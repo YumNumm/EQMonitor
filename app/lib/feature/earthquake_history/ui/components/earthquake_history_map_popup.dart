@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -18,32 +16,6 @@ EarthquakeHistoryMapPopupAction earthquakeHistoryMapPopupAction(Ref ref) =>
 
 /// 地震履歴マップの観測点・区域タップ時のポップアップ表示を担う。
 class const EarthquakeHistoryMapPopupAction() {
-  /// 観測点タップ時のポップアップ
-  ///
-  /// [intensityLabel] は [intensity] が null のときにラベルテキストで震度を表示する
-  /// フォールバック (震度DBの歴史的階級など JmaIntensity に対応しない階級向け)。
-  Future<void> showStation(
-    BuildContext context, {
-    required String stationName,
-    required JmaIntensity? intensity,
-    required JmaLpgmIntensity? lpgmIntensity,
-    String? intensityLabel,
-  }) {
-    return showM3EModalBottomSheet(
-      isScrollControlled: false,
-      useSafeArea: false,
-      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-      context: context,
-      clipBehavior: .antiAlias,
-      builder: (context) => _StationPopupBody(
-        stationName: stationName,
-        intensity: intensity,
-        lpgmIntensity: lpgmIntensity,
-        intensityLabel: intensityLabel,
-      ),
-    );
-  }
-
   /// 区域タップ時のポップアップ
   ///
   /// [intensityHistoryRoute] を指定すると「この地域の最大震度履歴」ボタンを表示する。
@@ -51,6 +23,7 @@ class const EarthquakeHistoryMapPopupAction() {
     BuildContext context, {
     required String areaName,
     required JmaIntensity? maxIntensity,
+    required Widget intensityContent,
     IntensityHistoryRoute? intensityHistoryRoute,
   }) {
     return showM3EModalBottomSheet(
@@ -62,84 +35,8 @@ class const EarthquakeHistoryMapPopupAction() {
       builder: (context) => _AreaPopupBody(
         areaName: areaName,
         maxIntensity: maxIntensity,
+        intensityContent: intensityContent,
         intensityHistoryRoute: intensityHistoryRoute,
-      ),
-    );
-  }
-}
-
-class _StationPopupBody extends StatelessWidget {
-  const new({
-    required this.stationName,
-    required this.intensity,
-    required this.lpgmIntensity,
-    this.intensityLabel,
-  });
-
-  final String stationName;
-  final JmaIntensity? intensity;
-  final JmaLpgmIntensity? lpgmIntensity;
-  final String? intensityLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          mainAxisSize: .min,
-          crossAxisAlignment: .start,
-          children: [
-            Center(
-              child: Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(2),
-                  color: context.designSystem.colorTheme.onSurface.withValues(
-                    alpha: 0.3,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(stationName, style: theme.textTheme.titleLarge),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                if (intensity case final currentIntensity?) ...[
-                  JmaIntensityIcon(
-                    intensity: currentIntensity,
-                    type: .filled,
-                    size: 48,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '震度 ${currentIntensity.label}',
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                ] else if (intensityLabel != null) ...[
-                  Text('震度 $intensityLabel', style: theme.textTheme.bodyLarge),
-                ],
-                if (lpgmIntensity case final currentLpgmIntensity?
-                    when currentLpgmIntensity != JmaLpgmIntensity.zero) ...[
-                  const SizedBox(width: 16),
-                  JmaLpgmIntensityIcon(
-                    intensity: currentLpgmIntensity,
-                    type: .filled,
-                    size: 48,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '長周期 ${currentLpgmIntensity.label}',
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                ],
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -149,11 +46,13 @@ class _AreaPopupBody extends StatelessWidget {
   const new({
     required this.areaName,
     required this.maxIntensity,
+    required this.intensityContent,
     this.intensityHistoryRoute,
   });
 
   final String areaName;
   final JmaIntensity? maxIntensity;
+  final Widget intensityContent;
   final IntensityHistoryRoute? intensityHistoryRoute;
 
   @override
@@ -162,9 +61,8 @@ class _AreaPopupBody extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          mainAxisSize: .min,
-          crossAxisAlignment: .start,
+        child: ListView(
+          shrinkWrap: true,
           children: [
             Center(
               child: Container(
@@ -195,16 +93,8 @@ class _AreaPopupBody extends StatelessWidget {
                     style: theme.textTheme.bodyLarge,
                   ),
                 ],
-              )
-            else
-              Text(
-                '観測なし',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: context.designSystem.colorTheme.onSurface.withValues(
-                    alpha: 0.6,
-                  ),
-                ),
               ),
+            intensityContent,
             if (intensityHistoryRoute case final route?) ...[
               const SizedBox(height: 8),
               M3ETextButton.icon(

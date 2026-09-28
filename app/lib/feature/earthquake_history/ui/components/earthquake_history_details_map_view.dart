@@ -10,8 +10,10 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_map_bounds_calculator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_area_filter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_focus_notifier.dart';
@@ -21,7 +23,11 @@ import 'package:eqmonitor/feature/earthquake_history/ui/action/earthquake_histor
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_camera.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_legend.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_popup.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_sheet.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_content.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_error_layer.dart';
@@ -46,6 +52,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
@@ -359,16 +366,15 @@ class _MapContent extends HookConsumerWidget {
       if (result == null) {
         return;
       }
-      final (station, cls) = result;
-      await ref
-          .read(earthquakeHistoryMapPopupActionProvider)
-          .showStation(
-            context,
-            stationName: station.name,
-            intensity: cls.exactJmaIntensity,
-            lpgmIntensity: null,
-            intensityLabel: cls.exactJmaIntensity == null ? cls.label : null,
-          );
+      final (station, _) = result;
+      await showM3EModalBottomSheet<void>(
+        isScrollControlled: false,
+        useSafeArea: false,
+        style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+        context: context,
+        clipBehavior: Clip.antiAlias,
+        builder: (_) => ShindoDbStationDetailSheet(station: station),
+      );
       return;
     }
 
@@ -381,14 +387,19 @@ class _MapContent extends HookConsumerWidget {
       if (stationNode == null) {
         return;
       }
-      await ref
-          .read(earthquakeHistoryMapPopupActionProvider)
-          .showStation(
-            context,
-            stationName: stationNode.station.name.ja,
-            intensity: stationNode.intensity?.maxIntensity,
-            lpgmIntensity: stationNode.intensity?.maxLpgmIntensity,
-          );
+      await showM3EModalBottomSheet<void>(
+        isScrollControlled: false,
+        useSafeArea: false,
+        style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+        context: context,
+        clipBehavior: Clip.antiAlias,
+        builder: (_) => LpgmStationDetailSheet(
+          station: StationLpgmIntensityNode(
+            station: stationNode.station,
+            intensity: stationNode.intensity,
+          ),
+        ),
+      );
       return;
     }
 
@@ -418,6 +429,23 @@ class _MapContent extends HookConsumerWidget {
             .whenOrNull(data: (p) => p.earthquake.prefectures) ??
         [];
 
+    final filter = ref.read(earthquakeIntensityAreaFilterProvider);
+    final intensityContent = dbTree != null
+        ? ShindoDbIntensityContent(
+            tree: filter.filterDatabase(
+              tree: dbTree,
+              code: code,
+              isCity: isCity,
+            ),
+          )
+        : JmaIntensityContent(
+            item: filter.filterEarthquake(
+              earthquake: earthquake,
+              code: code,
+              isCity: isCity,
+            ),
+          );
+
     if (isCity) {
       final cityNode = _findCityByCode(code);
       final prefCode = RegionCodeMapping.prefectureCodeOfCity(
@@ -432,7 +460,8 @@ class _MapContent extends HookConsumerWidget {
           .showArea(
             context,
             areaName: name,
-            maxIntensity: cityNode?.maxIntensity,
+            intensityContent: intensityContent,
+            maxIntensity: dbTree == null ? cityNode?.maxIntensity : null,
             intensityHistoryRoute: intensityHistoryRoute,
           );
     } else {
@@ -449,7 +478,8 @@ class _MapContent extends HookConsumerWidget {
           .showArea(
             context,
             areaName: name,
-            maxIntensity: region?.maxIntensity,
+            intensityContent: intensityContent,
+            maxIntensity: dbTree == null ? region?.maxIntensity : null,
             intensityHistoryRoute: intensityHistoryRoute,
           );
     }

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
@@ -23,9 +24,8 @@ class LpgmStationDetailSheet extends ConsumerWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Column(
-          mainAxisSize: .min,
-          crossAxisAlignment: .start,
+        child: ListView(
+          shrinkWrap: true,
           children: [
             Center(
               child: Container(
@@ -71,6 +71,10 @@ class _Header extends ConsumerWidget {
 
     return Row(
       children: [
+        if (intensity?.maxIntensity case final jmaIntensity?) ...[
+          JmaIntensityIcon(intensity: jmaIntensity, type: .filled, size: 44),
+          const SizedBox(width: 12),
+        ],
         if (maxLpgmIntensity != null) ...[
           JmaLpgmIntensityIcon(
             intensity: maxLpgmIntensity,

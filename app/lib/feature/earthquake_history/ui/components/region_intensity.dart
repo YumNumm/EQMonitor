@@ -11,8 +11,8 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.d
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/expand_trailing_icon_builder.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:m3e_core/m3e_core.dart';
 
 /// JMA震度階級の各地の震度ツリー表示
@@ -525,9 +525,31 @@ class _CityTile extends HookWidget {
         if (isExpanded.value)
           Padding(
             padding: const .only(left: 32),
-            child: Text(
-              city.stations.map((s) => s.station.name.ja).join(', '),
-              style: const TextStyle(fontSize: 12),
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: city.stations
+                  .map(
+                    (station) => ActionChip(
+                      label: Text(station.station.name.ja),
+                      onPressed: () => showM3EModalBottomSheet<void>(
+                        isScrollControlled: false,
+                        useSafeArea: false,
+                        style: const M3EBottomSheetStyle(
+                          padding: EdgeInsets.zero,
+                        ),
+                        context: context,
+                        clipBehavior: Clip.antiAlias,
+                        builder: (_) => LpgmStationDetailSheet(
+                          station: StationLpgmIntensityNode(
+                            station: station.station,
+                            intensity: station.intensity,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
           )
         else
