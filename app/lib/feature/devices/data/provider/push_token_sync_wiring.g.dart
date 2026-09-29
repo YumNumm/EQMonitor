@@ -77,4 +77,4 @@ final class PushTokenSyncWiringProvider
 }
 
 String _$pushTokenSyncWiringHash() =>
-    r'4b74ed46c58978eaa8fc9cfb5f9d01502cfdb127';
+    r'805be3cb3324ba908f8fd2d365185e25b784bf5f';
