@@ -27,6 +27,15 @@ Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
 /// アプリ resume 時はバックオフをリセットして即座に再接続する。
 @Riverpod(keepAlive: true)
 class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
+  /// 受信が途絶えたら接続が死んでいるとみなすまでの時間。
+  ///
+  /// サーバーは pong を受けてから 15 秒後に次の ping を送り、ping 送出後
+  /// 15 秒以内に pong が届かなければ接続を閉じる
+  /// (backend api/websocket/src/index.ts の PING_INTERVAL_MS / PONG_TIMEOUT_MS)。
+  /// 正常な接続ならこの合計時間内に必ず次のフレームが届くため、
+  /// それを超えて何も受信しない場合は半開状態として再接続する。
+  static const silenceTimeout = Duration(seconds: 15 + 15);
+
   var _retryCount = 0;
 
   /// これは状態ではなくイベント列なので、同じ値でも必ず通知する。
@@ -45,17 +54,31 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
     ref.listen(appLifecycleProvider, (_, next) {
       if (next == AppLifecycleState.resumed) {
         _retryCount = 0;
-        ref.invalidate(eqmonitorWebSocketTicketProvider, asReload: true);
-        ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
+        _reconnect();
       }
     });
+
+    Timer? silenceWatchdog;
+    ref.onDispose(() => silenceWatchdog?.cancel());
+    void armSilenceWatchdog() {
+      silenceWatchdog?.cancel();
+      silenceWatchdog = Timer(silenceTimeout, () {
+        talker.warning(
+          'EQMonitor WebSocket: no frame received for '
+          '${silenceTimeout.inSeconds}s, reconnecting',
+        );
+        _reconnect();
+      });
+    }
 
     try {
       final websocket = await ref.watch(eqmonitorWebSocketProvider.future);
       const heartbeatResponder = WsHeartbeatResponder();
       _retryCount = 0;
+      armSilenceWatchdog();
 
       await for (final event in websocket.events) {
+        armSilenceWatchdog();
         if (event case TextDataReceived(:final text)) {
           final response = heartbeatResponder.buildResponse(text);
           if (response != null) {
@@ -72,6 +95,8 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       }
     } on Exception catch (e) {
       talker.error('EQMonitor WebSocket: connection failed', e);
+    } finally {
+      silenceWatchdog?.cancel();
     }
 
     final delaySeconds = math.min(math.pow(2, _retryCount).toInt(), 60);
@@ -81,11 +106,13 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       '(attempt $_retryCount)',
     );
 
-    final timer = Timer(Duration(seconds: delaySeconds), () {
-      ref.invalidate(eqmonitorWebSocketTicketProvider, asReload: true);
-      ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
-    });
+    final timer = Timer(Duration(seconds: delaySeconds), _reconnect);
     ref.onDispose(timer.cancel);
+  }
+
+  void _reconnect() {
+    ref.invalidate(eqmonitorWebSocketTicketProvider, asReload: true);
+    ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
   }
 }
 
