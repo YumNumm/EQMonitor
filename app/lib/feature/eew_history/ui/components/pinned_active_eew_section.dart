@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/component/layout/history_selection.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/feature/eew/data/eew.dart';
+import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,7 +13,8 @@ class PinnedActiveEewSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eews = ref.watch(eewProvider).value ?? const [];
+    // 終了済みのEEWを残さないよう、発表中のものだけを表示する。
+    final eews = ref.watch(eewAliveTelegramProvider) ?? const [];
     if (eews.isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
