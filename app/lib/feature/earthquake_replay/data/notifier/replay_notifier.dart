@@ -84,7 +84,9 @@ class ReplayNotifier extends _$ReplayNotifier {
     state = null;
     ref.read(appClockProvider.notifier).returnToRealtime();
     // リプレイ由来のデータを破棄し、ライブ取得を再開させる。
+    // リプレイ中に発表されたライブのEEWは破棄されているため、REST も取り直す。
     ref
+      ..invalidate(eewRestProvider, asReload: true)
       ..invalidate(eewProvider, asReload: true)
       ..invalidate(kyoshinMonitorProvider, asReload: true);
   }
