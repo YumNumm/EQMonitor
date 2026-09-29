@@ -89,7 +89,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     final stopwatch = Stopwatch()..start();
     final previous = state.value;
     state = const AsyncLoading<KyoshinMonitorState>();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       final settings = ref.read(kyoshinMonitorSettingsProvider).requireValue;
       final request = ref.read(kyoshinMonitorImageRequestProvider);
       final realtimeDataType = settings.realtimeDataType;
@@ -130,7 +130,8 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
           );
 
       return KyoshinMonitorState(
-        lastUpdatedAt: DateTime.now(),
+        // 表示時刻は取得完了時の端末時計ではなく、画像の観測時刻とする。
+        lastUpdatedAt: targetTime,
         lastImageFetchTargetTime: targetTime,
         status: isDelayed ? .delayed : .realtime,
         currentRealtimeDataType: realtimeDataType,
@@ -142,10 +143,11 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       );
     });
 
-    // 404 は「その時刻の画像がまだ公開されていない」というだけなので、
-    // エラー表示に落とさずオフセットを調整して直前の表示を維持する。
-    if (state case AsyncError(:final error)) {
-      if (error is DioException && error.response?.statusCode == 404) {
+    switch (result) {
+      // 404 は「その時刻の画像がまだ公開されていない」というだけなので、
+      // エラー表示に落とさずオフセットを調整して直前の表示を維持する。
+      case AsyncError(:final error)
+          when error is DioException && error.response?.statusCode == 404:
         final delayProfile = ref
             .read(kyoshinMonitorImageRequestProvider)
             .delayProfile;
@@ -157,7 +159,16 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
             status: KyoshinMonitorStatus.delayed,
           ),
         );
-      }
+      // それ以外の取得失敗でも直前の表示は AsyncError の value として残るため、
+      // 「リアルタイム」のまま古い観測点を表示しないよう遅延扱いにしてから
+      // エラーを反映する。
+      case AsyncError() when previous != null:
+        state = AsyncData(
+          previous.copyWith(status: KyoshinMonitorStatus.delayed),
+        );
+        state = result;
+      case _:
+        state = result;
     }
   }
 
