@@ -40,6 +40,14 @@ class MapConfigurationNotifier extends _$MapConfigurationNotifier {
     if (json == null) {
       return null;
     }
-    return MapConfiguration.fromJson(jsonDecode(json) as Map<String, dynamic>);
+    // 旧バージョンの保存値などを解釈できない場合に地図全体を表示不能にしないよう、
+    // 既定値へ戻す。
+    try {
+      return MapConfiguration.fromJson(
+        jsonDecode(json) as Map<String, dynamic>,
+      );
+    } on Object {
+      return null;
+    }
   }
 }
