@@ -20,6 +20,7 @@ part 'subscription_notifier.g.dart';
 class SubscriptionNotifier extends _$SubscriptionNotifier {
   var _generation = 0;
   var _busy = false;
+  Future<void>? _refreshing;
   Timer? _expiryTimer;
 
   @override
@@ -35,7 +36,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
     if (!ref.mounted) return const SubscriptionStatus.inactive();
     var ready = false;
     void onCustomerInfo(rc.CustomerInfo _) {
-      if (ready && !_busy && ref.mounted) ref.invalidateSelf();
+      if (ready && !_busy && ref.mounted) unawaited(refresh());
     }
 
     rc.Purchases.addCustomerInfoUpdateListener(onCustomerInfo);
@@ -44,10 +45,37 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
     );
     ref.listen(appLifecycleProvider, (previous, next) {
       if (next == AppLifecycleState.resumed && previous != next && !_busy)
-        ref.invalidateSelf();
+        unawaited(refresh());
     });
+    final status = await fetchStatus(repository: repository, server: server);
+    if (ref.mounted && generation == _generation) {
+      ready = true;
+      scheduleExpiry(status: status);
+    }
+    return status;
+  }
+
+  /// バックエンドの確認値を取得する。
+  ///
+  /// [retained] は同一 device で確認済みの Pro 権限。通信エラー時だけ期限まで維持する。
+  Future<SubscriptionStatus> fetchStatus({
+    required SubscriptionRepository repository,
+    required SubscriptionServerRepository server,
+    SubscriptionStatusActive? retained,
+  }) async {
     await repository.session.validateCredentials();
-    var status = (await server.fetch()).unwrap();
+    var status = switch ((await server.fetch(), retained)) {
+      (
+        Failure(
+          exception: SubscriptionApiException(
+            reason: SubscriptionApiFailure.unavailable,
+          ),
+        ),
+        final SubscriptionStatusActive retained,
+      ) =>
+        retained.copyWith(syncPhase: SubscriptionSyncPhase.failed),
+      (final result, _) => result.unwrap(),
+    };
     if (status is SubscriptionStatusInactive) {
       final storeStatus = await repository.fetchStatus();
       if (storeStatus is SubscriptionStatusActive) {
@@ -55,13 +83,49 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
             .toSyncedStatus(previous: status);
       }
     }
-
     await repository.session.validateCredentials();
-    if (ref.mounted && generation == _generation) {
-      ready = true;
-      scheduleExpiry(status: status);
-    }
     return status;
+  }
+
+  /// 同一 device の権限を再確認する (foreground 復帰・SDK 更新)。
+  ///
+  /// 確認中も直前の確定値を保持し、通信エラーでは確認済みの Pro を期限まで維持する。
+  /// 確定値がない、または取得に失敗した場合は通常の再構築に委ねる。
+  Future<void> refresh() => _refreshing ??= _refresh().whenComplete(
+    () => _refreshing = null,
+  );
+
+  Future<void> _refresh() async {
+    final current = state;
+    final previous = current.value;
+    if (_busy) return;
+    if (current.isLoading || current.hasError || previous == null) {
+      ref.invalidateSelf();
+      return;
+    }
+    final generation = _generation;
+    try {
+      final repository = await ref.read(subscriptionRepositoryProvider.future);
+      final server = await ref.read(
+        subscriptionServerRepositoryProvider.future,
+      );
+      final status = await fetchStatus(
+        repository: repository,
+        server: server,
+        retained: switch (previous) {
+          SubscriptionStatusActive(:final expiresAt)
+              when expiresAt == null || expiresAt.isAfter(clock.now()) =>
+            previous,
+          _ => null,
+        },
+      );
+      if (!ref.mounted || generation != _generation || _busy) return;
+      state = AsyncData(status);
+      scheduleExpiry(status: status);
+    } catch (_) {
+      if (ref.mounted && generation == _generation && !_busy)
+        ref.invalidateSelf();
+    }
   }
 
   static final purchaseMonthlyMutation = Mutation<PurchaseResult>();
