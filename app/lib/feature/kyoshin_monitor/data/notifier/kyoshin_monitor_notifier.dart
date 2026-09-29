@@ -52,16 +52,17 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       void onSettingsChanged() =>
           state = const AsyncData(KyoshinMonitorState());
 
-      if (previous == null) {
+      // 読み込み中・エラー時は requireValue が StateError になるため、
+      // 前後とも値がある場合だけ比較する。
+      final previousValue = previous?.value;
+      final nextValue = next.value;
+      if (previousValue == null || nextValue == null) {
         return;
       }
-      if (previous.requireValue.realtimeDataType !=
-              next.requireValue.realtimeDataType ||
-          previous.requireValue.realtimeLayer !=
-              next.requireValue.realtimeLayer ||
-          previous.requireValue.useKmoni != next.requireValue.useKmoni ||
-          previous.requireValue.monitorSource !=
-              next.requireValue.monitorSource) {
+      if (previousValue.realtimeDataType != nextValue.realtimeDataType ||
+          previousValue.realtimeLayer != nextValue.realtimeLayer ||
+          previousValue.useKmoni != nextValue.useKmoni ||
+          previousValue.monitorSource != nextValue.monitorSource) {
         onSettingsChanged();
       }
     });
