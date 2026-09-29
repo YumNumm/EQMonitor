@@ -23,7 +23,7 @@ class LpgmKyoshinMonitorWebApiDataSource {
     BaseMapTheme theme,
   ) => _client.getScaleImageData(
     type: type.urlString,
-    layer: layer.urlString,
+    layer: type.isLpgm ? RealtimeLayer.surface.urlString : layer.urlString,
     theme: theme.urlString,
   );
 

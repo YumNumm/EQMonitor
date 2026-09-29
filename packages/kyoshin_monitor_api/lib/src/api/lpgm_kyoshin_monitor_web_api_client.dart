@@ -53,7 +53,7 @@ abstract class LpgmKyoshinMonitorWebApiClient {
   ///
   /// [date] 日付(yyyyMMdd)
   /// [dateTime] 日付(yyyyMMddHHmmss)
-  @GET('/monitor/data/data/map_img/PSWaveImg/eew/{date}/{dateTime}_eew.gif')
+  @GET('/monitor/data/data/map_img/PSWaveImg/eew/{date}/{dateTime}.eew.gif')
   @DioResponseType(ResponseType.bytes)
   Future<List<int>> getPsWaveImageData({
     @Path('date') required String date,

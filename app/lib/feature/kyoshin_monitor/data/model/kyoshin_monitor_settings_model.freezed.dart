@@ -21,7 +21,7 @@ mixin _$KyoshinMonitorSettingsModel {
  bool get showScale;/// 強震モニタを使用するかどうか
  bool get useKmoni;/// 強震モニタ観測点のマーカーの種類
  KyoshinMonitorMarkerType get kmoniMarkerType;/// データソース (強震モニタ / 長周期地震動モニタ)
-@JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni) KyoshinMonitorSource get monitorSource;/// 強震モニタのリアルタイムデータの種類
+@JsonKey(unknownEnumValue: KyoshinMonitorSource.lmoni) KyoshinMonitorSource get monitorSource;/// 強震モニタのリアルタイムデータの種類
  RealtimeDataType get realtimeDataType;/// 強震モニタのリアルタイムデータのレイヤー
  RealtimeLayer get realtimeLayer;/// 強震モニタ API関連の設定
  KyoshinMonitorSettingsApiModel get api;
@@ -57,7 +57,7 @@ abstract mixin class $KyoshinMonitorSettingsModelCopyWith<$Res>  {
   factory $KyoshinMonitorSettingsModelCopyWith(KyoshinMonitorSettingsModel value, $Res Function(KyoshinMonitorSettingsModel) _then) = _$KyoshinMonitorSettingsModelCopyWithImpl;
 @useResult
 $Res call({
- double? minRealtimeShindo, bool showScale, bool useKmoni, KyoshinMonitorMarkerType kmoniMarkerType,@JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni) KyoshinMonitorSource monitorSource, RealtimeDataType realtimeDataType, RealtimeLayer realtimeLayer, KyoshinMonitorSettingsApiModel api
+ double? minRealtimeShindo, bool showScale, bool useKmoni, KyoshinMonitorMarkerType kmoniMarkerType,@JsonKey(unknownEnumValue: KyoshinMonitorSource.lmoni) KyoshinMonitorSource monitorSource, RealtimeDataType realtimeDataType, RealtimeLayer realtimeLayer, KyoshinMonitorSettingsApiModel api
 });
 
 
@@ -178,7 +178,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType, @JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni)  KyoshinMonitorSource monitorSource,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType, @JsonKey(unknownEnumValue: KyoshinMonitorSource.lmoni)  KyoshinMonitorSource monitorSource,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorSettingsModel() when $default != null:
 return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.monitorSource,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
@@ -199,7 +199,7 @@ return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType, @JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni)  KyoshinMonitorSource monitorSource,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType, @JsonKey(unknownEnumValue: KyoshinMonitorSource.lmoni)  KyoshinMonitorSource monitorSource,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorSettingsModel():
 return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.monitorSource,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
@@ -219,7 +219,7 @@ return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType, @JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni)  KyoshinMonitorSource monitorSource,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType, @JsonKey(unknownEnumValue: KyoshinMonitorSource.lmoni)  KyoshinMonitorSource monitorSource,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)?  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorSettingsModel() when $default != null:
 return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.monitorSource,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
@@ -234,7 +234,7 @@ return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmo
 @JsonSerializable()
 
 class _KyoshinMonitorSettingsModel implements KyoshinMonitorSettingsModel {
-  const _KyoshinMonitorSettingsModel({this.minRealtimeShindo = null, this.showScale = true, this.useKmoni = true, this.kmoniMarkerType = KyoshinMonitorMarkerType.onlyEew, @JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni) this.monitorSource = KyoshinMonitorSource.kmoni, this.realtimeDataType = RealtimeDataType.shindo, this.realtimeLayer = RealtimeLayer.surface, this.api = const KyoshinMonitorSettingsApiModel()});
+  const _KyoshinMonitorSettingsModel({this.minRealtimeShindo = null, this.showScale = true, this.useKmoni = true, this.kmoniMarkerType = KyoshinMonitorMarkerType.onlyEew, @JsonKey(unknownEnumValue: KyoshinMonitorSource.lmoni) this.monitorSource = KyoshinMonitorSource.lmoni, this.realtimeDataType = RealtimeDataType.shindo, this.realtimeLayer = RealtimeLayer.surface, this.api = const KyoshinMonitorSettingsApiModel()});
   factory _KyoshinMonitorSettingsModel.fromJson(Map<String, dynamic> json) => _$KyoshinMonitorSettingsModelFromJson(json);
 
 /// 強震モニタの表示最低リアルタイム震度
@@ -246,7 +246,7 @@ class _KyoshinMonitorSettingsModel implements KyoshinMonitorSettingsModel {
 /// 強震モニタ観測点のマーカーの種類
 @override@JsonKey() final  KyoshinMonitorMarkerType kmoniMarkerType;
 /// データソース (強震モニタ / 長周期地震動モニタ)
-@override@JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni) final  KyoshinMonitorSource monitorSource;
+@override@JsonKey(unknownEnumValue: KyoshinMonitorSource.lmoni) final  KyoshinMonitorSource monitorSource;
 /// 強震モニタのリアルタイムデータの種類
 @override@JsonKey() final  RealtimeDataType realtimeDataType;
 /// 強震モニタのリアルタイムデータのレイヤー
@@ -287,7 +287,7 @@ abstract mixin class _$KyoshinMonitorSettingsModelCopyWith<$Res> implements $Kyo
   factory _$KyoshinMonitorSettingsModelCopyWith(_KyoshinMonitorSettingsModel value, $Res Function(_KyoshinMonitorSettingsModel) _then) = __$KyoshinMonitorSettingsModelCopyWithImpl;
 @override @useResult
 $Res call({
- double? minRealtimeShindo, bool showScale, bool useKmoni, KyoshinMonitorMarkerType kmoniMarkerType,@JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni) KyoshinMonitorSource monitorSource, RealtimeDataType realtimeDataType, RealtimeLayer realtimeLayer, KyoshinMonitorSettingsApiModel api
+ double? minRealtimeShindo, bool showScale, bool useKmoni, KyoshinMonitorMarkerType kmoniMarkerType,@JsonKey(unknownEnumValue: KyoshinMonitorSource.lmoni) KyoshinMonitorSource monitorSource, RealtimeDataType realtimeDataType, RealtimeLayer realtimeLayer, KyoshinMonitorSettingsApiModel api
 });
 
 
