@@ -38,6 +38,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_ma
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/location/data/headless/headless_location_callback.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
+import 'package:eqmonitor/feature/telemetry/data/noop_telemetry.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_watcher_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
@@ -211,9 +212,22 @@ class AppBootstrap {
     profiler.mark('parallel_init');
     LicenseInitializer.init();
 
-    final telemetryDbPath = kIsWeb
-        ? null
-        : await TelemetryDbPathResolver.resolve();
+    // テレメトリは必須機能ではないため、DB パス (iOS は App Group コンテナ) を
+    // 解決できない場合は記録・送信を無効化して起動を継続する。
+    String? telemetryDbPath;
+    var isTelemetryDisabled = false;
+    if (!kIsWeb) {
+      try {
+        telemetryDbPath = await TelemetryDbPathResolver.resolve();
+      } on Object catch (error, stackTrace) {
+        isTelemetryDisabled = true;
+        talker.error(
+          'Telemetry is disabled: failed to resolve database path',
+          error,
+          stackTrace,
+        );
+      }
+    }
 
     if (!kIsWeb) {
       unawaited(
@@ -242,6 +256,14 @@ class AppBootstrap {
           kyoshinColorMapProvider.overrideWithValue(colorMap),
         if (telemetryDbPath case final dbPath?)
           telemetryDbPathProvider.overrideWithValue(dbPath),
+        if (isTelemetryDisabled) ...[
+          telemetryRecorderProvider.overrideWithValue(
+            const NoopTelemetryRecorder(),
+          ),
+          telemetryUploaderProvider.overrideWithValue(
+            const NoopTelemetryUploader(),
+          ),
+        ],
         startupProfilerProvider.overrideWithValue(profiler),
       ],
       observers: [if (kDebugMode) CustomProviderObserver(talker)],
