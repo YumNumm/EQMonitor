@@ -28,6 +28,8 @@ import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_statu
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/core/startup/startup_profiler.dart';
 import 'package:eqmonitor/core/startup/startup_profiler_provider.dart';
+import 'package:eqmonitor/core/theme/build_theme.dart';
+import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/util/guarded_unawaited.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.dart';
@@ -36,6 +38,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_ma
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/location/data/headless/headless_location_callback.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
+import 'package:eqmonitor/feature/telemetry/data/noop_telemetry.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_watcher_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
@@ -76,9 +79,20 @@ Future<void> main() async {
         talker.error(error, stackTrace);
       }
     }());
+    // ErrorCard は context.designSystem を参照するため、アプリ本体と同じ
+    // 既定テーマ (DesignSystemThemeExtension を含む) を渡す。
+    final defaultTheme = AppTheme.eqmonitorDefault();
     runApp(
       ProviderScope(
         child: MaterialApp(
+          theme: AppThemeDataBuilder.build(
+            colorSet: defaultTheme.colorSetFor(.light),
+            brightness: .light,
+          ),
+          darkTheme: AppThemeDataBuilder.build(
+            colorSet: defaultTheme.colorSetFor(.dark),
+            brightness: .dark,
+          ),
           home: Scaffold(
             body: Center(
               child: ErrorCard(
@@ -198,9 +212,22 @@ class AppBootstrap {
     profiler.mark('parallel_init');
     LicenseInitializer.init();
 
-    final telemetryDbPath = kIsWeb
-        ? null
-        : await TelemetryDbPathResolver.resolve();
+    // テレメトリは必須機能ではないため、DB パス (iOS は App Group コンテナ) を
+    // 解決できない場合は記録・送信を無効化して起動を継続する。
+    String? telemetryDbPath;
+    var isTelemetryDisabled = false;
+    if (!kIsWeb) {
+      try {
+        telemetryDbPath = await TelemetryDbPathResolver.resolve();
+      } on Object catch (error, stackTrace) {
+        isTelemetryDisabled = true;
+        talker.error(
+          'Telemetry is disabled: failed to resolve database path',
+          error,
+          stackTrace,
+        );
+      }
+    }
 
     if (!kIsWeb) {
       unawaited(
@@ -229,6 +256,14 @@ class AppBootstrap {
           kyoshinColorMapProvider.overrideWithValue(colorMap),
         if (telemetryDbPath case final dbPath?)
           telemetryDbPathProvider.overrideWithValue(dbPath),
+        if (isTelemetryDisabled) ...[
+          telemetryRecorderProvider.overrideWithValue(
+            const NoopTelemetryRecorder(),
+          ),
+          telemetryUploaderProvider.overrideWithValue(
+            const NoopTelemetryUploader(),
+          ),
+        ],
         startupProfilerProvider.overrideWithValue(profiler),
       ],
       observers: [if (kDebugMode) CustomProviderObserver(talker)],
