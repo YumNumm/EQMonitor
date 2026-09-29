@@ -22,6 +22,11 @@
 - `ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES` が残るため、未使用の代替アイコンを同時コンパイルする必要性を確認し、不要なら設定を整理する。
 - 完了条件: 新しい専用 DerivedData で archive が成功する。warm cache の成功だけで閉じず、失敗時の生 xcodebuild log を保存する。
 
+## 860: Xcode 27.0 正式版でのストア提出確認
+
+- 配布 workflow は Xcode 27.0 / `27A266a` と iOS SDK 27.0 に固定済み。変更後の署名済みビルドとストア提出は未確認。
+- 完了条件: 新しいビルド番号で再ビルドし、CI の Xcode・SDK 検査と App Store Connect の処理が成功する。ベータ版 Xcode を理由に提出を拒否されないことを確認する。
+
 ## 300: iOS extension の版番号
 
 - `app/ios/Runner.xcodeproj/project.pbxproj` の Runner は1287、extension は1という固定値が残る。各 target の `CURRENT_PROJECT_VERSION` / `MARKETING_VERSION` を Flutter の build number/name と同期する。

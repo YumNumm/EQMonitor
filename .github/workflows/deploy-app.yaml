@@ -28,8 +28,9 @@ permissions:
   contents: read
 
 env:
-  # The xcode-27 image includes prereleases until the stable SDK is available.
-  XCODE_VERSION: latest
+  # App Store builds must use the stable release, not the runner's latest beta.
+  XCODE_VERSION: "27.0"
+  XCODE_BUILD_VERSION: "27A266a"
   GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER: projects/179553945248/locations/global/workloadIdentityPools/github-actions-identity-pool/providers/github-actions-identity-provider
   GOOGLE_CLOUD_SERVICE_ACCOUNT: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
 
@@ -260,11 +261,18 @@ jobs:
 
       - name: Verify Xcode and iOS SDK
         run: |
-          xcodebuild -version
+          xcode_info="$(xcodebuild -version)"
+          echo "$xcode_info"
+          xcode_version="$(sed -n 's/^Xcode //p' <<< "$xcode_info")"
+          xcode_build="$(sed -n 's/^Build version //p' <<< "$xcode_info")"
+          if [[ "$xcode_version" != "$XCODE_VERSION" || "$xcode_build" != "$XCODE_BUILD_VERSION" ]]; then
+            echo "::error::App Store builds require stable Xcode $XCODE_VERSION ($XCODE_BUILD_VERSION)."
+            exit 1
+          fi
           sdk_version="$(xcrun --sdk iphoneos --show-sdk-version)"
           echo "iOS SDK: $sdk_version"
-          if [[ "${sdk_version%%.*}" != "27" ]]; then
-            echo "::error::SearchEarthquakesIntent requires the iOS 27 SDK."
+          if [[ "$sdk_version" != "27.0" ]]; then
+            echo "::error::App Store builds require the stable iOS 27.0 SDK."
             exit 1
           fi
 
