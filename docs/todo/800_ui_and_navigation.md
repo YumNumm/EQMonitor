@@ -53,6 +53,7 @@
 
 ## 800: M3E 移行後の実機表示・操作確認
 
+- `telegram_list_by_event_id_page.dart` の緊急地震速報カードはクリップを設定済み。iOS / Android の Light・Dark で、押下時のハイライトがカードの角丸からはみ出さず、行全体のタップで該当イベントの EEW 詳細へ遷移することを確認する。実機検証は未実施。
 - `home_earthquake_history_sheet.dart` の現在地更新中に既存一覧が維持され、「最近の地震」の右側の進捗表示だけが切り替わることを確認する。同一市区町村での再取得抑止は Widget Test で確認済み、実機検証は未実施。
 - iOS / Android の Light・Dark、文字拡大、VoiceOver / TalkBack で、選択値・無効状態・ボタン表示とスライダーの増減を確認する。Widget Test の成功と実機検証を区別する。
 - モーダルのキーボード表示時、画面分割時の高さ・スクロール、地図操作パネルとの重なりを確認する。

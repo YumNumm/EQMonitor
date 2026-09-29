@@ -328,6 +328,7 @@ class _EewNavigationCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      clipBehavior: .antiAlias,
       child: ListTile(
         leading: Icon(Icons.warning_amber_rounded, color: colorTheme.error),
         title: Text(
