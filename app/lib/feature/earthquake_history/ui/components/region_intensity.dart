@@ -17,9 +17,14 @@ import 'package:m3e_core/m3e_core.dart';
 
 /// JMA震度階級の各地の震度ツリー表示
 class JmaIntensityContent extends HookWidget {
-  const new({required this.item, super.key});
+  const new({required this.item, this.isPreliminary, super.key});
 
   final Earthquake item;
+
+  /// 速報 (各地の震度ツリー未発表) かどうか。
+  /// 区域で絞り込んだ [item] を渡す場合は、絞り込み前の地震で判定した値を渡す。
+  /// null のときは [item] の震度ツリーが空かどうかで判定する。
+  final bool? isPreliminary;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +50,7 @@ class JmaIntensityContent extends HookWidget {
       return Column(
         crossAxisAlignment: .start,
         children: [
-          _PreliminaryBadge(),
+          if (isPreliminary ?? true) _PreliminaryBadge(),
           if (regions.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),

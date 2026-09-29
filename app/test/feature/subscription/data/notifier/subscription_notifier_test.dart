@@ -313,7 +313,22 @@ void main() {
     container
         .read(appLifecycleProvider.notifier)
         .didChangeAppLifecycleState(AppLifecycleState.resumed);
-    expect(await container.read(subscriptionProvider.future), active);
+    expect(container.read(subscriptionProvider).isLoading, isFalse);
+    await container.read(subscriptionProvider.notifier).refresh();
+    expect(container.read(subscriptionProvider).value, active);
+  });
+
+  test('offline foreground refresh keeps confirmed Pro until expiry', () async {
+    server.current = const Success(active);
+    await container.read(subscriptionProvider.future);
+    server.current = const Failure(
+      SubscriptionApiException(reason: SubscriptionApiFailure.unavailable),
+    );
+    await container.read(subscriptionProvider.notifier).refresh();
+    expect(
+      container.read(subscriptionProvider).value,
+      active.copyWith(syncPhase: SubscriptionSyncPhase.failed),
+    );
   });
 
   test('offline startup is an error, not a verified Free status', () async {
@@ -326,6 +341,30 @@ void main() {
     );
     expect(repository.purchases, 0);
   });
+  testWidgets('pending purchase sync retries until the webhook arrives', (
+    tester,
+  ) async {
+    await container.read(subscriptionProvider.future);
+    server.synced = const Failure(
+      SubscriptionApiException(reason: SubscriptionApiFailure.pending),
+    );
+    expect(
+      await container
+          .read(subscriptionProvider.notifier)
+          .purchaseMonthly(package: monthlyPackage),
+      const PurchaseResult.pending(),
+    );
+    expect(server.syncs, 1);
+    await tester.pump(const Duration(seconds: 3));
+    expect(server.syncs, 2);
+    server.synced = const Success(active);
+    await tester.pump(const Duration(seconds: 5));
+    expect(server.syncs, 3);
+    expect(container.read(subscriptionProvider).value, active);
+    await tester.pump(const Duration(seconds: 60));
+    expect(server.syncs, 3);
+  });
+
   testWidgets('expiry schedules a server refresh without a UI action', (
     tester,
   ) async {

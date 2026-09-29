@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_delay_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -40,11 +40,8 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) {
   final wholeSeconds = Duration(seconds: offset.inSeconds);
   final phase = offset - wholeSeconds;
 
-  bool isBackground() => const [
-    AppLifecycleState.paused,
-    AppLifecycleState.detached,
-    AppLifecycleState.inactive,
-  ].contains(ref.read(appLifecycleProvider));
+  bool isBackground() =>
+      KyoshinMonitorBackground.isBackground(ref.read(appLifecycleProvider));
 
   void emit() {
     if (controller.isClosed) {

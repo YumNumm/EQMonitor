@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_candidate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,7 +22,9 @@ class EewWarningCandidateSelector {
       final hasCurrentWarning = event.warning?.prefectures.any(
         (prefecture) => prefecture.code == warningAreaCode,
       );
-      if (event.isWarning != true ||
+      // 訓練報・試験報は全画面警報と振動の対象にしない。
+      if (event.status != TelegramStatus.normal ||
+          event.isWarning != true ||
           event.isCanceled ||
           hasCurrentWarning != true) {
         continue;

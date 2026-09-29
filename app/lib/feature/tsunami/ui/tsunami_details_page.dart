@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
@@ -29,11 +30,9 @@ class TsunamiDetailsPage extends HookConsumerWidget {
     // Prefetch telegrams for overlay
     ref.watch(tsunamiTelegramsProvider(tsunamiId));
 
+    // ポーリング失敗時も前回値を保持して表示し続ける (エラーはバナーで示す)
     return switch (state) {
-      AsyncLoading() => Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: AccessibleCircularProgressIndicator()),
-      ),
+      AsyncValue(hasValue: true) => _buildContent(context, ref),
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(),
         body: ErrorCard(
@@ -41,7 +40,10 @@ class TsunamiDetailsPage extends HookConsumerWidget {
           onReload: () async => ref.refresh(tsunamiDetailsProvider(tsunamiId)),
         ),
       ),
-      AsyncData() => _buildContent(context, ref),
+      _ => Scaffold(
+        appBar: AppBar(),
+        body: const Center(child: AccessibleCircularProgressIndicator()),
+      ),
     };
   }
 
@@ -65,6 +67,9 @@ class TsunamiDetailsPage extends HookConsumerWidget {
                 child: SafeArea(
                   child: Column(
                     children: [
+                      CachedDataBanner(
+                        values: [ref.watch(tsunamiDetailsProvider(tsunamiId))],
+                      ),
                       TsunamiWarningStatusCard(tsunami: tsunami),
                       CurrentLocationTsunamiCard(tsunami: tsunami),
                       TsunamiRegionList(tsunami: tsunami),

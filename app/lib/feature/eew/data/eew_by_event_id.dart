@@ -27,10 +27,11 @@ class EewsByEventId extends _$EewsByEventId {
       if (next case AsyncData(:final value)) {
         final eews = value.where((e) => e.eventId == eventId).toList();
         final currentEews = state.value ?? <EewTelegramItem>[];
-        for (final eew in eews) {
-          if (!currentEews.any((e) => e.serialNo == eew.serialNo)) {
-            state = AsyncData([...currentEews, eew]);
-          }
+        final additions = eews
+            .where((eew) => !currentEews.any((e) => e.serialNo == eew.serialNo))
+            .toList();
+        if (additions.isNotEmpty) {
+          state = AsyncData([...currentEews, ...additions]);
         }
       }
     });

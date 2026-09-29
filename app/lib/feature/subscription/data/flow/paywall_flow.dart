@@ -162,6 +162,10 @@ class PaywallFlow {
         return;
       case PurchaseResultCancelled():
         return;
+      case PurchaseResultFailed(reason: PurchaseFailureReason.paymentPending):
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(PurchaseFailureReason.paymentPending.message)),
+        );
       case PurchaseResultFailed(:final reason):
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('購入に失敗しました: ${reason.message}')),

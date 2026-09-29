@@ -212,9 +212,9 @@ class _MapContent extends HookConsumerWidget {
           lat: camera.centerLatitude,
         );
         zoom = camera.zoom;
-      } else {
-        return const Center(child: Text('地図の表示範囲を取得できませんでした'));
       }
+      // 観測区域から表示範囲を求められない場合は、震源 → 既定位置の順で
+      // 算出済みの initialCenter / initialZoom のまま地図を表示する。
     }
     final mapOptions = MapOptions(
       initCenter: center,
@@ -252,6 +252,8 @@ class _MapContent extends HookConsumerWidget {
                   event: event,
                   jmaMap: jmaMap,
                   dbTree: dbTree,
+                  showingDb: showingDb,
+                  showingLpgmIntensity: showingLpgmIntensity,
                 );
               }
             }
@@ -354,6 +356,8 @@ class _MapContent extends HookConsumerWidget {
     required WidgetRef ref,
     required MapEventClick event,
     required Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
+    required bool showingDb,
+    required bool showingLpgmIntensity,
     ShindoDbIntensityTree? dbTree,
   }) async {
     final hits = mapController.queryLayers(event.screenPoint);
@@ -383,7 +387,10 @@ class _MapContent extends HookConsumerWidget {
           h.layerId ==
           EarthquakeHistoryStationIntensityLayerBuilder.iconLayerId,
     )) {
-      final stationNode = _findNearestStation(event.point);
+      final stationNode = _findNearestStation(
+        event.point,
+        showingLpgmIntensity: showingLpgmIntensity,
+      );
       if (stationNode == null) {
         return;
       }
@@ -393,13 +400,13 @@ class _MapContent extends HookConsumerWidget {
         style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
         context: context,
         clipBehavior: Clip.antiAlias,
-        builder: (_) => LpgmStationDetailSheet(
-          station: StationLpgmIntensityNode(
-            station: stationNode.station,
-            intensity: stationNode.intensity,
-          ),
-        ),
+        builder: (_) => LpgmStationDetailSheet(station: stationNode),
       );
+      return;
+    }
+
+    // 震度DBの読み込み中は地図に震度を描画していないため、XML の震度を出さない
+    if (showingDb && dbTree == null) {
       return;
     }
 
@@ -430,21 +437,27 @@ class _MapContent extends HookConsumerWidget {
         [];
 
     final filter = ref.read(earthquakeIntensityAreaFilterProvider);
-    final intensityContent = dbTree != null
-        ? ShindoDbIntensityContent(
-            tree: filter.filterDatabase(
-              tree: dbTree,
-              code: code,
-              isCity: isCity,
-            ),
-          )
-        : JmaIntensityContent(
-            item: filter.filterEarthquake(
-              earthquake: earthquake,
-              code: code,
-              isCity: isCity,
-            ),
-          );
+    final filteredEarthquake = filter.filterEarthquake(
+      earthquake: earthquake,
+      code: code,
+      isCity: isCity,
+    );
+    final hasJmaObservation = switch (filteredEarthquake.intensity) {
+      final intensity? =>
+        intensity.intensityTree.isNotEmpty || intensity.regions.isNotEmpty,
+      null => false,
+    };
+    // null のときはポップアップ側で「観測なし」を表示する
+    final Widget? intensityContent = switch (dbTree) {
+      final tree? => ShindoDbIntensityContent(
+        tree: filter.filterDatabase(tree: tree, code: code, isCity: isCity),
+      ),
+      null when hasJmaObservation => JmaIntensityContent(
+        item: filteredEarthquake,
+        isPreliminary: earthquake.intensity?.intensityTree.isEmpty ?? true,
+      ),
+      null => null,
+    };
 
     if (isCity) {
       final cityNode = _findCityByCode(code);
@@ -485,29 +498,43 @@ class _MapContent extends HookConsumerWidget {
     }
   }
 
-  StationIntensityNode? _findNearestStation(Geographic point) {
+  StationLpgmIntensityNode? _findNearestStation(
+    Geographic point, {
+    required bool showingLpgmIntensity,
+  }) {
     final intensity = earthquake.intensity;
     if (intensity == null) {
       return null;
     }
 
-    StationIntensityNode? nearest;
-    var minDist = double.infinity;
+    // 地図のアイコンと同じツリーから探索する (LPGM 表示中は長周期のツリー)
+    final candidates = showingLpgmIntensity
+        ? intensity.lpgmIntensityTree.values
+              .expand((prefectures) => prefectures)
+              .expand((prefecture) => prefecture.cities)
+              .expand((city) => city.stations)
+              .where((node) => node.intensity?.maxLpgmIntensity != null)
+        : intensity.intensityTree.values
+              .expand((prefectures) => prefectures)
+              .expand((prefecture) => prefecture.cities)
+              .expand((city) => city.stations)
+              .map(
+                (node) => StationLpgmIntensityNode(
+                  station: node.station,
+                  intensity: node.intensity,
+                ),
+              );
 
-    for (final entry in intensity.intensityTree.entries) {
-      for (final region in entry.value) {
-        for (final city in region.cities) {
-          for (final stationNode in city.stations) {
-            final station = stationNode.station;
-            final dist =
-                math.pow(station.location.lat - point.lat, 2) +
-                math.pow(station.location.lon - point.lon, 2);
-            if (dist < minDist) {
-              minDist = dist.toDouble();
-              nearest = stationNode;
-            }
-          }
-        }
+    StationLpgmIntensityNode? nearest;
+    var minDist = double.infinity;
+    for (final stationNode in candidates) {
+      final station = stationNode.station;
+      final dist =
+          math.pow(station.location.lat - point.lat, 2) +
+          math.pow(station.location.lon - point.lon, 2);
+      if (dist < minDist) {
+        minDist = dist.toDouble();
+        nearest = stationNode;
       }
     }
 

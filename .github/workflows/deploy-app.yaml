@@ -688,9 +688,20 @@ jobs:
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
+          # iOS と同じく x.y.z を versionName に渡す。`3.0.0-beta.11` のままだと
+          # PackageInfo.version が pre-release になり、Version.parse による
+          # minimum_app_version / 強制アップデート判定で 3.0.0 未満と扱われる。
+          BUILD_NAME=$(sed -n 's/^version: *\([^ #]*\).*/\1/p' pubspec.yaml)
+          BUILD_NAME=${BUILD_NAME%%-*}
+          BUILD_NAME=${BUILD_NAME%%+*}
+          if ! [[ "$BUILD_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::unexpected build-name '${BUILD_NAME}' derived from app/pubspec.yaml"
+            exit 1
+          fi
           flutter build appbundle \
             --release \
             --no-pub \
+            --build-name="$BUILD_NAME" \
             --build-number="${BUILD_NUMBER}" \
             --dart-define-from-file=../environment/.env.prod \
             --dart-define IS_PRODUCTION="true" \

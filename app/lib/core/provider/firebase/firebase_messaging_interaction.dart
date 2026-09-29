@@ -75,20 +75,25 @@ Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
     );
     pendingGate.resolve();
     if (initialMessage != null) {
-      await NotificationOpenedRecorder.record(
-        recorder: recorder,
-        uploader: uploader,
-        message: initialMessage,
-        coldStart: true,
+      unawaited(
+        NotificationOpenedRecorder.record(
+          recorder: recorder,
+          uploader: uploader,
+          message: initialMessage,
+          coldStart: true,
+        ),
       );
       yield initialMessage;
     }
     await for (final message in openedMessages.stream) {
-      await NotificationOpenedRecorder.record(
-        recorder: recorder,
-        uploader: uploader,
-        message: message,
-        coldStart: false,
+      // 計測は遷移を遅らせず、失敗しても以降の通知タップを止めない。
+      unawaited(
+        NotificationOpenedRecorder.record(
+          recorder: recorder,
+          uploader: uploader,
+          message: message,
+          coldStart: false,
+        ),
       );
       final link = NotificationDeepLink.fromData(message.data);
       switch (link) {
@@ -116,12 +121,16 @@ class NotificationOpenedRecorder {
     required RemoteMessage message,
     required bool coldStart,
   }) async {
-    await recorder.record(
-      TelemetryEvent.notificationOpened(
-        coldStart: coldStart,
-        eventId: message.data['eventId'] as String?,
-      ),
-    );
-    await uploader.flush();
+    try {
+      await recorder.record(
+        TelemetryEvent.notificationOpened(
+          coldStart: coldStart,
+          eventId: message.data['eventId'] as String?,
+        ),
+      );
+      await uploader.flush();
+    } on Object catch (error, stackTrace) {
+      talker.error('Failed to record notification opened', error, stackTrace);
+    }
   }
 }

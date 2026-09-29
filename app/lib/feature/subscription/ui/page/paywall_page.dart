@@ -155,30 +155,23 @@ class _BenefitsSection extends StatelessWidget {
   static const _benefits = <_Benefit>[
     _Benefit(
       icon: Icons.notifications_active_rounded,
-      title: '通知対象地域を追加',
-      description: '複数の地点の地震情報をまとめて受信できます',
+      title: '通知地域を追加',
+      description: '通知を受け取る地域を無料プランより多く登録できます',
     ),
     _Benefit(
       icon: Icons.history_rounded,
-      title: "緊急地震速報の履歴",
-      description: "過去に発表された緊急地震速報の履歴を確認できます",
+      title: '緊急地震速報の履歴',
+      description: '過去に発表された緊急地震速報の一覧と詳細を確認できます',
     ),
     _Benefit(
       icon: Icons.location_on_rounded,
-      title: "この震源の近傍で発生した地震",
-      description: "地震の詳細ページから、付近で発生した地震の履歴を確認できます",
+      title: 'この震源の近傍で発生した地震',
+      description: '地震の詳細ページから、付近で発生した地震の履歴を確認できます',
     ),
     _Benefit(
       icon: Icons.favorite_rounded,
       title: '開発・運営を支援',
       description: 'いただいた支援は EQMonitor の運営に充てられます。',
-    ),
-    _Benefit(
-      icon: Icons.new_releases_rounded,
-      title: "ベータアクセス",
-      description:
-          "一般公開前の機能をご利用できます。\n"
-          "現在、ベータ版で提供している機能はありません",
     ),
   ];
 

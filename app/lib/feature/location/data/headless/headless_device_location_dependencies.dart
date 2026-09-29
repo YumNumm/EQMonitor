@@ -90,8 +90,8 @@ class HeadlessDeviceLocationSyncServiceLoader {
       preferences,
     );
     final deviceToken = await const HeadlessSecureDeviceTokenLoader().load();
-    final resolver = await HeadlessJmaRegionResolverLoader(preferences).load();
-    final restApiUrl = await HeadlessRestApiUrlLoader(preferences).load();
+    final resolver = await const HeadlessJmaRegionResolverLoader().load();
+    final restApiUrl = await const HeadlessRestApiUrlLoader().load();
     final scope = DeviceLocationSyncScope.fromApiBaseUrl(
       apiBaseUrl: restApiUrl,
     );
@@ -126,19 +126,16 @@ class const HeadlessSecureDeviceTokenLoader() {
   }
 }
 
-class HeadlessJmaRegionResolverLoader {
-  new(this.preferences);
-
-  final SharedPreferencesAsync preferences;
-
+class const HeadlessJmaRegionResolverLoader() {
   Future<JmaRegionResolver> load() async {
     final mapBytes = await rootBundle.load(Assets.jmaMap);
     final mapData = const HeadlessJmaMapParser().parse(mapBytes);
-    final parameterSource = await const HeadlessEarthquakeParameterAssetLoader()
-        .load(preferences: preferences);
-    final earthquakeParameter = const ParameterJsonParser().parseEarthquake(
-      parameterSource,
-    );
+    final preferences = await const HeadlessAppPreferencesLoader().load();
+    final earthquakeParameter =
+        await const HeadlessEarthquakeParameterAssetLoader().load(
+          preferences: preferences,
+          parse: const ParameterJsonParser().parseEarthquake,
+        );
     return JmaRegionResolver(
       cityMapData: mapData.areaInformationCity,
       tsunamiMapData: mapData.areaTsunami,
@@ -150,11 +147,15 @@ class HeadlessJmaRegionResolverLoader {
 class const HeadlessEarthquakeParameterAssetLoader() {
   static const bundledPrefix = 'assets/platform/';
 
-  Future<String> load({
-    required SharedPreferencesAsync preferences,
+  /// 有効なダウンロード版、なければ同梱版の earthquakeStations を [parse] する。
+  ///
+  /// ダウンロード版の検証・解析に失敗した場合は同梱版へ戻す。
+  Future<T> load<T>({
+    required SharedPreferences preferences,
+    required T Function(String source) parse,
   }) async {
     final bundledManifest = await loadBundledManifest(bundle: rootBundle);
-    final activeVersion = await preferences.getString(
+    final activeVersion = preferences.getString(
       SharedPreferencesKey.assetPackActiveDownloadedVersion.key,
     );
     if (activeVersion != null &&
@@ -164,9 +165,8 @@ class const HeadlessEarthquakeParameterAssetLoader() {
         await preferences.remove(
           SharedPreferencesKey.assetPackActiveDownloadedVersion.key,
         );
-        return loadBundledAsset(
-          bundle: rootBundle,
-          manifest: bundledManifest,
+        return parse(
+          await loadBundledAsset(bundle: rootBundle, manifest: bundledManifest),
         );
       }
       try {
@@ -188,14 +188,16 @@ class const HeadlessEarthquakeParameterAssetLoader() {
         final file = await repository.resolveAsset(
           AssetPackAssetId.earthquakeStations,
         );
-        return await file.readAsString();
-      } on AssetPackNotReadyException {
+        return parse(await file.readAsString());
+      } on Object {
         await preferences.remove(
           SharedPreferencesKey.assetPackActiveDownloadedVersion.key,
         );
       }
     }
-    return loadBundledAsset(bundle: rootBundle, manifest: bundledManifest);
+    return parse(
+      await loadBundledAsset(bundle: rootBundle, manifest: bundledManifest),
+    );
   }
 
   Future<String> loadBundled({required AssetBundle bundle}) async {
@@ -257,17 +259,29 @@ class const HeadlessJmaMapParser() {
   }
 }
 
-class HeadlessRestApiUrlLoader {
-  new(this.preferences);
+/// 通常 Engine が SharedPreferencesDataSource で保存した値を読むための
+/// SharedPreferences を返す。
+///
+/// SharedPreferencesAsync とは保存先・key 接頭辞が異なるため、通常 Engine と
+/// 同じ API で読む。別 Engine で更新された値を反映するため reload する。
+class const HeadlessAppPreferencesLoader() {
+  Future<SharedPreferences> load() async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.reload();
+    return preferences;
+  }
+}
 
-  final SharedPreferencesAsync preferences;
-
-  Future<String> load() async => const HeadlessRestApiUrlResolver().resolve(
-    buildConfig: BuildConfig.fromEnvironment(),
-    savedTelegramUrlJson: await preferences.getString(
-      SharedPreferencesKey.telegramUrl.key,
-    ),
-  );
+class const HeadlessRestApiUrlLoader() {
+  Future<String> load() async {
+    final preferences = await const HeadlessAppPreferencesLoader().load();
+    return const HeadlessRestApiUrlResolver().resolve(
+      buildConfig: BuildConfig.fromEnvironment(),
+      savedTelegramUrlJson: preferences.getString(
+        SharedPreferencesKey.telegramUrl.key,
+      ),
+    );
+  }
 }
 
 class const HeadlessRestApiUrlResolver() {

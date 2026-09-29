@@ -23,8 +23,9 @@
   発行時にappClockから公開遅延を引く。schedule側ではappClockからNTP offsetを引いており、
   秒境界の意味を別途確認する必要がある。静的確認だけで二重補正による不具合と断定しない。
 - `app/lib/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart`には
-  privateの_fetchAndAnalyzeImage、取得ごとのAsyncLoading代入、lastUpdatedAtのDateTime.nowが残る。
-  UIのちらつきや遅延判定への影響は計測・回帰確認し、共通clockとtimestampの意味を揃える。
+  privateの_fetchAndAnalyzeImage、取得ごとのAsyncLoading代入が残る。
+  lastUpdatedAtは画像の観測時刻(targetTime)で、404以外の取得失敗でも直前の表示を遅延扱いにする。
+  UIのちらつきや遅延判定への影響は計測・回帰確認する。
 - 端末時計が30秒進むケースを維持し、fractional NTP offset、公開遅延、pause/replayも確認する。
 
 ## LMoni配信経路

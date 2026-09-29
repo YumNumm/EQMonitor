@@ -47,7 +47,7 @@ final class RealtimeEventsProvider
   RealtimeEvents create() => RealtimeEvents();
 }
 
-String _$realtimeEventsHash() => r'a607a82da10dfa2ffcca328a1670f7a235edc4d7';
+String _$realtimeEventsHash() => r'08106708095c270c98c1e204f44024f45c638b04';
 
 /// 全データソースを集約し、正規化された [RealtimeEvent] を emit するプロバイダー。
 ///

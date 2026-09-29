@@ -15,12 +15,16 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/repository/kyoshin_monitor_repository.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_notifier.g.dart';
 
 @riverpod
 class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
+  /// 画像解析 worker の応答を待つ上限。
+  static const _workerTimeout = Duration(seconds: 6);
+
   @override
   Future<KyoshinMonitorState> build() async {
     // タイマーストリームを監視
@@ -52,16 +56,17 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       void onSettingsChanged() =>
           state = const AsyncData(KyoshinMonitorState());
 
-      if (previous == null) {
+      // 読み込み中・エラー時は requireValue が StateError になるため、
+      // 前後とも値がある場合だけ比較する。
+      final previousValue = previous?.value;
+      final nextValue = next.value;
+      if (previousValue == null || nextValue == null) {
         return;
       }
-      if (previous.requireValue.realtimeDataType !=
-              next.requireValue.realtimeDataType ||
-          previous.requireValue.realtimeLayer !=
-              next.requireValue.realtimeLayer ||
-          previous.requireValue.useKmoni != next.requireValue.useKmoni ||
-          previous.requireValue.monitorSource !=
-              next.requireValue.monitorSource) {
+      if (previousValue.realtimeDataType != nextValue.realtimeDataType ||
+          previousValue.realtimeLayer != nextValue.realtimeLayer ||
+          previousValue.useKmoni != nextValue.useKmoni ||
+          previousValue.monitorSource != nextValue.monitorSource) {
         onSettingsChanged();
       }
     });
@@ -89,7 +94,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     final stopwatch = Stopwatch()..start();
     final previous = state.value;
     state = const AsyncLoading<KyoshinMonitorState>();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       final settings = ref.read(kyoshinMonitorSettingsProvider).requireValue;
       final request = ref.read(kyoshinMonitorImageRequestProvider);
       final realtimeDataType = settings.realtimeDataType;
@@ -117,7 +122,21 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       final workerSw = Stopwatch()..start();
       final workerResult = await Timeline.timeSync(
         'kmoni.workerAnalyze',
-        () async => analyzer.analyze(Uint8List.fromList(image)),
+        () async {
+          try {
+            return await analyzer
+                .analyze(Uint8List.fromList(image))
+                .timeout(_workerTimeout);
+          } on Object catch (error) {
+            // 応答しない・終了した worker は以後も応答しないため、
+            // 次回の取得で起動し直す。
+            if (error is TimeoutException ||
+                error is KyoshinMonitorWorkerExitedException) {
+              ref.invalidate(kyoshinMonitorAnalyzerIsolateProvider);
+            }
+            rethrow;
+          }
+        },
       );
       workerSw.stop();
 
@@ -130,7 +149,8 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
           );
 
       return KyoshinMonitorState(
-        lastUpdatedAt: DateTime.now(),
+        // 表示時刻は取得完了時の端末時計ではなく、画像の観測時刻とする。
+        lastUpdatedAt: targetTime,
         lastImageFetchTargetTime: targetTime,
         status: isDelayed ? .delayed : .realtime,
         currentRealtimeDataType: realtimeDataType,
@@ -142,10 +162,11 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       );
     });
 
-    // 404 は「その時刻の画像がまだ公開されていない」というだけなので、
-    // エラー表示に落とさずオフセットを調整して直前の表示を維持する。
-    if (state case AsyncError(:final error)) {
-      if (error is DioException && error.response?.statusCode == 404) {
+    switch (result) {
+      // 404 は「その時刻の画像がまだ公開されていない」というだけなので、
+      // エラー表示に落とさずオフセットを調整して直前の表示を維持する。
+      case AsyncError(:final error)
+          when error is DioException && error.response?.statusCode == 404:
         final delayProfile = ref
             .read(kyoshinMonitorImageRequestProvider)
             .delayProfile;
@@ -157,7 +178,16 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
             status: KyoshinMonitorStatus.delayed,
           ),
         );
-      }
+      // それ以外の取得失敗でも直前の表示は AsyncError の value として残るため、
+      // 「リアルタイム」のまま古い観測点を表示しないよう遅延扱いにしてから
+      // エラーを反映する。
+      case AsyncError() when previous != null:
+        state = AsyncData(
+          previous.copyWith(status: KyoshinMonitorStatus.delayed),
+        );
+        state = result;
+      case _:
+        state = result;
     }
   }
 

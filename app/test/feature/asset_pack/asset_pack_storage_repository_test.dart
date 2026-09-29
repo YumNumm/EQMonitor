@@ -45,7 +45,8 @@ void main() {
   });
 
   test(
-    'activates a verified pack and deletes older downloaded versions',
+    'activates a verified pack and deletes older downloaded versions '
+    'on the next launch',
     () async {
       final repository = createRepository(
         bundledDirectory: bundledDirectory,
@@ -62,11 +63,25 @@ void main() {
       );
       await writePack(root: newStaging, version: '1.2.0');
 
+      await repository.resolveActiveSource();
       await repository.activate(stagingDirectory: newStaging, version: '1.2.0');
       final source = await repository.resolveActiveSource();
 
       expect(source.kind, AssetPackSourceKind.downloaded);
       expect(source.version, '1.2.0');
+      // 同じ起動中は、開いている地図のために旧版を残す。
+      expect(
+        Directory('${storageDirectory.path}/packs/1.1.0').existsSync(),
+        isTrue,
+      );
+
+      final nextLaunchSource = await createRepository(
+        bundledDirectory: bundledDirectory,
+        storageDirectory: storageDirectory,
+        preferences: preferences,
+      ).resolveActiveSource();
+
+      expect(nextLaunchSource.version, '1.2.0');
       expect(
         Directory('${storageDirectory.path}/packs/1.1.0').existsSync(),
         isFalse,

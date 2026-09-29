@@ -13,10 +13,9 @@ Future<ParameterRepository> parameterRepository(Ref ref) async {
   );
 }
 
-/// Loads [ParameterSet] from the platform Asset Pack. This is the sole
-/// source of parameter data (no HTTP fetch, no bundled-asset fallback):
-/// if the pack isn't ready, `AssetPackNotReadyException` propagates from
-/// [assetDataSource] unchanged.
+/// Loads [ParameterSet] from the active Asset Pack. This is the sole source of
+/// parameter data (no HTTP fetch). If a downloaded pack cannot be parsed, it is
+/// deactivated and the pack bundled with the app is parsed instead.
 final class ParameterRepository {
   const new({
     required ParameterAssetDataSource assetDataSource,
@@ -27,17 +26,10 @@ final class ParameterRepository {
   final ParameterAssetDataSource _assetDataSource;
   final ParameterJsonParser _parser;
 
-  Future<ParameterSet> loadAsset() async {
-    final manifest = await _assetDataSource.readManifest();
-    final parameterJsonByType = <ParameterType, String>{};
-    for (final type in ParameterType.values) {
-      parameterJsonByType[type] = await _assetDataSource.readParameterJson(
-        type,
-      );
-    }
-    return _parser.parseSet(
+  Future<ParameterSet> loadAsset() => _assetDataSource.readParameters(
+    (manifest, parameterJsonByType) => _parser.parseSet(
       manifest: manifest,
       parameterJsonByType: parameterJsonByType,
-    );
-  }
+    ),
+  );
 }

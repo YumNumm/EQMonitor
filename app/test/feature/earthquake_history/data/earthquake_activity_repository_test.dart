@@ -65,7 +65,7 @@ void main() {
     expect(repository.limit, 100);
     expect(repository.earthquakeType, EarthquakeType.normal);
     expect(repository.originTimeGte, Date(year: 2026, month: 6, day: 30));
-    expect(repository.originTimeLte, Date(year: 2026, month: 7, day: 8));
+    expect(repository.originTimeLte, Date(year: 2026, month: 7, day: 9));
     expect(repository.depthGte, 20);
     expect(repository.depthLte, 60);
     expect(repository.sortBy, EarthquakeSortBy.eventId);

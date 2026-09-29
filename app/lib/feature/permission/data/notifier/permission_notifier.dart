@@ -22,7 +22,7 @@ class PermissionNotifier extends _$PermissionNotifier {
   Future<PermissionState> build() async {
     ref.listen(appLifecycleProvider, (_, next) async {
       if (next == AppLifecycleState.resumed) {
-        ref.invalidateSelf();
+        await _reload();
       }
     });
     return loadFromOs();
@@ -43,38 +43,44 @@ class PermissionNotifier extends _$PermissionNotifier {
     );
   }
 
+  /// 再 build して OS から取得し直した最新の権限状態を返す。
+  ///
+  /// [Ref.invalidateSelf] は再 build を予約するだけなので、直後の `state` は
+  /// 要求前の値のままになる。再 build 後の [future] を待って最新値を得る。
+  Future<PermissionState> _reload() {
+    ref.invalidateSelf();
+    return future;
+  }
+
   Future<bool> requestNotification() async {
     await ref
         .read(permissionRepositoryProvider)
         .requestNotificationPermission();
-    ref.invalidateSelf();
-    return state.requireValue.isNotificationGranted;
+    final next = await _reload();
+    return next.isNotificationGranted;
   }
 
   Future<bool> requestCriticalAlert() async {
     await ref
         .read(permissionRepositoryProvider)
         .requestCriticalAlertPermission();
-    ref.invalidateSelf();
-
-    return state.requireValue.isCriticalAlertGranted;
+    final next = await _reload();
+    return next.isCriticalAlertGranted;
   }
 
   Future<bool> requestForegroundLocation() async {
     await ref
         .read(permissionRepositoryProvider)
         .requestForegroundLocationPermission();
-    ref.invalidateSelf();
-
-    return state.requireValue.isForegroundLocationGranted;
+    final next = await _reload();
+    return next.isForegroundLocationGranted;
   }
 
   Future<bool> requestBackgroundLocation() async {
     await ref
         .read(permissionRepositoryProvider)
         .requestBackgroundLocationPermission();
-    ref.invalidateSelf();
-
-    return state.requireValue.isBackgroundLocationGranted;
+    final next = await _reload();
+    return next.isBackgroundLocationGranted;
   }
 }
