@@ -182,9 +182,13 @@ class const KyoshinMonitorTimeSync({
 }
 
 abstract final class KyoshinMonitorBackground {
+  /// 画面が見えていない状態だけを停止対象にする。
+  ///
+  /// `inactive` はコントロールセンター表示や Android のマルチウィンドウで
+  /// フォーカスを失った場合など、画面が見えたままでも遷移するため含めない。
   static bool isBackground(AppLifecycleState lifecycle) => const [
+    AppLifecycleState.hidden,
     AppLifecycleState.paused,
     AppLifecycleState.detached,
-    AppLifecycleState.inactive,
   ].contains(lifecycle);
 }
