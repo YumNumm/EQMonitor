@@ -29,6 +29,7 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 
 - `app/ios/Runner.xcodeproj/project.pbxproj` の Widget target は17.6、AppIntentExtension は26.0。availability 対応のビルド・表示検証は残る。
 - `app/ios/` で Runner scheme の iOS Simulator build を実行し、17.6向け Widget コンパイルと AppIntents metadata processor を確認する。
+- iOS 18〜26.0でLive Activityの対応判定・push-to-start token登録とAPNs Start→Update→Endを実機確認する。Vision判定をAPI利用可能なOS内へ限定する修正後も、iOS 26.1以降、Mac・Vision実行時の除外を確認する。
 - 完了条件: iOS 18で Widget/Live Activity が表示され、26専用 Snippet Control は出ない。iOS 26で Widget/Live Activity/Control が表示される。必要な `@available` 漏れを修正し、結果を記録する。
 
 ## 800: backend Live Activity API の復元・再生成

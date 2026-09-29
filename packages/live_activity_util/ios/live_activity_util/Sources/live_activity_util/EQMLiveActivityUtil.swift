@@ -31,7 +31,7 @@ import Foundation
         return false
       }
 
-      guard #available(iOS 26.1, *), !ProcessInfo.processInfo.isiOSAppOnVision else {
+      if #available(iOS 26.1, *), ProcessInfo.processInfo.isiOSAppOnVision {
         return false
       }
       return true

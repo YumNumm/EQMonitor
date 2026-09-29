@@ -5,6 +5,9 @@
 
 ## 入力と配信
 
+- `EQMLiveActivityUtil.isLiveActivitySupported()`はiOS 16.1以上でMac・Vision上の実行を除外する。
+  `isiOSAppOnVision`のavailabilityはVision判定だけに適用し、通常のiPhoneをiOS 26.1未満で
+  非対応にしない。push-to-startの対応判定は引き続きiOS 18.0以上。
 - 本番表示の入力はbackendがAPNsへ渡す`content-state`。アプリのカードから表示をコピーしない。
 - Codableの1フィールドの失敗でActivity全体が出なくなるため、未使用・欠損し得る項目を
   安易に必須化しない。`docs/live-activity-specification.md`と受信モデルを照合する。
