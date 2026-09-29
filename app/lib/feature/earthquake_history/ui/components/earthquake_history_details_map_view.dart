@@ -430,21 +430,26 @@ class _MapContent extends HookConsumerWidget {
         [];
 
     final filter = ref.read(earthquakeIntensityAreaFilterProvider);
-    final intensityContent = dbTree != null
-        ? ShindoDbIntensityContent(
-            tree: filter.filterDatabase(
-              tree: dbTree,
-              code: code,
-              isCity: isCity,
-            ),
-          )
-        : JmaIntensityContent(
-            item: filter.filterEarthquake(
-              earthquake: earthquake,
-              code: code,
-              isCity: isCity,
-            ),
-          );
+    final filteredEarthquake = filter.filterEarthquake(
+      earthquake: earthquake,
+      code: code,
+      isCity: isCity,
+    );
+    final hasJmaObservation = switch (filteredEarthquake.intensity) {
+      final intensity? =>
+        intensity.intensityTree.isNotEmpty || intensity.regions.isNotEmpty,
+      null => false,
+    };
+    // null のときはポップアップ側で「観測なし」を表示する
+    final Widget? intensityContent = switch (dbTree) {
+      final tree? => ShindoDbIntensityContent(
+        tree: filter.filterDatabase(tree: tree, code: code, isCity: isCity),
+      ),
+      null when hasJmaObservation => JmaIntensityContent(
+        item: filteredEarthquake,
+      ),
+      null => null,
+    };
 
     if (isCity) {
       final cityNode = _findCityByCode(code);
