@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:drift/native.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -18,6 +19,9 @@ const _appGroupChannel = MethodChannel('net.yumnumm.eqmonitor/app_group');
 
 @Riverpod(keepAlive: true)
 TelemetryDatabase telemetryDatabase(Ref ref) {
+  if (ref.watch(buildConfigProvider).isProduction) {
+    throw StateError('Telemetry is disabled in production builds');
+  }
   final dbPath = ref.watch(telemetryDbPathProvider);
   final db = TelemetryDatabase(NativeDatabase.createInBackground(File(dbPath)));
   ref.onDispose(db.close);

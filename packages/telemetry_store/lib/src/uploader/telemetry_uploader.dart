@@ -10,13 +10,20 @@ class TelemetryUploader {
   }) : _db = db,
        _sender = sender;
 
-  final TelemetryDatabase _db;
-  final EventSender _sender;
+  new disabled() : _db = null, _sender = null, batchSize = 100;
+
+  final TelemetryDatabase? _db;
+  final EventSender? _sender;
   final int batchSize;
 
   Future<UploadResult> flush() async {
+    final db = _db;
+    final sender = _sender;
+    if (db == null || sender == null) {
+      return const UploadResult(sentCount: 0, failedCount: 0);
+    }
     try {
-      final unsent = await _db.getUnsyncedEvents(limit: batchSize);
+      final unsent = await db.getUnsyncedEvents(limit: batchSize);
       if (unsent.isEmpty) {
         return const UploadResult(sentCount: 0, failedCount: 0);
       }
@@ -33,9 +40,9 @@ class TelemetryUploader {
           )
           .toList();
 
-      final success = await _sender.send(events);
+      final success = await sender.send(events);
       if (success) {
-        await _db.markAsSynced(unsent.map((row) => row.id).toList());
+        await db.markAsSynced(unsent.map((row) => row.id).toList());
         return UploadResult(sentCount: unsent.length, failedCount: 0);
       }
       return UploadResult(sentCount: 0, failedCount: unsent.length);

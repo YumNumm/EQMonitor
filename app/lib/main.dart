@@ -14,11 +14,13 @@ import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
 import 'package:eqmonitor/core/fcm/android_notification_channel_initializer.dart';
+import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/app_links_interaction.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -103,6 +105,8 @@ class AppBootstrap {
 
   static Future<void> run() async {
     final profiler = StartupProfiler();
+    final buildConfig = BuildConfig.fromEnvironment();
+    final isTelemetryEnabled = !kIsWeb && !buildConfig.isProduction;
 
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       await BackgroundLocationTracker.initialize(
@@ -199,9 +203,9 @@ class AppBootstrap {
     profiler.mark('parallel_init');
     LicenseInitializer.init();
 
-    final telemetryDbPath = kIsWeb
-        ? null
-        : await TelemetryDbPathResolver.resolve();
+    final telemetryDbPath = isTelemetryEnabled
+        ? await TelemetryDbPathResolver.resolve()
+        : null;
 
     if (!kIsWeb) {
       unawaited(
@@ -213,6 +217,7 @@ class AppBootstrap {
 
     final container = ProviderContainer(
       overrides: [
+        buildConfigProvider.overrideWithValue(buildConfig),
         data_prefs.sharedPreferencesProvider.overrideWithValue(
           AsyncValue.data(results.$1.$1),
         ),
@@ -242,7 +247,7 @@ class AppBootstrap {
     container.listen(firebaseMessagingInteractionProvider, (_, _) {});
     container.listen(appLinksInteractionProvider, (_, _) {});
     container.listen(pushTokenSyncStartupProvider, (_, _) {});
-    if (!kIsWeb) {
+    if (isTelemetryEnabled) {
       unawaited(() async {
         try {
           final uploader = container.read(telemetryUploaderProvider);
@@ -271,8 +276,9 @@ class AppBootstrap {
     }
     if (!kIsWeb) {
       GuardedUnawaitedUtil.run(() async {
-        await AndroidNotificationChannelInitializer.forCurrentPlatform()
-            .initialize();
+        await AndroidNotificationChannelInitializer.forCurrentPlatform(
+          isShakeDetectionEnabled: buildConfig.isShakeDetectionAvailable,
+        ).initialize();
         await FlutterLocalNotificationsPlugin().initialize(
           settings: const InitializationSettings(
             iOS: DarwinInitializationSettings(
@@ -299,7 +305,7 @@ class AppBootstrap {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       profiler.mark('home_first_frame');
-      if (!kIsWeb) {
+      if (isTelemetryEnabled) {
         // バックグラウンドで完了する travel_time_load / parameter_load が
         // timingsMicros に記録されてからテレメトリを送信する。
         // 各ロードの失敗は計測の欠落として許容し、record() の失敗は talker に委ねる。
