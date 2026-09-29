@@ -11,12 +11,13 @@ abstract interface class AndroidNotificationChannelPlatform {
 }
 
 class AndroidNotificationChannelInitializer {
-  const new({required this.platform});
+  const new({required this.platform, this.isShakeDetectionEnabled = true});
 
-  factory forCurrentPlatform() {
+  factory forCurrentPlatform({bool isShakeDetectionEnabled = true}) {
     if (kIsWeb) {
-      return const AndroidNotificationChannelInitializer(
-        platform: NoopAndroidNotificationChannelPlatform(),
+      return AndroidNotificationChannelInitializer(
+        platform: const NoopAndroidNotificationChannelPlatform(),
+        isShakeDetectionEnabled: isShakeDetectionEnabled,
       );
     }
 
@@ -30,16 +31,19 @@ class AndroidNotificationChannelInitializer {
     return AndroidNotificationChannelInitializer.forPlatform(
       targetPlatform: targetPlatform,
       androidPlugin: androidPlugin,
+      isShakeDetectionEnabled: isShakeDetectionEnabled,
     );
   }
 
   factory forPlatform({
     required TargetPlatform targetPlatform,
     required AndroidFlutterLocalNotificationsPlugin? androidPlugin,
+    bool isShakeDetectionEnabled = true,
   }) {
     if (targetPlatform != TargetPlatform.android) {
-      return const AndroidNotificationChannelInitializer(
-        platform: NoopAndroidNotificationChannelPlatform(),
+      return AndroidNotificationChannelInitializer(
+        platform: const NoopAndroidNotificationChannelPlatform(),
+        isShakeDetectionEnabled: isShakeDetectionEnabled,
       );
     }
     if (androidPlugin == null) {
@@ -51,15 +55,23 @@ class AndroidNotificationChannelInitializer {
       platform: AndroidFlutterLocalNotificationsChannelPlatform(
         plugin: androidPlugin,
       ),
+      isShakeDetectionEnabled: isShakeDetectionEnabled,
     );
   }
 
   final AndroidNotificationChannelPlatform platform;
+  final bool isShakeDetectionEnabled;
 
   Future<void> initialize() async {
-    final activeChannelIds = notificationChannels
+    final activeChannels = notificationChannels.where(
+      (channel) => isShakeDetectionEnabled || channel.id != 'shake_detection',
+    );
+    final activeChannelIds = activeChannels
         .map((channel) => channel.id)
         .toSet();
+    if (!isShakeDetectionEnabled) {
+      await platform.deleteChannel('shake_detection');
+    }
     for (final id in legacyNotificationChannelIds) {
       if (activeChannelIds.contains(id)) {
         continue;
@@ -69,7 +81,7 @@ class AndroidNotificationChannelInitializer {
     for (final group in notificationChannelGroups) {
       await platform.createGroup(group);
     }
-    for (final channel in notificationChannels) {
+    for (final channel in activeChannels) {
       await platform.createChannel(channel);
     }
   }

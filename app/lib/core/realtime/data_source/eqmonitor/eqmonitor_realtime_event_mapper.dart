@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:eqmonitor_websocket/eqmonitor_websocket.dart'
@@ -13,9 +14,15 @@ part 'eqmonitor_realtime_event_mapper.g.dart';
 
 @Riverpod(keepAlive: true)
 EqMonitorRealtimeEventMapper eqMonitorRealtimeEventMapper(Ref ref) =>
-    const EqMonitorRealtimeEventMapper();
+    EqMonitorRealtimeEventMapper(
+      isShakeDetectionEnabled: ref
+          .watch(buildConfigProvider)
+          .isShakeDetectionAvailable,
+    );
 
-class const EqMonitorRealtimeEventMapper() {
+class const EqMonitorRealtimeEventMapper({
+  final bool isShakeDetectionEnabled = true,
+}) {
   List<RealtimeEvent> map(WsMessage message) => switch (message) {
     WsRealtimeMessage(:final data) => switch (data) {
       api.RealtimeEewUpsertEvent(:final payload) => [
@@ -36,12 +43,15 @@ class const EqMonitorRealtimeEventMapper() {
           source: RealtimeSource.eqmonitor,
         ),
       ],
-      api.RealtimeShakeDetectionSnapshotEvent(:final payload) => [
-        RealtimeEvent.shakeSnapshot(
-          record: payload,
-          source: RealtimeSource.eqmonitor,
-        ),
-      ],
+      api.RealtimeShakeDetectionSnapshotEvent(:final payload) =>
+        isShakeDetectionEnabled
+            ? [
+                RealtimeEvent.shakeSnapshot(
+                  record: payload,
+                  source: RealtimeSource.eqmonitor,
+                ),
+              ]
+            : const [],
       api.RealtimeTsunamiUpsertEvent(:final payload) => [
         RealtimeEvent.tsunamiUpsert(
           eventId: payload.eventId,

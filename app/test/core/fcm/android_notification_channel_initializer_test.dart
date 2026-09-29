@@ -33,20 +33,33 @@ void main() {
     expect(completed, isTrue);
   });
 
-  test('never deletes active channel ids', () async {
-    final platform = _RecordingAndroidNotificationChannelPlatform();
+  test(
+    'never deletes enabled channel ids and removes disabled shake',
+    () async {
+      for (final isShakeDetectionEnabled in [true, false]) {
+        final platform = _RecordingAndroidNotificationChannelPlatform();
 
-    await AndroidNotificationChannelInitializer(
-      platform: platform,
-    ).initialize();
+        await AndroidNotificationChannelInitializer(
+          platform: platform,
+          isShakeDetectionEnabled: isShakeDetectionEnabled,
+        ).initialize();
 
-    final deletedIds = platform.operations
-        .where((operation) => operation.startsWith('delete:'))
-        .map((operation) => operation.substring('delete:'.length));
-    expect(deletedIds, _deletedLegacyChannelIds);
-    expect(deletedIds, isNot(contains('eew_forecast')));
-    expect(deletedIds, isNot(contains('bgl_debug')));
-  });
+        final deletedIds = platform.operations
+            .where((operation) => operation.startsWith('delete:'))
+            .map((operation) => operation.substring('delete:'.length));
+        expect(deletedIds, [
+          if (!isShakeDetectionEnabled) 'shake_detection',
+          ..._deletedLegacyChannelIds,
+        ]);
+        expect(deletedIds, isNot(contains('eew_forecast')));
+        expect(deletedIds, isNot(contains('bgl_debug')));
+        expect(
+          platform.operations.contains('channel:shake_detection'),
+          isShakeDetectionEnabled,
+        );
+      }
+    },
+  );
 
   test('uses no-op platform outside Android', () async {
     final initializer = AndroidNotificationChannelInitializer.forPlatform(

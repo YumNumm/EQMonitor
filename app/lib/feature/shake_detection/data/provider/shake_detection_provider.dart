@@ -24,7 +24,7 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
 
   @override
   ShakeDetectionSnapshot? build() {
-    if (!ref.watch(buildConfigProvider).isShakeDetectionEnabled) {
+    if (!ref.watch(buildConfigProvider).isShakeDetectionAvailable) {
       return null;
     }
 
@@ -141,6 +141,9 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
   }
 
   Future<void> synchronizeFromRest() async {
+    if (!ref.read(buildConfigProvider).isShakeDetectionAvailable) {
+      return;
+    }
     _synchronizationGeneration += 1;
     final generation = _synchronizationGeneration;
     final repository = await ref.read(shakeDetectionRepositoryProvider.future);
@@ -171,7 +174,7 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
   }
 
   void applySnapshot(ShakeDetectionSnapshot incoming) {
-    if (!ref.read(buildConfigProvider).isShakeDetectionEnabled) {
+    if (!ref.read(buildConfigProvider).isShakeDetectionAvailable) {
       return;
     }
     final reducer = ref.read(shakeDetectionSnapshotReducerProvider);
