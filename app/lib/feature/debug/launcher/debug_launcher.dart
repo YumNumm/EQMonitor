@@ -42,29 +42,40 @@ class DebugLauncher extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     const shakeGForceThreshold = 2.7;
     const shakeCooldown = Duration(seconds: 1);
-    const openCooldown = Duration(milliseconds: 800);
 
-    final accelSubscription =
-        useRef<StreamSubscription<UserAccelerometerEvent>?>(null);
+    // デバッグメニューを開けないユーザーでは加速度センサーを購読しない。
+    final isDebugMenuAvailable = ref.watch(isDebugMenuAvailableProvider);
     final lastShake = useRef(DateTime.fromMillisecondsSinceEpoch(0));
     final lastOpen = useRef(DateTime.fromMillisecondsSinceEpoch(0));
 
     useEffect(() {
-      void openDebugPage() {
-        final now = DateTime.now();
-        if (now.difference(lastOpen.value) < openCooldown) {
-          return;
+      bool handleKey(KeyEvent event) {
+        if (event is! KeyDownEvent) {
+          return false;
         }
-        if (!ref.read(isDebugMenuAvailableProvider)) {
-          return;
+        if (event.logicalKey != LogicalKeyboardKey.keyD) {
+          return false;
         }
-        lastOpen.value = now;
-        final router = ref.read(goRouterProvider);
-        if (GoRouterCurrentLocationResolver.resolve(router)
-            .startsWith(const DebugRoute().location)) {
-          return;
+        final keyboard = HardwareKeyboard.instance;
+        final shiftPressed =
+            keyboard.isLogicalKeyPressed(LogicalKeyboardKey.shiftLeft) ||
+            keyboard.isLogicalKeyPressed(LogicalKeyboardKey.shiftRight);
+        if (!shiftPressed) {
+          return false;
         }
-        unawaited(router.push<void>(const DebugRoute().location));
+        _openDebugPage(ref, lastOpen);
+        return true;
+      }
+
+      HardwareKeyboard.instance.addHandler(handleKey);
+      return () => HardwareKeyboard.instance.removeHandler(handleKey);
+    }, const []);
+
+    useEffect(() {
+      if (!isDebugMenuAvailable ||
+          kIsWeb ||
+          !(Platform.isAndroid || Platform.isIOS)) {
+        return null;
       }
 
       void onAccel(UserAccelerometerEvent event) {
@@ -80,45 +91,34 @@ class DebugLauncher extends HookConsumerWidget {
           return;
         }
         lastShake.value = now;
-        openDebugPage();
+        _openDebugPage(ref, lastOpen);
       }
 
-      void startShakeListener() {
-        if (kIsWeb || !(Platform.isAndroid || Platform.isIOS)) {
-          return;
-        }
-        accelSubscription.value = userAccelerometerEventStream(
-          samplingPeriod: SensorInterval.gameInterval,
-        ).listen(onAccel, onError: (_) {});
-      }
-
-      bool handleKey(KeyEvent event) {
-        if (event is! KeyDownEvent) {
-          return false;
-        }
-        if (event.logicalKey != LogicalKeyboardKey.keyD) {
-          return false;
-        }
-        final keyboard = HardwareKeyboard.instance;
-        final shiftPressed =
-            keyboard.isLogicalKeyPressed(LogicalKeyboardKey.shiftLeft) ||
-            keyboard.isLogicalKeyPressed(LogicalKeyboardKey.shiftRight);
-        if (!shiftPressed) {
-          return false;
-        }
-        openDebugPage();
-        return true;
-      }
-
-      startShakeListener();
-      HardwareKeyboard.instance.addHandler(handleKey);
-
-      return () {
-        HardwareKeyboard.instance.removeHandler(handleKey);
-        unawaited(accelSubscription.value?.cancel());
-      };
-    }, const []);
+      final subscription = userAccelerometerEventStream(
+        samplingPeriod: SensorInterval.gameInterval,
+      ).listen(onAccel, onError: (_) {});
+      return () => unawaited(subscription.cancel());
+    }, [isDebugMenuAvailable]);
 
     return child;
+  }
+
+  static const _openCooldown = Duration(milliseconds: 800);
+
+  static void _openDebugPage(WidgetRef ref, ObjectRef<DateTime> lastOpen) {
+    final now = DateTime.now();
+    if (now.difference(lastOpen.value) < _openCooldown) {
+      return;
+    }
+    if (!ref.read(isDebugMenuAvailableProvider)) {
+      return;
+    }
+    lastOpen.value = now;
+    final router = ref.read(goRouterProvider);
+    if (GoRouterCurrentLocationResolver.resolve(router)
+        .startsWith(const DebugRoute().location)) {
+      return;
+    }
+    unawaited(router.push<void>(const DebugRoute().location));
   }
 }
