@@ -9,7 +9,6 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
-import 'package:eqmonitor/feature/home/ui/component/home_kyoshin_monitor_delay_settings.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_bounds_selector_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
@@ -107,7 +106,6 @@ class HomeMapLayerPage extends ConsumerWidget {
                       _KyoshinShowScaleTile(),
                       _KyoshinMinShindoTile(),
                       _KyoshinMarkerSizeTile(),
-                      HomeKyoshinMonitorDelaySettings(),
                     ],
                   ),
                   SizedBox(height: spacing.lg),
