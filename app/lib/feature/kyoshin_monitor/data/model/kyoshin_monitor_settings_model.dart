@@ -22,8 +22,8 @@ abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
     KyoshinMonitorMarkerType kmoniMarkerType,
 
     /// データソース (強震モニタ / 長周期地震動モニタ)
-    @Default(KyoshinMonitorSource.kmoni)
-    @JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni)
+    @Default(KyoshinMonitorSource.lmoni)
+    @JsonKey(unknownEnumValue: KyoshinMonitorSource.lmoni)
     KyoshinMonitorSource monitorSource,
 
     /// 強震モニタのリアルタイムデータの種類

@@ -15,6 +15,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/repository/kyoshin_monitor_repository.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -125,7 +126,10 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         () async {
           try {
             return await analyzer
-                .analyze(Uint8List.fromList(image))
+                .analyze(
+                  Uint8List.fromList(image),
+                  isShindo: realtimeDataType == RealtimeDataType.shindo,
+                )
                 .timeout(_workerTimeout);
           } on Object catch (error) {
             // 応答しない・終了した worker は以後も応答しないため、

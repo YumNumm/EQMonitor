@@ -33,9 +33,9 @@ _KyoshinMonitorSettingsModel _$KyoshinMonitorSettingsModelFromJson(
             $enumDecodeNullable(
               _$KyoshinMonitorSourceEnumMap,
               v,
-              unknownValue: KyoshinMonitorSource.kmoni,
+              unknownValue: KyoshinMonitorSource.lmoni,
             ) ??
-            KyoshinMonitorSource.kmoni,
+            KyoshinMonitorSource.lmoni,
       ),
       realtimeDataType: $checkedConvert(
         'realtime_data_type',

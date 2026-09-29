@@ -121,14 +121,18 @@ final class KyoshinMonitorAnalyzerIsolate._({
   }
 
   /// GIF バイト列を解析し GeoJSON 文字列を返す。
-  Future<AnalyzeResult> analyze(Uint8List gifBytes) {
+  ///
+  /// 震度以外の画像では [isShindo] を false にして、震度への換算を行わない。
+  Future<AnalyzeResult> analyze(Uint8List gifBytes, {bool isShindo = true}) {
     if (_exited.isCompleted) {
       return Future.error(const KyoshinMonitorWorkerExitedException());
     }
     final id = _nextId++;
     final completer = Completer<AnalyzeResult>();
     _pending[id] = completer;
-    _workerSendPort.send(_AnalyzeMessage(id: id, gifBytes: gifBytes));
+    _workerSendPort.send(
+      _AnalyzeMessage(id: id, gifBytes: gifBytes, isShindo: isShindo),
+    );
     return completer.future;
   }
 
@@ -149,6 +153,7 @@ final class const _InitAck();
 final class const _AnalyzeMessage({
   required final int id,
   required final Uint8List gifBytes,
+  required final bool isShindo,
 });
 
 final class const _ShutdownMessage();
@@ -217,7 +222,11 @@ Future<void> _runAnalyze(
     final parseMicros = sw.elapsedMicroseconds;
 
     final sw2 = Stopwatch()..start();
-    final built = _buildGeoJsonString(results, namedPoints);
+    final built = _buildGeoJsonString(
+      results,
+      namedPoints,
+      isShindo: message.isShindo,
+    );
     sw2.stop();
     final geoMicros = sw2.elapsedMicroseconds;
 
@@ -245,8 +254,9 @@ Future<void> _runAnalyze(
 
 (String, int) _buildGeoJsonString(
   List<KyoshinMonitorImageParseObservationResult> parseResults,
-  List<NamedObservationPoint> namedPoints,
-) {
+  List<NamedObservationPoint> namedPoints, {
+  required bool isShindo,
+}) {
   final sb = StringBuffer('{"type":"FeatureCollection","features":[');
   var first = true;
   var count = 0;
@@ -262,7 +272,6 @@ Future<void> _runAnalyze(
     }
     first = false;
     count++;
-    final intensity = obs.scaleToIntensity;
     final colorHex =
         '#${obs.r.toRadixString(16).padLeft(2, '0')}'
                 '${obs.g.toRadixString(16).padLeft(2, '0')}'
@@ -275,8 +284,13 @@ Future<void> _runAnalyze(
       ..write(named.latitude.toStringAsFixed(6))
       ..write(']},"properties":{"color":"')
       ..write(colorHex)
-      ..write('","intensity":')
-      ..write(intensity)
+      ..write('"');
+    if (isShindo) {
+      sb
+        ..write(',"intensity":')
+        ..write(obs.scaleToIntensity);
+    }
+    sb
       ..write(',"name":')
       ..write(jsonEncode(named.name))
       ..write('}}');

@@ -21,7 +21,13 @@ class HsvColor {
     final delta = max - min;
 
     final alpha = a / 0xFF;
-    final hue = _getHue(red, green, blue, max, delta);
+    // 無彩色は色相を持たないため、除算より先に扱う。
+    final hue = switch (max) {
+      _ when delta == 0 => 0.0,
+      _ when max == red => 60.0 * (((green - blue) / delta) % 6),
+      _ when max == green => 60.0 * (((blue - red) / delta) + 2),
+      _ => 60.0 * (((red - green) / delta) + 4),
+    };
     final saturation = max == .0 ? 0.0 : delta / max;
     final value = max;
 
@@ -42,30 +48,4 @@ class HsvColor {
   final double hue;
   final double saturation;
   final double value;
-}
-
-double _getHue(
-  double red,
-  double green,
-  double blue,
-  double max,
-  double delta,
-) {
-  late final double hue;
-  if (max == .0) {
-    hue = .0;
-  } else if (max == red) {
-    hue = 60.0 * (((green - blue) / delta) % 6);
-  } else if (max == green) {
-    hue = 60.0 * (((blue - red) / delta) + 2);
-  } else if (max == blue) {
-    hue = 60.0 * (((red - green) / delta) + 4);
-  }
-
-  /// Set hue to 0.0 when red == green == blue.
-  if (hue.isNaN) {
-    hue = 0.0;
-  }
-
-  return hue;
 }

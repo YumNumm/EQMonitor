@@ -165,7 +165,7 @@ class _LpgmKyoshinMonitorWebApiClient
           )
           .compose(
             _dio.options,
-            '/monitor/data/data/map_img/PSWaveImg/eew/${date}/${dateTime}_eew.gif',
+            '/monitor/data/data/map_img/PSWaveImg/eew/${date}/${dateTime}.eew.gif',
             queryParameters: queryParameters,
             data: _data,
           )
