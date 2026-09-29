@@ -1,5 +1,17 @@
 # Changelog (Beta)
 
+## [3.0.0-beta.18](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.17...v3.0.0-beta.18) (2026-09-29)
+
+
+### Bug Fixes
+
+* App Intentの連続遷移と詳細表示の共通処理を修正 ([919718e](https://github.com/YumNumm/EQMonitor/commit/919718ef372d373b194e6344969a3c819f06fd10))
+* 地震Snippetの詳細導線と保存地域の表示を修正 ([003eb24](https://github.com/YumNumm/EQMonitor/commit/003eb24633908ce916ab7e29c9fa0e81e94c0e67))
+* 気象庁XMLがある地震だけ電文一覧を表示 ([b3e5c06](https://github.com/YumNumm/EQMonitor/commit/b3e5c0656cdb08b62166808bdf21ef85bc35b7a2))
+* 気象庁XMLがある地震だけ電文一覧を表示 ([1acf8af](https://github.com/YumNumm/EQMonitor/commit/1acf8af80ce18c49d264fb6aa836ae781e4b8dc1))
+* 電文一覧の緊急地震速報カードの押下表示を修正 ([afa8ae8](https://github.com/YumNumm/EQMonitor/commit/afa8ae8d7736ec5df91fc820928c3296426d0524))
+* 電文一覧の緊急地震速報カードの押下表示を修正 ([d742128](https://github.com/YumNumm/EQMonitor/commit/d7421285ca9f12f2cb9905e6d7aea64baed6758f))
+
 ## [3.0.0-beta.17](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.16...v3.0.0-beta.17) (2026-09-28)
 
 
