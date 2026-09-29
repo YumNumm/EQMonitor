@@ -46,9 +46,7 @@ final class KyoshinMonitorAnalyzerIsolate._({
         if (!exited.isCompleted) {
           exited.complete();
         }
-        const error = KyoshinMonitorWorkerException(
-          'kyoshin_monitor_analyzer isolate exited',
-        );
+        const error = KyoshinMonitorWorkerExitedException();
         if (!workerPortCompleter.isCompleted) {
           workerPortCompleter.completeError(error);
         }
@@ -125,11 +123,7 @@ final class KyoshinMonitorAnalyzerIsolate._({
   /// GIF バイト列を解析し GeoJSON 文字列を返す。
   Future<AnalyzeResult> analyze(Uint8List gifBytes) {
     if (_exited.isCompleted) {
-      return Future.error(
-        const KyoshinMonitorWorkerException(
-          'kyoshin_monitor_analyzer isolate exited',
-        ),
-      );
+      return Future.error(const KyoshinMonitorWorkerExitedException());
     }
     final id = _nextId++;
     final completer = Completer<AnalyzeResult>();
