@@ -20,7 +20,7 @@ extension PurchaseFailureReasonMessage on PurchaseFailureReason {
     PurchaseFailureReason.revenueCatConfiguration => '現在この機能はご利用いただけません',
     PurchaseFailureReason.purchaseFailed => '購入に失敗しました',
     PurchaseFailureReason.paymentPending =>
-      '支払いの完了を待っています。完了すると Pro プランが有効になります。再購入は不要です',
+      '支払いの完了を待っています。完了すると Pro プランが有効になります。',
     PurchaseFailureReason.restoreNotFound => '復元できる購入が見つかりませんでした',
     PurchaseFailureReason.restoreFailed => '購入の復元に失敗しました',
   };
