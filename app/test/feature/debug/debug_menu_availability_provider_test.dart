@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/devices/data/model/device_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 BuildConfig _buildConfig({
-  required bool isBetaTesting,
+  required bool isProduction,
   Flavor flavor = Flavor.prod,
 }) => BuildConfig(
   restApiUrl: '',
@@ -19,29 +19,29 @@ BuildConfig _buildConfig({
   buildCommitMessage: '',
   revenueCatApiKeyIos: '',
   revenueCatApiKeyAndroid: '',
-  isBetaTesting: isBetaTesting,
+  isProduction: isProduction,
 );
 
 bool _resolve({
   required DeviceRole? role,
   required bool isDebugEnabled,
-  bool isBetaTesting = false,
+  bool isProduction = false,
   Flavor flavor = Flavor.prod,
 }) => const DebugMenuAvailabilityResolver().resolve(
   isDebugBuild: false,
   role: role,
-  buildConfig: _buildConfig(isBetaTesting: isBetaTesting, flavor: flavor),
+  buildConfig: _buildConfig(isProduction: isProduction, flavor: flavor),
   isDebugEnabled: isDebugEnabled,
 );
 
 void main() {
   group('resolveDebugMenuAvailability', () {
-    test('一般配布ビルド(BETA/prod)でもAdminロールなら開ける', () {
+    test('一般配布ビルド(production)でもAdminロールなら開ける', () {
       expect(
         _resolve(
           role: DeviceRole.admin,
           isDebugEnabled: false,
-          isBetaTesting: true,
+          isProduction: true,
         ),
         isTrue,
       );
@@ -54,12 +54,12 @@ void main() {
       );
     });
 
-    test('一般配布ビルド(BETA/prod)ではAdmin以外は開けない', () {
+    test('一般配布ビルド(production)ではAdmin以外は開けない', () {
       expect(
         _resolve(
           role: DeviceRole.user,
           isDebugEnabled: true,
-          isBetaTesting: true,
+          isProduction: true,
         ),
         isFalse,
       );
@@ -67,7 +67,7 @@ void main() {
 
     test('ロールを取得できない場合は権限ありへフォールバックしない', () {
       expect(
-        _resolve(role: null, isDebugEnabled: true, isBetaTesting: true),
+        _resolve(role: null, isDebugEnabled: true, isProduction: true),
         isFalse,
       );
     });
@@ -80,15 +80,15 @@ void main() {
       expect(_resolve(role: DeviceRole.user, isDebugEnabled: false), isFalse);
     });
 
-    test('BETA配布のdevビルドはデバッグモードOFFでも開ける', () {
+    test('production の dev ビルドもデバッグモードOFFなら開けない', () {
       expect(
         _resolve(
           role: DeviceRole.user,
           isDebugEnabled: false,
-          isBetaTesting: true,
+          isProduction: true,
           flavor: Flavor.dev,
         ),
-        isTrue,
+        isFalse,
       );
     });
 
@@ -97,7 +97,7 @@ void main() {
         const DebugMenuAvailabilityResolver().resolve(
           isDebugBuild: true,
           role: null,
-          buildConfig: _buildConfig(isBetaTesting: true),
+          buildConfig: _buildConfig(isProduction: true),
           isDebugEnabled: false,
         ),
         isTrue,

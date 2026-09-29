@@ -47,19 +47,23 @@ void main() {
     expect(find.byIcon(Icons.arrow_back_rounded), findsOneWidget);
   });
 
-  testWidgets('isBetaTesting が false のときは揺れ検知セクションを表示する', (tester) async {
+  testWidgets('isShakeDetectionEnabled が true のときは揺れ検知セクションを表示する', (
+    tester,
+  ) async {
     await _pumpPage(
       tester,
-      buildConfig: const BuildConfigFixture().build(isBetaTesting: false),
+      buildConfig: const BuildConfigFixture().build(
+        isShakeDetectionEnabled: true,
+      ),
     );
 
     expect(find.text('揺れ検知'), findsOneWidget);
   });
 
-  testWidgets('isBetaTesting が true のときは揺れ検知セクションを表示しない', (tester) async {
+  testWidgets('production のときは揺れ検知セクションを表示しない', (tester) async {
     await _pumpPage(
       tester,
-      buildConfig: const BuildConfigFixture().build(isBetaTesting: true),
+      buildConfig: const BuildConfigFixture().build(isProduction: true),
     );
 
     expect(find.text('揺れ検知'), findsNothing);

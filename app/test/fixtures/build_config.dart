@@ -9,7 +9,7 @@ import 'package:eqmonitor/core/model/environment.dart';
 class const BuildConfigFixture() {
   BuildConfig build({
     Flavor flavor = Flavor.dev,
-    bool isBetaTesting = false,
+    bool isProduction = false,
     bool isShakeDetectionEnabled = true,
   }) => BuildConfig(
     restApiUrl: '',
@@ -24,7 +24,7 @@ class const BuildConfigFixture() {
     buildCommitMessage: '',
     revenueCatApiKeyIos: '',
     revenueCatApiKeyAndroid: '',
-    isBetaTesting: isBetaTesting,
+    isProduction: isProduction,
     isShakeDetectionEnabled: isShakeDetectionEnabled,
   );
 }

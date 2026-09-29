@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 BuildConfig _buildConfig({
   required Flavor flavor,
-  required bool isBetaTesting,
+  required bool isProduction,
   bool isShakeDetectionEnabled = true,
 }) => BuildConfig(
   restApiUrl: '',
@@ -18,47 +18,47 @@ BuildConfig _buildConfig({
   buildCommitMessage: '',
   revenueCatApiKeyIos: '',
   revenueCatApiKeyAndroid: '',
-  isBetaTesting: isBetaTesting,
+  isProduction: isProduction,
   isShakeDetectionEnabled: isShakeDetectionEnabled,
 );
 
 void main() {
   group('BuildConfig.isDeveloperUiEnabled', () {
-    test('BETA かつ prod のときのみ false', () {
+    test('production のときは false', () {
       expect(
         _buildConfig(
           flavor: Flavor.prod,
-          isBetaTesting: true,
+          isProduction: true,
         ).isDeveloperUiEnabled,
         isFalse,
       );
     });
 
-    test('BETA でも dev flavor なら true', () {
+    test('production なら dev flavor でも false', () {
       expect(
         _buildConfig(
           flavor: Flavor.dev,
-          isBetaTesting: true,
+          isProduction: true,
         ).isDeveloperUiEnabled,
-        isTrue,
+        isFalse,
       );
     });
 
-    test('prod でも BETA でなければ true', () {
+    test('非 production なら prod flavor でも true', () {
       expect(
         _buildConfig(
           flavor: Flavor.prod,
-          isBetaTesting: false,
+          isProduction: false,
         ).isDeveloperUiEnabled,
         isTrue,
       );
     });
 
-    test('dev かつ非 BETA なら true', () {
+    test('非 production の dev flavor なら true', () {
       expect(
         _buildConfig(
           flavor: Flavor.dev,
-          isBetaTesting: false,
+          isProduction: false,
         ).isDeveloperUiEnabled,
         isTrue,
       );
@@ -66,7 +66,7 @@ void main() {
   });
 
   group('BuildConfig defaults', () {
-    test('isBetaTesting は既定で false', () {
+    test('isProduction は既定で false', () {
       const config = BuildConfig(
         restApiUrl: '',
         appIdSuffix: '',
@@ -81,7 +81,7 @@ void main() {
         revenueCatApiKeyIos: '',
         revenueCatApiKeyAndroid: '',
       );
-      expect(config.isBetaTesting, isFalse);
+      expect(config.isProduction, isFalse);
     });
 
     test('isShakeDetectionEnabled は既定で true', () {
@@ -102,13 +102,13 @@ void main() {
       expect(config.isShakeDetectionEnabled, isTrue);
     });
 
-    test('isShakeDetectionEnabled は false を指定できる', () {
+    test('production では揺れ検知フラグが true でも無効', () {
       expect(
         _buildConfig(
           flavor: Flavor.prod,
-          isBetaTesting: true,
-          isShakeDetectionEnabled: false,
-        ).isShakeDetectionEnabled,
+          isProduction: true,
+          isShakeDetectionEnabled: true,
+        ).isShakeDetectionAvailable,
         isFalse,
       );
     });

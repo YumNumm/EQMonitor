@@ -28,7 +28,7 @@ ShakeDetectionEvent _event(String eventId) => ShakeDetectionEvent(
 );
 
 final _disabledBuildConfig = buildConfigProvider.overrideWithValue(
-  const BuildConfigFixture().build(isShakeDetectionEnabled: false),
+  const BuildConfigFixture().build(isProduction: true),
 );
 
 void main() {

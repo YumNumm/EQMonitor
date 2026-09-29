@@ -8,7 +8,6 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/material_page_mixin.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/feature/auth/ui/page/debug_auth_page.dart';
-import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
 import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
 import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
@@ -111,6 +110,12 @@ GoRouter goRouter(Ref ref) => GoRouter(
     }
 
     final buildConfig = ref.read(buildConfigProvider);
+    if (buildConfig.isProduction &&
+        state.matchedLocation.startsWith(
+          const DebugTelemetryRoute().location,
+        )) {
+      return const HomeRoute().location;
+    }
     final isDebugMenuAvailable = ref.read(isDebugMenuAvailableProvider);
     final debugRouteRedirect = DebugMenuRouteGuard.redirect(
       isAvailable: isDebugMenuAvailable,
@@ -119,10 +124,13 @@ GoRouter goRouter(Ref ref) => GoRouter(
     if (debugRouteRedirect != null) {
       return debugRouteRedirect;
     }
-    if (!buildConfig.isShakeDetectionEnabled &&
-        state.matchedLocation.startsWith(
+    if (!buildConfig.isShakeDetectionAvailable &&
+        [
           const ShakeDetectionSettingsRoute().location,
-        )) {
+          const DebugShakeDetectionSettingsRoute().location,
+          const DebugShakeDetectionCardRoute().location,
+          const DebugShakeDetectionInsertRoute().location,
+        ].any(state.matchedLocation.startsWith)) {
       return const HomeRoute().location;
     }
 
@@ -142,13 +150,6 @@ GoRouter goRouter(Ref ref) => GoRouter(
         return null;
       } else {
         return const OnboardingRoute().location;
-      }
-    }
-
-    if (isOnboardingCompleted && ref.read(buildConfigProvider).isBetaTesting) {
-      final betaAgreed = ref.read(betaTestingAgreedProvider).value ?? false;
-      if (!betaAgreed && state.matchedLocation != '/beta-warning') {
-        return '/beta-warning';
       }
     }
 

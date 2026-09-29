@@ -24,6 +24,6 @@ class const DebugMenuAvailabilityResolver() {
     if (!buildConfig.isDeveloperUiEnabled) {
       return false;
     }
-    return buildConfig.isBetaTesting || isDebugEnabled;
+    return isDebugEnabled;
   }
 }

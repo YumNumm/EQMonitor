@@ -27,7 +27,9 @@ class HomeMapLayerPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBetaTesting = ref.watch(buildConfigProvider).isBetaTesting;
+    final isShakeDetectionEnabled = ref
+        .watch(buildConfigProvider)
+        .isShakeDetectionAvailable;
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
@@ -72,7 +74,7 @@ class HomeMapLayerPage extends ConsumerWidget {
                     ],
                   ),
                   SizedBox(height: spacing.lg),
-                  if (!isBetaTesting) ...[
+                  if (isShakeDetectionEnabled) ...[
                     _SettingsSection(
                       title: '揺れ検知',
                       description: '揺れ検知イベントの表示とアニメーションを調整します。',
