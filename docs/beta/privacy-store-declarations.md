@@ -13,7 +13,7 @@ Google Play Console と App Store Connect のプライバシー関連申告を�
 | 常時位置情報 | `NSLocationAlwaysAndWhenInUseUsageDescription` / `NSLocationAlwaysUsageDescription` / `NSLocationWhenInUseUsageDescription` + `UIBackgroundModes: location` | `app/ios/Runner/Info.plist:148-153,183-` |
 | Android位置情報 | `ACCESS_FINE_LOCATION` / `ACCESS_COARSE_LOCATION` / `ACCESS_BACKGROUND_LOCATION` | `app/android/app/src/main/AndroidManifest.xml:10-12` |
 | 位置情報実装 | `geolocator` (フォア/バック権限取得) + `background_location_tracker` (バックグラウンド追跡、`LocationUpdateReceiver`) | `app/pubspec.yaml:57,118`、`AndroidManifest.xml:64-66` |
-| 広告 | AdMob (`google_mobile_ads`)。Android`APPLICATION_ID`/iOS`GADApplicationIdentifier`をそれぞれ直書き。`SKAdNetworkItems`・`NSUserTrackingUsageDescription`もあり | `app/pubspec.yaml:121`、`AndroidManifest.xml:72-74`、`Info.plist:75-82` |
+| 広告 | AdMob (`google_mobile_ads`)。Android`APPLICATION_ID`/iOS`GADApplicationIdentifier`をそれぞれ直書き。`SKAdNetworkItems`あり、ATTの利用目的キーは未設定 | `app/pubspec.yaml`、`app/android/app/src/main/AndroidManifest.xml`、`app/ios/Runner/Info.plist` |
 | 課金 | RevenueCat (`purchases_flutter`) | `app/pubspec.yaml:152` |
 | 計測/クラッシュ | Firebase Analytics / Crashlytics / Messaging / AppCheck / Installations | `app/pubspec.yaml:87-92` |
 | Google Sign-In | Info.plistに`GIDClientID`と`com.googleusercontent.apps.*`のURL Schemeが残存するが、`app/lib`・全パッケージに`google_sign_in`/`firebase_auth`依存が無く、呼び出しコードも見つからない | `Info.plist:32-59` / `app/pubspec.yaml`(依存なし) / `grep`結果(該当なし) |
@@ -174,21 +174,22 @@ Appleの仕様上、Xcodeのビルド時に生成される「プライバシー�
       回答を代替しない**(2.の表の通り、Device ID/Advertising Data/Purchase History は
       質問票側でも明示的にYes回答が必要)ことを担当者間で認識合わせする
 
-### 2.2 ATT(App Tracking Transparency)に関する既知の不整合
+### 2.2 ATT(App Tracking Transparency)の設定
 
-- `app/ios/Runner/Info.plist:79-80` に `NSUserTrackingUsageDescription`
-  (「ユーザーに合わせた広告を表示するために利用します」)が設定されているが、
-  `app_tracking_transparency` パッケージへの依存も、
-  `ATTrackingManager.requestTrackingAuthorization` 相当のコード呼び出しも
-  見つからなかった。つまり **ATTの許可ダイアログは実際には表示されない**。
-- `PrivacyInfo.xcprivacy` の `NSPrivacyTracking` は `false`(変更なし、妥当)。
-  ATTを呼んでいない以上、IDFAを用いたクロスアプリトラッキングは行われていないため
-  `NSPrivacyTracking = false` のままで整合する。
-- [ ] **確認事項**: 個人に合わせた広告(パーソナライズ広告)を将来的に有効化する場合は、
-      ATT呼び出しの実装と`NSPrivacyTracking`/`NSPrivacyTrackingDomains`の見直しが
-      別途必要になる。現状は`NSUserTrackingUsageDescription`の文言が「使われていない
-      権限の説明文」として残っているだけなので、削除するか実装するかを判断すること
-      (Info.plistの変更は本PRのスコープ外。Issue化を推奨)。
+- `app_tracking_transparency` パッケージへの依存や、
+  `ATTrackingManager.requestTrackingAuthorization` 相当の呼び出しはない。
+  `app/ios/Runner/Info.plist` にも `NSUserTrackingUsageDescription` を設定しない。
+  このキーは、[Appleの説明](https://developer.apple.com/documentation/bundleresources/information-property-list/nsusertrackingusagedescription)ではATTの許可要求に使う利用目的の説明文である。
+- `PrivacyInfo.xcprivacy` は `NSPrivacyTracking = false`、
+  `NSPrivacyTrackingDomains` は空配列。ATTを呼ばないことだけでは
+  トラッキングの有無を断定できないため、SDKを含む実際のデータ利用に基づいて申告する。
+- `GADApplicationIdentifier` と `SKAdNetworkItems` は広告配信に使用する。
+  [Googleの説明](https://developers.google.com/admob/ios/privacy/strategies)では、
+  SKAdNetworkによるコンバージョン計測はIDFAが利用できない場合にも対応している。
+- 将来トラッキングを導入する場合は、ATTの許可要求と利用目的の説明文を実装し、
+  `NSPrivacyTracking` / `NSPrivacyTrackingDomains` とストア申告を見直す。
+- 新しいビルドのアップロードとApp Store Connectでの警告解消は未確認。
+  確認項目は[ビルド・配布の残課題](../todo/950_build_and_release.md)に記載する。
 
 ### 2.3 App Store Connect 入力手順チェックリスト
 

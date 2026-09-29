@@ -100,8 +100,6 @@
 	<true/>
 	<key>NSSupportsLiveActivitiesFrequentUpdates</key>
 	<true/>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>ユーザーに合わせた広告を表示するために利用します。許可しなくても広告は表示されますが、より関連性の低い広告が表示される場合があります。</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
