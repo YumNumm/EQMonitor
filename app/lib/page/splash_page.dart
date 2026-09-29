@@ -23,6 +23,7 @@ class SplashPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // ensure cold-start getInitialLink runs even if main.dart listen is delayed
     ref.listen(appLinksInteractionProvider, (_, _) {});
+    ref.listen(firebaseMessagingInteractionProvider, (_, _) {});
     useEffect(() {
       // 重い初期化はトリガーのみ行い、完了を待たずに Home へ遷移する。
       // keepAlive のためバックグラウンドでロードは継続し、各消費画面が
@@ -46,6 +47,7 @@ class SplashPage extends HookConsumerWidget {
         await Future.wait([
           ref.read(onboardingCompletedProvider.future),
           ref.read(appLinksColdStartGateProvider).whenResolved,
+          ref.read(pendingNotificationDeepLinkGateProvider).whenResolved,
         ]);
         if (ref.read(buildConfigProvider).isBetaTesting) {
           await ref.read(betaTestingAgreedProvider.future);
