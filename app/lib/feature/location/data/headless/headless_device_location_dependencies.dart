@@ -91,7 +91,7 @@ class HeadlessDeviceLocationSyncServiceLoader {
     );
     final deviceToken = await const HeadlessSecureDeviceTokenLoader().load();
     final resolver = await const HeadlessJmaRegionResolverLoader().load();
-    final restApiUrl = await HeadlessRestApiUrlLoader(preferences).load();
+    final restApiUrl = await const HeadlessRestApiUrlLoader().load();
     final scope = DeviceLocationSyncScope.fromApiBaseUrl(
       apiBaseUrl: restApiUrl,
     );
@@ -130,11 +130,7 @@ class const HeadlessJmaRegionResolverLoader() {
   Future<JmaRegionResolver> load() async {
     final mapBytes = await rootBundle.load(Assets.jmaMap);
     final mapData = const HeadlessJmaMapParser().parse(mapBytes);
-    // 有効なダウンロード版 Asset Pack は、通常 Engine が
-    // SharedPreferencesDataSource (SharedPreferences) に保存している。
-    // SharedPreferencesAsync とは保存先・key 接頭辞が異なるため同じ API で読む。
-    final preferences = await SharedPreferences.getInstance();
-    await preferences.reload();
+    final preferences = await const HeadlessAppPreferencesLoader().load();
     final earthquakeParameter =
         await const HeadlessEarthquakeParameterAssetLoader().load(
           preferences: preferences,
@@ -263,17 +259,29 @@ class const HeadlessJmaMapParser() {
   }
 }
 
-class HeadlessRestApiUrlLoader {
-  new(this.preferences);
+/// 通常 Engine が SharedPreferencesDataSource で保存した値を読むための
+/// SharedPreferences を返す。
+///
+/// SharedPreferencesAsync とは保存先・key 接頭辞が異なるため、通常 Engine と
+/// 同じ API で読む。別 Engine で更新された値を反映するため reload する。
+class const HeadlessAppPreferencesLoader() {
+  Future<SharedPreferences> load() async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.reload();
+    return preferences;
+  }
+}
 
-  final SharedPreferencesAsync preferences;
-
-  Future<String> load() async => const HeadlessRestApiUrlResolver().resolve(
-    buildConfig: BuildConfig.fromEnvironment(),
-    savedTelegramUrlJson: await preferences.getString(
-      SharedPreferencesKey.telegramUrl.key,
-    ),
-  );
+class const HeadlessRestApiUrlLoader() {
+  Future<String> load() async {
+    final preferences = await const HeadlessAppPreferencesLoader().load();
+    return const HeadlessRestApiUrlResolver().resolve(
+      buildConfig: BuildConfig.fromEnvironment(),
+      savedTelegramUrlJson: preferences.getString(
+        SharedPreferencesKey.telegramUrl.key,
+      ),
+    );
+  }
 }
 
 class const HeadlessRestApiUrlResolver() {
