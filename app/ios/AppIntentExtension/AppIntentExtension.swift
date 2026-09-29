@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 //
 //  AppIntentExtension.swift
 //  AppIntentExtension
@@ -29,3 +30,5 @@ struct EQMonitorShortcuts: AppShortcutsProvider {
         )
     }
 }
+
+#endif

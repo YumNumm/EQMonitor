@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 //
 //  LatestEarthquakeSnippetControl.swift
 //  Widget
@@ -24,3 +25,5 @@ struct LatestEarthquakeSnippetControl: ControlWidget {
         .description("EQMonitorを開いて地震履歴を表示します")
     }
 }
+
+#endif

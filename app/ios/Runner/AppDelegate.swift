@@ -11,11 +11,14 @@ import WidgetKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    #if !IS_PRODUCTION
     if #available(iOS 18.0, *) {
       AppDependencyManager.shared.add(dependency: EarthquakeHistoryNavigation { url in
         await UIApplication.shared.open(url)
       })
     }
+
+    #endif
 
     let backgroundLaunchBootstrap = BackgroundLocationLaunchBootstrap(
       configurePluginRegistrants: {

@@ -38,7 +38,7 @@ struct UnifiedLiveActivityDisplay {
             return .earthquake
         case "eew" where state.eew != nil:
             return .eew
-        case "shake_detection" where state.shakeDetection != nil:
+        case "shake_detection" where shakeDetection != nil:
             return .shakeDetection
         default:
             return fallbackPrimary
@@ -48,11 +48,17 @@ struct UnifiedLiveActivityDisplay {
     private var fallbackPrimary: UnifiedPrimaryBlock {
         if state.earthquake != nil { return .earthquake }
         if state.eew != nil { return .eew }
-        if state.shakeDetection != nil { return .shakeDetection }
+        if shakeDetection != nil { return .shakeDetection }
         return .empty
     }
 
-    var shakeDetection: UnifiedShakeDetection? { state.shakeDetection }
+    var shakeDetection: UnifiedShakeDetection? {
+        #if IS_PRODUCTION
+        return nil
+        #else
+        return state.shakeDetection
+        #endif
+    }
     var eew: UnifiedEew? { state.eew }
     var earthquake: UnifiedEarthquake? { state.earthquake }
 

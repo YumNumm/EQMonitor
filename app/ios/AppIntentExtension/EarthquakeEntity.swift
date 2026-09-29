@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 //
 //  EarthquakeEntity.swift
 //  AppIntentExtension
@@ -127,3 +128,5 @@ enum EarthquakeIntensity: String, AppEnum {
         return item.earthquakeMaxIntensity.flatMap { Self(rawValue: $0.rawValue) }
     }
 }
+
+#endif

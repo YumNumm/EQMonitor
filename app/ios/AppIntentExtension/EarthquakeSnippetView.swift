@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 //
 //  EarthquakeSnippetView.swift
 //  AppIntentExtension
@@ -143,3 +144,5 @@ private struct EarthquakeSnippetRow: View {
         )
     }
 }
+
+#endif

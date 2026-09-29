@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 import Foundation
 import SQLite
 
@@ -77,3 +78,5 @@ final class TelemetryWriter {
             .path
     }
 }
+
+#endif

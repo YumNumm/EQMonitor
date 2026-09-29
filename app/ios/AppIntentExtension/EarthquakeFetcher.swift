@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 //
 //  EarthquakeFetcher.swift
 //  AppIntentExtension
@@ -57,3 +58,5 @@ enum EarthquakeFetcher {
         }
     }
 }
+
+#endif

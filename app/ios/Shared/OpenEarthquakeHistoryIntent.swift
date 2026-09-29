@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 import AppIntents
 import Foundation
 
@@ -50,3 +51,5 @@ enum EarthquakeHistoryNavigationError: Error, Equatable, CustomLocalizedStringRe
         "地震履歴を開けませんでした。EQMonitorを起動して、もう一度お試しください。"
     }
 }
+
+#endif

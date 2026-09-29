@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 //
 //  RegionEntity.swift
 //  AppIntentExtension
@@ -66,3 +67,5 @@ struct RegionQuery: EntityStringQuery {
         JmaCodeTable.shared.prefectures.map(RegionEntity.init)
     }
 }
+
+#endif

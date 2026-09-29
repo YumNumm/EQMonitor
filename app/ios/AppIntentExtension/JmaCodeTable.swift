@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 //
 //  JmaCodeTable.swift
 //  AppIntentExtension
@@ -66,3 +67,5 @@ struct JmaCodeTable {
         )
     }
 }
+
+#endif

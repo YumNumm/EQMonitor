@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 //
 //  MinIntensityOption.swift
 //  AppIntentExtension
@@ -39,3 +40,5 @@ enum MinIntensityOption: String, AppEnum {
         Components.Schemas.JmaIntensity(rawValue: rawValue)!
     }
 }
+
+#endif

@@ -21,10 +21,11 @@ class NotificationService: UNNotificationServiceExtension {
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
 
+        let channelId = (request.content.userInfo["channelId"] as? String) ?? "unknown"
+        #if !IS_PRODUCTION
         // Record telemetry event for notification receipt
         let now = Int64(Date().timeIntervalSince1970 * 1000)
         let eventId = (request.content.userInfo["eventId"] as? String)
-        let channelId = (request.content.userInfo["channelId"] as? String) ?? "unknown"
         let payloadDict: [String: Any] = [
             "framework": "apns",
             "channel_id": channelId,
@@ -39,6 +40,8 @@ class NotificationService: UNNotificationServiceExtension {
                 payload: payloadStr
             )
         }
+
+        #endif
 
         // 地震情報の通知（VXSE* テレグラム）はウィジェットの地震履歴を更新しうるため、
         // 受信時にタイムラインを再読み込みし、15分ポーリングを待たず即時反映する。
