@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/connectivity/connectivity_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
@@ -25,6 +28,9 @@ Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
 /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
 /// アプリ resume 時はバックオフをリセットして即座に再接続する。
+/// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
+/// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
+/// ジッタを入れて再接続する。
 @Riverpod(keepAlive: true)
 class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
   /// 受信が途絶えたら接続が死んでいるとみなすまでの時間。
@@ -37,6 +43,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
   static const silenceTimeout = Duration(seconds: 15 + 15);
 
   var _retryCount = 0;
+  final _random = math.Random();
 
   /// これは状態ではなくイベント列なので、同じ値でも必ず通知する。
   ///
@@ -56,6 +63,36 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
         _retryCount = 0;
         _reconnect();
       }
+    });
+
+    Timer? connectivityReconnectTimer;
+    ref.onDispose(() => connectivityReconnectTimer?.cancel());
+    ref.listen(connectivityStreamProvider, (previous, next) {
+      final previousResults = previous?.value;
+      final results = next.value;
+      // 初回の通知 (起動時の状態) は変化ではないので無視する。
+      if (previousResults == null || results == null) {
+        return;
+      }
+      if (const SetEquality<ConnectivityResult>().equals(
+        previousResults.toSet(),
+        results.toSet(),
+      )) {
+        return;
+      }
+      if (results.every((r) => r == ConnectivityResult.none)) {
+        return;
+      }
+      final jitter = Duration(milliseconds: 1000 + _random.nextInt(1001));
+      talker.info(
+        'EQMonitor WebSocket: network changed, reconnecting in '
+        '${jitter.inMilliseconds}ms',
+      );
+      connectivityReconnectTimer?.cancel();
+      connectivityReconnectTimer = Timer(jitter, () {
+        _retryCount = 0;
+        _reconnect();
+      });
     });
 
     Timer? silenceWatchdog;

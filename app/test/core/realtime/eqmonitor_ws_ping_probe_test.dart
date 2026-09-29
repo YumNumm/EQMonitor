@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:eqmonitor/core/provider/connectivity/connectivity_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_payload_stream.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_ping_probe.dart';
@@ -58,6 +59,11 @@ Future<void> _pump([int times = 20]) async {
   }
 }
 
+/// テストでは実機の接続状態 (platform channel) を使わない。
+final noConnectivityChange = connectivityStreamProvider.overrideWith(
+  (_) => const Stream.empty(),
+);
+
 void main() {
   setUpAll(() {
     try {
@@ -73,7 +79,10 @@ void main() {
     setUp(() {
       fakeWs = _RecordingWebSocket();
       container = ProviderContainer(
-        overrides: [eqmonitorWebSocketProvider.overrideWith((_) => fakeWs)],
+        overrides: [
+          noConnectivityChange,
+          eqmonitorWebSocketProvider.overrideWith((_) => fakeWs),
+        ],
       );
       addTearDown(container.dispose);
     });
@@ -135,6 +144,7 @@ void main() {
       final ws2 = _RecordingWebSocket();
       final testContainer = ProviderContainer(
         overrides: [
+          noConnectivityChange,
           eqmonitorWebSocketProvider.overrideWith((_) {
             connectCount++;
             return connectCount == 1 ? ws1 : ws2;
@@ -178,7 +188,10 @@ void main() {
       // サーバー ping が観測できなくなる。
       final fakeWs = _RecordingWebSocket();
       final container = ProviderContainer(
-        overrides: [eqmonitorWebSocketProvider.overrideWith((_) => fakeWs)],
+        overrides: [
+          noConnectivityChange,
+          eqmonitorWebSocketProvider.overrideWith((_) => fakeWs),
+        ],
       );
       addTearDown(container.dispose);
 
@@ -203,7 +216,10 @@ void main() {
     test('2 回目以降のサーバー ping も観測して受信間隔を出せること', () async {
       final fakeWs = _RecordingWebSocket();
       final container = ProviderContainer(
-        overrides: [eqmonitorWebSocketProvider.overrideWith((_) => fakeWs)],
+        overrides: [
+          noConnectivityChange,
+          eqmonitorWebSocketProvider.overrideWith((_) => fakeWs),
+        ],
       );
       addTearDown(container.dispose);
 

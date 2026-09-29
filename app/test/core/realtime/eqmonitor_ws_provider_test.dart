@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
+import 'package:eqmonitor/core/provider/connectivity/connectivity_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -57,6 +58,11 @@ Future<void> _pumpUntilListening(FakeWebSocket ws) async {
   }
 }
 
+/// テストでは実機の接続状態 (platform channel) を使わない。
+final noConnectivityChange = connectivityStreamProvider.overrideWith(
+  (_) => const Stream.empty(),
+);
+
 void main() {
   setUpAll(() {
     try {
@@ -104,6 +110,7 @@ void main() {
       fakeWs = FakeWebSocket();
       container = ProviderContainer(
         overrides: [
+          noConnectivityChange,
           eqmonitorWebSocketProvider.overrideWith((_) => fakeWs),
         ],
       );
@@ -128,6 +135,7 @@ void main() {
 
       final testContainer = ProviderContainer(
         overrides: [
+          noConnectivityChange,
           eqmonitorWebSocketProvider.overrideWith((_) {
             connectCount++;
             return connectCount == 1 ? ws1 : ws2;
