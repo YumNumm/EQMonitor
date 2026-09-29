@@ -73,6 +73,11 @@ class SubscriptionRepository {
       if (errorCode == rc.PurchasesErrorCode.purchaseCancelledError) {
         return const PurchaseOutcome(result: PurchaseResult.cancelled());
       }
+      if (errorCode == rc.PurchasesErrorCode.paymentPendingError) {
+        return const PurchaseOutcome(
+          result: PurchaseResult.failed(PurchaseFailureReason.paymentPending),
+        );
+      }
       if (errorCode == rc.PurchasesErrorCode.configurationError) {
         return const PurchaseOutcome(
           result: PurchaseResult.failed(
