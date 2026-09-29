@@ -33,6 +33,11 @@ class EarthquakeActivityRepository {
       longitude: query.longitude,
       radiusKm: query.radiusKm,
     );
+    // サーバーは日付のみの originTimeLte を当日 0:00 (UTC) として比較するため、
+    // 終了日時の翌日を渡して取りこぼしを防ぐ。期間の厳密な絞り込みは _filter で行う。
+    final originTimeLte = Date.fromDateTime(
+      query.effectiveEnd(now: now).toUtc().add(const Duration(days: 1)),
+    );
     final candidates = <EarthquakePartial>[];
     final seenCursors = <String>{};
     String? cursor;
@@ -45,7 +50,7 @@ class EarthquakeActivityRepository {
         depthLte: query.depthLte,
         earthquakeType: EarthquakeType.normal,
         originTimeGte: Date.fromDateTime(query.start.toUtc()),
-        originTimeLte: Date.fromDateTime(query.effectiveEnd(now: now).toUtc()),
+        originTimeLte: originTimeLte,
         latitudeGte: bounds.latitudeGte,
         latitudeLte: bounds.latitudeLte,
         longitudeGte: bounds.longitudeGte,
