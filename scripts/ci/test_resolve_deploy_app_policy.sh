@@ -22,63 +22,58 @@ assert_policy() {
 
 assert_policy \
   beta-tag \
-  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=true\nandroid-track=external\nis-beta-testing=true\n' \
+  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=true\nandroid-track=external\n' \
   EVENT_NAME=push \
   REF_TYPE=tag \
   REF_NAME=v3.0.0-beta.2 \
   COMMITS_JSON='[]' \
   INPUT_IOS=false \
   INPUT_ANDROID=false \
-  INPUT_EXTERNAL=false \
-  INPUT_IS_BETA_TESTING=false
+  INPUT_EXTERNAL=false
 
 assert_policy \
   develop \
-  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=false\nandroid-track=internal\nis-beta-testing=false\n' \
+  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=false\nandroid-track=internal\n' \
   EVENT_NAME=push \
   REF_TYPE=branch \
   REF_NAME=develop \
   COMMITS_JSON='[{"message":"fix: ordinary push"}]' \
   INPUT_IOS=false \
   INPUT_ANDROID=false \
-  INPUT_EXTERNAL=false \
-  INPUT_IS_BETA_TESTING=false
+  INPUT_EXTERNAL=false
 
 assert_policy \
   develop-external \
-  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=true\nandroid-track=internal\nis-beta-testing=false\n' \
+  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=true\nandroid-track=internal\n' \
   EVENT_NAME=push \
   REF_TYPE=branch \
   REF_NAME=develop \
   COMMITS_JSON='[{"message":"feat: distribute [external]"}]' \
   INPUT_IOS=false \
   INPUT_ANDROID=false \
-  INPUT_EXTERNAL=false \
-  INPUT_IS_BETA_TESTING=false
+  INPUT_EXTERNAL=false
 
 assert_policy \
   workflow-dispatch \
-  $'deploy-android=true\ndeploy-ios-external=true\nandroid-track=internal\nis-beta-testing=false\n' \
+  $'deploy-android=true\ndeploy-ios-external=true\nandroid-track=internal\n' \
   EVENT_NAME=workflow_dispatch \
   REF_TYPE=branch \
   REF_NAME=develop \
   COMMITS_JSON='[]' \
   INPUT_IOS=false \
   INPUT_ANDROID=true \
-  INPUT_EXTERNAL=true \
-  INPUT_IS_BETA_TESTING=false
+  INPUT_EXTERNAL=true
 
 assert_policy \
-  workflow-dispatch-beta \
-  $'deploy-ios=true\ndeploy-ios-external=false\nandroid-track=internal\nis-beta-testing=true\n' \
+  workflow-dispatch-ios \
+  $'deploy-ios=true\ndeploy-ios-external=false\nandroid-track=internal\n' \
   EVENT_NAME=workflow_dispatch \
   REF_TYPE=branch \
   REF_NAME=develop \
   COMMITS_JSON='[]' \
   INPUT_IOS=true \
   INPUT_ANDROID=false \
-  INPUT_EXTERNAL=false \
-  INPUT_IS_BETA_TESTING=true
+  INPUT_EXTERNAL=false
 
 if env \
   EVENT_NAME=push \
@@ -88,7 +83,6 @@ if env \
   INPUT_IOS=false \
   INPUT_ANDROID=false \
   INPUT_EXTERNAL=false \
-  INPUT_IS_BETA_TESTING=false \
   "$RESOLVER" > "$TEST_DIR/unsupported.stdout" 2> "$TEST_DIR/unsupported.stderr"; then
   echo "unsupported ref unexpectedly succeeded" >&2
   exit 1
