@@ -117,70 +117,64 @@ class _PagingBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return M3EPullToRefreshIndicator(
-      onError: Error.throwWithStackTrace,
-      onRefresh: onRefresh,
-      edgeOffset:
-          MediaQuery.paddingOf(context).top +
-          kToolbarHeight +
-          EewListParameterPersistentDelegate.height,
-      child: CustomScrollView(
-        slivers: [
-          const SliverAppBar(
-            pinned: true,
-            centerTitle: false,
-            title: Text('緊急地震速報 一覧'),
-          ),
-          PinnedActiveEewSection(
-            selectedEventId: selectedEventId,
-            onSelect: onSelect,
-          ),
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: EewListParameterPersistentDelegate(
-              parameter: parameter.value,
-              onChanged: (next) => parameter.value = next,
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        title: const Text('緊急地震速報 一覧'),
+        bottom: EewListParameterRow(
+          parameter: parameter.value,
+          onChanged: (next) => parameter.value = next,
+        ),
+      ),
+      body: M3EPullToRefreshIndicator(
+        onError: Error.throwWithStackTrace,
+        onRefresh: onRefresh,
+        child: CustomScrollView(
+          slivers: [
+            PinnedActiveEewSection(
+              selectedEventId: selectedEventId,
+              onSelect: onSelect,
             ),
-          ),
-          SliverGroupedPagingList<String?, String, EewTelegramItem>(
-            dataSource: dataSource,
-            stickyHeader: true,
-            headerBuilder: (_, date, _) => _DateHeader(date: date),
-            itemBuilder: (context, item, globalIndex, localIndex) => Column(
-              mainAxisSize: .min,
-              children: [
-                HistorySelection(
-                  selected: selectedEventId == item.eventId,
-                  child: EewHistoryListTile(
-                    item: item,
-                    visualDensity: VisualDensity.compact,
-                    onTap: () => onSelect(item.eventId),
+            SliverGroupedPagingList<String?, String, EewTelegramItem>(
+              dataSource: dataSource,
+              stickyHeader: true,
+              headerBuilder: (_, date, _) => _DateHeader(date: date),
+              itemBuilder: (context, item, globalIndex, localIndex) => Column(
+                mainAxisSize: .min,
+                children: [
+                  HistorySelection(
+                    selected: selectedEventId == item.eventId,
+                    child: EewHistoryListTile(
+                      item: item,
+                      visualDensity: VisualDensity.compact,
+                      onTap: () => onSelect(item.eventId),
+                    ),
                   ),
+                  Divider(
+                    height: 0,
+                    thickness: 0,
+                    color: context.designSystem.colorTheme.onInverseSurface,
+                  ),
+                ],
+              ),
+              initialLoadingWidget: const _Skeleton(scrollable: false),
+              appendLoadingWidget: const _Skeleton(
+                itemCount: 2,
+                scrollable: false,
+              ),
+              errorBuilder: (context, error, stackTrace) => ErrorCard(
+                error: error,
+                onReload: () async => dataSource.refresh(),
+              ),
+              emptyWidget: const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32),
+                  child: Text('緊急地震速報の履歴がありません'),
                 ),
-                Divider(
-                  height: 0,
-                  thickness: 0,
-                  color: context.designSystem.colorTheme.onInverseSurface,
-                ),
-              ],
-            ),
-            initialLoadingWidget: const _Skeleton(scrollable: false),
-            appendLoadingWidget: const _Skeleton(
-              itemCount: 2,
-              scrollable: false,
-            ),
-            errorBuilder: (context, error, stackTrace) => ErrorCard(
-              error: error,
-              onReload: () async => dataSource.refresh(),
-            ),
-            emptyWidget: const Center(
-              child: Padding(
-                padding: EdgeInsets.all(32),
-                child: Text('緊急地震速報の履歴がありません'),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
