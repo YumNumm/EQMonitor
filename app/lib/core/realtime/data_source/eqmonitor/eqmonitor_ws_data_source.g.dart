@@ -11,17 +11,11 @@ part of 'eqmonitor_ws_data_source.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(eqMonitorWsDataSource)
+@ProviderFor(EqMonitorWsDataSource)
 final eqMonitorWsDataSourceProvider = EqMonitorWsDataSourceProvider._();
 
 final class EqMonitorWsDataSourceProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<RealtimeEvent>,
-          RealtimeEvent,
-          Stream<RealtimeEvent>
-        >
-    with $FutureModifier<RealtimeEvent>, $StreamProvider<RealtimeEvent> {
+    extends $StreamNotifierProvider<EqMonitorWsDataSource, RealtimeEvent> {
   EqMonitorWsDataSourceProvider._()
     : super(
         from: null,
@@ -38,15 +32,26 @@ final class EqMonitorWsDataSourceProvider
 
   @$internal
   @override
-  $StreamProviderElement<RealtimeEvent> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
-
-  @override
-  Stream<RealtimeEvent> create(Ref ref) {
-    return eqMonitorWsDataSource(ref);
-  }
+  EqMonitorWsDataSource create() => EqMonitorWsDataSource();
 }
 
 String _$eqMonitorWsDataSourceHash() =>
-    r'5d44591548a3296655c308a77c52fbd7a7bd0a77';
+    r'3e8e3fd854a7fb46fdbd26e834884fd457cc0d13';
+
+abstract class _$EqMonitorWsDataSource extends $StreamNotifier<RealtimeEvent> {
+  Stream<RealtimeEvent> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<RealtimeEvent>, RealtimeEvent>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<RealtimeEvent>, RealtimeEvent>,
+              AsyncValue<RealtimeEvent>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
