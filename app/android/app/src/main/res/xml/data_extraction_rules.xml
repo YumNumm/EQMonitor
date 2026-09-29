@@ -2,6 +2,8 @@
 <data-extraction-rules>
     <cloud-backup>
         <exclude domain="sharedpref" path="blt_prefs.xml" />
+        <!-- Asset Pack (同梱版の展開コピー・ダウンロード版) は再展開・再取得できるため除外する -->
+        <exclude domain="file" path="eqmonitor_asset_packs" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="sharedpref" path="blt_prefs.xml" />
