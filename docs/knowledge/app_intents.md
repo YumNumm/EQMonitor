@@ -47,6 +47,10 @@
   RunnerのUIApplication.openから既存app_linksへ渡す。未確認のUniversal Linkへ置き換えない。
 - Control CenterはSnippetを表示できない。画面を開くOpenIntentをRunner/WidgetExtension両方へ含め、kindを保つ。
 - UIKitアクセスはRunnerでAppDependencyManagerへ登録し、共有Intentへ直接持ち込まない。
+- Snippetの詳細ボタンはRunnerと拡張で共有する`OpenEarthquakeDetailsIntent`を使い、
+  foreground実行から同じnavigation依存で詳細URLを開く。カスタムスキームを`OpenURLIntent`へ渡さない。
+- Flutterのリンク受信では`GoRouter.push`の完了を待たない。このFutureは画面を閉じるまで完了せず、
+  待つと履歴を開いたまま実行した次のIntentや検索リンクを処理できない。
 - 単体テストでperformを直接呼ぶ場合は、アクセス前にintent.navigationへ依存を注入する。
   システム実行時の@Dependency自動解決を直接呼出しでも期待するとクラッシュする。
 

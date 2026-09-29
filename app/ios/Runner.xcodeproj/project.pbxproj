@@ -144,6 +144,9 @@
 		C17940000000000000000002 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
 		C17940000000000000000003 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
 		C17940000000000000000004 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
+		C29940000000000000000001 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
+		C29940000000000000000002 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
+		C29940000000000000000003 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
 		C17940000000000000000006 /* OpenEarthquakeHistoryIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -1030,6 +1033,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C29940000000000000000001 /* OpenEarthquakeHistoryIntent.swift in Sources */,
+				C29940000000000000000002 /* EarthquakeDetailURL.swift in Sources */,
 				A91000000000000000000001 /* EarthquakeIntentDialog.swift in Sources */,
 				EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */,
 				EQ0000000000000000000069 /* WidgetErrorMessage.swift in Sources */,
@@ -1134,6 +1139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C17940000000000000000002 /* OpenEarthquakeHistoryIntent.swift in Sources */,
+				C29940000000000000000003 /* EarthquakeDetailURL.swift in Sources */,
 				A91000000000000000000006 /* EarthquakeSearchURL.swift in Sources */,
 				A91000000000000000000005 /* SearchEarthquakesIntent.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,

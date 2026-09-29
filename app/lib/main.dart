@@ -13,7 +13,6 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
-import 'package:eqmonitor/core/fcm/android_notification_channel_initializer.dart';
 import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/app_links_interaction.dart';
@@ -21,6 +20,7 @@ import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
+import 'package:eqmonitor/core/provider/firebase/firebase_messaging_foreground.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -49,7 +49,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -245,6 +244,7 @@ class AppBootstrap {
     container.read(realtimeEventsProvider);
     container.listen(backgroundLocationServiceProvider, (_, _) {});
     container.listen(firebaseMessagingInteractionProvider, (_, _) {});
+    container.listen(firebaseMessagingForegroundProvider, (_, _) {});
     container.listen(appLinksInteractionProvider, (_, _) {});
     container.listen(pushTokenSyncStartupProvider, (_, _) {});
     if (isTelemetryEnabled) {
@@ -276,24 +276,7 @@ class AppBootstrap {
     }
     if (!kIsWeb) {
       GuardedUnawaitedUtil.run(() async {
-        await AndroidNotificationChannelInitializer.forCurrentPlatform(
-          isShakeDetectionEnabled: buildConfig.isShakeDetectionAvailable,
-        ).initialize();
-        await FlutterLocalNotificationsPlugin().initialize(
-          settings: const InitializationSettings(
-            iOS: DarwinInitializationSettings(
-              requestAlertPermission: false,
-              requestSoundPermission: false,
-              requestBadgePermission: false,
-            ),
-            android: AndroidInitializationSettings('mipmap/ic_launcher'),
-            macOS: DarwinInitializationSettings(
-              requestAlertPermission: false,
-              requestSoundPermission: false,
-              requestBadgePermission: false,
-            ),
-          ),
-        );
+        await container.read(localNotificationRepositoryProvider).initialize();
         await FirebaseMessaging.instance
             .setForegroundNotificationPresentationOptions(
               alert: true,

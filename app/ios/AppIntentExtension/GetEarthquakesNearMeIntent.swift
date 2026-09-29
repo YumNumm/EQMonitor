@@ -3,7 +3,7 @@
 //  GetEarthquakesNearMeIntent.swift
 //  AppIntentExtension
 //
-//  現在地（App Group 経由で本体アプリが書き込んだ地域）の地震情報を表示する。
+//  保存地域（App Group 経由で本体アプリが書き込んだ地域）の地震情報を表示する。
 //
 
 import AppIntents

@@ -227,13 +227,12 @@ class _NotificationLogTile extends StatelessWidget {
       ),
       subtitle: Column(
         mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
-          Expanded(
-            child: Text(
-              item.body ?? '[本文なし]',
-              maxLines: 4,
-              overflow: .ellipsis,
-            ),
+          Text(
+            item.body ?? '[本文なし]',
+            maxLines: 4,
+            overflow: .ellipsis,
           ),
           if (liveActivityEventType != null)
             Text(

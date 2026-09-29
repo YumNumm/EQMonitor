@@ -24,6 +24,33 @@ struct OpenEarthquakeHistoryIntent: OpenIntent {
     }
 }
 
+@available(iOS 26.0, *)
+struct OpenEarthquakeDetailsIntent: AppIntent {
+    static let title: LocalizedStringResource = "地震の詳細を開く"
+    static let supportedModes: IntentModes = .foreground
+    static let isDiscoverable = false
+
+    @Parameter(title: "地震ID")
+    var eventID: String
+
+    @Dependency var navigation: EarthquakeHistoryNavigation
+
+    init() {}
+
+    init(eventID: String) {
+        self.eventID = eventID
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        guard let url = EarthquakeDetailURL.make(eventId: eventID),
+              await navigation.openURL(url) else {
+            throw EarthquakeHistoryNavigationError.cannotOpenDetails
+        }
+        return .result()
+    }
+}
+
 enum EarthquakeHistoryDestination: String, AppEnum {
     case earthquakeHistory
     static let typeDisplayRepresentation: TypeDisplayRepresentation = "EQMonitorの画面"
@@ -47,8 +74,14 @@ struct EarthquakeHistoryNavigation: Sendable {
 
 enum EarthquakeHistoryNavigationError: Error, Equatable, CustomLocalizedStringResourceConvertible {
     case cannotOpen
+    case cannotOpenDetails
     var localizedStringResource: LocalizedStringResource {
-        "地震履歴を開けませんでした。EQMonitorを起動して、もう一度お試しください。"
+        switch self {
+        case .cannotOpen:
+            "地震履歴を開けませんでした。EQMonitorを起動して、もう一度お試しください。"
+        case .cannotOpenDetails:
+            "地震の詳細を開けませんでした。EQMonitorを起動して、もう一度お試しください。"
+        }
     }
 }
 
