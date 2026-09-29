@@ -28,14 +28,15 @@ Future<void> pushTokenSyncWiring(Ref ref) async {
   }
 
   await ref.read(pushTokenSyncProvider.future);
-  final notifier = ref.read(pushTokenSyncProvider.notifier);
   ref.listen<AsyncValue<NotificationToken>>(notificationTokenStreamProvider, (
     _,
     next,
   ) {
     final token = next.value;
     if (token != null) {
-      notifier.accept(token);
+      // Notifier は rebuild のたびに作り直されるため、毎回現在のものを取得する。
+      // 取得を 1 度きりにすると、破棄済みの旧インスタンスへ渡してしまう。
+      ref.read(pushTokenSyncProvider.notifier).accept(token);
     }
   }, fireImmediately: true);
 }
