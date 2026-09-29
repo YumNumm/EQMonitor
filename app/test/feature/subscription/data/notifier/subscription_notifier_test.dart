@@ -341,6 +341,30 @@ void main() {
     );
     expect(repository.purchases, 0);
   });
+  testWidgets('pending purchase sync retries until the webhook arrives', (
+    tester,
+  ) async {
+    await container.read(subscriptionProvider.future);
+    server.synced = const Failure(
+      SubscriptionApiException(reason: SubscriptionApiFailure.pending),
+    );
+    expect(
+      await container
+          .read(subscriptionProvider.notifier)
+          .purchaseMonthly(package: monthlyPackage),
+      const PurchaseResult.pending(),
+    );
+    expect(server.syncs, 1);
+    await tester.pump(const Duration(seconds: 3));
+    expect(server.syncs, 2);
+    server.synced = const Success(active);
+    await tester.pump(const Duration(seconds: 5));
+    expect(server.syncs, 3);
+    expect(container.read(subscriptionProvider).value, active);
+    await tester.pump(const Duration(seconds: 60));
+    expect(server.syncs, 3);
+  });
+
   testWidgets('expiry schedules a server refresh without a UI action', (
     tester,
   ) async {

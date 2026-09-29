@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:clock/clock.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_failure_reason.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_outcome.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
@@ -21,11 +23,14 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
   var _generation = 0;
   var _busy = false;
   Future<void>? _refreshing;
+  var _pendingRetry = 0;
+  final _random = Random();
   Timer? _expiryTimer;
 
   @override
   Future<SubscriptionStatus> build() async {
     final generation = ++_generation;
+    cancelPendingRetry();
     ref.onDispose(() {
       _generation++;
       _expiryTimer?.cancel();
@@ -99,6 +104,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
     final current = state;
     final previous = current.value;
     if (_busy) return;
+    cancelPendingRetry();
     if (current.isLoading || current.hasError || previous == null) {
       ref.invalidateSelf();
       return;
@@ -150,6 +156,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
         PurchaseFailureReason.operationInProgress,
       );
     _busy = true;
+    cancelPendingRetry();
     final generation = _generation;
     try {
       final repository = await ref.read(subscriptionRepositoryProvider.future);
@@ -190,6 +197,13 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
         return const PurchaseResult.cancelled();
       state = AsyncData(status);
       scheduleExpiry(status: status);
+      if (synced.isPendingFailure) {
+        retryPendingSync(
+          repository: repository,
+          server: server,
+          generation: generation,
+        );
+      }
       if (status is SubscriptionStatusInactive &&
           status.syncPhase == SubscriptionSyncPhase.idle) {
         return outcome.result;
@@ -211,6 +225,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
   Future<void> synchronize() async {
     if (_busy) return;
     _busy = true;
+    cancelPendingRetry();
     final generation = _generation;
     final previous = state.value ?? const SubscriptionStatus.inactive();
     state = AsyncData(
@@ -245,6 +260,50 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
     }
   }
 
+  /// 購入直後の同期が 409 pending のとき、Webhook の到着を待って同期を再試行する。
+  ///
+  /// 間隔・回数は端末登録の [RetryController] と同じ (2s 基準・上限 60s・初回込み最大
+  /// [retryMaxAttempts] 回)。409 以外の結果で終了し、foreground 復帰・手動同期・
+  /// 購入/復元・再構築で打ち切る。
+  void retryPendingSync({
+    required SubscriptionRepository repository,
+    required SubscriptionServerRepository server,
+    required int generation,
+  }) {
+    final token = ++_pendingRetry;
+    bool cancelled() =>
+        !ref.mounted ||
+        token != _pendingRetry ||
+        generation != _generation ||
+        _busy;
+
+    unawaited(() async {
+      for (var attempt = 0; attempt < retryMaxAttempts - 1; attempt++) {
+        await Future<void>.delayed(
+          retryBackoffDelay(attempt: attempt, random: _random),
+        );
+        if (cancelled()) return;
+        try {
+          await repository.session.validateCredentials();
+          final synced = await server.fetch(synchronize: true);
+          await repository.session.validateCredentials();
+          if (cancelled()) return;
+          if (synced.isPendingFailure) continue;
+          final previous = state.value ?? const SubscriptionStatus.inactive();
+          final status = synced.toSyncedStatus(previous: previous);
+          state = AsyncData(status);
+          scheduleExpiry(status: status);
+          return;
+        } catch (_) {
+          // 端末 identity の変更は provider の再構築側で扱う。
+          return;
+        }
+      }
+    }());
+  }
+
+  void cancelPendingRetry() => _pendingRetry++;
+
   void scheduleExpiry({required SubscriptionStatus status}) {
     _expiryTimer?.cancel();
     if (status case SubscriptionStatusActive(:final expiresAt?)) {
@@ -256,4 +315,16 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
       }
     }
   }
+}
+
+extension on Result<SubscriptionStatus, SubscriptionApiException> {
+  bool get isPendingFailure => switch (this) {
+    Failure(
+      exception: SubscriptionApiException(
+        reason: SubscriptionApiFailure.pending,
+      ),
+    ) =>
+      true,
+    _ => false,
+  };
 }
