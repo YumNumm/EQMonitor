@@ -125,7 +125,8 @@ class EewListDataSource
       if (index == -1) {
         insertItem(0, item);
         currentItems.insert(0, item);
-      } else {
+      } else if (currentItems[index].serialNo <= item.serialNo) {
+        // 遅れて届いた古い報で新しい報を上書きしない。
         updateItem(index, (_) => item);
         currentItems[index] = item;
       }

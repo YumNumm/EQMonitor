@@ -39,8 +39,9 @@ class EewCard extends ConsumerWidget {
     final now = ref.watch(timeTickerProvider());
     final isWarning = eew.isWarning ?? false;
 
+    // 取消報は発生時刻を持たないが、取消の旨を表示するためカードは描画する。
     final happenedTime = eew.originTime ?? eew.arrivalTime;
-    if (happenedTime == null) {
+    if (happenedTime == null && !eew.isCanceled) {
       return const SizedBox.shrink();
     }
 
@@ -166,7 +167,7 @@ class _EewMainCard extends StatelessWidget {
 
   final EewTelegramItem eew;
   final bool isWarning;
-  final DateTime happenedTime;
+  final DateTime? happenedTime;
   final JmaIntensity? localForecastIntensity;
   final String? regionDisplayName;
   final bool showArrived;
@@ -195,6 +196,7 @@ class _EewMainCard extends StatelessWidget {
         : _forecastHeaderColor;
 
     final regionDisplayName = this.regionDisplayName;
+    final happenedTime = this.happenedTime;
     final showLocalForecast =
         (localForecastIntensity != null ||
             secondsUntilArrival != null ||
@@ -239,7 +241,7 @@ class _EewMainCard extends StatelessWidget {
                       fontWeight: .w700,
                     ),
                   )
-                else ...[
+                else if (happenedTime != null) ...[
                   Row(
                     spacing: spacing.sm,
                     children: [

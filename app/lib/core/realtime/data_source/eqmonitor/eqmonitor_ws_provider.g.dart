@@ -55,6 +55,9 @@ String _$eqmonitorWebSocketHash() =>
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
 /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
 /// アプリ resume 時はバックオフをリセットして即座に再接続する。
+/// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
+/// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
+/// ジッタを入れて再接続する。
 
 @ProviderFor(EqmonitorWsEventStream)
 final eqmonitorWsEventStreamProvider = EqmonitorWsEventStreamProvider._();
@@ -64,6 +67,9 @@ final eqmonitorWsEventStreamProvider = EqmonitorWsEventStreamProvider._();
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
 /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
 /// アプリ resume 時はバックオフをリセットして即座に再接続する。
+/// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
+/// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
+/// ジッタを入れて再接続する。
 final class EqmonitorWsEventStreamProvider
     extends $StreamNotifierProvider<EqmonitorWsEventStream, WebSocketEvent> {
   /// WebSocket イベントストリーム。
@@ -71,6 +77,9 @@ final class EqmonitorWsEventStreamProvider
   /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
   /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
   /// アプリ resume 時はバックオフをリセットして即座に再接続する。
+  /// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
+  /// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
+  /// ジッタを入れて再接続する。
   EqmonitorWsEventStreamProvider._()
     : super(
         from: null,
@@ -91,13 +100,16 @@ final class EqmonitorWsEventStreamProvider
 }
 
 String _$eqmonitorWsEventStreamHash() =>
-    r'02666dc05d9472a2f4dc397ee91fe8588bae15d6';
+    r'9ac4c810f5aa337c26f5543b185c3130c32d5410';
 
 /// WebSocket イベントストリーム。
 ///
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
 /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
 /// アプリ resume 時はバックオフをリセットして即座に再接続する。
+/// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
+/// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
+/// ジッタを入れて再接続する。
 
 abstract class _$EqmonitorWsEventStream
     extends $StreamNotifier<WebSocketEvent> {
