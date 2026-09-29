@@ -263,7 +263,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
   /// 購入直後の同期が 409 pending のとき、Webhook の到着を待って同期を再試行する。
   ///
   /// 間隔・回数は端末登録の [RetryController] と同じ (2s 基準・上限 60s・初回込み最大
-  /// [retryMaxAttempts] 回)。409 以外の結果で終了し、foreground 復帰・手動同期・
+  /// [RetryBackoffPolicy.maxAttempts] 回)。409 以外の結果で終了し、foreground 復帰・手動同期・
   /// 購入/復元・再構築で打ち切る。
   void retryPendingSync({
     required SubscriptionRepository repository,
@@ -278,9 +278,13 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
         _busy;
 
     unawaited(() async {
-      for (var attempt = 0; attempt < retryMaxAttempts - 1; attempt++) {
+      for (
+        var attempt = 0;
+        attempt < RetryBackoffPolicy.maxAttempts - 1;
+        attempt++
+      ) {
         await Future<void>.delayed(
-          retryBackoffDelay(attempt: attempt, random: _random),
+          const RetryBackoffPolicy().delay(attempt: attempt, random: _random),
         );
         if (cancelled()) return;
         try {

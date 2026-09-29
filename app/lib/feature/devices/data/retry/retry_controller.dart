@@ -6,16 +6,19 @@ const _retryBaseDelay = Duration(seconds: 2);
 const _retryMaxDelay = Duration(seconds: 60);
 const _retryMaxAttempts = 6;
 
-/// 初回を含む最大試行回数。
-const retryMaxAttempts = _retryMaxAttempts;
+/// 端末登録と購入同期で共有する再試行間隔。
+class const RetryBackoffPolicy() {
+  /// 初回を含む最大試行回数。
+  static const maxAttempts = _retryMaxAttempts;
 
-/// [attempt] 回目 (0 始まり) の失敗後に待つ時間。
-/// 2s 基準の指数バックオフに 0〜999ms の jitter を加え、60s を上限とする。
-Duration retryBackoffDelay({required int attempt, required Random random}) {
-  final base = _retryBaseDelay.inMilliseconds * (1 << attempt);
-  final jitter = random.nextInt(1000);
-  final total = Duration(milliseconds: base + jitter);
-  return total > _retryMaxDelay ? _retryMaxDelay : total;
+  /// [attempt] 回目 (0 始まり) の失敗後に待つ時間。
+  /// 2s 基準の指数バックオフに 0〜999ms の jitter を加え、60s を上限とする。
+  Duration delay({required int attempt, required Random random}) {
+    final base = _retryBaseDelay.inMilliseconds * (1 << attempt);
+    final jitter = random.nextInt(1000);
+    final total = Duration(milliseconds: base + jitter);
+    return total > _retryMaxDelay ? _retryMaxDelay : total;
+  }
 }
 
 sealed class const RetryControllerState();
@@ -106,7 +109,7 @@ class RetryController {
     if (e case RateLimitedException(retryAfter: final Duration retryAfter)) {
       return retryAfter;
     }
-    return retryBackoffDelay(attempt: attempt, random: _random);
+    return const RetryBackoffPolicy().delay(attempt: attempt, random: _random);
   }
 
   void _setState(RetryControllerState s) {
