@@ -43,7 +43,7 @@ final class PushTokenSyncStartupProvider
 }
 
 String _$pushTokenSyncStartupHash() =>
-    r'2f32d2fbd58411a74e3d04af83270e307ab0c48c';
+    r'1ec239946d7ea6e37c1154e616630ae7465648f7';
 
 @ProviderFor(pushTokenSyncWiring)
 final pushTokenSyncWiringProvider = PushTokenSyncWiringProvider._();
