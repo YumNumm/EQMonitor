@@ -13,9 +13,10 @@ const _keyExtra = 'cache.key';
 const kForceFreshExtra = 'cache.force_fresh';
 
 class HttpCacheInterceptor extends Interceptor {
-  new(this.store);
+  new(this.store, {DateTime Function() now = DateTime.now}) : _now = now;
 
   final HttpCacheStore store;
+  final DateTime Function() _now;
 
   @override
   Future<void> onRequest(
@@ -94,6 +95,14 @@ class HttpCacheInterceptor extends Interceptor {
         );
         return;
       }
+      try {
+        await store.touch(
+          key: key,
+          updatedAtMs: _now().millisecondsSinceEpoch,
+        );
+      } catch (_) {
+        // LRU の記録に失敗しても、復元できた応答は返す。
+      }
       handler.resolve(restoreResponse(response.requestOptions, cached));
       return;
     }
@@ -134,7 +143,7 @@ class HttpCacheInterceptor extends Interceptor {
       headers: response.headers.map,
       responseType: typeName,
       body: body,
-      updatedAtMs: 0,
+      updatedAtMs: _now().millisecondsSinceEpoch,
     );
   }
 }
