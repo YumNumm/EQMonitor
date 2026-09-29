@@ -454,6 +454,7 @@ class _MapContent extends HookConsumerWidget {
       ),
       null when hasJmaObservation => JmaIntensityContent(
         item: filteredEarthquake,
+        isPreliminary: earthquake.intensity?.intensityTree.isEmpty ?? true,
       ),
       null => null,
     };
