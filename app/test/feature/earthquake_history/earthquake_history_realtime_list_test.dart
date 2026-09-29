@@ -129,7 +129,7 @@ void main() {
     expect(dataSource.notifier.values, isEmpty);
   });
 
-  test('新規地震はProvider再取得を要求し既存地震の更新は要求しない', () {
+  test('新規地震は先頭の再検証を要求し既存地震の更新は要求しない', () {
     final repository = _CompletingListRepository([]);
     final dataSource = _dataSource(repository: repository);
     addTearDown(dataSource.dispose);
@@ -289,7 +289,7 @@ void main() {
     expect(dataSource.notifier.values, isEmpty);
   });
 
-  test('prefecture震度filterは推測せずProvider再取得を要求する', () {
+  test('prefecture震度filterは推測せず先頭の再検証を要求する', () {
     final repository = _CompletingListRepository([]);
     final dataSource = _dataSource(
       repository: repository,
@@ -311,7 +311,7 @@ void main() {
       ),
     ]);
 
-    final shouldInvalidate = dataSource.applyRealtimeRecord(
+    final shouldRevalidate = dataSource.applyRealtimeRecord(
       _earthquake(
         eventId: '20260724010000',
         earthquakeType: api.EarthquakeType.normal,
@@ -319,7 +319,7 @@ void main() {
     );
 
     final item = dataSource.notifier.values.single;
-    expect(shouldInvalidate, isTrue);
+    expect(shouldRevalidate, isTrue);
     expect(item, isA<EarthquakePartialPrefecture>());
     expect(item.earthquake.earthquakeType, EarthquakeType.distant);
     expect(
@@ -328,7 +328,7 @@ void main() {
     );
   });
 
-  test('city震度filterは推測せずProvider再取得を要求する', () {
+  test('city震度filterは推測せず先頭の再検証を要求する', () {
     final repository = _CompletingListRepository([]);
     final dataSource = _dataSource(
       repository: repository,
@@ -350,7 +350,7 @@ void main() {
       ),
     ]);
 
-    final shouldInvalidate = dataSource.applyRealtimeRecord(
+    final shouldRevalidate = dataSource.applyRealtimeRecord(
       _earthquake(
         eventId: '20260724010000',
         earthquakeType: api.EarthquakeType.normal,
@@ -358,7 +358,7 @@ void main() {
     );
 
     final item = dataSource.notifier.values.single;
-    expect(shouldInvalidate, isTrue);
+    expect(shouldRevalidate, isTrue);
     expect(item, isA<EarthquakePartialCity>());
     expect(item.earthquake.earthquakeType, EarthquakeType.distant);
     expect((item as EarthquakePartialCity).cityIntensity, JmaIntensity.four);

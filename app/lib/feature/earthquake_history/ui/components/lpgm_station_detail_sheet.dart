@@ -20,6 +20,9 @@ class LpgmStationDetailSheet extends ConsumerWidget {
     final intensityColors = context.designSystem.colorTheme.intensity;
     final intensity = station.intensity;
     final prePeriods = intensity?.prePeriods;
+    final hasLpgmData =
+        intensity?.maxLpgmIntensity != null ||
+        (prePeriods != null && prePeriods.isNotEmpty);
 
     return SafeArea(
       child: Padding(
@@ -47,8 +50,10 @@ class LpgmStationDetailSheet extends ConsumerWidget {
                 intensityColors: intensityColors,
               ),
             ],
-            const SizedBox(height: 16),
-            const _RelatedLinksCard(),
+            if (hasLpgmData) ...[
+              const SizedBox(height: 16),
+              const _RelatedLinksCard(),
+            ],
             const SizedBox(height: 8),
           ],
         ),

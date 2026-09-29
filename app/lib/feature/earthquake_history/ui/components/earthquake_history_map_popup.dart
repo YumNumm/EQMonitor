@@ -23,7 +23,7 @@ class const EarthquakeHistoryMapPopupAction() {
     BuildContext context, {
     required String areaName,
     required JmaIntensity? maxIntensity,
-    required Widget intensityContent,
+    required Widget? intensityContent,
     IntensityHistoryRoute? intensityHistoryRoute,
   }) {
     return showM3EModalBottomSheet(
@@ -52,7 +52,7 @@ class _AreaPopupBody extends StatelessWidget {
 
   final String areaName;
   final JmaIntensity? maxIntensity;
-  final Widget intensityContent;
+  final Widget? intensityContent;
   final IntensityHistoryRoute? intensityHistoryRoute;
 
   @override
@@ -94,7 +94,17 @@ class _AreaPopupBody extends StatelessWidget {
                   ),
                 ],
               ),
-            intensityContent,
+            if (intensityContent case final content?)
+              content
+            else
+              Text(
+                '観測なし',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: context.designSystem.colorTheme.onSurface.withValues(
+                    alpha: 0.6,
+                  ),
+                ),
+              ),
             if (intensityHistoryRoute case final route?) ...[
               const SizedBox(height: 8),
               M3ETextButton.icon(

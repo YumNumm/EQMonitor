@@ -13,9 +13,10 @@ const _keyExtra = 'cache.key';
 const kForceFreshExtra = 'cache.force_fresh';
 
 class HttpCacheInterceptor extends Interceptor {
-  new(this.store);
+  new(this.store, {DateTime Function() now = DateTime.now}) : _now = now;
 
   final HttpCacheStore store;
+  final DateTime Function() _now;
 
   @override
   Future<void> onRequest(
@@ -83,8 +84,24 @@ class HttpCacheInterceptor extends Interceptor {
     if (response.statusCode == 304) {
       final cached = await store.read(key);
       if (cached == null) {
-        handler.next(response);
+        // 復元元が消えた 304 (body なし) を成功として渡すとデシリアライズで
+        // 失敗するため、応答エラーとして扱う。
+        handler.reject(
+          DioException.badResponse(
+            statusCode: 304,
+            requestOptions: response.requestOptions,
+            response: response,
+          ),
+        );
         return;
+      }
+      try {
+        await store.touch(
+          key: key,
+          updatedAtMs: _now().millisecondsSinceEpoch,
+        );
+      } catch (_) {
+        // LRU の記録に失敗しても、復元できた応答は返す。
       }
       handler.resolve(restoreResponse(response.requestOptions, cached));
       return;
@@ -126,7 +143,7 @@ class HttpCacheInterceptor extends Interceptor {
       headers: response.headers.map,
       responseType: typeName,
       body: body,
-      updatedAtMs: 0,
+      updatedAtMs: _now().millisecondsSinceEpoch,
     );
   }
 }

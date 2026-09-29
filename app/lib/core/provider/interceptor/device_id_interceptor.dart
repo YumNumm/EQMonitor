@@ -29,7 +29,12 @@ class DeviceIdInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final token = await _readToken();
+    // device-id ヘッダは任意のため、secure storage の読み取り失敗で
+    // リクエスト自体を失敗させない。
+    final token = await _readToken().catchError(
+      (Object _) => null,
+      test: (error) => error is Exception,
+    );
     if (token == null || token.isEmpty) {
       handler.next(options);
       return;

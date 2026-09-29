@@ -20,6 +20,28 @@ class CacheDatabase extends _$CacheDatabase {
   Future<void> deleteEntry(String key) =>
       (delete(httpCacheEntries)..where((t) => t.key.equals(key))).go();
 
+  Future<void> deleteEntries(List<String> keys) =>
+      (delete(httpCacheEntries)..where((t) => t.key.isIn(keys))).go();
+
+  Future<void> touchEntry({required String key, required int updatedAtMs}) =>
+      (update(httpCacheEntries)..where((t) => t.key.equals(key))).write(
+        HttpCacheEntriesCompanion(updatedAtMs: Value(updatedAtMs)),
+      );
+
+  /// LRU 判定用に、最近使われた順 (updated_at_ms 降順) のキーと body サイズを返す。
+  Future<List<({String key, int bodySizeBytes})>> listEntrySizesByRecency() =>
+      customSelect(
+        'SELECT key, length(body) AS body_size_bytes '
+        'FROM http_cache_entries '
+        'ORDER BY updated_at_ms DESC, key DESC',
+        readsFrom: {httpCacheEntries},
+      ).map((row) {
+        return (
+          key: row.read<String>('key'),
+          bodySizeBytes: row.read<int>('body_size_bytes'),
+        );
+      }).get();
+
   Future<void> clear() => delete(httpCacheEntries).go();
 
   Future<void> vacuum() => customStatement('VACUUM');

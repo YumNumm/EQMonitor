@@ -39,8 +39,10 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
     if (next case AsyncData(:final value)) {
       switch (value) {
         case RealtimeEarthquakeUpsertEvent(:final record):
+          // DataSource を作り直すとスクロール位置と追加読み込み済みページが
+          // 失われるため、先頭ページの差分反映で追従する。
           if (dataSource.applyRealtimeRecord(record)) {
-            ref.invalidateSelf();
+            await dataSource.revalidateLatest();
           }
         case RealtimeEarthquakeDeleteEvent(:final eventId):
           dataSource.applyRealtimeDelete(eventId);
@@ -53,7 +55,7 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
   if (parameter is EarthquakeHistoryParameterAll) {
     final refetchTimer = Timer.periodic(
       const Duration(minutes: 5),
-      (_) => ref.invalidateSelf(),
+      (_) async => dataSource.revalidateLatest(),
     );
     ref
       ..onDispose(refetchTimer.cancel)
@@ -89,8 +91,11 @@ class EarthquakeHistoryDataSource
   var _hasCompletedInitialLoad = false;
 
   final ValueNotifier<bool> isRevalidating = ValueNotifier(false);
+  var _isDisposed = false;
+
   @override
   void dispose() {
+    _isDisposed = true;
     isRevalidating.dispose();
     super.dispose();
   }
@@ -118,16 +123,24 @@ class EarthquakeHistoryDataSource
     Prepend() => const None(),
   };
 
+  /// 先頭ページを再取得して差分を反映する。失敗しても表示中の一覧は維持する。
   Future<void> revalidateLatest() async {
     talker.debug('revalidateLatest');
     final startedAt = _mutationSequence;
-    final latest = await _fetch(limit: 10, cursor: null);
-    final reconciled = _reconcileMutations(
-      items: latest.items,
-      afterSequence: startedAt,
-    );
-    if (reconciled.isNotEmpty) {
-      upsertItems(reconciled);
+    try {
+      final latest = await _fetch(limit: 10, cursor: null);
+      if (_isDisposed) {
+        return;
+      }
+      final reconciled = _reconcileMutations(
+        items: latest.items,
+        afterSequence: startedAt,
+      );
+      if (reconciled.isNotEmpty) {
+        upsertItems(reconciled);
+      }
+    } on Exception catch (e, st) {
+      talker.handle(e, st, 'revalidateLatest failed');
     }
   }
 

@@ -68,14 +68,18 @@ class EarthquakeHistoryPagingList extends StatelessWidget {
       itemBuilder: (context, item, globalIndex, localIndex) =>
           _EarthquakeHistoryPagingItem(
             index: localIndex,
-            totalCount: dataSource.groupedValues
-                .firstWhere(
-                  (group) =>
-                      group.children.length > localIndex &&
-                      group.children[localIndex].index == globalIndex,
-                )
-                .children
-                .length,
+            // 更新直後などでグループが見つからなくても例外にせず、末尾の項目として扱う
+            totalCount:
+                dataSource.groupedValues
+                    .where(
+                      (group) =>
+                          group.children.length > localIndex &&
+                          group.children[localIndex].index == globalIndex,
+                    )
+                    .firstOrNull
+                    ?.children
+                    .length ??
+                localIndex + 1,
             item: item,
             selected: selectedEventId == item.earthquake.eventId,
             onSelect: onSelect,
