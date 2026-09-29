@@ -15,6 +15,12 @@
 - 最新値＋1、十分な offset、日時方式のいずれかを運用として決め、再実行・並列実行でも既使用値を再利用しない採番に統一する。
 - 完了条件: 不要な計算/出力を削除し、生成 AAB の versionCode が既存最大値を超え、実際の Play upload が成功する。
 
+## 900: iOS ATT 利用目的キー削除後の提出確認
+
+- [ ] 修正を含む配布用 IPA の `Payload/Runner.app/Info.plist` に `NSUserTrackingUsageDescription` が含まれないことを確認する。ソースのキー削除のみ確認済みで、配布成果物は未検証。
+- [ ] 新しいビルドを App Store Connect にアップロードし、そのビルドを審査対象に選択して警告の解消を確認する。アップロードと審査画面での確認は未実施。
+- 設定と申告の確認先: [ストア申告チェックリスト](../beta/privacy-store-declarations.md#22-attapp-tracking-transparencyの設定)。
+
 ## 860: iOS cold archive の actool
 
 - 対象: `app/ios/Runner.xcodeproj/project.pbxproj`、`app/ios/AppIcon-dev.icon` / `AppIcon-prod.icon`、`.github/workflows/deploy-app.yaml`。
