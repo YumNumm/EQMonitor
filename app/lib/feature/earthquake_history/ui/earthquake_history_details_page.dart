@@ -258,7 +258,8 @@ class _LoadedContent extends HookConsumerWidget {
                             ),
                           ),
                         ),
-                      _TelegramListButton(eventId: earthquake.eventId),
+                      if (hasXml)
+                        _TelegramListButton(eventId: earthquake.eventId),
                     ],
                   ),
                 ),
