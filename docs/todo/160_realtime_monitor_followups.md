@@ -11,7 +11,7 @@
 
 ## 080: 強震モニタ data 層
 
-対象: `app/lib/feature/kyoshin_monitor/data/` と遅延設定UI。
+対象: `app/lib/feature/kyoshin_monitor/data/`。
 
 - 高: `KyoshinMonitorNotifier._fetchAndAnalyzeImage` を注入可能な専用クラスへ分離し、毎秒 `AsyncLoading` に戻す点滅を解消する。補正量の正本をSettings/Adjustmentで二重化せず、永続化をRepositoryへ集約する。
 - 高: `timer_stream` の scheduling 時にNTPを引く処理と、補正済みclockから対象時刻を発行する処理の意味を確認する。二重補正の不具合とは断定せず、端末時計＋30秒と小数秒offsetで秒境界・発行時刻の契約をテストする。

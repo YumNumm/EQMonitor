@@ -15,12 +15,23 @@
 - 最新値＋1、十分な offset、日時方式のいずれかを運用として決め、再実行・並列実行でも既使用値を再利用しない採番に統一する。
 - 完了条件: 不要な計算/出力を削除し、生成 AAB の versionCode が既存最大値を超え、実際の Play upload が成功する。
 
+## 900: iOS ATT 利用目的キー削除後の提出確認
+
+- [ ] 修正を含む配布用 IPA の `Payload/Runner.app/Info.plist` に `NSUserTrackingUsageDescription` が含まれないことを確認する。ソースのキー削除のみ確認済みで、配布成果物は未検証。
+- [ ] 新しいビルドを App Store Connect にアップロードし、そのビルドを審査対象に選択して警告の解消を確認する。アップロードと審査画面での確認は未実施。
+- 設定と申告の確認先: [ストア申告チェックリスト](../beta/privacy-store-declarations.md#22-attapp-tracking-transparencyの設定)。
+
 ## 860: iOS cold archive の actool
 
 - 対象: `app/ios/Runner.xcodeproj/project.pbxproj`、`app/ios/AppIcon-dev.icon` / `AppIcon-prod.icon`、`.github/workflows/deploy-app.yaml`。
 - clean DerivedData での `CompileAssetCatalogVariant thinned` / actool クラッシュを再確認する。
 - `ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES` が残るため、未使用の代替アイコンを同時コンパイルする必要性を確認し、不要なら設定を整理する。
 - 完了条件: 新しい専用 DerivedData で archive が成功する。warm cache の成功だけで閉じず、失敗時の生 xcodebuild log を保存する。
+
+## 860: Xcode 27.0 正式版でのストア提出確認
+
+- 配布 workflow は Xcode 27.0 / `27A266a` と iOS SDK 27.0 に固定済み。変更後の署名済みビルドとストア提出は未確認。
+- 完了条件: 新しいビルド番号で再ビルドし、CI の Xcode・SDK 検査と App Store Connect の処理が成功する。ベータ版 Xcode を理由に提出を拒否されないことを確認する。
 
 ## 300: iOS extension の版番号
 
