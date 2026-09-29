@@ -8,33 +8,20 @@ import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart
 import 'package:eqmonitor/feature/eew_history/ui/components/eew_warning_filter_chip.dart';
 import 'package:material_ui/material_ui.dart';
 
-class const EewListParameterPersistentDelegate({
+class const EewListParameterRow({
   required final EewListParameter parameter,
   required final void Function(EewListParameter) onChanged,
-}) extends SliverPersistentHeaderDelegate {
-  static const double height = 48;
+}) extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  Size get preferredSize => const Size.fromHeight(48);
 
   @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
+  Widget build(BuildContext context) {
     return ColoredBox(
       color: context.designSystem.colorTheme.surface,
       child: _FilterChipBar(parameter: parameter, onChanged: onChanged),
     );
   }
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  double get minExtent => height;
-
-  @override
-  bool shouldRebuild(covariant EewListParameterPersistentDelegate old) =>
-      parameter != old.parameter;
 }
 
 class _FilterChipBar extends StatelessWidget {
