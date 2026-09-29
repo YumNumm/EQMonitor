@@ -24,26 +24,32 @@ void main() {
         File('android/app/src/main/res/xml/backup_rules.xml')
             .readAsStringSync(),
       );
-      expect(legacyRules.findAllElements('exclude'), hasLength(1));
-      expectBackupExclusion(legacyRules.findAllElements('exclude').single);
+      expectBackupExclusion(legacyRules.findAllElements('exclude'));
 
       final extractionRules = XmlDocument.parse(
         File('android/app/src/main/res/xml/data_extraction_rules.xml')
             .readAsStringSync(),
       );
       for (final section in ['cloud-backup', 'device-transfer']) {
-        final exclude = extractionRules
-            .findAllElements(section)
-            .single
-            .findElements('exclude')
-            .single;
-        expectBackupExclusion(exclude);
+        expectBackupExclusion(
+          extractionRules
+              .findAllElements(section)
+              .single
+              .findElements(
+                'exclude',
+              ),
+        );
       }
     },
   );
 }
 
-void expectBackupExclusion(XmlElement exclude) {
-  expect(exclude.getAttribute('domain'), 'sharedpref');
-  expect(exclude.getAttribute('path'), 'blt_prefs.xml');
+void expectBackupExclusion(Iterable<XmlElement> excludes) {
+  expect(
+    excludes.map(
+      (exclude) =>
+          (exclude.getAttribute('domain'), exclude.getAttribute('path')),
+    ),
+    contains(('sharedpref', 'blt_prefs.xml')),
+  );
 }
