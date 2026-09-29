@@ -23,10 +23,10 @@ void main() {
     await pumpUpdateCard(tester: tester);
     await tester.pump();
 
-    expect(find.text('Asset Pack v1.2.3 を利用できます'), findsOneWidget);
+    expect(find.text('新しい地図データ Asset Pack v1.2.3 を利用できます'), findsOneWidget);
     expect(FakeAssetPackUpdateNotifier.installCount, 0);
 
-    await tester.tap(find.text('Asset Pack v1.2.3 を利用できます'));
+    await tester.tap(find.text('新しい地図データ Asset Pack v1.2.3 を利用できます'));
     await tester.pumpAndSettle();
 
     expect(find.text('ダウンロード'), findsOneWidget);
@@ -73,17 +73,29 @@ void main() {
     expect(find.text('ダウンロード'), findsNothing);
   });
 
-  testWidgets('shows a bounded retry message after a check failure', (
-    tester,
-  ) async {
+  testWidgets('hides the card after a check failure', (tester) async {
     FakeAssetPackUpdateNotifier.initialState = const AssetPackUpdateError(
-      message: '現在のデータを使用します。',
+      message: 'Asset Pack の更新情報を確認できませんでした。',
       isUpdating: false,
     );
 
     await pumpUpdateCard(tester: tester);
 
-    expect(find.text('Asset Pack の更新確認に失敗しました'), findsOneWidget);
+    expect(find.text('Asset Pack の更新確認に失敗しました'), findsNothing);
+    expect(find.byTooltip('再試行'), findsNothing);
+  });
+
+  testWidgets('shows a bounded retry message after an install failure', (
+    tester,
+  ) async {
+    FakeAssetPackUpdateNotifier.initialState = const AssetPackUpdateError(
+      message: 'Asset Pack を更新できませんでした。',
+      isUpdating: true,
+    );
+
+    await pumpUpdateCard(tester: tester);
+
+    expect(find.text('Asset Pack を更新できませんでした。'), findsOneWidget);
     expect(find.byTooltip('再試行'), findsOneWidget);
   });
 }
