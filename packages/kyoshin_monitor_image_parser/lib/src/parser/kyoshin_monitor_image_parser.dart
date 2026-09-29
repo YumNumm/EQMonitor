@@ -21,8 +21,15 @@ class KyoshinMonitorImageParser {
     final results = <KyoshinMonitorImageParseObservationResult>[];
 
     for (final point in points) {
-      assert(point.x >= 0 && point.x < image.width, 'x is out of range');
-      assert(point.y >= 0 && point.y < image.height, 'y is out of range');
+      // release build でも範囲外の座標から別地点の色を読まないよう、
+      // 解析失敗として扱う。
+      if (point.x < 0 ||
+          point.x >= image.width ||
+          point.y < 0 ||
+          point.y >= image.height) {
+        results.add(KyoshinMonitorImageParseObservationFailure(point));
+        continue;
+      }
       final pixel = image.getPixel(point.x, point.y);
       final hsv = HsvColor.fromRgb(pixel.r, pixel.g, pixel.b, pixel.a);
       final position = _hsvToPosition(hsv);

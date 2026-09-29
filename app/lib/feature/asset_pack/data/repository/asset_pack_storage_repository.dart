@@ -44,8 +44,33 @@ class AssetPackStorageRepository {
   final ResolveAssetPackStorageRoot _resolveStorageRoot;
   final AssetPackContentValidator _contentValidator;
   String? _verifiedDownloadedVersion;
+  bool _didCleanupInactiveVersions = false;
 
+  /// 現在有効な Pack を返す。
+  ///
+  /// この repository の最初の呼び出し (= 起動後の最初の解決) でのみ、有効版以外の
+  /// ダウンロード版を削除する。更新直後に消すと、開いている地図が旧版の
+  /// pmtiles を参照し続けてタイルが欠けるため、削除は次回起動まで遅らせる。
   Future<AssetPackSource> resolveActiveSource() async {
+    final source = await resolveActiveSourceWithoutCleanup();
+    if (!_didCleanupInactiveVersions) {
+      _didCleanupInactiveVersions = true;
+      try {
+        final storageRoot = await _resolveStorageRoot();
+        await cleanupInactiveAssetPackVersions(
+          packsRoot: Directory(p.join(storageRoot.path, 'packs')),
+          activeVersion: source.kind == AssetPackSourceKind.downloaded
+              ? source.version
+              : null,
+        );
+      } on FileSystemException {
+        // 削除できなくても表示には影響しない。次回起動時に再試行する。
+      }
+    }
+    return source;
+  }
+
+  Future<AssetPackSource> resolveActiveSourceWithoutCleanup() async {
     final bundledSource = await resolveBundledAssetPackSource(
       resolveBundledRoot: _resolveBundledRoot,
     );
@@ -153,10 +178,8 @@ class AssetPackStorageRepository {
         value: version,
       );
       _verifiedDownloadedVersion = version;
-      await cleanupInactiveAssetPackVersions(
-        packsRoot: packsRoot,
-        activeVersion: version,
-      );
+      // 旧版は開いている地図が参照している可能性があるため、ここでは消さず
+      // 次回起動時の resolveActiveSource で削除する。
     } on AssetPackStorageException {
       rethrow;
     } on Object catch (error) {
@@ -205,7 +228,7 @@ class AssetPackStorageRepository {
 
   Future<void> cleanupInactiveAssetPackVersions({
     required Directory packsRoot,
-    required String activeVersion,
+    required String? activeVersion,
   }) async {
     if (!packsRoot.existsSync()) {
       return;

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
     <exclude domain="sharedpref" path="blt_prefs.xml" />
+    <!-- Asset Pack (同梱版の展開コピー・ダウンロード版) は再展開・再取得できるため除外する -->
+    <exclude domain="file" path="eqmonitor_asset_packs" />
 </full-backup-content>

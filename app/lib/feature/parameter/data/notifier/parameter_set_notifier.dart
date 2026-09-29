@@ -8,9 +8,9 @@ part 'parameter_set_notifier.g.dart';
 
 /// パラメータは Asset Pack が唯一のソースであるため、HTTP キャッシュ層
 /// （`CachedNotifier`）は使わず、単純に [ParameterRepository.loadAsset] を
-/// 呼び出すだけの Notifier とする。Pack 未取得/破損時は
-/// `AssetPackNotReadyException` が [build] からそのまま `AsyncError` として
-/// 伝播する（偽データへのフォールバックはしない）。
+/// 呼び出すだけの Notifier とする。ダウンロード版 Pack の破損・解析失敗時は
+/// Repository 側で同梱版へ戻す。同梱版でも読めない場合はエラーが [build] から
+/// そのまま `AsyncError` として伝播する（偽データへのフォールバックはしない）。
 @Riverpod(keepAlive: true)
 class ParameterSetNotifier extends _$ParameterSetNotifier {
   @override

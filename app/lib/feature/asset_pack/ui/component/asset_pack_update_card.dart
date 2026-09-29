@@ -270,7 +270,7 @@ class _AssetPackErrorCard extends ConsumerWidget {
     margin: EdgeInsets.zero,
     child: ListTile(
       leading: const Icon(Icons.info_outline_rounded),
-      title: const Text('Asset Pack の更新確認に失敗しました'),
+      title: const Text('Asset Pack の更新に失敗しました'),
       subtitle: Text(message),
       trailing: IconButton(
         tooltip: '再試行',

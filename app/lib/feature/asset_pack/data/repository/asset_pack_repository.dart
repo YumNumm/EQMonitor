@@ -35,6 +35,15 @@ typedef DeactivateDownloadedAssetPackSource = Future<void> Function(
   AssetPackSource source,
 );
 
+/// 1つの Pack ソースに固定された読み取り手段。
+///
+/// [AssetPackRepository.readFromActivePack] の中で使い、manifest と各アセットが
+/// 同じ Pack から読まれることを保証する。
+final class const AssetPackReader({
+  required final Future<AssetPackManifest> Function() readManifest,
+  required final Future<File> Function(AssetPackAssetId id) resolveAsset,
+});
+
 /// Reads `manifest.json` and individual assets from the active local pack.
 ///
 /// A verified R2 download is preferred. If it is missing or corrupt,
@@ -93,6 +102,38 @@ class AssetPackRepository {
     }
     return readAssetPackManifestFile(
       File(await requireResolvePackFile()('manifest.json')),
+    );
+  }
+
+  /// 1つの Pack ソースに固定して [operation] を実行する。
+  ///
+  /// ダウンロード版で整合性検証、または [operation] 内での内容の解析が失敗した
+  /// 場合は、ダウンロード版を無効化して同梱版で1回だけ再実行する。
+  /// 同梱版でも失敗した場合はそのエラーをそのまま伝播する。
+  Future<T> readFromActivePack<T>(
+    Future<T> Function(AssetPackReader reader) operation,
+  ) async {
+    if (_resolvePackSource case final resolveSource?) {
+      return withDownloadedAssetPackFallback(
+        resolveSource: resolveSource,
+        deactivateDownloadedSource: _deactivateDownloadedSource,
+        verifiedSha256Keys: _verifiedSha256Keys,
+        operation: (source) => operation(
+          AssetPackReader(
+            readManifest: () => readAssetPackManifestFile(
+              File(p.join(source.rootDirectory.path, 'manifest.json')),
+            ),
+            resolveAsset: (id) => resolveAssetPackAssetFromRoot(
+              id: id,
+              rootDirectory: source.rootDirectory,
+              verifiedSha256Keys: _verifiedSha256Keys,
+            ),
+          ),
+        ),
+      );
+    }
+    return operation(
+      AssetPackReader(readManifest: readManifest, resolveAsset: resolveAsset),
     );
   }
 
@@ -209,7 +250,9 @@ class AssetPackRepository {
     final source = await resolveSource();
     try {
       return await operation(source);
-    } on AssetPackNotReadyException {
+    } on Object {
+      // ダウンロード版の内容をこのアプリが解釈できない場合 (JSON 解析失敗など)
+      // も同梱版へ戻すため、例外の種類は限定しない。
       if (source.kind != AssetPackSourceKind.downloaded ||
           deactivateDownloadedSource == null) {
         rethrow;
