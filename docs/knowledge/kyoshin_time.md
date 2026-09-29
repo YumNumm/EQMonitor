@@ -33,9 +33,21 @@
 - 通常画像は`/img_svr/data/map_img/RealTimeImg/{type}_{layer}/...`。
 - 長周期画像は`/monitor/data/data/map_img/RealTimeImg/{type}_s/...`。
   地中画像はないため保存設定が地中でも_sを使い、_bを組み立てない。
-- 日時は公開済みのJSTを使う。取得失敗を別layerや固定値へ置換せず、エラーとして調査する。
+- 取得元の既定値は`lmoni`。保存済みの明示的な`kmoni`設定は維持し、未指定・未知の値は`lmoni`を使う。
+- サーバ時刻は`/img_svr/webservice/server/pros/latest.json`。日時は公開済みのJSTを使う。
+  取得失敗を別layerや固定値へ置換せず、エラーとして調査する。
+- 凡例は`/monitor/data/data/map_img/ScaleImg2/nied_{type}_{layer}_{theme}_scale.gif`。
+  長周期系列では凡例も地表の`_s`を使う。公式画面はPNG版を利用するがGIF版も公開されている。
+- P/S波画像は`/monitor/data/data/map_img/PSWaveImg/eew/{date}/{dateTime}.eew.gif`。
+  EEWがない時刻では誤ったファイル名でも1×1の空GIFが200で返るため、応答コードだけでURLを判定しない。
+- RGB→HSV変換では`delta == 0`の無彩色を除算前に処理する。白・グレーの点は
+  彩度0となり観測値には変換されないが、例外で画像全体の解析を止めてはいけない。
+- GeoJSONの`intensity`は震度画像だけで算出する。長周期・加速度・速度・変位画像の色は
+  震度へ換算せず、そのまま表示へ渡す。最低震度フィルターも非震度画像には適用しない。
 - 公式画面の通信・JavaScriptを配信形式確認の基準にする。参考ライブラリの古いhostをコピーしない。
   [LMoni](https://www.lmoni.bosai.go.jp/monitor/)、
+  [公式JavaScript](https://www.lmoni.bosai.go.jp/monitor/static/prism_longterm/js/prism_longperiod.js)、
+  [参照ライブラリのURL生成](https://github.com/ingen084/KyoshinMonitorLib/blob/master/src/KyoshinMonitorLib/UrlGenerator/LpgmWebApiUrlGenerator.cs)、
   [利用上の注意](https://www.kyoshin.bosai.go.jp/ja/about_lmoni/)を参照する。
 
 ## 画像解析の高速化は計測から
@@ -72,4 +84,5 @@ mise exec -- dart test
 mise exec -- dart analyze
 ```
 
-本統合は上記コードの静的確認のみ。新たな画像取得・GPU benchmark・clock試験は実行していない。
+LMoniのURL確認では実クライアントが生成したURLを利用し、全リアルタイム系列のGIF形式・352×400の画像寸法まで確認する。
+EEWがない時刻のP/S波画像は空画像となるため、地震発生時の描画確認とは区別する。GPU benchmarkは別途行う。
