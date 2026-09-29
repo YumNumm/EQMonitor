@@ -24,6 +24,7 @@ final class KyoshinMonitorAnalyzerIsolate._({
   required final SendPort _workerSendPort,
   required final StreamSubscription<Object?> _subscription,
   required final Map<int, Completer<AnalyzeResult>> _pending,
+  required final Completer<void> _exited,
 }) {
   var _nextId = 0;
 
@@ -35,9 +36,32 @@ final class KyoshinMonitorAnalyzerIsolate._({
     final workerPortCompleter = Completer<SendPort>();
     final initAck = Completer<void>();
     final pending = <int, Completer<AnalyzeResult>>{};
+    final exited = Completer<void>();
 
     late final StreamSubscription<Object?> subscription;
     subscription = mainReceive.listen((message) {
+      // onExit 通知。worker が異常終了した場合に応答待ちが永久に残らないよう、
+      // 待機中のすべての要求を失敗させる。
+      if (message == null) {
+        if (!exited.isCompleted) {
+          exited.complete();
+        }
+        const error = KyoshinMonitorWorkerException(
+          'kyoshin_monitor_analyzer isolate exited',
+        );
+        if (!workerPortCompleter.isCompleted) {
+          workerPortCompleter.completeError(error);
+        }
+        if (!initAck.isCompleted) {
+          initAck.completeError(error);
+        }
+        final waiting = pending.values.toList();
+        pending.clear();
+        for (final c in waiting) {
+          c.completeError(error);
+        }
+        return;
+      }
       if (message is SendPort) {
         if (!workerPortCompleter.isCompleted) {
           workerPortCompleter.complete(message);
@@ -76,6 +100,7 @@ final class KyoshinMonitorAnalyzerIsolate._({
         _workerEntryPoint,
         mainReceive.sendPort,
         debugName: 'kyoshin_monitor_analyzer',
+        onExit: mainReceive.sendPort,
       );
 
       workerSendPort = await workerPortCompleter.future;
@@ -93,11 +118,19 @@ final class KyoshinMonitorAnalyzerIsolate._({
       workerSendPort: workerSendPort,
       subscription: subscription,
       pending: pending,
+      exited: exited,
     );
   }
 
   /// GIF バイト列を解析し GeoJSON 文字列を返す。
   Future<AnalyzeResult> analyze(Uint8List gifBytes) {
+    if (_exited.isCompleted) {
+      return Future.error(
+        const KyoshinMonitorWorkerException(
+          'kyoshin_monitor_analyzer isolate exited',
+        ),
+      );
+    }
     final id = _nextId++;
     final completer = Completer<AnalyzeResult>();
     _pending[id] = completer;
