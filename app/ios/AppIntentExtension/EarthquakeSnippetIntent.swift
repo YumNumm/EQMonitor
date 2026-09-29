@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 import AppIntents
 import Foundation
 import SwiftUI
@@ -86,3 +87,5 @@ struct RefreshEarthquakeSnippetIntent: AppIntent {
             regionID: regionID, minIntensity: minIntensity, limit: limit, snapshotID: snapshotID))
     }
 }
+
+#endif

@@ -3,6 +3,15 @@
 2026-09-21統合。取得結果の一貫性と保存地域の意味を優先する。
 過去の署名なしbuild・共有テスト成功は、Siri実機登録や日本語認識の証明にしない。
 
+## ビルド設定
+
+- `IS_PRODUCTION=true` では Siri / Shortcuts / Control Center の Intent と Control を
+  コンパイル対象から外す。`AppIntentExtension` は空の entry point のみを保持する。
+- 同じ Dart define を `extract_dart_defines.sh` で Swift のコンパイル条件へ渡す。
+  GitHub Actions のビルドは常に production。ローカルの未指定時は Intent を有効にする。
+- 地震履歴のホーム画面 Widget と Live Activity は維持する。Widget 設定用の
+  `EarthquakeWidgetIntent` は production では `isDiscoverable=false` とする。
+
 ## 取得結果と保存地域
 
 - 主Intentの戻り値・音声・初回カードは同じ取得結果。Snippetには結果IDを渡し、再描画で再取得しない。

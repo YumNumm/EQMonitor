@@ -16,13 +16,16 @@ class LocalNotificationRepository {
     required Stream<RemoteMessage> foregroundMessages,
   }) : _foregroundMessages = foregroundMessages;
 
-  factory forCurrentPlatform() => LocalNotificationRepository(
-    plugin: FlutterLocalNotificationsPlugin(),
-    channelInitializer:
-        AndroidNotificationChannelInitializer.forCurrentPlatform(),
-    isAndroid: !kIsWeb && defaultTargetPlatform == TargetPlatform.android,
-    foregroundMessages: FirebaseMessaging.onMessage,
-  );
+  factory forCurrentPlatform({bool isShakeDetectionEnabled = true}) =>
+      LocalNotificationRepository(
+        plugin: FlutterLocalNotificationsPlugin(),
+        channelInitializer:
+            AndroidNotificationChannelInitializer.forCurrentPlatform(
+              isShakeDetectionEnabled: isShakeDetectionEnabled,
+            ),
+        isAndroid: !kIsWeb && defaultTargetPlatform == TargetPlatform.android,
+        foregroundMessages: FirebaseMessaging.onMessage,
+      );
 
   final FlutterLocalNotificationsPlugin plugin;
   final AndroidNotificationChannelInitializer channelInitializer;
@@ -84,6 +87,10 @@ class LocalNotificationRepository {
   Future<void> showForegroundNotification(RemoteMessage message) async {
     final notification = message.notification;
     if (!isAndroid || notification == null) {
+      return;
+    }
+    if (!channelInitializer.isShakeDetectionEnabled &&
+        notification.android?.channelId == 'shake_detection') {
       return;
     }
     await initialize();

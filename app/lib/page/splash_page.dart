@@ -1,12 +1,10 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/fcm/notification_deep_link.dart';
 import 'package:eqmonitor/core/provider/app_links_interaction.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
@@ -35,7 +33,7 @@ class SplashPage extends HookConsumerWidget {
         ..read(earthquakeHistoryConfigProvider)
         ..read(startProvider);
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        // オンボーディング / ベータ版同意のゲーティング状態は
+        // オンボーディングのゲーティング状態は
         // GoRouter の redirect が同期的に `.value` を参照するため、
         // 遷移前にここで解決しておく。これらは keepAlive なので一度
         // 解決すればキャッシュされ、redirect が正しい値を参照できる。
@@ -49,9 +47,6 @@ class SplashPage extends HookConsumerWidget {
           ref.read(appLinksColdStartGateProvider).whenResolved,
           ref.read(pendingNotificationDeepLinkGateProvider).whenResolved,
         ]);
-        if (ref.read(buildConfigProvider).isBetaTesting) {
-          await ref.read(betaTestingAgreedProvider.future);
-        }
         if (!context.mounted) {
           return;
         }

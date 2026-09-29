@@ -13,11 +13,13 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
+import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/app_links_interaction.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_foreground.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -116,6 +118,8 @@ class AppBootstrap {
 
   static Future<void> run() async {
     final profiler = StartupProfiler();
+    final buildConfig = BuildConfig.fromEnvironment();
+    final isTelemetryEnabled = !kIsWeb && !buildConfig.isProduction;
 
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       await BackgroundLocationTracker.initialize(
@@ -214,20 +218,20 @@ class AppBootstrap {
 
     // テレメトリは必須機能ではないため、DB パス (iOS は App Group コンテナ) を
     // 解決できない場合は記録・送信を無効化して起動を継続する。
-    String? telemetryDbPath;
-    var isTelemetryDisabled = false;
-    if (!kIsWeb) {
-      try {
-        telemetryDbPath = await TelemetryDbPathResolver.resolve();
-      } on Object catch (error, stackTrace) {
-        isTelemetryDisabled = true;
-        talker.error(
-          'Telemetry is disabled: failed to resolve database path',
-          error,
-          stackTrace,
-        );
-      }
-    }
+    final telemetryDbPath = isTelemetryEnabled
+        ? await Future<String?>.sync(TelemetryDbPathResolver.resolve).onError((
+            error,
+            stackTrace,
+          ) {
+            talker.error(
+              'Telemetry is disabled: failed to resolve database path',
+              error,
+              stackTrace,
+            );
+            return null;
+          })
+        : null;
+    final isTelemetryDisabled = !isTelemetryEnabled || telemetryDbPath == null;
 
     if (!kIsWeb) {
       unawaited(
@@ -239,6 +243,7 @@ class AppBootstrap {
 
     final container = ProviderContainer(
       overrides: [
+        buildConfigProvider.overrideWithValue(buildConfig),
         data_prefs.sharedPreferencesProvider.overrideWithValue(
           AsyncValue.data(results.$1.$1),
         ),
@@ -277,7 +282,7 @@ class AppBootstrap {
     container.listen(firebaseMessagingForegroundProvider, (_, _) {});
     container.listen(appLinksInteractionProvider, (_, _) {});
     container.listen(pushTokenSyncStartupProvider, (_, _) {});
-    if (!kIsWeb) {
+    if (isTelemetryEnabled && !isTelemetryDisabled) {
       unawaited(() async {
         try {
           final uploader = container.read(telemetryUploaderProvider);
@@ -318,7 +323,7 @@ class AppBootstrap {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       profiler.mark('home_first_frame');
-      if (!kIsWeb) {
+      if (isTelemetryEnabled && !isTelemetryDisabled) {
         // バックグラウンドで完了する travel_time_load / parameter_load が
         // timingsMicros に記録されてからテレメトリを送信する。
         // 各ロードの失敗は計測の欠落として許容し、record() の失敗は talker に委ねる。

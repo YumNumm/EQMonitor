@@ -11,6 +11,15 @@ Future<ShakeDetectionSettingsRepository> shakeDetectionSettingsRepository(
     ShakeDetectionSettingsRepository(await ref.watch(apiClientProvider.future));
 
 class const ShakeDetectionSettingsRepository(final api.ApiClient apiClient) {
+  Future<void> disableNotifications() async {
+    final current = await load();
+    if (current.entries.any((entry) => entry.enabled)) {
+      await save([
+        for (final entry in current.entries) entry.copyWith(enabled: false),
+      ]);
+    }
+  }
+
   Future<ShakeDetectionState> load() async {
     final response = await apiClient.device
         .getV2DeviceMeSettingsShakeDetection();

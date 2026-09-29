@@ -30,17 +30,34 @@
 
 正本は `scripts/ci/resolve_deploy_app_policy.sh` と `.github/workflows/deploy-app.yaml`。
 
-| 起点 | iOS | Android track | `IS_BETA_TESTING` |
+| 起点 | iOS | Android track | `IS_PRODUCTION` |
 | --- | --- | --- | --- |
-| `develop` push | 内部、`[external]` を含むと外部 | `internal` | false |
+| `develop` push | 内部、`[external]` を含むと外部 | `internal` | true |
 | `v*-beta.*` push | TestFlight 外部 | `external` | true |
-| 手動実行 | `ios` / `external` 入力 | `android` 入力、trackは `internal` | 入力、既定false |
+| 手動実行 | `ios` / `external` 入力 | `android` 入力、trackは `internal` | true |
 
 - 両OSとも対応する Firebase App Distribution へ配布する。iOSストアuploadとFirebaseは別job。
-- 公開テストでは `IS_SHAKE_DETECTION_ENABLED=false` を追加する。
-  iOSは `deploy-ios-external`、Androidは `android-track == external` が判定条件。
-- `BuildConfig.isDeveloperUiEnabled` は `!(isBetaTesting && flavor == prod)`。
-  prod betaのdebug導線は抑止され、App Check等の確認経路もこれを考慮する。
+- `BuildConfig.isShakeDetectionAvailable` は `!isProduction && isShakeDetectionEnabled`。
+  production では配布先や `IS_SHAKE_DETECTION_ENABLED` に関係なく揺れ検知を無効にする。
+- GitHub Actions の iOS / Android ビルドは、配布先によらず `IS_PRODUCTION=true` を渡す。
+  ローカルでは未指定時 false、`--dart-define=IS_PRODUCTION=true` で切り替える。
+- `BuildConfig.isDeveloperUiEnabled` は `!isProduction`。
+  production の一般ユーザー向け debug 導線は抑止され、Admin の既存導線は維持する。
+- production では Telemetry の記録・端末内保存・API 送信を無効にする。
+  DB のパス解決・接続、起動と resume の記録、起動時計測の保存を開始せず、
+  通知タップ・push token 同期失敗の記録は保存先も API client も持たない実装を使う。
+  iOS 通知拡張の TelemetryWriter もコンパイル対象から外す。
+- iOS の `extract_dart_defines.sh` は同じフラグを全 app extension の Swift へ渡す。
+  production では Siri / Shortcuts / Control Center の AppIntent をコンパイル対象から外す。
+  ホーム画面 Widget の設定用 Intent は維持し、Shortcuts からの検出を無効にする。
+- BETA バナー・beta 同意への自動遷移・設定画面の commit hash 表示は廃止する。
+  揺れ検知の UI・REST 同期・realtime event・デバッグ挿入は共通の利用可否で判定する。
+- production では揺れ検知の全設定導線を隠し、通知設定の変更操作を無効にする。
+  起動時には保存済みの揺れ検知通知を `enabled=false` へ同期する。地域・閾値は保持する。
+  通信に失敗した場合は次の起動・再プロビジョニングで再試行するため、
+  サーバー側の通知停止は設定の同期成功後に反映される。
+  揺れ検知だけを理由とする位置情報監視を停止し、iOS Live Activity も揺れ検知を表示しない。
+  Android の OS 通知設定でも揺れ検知チャネルを作成せず、更新前の同チャネルは削除する。
 - Proの購入・復元・設定導線は常時有効。有料権限はバックエンド確認値で判定する。
 - RevenueCatの公開SDKキーは、GitHub secret `AGE_KEY` → SOPS `.env.json` →
   `DART_DEFINE_PRODUCTION` → `environment/.env.prod` → `--dart-define-from-file` で供給する。

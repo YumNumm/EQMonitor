@@ -29,7 +29,7 @@ abstract class BuildConfig with _$BuildConfig {
     required String buildCommitMessage,
     required String revenueCatApiKeyIos,
     required String revenueCatApiKeyAndroid,
-    @Default(false) bool isBetaTesting,
+    @Default(false) bool isProduction,
     @Default(false) bool isNativeSocialAuthEnabled,
     @Default(true) bool isShakeDetectionEnabled,
   }) = _BuildConfig;
@@ -62,7 +62,7 @@ abstract class BuildConfig with _$BuildConfig {
     revenueCatApiKeyAndroid: const String.fromEnvironment(
       'REVENUECAT_API_KEY_ANDROID',
     ),
-    isBetaTesting: const bool.fromEnvironment('IS_BETA_TESTING'),
+    isProduction: const bool.fromEnvironment('IS_PRODUCTION'),
     isNativeSocialAuthEnabled: const bool.fromEnvironment(
       'IS_NATIVE_SOCIAL_AUTH_ENABLED',
     ),
@@ -76,9 +76,11 @@ abstract class BuildConfig with _$BuildConfig {
 
   /// デバッグ向け UI（デバッグメニュー・HTTP キャッシュ操作）を表示してよいか。
   ///
-  /// BETA 配布かつ production flavor のビルドでは、一般ユーザーへ配布されるため
-  /// デバッグ向け UI を隠す。
-  bool get isDeveloperUiEnabled => !(isBetaTesting && flavor == Flavor.prod);
+  /// production ビルドでは一般ユーザー向けの UI のみ表示する。
+  bool get isDeveloperUiEnabled => !isProduction;
+
+  bool get isShakeDetectionAvailable =>
+      !isProduction && isShakeDetectionEnabled;
 
   /// プラットフォームに応じた RevenueCat の API キーを返す。
   /// 後続 PR の Paywall / サブスク状態取得実装で利用する想定。

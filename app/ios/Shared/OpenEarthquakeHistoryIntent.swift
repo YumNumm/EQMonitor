@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 import AppIntents
 import Foundation
 
@@ -83,3 +84,5 @@ enum EarthquakeHistoryNavigationError: Error, Equatable, CustomLocalizedStringRe
         }
     }
 }
+
+#endif

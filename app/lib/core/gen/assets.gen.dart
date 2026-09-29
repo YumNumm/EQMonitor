@@ -37,10 +37,6 @@ class $AssetsDocsGen {
   List<String> get values => [aboutThisApp, privacyPolicy, termOfService];
 }
 
-class $AssetsFontsGen {
-  const $AssetsFontsGen();
-}
-
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -91,13 +87,19 @@ abstract final class Assets {
       'assets/KyoshinShindoColorMap.json';
   static const $AssetsDebugGen debug = $AssetsDebugGen();
   static const $AssetsDocsGen docs = $AssetsDocsGen();
-  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const String jmaMap = 'assets/jma_map.pb';
+  static const String prefectureBoundariesGeojson =
+      'assets/prefecture_boundaries.geojson.gz';
   static const String tjma2001 = 'assets/tjma2001.csv';
 
   /// List of all assets
-  static List<String> get values => [kyoshinShindoColorMap, jmaMap, tjma2001];
+  static List<String> get values => [
+    kyoshinShindoColorMap,
+    jmaMap,
+    prefectureBoundariesGeojson,
+    tjma2001,
+  ];
 }
 
 class AssetGenImage {
@@ -129,13 +131,13 @@ class AssetGenImage {
     BlendMode? colorBlendMode,
     BoxFit? fit,
     AlignmentGeometry alignment = Alignment.center,
-    ImageRepeat repeat = .noRepeat,
+    ImageRepeat repeat = ImageRepeat.noRepeat,
     Rect? centerSlice,
     bool matchTextDirection = false,
     bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = .medium,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {

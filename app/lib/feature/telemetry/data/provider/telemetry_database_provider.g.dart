@@ -56,7 +56,7 @@ final class TelemetryDatabaseProvider
   }
 }
 
-String _$telemetryDatabaseHash() => r'e27dd1aae61e7399e275dd1aab1232dfb9f87206';
+String _$telemetryDatabaseHash() => r'6a4d9dcdefea05d73f131cfa102cdb63816b8012';
 
 @ProviderFor(telemetryDbPath)
 final telemetryDbPathProvider = TelemetryDbPathProvider._();

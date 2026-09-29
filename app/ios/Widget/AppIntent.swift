@@ -9,6 +9,9 @@ import WidgetKit
 import AppIntents
 
 struct EarthquakeWidgetIntent: WidgetConfigurationIntent {
+    #if IS_PRODUCTION
+    static let isDiscoverable = false
+    #endif
     static var title: LocalizedStringResource { "地震履歴設定" }
     static var description: IntentDescription {
         "表示する範囲を選択してください。「アプリで選択した地域」はEQMonitor Proで、アプリの設定画面から地域を指定できます。"

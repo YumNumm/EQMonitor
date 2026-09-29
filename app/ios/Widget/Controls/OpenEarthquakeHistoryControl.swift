@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 import WidgetKit
 import SwiftUI
 import AppIntents
@@ -17,3 +18,5 @@ struct OpenEarthquakeHistoryControl: ControlWidget {
         .description("EQMonitor の地震履歴を開きます")
     }
 }
+
+#endif

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 
 import 'dart:async';
@@ -695,7 +696,12 @@ class _SettingsProviderStatusSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final slots = ref.watch(notificationSlotsProvider);
-    final shakeDetection = ref.watch(shakeDetectionSettingsProvider);
+    final isShakeDetectionAvailable = ref
+        .watch(buildConfigProvider)
+        .isShakeDetectionAvailable;
+    final shakeDetection = isShakeDetectionAvailable
+        ? ref.watch(shakeDetectionSettingsProvider)
+        : null;
 
     return _SectionCard(
       title: '設定プロバイダー状態',
@@ -704,7 +710,8 @@ class _SettingsProviderStatusSection extends ConsumerWidget {
         crossAxisAlignment: .start,
         children: [
           _ProviderStatusRow(label: '通知スロット', state: slots),
-          _ProviderStatusRow(label: '揺れ検知設定', state: shakeDetection),
+          if (shakeDetection != null)
+            _ProviderStatusRow(label: '揺れ検知設定', state: shakeDetection),
         ],
       ),
     );

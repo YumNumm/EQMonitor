@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 import AppIntents
 import Foundation
 
@@ -74,3 +75,5 @@ actor EarthquakeSnippetStore {
         return snapshot
     }
 }
+
+#endif

@@ -62,25 +62,7 @@ class App extends HookConsumerWidget {
     final buildConfig = ref.watch(buildConfigProvider);
     Widget result = ForcedUpdateWrapper(child: app);
 
-    if (!kDebugMode && buildConfig.isBetaTesting) {
-      result = Directionality(
-        textDirection: .ltr,
-        child: Banner(
-          message: 'BETA',
-          location: BannerLocation.topEnd,
-          color: Colors.orange.shade400,
-          textStyle: const TextStyle(
-            color: Color(0xFF0F141A),
-            fontSize: 10,
-            fontWeight: .w700,
-            letterSpacing: 0.5,
-          ),
-          child: result,
-        ),
-      );
-    }
-
-    if (kDebugMode || buildConfig.isBetaTesting) {
+    if (kDebugMode && !buildConfig.isProduction) {
       final packageInfo = ref.watch(packageInfoProvider);
       result = Directionality(
         textDirection: .ltr,

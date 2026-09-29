@@ -10,7 +10,7 @@ part 'shake_detection_merge_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) {
-  if (!ref.watch(buildConfigProvider).isShakeDetectionEnabled) {
+  if (!ref.watch(buildConfigProvider).isShakeDetectionAvailable) {
     return const [];
   }
 

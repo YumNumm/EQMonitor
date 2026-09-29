@@ -40,6 +40,9 @@ class AppLaunchRecorder {
     bool? isLowRamDevice,
     String? installerStore,
   }) async {
+    if (!_recorder.isEnabled) {
+      return false;
+    }
     final now = DateTime.now().millisecondsSinceEpoch;
     final lastSentMs = _prefs.getInt(_kLastSentKey);
 

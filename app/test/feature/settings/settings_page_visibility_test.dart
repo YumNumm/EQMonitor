@@ -52,7 +52,7 @@ void main() {
   testWidgets('developer UI 有効時は HTTP キャッシュを表示する', (tester) async {
     await _pumpSettings(
       tester,
-      buildConfig: _buildConfig(flavor: Flavor.dev, isBetaTesting: true),
+      buildConfig: _buildConfig(flavor: Flavor.dev, isProduction: false),
     );
 
     await tester.scrollUntilVisible(
@@ -64,10 +64,10 @@ void main() {
     expect(find.text('HTTPキャッシュ'), findsOneWidget);
   });
 
-  testWidgets('BETA×prod では HTTP キャッシュを表示しない', (tester) async {
+  testWidgets('production では HTTP キャッシュを表示しない', (tester) async {
     await _pumpSettings(
       tester,
-      buildConfig: _buildConfig(flavor: Flavor.prod, isBetaTesting: true),
+      buildConfig: _buildConfig(flavor: Flavor.prod, isProduction: true),
     );
 
     await tester.scrollUntilVisible(
@@ -82,7 +82,7 @@ void main() {
 
 BuildConfig _buildConfig({
   Flavor flavor = Flavor.dev,
-  bool isBetaTesting = false,
+  bool isProduction = false,
 }) => BuildConfig(
   restApiUrl: '',
   appIdSuffix: '',
@@ -96,7 +96,7 @@ BuildConfig _buildConfig({
   buildCommitMessage: '',
   revenueCatApiKeyIos: '',
   revenueCatApiKeyAndroid: '',
-  isBetaTesting: isBetaTesting,
+  isProduction: isProduction,
 );
 
 final _packageInfo = PackageInfo(

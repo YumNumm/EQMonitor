@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 import AppIntents
 import UIKit
 
@@ -27,3 +28,5 @@ enum EarthquakeSearchError: Error, CustomLocalizedStringResourceConvertible {
         "検索画面を開けませんでした。EQMonitorを起動して、もう一度お試しください。"
     }
 }
+
+#endif

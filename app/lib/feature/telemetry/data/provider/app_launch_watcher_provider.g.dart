@@ -67,7 +67,7 @@ final class AppLaunchWatcherProvider
   }
 }
 
-String _$appLaunchWatcherHash() => r'e95cf5059d471b51f1417e9ec5b7f7dfc59bb584';
+String _$appLaunchWatcherHash() => r'ae1d04efdcd024efd7075dbdfadb86070eaa2ee9';
 
 /// Watches the app lifecycle and records app launch telemetry events.
 ///

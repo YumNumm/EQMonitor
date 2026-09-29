@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:eqmonitor/core/provider/device_info.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_recorder_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -22,6 +23,9 @@ part 'app_launch_watcher_provider.g.dart';
 class AppLaunchWatcher extends _$AppLaunchWatcher with WidgetsBindingObserver {
   @override
   void build() {
+    if (ref.watch(buildConfigProvider).isProduction) {
+      return;
+    }
     final binding = WidgetsBinding.instance..addObserver(this);
     ref.onDispose(() => binding.removeObserver(this));
 

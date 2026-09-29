@@ -49,7 +49,7 @@ final class ShakeDetectionAcceptedSnapshotProvider
 }
 
 String _$shakeDetectionAcceptedSnapshotHash() =>
-    r'c3bb84e5bbb6a217d70cac2d9afbbd1972c4769a';
+    r'51f4020f3860984dcb62b8b574b0f23171555da0';
 
 abstract class _$ShakeDetectionAcceptedSnapshot
     extends $Notifier<ShakeDetectionSnapshot?> {

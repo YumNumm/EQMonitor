@@ -56,4 +56,4 @@ final class TelemetryUploaderProvider
   }
 }
 
-String _$telemetryUploaderHash() => r'30769600dc9a6b9f4fb5bceb0baab86104f07edd';
+String _$telemetryUploaderHash() => r'b0994c138c06f4f2a9165f6ccdbfafce0d2fd5ab';

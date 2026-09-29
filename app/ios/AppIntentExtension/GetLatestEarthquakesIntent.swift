@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 //
 //  GetLatestEarthquakesIntent.swift
 //  AppIntentExtension
@@ -84,3 +85,5 @@ enum EQIntentError: Error, CustomLocalizedStringResourceConvertible, Equatable {
         }
     }
 }
+
+#endif

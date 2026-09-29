@@ -58,7 +58,7 @@ final class LocalNotificationRepositoryProvider
 }
 
 String _$localNotificationRepositoryHash() =>
-    r'9aa39e789894537147b41cc7c1bbf7f2ebcd5de9';
+    r'ac6fb9dffedf9bff07395e1fcdb344b6c5dbc365';
 
 @ProviderFor(firebaseMessagingForeground)
 final firebaseMessagingForegroundProvider =

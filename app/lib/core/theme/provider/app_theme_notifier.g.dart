@@ -167,7 +167,7 @@ final class ColorSetForBrightnessProvider
 }
 
 String _$colorSetForBrightnessHash() =>
-    r'faf5a882aca1e8a1f3f9d3503a99a0b2ed323ea2';
+    r'c71f0ca4d47e1bbc0c76d8406a833dce00d53d40';
 
 final class ColorSetForBrightnessFamily extends $Family
     with $FunctionalFamilyOverride<ThemeColorSet, Brightness> {

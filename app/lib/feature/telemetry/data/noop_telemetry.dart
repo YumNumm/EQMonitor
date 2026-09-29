@@ -7,6 +7,9 @@ import 'package:telemetry_store/telemetry_store.dart';
 /// プッシュトークン同期などの呼び出し側を失敗させない。
 final class const NoopTelemetryRecorder() implements TelemetryRecorder {
   @override
+  bool get isEnabled => false;
+
+  @override
   Future<void> record(TelemetryEvent event) async {}
 
   @override

@@ -1,3 +1,4 @@
+#if !IS_PRODUCTION
 //
 //  GetEarthquakesNearMeIntent.swift
 //  AppIntentExtension
@@ -59,3 +60,5 @@ struct GetEarthquakesNearMeIntent: AppIntent {
         )
     }
 }
+
+#endif

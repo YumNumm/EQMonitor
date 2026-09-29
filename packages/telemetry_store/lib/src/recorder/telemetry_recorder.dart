@@ -7,11 +7,19 @@ import 'package:telemetry_store/src/models/telemetry_event.dart';
 class TelemetryRecorder {
   new({required TelemetryDatabase db}) : _db = db;
 
-  final TelemetryDatabase _db;
+  new disabled() : _db = null;
+
+  final TelemetryDatabase? _db;
+
+  bool get isEnabled => _db != null;
 
   Future<void> record(TelemetryEvent event) async {
+    final db = _db;
+    if (db == null) {
+      return;
+    }
     final now = DateTime.now().millisecondsSinceEpoch;
-    await _db.insertEvent(
+    await db.insertEvent(
       TelemetryEventsCompanion.insert(
         eventType: event.eventType,
         timestampMs: now,
@@ -23,8 +31,12 @@ class TelemetryRecorder {
   }
 
   Future<void> recordAll(List<TelemetryEvent> events) async {
+    final db = _db;
+    if (db == null) {
+      return;
+    }
     final now = DateTime.now().millisecondsSinceEpoch;
-    await _db.insertEvents([
+    await db.insertEvents([
       for (final event in events)
         TelemetryEventsCompanion.insert(
           eventType: event.eventType,

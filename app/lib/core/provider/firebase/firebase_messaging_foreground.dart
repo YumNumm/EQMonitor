@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/fcm/local_notification_repository.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -9,7 +10,11 @@ part 'firebase_messaging_foreground.g.dart';
 
 @Riverpod(keepAlive: true)
 LocalNotificationRepository localNotificationRepository(Ref ref) {
-  final repository = LocalNotificationRepository.forCurrentPlatform();
+  final repository = LocalNotificationRepository.forCurrentPlatform(
+    isShakeDetectionEnabled: ref
+        .watch(buildConfigProvider)
+        .isShakeDetectionAvailable,
+  );
   ref.onDispose(() => unawaited(repository.dispose()));
   return repository;
 }

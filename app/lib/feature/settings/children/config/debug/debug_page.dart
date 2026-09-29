@@ -205,13 +205,14 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   const DebugHttpCacheRoute().push<void>(context),
             ),
-            ListTile(
-              title: const Text('Telemetry Events'),
-              leading: const Icon(Icons.analytics_outlined),
-              subtitle: const Text('ローカルテレメトリーイベントの閲覧'),
-              onTap: () async =>
-                  const DebugTelemetryRoute().push<void>(context),
-            ),
+            if (!buildCfg.isProduction)
+              ListTile(
+                title: const Text('Telemetry Events'),
+                leading: const Icon(Icons.analytics_outlined),
+                subtitle: const Text('ローカルテレメトリーイベントの閲覧'),
+                onTap: () async =>
+                    const DebugTelemetryRoute().push<void>(context),
+              ),
             ListTile(
               title: const Text('Startup Timing'),
               leading: const Icon(Icons.timer_outlined),
@@ -320,33 +321,36 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   const DebugEarthquakeHistoryListTileRoute().push(context),
             ),
-            ListTile(
-              title: const Text('揺れ検知 Card'),
-              subtitle: Text(
-                'ホームと同じ揺れ検知カードの見た目をパラメータ検証',
-                style: Theme.of(context).textTheme.bodySmall,
+            if (buildCfg.isShakeDetectionAvailable)
+              ListTile(
+                title: const Text('揺れ検知 Card'),
+                subtitle: Text(
+                  'ホームと同じ揺れ検知カードの見た目をパラメータ検証',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                leading: const Icon(Icons.sensors_rounded),
+                onTap: () async =>
+                    const DebugShakeDetectionCardRoute().push(context),
               ),
-              leading: const Icon(Icons.sensors_rounded),
-              onTap: () async =>
-                  const DebugShakeDetectionCardRoute().push(context),
-            ),
-            ListTile(
-              title: const Text('揺れ検知の通知設定'),
-              subtitle: const Text('現在地・全国・細分化地域の通知条件を設定'),
-              leading: const Icon(Icons.notifications_active_outlined),
-              onTap: () async =>
-                  const DebugShakeDetectionSettingsRoute().push(context),
-            ),
-            ListTile(
-              title: const Text('揺れ検知を挿入'),
-              subtitle: Text(
-                'プリセットをホーム地図・カードへマージ表示',
-                style: Theme.of(context).textTheme.bodySmall,
+            if (buildCfg.isShakeDetectionAvailable)
+              ListTile(
+                title: const Text('揺れ検知の通知設定'),
+                subtitle: const Text('現在地・全国・細分化地域の通知条件を設定'),
+                leading: const Icon(Icons.notifications_active_outlined),
+                onTap: () async =>
+                    const DebugShakeDetectionSettingsRoute().push(context),
               ),
-              leading: const Icon(Icons.add_location_alt_outlined),
-              onTap: () async =>
-                  const DebugShakeDetectionInsertRoute().push(context),
-            ),
+            if (buildCfg.isShakeDetectionAvailable)
+              ListTile(
+                title: const Text('揺れ検知を挿入'),
+                subtitle: Text(
+                  'プリセットをホーム地図・カードへマージ表示',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                leading: const Icon(Icons.add_location_alt_outlined),
+                onTap: () async =>
+                    const DebugShakeDetectionInsertRoute().push(context),
+              ),
             ListTile(
               title: const Text('JmaMap'),
               leading: const Icon(Icons.map),

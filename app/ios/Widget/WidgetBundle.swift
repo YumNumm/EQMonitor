@@ -16,6 +16,7 @@ struct EQMonitorWidgetBundle: WidgetBundle {
             EewLiveActivityWidget()
             EarthquakeLiveActivityWidget()
         }
+        #if !IS_PRODUCTION
         if #available(iOS 18.0, *) {
             OpenEarthquakeHistoryControl()
         }
@@ -23,5 +24,6 @@ struct EQMonitorWidgetBundle: WidgetBundle {
         if #available(iOS 26.0, *) {
             LatestEarthquakeSnippetControl()
         }
+        #endif
     }
 }

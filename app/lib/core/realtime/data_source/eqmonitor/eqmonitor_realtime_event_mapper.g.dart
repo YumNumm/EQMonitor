@@ -58,4 +58,4 @@ final class EqMonitorRealtimeEventMapperProvider
 }
 
 String _$eqMonitorRealtimeEventMapperHash() =>
-    r'2694d2ad50c52a6d32b21e12f181eb85c7979b39';
+    r'de9e9e6f768c8b30911b876e0dffd95ad1d5a985';
