@@ -83,7 +83,15 @@ class HttpCacheInterceptor extends Interceptor {
     if (response.statusCode == 304) {
       final cached = await store.read(key);
       if (cached == null) {
-        handler.next(response);
+        // 復元元が消えた 304 (body なし) を成功として渡すとデシリアライズで
+        // 失敗するため、応答エラーとして扱う。
+        handler.reject(
+          DioException.badResponse(
+            statusCode: 304,
+            requestOptions: response.requestOptions,
+            response: response,
+          ),
+        );
         return;
       }
       handler.resolve(restoreResponse(response.requestOptions, cached));
