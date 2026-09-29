@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app_links/app_links.dart';
 import 'package:eqmonitor/core/fcm/notification_deep_link.dart';
 import 'package:eqmonitor/core/provider/app_links_cold_start_gate.dart';
@@ -38,7 +40,8 @@ Stream<Uri> appLinksInteraction(Ref ref) async* {
     final link = NotificationDeepLink.fromUri(uri);
     switch (link) {
       case NotificationRouteLink(:final location):
-        await ref.read(goRouterProvider).push(location);
+        // push completes when the page is popped; keep receiving new app links.
+        unawaited(ref.read(goRouterProvider).push<void>(location));
       case NotificationUrlLink(:final uri):
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       case null:
