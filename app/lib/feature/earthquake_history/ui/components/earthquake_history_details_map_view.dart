@@ -212,9 +212,9 @@ class _MapContent extends HookConsumerWidget {
           lat: camera.centerLatitude,
         );
         zoom = camera.zoom;
-      } else {
-        return const Center(child: Text('地図の表示範囲を取得できませんでした'));
       }
+      // 観測区域から表示範囲を求められない場合は、震源 → 既定位置の順で
+      // 算出済みの initialCenter / initialZoom のまま地図を表示する。
     }
     final mapOptions = MapOptions(
       initCenter: center,
