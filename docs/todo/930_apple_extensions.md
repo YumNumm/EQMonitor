@@ -6,6 +6,13 @@
 
 Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/AppIntentExtension/`、`app/ios/Widget/`、`app/lib/feature/earthquake_history/`。
 
+- `IS_PRODUCTION=true` / false の署名ビルドで切り替えを確認する。production では
+  Siri / Shortcuts / Control Center に地震 Intent が公開されず、通知受信・通知タップ・
+  起動 / resume / push token 同期失敗で Telemetry DB 作成・保存・API 送信がないことを確認する。
+  ホーム画面 Widget の地域設定と Live Activity の表示は維持されることも確認する。
+- production への更新時に、登録済み揺れ検知通知の無効化が同期されること、
+  揺れ検知だけの位置監視が停止すること、統合 Live Activity の揺れ検知表示が出ないことを確認する。
+
 - 署名実機で「EQMonitorで最新の地震を確認」、Snippet 表示/明示更新、Pro失効、保存地域変更、オフライン音声を確認する。メタデータ生成や Swift テストだけで登録成功とは判断しない。
 - Control Center の「最新の地震を確認」「地震履歴を開く」を起動済み/終了状態から実タップし、履歴が開くことを確認する。
 - `deeplink.eqmonitor.app` の DNS/AASA と実機導線を復旧・検証してから、Widget/Snippet の既存カスタムスキーム OpenURLIntent を Universal Link へ移行する（2026-09-10 の記録では名前解決失敗）。

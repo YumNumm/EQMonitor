@@ -36,7 +36,7 @@ final class MapConfigurationNotifierProvider
 }
 
 String _$mapConfigurationNotifierHash() =>
-    r'34b1d27c791e9271e7e97b5a9d9d10ec709a1d98';
+    r'00442de7e534b56a124d31bc6729d651834fd4b8';
 
 abstract class _$MapConfigurationNotifier
     extends $AsyncNotifier<MapConfiguration> {

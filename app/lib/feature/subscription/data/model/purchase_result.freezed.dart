@@ -189,7 +189,7 @@ return failed(_that.reason);case _:
 
 class PurchaseResultSuccess implements PurchaseResult {
   const PurchaseResultSuccess();
-
+  
 
 
 
@@ -221,7 +221,7 @@ String toString() {
 
 class PurchaseResultPending implements PurchaseResult {
   const PurchaseResultPending();
-
+  
 
 
 
@@ -253,7 +253,7 @@ String toString() {
 
 class PurchaseResultCancelled implements PurchaseResult {
   const PurchaseResultCancelled();
-
+  
 
 
 
@@ -285,7 +285,7 @@ String toString() {
 
 class PurchaseResultFailed implements PurchaseResult {
   const PurchaseResultFailed(this.reason);
-
+  
 
  final  PurchaseFailureReason reason;
 

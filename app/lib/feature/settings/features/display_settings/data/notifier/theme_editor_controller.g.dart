@@ -61,7 +61,7 @@ final class ThemeEditorControllerProvider
 }
 
 String _$themeEditorControllerHash() =>
-    r'3fe2cb83027cfe5a381f37e66b88a1f8e8e521ea';
+    r'310469061e510c1117ae78f95f6b66f2341ce2c1';
 
 final class ThemeEditorControllerFamily extends $Family
     with
