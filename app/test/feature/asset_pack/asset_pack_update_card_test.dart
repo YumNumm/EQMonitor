@@ -81,7 +81,7 @@ void main() {
 
     await pumpUpdateCard(tester: tester);
 
-    expect(find.text('Asset Pack の更新確認に失敗しました'), findsNothing);
+    expect(find.text('Asset Pack の更新に失敗しました'), findsNothing);
     expect(find.byTooltip('再試行'), findsNothing);
   });
 
@@ -95,6 +95,7 @@ void main() {
 
     await pumpUpdateCard(tester: tester);
 
+    expect(find.text('Asset Pack の更新に失敗しました'), findsOneWidget);
     expect(find.text('Asset Pack を更新できませんでした。'), findsOneWidget);
     expect(find.byTooltip('再試行'), findsOneWidget);
   });
