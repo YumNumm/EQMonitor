@@ -114,7 +114,7 @@
 - [x] app で `mise exec -- flutter test test/feature/settings/features/notification_settings --dart-define=CI=true` を実行した。91件成功・3件失敗。3件は基準 commit `4e853b5b1` の別 worktree でも再現した既存文言不一致で、通知音変更による失敗はない。失敗名は `slot_detail_page_test.dart` の現在地・全国警報の2件と、`notification_preset_selector_test.dart` の権限ダイアログの1件。
 - [ ] macOS で SPM を有効にし、Runner と FcmServiceExtension を含む Simulator build と署名済み実機 build を行う。共有 source の所属、生成 Flutter 設定、App Group の entitlement を確認する。
 - [ ] テスト端末へ実際の EEW 予報・地震情報・override の通知を送り、保存した fileName、最終 APNs payload、端末の再生音を照合する。前面・バックグラウンド・終了・ロック・端末再起動後、passive、critical、続報上書き、欠損時 fallback を確認する。固定の「通常テスト通知」が設定音を使わない場合は、それだけで受け入れ確認を代替しない。
-- [ ] 実機未確認の条件は `docs/todo/800_ui_and_navigation.md` に残す。文書と差分を確認し、意図した変更を stage して `mise exec -- hk check`、論理単位の commit / push、`YumNumm/EQMonitor` の `develop` 向け PR へ進める。
+- [x] 実機未確認の条件は `docs/todo/800_ui_and_navigation.md` に残す。文書と差分を確認し、意図した変更を stage して `mise exec -- hk check`、論理単位の commit / push、`YumNumm/EQMonitor` の `develop` 向け PR へ進める。
 
 **完了の判断:** UI の試聴、静的解析、build、APNs の受付成功と、実通知の音再生を区別して報告する。受け入れ結果がそろった条件だけを完了とする。
 
