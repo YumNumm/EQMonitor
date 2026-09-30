@@ -5,6 +5,8 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_sound_selector.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_sound_library_controls.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -43,17 +45,15 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
       }
     });
 
-    final eewSound = NotificationSound.fromApiValue(
-      eewSettings?.defaultSound ?? NotificationSound.defaultSound.apiValue,
-    );
+    final eewSound =
+        eewSettings?.defaultSound ?? NotificationSound.defaultSound.apiValue;
     final eewLevel =
         eewSettings?.defaultInterruptionLevel ?? InterruptionLevel.active;
     final eewCollapse = eewSettings?.collapseNotification ?? false;
 
-    final earthquakeSound = NotificationSound.fromApiValue(
-      earthquakeSettings?.defaultSound ??
-          NotificationSound.defaultSound.apiValue,
-    );
+    final earthquakeSound =
+        earthquakeSettings?.defaultSound ??
+        NotificationSound.defaultSound.apiValue;
     final earthquakeLevel =
         earthquakeSettings?.defaultInterruptionLevel ??
         InterruptionLevel.active;
@@ -65,6 +65,10 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.only(top: 16, bottom: 24),
         children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: NotificationSoundLibraryControls(),
+          ),
           const SettingsSectionHeader(text: '緊急地震速報(予報)'),
           _SoundInterruptionCard(
             sound: eewSound,
@@ -76,7 +80,7 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
               ) async {
                 await tsx
                     .get(eewGlobalSettingsProvider.notifier)
-                    .updateSettings(defaultSound: sound.apiValue);
+                    .updateSettings(defaultSound: sound);
               });
             },
             onInterruptionLevelChanged: (level) async {
@@ -109,7 +113,7 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
                 (tsx) async {
                   await tsx
                       .get(earthquakeGlobalSettingsProvider.notifier)
-                      .updateSettings(defaultSound: sound.apiValue);
+                      .updateSettings(defaultSound: sound);
                 },
               );
             },
@@ -150,10 +154,10 @@ class _SoundInterruptionCard extends StatelessWidget {
     required this.onCollapseChanged,
   });
 
-  final NotificationSound sound;
+  final String sound;
   final InterruptionLevel interruptionLevel;
   final bool collapseNotification;
-  final Future<void> Function(NotificationSound) onSoundChanged;
+  final Future<void> Function(String) onSoundChanged;
   final Future<void> Function(InterruptionLevel) onInterruptionLevelChanged;
   final Future<void> Function({required bool value}) onCollapseChanged;
 
@@ -185,27 +189,9 @@ class _SoundInterruptionCard extends StatelessWidget {
             title: const Text('通知音'),
             trailing: SizedBox(
               width: 200,
-              child: ControlledDropdown<NotificationSound>(
-                key: ValueKey(sound),
-                items:
-                    (NotificationSound.values
-                            .map(
-                              (sound) => M3EDropdownItem(
-                                value: sound,
-                                label: sound.displayName,
-                              ),
-                            )
-                            .toList())
-                        .map(
-                          (item) =>
-                              item.copyWith(selected: item.value == (sound)),
-                        )
-                        .toList(),
-                onSelectionChanged: (selectedItems) async {
-                  if (selectedItems.isEmpty) return;
-                  final selected = selectedItems.first.value;
-                  await onSoundChanged(selected);
-                },
+              child: NotificationSoundSelector(
+                apiValue: sound,
+                onChanged: onSoundChanged,
               ),
             ),
           ),
