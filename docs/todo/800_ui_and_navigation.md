@@ -2,6 +2,13 @@
 
 数値は元の優先度。実機表示の確認は未完了。
 
+## 800: ファイルから追加する通知音
+
+- 計画のみ。初回 iOS 対応を前提とする案で、対象 OS は確認中。実装・実機検証は未着手。
+- [設計案](../superpowers/specs/2026-09-30-custom-notification-sounds-design.md) と [実装計画](../superpowers/plans/2026-09-30-custom-notification-sounds.md) を参照する。
+- 対象: `app/lib/feature/settings/features/notification_settings/`、`app/ios/Runner/`、App Group の `Library/Sounds/`。
+- 完了条件: Files から音声を選択し、必要な変換・保存・試聴・通知音選択・使用中削除の防止が動く。EEW 予報・地震情報・震度別 override の実通知で、バックグラウンド・アプリ終了・ロック中の再生、passive の無音、欠損時 fallback を確認する。
+
 ## 800: Android 前面通知の実機確認
 
 - 対象: `app/lib/core/fcm/local_notification_repository.dart`、`firebaseMessagingForegroundProvider`、通知タップ処理。
