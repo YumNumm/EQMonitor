@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot_draft.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_sound_operation_coordinator.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,7 +18,12 @@ const JmaIntensity defaultNotificationSlotMinIntensity = JmaIntensity.three;
 
 @Riverpod(keepAlive: true)
 Future<NotificationSlotRepository> notificationSlotRepository(Ref ref) async =>
-    NotificationSlotRepository(api: await ref.watch(apiClientProvider.future));
+    NotificationSlotRepository(
+      api: await ref.watch(apiClientProvider.future),
+      soundCoordinator: ref.watch(
+        notificationSoundOperationCoordinatorProvider,
+      ),
+    );
 
 /// 通知スロットの最小震度を決定する。
 ///
@@ -47,9 +53,15 @@ class const NotificationSlotMinIntensityResolver() {
 }
 
 class NotificationSlotRepository {
-  new({required api.ApiClient api}) : _api = api;
+  new({
+    required api.ApiClient api,
+    NotificationSoundOperationCoordinator? soundCoordinator,
+  }) : _api = api,
+       _soundCoordinator =
+           soundCoordinator ?? NotificationSoundOperationCoordinator();
 
   final api.ApiClient _api;
+  final NotificationSoundOperationCoordinator _soundCoordinator;
 
   static const _minIntensityResolver = NotificationSlotMinIntensityResolver();
 
@@ -68,45 +80,47 @@ class NotificationSlotRepository {
     bool? earthquakeEnabled,
     JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
-  }) async {
-    final resolvedEewEnabled = eewEnabled ?? false;
-    final resolvedEarthquakeEnabled = earthquakeEnabled ?? false;
-    final response = await _api.device
-        .putV2DeviceMeSettingsSlotsCurrentLocation(
-          body: api.UpsertSingletonSlotRequest(
-            eewEnabled: resolvedEewEnabled,
-            eewMinIntensity: resolvedEewEnabled
-                ? notificationMinIntensityPolicy
-                      .clamp(
-                        slotType: NotificationSlotType.currentLocation,
-                        kind: NotificationKind.eew,
-                        minIntensity:
-                            eewMinIntensity ?? currentLocationEewMinIntensity,
-                      )
-                      ?.toApiJmaIntensity
-                : null,
-            eewOverrides: eewOverrides
-                ?.map((o) => o.toApiSlotOverride())
-                .toList(),
-            earthquakeEnabled: resolvedEarthquakeEnabled,
-            earthquakeMinIntensity: resolvedEarthquakeEnabled
-                ? notificationMinIntensityPolicy
-                      .clamp(
-                        slotType: NotificationSlotType.currentLocation,
-                        kind: NotificationKind.earthquake,
-                        minIntensity:
-                            earthquakeMinIntensity ??
-                            currentLocationEarthquakeMinIntensity,
-                      )
-                      ?.toApiJmaIntensity
-                : null,
-            earthquakeOverrides: earthquakeOverrides
-                ?.map((o) => o.toApiSlotOverride())
-                .toList(),
-          ),
-        );
-    return response.data.toNotificationSlot();
-  }
+  }) => _soundCoordinator.run(
+    () async {
+      final resolvedEewEnabled = eewEnabled ?? false;
+      final resolvedEarthquakeEnabled = earthquakeEnabled ?? false;
+      final response = await _api.device
+          .putV2DeviceMeSettingsSlotsCurrentLocation(
+            body: api.UpsertSingletonSlotRequest(
+              eewEnabled: resolvedEewEnabled,
+              eewMinIntensity: resolvedEewEnabled
+                  ? notificationMinIntensityPolicy
+                        .clamp(
+                          slotType: NotificationSlotType.currentLocation,
+                          kind: NotificationKind.eew,
+                          minIntensity:
+                              eewMinIntensity ?? currentLocationEewMinIntensity,
+                        )
+                        ?.toApiJmaIntensity
+                  : null,
+              eewOverrides: eewOverrides
+                  ?.map((o) => o.toApiSlotOverride())
+                  .toList(),
+              earthquakeEnabled: resolvedEarthquakeEnabled,
+              earthquakeMinIntensity: resolvedEarthquakeEnabled
+                  ? notificationMinIntensityPolicy
+                        .clamp(
+                          slotType: NotificationSlotType.currentLocation,
+                          kind: NotificationKind.earthquake,
+                          minIntensity:
+                              earthquakeMinIntensity ??
+                              currentLocationEarthquakeMinIntensity,
+                        )
+                        ?.toApiJmaIntensity
+                  : null,
+              earthquakeOverrides: earthquakeOverrides
+                  ?.map((o) => o.toApiSlotOverride())
+                  .toList(),
+            ),
+          );
+      return response.data.toNotificationSlot();
+    },
+  );
 
   /// 通知スロットを全件置換する
   ///
@@ -115,14 +129,18 @@ class NotificationSlotRepository {
   /// 最小震度はスロット種別ごとの下限まで引き上げてから送信する。
   Future<List<NotificationSlot>> replaceSlots(
     List<NotificationSlotDraft> slots,
-  ) async {
-    final response = await _api.device.putV2DeviceMeSettingsSlots(
-      body: slots
-          .map((slot) => _clampDraftMinIntensity(slot).toApiReplaceSlotEntry())
-          .toList(),
-    );
-    return response.data.map((s) => s.toNotificationSlot()).toList();
-  }
+  ) => _soundCoordinator.run(
+    () async {
+      final response = await _api.device.putV2DeviceMeSettingsSlots(
+        body: slots
+            .map(
+              (slot) => _clampDraftMinIntensity(slot).toApiReplaceSlotEntry(),
+            )
+            .toList(),
+      );
+      return response.data.map((s) => s.toNotificationSlot()).toList();
+    },
+  );
 
   NotificationSlotDraft _clampDraftMinIntensity(NotificationSlotDraft slot) =>
       slot.copyWith(
@@ -164,37 +182,41 @@ class NotificationSlotRepository {
     bool? earthquakeEnabled,
     JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
-  }) async {
-    final resolvedEewEnabled = eewEnabled ?? false;
-    final resolvedEarthquakeEnabled = earthquakeEnabled ?? false;
-    final response = await _api.device.putV2DeviceMeSettingsSlotsNationwide(
-      body: api.UpsertSingletonSlotRequest(
-        eewEnabled: resolvedEewEnabled,
-        eewMinIntensity: _minIntensityResolver
-            .resolve(
-              slotType: NotificationSlotType.nationwide,
-              kind: NotificationKind.eew,
-              enabled: resolvedEewEnabled,
-              minIntensity: eewMinIntensity,
-            )
-            ?.toApiJmaIntensity,
-        eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
-        earthquakeEnabled: resolvedEarthquakeEnabled,
-        earthquakeMinIntensity: _minIntensityResolver
-            .resolve(
-              slotType: NotificationSlotType.nationwide,
-              kind: NotificationKind.earthquake,
-              enabled: resolvedEarthquakeEnabled,
-              minIntensity: earthquakeMinIntensity,
-            )
-            ?.toApiJmaIntensity,
-        earthquakeOverrides: earthquakeOverrides
-            ?.map((o) => o.toApiSlotOverride())
-            .toList(),
-      ),
-    );
-    return response.data.toNotificationSlot();
-  }
+  }) => _soundCoordinator.run(
+    () async {
+      final resolvedEewEnabled = eewEnabled ?? false;
+      final resolvedEarthquakeEnabled = earthquakeEnabled ?? false;
+      final response = await _api.device.putV2DeviceMeSettingsSlotsNationwide(
+        body: api.UpsertSingletonSlotRequest(
+          eewEnabled: resolvedEewEnabled,
+          eewMinIntensity: _minIntensityResolver
+              .resolve(
+                slotType: NotificationSlotType.nationwide,
+                kind: NotificationKind.eew,
+                enabled: resolvedEewEnabled,
+                minIntensity: eewMinIntensity,
+              )
+              ?.toApiJmaIntensity,
+          eewOverrides: eewOverrides
+              ?.map((o) => o.toApiSlotOverride())
+              .toList(),
+          earthquakeEnabled: resolvedEarthquakeEnabled,
+          earthquakeMinIntensity: _minIntensityResolver
+              .resolve(
+                slotType: NotificationSlotType.nationwide,
+                kind: NotificationKind.earthquake,
+                enabled: resolvedEarthquakeEnabled,
+                minIntensity: earthquakeMinIntensity,
+              )
+              ?.toApiJmaIntensity,
+          earthquakeOverrides: earthquakeOverrides
+              ?.map((o) => o.toApiSlotOverride())
+              .toList(),
+        ),
+      );
+      return response.data.toNotificationSlot();
+    },
+  );
 
   Future<void> deleteNationwide() async {
     await _api.device.deleteV2DeviceMeSettingsSlotsNationwide();
@@ -211,39 +233,43 @@ class NotificationSlotRepository {
     bool? earthquakeEnabled,
     JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
-  }) async {
-    final response = await _api.device.postV2DeviceMeSettingsSlotsRegions(
-      body: api.CreateRegionSlotRequest(
-        regionId: regionId,
-        regionName: regionName,
-        cityCode: cityCode,
-        cityName: cityName,
-        eewEnabled: eewEnabled,
-        eewMinIntensity: _minIntensityResolver
-            .resolve(
-              slotType: NotificationSlotType.region,
-              kind: NotificationKind.eew,
-              enabled: eewEnabled,
-              minIntensity: eewMinIntensity,
-            )
-            ?.toApiJmaIntensity,
-        eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
-        earthquakeEnabled: earthquakeEnabled,
-        earthquakeMinIntensity: _minIntensityResolver
-            .resolve(
-              slotType: NotificationSlotType.region,
-              kind: NotificationKind.earthquake,
-              enabled: earthquakeEnabled,
-              minIntensity: earthquakeMinIntensity,
-            )
-            ?.toApiJmaIntensity,
-        earthquakeOverrides: earthquakeOverrides
-            ?.map((o) => o.toApiSlotOverride())
-            .toList(),
-      ),
-    );
-    return response.data.toNotificationSlot();
-  }
+  }) => _soundCoordinator.run(
+    () async {
+      final response = await _api.device.postV2DeviceMeSettingsSlotsRegions(
+        body: api.CreateRegionSlotRequest(
+          regionId: regionId,
+          regionName: regionName,
+          cityCode: cityCode,
+          cityName: cityName,
+          eewEnabled: eewEnabled,
+          eewMinIntensity: _minIntensityResolver
+              .resolve(
+                slotType: NotificationSlotType.region,
+                kind: NotificationKind.eew,
+                enabled: eewEnabled,
+                minIntensity: eewMinIntensity,
+              )
+              ?.toApiJmaIntensity,
+          eewOverrides: eewOverrides
+              ?.map((o) => o.toApiSlotOverride())
+              .toList(),
+          earthquakeEnabled: earthquakeEnabled,
+          earthquakeMinIntensity: _minIntensityResolver
+              .resolve(
+                slotType: NotificationSlotType.region,
+                kind: NotificationKind.earthquake,
+                enabled: earthquakeEnabled,
+                minIntensity: earthquakeMinIntensity,
+              )
+              ?.toApiJmaIntensity,
+          earthquakeOverrides: earthquakeOverrides
+              ?.map((o) => o.toApiSlotOverride())
+              .toList(),
+        ),
+      );
+      return response.data.toNotificationSlot();
+    },
+  );
 
   Future<NotificationSlot> updateRegion({
     required String slotId,
@@ -256,42 +282,44 @@ class NotificationSlotRepository {
     bool? earthquakeEnabled,
     JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
-  }) async {
-    final response = await _api.device
-        .patchV2DeviceMeSettingsSlotsRegionsSlotId(
-          slotId: slotId,
-          body: api.UpdateRegionSlotRequest(
-            regionName: regionName,
-            cityCode: cityCode,
-            cityName: cityName,
-            eewEnabled: eewEnabled,
-            eewMinIntensity: _minIntensityResolver
-                .resolve(
-                  slotType: NotificationSlotType.region,
-                  kind: NotificationKind.eew,
-                  enabled: eewEnabled,
-                  minIntensity: eewMinIntensity,
-                )
-                ?.toApiJmaIntensity,
-            eewOverrides: eewOverrides
-                ?.map((o) => o.toApiSlotOverride())
-                .toList(),
-            earthquakeEnabled: earthquakeEnabled,
-            earthquakeMinIntensity: _minIntensityResolver
-                .resolve(
-                  slotType: NotificationSlotType.region,
-                  kind: NotificationKind.earthquake,
-                  enabled: earthquakeEnabled,
-                  minIntensity: earthquakeMinIntensity,
-                )
-                ?.toApiJmaIntensity,
-            earthquakeOverrides: earthquakeOverrides
-                ?.map((o) => o.toApiSlotOverride())
-                .toList(),
-          ),
-        );
-    return response.data.toNotificationSlot();
-  }
+  }) => _soundCoordinator.run(
+    () async {
+      final response = await _api.device
+          .patchV2DeviceMeSettingsSlotsRegionsSlotId(
+            slotId: slotId,
+            body: api.UpdateRegionSlotRequest(
+              regionName: regionName,
+              cityCode: cityCode,
+              cityName: cityName,
+              eewEnabled: eewEnabled,
+              eewMinIntensity: _minIntensityResolver
+                  .resolve(
+                    slotType: NotificationSlotType.region,
+                    kind: NotificationKind.eew,
+                    enabled: eewEnabled,
+                    minIntensity: eewMinIntensity,
+                  )
+                  ?.toApiJmaIntensity,
+              eewOverrides: eewOverrides
+                  ?.map((o) => o.toApiSlotOverride())
+                  .toList(),
+              earthquakeEnabled: earthquakeEnabled,
+              earthquakeMinIntensity: _minIntensityResolver
+                  .resolve(
+                    slotType: NotificationSlotType.region,
+                    kind: NotificationKind.earthquake,
+                    enabled: earthquakeEnabled,
+                    minIntensity: earthquakeMinIntensity,
+                  )
+                  ?.toApiJmaIntensity,
+              earthquakeOverrides: earthquakeOverrides
+                  ?.map((o) => o.toApiSlotOverride())
+                  .toList(),
+            ),
+          );
+      return response.data.toNotificationSlot();
+    },
+  );
 
   Future<void> removeRegion({required String slotId}) async {
     await _api.device.deleteV2DeviceMeSettingsSlotsRegionsSlotId(
@@ -337,7 +365,7 @@ class NotificationSlotRepository {
     bool? startLiveActivity,
     bool? collapseNotification,
     bool? warningEnabled,
-  }) async {
+  }) => _soundCoordinator.run(() async {
     final response = await _api.device.patchV2DeviceMeSettingsEew(
       body: api.EewSettingsRequest(
         enabled: enabled,
@@ -350,7 +378,7 @@ class NotificationSlotRepository {
       ),
     );
     return response.data.toEewGlobalSettings();
-  }
+  });
 
   // ─── Earthquake Global Settings ───
 
@@ -365,7 +393,7 @@ class NotificationSlotRepository {
     InterruptionLevel? defaultInterruptionLevel,
     bool? estimatedIntensityEnabled,
     bool? collapseNotification,
-  }) async {
+  }) => _soundCoordinator.run(() async {
     final response = await _api.device.patchV2DeviceMeSettingsEarthquake(
       body: api.EarthquakeSettingsRequest(
         enabled: enabled,
@@ -377,5 +405,5 @@ class NotificationSlotRepository {
       ),
     );
     return response.data.toEarthquakeGlobalSettings();
-  }
+  });
 }

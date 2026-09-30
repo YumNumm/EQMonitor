@@ -53,4 +53,4 @@ final class NotificationCustomSnapshotRepositoryProvider
 }
 
 String _$notificationCustomSnapshotRepositoryHash() =>
-    r'ff0ab9ca6e4dfb5d53b98f4562c1267e5c5d7bf8';
+    r'34e1ad0c76a3092a2bd733509c8e0fecf068ee84';

@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound_selection.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -40,13 +41,13 @@ void main() {
     );
     expect(
       tester
-          .widget<ControlledDropdown<NotificationSound>>(
-            find.byType(ControlledDropdown<NotificationSound>),
+          .widget<ControlledDropdown<NotificationSoundSelection>>(
+            find.byType(ControlledDropdown<NotificationSoundSelection>),
           )
           .items
           .singleWhere((item) => item.selected)
           .value,
-      NotificationSound.defaultSound,
+      const NotificationSoundSelection.builtin(NotificationSound.defaultSound),
     );
     expect(
       tester
@@ -86,7 +87,9 @@ void main() {
     await tester.tap(find.byType(M3EFloatingActionButton));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(ControlledDropdown<NotificationSound>));
+    await tester.tap(
+      find.byType(ControlledDropdown<NotificationSoundSelection>),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('EEW警報音').last);
     await tester.pumpAndSettle();

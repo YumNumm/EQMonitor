@@ -52,4 +52,4 @@ final class NotificationSlotRepositoryProvider
 }
 
 String _$notificationSlotRepositoryHash() =>
-    r'072869eb850ed1a35d6176fd4902c878ed3de4a0';
+    r'add9d0b01a8b7bf096e1b3994394d26d88648219';

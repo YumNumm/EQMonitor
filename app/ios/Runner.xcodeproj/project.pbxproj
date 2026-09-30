@@ -63,6 +63,10 @@
 		85873D0C2E9182A600ED0F72 /* AppIcon-dev.icon in Resources */ = {isa = PBXBuildFile; fileRef = 85873D0B2E9182A600ED0F72 /* AppIcon-dev.icon */; };
 		859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 859DF75B2BBE9FFC00B827B1 /* StoreKit.framework */; };
 		859DF75E2BBEA0F000B827B1 /* Synced - EQMonitor.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 859DF75D2BBEA0F000B827B1 /* Synced - EQMonitor.storekit */; };
+		C6D30F83604995BE84AEE23D /* NotificationSoundStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EEF0834DCDFD4A5778FC82 /* NotificationSoundStore.swift */; };
+		E001B0C6628E2AEA1D88A026 /* NotificationSoundImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE0C3DF0CBD67A9D6E0FF54 /* NotificationSoundImporter.swift */; };
+		9F3D0257E438E797B3135F95 /* NotificationSoundPreviewPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC60937ECD7FD4EF0A75E3EA /* NotificationSoundPreviewPlayer.swift */; };
+		EBF69C94B2FF74D69778C8B6 /* NotificationSoundMethodChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A5DD37BC761FC565242E21 /* NotificationSoundMethodChannel.swift */; };
 		85A1B0012F59A00000000001 /* AppGroupMethodChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1B0002F59A00000000001 /* AppGroupMethodChannel.swift */; };
 		85A1B0102F59B00000000010 /* TelemetryWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1B0112F59B00000000011 /* TelemetryWriter.swift */; };
 		85A1B0212F59C00000000021 /* LiveActivityDebugMethodChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1B0202F59C00000000020 /* LiveActivityDebugMethodChannel.swift */; };
@@ -258,6 +262,10 @@
 		85873D0B2E9182A600ED0F72 /* AppIcon-dev.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "AppIcon-dev.icon"; sourceTree = "<group>"; };
 		859DF75B2BBE9FFC00B827B1 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		859DF75D2BBEA0F000B827B1 /* Synced - EQMonitor.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Synced - EQMonitor.storekit"; sourceTree = "<group>"; };
+		38EEF0834DCDFD4A5778FC82 /* NotificationSoundStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSoundStore.swift; sourceTree = "<group>"; };
+		CDE0C3DF0CBD67A9D6E0FF54 /* NotificationSoundImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSoundImporter.swift; sourceTree = "<group>"; };
+		CC60937ECD7FD4EF0A75E3EA /* NotificationSoundPreviewPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSoundPreviewPlayer.swift; sourceTree = "<group>"; };
+		B3A5DD37BC761FC565242E21 /* NotificationSoundMethodChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSoundMethodChannel.swift; sourceTree = "<group>"; };
 		85A1B0002F59A00000000001 /* AppGroupMethodChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppGroupMethodChannel.swift; sourceTree = "<group>"; };
 		85A1B0112F59B00000000011 /* TelemetryWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryWriter.swift; sourceTree = "<group>"; };
 		85A1B0202F59C00000000020 /* LiveActivityDebugMethodChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveActivityDebugMethodChannel.swift; sourceTree = "<group>"; };
@@ -611,6 +619,10 @@
 				1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
+				38EEF0834DCDFD4A5778FC82 /* NotificationSoundStore.swift */,
+				CDE0C3DF0CBD67A9D6E0FF54 /* NotificationSoundImporter.swift */,
+				CC60937ECD7FD4EF0A75E3EA /* NotificationSoundPreviewPlayer.swift */,
+				B3A5DD37BC761FC565242E21 /* NotificationSoundMethodChannel.swift */,
 				85A1B0002F59A00000000001 /* AppGroupMethodChannel.swift */,
 				85A1B0202F59C00000000020 /* LiveActivityDebugMethodChannel.swift */,
 				A5A2B0003268000000000001 /* ApnsTokenEventChannel.swift */,
@@ -1143,6 +1155,10 @@
 				A91000000000000000000006 /* EarthquakeSearchURL.swift in Sources */,
 				A91000000000000000000005 /* SearchEarthquakesIntent.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
+				C6D30F83604995BE84AEE23D /* NotificationSoundStore.swift in Sources */,
+				E001B0C6628E2AEA1D88A026 /* NotificationSoundImporter.swift in Sources */,
+				9F3D0257E438E797B3135F95 /* NotificationSoundPreviewPlayer.swift in Sources */,
+				EBF69C94B2FF74D69778C8B6 /* NotificationSoundMethodChannel.swift in Sources */,
 				85A1B0012F59A00000000001 /* AppGroupMethodChannel.swift in Sources */,
 				85A1B0212F59C00000000021 /* LiveActivityDebugMethodChannel.swift in Sources */,
 				A5A2B0013268000000000001 /* ApnsTokenEventChannel.swift in Sources */,

@@ -68,6 +68,12 @@ import WidgetKit
       AppGroupMethodChannel.register(with: registrar)
     }
 
+    if let registrar = engineBridge.pluginRegistry.registrar(
+      forPlugin: "NotificationSoundMethodChannel"
+    ) {
+      NotificationSoundMethodChannel.register(with: registrar)
+    }
+
     // Register the debug-only Live Activity local start/update/end channel.
     if let registrar = engineBridge.pluginRegistry.registrar(
       forPlugin: "LiveActivityDebugMethodChannel"

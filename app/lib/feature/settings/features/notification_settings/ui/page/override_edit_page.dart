@@ -7,7 +7,11 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound_selection.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/notification_sound_options.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_sound_selector.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_sound_library_controls.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -224,7 +228,7 @@ class OverrideEditPage extends HookConsumerWidget {
         kind: overrideType,
         availableIntensities: [current.minJmaIntensity],
         initialIntensity: current.minJmaIntensity,
-        initialSound: NotificationSound.fromApiValue(current.sound),
+        initialSound: current.sound,
         initialInterruptionLevel: current.interruptionLevel,
         isEditing: true,
       ),
@@ -318,26 +322,26 @@ class OverrideEditPage extends HookConsumerWidget {
   }
 }
 
-class _OverrideTile extends StatelessWidget {
+class _OverrideTile extends ConsumerWidget {
   const new({required this.entry});
 
   final NotificationOverride entry;
 
   @override
-  Widget build(BuildContext context) => ListTile(
-    leading: _IntensityBadge(intensity: entry.minJmaIntensity),
-    title: Text(entry.minJmaIntensity.minIntensityThresholdLabel),
-    subtitle: Text(
-      '${switch (entry.sound) {
-        'default' => 'デフォルト',
-        'eew_warning' => 'EEW警報',
-        'eew_forecast' => 'EEW予報',
-        'earthquake' => '地震情報',
-        _ => entry.sound,
-      }} / ${entry.interruptionLevel.name}',
-    ),
-    trailing: const Icon(Icons.chevron_right),
-  );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sound = ref
+        .watch(notificationSoundOptionsProvider)
+        .where((sound) => sound.apiValue == entry.sound)
+        .firstOrNull;
+    return ListTile(
+      leading: _IntensityBadge(intensity: entry.minJmaIntensity),
+      title: Text(entry.minJmaIntensity.minIntensityThresholdLabel),
+      subtitle: Text(
+        '${sound?.displayName ?? '利用不可の通知音'} / ${entry.interruptionLevel.name}',
+      ),
+      trailing: const Icon(Icons.chevron_right),
+    );
+  }
 }
 
 class _IntensityBadge extends StatelessWidget {
@@ -368,12 +372,12 @@ class _IntensityBadge extends StatelessWidget {
   }
 }
 
-class _OverrideFormDialog extends HookWidget {
+class _OverrideFormDialog extends HookConsumerWidget {
   const new({
     required this.kind,
     required this.availableIntensities,
     required this.initialIntensity,
-    this.initialSound = NotificationSound.defaultSound,
+    this.initialSound,
     this.initialInterruptionLevel = InterruptionLevel.active,
     this.isEditing = false,
   });
@@ -381,14 +385,16 @@ class _OverrideFormDialog extends HookWidget {
   final NotificationKind kind;
   final List<JmaIntensity> availableIntensities;
   final JmaIntensity initialIntensity;
-  final NotificationSound initialSound;
+  final String? initialSound;
   final InterruptionLevel initialInterruptionLevel;
   final bool isEditing;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final selectedIntensity = useState(initialIntensity);
-    final selectedSound = useState(initialSound);
+    final selectedSound = useState(
+      initialSound ?? NotificationSound.defaultSound.apiValue,
+    );
     final levels = kind.interruptionLevels;
     final selectedInterruptionLevel = useState(
       levels.contains(initialInterruptionLevel)
@@ -424,21 +430,13 @@ class _OverrideFormDialog extends HookWidget {
             const SizedBox(height: 16),
             Text('通知音', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 8),
-            ControlledDropdown<NotificationSound>(
-              items: [
-                for (final sound in NotificationSound.values)
-                  M3EDropdownItem(
-                    value: sound,
-                    label: sound.displayName,
-                    selected: sound == selectedSound.value,
-                  ),
-              ],
-              onSelectionChanged: (selectedItems) {
-                if (selectedItems.isEmpty) return;
-                final next = selectedItems.first.value;
-                selectedSound.value = next;
+            NotificationSoundSelector(
+              apiValue: selectedSound.value,
+              onChanged: (value) async {
+                selectedSound.value = value;
               },
             ),
+            const NotificationSoundLibraryControls(),
             const SizedBox(height: 16),
             Text('割り込みレベル', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 8),
@@ -474,7 +472,7 @@ class _OverrideFormDialog extends HookWidget {
           onPressed: () => Navigator.of(context).pop(
             NotificationOverride(
               minJmaIntensity: selectedIntensity.value,
-              sound: selectedSound.value.apiValue,
+              sound: selectedSound.value,
               interruptionLevel: selectedInterruptionLevel.value,
             ),
           ),
