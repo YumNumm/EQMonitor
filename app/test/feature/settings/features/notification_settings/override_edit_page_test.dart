@@ -91,13 +91,13 @@ void main() {
     await tester.tap(find.text('EEW警報音').last);
     await tester.pumpAndSettle();
 
-    final criticalOption = find.widgetWithText(
+    final timeSensitiveOption = find.widgetWithText(
       RadioListTile<InterruptionLevel>,
-      InterruptionLevel.critical.label,
+      InterruptionLevel.timeSensitive.label,
     );
-    await tester.ensureVisible(criticalOption);
+    await tester.ensureVisible(timeSensitiveOption);
     await tester.pumpAndSettle();
-    await tester.tap(criticalOption);
+    await tester.tap(timeSensitiveOption);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('追加'));
@@ -110,7 +110,7 @@ void main() {
     expect(fake.lastEarthquakeOverrides!.single.sound, 'eew_warning');
     expect(
       fake.lastEarthquakeOverrides!.single.interruptionLevel,
-      InterruptionLevel.critical,
+      InterruptionLevel.timeSensitive,
     );
     expect(find.text('すべて'), findsOneWidget);
   });
