@@ -1,5 +1,81 @@
 # Changelog (Beta)
 
+## [3.0.0](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.18...v3.0.0) (2026-09-29)
+
+
+### Features
+
+* HTTPキャッシュにbody合計5MBのLRU削除を導入 ([59491b0](https://github.com/YumNumm/EQMonitor/commit/59491b0fb911696defc758968477d3ecd595f534))
+* IS_PRODUCTION設定へ統一しbeta表示を廃止 ([681cfb9](https://github.com/YumNumm/EQMonitor/commit/681cfb9b2e9d8dfa64cc09795bd779dd774e27b7))
+
+
+### Bug Fixes
+
+* Android前面通知の表示をリポジトリへ集約 ([d934006](https://github.com/YumNumm/EQMonitor/commit/d934006971691e4fb3ccb5e392b2274d45ec7c46))
+* Asset Pack インストール失敗カードの題名を内容に合わせる ([14cb2e7](https://github.com/YumNumm/EQMonitor/commit/14cb2e776880af6eb536ca3947ba88eeebb5057d))
+* Asset Pack の解析失敗時も同梱版へフォールバック ([2111f8b](https://github.com/YumNumm/EQMonitor/commit/2111f8bd65eebee4754dd5d8a47b653a928c22b2))
+* Asset Pack を Android の Auto Backup 対象から除外 ([b734947](https://github.com/YumNumm/EQMonitor/commit/b734947bdeeb52f4eadc4b8cf3a6be00c3096a2b))
+* device-id読み取り失敗でAPIリクエストを失敗させない ([7fec3fd](https://github.com/YumNumm/EQMonitor/commit/7fec3fd809334f17043a9cf14eca6ec98caec705))
+* EEW取消報でカードが消え取消表示が出ない問題を修正 ([0260e00](https://github.com/YumNumm/EQMonitor/commit/0260e000db9e359b4a4bb1aecdafbc95798dad10))
+* EEW履歴とイベント別EEWで報の上書き・欠落が起きる問題を修正 ([727f18c](https://github.com/YumNumm/EQMonitor/commit/727f18c43cf29a77e36d70eea79462acda8c4580))
+* EEW履歴の発表中セクションに終了済みのEEWが残る問題を修正 ([3c9058a](https://github.com/YumNumm/EQMonitor/commit/3c9058a1b4f395b8bd66f2cb4fe86df25e34bcab))
+* foreground復帰時もPro確認値を保持し通信エラーでは期限まで維持 ([1188210](https://github.com/YumNumm/EQMonitor/commit/11882108d851b8d3a839a4adad8225d96bcfc520))
+* headless で保存済み Telegram URL を本体と同じ保存先から読む ([29fc904](https://github.com/YumNumm/EQMonitor/commit/29fc90435b77a4b93fd58b50b0ed074076a73127))
+* headless 位置処理で有効なダウンロード版 Asset Pack を読む ([f7e1e65](https://github.com/YumNumm/EQMonitor/commit/f7e1e657bc635bd1e0d73c59107c2baf8b837148))
+* iOS 26.1未満のLive Activity対応判定を修正 ([c119f85](https://github.com/YumNumm/EQMonitor/commit/c119f85b830de3fe55dce6ba23e7383d036556a4))
+* iOSの未使用トラッキング許可説明を削除 ([783f919](https://github.com/YumNumm/EQMonitor/commit/783f91914fb2acedc8a5305424b77b5434c7ded1))
+* iOS拡張へproductionフラグと機能制限を反映 ([9a557b9](https://github.com/YumNumm/EQMonitor/commit/9a557b9b3220d39798806d34bcc7283c273dd2da))
+* Paywallの特典をPro限定の実機能に揃え支払い保留文言を調整 ([6e8e736](https://github.com/YumNumm/EQMonitor/commit/6e8e7365cdbbc75dce9a7d29ce26068cacda6678))
+* PrivacyInfo に App Group UserDefaults の理由コード 1C8F.1 を追加 ([4a48d56](https://github.com/YumNumm/EQMonitor/commit/4a48d56509499d62603a7b6f631dbb7ad237710e))
+* productionで揺れ検知処理と既存通知を無効化 ([3349db2](https://github.com/YumNumm/EQMonitor/commit/3349db221217bf2530d354e5eeda75b14762707d))
+* productionのTelemetry保存と送信を停止 ([115df66](https://github.com/YumNumm/EQMonitor/commit/115df66742e3027a6d3af26d5638a5e604f60f48))
+* resume時に端末が未登録ならprovisionをやり直す ([79a6bd8](https://github.com/YumNumm/EQMonitor/commit/79a6bd89044189677f61abba2b4b78311ae9970f))
+* WebSocketの無受信を検知して再接続する ([6c60626](https://github.com/YumNumm/EQMonitor/commit/6c60626840e2b7acba510f1dc8b9d773404eac8c))
+* コールドスタートの通知タップ遷移先喪失と計測失敗時のタップ不能を修正 ([1ab5c34](https://github.com/YumNumm/EQMonitor/commit/1ab5c3416c4710e14f3002d602a18889acb7d296))
+* ストアの支払い保留を購入失敗ではなく保留中として表示 ([0835b2a](https://github.com/YumNumm/EQMonitor/commit/0835b2a0c22b4e3b07e908c3f3c37042a4a5b5aa))
+* デバッグメニューを開けないときは加速度センサーを購読しない ([fb0941d](https://github.com/YumNumm/EQMonitor/commit/fb0941db80a5b3457084a3db0cf6c1970ac12709))
+* テレメトリ DB のパス解決に失敗しても起動を継続する ([99deb5c](https://github.com/YumNumm/EQMonitor/commit/99deb5ccb68b23b8a8499876ef88c43b5504ef66))
+* ネットワーク変化時にジッタ付きでWebSocketを再接続する ([e881429](https://github.com/YumNumm/EQMonitor/commit/e8814291193153922ca82f4814968bba998af1be))
+* プッシュトークン更新が破棄済みのNotifierへ渡る問題を修正 ([38cf109](https://github.com/YumNumm/EQMonitor/commit/38cf109e6ca974df1edbceaaa99e6e97739013bf))
+* モニターの既定取得元と長周期画像URLを修正 ([eb5319a](https://github.com/YumNumm/EQMonitor/commit/eb5319ac2938e7e2224682ea9b1d19ebfc6d2fa6))
+* リプレイ終了時にEEWのRESTを取り直す ([03f30ef](https://github.com/YumNumm/EQMonitor/commit/03f30ef8460fa99d3e38fc7cbfe89d4337096984))
+* ローカル通知のデータ変換と起動待機を追加 ([e06d5b0](https://github.com/YumNumm/EQMonitor/commit/e06d5b0437a7b91f8dbe92b6c104c6358b9ff95f))
+* 再接続時のreadyイベントが下流へ通知されない問題を修正 ([c646105](https://github.com/YumNumm/EQMonitor/commit/c6461053fd68f714515af3eb4c897120b3f4d882))
+* 再試行間隔の計算をRetryBackoffPolicyに移しトップレベル関数の lint 違反を解消 ([005ef45](https://github.com/YumNumm/EQMonitor/commit/005ef45d816a9a5cb5f6987efcd1a44b1f178111))
+* 前面通知の受信とタップ遷移を接続 ([233e047](https://github.com/YumNumm/EQMonitor/commit/233e04762aea2a48c8fdddb66ff3cb5eaef8bab3))
+* 地図設定の保存値を解釈できない場合は既定値を使う ([3587455](https://github.com/YumNumm/EQMonitor/commit/35874551140c167964b3e8effeb4c1f2de5909e1))
+* 地震履歴一覧のグループ検索で要素がない場合に例外にしない ([8ceac80](https://github.com/YumNumm/EQMonitor/commit/8ceac80f0cfab3779cf30002117e8994e952d2e2))
+* 地震履歴一覧を作り直さず先頭ページの差分反映で新着に追従 ([0823b1f](https://github.com/YumNumm/EQMonitor/commit/0823b1f40fc862579c1532d7208d8f3fb0694185))
+* 地震履歴地図で観測のない区域の「観測なし」表示を復元 ([0915404](https://github.com/YumNumm/EQMonitor/commit/0915404c64d53b851cae4c5896afd441dffafd83))
+* 地震履歴地図のLPGM観測点タップと震度DB読み込み中の区域タップを修正 ([de5634e](https://github.com/YumNumm/EQMonitor/commit/de5634e7eca512179de486112aaa48558b9b52d1))
+* 地震履歴詳細で表示範囲の算出に失敗しても震源か既定位置で地図を表示 ([a20ee28](https://github.com/YumNumm/EQMonitor/commit/a20ee2812111064f177b5346ec889dab9c5e7031))
+* 地震活動ページで終了日当日の地震が欠落する問題を修正 ([f2198aa](https://github.com/YumNumm/EQMonitor/commit/f2198aa6ff90713fd18df20ac18d19ff7f24968f))
+* 強震モニタの取得失敗時は遅延表示にし表示時刻を観測時刻に ([8d65b72](https://github.com/YumNumm/EQMonitor/commit/8d65b72b7f65164aac6afed9de6673a5fbdc1187))
+* 強震モニタの遅延詳細設定を非表示にする ([7eae640](https://github.com/YumNumm/EQMonitor/commit/7eae640e643a367f1fe3ee003da27c40134f2916))
+* 強震モニタを inactive では停止しないように ([3826928](https://github.com/YumNumm/EQMonitor/commit/3826928cd3a6e1d870ca5c225401a24b96e9c376))
+* 強震モニタ画像解析 worker に6秒のタイムアウトと再起動を追加 ([17f9388](https://github.com/YumNumm/EQMonitor/commit/17f9388614420cff1c0755f77640f53ee41d5f50))
+* 強震モニタ解析の座標範囲外と worker 終了時の応答待ちを処理 ([7d3e16a](https://github.com/YumNumm/EQMonitor/commit/7d3e16a72b5b5dc3b16390858d7d46352b8a42f6))
+* 強震モニタ設定の読み込み中に requireValue で落ちないように ([2008825](https://github.com/YumNumm/EQMonitor/commit/2008825ac384395870fc913eeba7949788db0956))
+* 復元元のない304応答をエラーとして扱う ([bb83e6a](https://github.com/YumNumm/EQMonitor/commit/bb83e6a2138b143f29692ccc1387e358c15be604))
+* 旧版 Asset Pack の削除を次回起動時まで遅らせる ([b4f7ea8](https://github.com/YumNumm/EQMonitor/commit/b4f7ea8adc2e3f78495801f6047aec5227706de7))
+* 権限要求後に再取得した最新の権限状態を返す ([89e8ce8](https://github.com/YumNumm/EQMonitor/commit/89e8ce8dcca1b35c4494b3d2d67f975bb33988ba))
+* 津波詳細のポーリング失敗時に前回値を保持して表示 ([b5fc8c4](https://github.com/YumNumm/EQMonitor/commit/b5fc8c4af850f3a65d799568598c98a7dc0ec5f3))
+* 確定報の区域ポップアップで速報バッジを出さない ([1ac212e](https://github.com/YumNumm/EQMonitor/commit/1ac212ec95337da1c680d1aa0c5f50e592e6d899))
+* 緊急地震速報履歴のAppBar配置を地震履歴と統一 ([0ed0075](https://github.com/YumNumm/EQMonitor/commit/0ed00759b9beaf2205fe06a32345d337b5159b61))
+* 訓練報・試験報のEEWを全画面警報と振動の対象外にする ([5735173](https://github.com/YumNumm/EQMonitor/commit/57351733a144aed392733aca5ad8bf776be98a84))
+* 購入直後の同期が409 pendingのとき端末登録と同じ間隔で再試行 ([603c64d](https://github.com/YumNumm/EQMonitor/commit/603c64d30ac26a1ffadc2315170708eb2156d271))
+* 起動失敗時のエラー画面に既定テーマを渡す ([85ffbef](https://github.com/YumNumm/EQMonitor/commit/85ffbefefd86eb7909d9a9353228addbb9a1b008))
+* 通知配信ログの本文を左寄せに修正 ([de65217](https://github.com/YumNumm/EQMonitor/commit/de6521760e4cc00145ec44a3b817555ec37b9825))
+* 配布ビルドをXcode 27.0正式版に固定 ([2704a5f](https://github.com/YumNumm/EQMonitor/commit/2704a5fb968ecff8385da1fe9723356ccd25d14f))
+* 配布ビルドをXcode 27.0正式版に固定 ([1859019](https://github.com/YumNumm/EQMonitor/commit/1859019fd3dc7e25f4ad098736f7c6c510d661aa))
+* 長周期データのない観測点詳細で長周期の解説リンクを出さない ([6ea47db](https://github.com/YumNumm/EQMonitor/commit/6ea47db42743ccb7707cfab8645449516a7176ee))
+* 長周期画像の解析例外と誤った震度換算を修正 ([bb8fd5c](https://github.com/YumNumm/EQMonitor/commit/bb8fd5c8f89dfdb746469514ee7ab7966588a0ff))
+
+
+### Miscellaneous Chores
+
+* 次のリリースを3.0.0に固定する ([7f67b65](https://github.com/YumNumm/EQMonitor/commit/7f67b65afaf110bca689c86dfb56a2a9d2770e23))
+
 ## [3.0.0-beta.18](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.17...v3.0.0-beta.18) (2026-09-29)
 
 
