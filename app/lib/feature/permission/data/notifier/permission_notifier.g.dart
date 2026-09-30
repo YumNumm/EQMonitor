@@ -45,7 +45,7 @@ final class PermissionNotifierProvider
 }
 
 String _$permissionNotifierHash() =>
-    r'368f635d7b413f329b1ad4b70f9f72d2652edfb3';
+    r'40efac083446802d0cd123088151deb31a2c3225';
 
 /// アプリで利用する権限の状態を保持する Notifier。
 ///

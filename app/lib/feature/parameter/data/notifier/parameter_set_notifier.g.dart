@@ -12,25 +12,25 @@ part of 'parameter_set_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 /// パラメータは Asset Pack が唯一のソースであるため、HTTP キャッシュ層
 /// （`CachedNotifier`）は使わず、単純に [ParameterRepository.loadAsset] を
-/// 呼び出すだけの Notifier とする。Pack 未取得/破損時は
-/// `AssetPackNotReadyException` が [build] からそのまま `AsyncError` として
-/// 伝播する（偽データへのフォールバックはしない）。
+/// 呼び出すだけの Notifier とする。ダウンロード版 Pack の破損・解析失敗時は
+/// Repository 側で同梱版へ戻す。同梱版でも読めない場合はエラーが [build] から
+/// そのまま `AsyncError` として伝播する（偽データへのフォールバックはしない）。
 
 @ProviderFor(ParameterSetNotifier)
 final parameterSetProvider = ParameterSetNotifierProvider._();
 
 /// パラメータは Asset Pack が唯一のソースであるため、HTTP キャッシュ層
 /// （`CachedNotifier`）は使わず、単純に [ParameterRepository.loadAsset] を
-/// 呼び出すだけの Notifier とする。Pack 未取得/破損時は
-/// `AssetPackNotReadyException` が [build] からそのまま `AsyncError` として
-/// 伝播する（偽データへのフォールバックはしない）。
+/// 呼び出すだけの Notifier とする。ダウンロード版 Pack の破損・解析失敗時は
+/// Repository 側で同梱版へ戻す。同梱版でも読めない場合はエラーが [build] から
+/// そのまま `AsyncError` として伝播する（偽データへのフォールバックはしない）。
 final class ParameterSetNotifierProvider
     extends $AsyncNotifierProvider<ParameterSetNotifier, ParameterSet> {
   /// パラメータは Asset Pack が唯一のソースであるため、HTTP キャッシュ層
   /// （`CachedNotifier`）は使わず、単純に [ParameterRepository.loadAsset] を
-  /// 呼び出すだけの Notifier とする。Pack 未取得/破損時は
-  /// `AssetPackNotReadyException` が [build] からそのまま `AsyncError` として
-  /// 伝播する（偽データへのフォールバックはしない）。
+  /// 呼び出すだけの Notifier とする。ダウンロード版 Pack の破損・解析失敗時は
+  /// Repository 側で同梱版へ戻す。同梱版でも読めない場合はエラーが [build] から
+  /// そのまま `AsyncError` として伝播する（偽データへのフォールバックはしない）。
   ParameterSetNotifierProvider._()
     : super(
         from: null,
@@ -55,9 +55,9 @@ String _$parameterSetNotifierHash() =>
 
 /// パラメータは Asset Pack が唯一のソースであるため、HTTP キャッシュ層
 /// （`CachedNotifier`）は使わず、単純に [ParameterRepository.loadAsset] を
-/// 呼び出すだけの Notifier とする。Pack 未取得/破損時は
-/// `AssetPackNotReadyException` が [build] からそのまま `AsyncError` として
-/// 伝播する（偽データへのフォールバックはしない）。
+/// 呼び出すだけの Notifier とする。ダウンロード版 Pack の破損・解析失敗時は
+/// Repository 側で同梱版へ戻す。同梱版でも読めない場合はエラーが [build] から
+/// そのまま `AsyncError` として伝播する（偽データへのフォールバックはしない）。
 
 abstract class _$ParameterSetNotifier extends $AsyncNotifier<ParameterSet> {
   FutureOr<ParameterSet> build();
