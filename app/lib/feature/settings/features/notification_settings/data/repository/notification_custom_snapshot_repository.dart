@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_s
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_custom_snapshot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_sound_operation_coordinator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_custom_snapshot_repository.g.dart';
@@ -16,22 +17,32 @@ notificationCustomSnapshotRepository(
   final dataSource = await ref.watch(
     sharedPreferencesDataSourceProvider.future,
   );
-  return NotificationCustomSnapshotRepository(dataSource);
+  return NotificationCustomSnapshotRepository(
+    dataSource,
+    soundCoordinator: ref.watch(notificationSoundOperationCoordinatorProvider),
+  );
 }
 
 class NotificationCustomSnapshotRepository {
-  new(this._dataSource);
+  new(
+    this._dataSource, {
+    NotificationSoundOperationCoordinator? soundCoordinator,
+  }) : _soundCoordinator =
+           soundCoordinator ?? NotificationSoundOperationCoordinator();
 
   final SharedPreferencesDataSource _dataSource;
+  final NotificationSoundOperationCoordinator _soundCoordinator;
 
   Future<void> save(NotificationCustomSnapshot snapshot) =>
-      _dataSource.setString(
-        key: SharedPreferencesKey.notificationCustomSnapshot,
-        value: jsonEncode(snapshot.toJson()),
+      _soundCoordinator.run(
+        () => _dataSource.setString(
+          key: SharedPreferencesKey.notificationCustomSnapshot,
+          value: jsonEncode(snapshot.toJson()),
+        ),
       );
 
   /// スキーマ不一致・パース失敗時は null を返し、呼び出し側でフォールバックする。
-  Future<NotificationCustomSnapshot?> load() async {
+  Future<NotificationCustomSnapshot?> load({bool requireValid = false}) async {
     final raw = await _dataSource.getString(
       key: SharedPreferencesKey.notificationCustomSnapshot,
     );
@@ -42,11 +53,14 @@ class NotificationCustomSnapshotRepository {
       final json = jsonDecode(raw) as Map<String, dynamic>;
       final snapshot = NotificationCustomSnapshot.fromJson(json);
       if (snapshot.schemaVersion != notificationCustomSnapshotSchemaVersion) {
+        if (requireValid)
+          throw const FormatException('Notification snapshot schema mismatch');
         return null;
       }
       return snapshot;
     } on Object catch (e, st) {
       talker.error('[NotificationCustomSnapshot] load failed', e, st);
+      if (requireValid) rethrow;
       return null;
     }
   }
