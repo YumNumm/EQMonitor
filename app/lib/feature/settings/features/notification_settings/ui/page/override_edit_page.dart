@@ -195,6 +195,7 @@ class OverrideEditPage extends HookConsumerWidget {
     final result = await showDialog<NotificationOverride>(
       context: context,
       builder: (context) => _OverrideFormDialog(
+        kind: overrideType,
         availableIntensities: availableIntensities,
         initialIntensity: availableIntensities.first,
       ),
@@ -224,6 +225,7 @@ class OverrideEditPage extends HookConsumerWidget {
     final result = await showDialog<NotificationOverride>(
       context: context,
       builder: (context) => _OverrideFormDialog(
+        kind: overrideType,
         availableIntensities: [current.minJmaIntensity],
         initialIntensity: current.minJmaIntensity,
         initialSound: current.sound,
@@ -372,6 +374,7 @@ class _IntensityBadge extends StatelessWidget {
 
 class _OverrideFormDialog extends HookConsumerWidget {
   const new({
+    required this.kind,
     required this.availableIntensities,
     required this.initialIntensity,
     this.initialSound,
@@ -379,6 +382,7 @@ class _OverrideFormDialog extends HookConsumerWidget {
     this.isEditing = false,
   });
 
+  final NotificationKind kind;
   final List<JmaIntensity> availableIntensities;
   final JmaIntensity initialIntensity;
   final String? initialSound;
@@ -391,7 +395,12 @@ class _OverrideFormDialog extends HookConsumerWidget {
     final selectedSound = useState(
       initialSound ?? NotificationSound.defaultSound.apiValue,
     );
-    final selectedInterruptionLevel = useState(initialInterruptionLevel);
+    final levels = kind.interruptionLevels;
+    final selectedInterruptionLevel = useState(
+      levels.contains(initialInterruptionLevel)
+          ? initialInterruptionLevel
+          : levels.last,
+    );
 
     return AlertDialog(
       title: Text(isEditing ? '震度別設定を編集' : '震度別設定を追加'),
@@ -441,7 +450,7 @@ class _OverrideFormDialog extends HookConsumerWidget {
               child: Column(
                 mainAxisSize: .min,
                 children: [
-                  for (final level in InterruptionLevel.values)
+                  for (final level in levels)
                     RadioListTile<InterruptionLevel>(
                       title: Text(level.label),
                       value: level,

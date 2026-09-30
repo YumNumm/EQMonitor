@@ -38,6 +38,7 @@ done
 
 # Environment.xcconfig is shared by Runner and all app extensions.
 if [[ "$is_production" == "true" ]]; then
+    echo 'APP_ICON = AppIcon' >> "$OUTPUT_FILE"
     echo 'EQMONITOR_PRODUCTION_SWIFT_FLAGS = -D IS_PRODUCTION' >> "$OUTPUT_FILE"
 fi
 echo 'OTHER_SWIFT_FLAGS = $(inherited) $(EQMONITOR_PRODUCTION_SWIFT_FLAGS)' >> "$OUTPUT_FILE"
