@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
@@ -67,6 +68,7 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
         children: [
           const SettingsSectionHeader(text: '緊急地震速報(予報)'),
           _SoundInterruptionCard(
+            kind: .eew,
             sound: eewSound,
             interruptionLevel: eewLevel,
             collapseNotification: eewCollapse,
@@ -100,6 +102,7 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
           ),
           const SettingsSectionHeader(text: '地震情報'),
           _SoundInterruptionCard(
+            kind: .earthquake,
             sound: earthquakeSound,
             interruptionLevel: earthquakeLevel,
             collapseNotification: earthquakeCollapse,
@@ -142,6 +145,7 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
 
 class _SoundInterruptionCard extends StatelessWidget {
   const new({
+    required this.kind,
     required this.sound,
     required this.interruptionLevel,
     required this.collapseNotification,
@@ -150,6 +154,7 @@ class _SoundInterruptionCard extends StatelessWidget {
     required this.onCollapseChanged,
   });
 
+  final NotificationKind kind;
   final NotificationSound sound;
   final InterruptionLevel interruptionLevel;
   final bool collapseNotification;
@@ -163,6 +168,10 @@ class _SoundInterruptionCard extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
+    final levels = kind.interruptionLevels;
+    final selectedLevel = levels.contains(interruptionLevel)
+        ? interruptionLevel
+        : levels.last;
 
     return Card.outlined(
       margin: EdgeInsets.fromLTRB(
@@ -217,11 +226,11 @@ class _SoundInterruptionCard extends StatelessWidget {
               child: ControlledDropdown<InterruptionLevel>(
                 key: ValueKey(interruptionLevel),
                 items: [
-                  for (final level in InterruptionLevel.values)
+                  for (final level in levels)
                     M3EDropdownItem(
                       value: level,
                       label: level.label,
-                      selected: level == interruptionLevel,
+                      selected: level == selectedLevel,
                     ),
                 ],
                 onSelectionChanged: (selectedItems) async {
@@ -235,7 +244,7 @@ class _SoundInterruptionCard extends StatelessWidget {
           const Divider(height: 1),
           ListTile(
             title: const Text('通知の上書き'),
-            subtitle: const Text('緊急地震速報の続報が発表された時に、前の通知を上書きします'),
+            subtitle: Text(kind.collapseNotificationDescription),
             trailing: AppSwitch(
               value: collapseNotification,
               onChanged: (value) async => onCollapseChanged(value: value),
