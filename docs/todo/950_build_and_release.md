@@ -23,7 +23,7 @@
 
 ## 860: iOS cold archive の actool
 
-- 対象: `app/ios/Runner.xcodeproj/project.pbxproj`、`app/ios/AppIcon-dev.icon` / `AppIcon-prod.icon`、`.github/workflows/deploy-app.yaml`。
+- 対象: `app/ios/Runner.xcodeproj/project.pbxproj`、`app/ios/AppIcon-dev.icon` / `AppIcon.icon`、`.github/workflows/deploy-app.yaml`。
 - clean DerivedData での `CompileAssetCatalogVariant thinned` / actool クラッシュを再確認する。
 - `ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES` が残るため、未使用の代替アイコンを同時コンパイルする必要性を確認し、不要なら設定を整理する。
 - 完了条件: 新しい専用 DerivedData で archive が成功する。warm cache の成功だけで閉じず、失敗時の生 xcodebuild log を保存する。
@@ -40,7 +40,8 @@
 
 ## 300: production アイコン
 
-- `environment/.env.prod` と CI secret `DART_DEFINE_PRODUCTION` の `APP_ICON` / `APP_NAME` をオーナーが確認する（secret の現在値は未検証）。βで dev アイコンを使う意図がなければ `AppIcon-prod` に変更する。
-- 完了条件: production archive の選択アイコン/表示名を確認する。β専用の意図的設定なら `environment/.env.example` に運用を記載する。
+- `IS_PRODUCTION=true` 時に `APP_ICON=AppIcon` を強制する設定は実装済み。production archive と実機での表示は未検証。
+- `environment/.env.prod` と CI secret `DART_DEFINE_PRODUCTION` の `APP_NAME` はオーナーが確認する（secret の現在値は未検証）。
+- 完了条件: production archive の選択アイコン/表示名と実機でのアイコン表示を確認する。
 
 実機での pack 検証は [Asset Pack](850_asset_pack.md)、Widget の OS 別検証は [Apple 拡張](930_apple_extensions.md) を参照。
