@@ -5,6 +5,7 @@
 ## 800: ファイルから追加する通知音
 
 - iOS 向けの取り込み・変換・保存・試聴・選択・管理を実装。Apple SDK ビルドと実機検証は未実施。
+- 今回の作業ではユーザーの指定により追加の実機確認を行わず、以下を未検証項目として残す。
 - [設計案](../superpowers/specs/2026-09-30-custom-notification-sounds-design.md) と [実装計画](../superpowers/plans/2026-09-30-custom-notification-sounds.md) を参照する。
 - 対象: `app/lib/feature/settings/features/notification_settings/`、`app/ios/Runner/`、App Group の `Library/Sounds/`。
 - macOS で Runner・FcmServiceExtension の Simulator build と署名済み実機 build を確認する。Linux の Swift 構文解析は Apple SDK の型確認を代替しない。

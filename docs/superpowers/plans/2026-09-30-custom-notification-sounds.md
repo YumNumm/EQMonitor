@@ -120,4 +120,4 @@
 
 ## 実装後の確認範囲
 
-Dart の静的解析はエラー・警告・info なし。既存テストの3件の失敗は変更前でも再現した。Swift 6.3.3 の `swiftc -frontend -parse` は成功したが、Apple SDK での型確認・Simulator build・実機再生は未実施。PR は Draft とし、Task 1・2・4・5・6 の実機条件がそろうまで受け入れ完了としない。
+Dart の静的解析はエラー・警告・info なし。既存テストの3件の失敗は変更前でも再現した。Swift 6.3.3 の `swiftc -frontend -parse` は成功したが、Apple SDK での型確認・Simulator build・実機再生は未実施。ユーザーの指定により今回の作業では追加の実機確認を行わず、PR をレビュー可能な状態へ進める。Task 1・2・4・5・6 の実機条件は未検証として TODO に残す。
