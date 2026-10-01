@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
+import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -38,11 +39,11 @@ void main() {
     );
 
     expect(result, isA<Success<void, Exception>>());
-    expect(adapter.paths, ['/v2/device/me', '/v2/device/me/migrate']);
+    expect(adapter.paths, ['/v2/device/me/migrate']);
     expect(adapter.migrateRequestBody, {'old_device_id': _oldDeviceId});
   });
 
-  test('migrate が 409 なら冪等成功として Success を返す', () async {
+  test('migrate の409は移行先一致の証明がないため Failure を返す', () async {
     final adapter = _MigrateAdapter(migrateStatus: 409);
     final repository = buildRepository(adapter);
 
@@ -50,10 +51,14 @@ void main() {
       oldDeviceId: _oldDeviceId,
     );
 
-    expect(result, isA<Success<void, Exception>>());
+    expect(result, isA<Failure<void, Exception>>());
+    if (result case Failure(:final exception)) {
+      expect(exception, isA<LegacyMigrationException>());
+      expect((exception as LegacyMigrationException).statusCode, 409);
+    }
   });
 
-  test('migrate が 404 (旧デバイスなし) なら非致命として Success を返す', () async {
+  test('migrate の404は旧設定未移行として Failure を返す', () async {
     final adapter = _MigrateAdapter(migrateStatus: 404);
     final repository = buildRepository(adapter);
 
@@ -61,7 +66,11 @@ void main() {
       oldDeviceId: _oldDeviceId,
     );
 
-    expect(result, isA<Success<void, Exception>>());
+    expect(result, isA<Failure<void, Exception>>());
+    if (result case Failure(:final exception)) {
+      expect(exception, isA<LegacyMigrationException>());
+      expect((exception as LegacyMigrationException).statusCode, 404);
+    }
   });
 
   test('migrate が 500 なら Failure を返す', () async {
@@ -75,8 +84,8 @@ void main() {
     expect(result, isA<Failure<void, Exception>>());
   });
 
-  test('GET /v2/device/me が予期しないエラーなら migrate を呼ばず Failure', () async {
-    final adapter = _MigrateAdapter(getMeStatus: 500);
+  test('migrate の401では端末を再登録せず Failure を返す', () async {
+    final adapter = _MigrateAdapter(getMeStatus: 500, migrateStatus: 401);
     final repository = buildRepository(adapter);
 
     final result = await repository.migrateFromLegacy(
@@ -84,10 +93,10 @@ void main() {
     );
 
     expect(result, isA<Failure<void, Exception>>());
-    expect(adapter.paths, ['/v2/device/me']);
+    expect(adapter.paths, ['/v2/device/me/migrate']);
   });
 
-  test('デバイス未登録 (404) なら登録してから migrate する', () async {
+  test('移行repositoryは事前登録済み端末へだけ移行しGET・再登録をしない', () async {
     final adapter = _MigrateAdapter(firstGetMeStatus: 404);
     final repository = buildRepository(adapter);
 
@@ -96,12 +105,7 @@ void main() {
     );
 
     expect(result, isA<Success<void, Exception>>());
-    expect(adapter.paths, [
-      '/v2/device/me', // step 1: 404
-      '/v2/device', // register
-      '/v2/device/me', // register 内の確認 GET
-      '/v2/device/me/migrate',
-    ]);
+    expect(adapter.paths, ['/v2/device/me/migrate']);
   });
 
   test('migrate が 200 でも不正なボディなら Failure を返す (パース失敗は成功扱いしない)', () async {
