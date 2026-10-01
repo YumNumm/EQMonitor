@@ -2,7 +2,14 @@ import Foundation
 
 struct NotificationSoundFailure: Error {
   let code: String
-  init(_ code: String = "storageFailure") { self.code = code }
+  let stage: String?
+  let underlyingError: NSError?
+
+  init(_ code: String = "storageFailure", stage: String? = nil, underlyingError: Error? = nil) {
+    self.code = code
+    self.stage = stage
+    self.underlyingError = underlyingError.map { $0 as NSError }
+  }
 }
 
 struct CustomNotificationSoundRecord: Codable {
