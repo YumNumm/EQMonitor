@@ -36,7 +36,7 @@
 - native は直列 queue で一時出力・最終検証・rename・atomic カタログ更新を行う。正常にカタログを読めた場合だけ、自前の未登録ファイルを回収する。カタログ破損で音声を消さない。
 - Flutter の coordinator は API 設定保存・削除・snapshot 保存を直列化する。新規選択と編集中の音を予約し、削除は live 設定・全 override・snapshot の取得後にも予約を確認する。読取失敗は削除を禁止する。
 - 欠損音は利用不可として表示し、API / snapshot のファイル名を保持する。存在確認は新しく選ぶ音へ適用し、既存の欠損名が他の設定変更や復元を妨げないようにする。
-- native の file protection は初回 unlock 後に利用できる設定。通知音導入時の Apple SDK archive・IPA 作成・TestFlight アップロードは [CD](https://github.com/YumNumm/EQMonitor/actions/runs/36690312733) で成功。入力形式ごとの変換、OS による実通知再生は未検証。[受け入れ TODO](../todo/800_ui_and_navigation.md) と [設計](../superpowers/specs/2026-09-30-custom-notification-sounds-design.md) を参照する。
+- native の file protection は初回 unlock 後に利用できる設定。通知音導入時の Apple SDK archive・IPA 作成・TestFlight アップロードは [CD](https://github.com/YumNumm/EQMonitor/actions/runs/36690312733) で成功。WAV・MP3 の検査・変換・保存・再デコードは iOS 27.0 Simulator の[単体テストで検証済み](https://github.com/YumNumm/EQMonitor/actions/runs/36942451438)。その他の入力形式、実機での取り込み、OS による実通知再生は未検証。[受け入れ TODO](../todo/800_ui_and_navigation.md) と [設計](../superpowers/specs/2026-09-30-custom-notification-sounds-design.md) を参照する。
 
 ## 揺れ検知の通知条件
 
