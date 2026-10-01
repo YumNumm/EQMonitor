@@ -13,6 +13,12 @@
 - Light/Dark・大きい文字・長い日本語名・VoiceOver・Pro 失効時を確認する。使用中・snapshot 内・未保存編集の音の削除禁止、通信失敗・壊れたカタログ・欠損ファイルからの再追加を確認する。
 - EEW 予報・地震情報・震度別 override の実通知で保存名・最終 APNs payload・再生音を照合する。前面・バックグラウンド・アプリ終了・ロック中・再起動後（初回 unlock 前後）、passive の無音、critical、続報上書き、欠損時 fallback を確認する。試聴や APNs HTTP 200 だけでは完了としない。
 
+## 900: 複数通知地域が一致した場合の震度別設定の優先順位
+
+- 通常の EEW 予報・地震情報の最終選択は、候補配列の最後の音・割り込みを採用する。SQL に並び順の指定がなく、異なる対象震度でも、全国の重大な通知が現在地のデフォルトへ下がる場合を純粋な選択関数で確認した。
+- 優先順位の方針を決め、backend の候補選択を決定的にする。音と割り込みは選択した同じ候補から採用し、EEW 警報・Live Activity の別経路と混同しない。
+- [backend の既存 TODO](https://github.com/YumNumm/eqmonitor-backend/blob/a9a1d7987a0e4e8000d04ba3b464b1997e5f685f/docs/todo/250_notification_slots_minor_findings.md#L25-L30) の同値 tier に限らず、異なる対象震度の競合も対象にする。決定規則を修正するまでは UI で現在地優先・強い通知優先を保証しない。
+
 ## 800: Android 前面通知の実機確認
 
 - 対象: `app/lib/core/fcm/local_notification_repository.dart`、`firebaseMessagingForegroundProvider`、通知タップ処理。

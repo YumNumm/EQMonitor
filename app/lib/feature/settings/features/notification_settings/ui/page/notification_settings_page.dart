@@ -22,6 +22,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/p
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_settings_info_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_tile.dart';
@@ -242,6 +243,9 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
         data: (plan) => ListView(
           padding: const EdgeInsets.only(top: 16, bottom: 24),
           children: [
+            const NotificationSettingsInfoCard(
+              text: '通知地域のいずれかの条件を満たした場合に通知します',
+            ),
             const SettingsSectionHeader(text: '通知地域'),
             _SlotListSection(maxRegions: plan.maxRegions.toInt()),
             const SettingsSectionHeader(text: '通知の種類'),

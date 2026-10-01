@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/settings/component/settings_section_header.dar
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_settings_info_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -22,6 +23,12 @@ class PerIntensitySoundSettingsPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.only(top: 16, bottom: 24),
         children: [
+          const NotificationSettingsInfoCard(
+            text:
+                '各通知地域の条件を満たした通知に適用します。震度別設定は通知地域ごとに保存されます。\n\n'
+                '全国は最大震度、現在地・登録地域は対象地域の震度で判定します。'
+                '緊急地震速報(予報)は予想震度、地震情報は観測震度を使います。',
+          ),
           if (slotsAsync.isLoading && slots.isEmpty)
             const Padding(
               padding: EdgeInsets.all(24),
@@ -96,15 +103,13 @@ class _SlotOverrideTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (icon, name) = switch (slot.slotType) {
-      NotificationSlotType.currentLocation => ('📍', '現在地'),
-      NotificationSlotType.nationwide => ('🌐', '全国'),
-      NotificationSlotType.region => (
-        '📍',
+    final name = switch (slot.slotType) {
+      NotificationSlotType.currentLocation => '現在地',
+      NotificationSlotType.nationwide => '全国',
+      NotificationSlotType.region =>
         slot.cityName != null
             ? '${slot.regionName ?? slot.slotType.name} ${slot.cityName}'
             : slot.regionName ?? slot.slotType.name,
-      ),
     };
 
     final overrides = switch (overrideType) {
@@ -117,7 +122,6 @@ class _SlotOverrideTile extends StatelessWidget {
         : '${overrides.length}件のオーバーライド';
 
     return ListTile(
-      leading: Text(icon, style: const TextStyle(fontSize: 20)),
       title: Text(name),
       subtitle: Text(subtitle),
       trailing: const Icon(Icons.chevron_right),

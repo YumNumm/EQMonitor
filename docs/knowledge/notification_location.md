@@ -17,6 +17,13 @@
 - プリセット初期化の同期callback問題は[UI残件](../todo/800_ui_and_navigation.md)。
   `NotificationPresetSelector`のuseEffect内onChangedは現コードにも存在し、実機再現は未実施。
 
+## 震度別設定の適用範囲
+
+- 震度別設定は全国・現在地・登録地域の slot ごとに保存する。「震度別の音設定」は各 slot への編集入口をまとめた画面で、地域詳細から開く設定と同じ保存値を使う。各通知地域の通知条件を満たした後に、その地域の震度別設定を適用する。
+- 全国は電文の最大震度、現在地・登録地域は対象区域の震度を使う。EEW 予報は細分地域の予想震度、地震情報は観測震度。地震情報の現在地・市区町村指定は市区町村の観測震度を優先し、取得できなければ細分地域へフォールバックする。
+- 同じ slot 内では対象震度以下で最も高い最小震度の設定を採用し、該当設定がなければ通知種類ごとの既定音・割り込みを使う。EEW 警報の音・割り込みと Live Activity は、この震度別設定とは別経路。
+- 通常の EEW 予報・地震情報で複数 slot が一致した場合、現行 backend は候補配列の最後の音・割り込みを採用する。SQL の並び順も指定されておらず、強い通知・現在地・全国の優先は保証しない。固定 backend と main の双方で確認した [最終選択](https://github.com/YumNumm/eqmonitor-backend/blob/a9a1d7987a0e4e8000d04ba3b464b1997e5f685f/packages/notification-common/src/types/notification-tier.ts#L60-L71) を参照し、[残課題](../todo/800_ui_and_navigation.md) で追跡する。
+
 ## iOS のファイルから追加する通知音
 
 - 予報・地震情報の既定音と震度別 override は、標準音と端末内の追加音を同じ選択欄で扱う。導線は既存 Pro 条件を使う。
