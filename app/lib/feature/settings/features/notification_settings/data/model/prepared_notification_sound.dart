@@ -5,6 +5,7 @@ part 'prepared_notification_sound.g.dart';
 
 @freezed
 abstract class PreparedNotificationSound with _$PreparedNotificationSound {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory({required String id, required int durationMs}) =
       _PreparedNotificationSound;
 

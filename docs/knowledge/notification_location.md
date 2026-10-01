@@ -22,10 +22,11 @@
 - 予報・地震情報の既定音と震度別 override は、標準音と端末内の追加音を同じ選択欄で扱う。導線は既存 Pro 条件を使う。
 - Files で選んだ音声は native の AVAudioFile / AVAudioConverter で WAV・PCM16 LE・mono・44,100 Hz・最長29.9秒に変換する。長い入力は先頭切り出しを確認してから変換する。追加しても設定は自動で切り替えない。
 - 保存先は App Group の `Library/Sounds/eqm_custom_<32桁UUID>.wav`。カタログは `Library/Application Support/NotificationSounds/catalog.json`。表示名変更でファイル名は変えない。サーバーへ音声を送信しない。
+- MethodChannel の JSON は camelCase。取り込み検査・変換済み音・保存済み音の Dart モデルは `@JsonSerializable(fieldRename: FieldRename.none)` を指定し、app 全体の snake_case 設定を適用しない。`sourceDisplayName` は Files の選択結果から Repository が補う。
 - native は直列 queue で一時出力・最終検証・rename・atomic カタログ更新を行う。正常にカタログを読めた場合だけ、自前の未登録ファイルを回収する。カタログ破損で音声を消さない。
 - Flutter の coordinator は API 設定保存・削除・snapshot 保存を直列化する。新規選択と編集中の音を予約し、削除は live 設定・全 override・snapshot の取得後にも予約を確認する。読取失敗は削除を禁止する。
 - 欠損音は利用不可として表示し、API / snapshot のファイル名を保持する。存在確認は新しく選ぶ音へ適用し、既存の欠損名が他の設定変更や復元を妨げないようにする。
-- native の file protection は初回 unlock 後に利用できる設定。Apple SDK build、入力形式ごとの変換、OS による実通知再生は未検証。[受け入れ TODO](../todo/800_ui_and_navigation.md) と [設計](../superpowers/specs/2026-09-30-custom-notification-sounds-design.md) を参照する。
+- native の file protection は初回 unlock 後に利用できる設定。通知音導入時の Apple SDK archive・IPA 作成・TestFlight アップロードは [CD](https://github.com/YumNumm/EQMonitor/actions/runs/36690312733) で成功。入力形式ごとの変換、OS による実通知再生は未検証。[受け入れ TODO](../todo/800_ui_and_navigation.md) と [設計](../superpowers/specs/2026-09-30-custom-notification-sounds-design.md) を参照する。
 
 ## 揺れ検知の通知条件
 

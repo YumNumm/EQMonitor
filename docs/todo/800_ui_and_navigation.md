@@ -4,11 +4,11 @@
 
 ## 800: ファイルから追加する通知音
 
-- iOS 向けの取り込み・変換・保存・試聴・選択・管理を実装。Apple SDK ビルドと実機検証は未実施。
+- iOS 向けの取り込み・変換・保存・試聴・選択・管理を実装。通知音導入時の Apple SDK archive・IPA 作成・TestFlight アップロードは [CD](https://github.com/YumNumm/EQMonitor/actions/runs/36690312733) で成功。実機検証は未実施。
 - 今回の作業ではユーザーの指定により追加の実機確認を行わず、以下を未検証項目として残す。
 - [設計案](../superpowers/specs/2026-09-30-custom-notification-sounds-design.md) と [実装計画](../superpowers/plans/2026-09-30-custom-notification-sounds.md) を参照する。
 - 対象: `app/lib/feature/settings/features/notification_settings/`、`app/ios/Runner/`、App Group の `Library/Sounds/`。
-- macOS で Runner・FcmServiceExtension の Simulator build と署名済み実機 build を確認する。Linux の Swift 構文解析は Apple SDK の型確認を代替しない。
+- macOS で Runner・FcmServiceExtension の Simulator build を確認する。通知音モデルの JSON キー修正後に、iOS 実機で Files からの取り込み・変換・保存・管理を確認する。実機での取り込みと再生は CD のビルド成功だけでは検証できない。
 - MP3・AAC/M4A・WAV・AIFF・CAF、mono/stereo、異なる sample rate、29.9秒・30秒・長い音、破損・DRM・クラウド source の失敗を確認する。容量不足・カタログ保存失敗・変換中の終了・再起動後の回収と file protection も未検証。
 - Light/Dark・大きい文字・長い日本語名・VoiceOver・Pro 失効時を確認する。使用中・snapshot 内・未保存編集の音の削除禁止、通信失敗・壊れたカタログ・欠損ファイルからの再追加を確認する。
 - EEW 予報・地震情報・震度別 override の実通知で保存名・最終 APNs payload・再生音を照合する。前面・バックグラウンド・アプリ終了・ロック中・再起動後（初回 unlock 前後）、passive の無音、critical、続報上書き、欠損時 fallback を確認する。試聴や APNs HTTP 200 だけでは完了としない。

@@ -208,8 +208,8 @@ return $default(_that.sourceDisplayName,_that.durationMs);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
 
+@JsonSerializable(fieldRename: FieldRename.none)
 class _NotificationSoundInspection implements NotificationSoundInspection {
   const _NotificationSoundInspection({required this.sourceDisplayName, required this.durationMs});
   factory _NotificationSoundInspection.fromJson(Map<String, dynamic> json) => _$NotificationSoundInspectionFromJson(json);

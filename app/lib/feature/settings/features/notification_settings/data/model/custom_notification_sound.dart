@@ -5,6 +5,7 @@ part 'custom_notification_sound.g.dart';
 
 @freezed
 abstract class CustomNotificationSound with _$CustomNotificationSound {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory({
     required String id,
     required String displayName,

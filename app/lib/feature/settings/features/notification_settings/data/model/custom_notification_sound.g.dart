@@ -10,39 +10,25 @@ part of 'custom_notification_sound.dart';
 
 _CustomNotificationSound _$CustomNotificationSoundFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_CustomNotificationSound',
-  json,
-  ($checkedConvert) {
-    final val = _CustomNotificationSound(
-      id: $checkedConvert('id', (v) => v as String),
-      displayName: $checkedConvert('display_name', (v) => v as String),
-      fileName: $checkedConvert('file_name', (v) => v as String),
-      durationMs: $checkedConvert('duration_ms', (v) => (v as num).toInt()),
-      createdAt: $checkedConvert(
-        'created_at',
-        (v) => DateTime.parse(v as String),
-      ),
-      isAvailable: $checkedConvert('is_available', (v) => v as bool? ?? true),
-    );
-    return val;
-  },
-  fieldKeyMap: const {
-    'displayName': 'display_name',
-    'fileName': 'file_name',
-    'durationMs': 'duration_ms',
-    'createdAt': 'created_at',
-    'isAvailable': 'is_available',
-  },
-);
+) => $checkedCreate('_CustomNotificationSound', json, ($checkedConvert) {
+  final val = _CustomNotificationSound(
+    id: $checkedConvert('id', (v) => v as String),
+    displayName: $checkedConvert('displayName', (v) => v as String),
+    fileName: $checkedConvert('fileName', (v) => v as String),
+    durationMs: $checkedConvert('durationMs', (v) => (v as num).toInt()),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+    isAvailable: $checkedConvert('isAvailable', (v) => v as bool? ?? true),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$CustomNotificationSoundToJson(
   _CustomNotificationSound instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'display_name': instance.displayName,
-  'file_name': instance.fileName,
-  'duration_ms': instance.durationMs,
-  'created_at': instance.createdAt.toIso8601String(),
-  'is_available': instance.isAvailable,
+  'displayName': instance.displayName,
+  'fileName': instance.fileName,
+  'durationMs': instance.durationMs,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'isAvailable': instance.isAvailable,
 };
