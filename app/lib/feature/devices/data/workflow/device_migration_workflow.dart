@@ -1,95 +1,22 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
-import 'package:flutter/foundation.dart';
 import 'package:workflows/workflows.dart';
 
-/// Instance ID used to key the durable migration workflow.
-const kV3MigrationInstanceId = 'v3-device-migration-v1';
+/// v1 は 404/409 でも完了を保存していたため、その記録を再利用しない。
+const kV3MigrationInstanceId = 'v3-device-migration-v2';
 
-/// Key under which the local "migration complete" flag is stored in
-/// a [WorkflowPersistence] instance (used as a step result).
-const _kMarkComplete = 'markLocalComplete';
-
-/// v2.6 → v3 device migration workflow のランナー。
 class const DeviceMigrationWorkflow() {
-  /// Runs the v2.6 → v3 device migration as a durable workflow.
-  ///
-  /// Steps:
-  /// 1. `ensureDeviceAbsent`  — GET /v2/device/me; records whether device
-  ///    already existed.
-  /// 2. `registerDevice`      — POST /v2/device only when absent.
-  /// 3. `migrateLegacySettings` — POST /v2/device/me/migrate with
-  ///    [oldDeviceId].
-  /// 4. `markLocalComplete`   — writes true to persistence.
-  ///
-  /// Caller must ensure [oldDeviceId] was successfully retrieved from legacy
-  /// storage before calling this function. When legacy ID is unavailable, skip
-  /// this workflow entirely and navigate to onboarding instead.
+  /// 登録済みの移行先ごとに成功 step を保存し、中断後に再開する。
+  /// 通信断でサーバーの成功応答を受け取れなかった場合の409は未確認とする。
   Future<void> run({
     required WorkflowRunner runner,
     required DeviceRepository repository,
     required String oldDeviceId,
+    required String deviceId,
   }) async {
     await runner.run(
-      instanceId: kV3MigrationInstanceId,
+      instanceId: '$kV3MigrationInstanceId:$oldDeviceId:$deviceId',
       workflow: (step) async {
-        // Step 1 — check whether device already exists
-        final alreadyRegistered = await step<bool>(
-          'ensureDeviceAbsent',
-          () async {
-            final result = await repository.getDevice();
-            return switch (result) {
-              Success() => true,
-              Failure(:final exception)
-                  when exception is DioException &&
-                      exception.response?.statusCode == 404 =>
-                false,
-              Failure(:final exception)
-                  when exception is DioException &&
-                      exception.response?.statusCode == 401 =>
-                false,
-              Failure(:final exception)
-                  when exception is AuthorizationException &&
-                      exception.reason ==
-                          AuthorizationFailureReason.unauthenticated =>
-                false,
-              Failure(:final exception, :final stackTrace) =>
-                Error.throwWithStackTrace(
-                  exception,
-                  stackTrace ?? StackTrace.empty,
-                ),
-            };
-          },
-        );
-
-        // Step 2 — register only when absent
-        if (!alreadyRegistered) {
-          await step<void>('registerDevice', () async {
-            final result = await repository.registerDevice(
-              devicePlatform: kIsWeb
-                  ? .ios
-                  : Platform.isIOS
-                  ? .ios
-                  : .android,
-              deviceLocale: .ja,
-            );
-            switch (result) {
-              case Success():
-                break;
-              case Failure(:final exception, :final stackTrace):
-                Error.throwWithStackTrace(
-                  exception,
-                  stackTrace ?? StackTrace.empty,
-                );
-            }
-          });
-        }
-
-        // Step 3 — migrate legacy settings
         await step<void>('migrateLegacySettings', () async {
           final result = await repository.migrateFromLegacy(
             oldDeviceId: oldDeviceId,
@@ -104,18 +31,19 @@ class const DeviceMigrationWorkflow() {
               );
           }
         });
-
-        // Step 4 — persist completion flag
-        await step<bool>(_kMarkComplete, () => true);
+        await step<bool>('markLocalComplete', () => true);
       },
     );
   }
 
-  /// Returns true when the migration workflow completed in a previous run.
-  Future<bool> isComplete(WorkflowPersistence persistence) async {
+  Future<bool> isComplete({
+    required WorkflowPersistence persistence,
+    required String oldDeviceId,
+    required String deviceId,
+  }) async {
     final (:completed, value: _) = await persistence.getStepResult(
-      kV3MigrationInstanceId,
-      _kMarkComplete,
+      '$kV3MigrationInstanceId:$oldDeviceId:$deviceId',
+      'markLocalComplete',
     );
     return completed;
   }

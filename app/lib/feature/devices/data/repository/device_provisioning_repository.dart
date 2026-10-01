@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/feature/devices/data/logic/legacy_device_id_decoder.dart';
 import 'package:eqmonitor/feature/devices/data/persistence/shared_preferences_workflow_persistence.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workflows/workflows.dart';
@@ -49,19 +50,29 @@ class DeviceProvisioningRepository {
     value: false,
   );
 
-  Future<String?> readLegacyDeviceId() =>
-      _dataSource.getString(key: SharedPreferencesKey.legacyDeviceId);
+  Future<String?> readLegacyDeviceId() async {
+    final id = await _dataSource.getString(
+      key: SharedPreferencesKey.legacyDeviceId,
+    );
+    return id != null && const LegacyDeviceIdDecoder().isValid(id) ? id : null;
+  }
 
   Future<bool> wasMigratedFromLegacy() async =>
       await _dataSource.getBool(
-        key: SharedPreferencesKey.deviceMigratedFromLegacy,
+        key: SharedPreferencesKey.deviceLegacyMigrationVerified,
       ) ??
       false;
 
-  Future<void> markMigratedFromLegacy() => _dataSource.setBool(
-    key: SharedPreferencesKey.deviceMigratedFromLegacy,
-    value: true,
-  );
+  Future<void> markMigratedFromLegacy() async {
+    await _dataSource.setBool(
+      key: SharedPreferencesKey.deviceMigratedFromLegacy,
+      value: true,
+    );
+    await _dataSource.setBool(
+      key: SharedPreferencesKey.deviceLegacyMigrationVerified,
+      value: true,
+    );
+  }
 
   WorkflowRunner buildRunner() => WorkflowRunner(persistence: _persistence);
 }
