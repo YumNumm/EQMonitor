@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound_failure.dart';
 
 /// エラー詳細シートの「まとめてコピー」で共有する診断テキストを組み立てる。
 class ErrorDiagnosticsBuilder {
@@ -38,6 +39,27 @@ class ErrorDiagnosticsBuilder {
     }
 
     buffer.writeln('メッセージ: $error');
+
+    if (error case NotificationSoundException(
+      :final failure,
+      :final operation,
+      :final cause,
+    )) {
+      buffer.writeln('通知音エラー: ${failure.name}');
+      if (operation != null) buffer.writeln('処理: $operation');
+      if (cause != null) {
+        buffer.writeln('プラットフォームコード: ${cause.code}');
+        if (cause.details case {'stage': final String stage}) {
+          buffer.writeln('失敗箇所: $stage');
+        }
+        if (cause.details case {'nativeDomain': final String domain}) {
+          buffer.writeln('OSエラードメイン: $domain');
+        }
+        if (cause.details case {'nativeCode': final int code}) {
+          buffer.writeln('OSエラーコード: $code');
+        }
+      }
+    }
 
     if (includeStackTrace && stackTrace != null) {
       buffer

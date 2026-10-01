@@ -31,7 +31,7 @@ class const NotificationSoundDataSource(final MethodChannel _channel) {
     try {
       final response = await _channel.invokeMethod<String>(method, arguments);
       if (response == null)
-        throw const NotificationSoundException(.storageFailure);
+        throw NotificationSoundException(.storageFailure, operation: method);
       return jsonDecode(response) as Map<String, dynamic>;
     } on PlatformException catch (error) {
       throw NotificationSoundException(
@@ -39,9 +39,11 @@ class const NotificationSoundDataSource(final MethodChannel _channel) {
           (failure) => failure.name == error.code,
           orElse: () => .storageFailure,
         ),
+        operation: method,
+        cause: error,
       );
     } on MissingPluginException {
-      throw const NotificationSoundException(.storageFailure);
+      throw NotificationSoundException(.storageFailure, operation: method);
     }
   }
 
@@ -54,9 +56,11 @@ class const NotificationSoundDataSource(final MethodChannel _channel) {
           (failure) => failure.name == error.code,
           orElse: () => .storageFailure,
         ),
+        operation: method,
+        cause: error,
       );
     } on MissingPluginException {
-      throw const NotificationSoundException(.storageFailure);
+      throw NotificationSoundException(.storageFailure, operation: method);
     }
   }
 }
