@@ -30,6 +30,7 @@
 - Files で選んだ音声は native の AVAudioFile / AVAudioConverter で WAV・PCM16 LE・mono・44,100 Hz・最長29.9秒に変換する。長い入力は先頭切り出しを確認してから変換する。追加しても設定は自動で切り替えない。
 - AVAudioFile の読み込み数は残りフレーム数を上限とし、末尾に到達したら converter へ endOfStream を渡す。出力は検証前に閉じて WAV ヘッダーを確定する。iOS 18 以降は [close()](https://developer.apple.com/documentation/avfaudio/avaudiofile/close())、iOS 17 は変換スコープの autoreleasepool を使う。読み込み失敗と出力の変換・検証失敗を区別し、入力の破損と断定しない。
 - 通知音の例外は MethodChannel の処理名・失敗箇所・元の NSError の domain/code を保持し、リリース版でもエラー詳細の表示・コピーに含める。通常の案内には技術情報を付け足さない。ファイルパスを含み得る localizedDescription・userInfo は診断情報に渡さない。
+- 読み込み・変換・保存の実装と iOS 単体テストは `app/ios/Packages/NotificationSounds/` に置く。Runner も同じ Swift ソースを参照する。[実行手順](../../app/ios/Packages/NotificationSounds/README.md)に従い、WAV・MP3 の実デコードを iOS Simulator で検証する。PR の `iOS Notification Sound Tests` が実行する。
 - 保存先は App Group の `Library/Sounds/eqm_custom_<32桁UUID>.wav`。カタログは `Library/Application Support/NotificationSounds/catalog.json`。表示名変更でファイル名は変えない。サーバーへ音声を送信しない。
 - MethodChannel の JSON は camelCase。取り込み検査・変換済み音・保存済み音の Dart モデルは `@JsonSerializable(fieldRename: FieldRename.none)` を指定し、app 全体の snake_case 設定を適用しない。`sourceDisplayName` は Files の選択結果から Repository が補う。
 - native は直列 queue で一時出力・最終検証・rename・atomic カタログ更新を行う。正常にカタログを読めた場合だけ、自前の未登録ファイルを回収する。カタログ破損で音声を消さない。
