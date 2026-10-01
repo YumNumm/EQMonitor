@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -11,7 +9,6 @@ import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'device_repository.g.dart';
@@ -119,73 +116,32 @@ class DeviceRepository {
     }
   }
 
-  /// Migrates settings from a v2.6 Supabase device to this v3 device.
-  ///
-  /// Sequence (per spec):
-  /// 1. GET /v2/device/me — if 200 it already exists, skip registration.
-  /// 2. POST /v2/device — only when step 1 returned 404.
-  /// 3. POST /v2/device/me/migrate with [oldDeviceId].
-  ///
-  /// 409 on migrate is treated as idempotent success (already migrated).
+  /// 登録済みの新端末へ旧設定を移行する。登録は provisioning が先に行う。
+  /// 移行中に端末を再登録すると durable workflow の移行先が変わるため、
+  /// 認証失敗も呼び出し元へ返す。
+  /// 404 / 409 は移行先への移行成功を証明しないため失敗として返す。
   Future<Result<void, Exception>> migrateFromLegacy({
     required String oldDeviceId,
-  }) async {
-    // Step 1 — check existence
-    final getResult = await getDevice();
-    final alreadyRegistered = switch (getResult) {
-      Success() => true,
-      Failure(:final exception) when _isNotFound(exception) => false,
-      Failure() => null, // unexpected error
-    };
-    if (alreadyRegistered == null) {
-      return getResult as Failure<void, Exception>;
-    }
-
-    // Step 2 — register only when absent
-    if (!alreadyRegistered) {
-      final registerResult = await registerDevice(
-        devicePlatform: kIsWeb
-            ? .ios
-            : Platform.isIOS
-            ? .ios
-            : .android,
-        deviceLocale: .ja,
+  }) => Result.capture(() async {
+    try {
+      final response = await _api.device.postV2DeviceMeMigrate(
+        body: api.MigrateRequest(oldDeviceId: oldDeviceId),
       );
-      if (registerResult is Failure<RegisteredDevice, Exception>) {
-        return Failure(registerResult.exception, registerResult.stackTrace);
+      final migrated = response.data.migrated;
+      talker.info(
+        '[V2Migration] migrate succeeded: '
+        'earthquakeRegions=${migrated.earthquakeRegions}, '
+        'eewRegions=${migrated.eewRegions}, '
+        'notificationSettings=${migrated.notificationSettings}',
+      );
+    } on DioException catch (e) {
+      final status = e.response?.statusCode;
+      if (status == 404 || status == 409) {
+        throw LegacyMigrationException(statusCode: status == 404 ? 404 : 409);
       }
+      rethrow;
     }
-
-    // Step 3 — call migration endpoint to transfer Supabase settings
-    return Result.capture(() async {
-      try {
-        final response = await _api.device.postV2DeviceMeMigrate(
-          body: api.MigrateRequest(oldDeviceId: oldDeviceId),
-        );
-        final migrated = response.data.migrated;
-        talker.info(
-          '[V2Migration] migrate succeeded: '
-          'earthquakeRegions=${migrated.earthquakeRegions}, '
-          'eewRegions=${migrated.eewRegions}, '
-          'notificationSettings=${migrated.notificationSettings}',
-        );
-      } on DioException catch (e) {
-        // 409 = already migrated; treat as idempotent success
-        if (e.response?.statusCode == 409) {
-          talker.info('[V2Migration] already migrated (409); skipping');
-          return;
-        }
-        // 404 = old device not found in Supabase; non-fatal
-        if (e.response?.statusCode == 404) {
-          talker.warning(
-            '[V2Migration] old device not found (404); nothing migrated',
-          );
-          return;
-        }
-        rethrow;
-      }
-    });
-  }
+  });
 
   Future<Result<void, Exception>> upsertPushToken({
     required PushTokenKind kind,

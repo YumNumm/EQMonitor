@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
@@ -11,9 +10,8 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:workflows/workflows.dart';
 
-const _deviceId = 'test-device-id';
-const _oldDeviceId = 'legacy-device-id';
-
+const _deviceId = 'new-device';
+const _oldDeviceId = 'old-device';
 const _fakeDevice = RegisteredDevice(
   id: _deviceId,
   platform: DevicePlatform.ios,
@@ -23,225 +21,164 @@ const _fakeDevice = RegisteredDevice(
   updatedAtIso: '2026-01-01T00:00:00Z',
 );
 
-Result<RegisteredDevice, Exception> _notFound() => Failure(
-  DioException(
-    requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
-    response: Response(
-      requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
-      statusCode: 404,
-    ),
-    type: DioExceptionType.badResponse,
-  ),
-);
-
-Result<RegisteredDevice, Exception> _serverError() => Failure(
-  DioException(
-    requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
-    response: Response(
-      requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
-      statusCode: 500,
-    ),
-    type: DioExceptionType.badResponse,
-  ),
-);
-
-Result<RegisteredDevice, Exception> _unauthorized() => Failure(
-  DioException(
-    requestOptions: RequestOptions(path: '/v2/device/me'),
-    response: Response(
-      requestOptions: RequestOptions(path: '/v2/device/me'),
-      statusCode: 401,
-    ),
-    type: DioExceptionType.badResponse,
-  ),
-);
-
-Result<RegisteredDevice, Exception> _unauthenticated() => const Failure(
-  AuthorizationException(reason: AuthorizationFailureReason.unauthenticated),
-);
-
 void main() {
-  late InMemoryWorkflowPersistence persistence;
-  late WorkflowRunner runner;
-
-  setUp(() {
-    persistence = InMemoryWorkflowPersistence();
-    runner = WorkflowRunner(persistence: persistence);
-  });
-
   const workflow = DeviceMigrationWorkflow();
-  Future<void> run(FakeDeviceRepository repo) => workflow.run(
-    runner: runner,
-    repository: repo,
-    oldDeviceId: _oldDeviceId,
-  );
 
-  // ── happy path: device absent ───────────────────────────────────────────
-
-  group('デバイス未登録のフルハッピーパス', () {
-    test('GET→デバイス登録→migrateの順に呼ばれ、完了フラグが立つ', () async {
-      final repo = FakeDeviceRepository(
-        getResult: _notFound,
+  FakeDeviceRepository repository(Result<void, Exception> Function() migrate) =>
+      FakeDeviceRepository(
+        getResult: () => const Success(_fakeDevice),
         putResult: () => const Success(_fakeDevice),
-        migrateResult: () => const Success(null),
+        migrateResult: migrate,
       );
 
-      await run(repo);
-
-      expect(repo.getCalls, 1);
-      expect(repo.putCalls, 1);
-      expect(repo.migrateCalls, 1);
-      expect(await workflow.isComplete(persistence), isTrue);
-    });
-
-    test('2回目の実行でAPIが一切呼ばれない (全ステップキャッシュ済み)', () async {
-      final repo = FakeDeviceRepository(
-        getResult: _notFound,
-        putResult: () => const Success(_fakeDevice),
-        migrateResult: () => const Success(null),
+  test('成功後の再起動では同じ移行を再送しない', () async {
+    final persistence = InMemoryWorkflowPersistence();
+    final repo = repository(() => const Success(null));
+    for (var i = 0; i < 2; i++) {
+      await workflow.run(
+        runner: WorkflowRunner(persistence: persistence),
+        repository: repo,
+        oldDeviceId: _oldDeviceId,
+        deviceId: _deviceId,
       );
-
-      await run(repo);
-
-      final getCalls = repo.getCalls;
-      final putCalls = repo.putCalls;
-      final migrateCalls = repo.migrateCalls;
-
-      // 同一 runner / persistence で再実行
-      await run(repo);
-
-      expect(repo.getCalls, getCalls, reason: 'getDevice が再実行されてはいけない');
-      expect(repo.putCalls, putCalls, reason: 'registerDevice が再実行されてはいけない');
-      expect(repo.migrateCalls, migrateCalls, reason: 'migrate が再実行されてはいけない');
-    });
+    }
+    expect(repo.migrateCalls, 1);
+    expect(
+      await workflow.isComplete(
+        persistence: persistence,
+        oldDeviceId: _oldDeviceId,
+        deviceId: _deviceId,
+      ),
+      isTrue,
+    );
   });
 
-  // ── happy path: device already registered ──────────────────────────────
-
-  test('GETが200のときデバイス登録をスキップしてmigrateを呼ぶ', () async {
-    final repo = FakeDeviceRepository(
-      getResult: () => const Success(_fakeDevice),
-      putResult: () => throw StateError('register should not be called'),
-      migrateResult: () => const Success(null),
+  test('失敗後は新しい runner でも移行を再試行できる', () async {
+    final persistence = InMemoryWorkflowPersistence();
+    var shouldFail = true;
+    final repo = repository(
+      () => shouldFail
+          ? Failure(Exception('network failure'))
+          : const Success(null),
     );
+    await expectLater(
+      workflow.run(
+        runner: WorkflowRunner(persistence: persistence),
+        repository: repo,
+        oldDeviceId: _oldDeviceId,
+        deviceId: _deviceId,
+      ),
+      throwsA(isA<Exception>()),
+    );
+    expect(
+      await workflow.isComplete(
+        persistence: persistence,
+        oldDeviceId: _oldDeviceId,
+        deviceId: _deviceId,
+      ),
+      isFalse,
+    );
+    shouldFail = false;
+    await workflow.run(
+      runner: WorkflowRunner(persistence: persistence),
+      repository: repo,
+      oldDeviceId: _oldDeviceId,
+      deviceId: _deviceId,
+    );
+    expect(repo.migrateCalls, 2);
+  });
 
-    await run(repo);
+  test('移行元・移行先が変わると以前の成功を再利用しない', () async {
+    final persistence = InMemoryWorkflowPersistence();
+    final repo = repository(() => const Success(null));
+    for (final pair in [
+      (old: _oldDeviceId, destination: _deviceId),
+      (old: _oldDeviceId, destination: 'another-device'),
+      (old: 'another-source', destination: _deviceId),
+    ]) {
+      await workflow.run(
+        runner: WorkflowRunner(persistence: persistence),
+        repository: repo,
+        oldDeviceId: pair.old,
+        deviceId: pair.destination,
+      );
+    }
+    expect(repo.migrateCalls, 3);
+  });
 
-    expect(repo.getCalls, 1);
-    expect(repo.putCalls, 0);
+  test('v1で保存された成功を新 workflow の成功と扱わない', () async {
+    final persistence = InMemoryWorkflowPersistence();
+    await persistence.saveStepResult(
+      'v3-device-migration-v1',
+      'migrateLegacySettings',
+      null,
+    );
+    await persistence.saveStepResult(
+      'v3-device-migration-v1',
+      'markLocalComplete',
+      true,
+    );
+    final repo = repository(() => const Success(null));
+    await workflow.run(
+      runner: WorkflowRunner(persistence: persistence),
+      repository: repo,
+      oldDeviceId: _oldDeviceId,
+      deviceId: _deviceId,
+    );
     expect(repo.migrateCalls, 1);
   });
 
-  test('GETが401のとき未登録扱いでデバイス登録とmigrateを呼ぶ', () async {
-    final repo = FakeDeviceRepository(
-      getResult: _unauthorized,
-      putResult: () => const Success(_fakeDevice),
-      migrateResult: () => const Success(null),
+  test('成功step保存後の完了保存失敗は再起動後も移行を再送しない', () async {
+    final persistence = _FailCompletePersistence();
+    final repo = repository(() => const Success(null));
+    await expectLater(
+      workflow.run(
+        runner: WorkflowRunner(persistence: persistence),
+        repository: repo,
+        oldDeviceId: _oldDeviceId,
+        deviceId: _deviceId,
+      ),
+      throwsStateError,
     );
-
-    await run(repo);
-
-    expect(repo.getCalls, 1);
-    expect(repo.putCalls, 1);
+    await workflow.run(
+      runner: WorkflowRunner(persistence: persistence),
+      repository: repo,
+      oldDeviceId: _oldDeviceId,
+      deviceId: _deviceId,
+    );
     expect(repo.migrateCalls, 1);
-    expect(await workflow.isComplete(persistence), isTrue);
-  });
-
-  test('GETがunauthenticatedのとき未登録扱いでデバイス登録とmigrateを呼ぶ', () async {
-    final repo = FakeDeviceRepository(
-      getResult: _unauthenticated,
-      putResult: () => const Success(_fakeDevice),
-      migrateResult: () => const Success(null),
+    expect(
+      await workflow.isComplete(
+        persistence: persistence,
+        oldDeviceId: _oldDeviceId,
+        deviceId: _deviceId,
+      ),
+      isTrue,
     );
-
-    await run(repo);
-
-    expect(repo.getCalls, 1);
-    expect(repo.putCalls, 1);
-    expect(repo.migrateCalls, 1);
-    expect(await workflow.isComplete(persistence), isTrue);
-  });
-
-  // ── resume: registerDevice failure ─────────────────────────────────────
-
-  test('登録失敗後の再実行: 存在確認をスキップして登録が再試行される', () async {
-    var putShouldFail = true;
-    final repo = FakeDeviceRepository(
-      getResult: _notFound,
-      putResult: () {
-        if (putShouldFail) {
-          return Failure(Exception('register network error'));
-        }
-        return const Success(_fakeDevice);
-      },
-      migrateResult: () => const Success(null),
-    );
-
-    // 1回目: GET成功 (キャッシュ), 登録失敗
-    await expectLater(run(repo), throwsA(isA<Exception>()));
-    expect(repo.getCalls, 1, reason: 'GET は1回だけ呼ばれるはず');
-    expect(repo.putCalls, 1, reason: '登録は1回試行されるはず');
-    expect(repo.migrateCalls, 0, reason: 'migrate はまだ呼ばれないはず');
-
-    // 2回目: 登録を成功させる
-    putShouldFail = false;
-    await run(repo);
-
-    expect(repo.getCalls, 1, reason: 'GET は2回目でキャッシュ済みなので再実行されない');
-    expect(repo.putCalls, 2, reason: '登録は2回目で再試行される');
-    expect(repo.migrateCalls, 1, reason: 'migrate は2回目で呼ばれる');
-    expect(await workflow.isComplete(persistence), isTrue);
-  });
-
-  // ── resume: migrateLegacySettings failure ──────────────────────────────
-
-  test(
-    'migrate失敗後の再実行: ensureDeviceAbsent・registerDevice はスキップされ migrate が再試行される',
-    () async {
-      var migrateShouldFail = true;
-      final repo = FakeDeviceRepository(
-        getResult: _notFound,
-        putResult: () => const Success(_fakeDevice),
-        migrateResult: () {
-          if (migrateShouldFail) {
-            return Failure(Exception('migrate network error'));
-          }
-          return const Success(null);
-        },
-      );
-
-      // 1回目: GET・登録成功, migrate失敗
-      await expectLater(run(repo), throwsA(isA<Exception>()));
-      expect(repo.getCalls, 1);
-      expect(repo.putCalls, 1);
-      expect(repo.migrateCalls, 1);
-
-      // 2回目: migrate を成功させる
-      migrateShouldFail = false;
-      await run(repo);
-
-      expect(repo.getCalls, 1, reason: 'ensureDeviceAbsent はキャッシュ済み');
-      expect(repo.putCalls, 1, reason: 'registerDevice はキャッシュ済み');
-      expect(repo.migrateCalls, 2, reason: 'migrate は再試行される');
-      expect(await workflow.isComplete(persistence), isTrue);
-    },
-  );
-
-  // ── getDevice unexpected error ──────────────────────────────────────────
-
-  test('GET が 500 を返したとき例外が伝播し完了フラグは立たない', () async {
-    final repo = FakeDeviceRepository(
-      getResult: _serverError,
-      putResult: () => throw StateError('should not reach'),
-      migrateResult: () => throw StateError('should not reach'),
-    );
-
-    await expectLater(run(repo), throwsA(isA<Exception>()));
-    expect(await workflow.isComplete(persistence), isFalse);
   });
 }
 
-// ── fake ───────────────────────────────────────────────────────────────────
+final class _FailCompletePersistence implements WorkflowPersistence {
+  final delegate = InMemoryWorkflowPersistence();
+  var failOnce = true;
+
+  @override
+  Future<String?> getRaw(String instanceId, String stepName) =>
+      delegate.getRaw(instanceId, stepName);
+
+  @override
+  Future<void> saveRaw(String instanceId, String stepName, String raw) async {
+    if (stepName == 'markLocalComplete' && failOnce) {
+      failOnce = false;
+      throw StateError('mock disk failure');
+    }
+    await delegate.saveRaw(instanceId, stepName, raw);
+  }
+
+  @override
+  Future<void> clearInstance(String instanceId) =>
+      delegate.clearInstance(instanceId);
+}
 
 class FakeDeviceRepository extends DeviceRepository {
   new({

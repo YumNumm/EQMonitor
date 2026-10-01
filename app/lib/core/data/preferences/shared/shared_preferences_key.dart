@@ -25,10 +25,13 @@ enum SharedPreferencesKey(final String key) {
   assetPackAcceptedLatestVersion('asset_pack_accepted_latest_version'),
   assetPackActiveDownloadedVersion('asset_pack_active_downloaded_version'),
 
-  /// v2.6アプリがSupabase device IDの保存に使用していたキー（移行用）
+  /// v2 の api_token から回収した旧 ID。過去の移行用キーも引き継ぐ。
   legacyDeviceId('device_id'),
   deviceProvisioned('device_provisioned'),
   deviceMigratedFromLegacy('device_migrated_from_legacy'),
+
+  /// 404/409 を成功とした旧 flag とは別に、v2 workflow の成功を確認する。
+  deviceLegacyMigrationVerified('device_legacy_migration_verified_v2'),
   adsOptOut('ads_opt_out'),
   autoReturnToRealtime('auto_return_to_realtime'),
   earthquakeHistoryMapLayerParameter('earthquake_history_map_layer_parameter'),

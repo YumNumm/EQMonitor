@@ -10,8 +10,12 @@ class SharedPreferencesAsync {
   final SharedPreferences _prefs;
 
   String? getString(String key) => _prefs.getString(key);
-  Future<void> setString(String key, String value) =>
-      _prefs.setString(key, value);
+  Future<void> setString(String key, String value) async {
+    final didPersist = await _prefs.setString(key, value);
+    if (!didPersist) {
+      throw StateError('Failed to persist workflow preferences');
+    }
+  }
 
   int? getInt(String key) => _prefs.getInt(key);
   Future<void> setInt(String key, int value) => _prefs.setInt(key, value);

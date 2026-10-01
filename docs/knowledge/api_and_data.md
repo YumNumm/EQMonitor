@@ -21,9 +21,12 @@
 ## v2.6 端末の移行
 
 - 現行の所有者は `app/lib/feature/devices/data/workflow/device_migration_workflow.dart` と `DeviceProvisioningRepository`。旧 `feature/migration` の path・device ID 付き endpoint を流用しない。
-- 旧 ID は `SharedPreferencesKey.legacyDeviceId` 経由で取得し、取得できた場合だけ durable workflow を実行する。
-- `ensureDeviceAbsent` → 必要な場合の登録 → `migrateLegacySettings` → `markLocalComplete` を同一 instance ID で永続化し、中断後は完了 step の次から再開する。
-- 登録・移行は `DeviceRepository` の現行 API/認証契約を使う。409 の冪等処理も Repository に集約されている。
-- 旧 ID なしの場合の onboarding は現在の provisioning flow と照合する。過去の「未実装」を現行 TODO として復活させない。
+- v2.6 の旧 ID は Secure Storage の `api_token` の `id` claim にある。v2 は初期化 marker を持たない。`SecureStorageInitializer` が消去前に UUID を回収し、`SharedPreferencesKey.legacyDeviceId` に保存する。書き込み失敗では marker を保存せず token を保持する。
+- 旧 JWT はローカルの移行元 ID を読む目的に限定する。署名・期限の認証判断や v3 の Bearer token として利用しない。破損 JWT から ID を補完しない。保存済み旧 ID と JWT の ID が矛盾する場合は停止する。
+- `deviceProvisioned` は新端末登録の完了、`deviceLegacyMigrationVerified` は今回の workflow による旧設定移行の確認を表す。旧 `deviceMigratedFromLegacy` flag は互換性のため出力するが、旧版の404/409でも保存されるため完了判定に使わない。旧 ID があり移行未完了なら登録済みでも再試行を要求する。新 JWT があれば既存新端末を取得して再利用する。
+- 登録・移行は `DeviceRepository` の現行 API/認証契約を使う。移行元・移行先ごとの `v3-device-migration-v2` workflow で `migrateLegacySettings` → `markLocalComplete` を永続化する。v1 の step は 404/409 でも成功を保存していたため再利用しない。成功をローカルに保存できた場合の再実行は移行を再送しない。
+- 404 は旧端末不在、409 は既移行・更新対象 0 行を含み、同じ新端末への成功を証明しない。両方とも未完了を保持し手動再試行できる。通信失敗・5xx は既存の自動再試行を使う。サーバー成功後に応答・ローカル保存を失ったケースの409を自動解決するには、backend に検証可能な移行先記録が必要。
+- 移行確認後の次の Secure Storage 初期化で旧 JWT のみを削除する。旧 JWT なし・marker なしでは再インストール時の既存 credentials 消去を維持する。iOS の keychain に旧 JWT が残る再インストールと v2 アップグレードは、現行保存形式だけでは区別できない。
+- 旧 JWT と旧 ID が既に失われた端末は推定紐付けしない。通知設定の手動再設定、旧 ID が確認できる保存データからの回復、本人性と移行先を検証できるサーバー救済を区別する。旧IDからの救済を追加するには、現在の通知設定を上書きしない方針と API 契約の検討が必要。
 
 変更時は `app/` で関連する cache・device provisioning・Validator の既存テストと解析を実行する。
