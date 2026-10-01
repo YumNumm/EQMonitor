@@ -38,16 +38,11 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
 
   @override
   Future<DeviceProvisioningStatus> build() async {
-    // Secure Storage の初期化で旧 ID を保全してから移行要否を読む。
-    final authRepo = await ref.watch(deviceAuthRepositoryProvider.future);
     final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
-    final legacy = await repo.readLegacyDeviceId();
-    if (legacy != null && !await repo.wasMigratedFromLegacy()) {
-      return .required;
-    }
     if (!await repo.isProvisioned()) {
       return .required;
     }
+    final authRepo = await ref.watch(deviceAuthRepositoryProvider.future);
     final token = await authRepo.readToken();
     if (token == null || token.isEmpty) {
       await repo.clearProvisioned();
@@ -74,23 +69,6 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
         try {
           final legacy = await repo.readLegacyDeviceId();
           final alreadyMigrated = await repo.wasMigratedFromLegacy();
-          final result = await deviceRepo.registerDevice(
-            devicePlatform: kIsWeb
-                ? .ios
-                : Platform.isIOS
-                ? .ios
-                : .android,
-            deviceLocale: .ja,
-          );
-          final device = switch (result) {
-            Success(:final value) => value,
-            Failure(:final exception, :final stackTrace) =>
-              Error.throwWithStackTrace(
-                exception,
-                stackTrace ?? StackTrace.empty,
-              ),
-          };
-          await repo.markProvisioned();
           if (legacy != null && legacy.isNotEmpty && !alreadyMigrated) {
             talker.info(
               '[Provisioning] legacy device detected; '
@@ -100,11 +78,29 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
               runner: repo.buildRunner(),
               repository: deviceRepo,
               oldDeviceId: legacy,
-              deviceId: device.id,
             );
             await repo.markMigratedFromLegacy();
             talker.info('[Provisioning] v2→v3 migration workflow completed');
+          } else {
+            final result = await deviceRepo.registerDevice(
+              devicePlatform: kIsWeb
+                  ? .ios
+                  : Platform.isIOS
+                  ? .ios
+                  : .android,
+              deviceLocale: .ja,
+            );
+            switch (result) {
+              case Success():
+                break;
+              case Failure(:final exception, :final stackTrace):
+                Error.throwWithStackTrace(
+                  exception,
+                  stackTrace ?? StackTrace.empty,
+                );
+            }
           }
+          await repo.markProvisioned();
         } on DeviceProvisioningException catch (e, st) {
           talker.error('[Provisioning] failed', e, st);
           rethrow;
@@ -122,7 +118,6 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
     }
 
     state = const AsyncData(DeviceProvisioningStatus.notRequired);
-    ref.invalidate(deviceMigratedFromLegacyProvider);
     ref.invalidate(pushTokenSyncProvider, asReload: true);
   }
 

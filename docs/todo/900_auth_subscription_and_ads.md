@@ -10,13 +10,6 @@
 - 完了条件: iOS/Android 署名実機で Google、Apple iOS、Apple Android callback を検証してから `IS_NATIVE_SOCIAL_AUTH_ENABLED=true` にする。欠損設定は `AuthFailureKind.configuration` で UI/HTTP 開始前に失敗する契約を維持する。
 - 対象: `app/lib/feature/auth/`、`app/lib/core/model/environment.dart`、`.github/workflows/deploy-app.yaml`。
 
-## 900: v2 → v3 移行の実機確認と既アップグレード端末の救済
-
-- [ ] iOS/Android で v2 の実 storage から上書きアップグレードし、旧 JWT の ID 回収、新端末再利用、通信失敗後の再起動・再試行、移行後の通知設定を確認する。devbox の mock 検証は Keychain access group・Android secure storage のネイティブ挙動を証明しない。
-- [ ] 旧 JWT・旧 ID が既に失われた端末について、手動再設定、検証済み保存データ、サーバーで検証可能な紐付けを使う救済方法を確定する。端末や FCM token の類似だけで自動移行しない。
-- [ ] backend 成功後の応答消失・ローカル成功保存失敗に伴う409、および過去に404/409で完了 flag を保存した端末の救済契約を検討する。現行の409と `migrated_at` だけでは移行先を証明できないため、移行先記録・既存通知設定の保護・認可を決めてから実装する。本番DBの更新・backfillは別途許可が必要。
-- 現行の保全・再試行契約: [API とデータ](../knowledge/api_and_data.md)。
-
 ## 900: Firebase iOS 登録と FCM
 
 - `app/ios/Runner/GoogleService-Info.plist` の App ID `1:179553945248:ios:a738f33a18702c7f6fabc5` が `eqmonitor-main` に存在するか、Firebase Installations API が有効かを Console で確認する。必要なら再登録し設定を更新する。

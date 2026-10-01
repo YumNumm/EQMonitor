@@ -51,20 +51,6 @@ final class const InvalidRequestException({
   bool get isRetryable => false;
 }
 
-/// 旧設定の移行をサーバーで確認できない。登録済みでも完了と扱わない。
-final class const LegacyMigrationException({required final int statusCode})
-    extends DeviceProvisioningException {
-  @override
-  String get userMessage => switch (statusCode) {
-    404 => '旧端末の設定が見つかりません。時間をおいて再試行してください',
-    409 => '旧設定の移行完了を確認できません。お問い合わせください',
-    _ => '旧設定の移行に失敗しました',
-  };
-
-  @override
-  bool get isRetryable => false;
-}
-
 enum AuthorizationFailureReason {
   appCheckUnavailable,
   unauthenticated,

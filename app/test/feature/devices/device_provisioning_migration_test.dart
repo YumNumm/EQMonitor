@@ -22,7 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 const _deviceId = 'test-device-id';
-const _legacyId = '11111111-2222-4333-8444-555555555555';
+const _legacyId = 'legacy-supabase-id';
 
 String _deviceToken(String deviceId) => JWT({
   'sub': 'device:$deviceId',
@@ -128,7 +128,6 @@ void main() {
       initialPrefs: {
         SharedPreferencesKey.legacyDeviceId.key: _legacyId,
         SharedPreferencesKey.deviceMigratedFromLegacy.key: true,
-        SharedPreferencesKey.deviceLegacyMigrationVerified.key: true,
       },
       deviceRepo: FakeDeviceRepository(
         getResult: () => const Success(_fakeDevice),
@@ -148,7 +147,7 @@ void main() {
     expect(prefs.getBool(SharedPreferencesKey.deviceProvisioned.key), isTrue);
   });
 
-  test('migrate の400は登録完了と移行未完了を分けて保存する', () async {
+  test('migrate が非再試行エラー(400)なら例外が伝播しフラグは立たない', () async {
     final (container, deviceRepo, prefs) = await buildContainer(
       initialPrefs: {SharedPreferencesKey.legacyDeviceId.key: _legacyId},
       deviceRepo: FakeDeviceRepository(
@@ -168,7 +167,7 @@ void main() {
     );
     expect(
       prefs.getBool(SharedPreferencesKey.deviceProvisioned.key),
-      isTrue,
+      isNot(isTrue),
     );
   });
 
