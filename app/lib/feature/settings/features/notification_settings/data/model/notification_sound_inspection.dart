@@ -5,6 +5,7 @@ part 'notification_sound_inspection.g.dart';
 
 @freezed
 abstract class NotificationSoundInspection with _$NotificationSoundInspection {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory({required String sourceDisplayName, required int durationMs}) =
       _NotificationSoundInspection;
 

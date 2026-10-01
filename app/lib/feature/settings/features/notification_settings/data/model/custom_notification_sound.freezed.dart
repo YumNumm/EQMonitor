@@ -212,8 +212,8 @@ return $default(_that.id,_that.displayName,_that.fileName,_that.durationMs,_that
 }
 
 /// @nodoc
-@JsonSerializable()
 
+@JsonSerializable(fieldRename: FieldRename.none)
 class _CustomNotificationSound implements CustomNotificationSound {
   const _CustomNotificationSound({required this.id, required this.displayName, required this.fileName, required this.durationMs, required this.createdAt, this.isAvailable = true});
   factory _CustomNotificationSound.fromJson(Map<String, dynamic> json) => _$CustomNotificationSoundFromJson(json);

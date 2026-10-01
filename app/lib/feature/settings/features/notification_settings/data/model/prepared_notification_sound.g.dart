@@ -13,11 +13,11 @@ _PreparedNotificationSound _$PreparedNotificationSoundFromJson(
 ) => $checkedCreate('_PreparedNotificationSound', json, ($checkedConvert) {
   final val = _PreparedNotificationSound(
     id: $checkedConvert('id', (v) => v as String),
-    durationMs: $checkedConvert('duration_ms', (v) => (v as num).toInt()),
+    durationMs: $checkedConvert('durationMs', (v) => (v as num).toInt()),
   );
   return val;
-}, fieldKeyMap: const {'durationMs': 'duration_ms'});
+});
 
 Map<String, dynamic> _$PreparedNotificationSoundToJson(
   _PreparedNotificationSound instance,
-) => <String, dynamic>{'id': instance.id, 'duration_ms': instance.durationMs};
+) => <String, dynamic>{'id': instance.id, 'durationMs': instance.durationMs};

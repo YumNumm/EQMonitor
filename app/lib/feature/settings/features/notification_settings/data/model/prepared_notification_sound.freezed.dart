@@ -208,8 +208,8 @@ return $default(_that.id,_that.durationMs);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
 
+@JsonSerializable(fieldRename: FieldRename.none)
 class _PreparedNotificationSound implements PreparedNotificationSound {
   const _PreparedNotificationSound({required this.id, required this.durationMs});
   factory _PreparedNotificationSound.fromJson(Map<String, dynamic> json) => _$PreparedNotificationSoundFromJson(json);

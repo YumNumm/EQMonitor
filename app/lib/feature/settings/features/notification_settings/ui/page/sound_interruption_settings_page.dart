@@ -6,6 +6,7 @@ import 'package:eqmonitor/feature/settings/component/settings_section_header.dar
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_settings_info_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_sound_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_sound_library_controls.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
@@ -66,6 +67,11 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.only(top: 16, bottom: 24),
         children: [
+          const NotificationSettingsInfoCard(
+            text:
+                '通知地域の条件を満たした通知に対して、通知音・通知の優先度・通知の上書きを設定します。'
+                '通知する条件は、各通知地域の設定で変更できます。',
+          ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: NotificationSoundLibraryControls(),
