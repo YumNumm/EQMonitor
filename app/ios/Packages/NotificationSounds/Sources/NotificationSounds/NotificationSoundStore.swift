@@ -37,9 +37,12 @@ private struct NotificationSoundCatalog: Codable {
 /// Accessed only on NotificationSoundMethodChannel's serial worker queue.
 final class NotificationSoundStore {
   private let manager = FileManager.default
+  private let rootURL: URL?
+
+  init(rootURL: URL? = nil) { self.rootURL = rootURL }
 
   func directory(_ relativePath: String) throws -> URL {
-    guard let root = manager.containerURL(
+    guard let root = rootURL ?? manager.containerURL(
       forSecurityApplicationGroupIdentifier: "group.net.yumnumm.eqmonitor"
     ) else { throw NotificationSoundFailure() }
     let url = root.appendingPathComponent(relativePath, isDirectory: true)
