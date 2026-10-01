@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
-import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
+import 'package:eqmonitor/core/data/preferences/secure/secure_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/secure/secure_storage_initializer.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,18 +18,9 @@ Future<FlutterSecureStorage> secureStorage(Ref ref) async {
   final sharedPreferences = await ref.read(
     sharedPreferencesDataSourceProvider.future,
   );
-  const secureStorageInitializedKey =
-      SharedPreferencesKey.secureStorageInitialized;
-  final hasInitialized = await sharedPreferences.getBool(
-    key: secureStorageInitializedKey,
-  );
-
-  if (hasInitialized == null) {
-    await storage.deleteAll();
-    await sharedPreferences.setBool(
-      key: secureStorageInitializedKey,
-      value: true,
-    );
-  }
+  await SecureStorageInitializer(
+    sharedPreferences: sharedPreferences,
+    securePreferences: SecurePreferencesDataSource(secureStorage: storage),
+  ).initialize();
   return storage;
 }
