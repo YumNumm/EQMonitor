@@ -51,10 +51,12 @@ void main() {
     );
     expect(
       tester
-          .widget<RadioGroup<InterruptionLevel>>(
-            find.byType(RadioGroup<InterruptionLevel>),
+          .widget<ControlledDropdown<InterruptionLevel>>(
+            find.byType(ControlledDropdown<InterruptionLevel>),
           )
-          .groupValue,
+          .items
+          .singleWhere((item) => item.selected)
+          .value,
       InterruptionLevel.active,
     );
   });
@@ -94,13 +96,9 @@ void main() {
     await tester.tap(find.text('EEW警報音').last);
     await tester.pumpAndSettle();
 
-    final timeSensitiveOption = find.widgetWithText(
-      RadioListTile<InterruptionLevel>,
-      InterruptionLevel.timeSensitive.label,
-    );
-    await tester.ensureVisible(timeSensitiveOption);
+    await tester.tap(find.byType(ControlledDropdown<InterruptionLevel>));
     await tester.pumpAndSettle();
-    await tester.tap(timeSensitiveOption);
+    await tester.tap(find.text(InterruptionLevel.timeSensitive.label).last);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('追加'));
@@ -145,13 +143,17 @@ void main() {
     );
     expect(
       tester
-          .widget<RadioGroup<InterruptionLevel>>(
-            find.byType(RadioGroup<InterruptionLevel>),
+          .widget<ControlledDropdown<InterruptionLevel>>(
+            find.byType(ControlledDropdown<InterruptionLevel>),
           )
-          .groupValue,
+          .items
+          .singleWhere((item) => item.selected)
+          .value,
       InterruptionLevel.active,
     );
 
+    await tester.tap(find.byType(ControlledDropdown<InterruptionLevel>));
+    await tester.pumpAndSettle();
     await tester.tap(find.text(InterruptionLevel.passive.label).last);
     await tester.pumpAndSettle();
 

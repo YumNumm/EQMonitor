@@ -440,25 +440,19 @@ class _OverrideFormDialog extends HookConsumerWidget {
             const SizedBox(height: 16),
             Text('割り込みレベル', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 8),
-            RadioGroup<InterruptionLevel>(
-              groupValue: selectedInterruptionLevel.value,
-              onChanged: (next) {
-                if (next != null) {
-                  selectedInterruptionLevel.value = next;
-                }
+            ControlledDropdown<InterruptionLevel>(
+              items: [
+                for (final level in levels)
+                  M3EDropdownItem(
+                    value: level,
+                    label: level.label,
+                    selected: level == selectedInterruptionLevel.value,
+                  ),
+              ],
+              onSelectionChanged: (selectedItems) {
+                if (selectedItems.isEmpty) return;
+                selectedInterruptionLevel.value = selectedItems.first.value;
               },
-              child: Column(
-                mainAxisSize: .min,
-                children: [
-                  for (final level in levels)
-                    RadioListTile<InterruptionLevel>(
-                      title: Text(level.label),
-                      value: level,
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                    ),
-                ],
-              ),
             ),
           ],
         ),
