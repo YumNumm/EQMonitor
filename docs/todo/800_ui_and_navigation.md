@@ -10,6 +10,7 @@
 - 対象: `app/lib/feature/settings/features/notification_settings/`、`app/ios/Runner/`、App Group の `Library/Sounds/`。
 - macOS で Runner・FcmServiceExtension の Simulator build を確認する。通知音モデルの JSON キー修正後に、iOS 実機で Files からの取り込み・変換・保存・管理を確認する。実機での取り込みと再生は CD のビルド成功だけでは検証できない。
 - MP3・AAC/M4A・WAV・AIFF・CAF、mono/stereo、異なる sample rate、29.9秒・30秒・長い音、破損・DRM・クラウド source の失敗を確認する。容量不足・カタログ保存失敗・変換中の終了・再起動後の回収と file protection も未検証。
+- WAV 追加時の末尾読み込みと出力の close 修正後に、報告端末の iOS 27.2 と iOS 17.6 で取り込み・試聴・保存を確認する。4096フレーム未満、4096フレームの倍数と端数、44.1/48 kHz の入力を含める。報告された元ファイルでの再現・修正確認と Apple SDK による今回の変更のビルドは未実施。
 - Light/Dark・大きい文字・長い日本語名・VoiceOver・Pro 失効時を確認する。使用中・snapshot 内・未保存編集の音の削除禁止、通信失敗・壊れたカタログ・欠損ファイルからの再追加を確認する。
 - EEW 予報・地震情報・震度別 override の実通知で保存名・最終 APNs payload・再生音を照合する。前面・バックグラウンド・アプリ終了・ロック中・再起動後（初回 unlock 前後）、passive の無音、critical、続報上書き、欠損時 fallback を確認する。試聴や APNs HTTP 200 だけでは完了としない。
 
