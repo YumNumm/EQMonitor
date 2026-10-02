@@ -40,6 +40,10 @@ APNs・認証は [push_and_auth.md](push_and_auth.md) を参照する。
   CI の build number は `github.run_number`。
 - CI は `CODE_SIGNING_ALLOWED=NO` で archive し、
   `scripts/ci/sign_ios_archive_for_export.sh` で entitlement を付けて ad-hoc 署名してから export する。
+- App Store / Ad-Hoc の export は `scripts/ci/export_ios_archive.sh` を使う。
+  `error: exportArchive The request timed out.` の場合だけ、20秒・40秒待って最大3回試行する。
+  このタイムアウトに続いて extension の profile 不足が出る場合もある。
+  profile 不足だけのエラーや署名設定エラーは再試行せず失敗させる。
 - 署名順は内側から framework → 各 `.appex` → Runner.app。
   extension を追加するときは同スクリプトへ target 固有の entitlement mapping も追加する。
 - 全 target の team は `ExportOptions.plist` / `ExportOptionsAdHoc.plist` と揃える。

@@ -370,32 +370,28 @@ jobs:
       - name: Create IPA
         working-directory: app
         run: |
-          set -o pipefail
           KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
-          xcodebuild -exportArchive \
+          bash ../scripts/ci/export_ios_archive.sh \
             -archivePath build/ios/Runner.xcarchive \
             -exportOptionsPlist ios/ExportOptions.plist \
             -exportPath . \
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID "$APP_STORE_CONNECT_API_ISSUER_ID" \
             -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
-            -authenticationKeyPath "$KEY_PATH" \
-          | xcbeautify --renderer github-actions
+            -authenticationKeyPath "$KEY_PATH"
 
       - name: Create Ad-Hoc IPA
         working-directory: app
         run: |
-          set -o pipefail
           KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
-          xcodebuild -exportArchive \
+          bash ../scripts/ci/export_ios_archive.sh \
             -archivePath build/ios/Runner.xcarchive \
             -exportOptionsPlist ios/ExportOptionsAdHoc.plist \
             -exportPath adhoc \
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID "$APP_STORE_CONNECT_API_ISSUER_ID" \
             -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
-            -authenticationKeyPath "$KEY_PATH" \
-          | xcbeautify --renderer github-actions
+            -authenticationKeyPath "$KEY_PATH"
 
       # https://github.com/actions/upload-artifact
       - name: Upload ipa as artifact
