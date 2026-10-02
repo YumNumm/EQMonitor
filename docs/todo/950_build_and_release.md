@@ -15,6 +15,12 @@
 - 最新値＋1、十分な offset、日時方式のいずれかを運用として決め、再実行・並列実行でも既使用値を再利用しない採番に統一する。
 - 完了条件: 不要な計算/出力を削除し、生成 AAB の versionCode が既存最大値を超え、実際の Play upload が成功する。
 
+## 900: 3.0.1 のリリース確認
+
+- [ ] アプリ名の修正を含む変更をマージし、`Release-As: 3.0.1` をマージ後のコミットメッセージにも残す。自動生成される本番 Release PR が 3.0.1 になったことを確認してからマージする。
+- [ ] 新しい配布用 IPA の表示名が `EQMonitor`、バージョンが `3.0.1` であることを確認する。Android AAB の表示名とバージョンも確認する。
+- [ ] iOS / Android の実機でホーム画面のアプリ名を確認し、App Store / Google Play の公開状態が 3.0.1 になったことを確認する。
+
 ## 900: iOS ATT 利用目的キー削除後の提出確認
 
 - [ ] 修正を含む配布用 IPA の `Payload/Runner.app/Info.plist` に `NSUserTrackingUsageDescription` が含まれないことを確認する。ソースのキー削除のみ確認済みで、配布成果物は未検証。
@@ -41,7 +47,7 @@
 ## 300: production アイコン
 
 - `IS_PRODUCTION=true` 時に `APP_ICON=AppIcon` を強制する設定は実装済み。production archive と実機での表示は未検証。
-- `environment/.env.prod` と CI secret `DART_DEFINE_PRODUCTION` の `APP_NAME` はオーナーが確認する（secret の現在値は未検証）。
+- SOPS `.env.json` の `DART_DEFINE_PRODUCTION` は `APP_NAME=EQMonitor` に修正済み。CI が復号する設定で、iOS の表示名に使う。配布成果物と実機での表示は未検証。
 - 完了条件: production archive の選択アイコン/表示名と実機でのアイコン表示を確認する。
 
 実機での pack 検証は [Asset Pack](850_asset_pack.md)、Widget の OS 別検証は [Apple 拡張](930_apple_extensions.md) を参照。
