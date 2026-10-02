@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
@@ -46,6 +46,7 @@ class ShindoDbStationDetailSheet extends StatelessWidget {
                   _MaxAccelTable(
                     maxAccel: maxAccel,
                     maxAccelTime: record.maxAccelTime,
+                    maxAccelTimePrecision: record.maxAccelTimePrecision,
                   ),
                 ],
                 if (periods != null) ...[
@@ -138,8 +139,8 @@ class _InfoRows extends StatelessWidget {
         if (observedAt != null)
           _InfoRow(
             label: '観測時刻',
-            value: observedAt.formatWithTz(
-              DateTimeFormat.yearMonthDayHourMinuteSecond,
+            value: (record.observedAtPrecision ?? .minute).format(
+              value: observedAt,
             ),
           ),
         if (observationCount != null)
@@ -188,17 +189,22 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _MaxAccelTable extends StatelessWidget {
-  const new({required this.maxAccel, required this.maxAccelTime});
+  const new({
+    required this.maxAccel,
+    required this.maxAccelTime,
+    required this.maxAccelTimePrecision,
+  });
 
   final EarthquakeCatalogMaxAcceleration maxAccel;
   final DateTime? maxAccelTime;
+  final EarthquakeCatalogTimePrecision? maxAccelTimePrecision;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     String galText(double? gal) =>
-        gal != null ? '${gal.toStringAsFixed(2)}gal' : '-';
+        gal != null ? '${gal.toStringAsFixed(1)}gal' : '-';
 
     return Column(
       crossAxisAlignment: .start,
@@ -242,7 +248,7 @@ class _MaxAccelTable extends StatelessWidget {
         if (maxAccelTime case final accelTime?) ...[
           const SizedBox(height: 4),
           Text(
-            '最大加速度時刻: ${accelTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinuteSecond)}',
+            '最大加速度時刻: ${(maxAccelTimePrecision ?? .minute).format(value: accelTime)}',
             style: theme.textTheme.labelSmall?.copyWith(
               color: context.designSystem.colorTheme.onSurfaceVariant,
               fontFamily: FontFamily.googleSansCode,

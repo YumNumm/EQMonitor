@@ -30,4 +30,9 @@ extension DateTimeFormatting on DateTime {
 
   String formatWithTz(DateTimeFormat format) =>
       format.formatter.format(tokyoDateTime);
+
+  // intl の S は桁数によらず3桁を出力するため、0.1秒の桁を明示する。
+  String formatWithTzDecisecond() =>
+      '${formatWithTz(DateTimeFormat.yearMonthDayHourMinuteSecond)}'
+      '.${millisecond ~/ 100}';
 }

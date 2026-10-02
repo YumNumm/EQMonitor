@@ -1,5 +1,8 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+
+import 'earthquake_catalog_time_precision.dart';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_catalog.freezed.dart';
@@ -53,8 +56,10 @@ abstract class EarthquakeCatalogStationRecord
     required ShindoDbIntensityClass intensityClass,
     required double? instrumentalIntensity,
     required DateTime? observedAt,
+    EarthquakeCatalogTimePrecision? observedAtPrecision,
     required EarthquakeCatalogMaxAcceleration? maxAcceleration,
     required DateTime? maxAccelTime,
+    EarthquakeCatalogTimePrecision? maxAccelTimePrecision,
     required EarthquakeCatalogPeriods? periods,
     required int? observationCount,
   }) = _EarthquakeCatalogStationRecord;
@@ -152,8 +157,10 @@ extension on api.CatalogStationRecord {
       intensityClass: intensity.classValue.toShindoDbIntensityClass,
       instrumentalIntensity: intensity.instrumental?.toDouble(),
       observedAt: observedAt,
+      observedAtPrecision: observedAtPrecision?.toDomain,
       maxAcceleration: maxAcceleration?._toDomain,
       maxAccelTime: maxAccelTime,
+      maxAccelTimePrecision: maxAccelTimePrecision?.toDomain,
       periods: periodsValue == null
           ? null
           : EarthquakeCatalogPeriods(
