@@ -26,10 +26,8 @@
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		34E47F47BF5359B04DBBCA3B /* platform in Resources */ = {isa = PBXBuildFile; fileRef = F283DBF06C6227F39550CFBE /* platform */; };
-		3A2BB32E64652274C729F64F /* AssetsUtil.xcframework in Bundle Framework */ = {isa = PBXBuildFile; fileRef = D3B01C0050A5CF0AA1BC6F7E /* AssetsUtil.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 		8523B0372A1376B000F00AFF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8523B0362A1376B000F00AFF /* Assets.xcassets */; };
-		E98D88E3B33C58E523CE15F6 /* AssetsUtil.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B01C0050A5CF0AA1BC6F7E /* AssetsUtil.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
 		F57D079DC983DA3F7361F1B5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 37DC50C96859843FD745673E /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -50,7 +48,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3A2BB32E64652274C729F64F /* AssetsUtil.xcframework in Bundle Framework */,
 			);
 			name = "Bundle Framework";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -88,7 +85,6 @@
 		8523B03E2A1376DE00F00AFF /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		8523B0402A1376DE00F00AFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
-		D3B01C0050A5CF0AA1BC6F7E /* AssetsUtil.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AssetsUtil.xcframework; path = Runner/Frameworks/AssetsUtil.xcframework; sourceTree = "<group>"; };
 		F283DBF06C6227F39550CFBE /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = ../assets/platform; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,7 +94,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
-				E98D88E3B33C58E523CE15F6 /* AssetsUtil.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,7 +103,6 @@
 		1C0891B9F2961454CC3AC16D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D3B01C0050A5CF0AA1BC6F7E /* AssetsUtil.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

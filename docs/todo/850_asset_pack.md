@@ -16,11 +16,10 @@
 - clean checkout に `platform/` の placeholder はない。staging 必須を保つか placeholder を導入するか決め、再stageでのディレクトリ交換も含めて同梱漏れを検出する。
 - 完了条件: 起動時RSS/容量が端末予算内で、未知ディレクトリとclean checkoutの検証が自動化される。
 
-## 700: assets_util の native 残骸
+## 700: AssetsUtil 削除後の native ビルド確認
 
-- Dart package は削除済みだが、`app/ios/Runner/Frameworks/AssetsUtil.xcframework`、`app/macos/Runner/Frameworks/AssetsUtil.xcframework` と各 `Runner.xcodeproj/project.pbxproj` の Frameworks/Embed 参照は残る。
-- 呼び出し元がないことを再確認して native参照/バイナリを削除する。
-- 完了条件: iOS/macOS build が通り、成果物に未使用 framework が同梱されない。
+- macOS/Xcode で iOS/macOS の release build を作り、`AssetsUtil.xcframework` と Frameworks/Embed 参照の削除後もリンク・起動・同梱 Pack の読み出しが成功することを確認する。
+- 完了条件: iOS/macOS build が通り、成果物に `AssetsUtil.framework` が同梱されない。Linux での Xcode project 構文・参照確認だけでは未検証とする。
 
 ## 600: 更新チェック失敗カードの仕様
 
