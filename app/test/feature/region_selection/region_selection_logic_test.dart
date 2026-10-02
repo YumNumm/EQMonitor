@@ -92,26 +92,24 @@ void main() {
     );
   });
 
-  test('同一市区町村の異なる通知親を選択結果まで維持する', () {
-    final first = city.copyWith(
-      parentKind: .eewRegion,
-      parentCode: '9011',
-      parentName: '地域A',
-    );
-    final second = first.copyWith(parentCode: '9012', parentName: '地域B');
-    final selected = reducer.select(
-      selected: [first],
-      option: second,
-      mode: .multiple,
-    );
-    expect(selected, hasLength(2));
-    final converted = selected
-        .map(const NotificationRegionSelectionConverter().convert)
-        .toList();
-    expect(converted.map((item) => item.regionCode), ['9011', '9012']);
-    expect(converted.map((item) => item.cityCode), [city.code, city.code]);
+  test('通知では細分区域または市区町村の親細分区域を保存する', () {
+    const converter = NotificationRegionSelectionConverter();
+    const region = RegionOption(kind: .region, code: '360', name: '神奈川県東部');
+    final regionSelection = converter.convert(region);
+    expect(regionSelection.regionCode, '360');
+    expect(regionSelection.regionName, '神奈川県東部');
+    expect(regionSelection.cityCode, isNull);
+    final citySelection = converter.convert(city);
+    expect(citySelection.regionCode, city.parentCode);
+    expect(citySelection.cityCode, city.code);
     expect(
-      () => const NotificationRegionSelectionConverter().convert(city),
+      () => converter.convert(
+        city.copyWith(parentKind: .eewRegion, parentCode: '9140'),
+      ),
+      throwsArgumentError,
+    );
+    expect(
+      () => converter.convert(region.copyWith(kind: .eewRegion, code: '9140')),
       throwsArgumentError,
     );
   });
@@ -178,11 +176,11 @@ void main() {
 
   test('通知の地図で複数の親候補を自動選択せず提示する', () {
     final first = city.copyWith(
-      parentKind: .eewRegion,
-      parentCode: '9011',
+      parentKind: .region,
+      parentCode: '360',
       parentName: '地域A',
     );
-    final second = first.copyWith(parentCode: '9012', parentName: '地域B');
+    final second = first.copyWith(parentCode: '361', parentName: '地域B');
     expect(
       const RegionMapMatcher().administrative(
         catalog: [first, second],

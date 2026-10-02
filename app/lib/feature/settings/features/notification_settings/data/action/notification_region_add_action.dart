@@ -22,7 +22,7 @@ final class const NotificationRegionAddAction() {
     final selected = await RegionSelectionRoute(
       $extra: const RegionSelectionRequest(
         title: '通知する地域を選択',
-        kinds: [.eewRegion, .city],
+        kinds: [.region, .city],
         notification: true,
       ),
     ).push<List<RegionOption>>(context);

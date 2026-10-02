@@ -3,7 +3,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 
 final class const NotificationRegionSelectionConverter() {
   NotificationRegionSelection convert(RegionOption option) {
-    if (option.kind == .eewRegion) {
+    if (option.kind == .region) {
       return NotificationRegionSelection(
         regionCode: option.code,
         regionName: option.name,
@@ -12,7 +12,7 @@ final class const NotificationRegionSelectionConverter() {
     final parentCode = option.parentCode;
     final parentName = option.parentName;
     if (option.kind == .city &&
-        option.parentKind == .eewRegion &&
+        option.parentKind == .region &&
         parentCode != null &&
         parentName != null) {
       return NotificationRegionSelection(
@@ -22,6 +22,6 @@ final class const NotificationRegionSelectionConverter() {
         cityName: option.name,
       );
     }
-    throw ArgumentError('通知地域にはEEW区域または親EEW区域付きの市区町村が必要です');
+    throw ArgumentError('通知地域には細分区域または親細分区域付きの市区町村が必要です');
   }
 }

@@ -102,21 +102,24 @@ void main() {
       );
     }
   });
-  test('通知はEEW親を使い、結合不能な市を候補にしない', () {
+  test('通知は地震情報の細分区域と市区町村の親子関係を使う', () {
     final items = builder.build(
       earthquake: EarthquakeSearchFixture.parameter,
       codeTable: codeTable,
       notification: true,
     );
     expect(
-      items.where((item) => item.kind == .eewRegion).map((item) => item.code),
-      ['9011', '9012'],
+      items.where((item) => item.kind == .region).map((item) => item.code),
+      ['350', '671'],
     );
-    final city = items.where((item) => item.kind == .city).single;
+    final cities = items.where((item) => item.kind == .city).toList();
+    expect(cities.map((item) => item.code), ['1320600', '3420800']);
+    final city = cities.first;
     expect(city.code, '1320600');
-    expect(city.parentKind, RegionKind.eewRegion);
-    expect(city.parentCode, '9011');
-    expect(city.parentName, '地域A');
+    expect(city.parentKind, RegionKind.region);
+    expect(city.parentCode, '350');
+    expect(city.parentName, '東京都多摩東部');
+    expect(items.any((item) => item.kind == .eewRegion), isFalse);
   });
 }
 
