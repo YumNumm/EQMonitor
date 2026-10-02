@@ -42,8 +42,8 @@ EQMonitor の `.github/workflows/upload-asset-pack.yaml` は dispatch を受け�
 - 現行の読み出しは Flutter assets が正本。`app/pubspec.yaml` に宣言した
   `platform/` の manifest・map・parameters を `rootBundle` から読み、
   Dart の `BundledAssetPackRepository` が app support へ展開する。
-- Android generated assets、Xcode の folder reference、旧 AssetsUtil framework の
-  残存整理は [Asset Pack TODO](todo/850_asset_pack.md) で追跡する。
+- Android generated assets と Xcode の `platform/` folder reference は残る。
+  旧 AssetsUtil framework 削除後のビルド・成果物確認は [Asset Pack TODO](todo/850_asset_pack.md) で追跡する。
 - iOS native extension 用の縮小 JMA テーブルも必要な場合は
   `tool/asset_pack/stage_from_r2.sh --target all` を使う。
 

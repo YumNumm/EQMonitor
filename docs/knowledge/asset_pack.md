@@ -9,8 +9,9 @@ release実機検証・容量・配信地物の未完了項目は [Asset Pack TOD
 - 配布元は `https://assets.eqmonitor.app/v1/assets`。Managed Background Assets / Play Asset Deliveryは使わない。
 - 同梱解決の正本は `app/lib/feature/asset_pack/data/repository/bundled_asset_pack_repository.dart`。
   `rootBundle` から `<applicationSupport>/eqmonitor_asset_packs/bundled/<pack_version>/` へ展開する。
-- `packages/assets_util` は削除済み。ただしAndroidのgenerated assets、Xcodeの `platform/` folder参照、
-  `AssetsUtil.xcframework` は残る。runbookのnative配置説明を現在の読み出し経路と混同しない。
+- `packages/assets_util` と iOS/macOS の `AssetsUtil.xcframework`・リンク・同梱設定は削除済み。
+  Android の generated assets と Xcode の `platform/` folder 参照は残る。
+  runbook の native 配置説明を現在の読み出し経路と混同しない。
 - repository rootで署名済み公開物をstagingする。秘密鍵・GH_TOKENは不要。
 
 ```sh
