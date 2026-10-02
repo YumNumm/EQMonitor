@@ -17,13 +17,54 @@ concurrency:
 
 jobs:
   test:
+    name: test (${{ matrix.fix }})
     runs-on: xcode-27
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        fix: [eof-only, finalize-only]
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Isolate each audio fix
+        env:
+          FIX_VARIANT: ${{ matrix.fix }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          path = Path("app/ios/Packages/NotificationSounds/Sources/NotificationSounds/NotificationSoundImporter.swift")
+          source = path.read_text()
+          if os.environ["FIX_VARIANT"] == "eof-only":
+              statement = "try autoreleasepool { try convert(source: source, destination: url) }"
+              assert source.count(statement) == 1
+              source = source.replace(statement, "try convert(source: source, destination: url)")
+              start = source.index("    defer {\n")
+              end = source.index("    let limit", start)
+              source = source[:start] + source[end:]
+          elif os.environ["FIX_VARIANT"] == "finalize-only":
+              start = source.index("    do {\n      try file.read(")
+              end = source.index("\n    catch", start)
+              source = source[:start] + "    do { try file.read(into: buffer) }" + source[end:]
+              start = source.index("        // EOF is normal:")
+              end = source.index("\n        } catch {", start)
+              original = "\n".join([
+                  "        do {",
+                  "          let count = min(input.frameCapacity, max(1, requested))",
+                  "          try source.read(into: input, frameCount: count)",
+                  "          inputStatus.pointee = input.frameLength == 0 ? .endOfStream : .haveData",
+                  "          return input.frameLength == 0 ? nil : input",
+              ])
+              source = source[:start] + original + source[end:]
+          else:
+              raise ValueError("Unknown fix variant")
+          path.write_text(source)
+          PY
+          git --no-pager diff -- app/ios/Packages/NotificationSounds/Sources/NotificationSounds/NotificationSoundImporter.swift
 
       - name: Select iPhone simulator
         id: simulator
@@ -47,12 +88,14 @@ jobs:
           PY
 
       - name: Test real audio import
+        timeout-minutes: 8
         working-directory: app/ios/Packages/NotificationSounds
         env:
           SIMULATOR_ID: ${{ steps.simulator.outputs.id }}
         run: |
           set -o pipefail
           xcodebuild test -scheme NotificationSounds \
+            -parallel-testing-enabled NO \
             -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
             -derivedDataPath "$RUNNER_TEMP/notification-sounds-build" \
             -resultBundlePath "$RUNNER_TEMP/notification-sounds.xcresult" \
@@ -62,7 +105,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: notification-sound-tests
+          name: notification-sound-tests-${{ matrix.fix }}
           path: |
             ${{ runner.temp }}/notification-sounds.xcresult
             ${{ runner.temp }}/notification-sounds.log
