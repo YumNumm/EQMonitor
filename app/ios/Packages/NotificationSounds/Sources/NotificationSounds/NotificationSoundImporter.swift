@@ -12,7 +12,7 @@ final class NotificationSoundImporter {
     let file = try open(sourcePath)
     let duration = Double(file.length) / file.processingFormat.sampleRate
     guard duration.isFinite, duration > 0, duration * 1_000 < Double(Int.max) else {
-      throw NotificationSoundFailure("invalidAudio", stage: "inspect.duration")
+      throw NotificationSoundFailure("invalidAudio")
     }
     return ["durationMs": max(1, Int(ceil(duration * 1_000)))]
   }
@@ -21,16 +21,14 @@ final class NotificationSoundImporter {
     let source = try open(sourcePath)
     let duration = Double(source.length) / source.processingFormat.sampleRate
     guard duration <= Double(Self.maxDurationMs) / 1_000 || trimToMaxDuration else {
-      throw NotificationSoundFailure("durationTooLong", stage: "prepare.duration")
+      throw NotificationSoundFailure("durationTooLong")
     }
     let id = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
     let url = try store.preparedURL(id: id)
     do {
       // Even matching WAV files are decoded, so a corrupt tail is not silently copied.
-      // On iOS 17, drain autoreleased writers before reopening the WAV header.
-      try autoreleasepool { try convert(source: source, destination: url) }
-      do { try store.protect(url) }
-      catch { throw NotificationSoundFailure(stage: "output.protect", underlyingError: error) }
+      try convert(source: source, destination: url)
+      try store.protect(url)
       return ["id": id, "durationMs": try validate(url)]
     } catch {
       try? store.discard(id: id)
@@ -39,42 +37,31 @@ final class NotificationSoundImporter {
   }
 
   func validate(_ url: URL) throws -> Int {
-    let file: AVAudioFile
-    do { file = try AVAudioFile(forReading: url) }
-    catch { throw NotificationSoundFailure(stage: "output.open", underlyingError: error) }
+    let file = try AVAudioFile(forReading: url)
     let format = file.fileFormat
     let limit = AVAudioFramePosition(Self.sampleRate * Double(Self.maxDurationMs) / 1_000)
     guard format.commonFormat == .pcmFormatInt16,
       format.sampleRate == Self.sampleRate, format.channelCount == 1,
       file.length > 0, file.length <= limit,
       (format.settings[AVLinearPCMIsBigEndianKey] as? Bool) != true
-    else { throw NotificationSoundFailure("conversionFailed", stage: "output.validate") }
+    else { throw NotificationSoundFailure("invalidAudio") }
     return max(1, Int(ceil(Double(file.length) / Self.sampleRate * 1_000)))
   }
 
   private func open(_ sourcePath: String) throws -> AVAudioFile {
     guard FileManager.default.isReadableFile(atPath: sourcePath) else {
-      throw NotificationSoundFailure("sourceUnavailable", stage: "source.access")
+      throw NotificationSoundFailure("sourceUnavailable")
     }
     let file: AVAudioFile
     do { file = try AVAudioFile(forReading: URL(fileURLWithPath: sourcePath)) }
-    catch {
-      throw NotificationSoundFailure("unsupportedFormat", stage: "source.open", underlyingError: error)
-    }
+    catch { throw NotificationSoundFailure("unsupportedFormat") }
     guard file.length > 0, file.processingFormat.sampleRate.isFinite,
       file.processingFormat.sampleRate > 0, file.processingFormat.channelCount > 0,
       let buffer = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: 4_096)
-    else { throw NotificationSoundFailure("invalidAudio", stage: "source.format") }
-    do {
-      try file.read(
-        into: buffer,
-        frameCount: AVAudioFrameCount(min(AVAudioFramePosition(buffer.frameCapacity), file.length))
-      )
-    }
-    catch { throw NotificationSoundFailure("invalidAudio", stage: "source.read", underlyingError: error) }
-    guard buffer.frameLength > 0 else {
-      throw NotificationSoundFailure("invalidAudio", stage: "source.empty")
-    }
+    else { throw NotificationSoundFailure("invalidAudio") }
+    do { try file.read(into: buffer) }
+    catch { throw NotificationSoundFailure("invalidAudio") }
+    guard buffer.frameLength > 0 else { throw NotificationSoundFailure("invalidAudio") }
     file.framePosition = 0
     return file
   }
@@ -86,24 +73,17 @@ final class NotificationSoundImporter {
     ), let converter = AVAudioConverter(from: source.processingFormat, to: format),
       let input = AVAudioPCMBuffer(pcmFormat: source.processingFormat, frameCapacity: 4_096),
       let output = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 4_096)
-    else { throw NotificationSoundFailure("unsupportedFormat", stage: "convert.setup") }
+    else { throw NotificationSoundFailure("unsupportedFormat") }
     let settings: [String: Any] = [
       AVFormatIDKey: kAudioFormatLinearPCM, AVSampleRateKey: Self.sampleRate,
       AVNumberOfChannelsKey: 1, AVLinearPCMBitDepthKey: 16,
       AVLinearPCMIsFloatKey: false, AVLinearPCMIsBigEndianKey: false,
       AVLinearPCMIsNonInterleaved: false,
     ]
-    let destinationFile: AVAudioFile
-    do {
-      destinationFile = try AVAudioFile(
-        forWriting: destination, settings: settings,
-        commonFormat: .pcmFormatFloat32, interleaved: false
-      )
-    } catch { throw NotificationSoundFailure(stage: "output.create", underlyingError: error) }
-    defer {
-      // Finalize the WAV header before prepare() validates the output.
-      if #available(iOS 18.0, *) { destinationFile.close() }
-    }
+    let destinationFile = try AVAudioFile(
+      forWriting: destination, settings: settings,
+      commonFormat: .pcmFormatFloat32, interleaved: false
+    )
     let limit = AVAudioFramePosition(Self.sampleRate * Double(Self.maxDurationMs) / 1_000)
     var written: AVAudioFramePosition = 0
     var ended = false
@@ -111,50 +91,30 @@ final class NotificationSoundImporter {
       var conversionError: NSError?
       var readError: Error?
       let status = converter.convert(to: output, error: &conversionError) { requested, inputStatus in
-        // EOF is normal: do not ask AVAudioFile to read past its last frame.
-        let remaining = source.length - source.framePosition
-        guard remaining > 0 else {
-          inputStatus.pointee = .endOfStream
-          return nil
-        }
         do {
-          let count = AVAudioFrameCount(min(
-            AVAudioFramePosition(min(input.frameCapacity, max(1, requested))), remaining
-          ))
+          let count = min(input.frameCapacity, max(1, requested))
           try source.read(into: input, frameCount: count)
-          guard input.frameLength > 0 else {
-            throw NotificationSoundFailure("invalidAudio", stage: "convert.emptyInput")
-          }
-          inputStatus.pointee = .haveData
-          return input
+          inputStatus.pointee = input.frameLength == 0 ? .endOfStream : .haveData
+          return input.frameLength == 0 ? nil : input
         } catch {
           readError = error
           inputStatus.pointee = .endOfStream
           return nil
         }
       }
-      if let readError {
-        if let failure = readError as? NotificationSoundFailure { throw failure }
-        throw NotificationSoundFailure("invalidAudio", stage: "convert.read", underlyingError: readError)
-      }
-      if conversionError != nil || status == .error {
-        throw NotificationSoundFailure(
-          "conversionFailed", stage: "convert.process", underlyingError: conversionError
-        )
+      if readError != nil || conversionError != nil || status == .error {
+        throw NotificationSoundFailure("invalidAudio")
       }
       output.frameLength = min(output.frameLength, AVAudioFrameCount(limit - written))
       if output.frameLength > 0 {
-        do { try destinationFile.write(from: output) }
-        catch { throw NotificationSoundFailure(stage: "output.write", underlyingError: error) }
+        try destinationFile.write(from: output)
         written += AVAudioFramePosition(output.frameLength)
       }
       ended = status == .endOfStream
       if output.frameLength == 0 && !ended {
-        throw NotificationSoundFailure("conversionFailed", stage: "convert.noProgress")
+        throw NotificationSoundFailure("invalidAudio")
       }
     }
-    guard written > 0 else {
-      throw NotificationSoundFailure("conversionFailed", stage: "convert.emptyOutput")
-    }
+    guard written > 0 else { throw NotificationSoundFailure("invalidAudio") }
   }
 }

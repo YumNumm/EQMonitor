@@ -62,8 +62,6 @@ struct NotificationSoundImporterTests {
       Issue.record("Non-audio data must not be accepted.")
     } catch let failure as NotificationSoundFailure {
       #expect(failure.code == "unsupportedFormat")
-      #expect(failure.stage == "source.open")
-      #expect(failure.underlyingError != nil)
     }
   }
 }
