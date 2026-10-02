@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_s
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_config_notifier.g.dart';
@@ -38,6 +39,19 @@ class EarthquakeHistoryConfigNotifier
         stackTrace,
       );
       return _defaultEarthquakeHistoryConfig;
+    }
+  }
+
+  static final saveDetailsMutation = Mutation<void>();
+  Future<void> saveDetails(EarthquakeHistoryDetailsConfig details) async {
+    final previous = await future;
+    try {
+      await save(previous.copyWith(details: details));
+    } on Exception {
+      if (ref.mounted) {
+        state = AsyncData(previous);
+      }
+      rethrow;
     }
   }
 

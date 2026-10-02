@@ -101,21 +101,37 @@ const _$RegionSearchTypeEnumMap = {
 
 _EarthquakeHistoryDetailsConfig _$EarthquakeHistoryDetailsConfigFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('_EarthquakeHistoryDetailsConfig', json, ($checkedConvert) {
-  final val = _EarthquakeHistoryDetailsConfig(
-    stationDisplayMode: $checkedConvert(
-      'station_display_mode',
-      (v) =>
-          $enumDecodeNullable(_$StationDisplayModeEnumMap, v) ??
-          StationDisplayMode.auto,
-    ),
-  );
-  return val;
-}, fieldKeyMap: const {'stationDisplayMode': 'station_display_mode'});
+) => $checkedCreate(
+  '_EarthquakeHistoryDetailsConfig',
+  json,
+  ($checkedConvert) {
+    final val = _EarthquakeHistoryDetailsConfig(
+      showStations: $checkedConvert('show_stations', (v) => v as bool? ?? true),
+      hypocenterAboveStations: $checkedConvert(
+        'hypocenter_above_stations',
+        (v) => v as bool? ?? true,
+      ),
+      stationDisplayMode: $checkedConvert(
+        'station_display_mode',
+        (v) =>
+            $enumDecodeNullable(_$StationDisplayModeEnumMap, v) ??
+            StationDisplayMode.auto,
+      ),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'showStations': 'show_stations',
+    'hypocenterAboveStations': 'hypocenter_above_stations',
+    'stationDisplayMode': 'station_display_mode',
+  },
+);
 
 Map<String, dynamic> _$EarthquakeHistoryDetailsConfigToJson(
   _EarthquakeHistoryDetailsConfig instance,
 ) => <String, dynamic>{
+  'show_stations': instance.showStations,
+  'hypocenter_above_stations': instance.hypocenterAboveStations,
   'station_display_mode':
       _$StationDisplayModeEnumMap[instance.stationDisplayMode]!,
 };
