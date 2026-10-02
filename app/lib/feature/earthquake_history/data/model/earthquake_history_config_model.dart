@@ -56,6 +56,9 @@ enum DateHeaderDisplayMode {
 abstract class EarthquakeHistoryDetailsConfig
     with _$EarthquakeHistoryDetailsConfig {
   const factory({
+    @Default(true) bool showStations,
+    @Default(true) bool hypocenterAboveStations,
+
     /// 観測点アイコンの表示モード
     @Default(StationDisplayMode.auto) StationDisplayMode stationDisplayMode,
   }) = _EarthquakeHistoryDetailsConfig;

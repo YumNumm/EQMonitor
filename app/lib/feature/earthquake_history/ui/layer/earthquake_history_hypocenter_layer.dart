@@ -23,12 +23,15 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
     required this.earthquake,
     this.displayMode = HypocenterDisplayMode.zoomFade,
     this.parameter = const EarthquakeHistoryMapLayerParameter(),
+    this.belowLayerId,
     super.key,
   });
 
   final Earthquake earthquake;
   final HypocenterDisplayMode displayMode;
   final EarthquakeHistoryMapLayerParameter parameter;
+
+  final String? belowLayerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -118,12 +121,13 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
               parameter: parameter,
               displayMode: displayMode,
             ),
+            belowLayerId: belowLayerId,
           );
           isLayerInitialized.value = true;
         }),
       );
       return null;
-    }, [styleController, parameter, displayMode]);
+    }, [styleController, belowLayerId, parameter, displayMode]);
 
     useEffect(() {
       final token = lifecycleToken.value;
