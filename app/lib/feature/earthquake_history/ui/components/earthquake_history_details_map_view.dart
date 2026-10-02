@@ -1,14 +1,15 @@
-import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
-
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_map_bounds_calculator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_area_filter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
@@ -16,6 +17,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.d
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_focus_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_layer_parameter_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_intensity_tree_provider.dart';
@@ -25,6 +27,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_popup.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_sheet.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_details_settings_sheet.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_content.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart';
@@ -32,6 +35,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_error_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_marker_anchors_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_shindo_db_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_shindo_db_station_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_station_intensity_layer.dart';
@@ -51,8 +55,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
-import 'package:maplibre/maplibre.dart';
 import 'package:m3e_core/m3e_core.dart';
+import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
@@ -136,6 +140,15 @@ class _MapContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final details =
+        ref.watch(earthquakeHistoryConfigProvider).value?.details ??
+        const EarthquakeHistoryDetailsConfig();
+    final stationAnchor = details.hypocenterAboveStations
+        ? EarthquakeHistoryMarkerAnchorsLayer.lower
+        : EarthquakeHistoryMarkerAnchorsLayer.upper;
+    final hypocenterAnchor = details.hypocenterAboveStations
+        ? EarthquakeHistoryMarkerAnchorsLayer.upper
+        : EarthquakeHistoryMarkerAnchorsLayer.lower;
     final parameter = ref.watch(
       earthquakeHistoryMapLayerParameterProvider.select(
         (v) => v.value ?? const EarthquakeHistoryMapLayerParameter(),
@@ -224,6 +237,8 @@ class _MapContent extends HookConsumerWidget {
       gestures: gestures,
     );
     final hypocenterLayer = EarthquakeHistoryHypocenterLayer(
+      key: const ValueKey('hypocenter'),
+      belowLayerId: hypocenterAnchor,
       earthquake: earthquake,
       parameter: parameter,
     );
@@ -259,6 +274,7 @@ class _MapContent extends HookConsumerWidget {
             }
           },
           children: [
+            const EarthquakeHistoryMarkerAnchorsLayer(),
             if (showingDb) ...[
               if (dbTree != null) ...[
                 EarthquakeHistoryShindoDbFillLayer(
@@ -266,11 +282,13 @@ class _MapContent extends HookConsumerWidget {
                   tree: dbTree,
                   parameter: parameter,
                 ),
-                EarthquakeHistoryShindoDbStationLayer(
-                  key: const ValueKey('shindo-db-station'),
-                  tree: dbTree,
-                  parameter: parameter,
-                ),
+                if (details.showStations)
+                  EarthquakeHistoryShindoDbStationLayer(
+                    key: const ValueKey('shindo-db-station'),
+                    belowLayerId: stationAnchor,
+                    tree: dbTree,
+                    parameter: parameter,
+                  ),
               ],
             ] else ...[
               if (showEstimated && tileUrl != null)
@@ -287,16 +305,19 @@ class _MapContent extends HookConsumerWidget {
                 ),
                 EarthquakeHistoryHypocenterErrorLayer(
                   key: const ValueKey('hypocenter-error'),
+                  belowLayerId: EarthquakeHistoryMarkerAnchorsLayer.background,
                   earthquake: earthquake,
                   parameter: parameter,
                 ),
+              ],
+              if (details.showStations)
                 EarthquakeHistoryStationIntensityLayer(
                   key: const ValueKey('station'),
+                  belowLayerId: stationAnchor,
                   earthquake: earthquake,
                   parameter: parameter,
                   showingLpgmIntensity: showingLpgmIntensity,
                 ),
-              ],
             ],
             hypocenterLayer,
           ],
@@ -647,6 +668,19 @@ class _MapControllerCard extends StatelessWidget {
         child: Column(
           mainAxisSize: .min,
           children: [
+            IconButton(
+              tooltip: '地震履歴詳細の設定',
+              icon: const Icon(Icons.settings_outlined),
+              onPressed: () async {
+                await Navigator.of(context).push<void>(
+                  AppSheetRoute(
+                    builder: (_) =>
+                        const EarthquakeHistoryDetailsSettingsSheet(),
+                  ),
+                );
+              },
+            ),
+            divider,
             InkWell(
               onTap: () async {
                 await HapticFeedback.lightImpact();

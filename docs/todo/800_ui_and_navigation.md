@@ -47,6 +47,12 @@
 - `useEffect` から親の ValueNotifier を同期更新する初期化を build 前へ移すか、初回 build 後一度だけ通知する。
 - 完了条件: 新規ユーザー相当のテストで初期プリセット/変更値が正しく、`setState() or markNeedsBuild() called during build` が出ない。iOS初回画面も確認する。
 
+## 500: 地震履歴詳細の地図設定
+
+- 対象: `app/lib/feature/earthquake_history/ui/components/modal/earthquake_history_details_settings_sheet.dart` と詳細地図の観測点・震央レイヤー。
+- iOS/Android 実機で右上の設定シートを開き、観測点の表示切り替え、震央との重なり順、画面を開き直した後・再起動後の設定保持を確認する。実機表示は未検証。
+- 防災情報XML・長周期地震動・推計震度・震度データベースで、アイコンの遅延読み込み後と表示元切り替え後も重なり順が保たれ、非表示の観測点をタップできないことを確認する。地図の拡大率・中心の維持と、Light/Dark・文字拡大時のシート操作も確認する。
+
 ## 500: 地震/EEW履歴のタブレット検証
 
 - 対象: `app/lib/feature/earthquake_history/ui/`、`app/lib/feature/eew/ui/`。以前の静的解析は表示確認の根拠ではない。
