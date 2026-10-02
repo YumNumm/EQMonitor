@@ -10,13 +10,12 @@ final class const RegionCatalogBuilder() {
   }) {
     if (notification) {
       final catalog = const NotificationRegionCatalogBuilder().build(
-        codeTable: codeTable,
         earthquake: earthquake,
       );
       return [
         for (final region in catalog.regions) ...[
           RegionOption(
-            kind: .eewRegion,
+            kind: .region,
             code: region.code,
             name: region.name,
             kana: region.kana,
@@ -27,7 +26,7 @@ final class const RegionCatalogBuilder() {
               code: city.code,
               name: city.name,
               kana: city.kana,
-              parentKind: .eewRegion,
+              parentKind: .region,
               parentCode: region.code,
               parentName: region.name,
             ),
