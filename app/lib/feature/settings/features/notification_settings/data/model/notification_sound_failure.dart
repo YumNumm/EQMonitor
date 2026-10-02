@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 enum NotificationSoundFailure {
   unsupportedFormat,
   invalidAudio,
@@ -24,8 +26,11 @@ extension NotificationSoundFailureMessage on NotificationSoundFailure {
   };
 }
 
-class const NotificationSoundException(final NotificationSoundFailure failure)
-    implements Exception {
+class const NotificationSoundException(
+  final NotificationSoundFailure failure, {
+  final String? operation,
+  final PlatformException? cause,
+}) implements Exception {
   @override
   String toString() => failure.message;
 }

@@ -66,7 +66,7 @@ final class NotificationSoundMethodChannel: NSObject, FlutterPlugin {
               UIApplication.shared.applicationState == .active
             else { result(nil); return }
             do { try self.previewPlayer.preview(url); result(nil) }
-            catch { result(self.flutterError(error)) }
+            catch { result(self.flutterError(error, operation: call.method)) }
           }
           return
         }
@@ -80,7 +80,7 @@ final class NotificationSoundMethodChannel: NSObject, FlutterPlugin {
         }
         DispatchQueue.main.async { result(response) }
       } catch {
-        DispatchQueue.main.async { result(self.flutterError(error)) }
+        DispatchQueue.main.async { result(self.flutterError(error, operation: call.method)) }
       }
     }
   }
@@ -129,8 +129,16 @@ final class NotificationSoundMethodChannel: NSObject, FlutterPlugin {
     return value
   }
 
-  private func flutterError(_ error: Error) -> FlutterError {
-    let code = (error as? NotificationSoundFailure)?.code ?? "storageFailure"
-    return FlutterError(code: code, message: "Notification sound operation failed", details: nil)
+  private func flutterError(_ error: Error, operation: String) -> FlutterError {
+    let failure = error as? NotificationSoundFailure
+    let code = failure?.code ?? "storageFailure"
+    var details: [String: Any] = ["stage": failure?.stage ?? operation]
+    let nativeError = failure?.underlyingError ?? (failure == nil ? error as NSError : nil)
+    if let nativeError {
+      // Only expose stable identifiers; descriptions/userInfo may contain file paths.
+      details["nativeDomain"] = nativeError.domain
+      details["nativeCode"] = nativeError.code
+    }
+    return FlutterError(code: code, message: "Notification sound operation failed", details: details)
   }
 }

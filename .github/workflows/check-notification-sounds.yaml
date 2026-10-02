@@ -1,0 +1,68 @@
+name: iOS Notification Sound Tests
+
+on:
+  pull_request:
+    paths:
+      - app/ios/Packages/NotificationSounds/**
+      - app/ios/Runner/NotificationSound*.swift
+      - .github/workflows/check-notification-sounds.yaml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notification-sound-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: xcode-27
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Select iPhone simulator
+        id: simulator
+        run: |
+          xcrun simctl list devices available --json > "$RUNNER_TEMP/simulators.json"
+          python3 - "$RUNNER_TEMP/simulators.json" "$GITHUB_OUTPUT" <<'PY'
+          import json
+          import sys
+          with open(sys.argv[1]) as file:
+              runtimes = json.load(file)["devices"]
+          for runtime in sorted(runtimes, reverse=True):
+              if ".iOS-" not in runtime:
+                  continue
+              for device in runtimes[runtime]:
+                  if device["isAvailable"] and device["name"].startswith("iPhone"):
+                      with open(sys.argv[2], "a") as output:
+                          output.write(f"id={device['udid']}\n")
+                      print(f"Testing on {runtime}: {device['name']}")
+                      sys.exit(0)
+          sys.exit("No available iPhone simulator")
+          PY
+
+      - name: Test real audio import
+        working-directory: app/ios/Packages/NotificationSounds
+        env:
+          SIMULATOR_ID: ${{ steps.simulator.outputs.id }}
+        run: |
+          set -o pipefail
+          xcodebuild test -scheme NotificationSounds \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
+            -derivedDataPath "$RUNNER_TEMP/notification-sounds-build" \
+            -resultBundlePath "$RUNNER_TEMP/notification-sounds.xcresult" \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$RUNNER_TEMP/notification-sounds.log"
+
+      - name: Upload test result
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: notification-sound-tests
+          path: |
+            ${{ runner.temp }}/notification-sounds.xcresult
+            ${{ runner.temp }}/notification-sounds.log

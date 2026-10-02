@@ -262,8 +262,8 @@
 		85873D0B2E9182A600ED0F72 /* AppIcon-dev.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "AppIcon-dev.icon"; sourceTree = "<group>"; };
 		859DF75B2BBE9FFC00B827B1 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		859DF75D2BBEA0F000B827B1 /* Synced - EQMonitor.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Synced - EQMonitor.storekit"; sourceTree = "<group>"; };
-		38EEF0834DCDFD4A5778FC82 /* NotificationSoundStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSoundStore.swift; sourceTree = "<group>"; };
-		CDE0C3DF0CBD67A9D6E0FF54 /* NotificationSoundImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSoundImporter.swift; sourceTree = "<group>"; };
+		38EEF0834DCDFD4A5778FC82 /* NotificationSoundStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationSoundStore.swift; path = ../Packages/NotificationSounds/Sources/NotificationSounds/NotificationSoundStore.swift; sourceTree = "<group>"; };
+		CDE0C3DF0CBD67A9D6E0FF54 /* NotificationSoundImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationSoundImporter.swift; path = ../Packages/NotificationSounds/Sources/NotificationSounds/NotificationSoundImporter.swift; sourceTree = "<group>"; };
 		CC60937ECD7FD4EF0A75E3EA /* NotificationSoundPreviewPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSoundPreviewPlayer.swift; sourceTree = "<group>"; };
 		B3A5DD37BC761FC565242E21 /* NotificationSoundMethodChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSoundMethodChannel.swift; sourceTree = "<group>"; };
 		85A1B0002F59A00000000001 /* AppGroupMethodChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppGroupMethodChannel.swift; sourceTree = "<group>"; };
