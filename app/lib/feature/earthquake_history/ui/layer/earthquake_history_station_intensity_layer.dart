@@ -30,6 +30,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     this.stationDisplayMode = StationDisplayMode.auto,
     this.showStationLabel = false,
     this.showingLpgmIntensity = false,
+    this.belowLayerId,
     super.key,
   });
 
@@ -38,6 +39,8 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   final StationDisplayMode stationDisplayMode;
   final bool showStationLabel;
   final bool showingLpgmIntensity;
+
+  final String? belowLayerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,6 +62,8 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     final imagesAdded = useRef(false);
     final latestLayerConfiguration = useRef<Object?>(null);
     final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
+    final latestBelowLayerId = useRef(belowLayerId);
+    latestBelowLayerId.value = belowLayerId;
     final latestParameter = useRef(parameter);
     latestParameter.value = parameter;
     final latestStationDisplayMode = useRef(stationDisplayMode);
@@ -108,9 +113,11 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         )) {
           await styleController.addLayer(
             layer,
+            belowLayerId: latestBelowLayerId.value,
           );
         }
         latestLayerConfiguration.value = (
+          belowLayerId: latestBelowLayerId.value,
           parameter: latestParameter.value,
           stationDisplayMode: latestStationDisplayMode.value,
           showStationLabel: latestShowStationLabel.value,
@@ -170,6 +177,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
           return null;
         }
         final configuration = (
+          belowLayerId: belowLayerId,
           parameter: parameter,
           stationDisplayMode: stationDisplayMode,
           showStationLabel: showStationLabel,
@@ -200,6 +208,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             )) {
               await styleController.addLayer(
                 layer,
+                belowLayerId: belowLayerId,
               );
             }
             latestLayerConfiguration.value = configuration;
@@ -209,6 +218,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
       },
       [
         styleController,
+        belowLayerId,
         parameter,
         stationDisplayMode,
         showStationLabel,

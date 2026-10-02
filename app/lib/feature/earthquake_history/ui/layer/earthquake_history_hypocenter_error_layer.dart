@@ -21,11 +21,14 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
   const new({
     required this.earthquake,
     this.parameter = const EarthquakeHistoryMapLayerParameter(),
+    this.belowLayerId,
     super.key,
   });
 
   final Earthquake earthquake;
   final EarthquakeHistoryMapLayerParameter parameter;
+
+  final String? belowLayerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -113,12 +116,13 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
           }
           await styleController.addLayer(
             layerBuilder.buildLineLayer(parameter: parameter, isDark: isDark),
+            belowLayerId: belowLayerId,
           );
           isLayerInitialized.value = true;
         }),
       );
       return null;
-    }, [styleController, parameter, isDark]);
+    }, [styleController, belowLayerId, parameter, isDark]);
 
     useEffect(() {
       final token = lifecycleToken.value;

@@ -22,6 +22,7 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
     required this.tree,
     required this.parameter,
     this.stationDisplayMode = StationDisplayMode.auto,
+    this.belowLayerId,
     super.key,
   });
 
@@ -31,6 +32,8 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
 
   static const sourceId = 'eq-history-shindo-db-station';
   static const iconLayerId = 'eq-history-shindo-db-station-icon';
+
+  final String? belowLayerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -84,46 +87,57 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
       };
     }, [styleController]);
 
-    useEffect(() {
-      final token = lifecycleToken.value;
-      final initialized = initialization.value;
-      if (styleController == null ||
-          token == null ||
-          initialized == null ||
-          iconData == null ||
-          dbIconData == null) {
+    useEffect(
+      () {
+        final token = lifecycleToken.value;
+        final initialized = initialization.value;
+        if (styleController == null ||
+            token == null ||
+            initialized == null ||
+            iconData == null ||
+            dbIconData == null) {
+          return null;
+        }
+        unawaited(
+          enqueue(() async {
+            await initialized;
+            if (lifecycleToken.value != token) {
+              return;
+            }
+            if (!imagesAdded.value) {
+              await styleController.addImages({
+                ...iconData.toMapStyleImages,
+                ...dbIconData.toMapStyleImages,
+              });
+              imagesAdded.value = true;
+            }
+            if (isLayerInitialized.value) {
+              await styleController.removeLayer(iconLayerId);
+            }
+            if (lifecycleToken.value != token) {
+              return;
+            }
+            await styleController.addLayer(
+              EarthquakeHistoryShindoDbStationLayerBuilder.build(
+                parameter: parameter,
+                stationDisplayMode: stationDisplayMode,
+              ),
+              belowLayerId: belowLayerId,
+            );
+            isLayerInitialized.value = true;
+          }),
+        );
         return null;
-      }
-      unawaited(
-        enqueue(() async {
-          await initialized;
-          if (lifecycleToken.value != token) {
-            return;
-          }
-          if (!imagesAdded.value) {
-            await styleController.addImages({
-              ...iconData.toMapStyleImages,
-              ...dbIconData.toMapStyleImages,
-            });
-            imagesAdded.value = true;
-          }
-          if (isLayerInitialized.value) {
-            await styleController.removeLayer(iconLayerId);
-          }
-          if (lifecycleToken.value != token) {
-            return;
-          }
-          await styleController.addLayer(
-            EarthquakeHistoryShindoDbStationLayerBuilder.build(
-              parameter: parameter,
-              stationDisplayMode: stationDisplayMode,
-            ),
-          );
-          isLayerInitialized.value = true;
-        }),
-      );
-      return null;
-    }, [styleController, parameter, stationDisplayMode, iconData, dbIconData]);
+      },
+      [
+        styleController,
+        belowLayerId,
+        parameter,
+        stationDisplayMode,
+        iconData,
+        dbIconData,
+      ],
+    );
 
     useEffect(() {
       final token = lifecycleToken.value;
