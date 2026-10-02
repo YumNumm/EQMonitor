@@ -44,7 +44,7 @@ class EarthquakeHistoryDetailsSettingsSheet extends ConsumerWidget {
                 children: [
                   SwitchListTile.adaptive(
                     title: const Text('観測点を表示'),
-                    subtitle: const Text('地図上に観測点の震度・長周期地震動階級を表示します'),
+                    subtitle: const Text('各地の震度・長周期地震動の地図に観測点を表示します'),
                     value: details.showStations,
                     onChanged: busy
                         ? null
@@ -65,10 +65,38 @@ class EarthquakeHistoryDetailsSettingsSheet extends ConsumerWidget {
                           },
                   ),
                   SwitchListTile.adaptive(
+                    title: const Text('推計震度に観測点を重ねて表示'),
+                    subtitle: const Text('推計震度の色分けの上に、観測点の震度を表示します'),
+                    value: details.showStationsOnEstimatedIntensity,
+                    onChanged: busy
+                        ? null
+                        : (value) async {
+                            await EarthquakeHistoryConfigNotifier
+                                .saveDetailsMutation
+                                .run(
+                                  ref,
+                                  (tsx) => tsx
+                                      .get(
+                                        earthquakeHistoryConfigProvider
+                                            .notifier,
+                                      )
+                                      .saveDetails(
+                                        details.copyWith(
+                                          showStationsOnEstimatedIntensity:
+                                              value,
+                                        ),
+                                      ),
+                                );
+                          },
+                  ),
+                  SwitchListTile.adaptive(
                     title: const Text('震央アイコンを観測点の上に表示'),
                     subtitle: const Text('重なったときに震央アイコンを手前に表示します'),
                     value: details.hypocenterAboveStations,
-                    onChanged: busy || !details.showStations
+                    onChanged:
+                        busy ||
+                            (!details.showStations &&
+                                !details.showStationsOnEstimatedIntensity)
                         ? null
                         : (value) async {
                             await EarthquakeHistoryConfigNotifier

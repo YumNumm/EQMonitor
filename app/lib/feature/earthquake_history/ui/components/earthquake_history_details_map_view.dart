@@ -205,6 +205,9 @@ class _MapContent extends HookConsumerWidget {
     final tileUrl = earthquake.estimatedIntensityTileUrl;
     final showingLpgmIntensity = displayMode == IntensityDisplayMode.lpgm;
     final showEstimated = displayMode == IntensityDisplayMode.estimated;
+    final showStations = !showingDb && showEstimated
+        ? details.showStationsOnEstimatedIntensity
+        : details.showStations;
 
     const mapCamera = EarthquakeHistoryMapCamera();
     var center = mapCamera.initialCenter(earthquake);
@@ -282,7 +285,7 @@ class _MapContent extends HookConsumerWidget {
                   tree: dbTree,
                   parameter: parameter,
                 ),
-                if (details.showStations)
+                if (showStations)
                   EarthquakeHistoryShindoDbStationLayer(
                     key: const ValueKey('shindo-db-station'),
                     belowLayerId: stationAnchor,
@@ -310,7 +313,7 @@ class _MapContent extends HookConsumerWidget {
                   parameter: parameter,
                 ),
               ],
-              if (details.showStations)
+              if (showStations)
                 EarthquakeHistoryStationIntensityLayer(
                   key: const ValueKey('station'),
                   belowLayerId: stationAnchor,

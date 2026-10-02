@@ -57,6 +57,7 @@ abstract class EarthquakeHistoryDetailsConfig
     with _$EarthquakeHistoryDetailsConfig {
   const factory({
     @Default(true) bool showStations,
+    @Default(false) bool showStationsOnEstimatedIntensity,
     @Default(true) bool hypocenterAboveStations,
 
     /// 観測点アイコンの表示モード
