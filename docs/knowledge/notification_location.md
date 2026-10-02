@@ -31,6 +31,7 @@
 - 予報・地震情報の既定音と震度別 override は、標準音と端末内の追加音を同じ選択欄で扱う。導線は既存 Pro 条件を使う。
 - Files で選んだ音声は native の AVAudioFile / AVAudioConverter で WAV・PCM16 LE・mono・44,100 Hz・最長29.9秒に変換する。長い入力は先頭切り出しを確認してから変換する。追加しても設定は自動で切り替えない。
 - AVAudioFile の読み込み数は残りフレーム数を上限とし、末尾に到達したら converter へ endOfStream を渡す。出力は検証前に閉じて WAV ヘッダーを確定する。iOS 18 以降は [close()](https://developer.apple.com/documentation/avfaudio/avaudiofile/close())、iOS 17 は変換スコープの autoreleasepool を使う。読み込み失敗と出力の変換・検証失敗を区別し、入力の破損と断定しない。
+- 正常な WAV・MP3 でも、末尾を読んだ後の再読み込みは `convert.read` で `NSOSStatusErrorDomain / -39` になり得る。この失敗を `invalidAudio` にまとめると破損と誤表示する。iOS 27.0 Simulator の[比較テスト](https://github.com/YumNumm/EQMonitor/actions/runs/36967486070)では、出力を閉じる変更だけでは5ケースが失敗し、末尾の読み込み制御だけを直すと全ケースが成功した。EOF を通知してから追加の読み込みを行わないことが必要。
 - 通知音の例外は MethodChannel の処理名・失敗箇所・元の NSError の domain/code を保持し、リリース版でもエラー詳細の表示・コピーに含める。通常の案内には技術情報を付け足さない。ファイルパスを含み得る localizedDescription・userInfo は診断情報に渡さない。
 - 読み込み・変換・保存の実装と iOS 単体テストは `app/ios/Packages/NotificationSounds/` に置く。Runner も同じ Swift ソースを参照する。[実行手順](../../app/ios/Packages/NotificationSounds/README.md)に従い、WAV・MP3 の実デコードを iOS Simulator で検証する。PR の `iOS Notification Sound Tests` が実行する。
 - 保存先は App Group の `Library/Sounds/eqm_custom_<32桁UUID>.wav`。カタログは `Library/Application Support/NotificationSounds/catalog.json`。表示名変更でファイル名は変えない。サーバーへ音声を送信しない。
@@ -38,7 +39,7 @@
 - native は直列 queue で一時出力・最終検証・rename・atomic カタログ更新を行う。正常にカタログを読めた場合だけ、自前の未登録ファイルを回収する。カタログ破損で音声を消さない。
 - Flutter の coordinator は API 設定保存・削除・snapshot 保存を直列化する。新規選択と編集中の音を予約し、削除は live 設定・全 override・snapshot の取得後にも予約を確認する。読取失敗は削除を禁止する。
 - 欠損音は利用不可として表示し、API / snapshot のファイル名を保持する。存在確認は新しく選ぶ音へ適用し、既存の欠損名が他の設定変更や復元を妨げないようにする。
-- native の file protection は初回 unlock 後に利用できる設定。通知音導入時の Apple SDK archive・IPA 作成・TestFlight アップロードは [CD](https://github.com/YumNumm/EQMonitor/actions/runs/36690312733) で成功。WAV・MP3 の検査・変換・保存・再デコードは iOS 27.0 Simulator の[単体テストで検証済み](https://github.com/YumNumm/EQMonitor/actions/runs/36942451438)。その他の入力形式、実機での取り込み、OS による実通知再生は未検証。[受け入れ TODO](../todo/800_ui_and_navigation.md) と [設計](../superpowers/specs/2026-09-30-custom-notification-sounds-design.md) を参照する。
+- native の file protection は初回 unlock 後に利用できる設定。通知音導入時の Apple SDK archive・IPA 作成・TestFlight アップロードは [CD](https://github.com/YumNumm/EQMonitor/actions/runs/36690312733) で成功。WAV・MP3 の検査・変換・保存・再デコードは iPhone 18 Pro / iOS 27.0 Simulator の[単体テストで検証済み](https://github.com/YumNumm/EQMonitor/actions/runs/36966441154)。その他の入力形式、実機での取り込み、OS による実通知再生は未検証。[受け入れ TODO](../todo/800_ui_and_navigation.md) と [設計](../superpowers/specs/2026-09-30-custom-notification-sounds-design.md) を参照する。
 
 ## 揺れ検知の通知条件
 
