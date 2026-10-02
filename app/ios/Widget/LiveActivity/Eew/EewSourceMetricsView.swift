@@ -39,7 +39,11 @@ struct SourceMetricsView: View {
             Text("\(Text("M").font(labelFont))\(Text($0).font(valueFont).tracking(size * -0.22))")
         }
         let depthText = depth.map {
-            Text("\(Text("深さ ").font(labelFont))\(Text(String(Int($0))).font(valueFont))\(Text("km").font(labelFont))")
+            if $0 == 0 {
+                return Text("\(Text("深さ ").font(labelFont))\(Text("ごく浅い").font(AppFonts.flex(size: size, weight: .bold)))")
+            } else {
+                return Text("\(Text("深さ ").font(labelFont))\(Text(String(Int($0))).font(valueFont))\(Text($0 == 700 ? "km以上" : "km").font(labelFont))")
+            }
         }
         Group {
             if vertical {

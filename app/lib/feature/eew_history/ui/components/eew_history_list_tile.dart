@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/jma_depth_formatter.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:extensions/extensions.dart';
 import 'package:material_ui/material_ui.dart';
@@ -32,7 +33,7 @@ class EewHistoryListTile extends StatelessWidget {
     final magnitude = hypocenter?.magnitude;
     final subtitleParts = [
       '${time.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}発生',
-      if (depth != null) '深さ ${depth}km',
+      if (depth != null) '深さ ${const JmaDepthFormatter().format(depth: depth)}',
       if (magnitude != null) 'M${magnitude.toStringAsFixed(1)}',
     ];
     final reportLabel = '#${item.serialNo}${item.isLastInfo ? ' (最終)' : ''}';

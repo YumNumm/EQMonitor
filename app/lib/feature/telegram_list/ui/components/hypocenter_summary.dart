@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/jma_depth_formatter.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_quake_model.dart';
 import 'package:material_ui/material_ui.dart';
@@ -20,12 +21,15 @@ class HypocenterSummary extends StatelessWidget {
 
     final epicenterName = quake.epicenterName ?? '震源不明';
     final magnitudeText = quake.magnitude != null ? ' M${quake.magnitude}' : '';
-    final depthText = quake.depth != null ? ' 深さ${quake.depth}km' : '';
+    const depthFormatter = JmaDepthFormatter();
+    final depthText = quake.depth != null
+        ? ' 深さ${depthFormatter.format(depth: quake.depth)}'
+        : '';
 
     final oldMagnitudeText = diff?.oldMagnitude ?? '不明';
     final newMagnitudeText = diff?.newMagnitude ?? '不明';
-    final oldDepthText = diff?.oldDepth?.toString() ?? '不明';
-    final newDepthText = diff?.newDepth?.toString() ?? '不明';
+    final oldDepthText = depthFormatter.format(depth: diff?.oldDepth);
+    final newDepthText = depthFormatter.format(depth: diff?.newDepth);
     final oldEpicenterNameText = diff?.oldEpicenterName ?? '不明';
     final newEpicenterNameText = diff?.newEpicenterName ?? '不明';
 
@@ -34,7 +38,7 @@ class HypocenterSummary extends StatelessWidget {
       if (diff case final value? when value.hasMagnitudeChange())
         _DiffChip(text: 'M$oldMagnitudeText→M$newMagnitudeText'),
       if (diff case final value? when value.hasDepthChange())
-        _DiffChip(text: '深さ${oldDepthText}km→${newDepthText}km'),
+        _DiffChip(text: '深さ$oldDepthText→$newDepthText'),
       if (diff case final value? when value.hasEpicenterNameChange())
         _DiffChip(text: '$oldEpicenterNameText→$newEpicenterNameText'),
     ];
