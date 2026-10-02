@@ -24,6 +24,10 @@ _CatalogStationRecord _$CatalogStationRecordFromJson(
         'observed_at',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
+      observedAtPrecision: $checkedConvert(
+        'observed_at_precision',
+        (v) => $enumDecodeNullable(_$CatalogTimePrecisionEnumMap, v),
+      ),
       maxAcceleration: $checkedConvert(
         'max_acceleration',
         (v) => v == null
@@ -33,6 +37,10 @@ _CatalogStationRecord _$CatalogStationRecordFromJson(
       maxAccelTime: $checkedConvert(
         'max_accel_time',
         (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      maxAccelTimePrecision: $checkedConvert(
+        'max_accel_time_precision',
+        (v) => $enumDecodeNullable(_$CatalogTimePrecisionEnumMap, v),
       ),
       periods: $checkedConvert(
         'periods',
@@ -50,8 +58,10 @@ _CatalogStationRecord _$CatalogStationRecordFromJson(
   fieldKeyMap: const {
     'stationCode': 'station_code',
     'observedAt': 'observed_at',
+    'observedAtPrecision': 'observed_at_precision',
     'maxAcceleration': 'max_acceleration',
     'maxAccelTime': 'max_accel_time',
+    'maxAccelTimePrecision': 'max_accel_time_precision',
     'observationCount': 'observation_count',
   },
 );
@@ -62,8 +72,16 @@ Map<String, dynamic> _$CatalogStationRecordToJson(
   'station_code': instance.stationCode,
   'intensity': instance.intensity,
   'observed_at': ?instance.observedAt?.toIso8601String(),
+  'observed_at_precision': ?instance.observedAtPrecision,
   'max_acceleration': ?instance.maxAcceleration,
   'max_accel_time': ?instance.maxAccelTime?.toIso8601String(),
+  'max_accel_time_precision': ?instance.maxAccelTimePrecision,
   'periods': ?instance.periods,
   'observation_count': ?instance.observationCount,
+};
+
+const _$CatalogTimePrecisionEnumMap = {
+  CatalogTimePrecision.minute: 'MINUTE',
+  CatalogTimePrecision.second: 'SECOND',
+  CatalogTimePrecision.decisecond: 'DECISECOND',
 };

@@ -861,7 +861,7 @@ as double,
 /// @nodoc
 mixin _$EarthquakeCatalogStationRecord {
 
- String get stationCode; ShindoDbIntensityClass get intensityClass; double? get instrumentalIntensity; DateTime? get observedAt; EarthquakeCatalogMaxAcceleration? get maxAcceleration; DateTime? get maxAccelTime; EarthquakeCatalogPeriods? get periods; int? get observationCount;
+ String get stationCode; ShindoDbIntensityClass get intensityClass; double? get instrumentalIntensity; DateTime? get observedAt; EarthquakeCatalogTimePrecision? get observedAtPrecision; EarthquakeCatalogMaxAcceleration? get maxAcceleration; DateTime? get maxAccelTime; EarthquakeCatalogTimePrecision? get maxAccelTimePrecision; EarthquakeCatalogPeriods? get periods; int? get observationCount;
 /// Create a copy of EarthquakeCatalogStationRecord
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -872,16 +872,16 @@ $EarthquakeCatalogStationRecordCopyWith<EarthquakeCatalogStationRecord> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeCatalogStationRecord&&(identical(other.stationCode, stationCode) || other.stationCode == stationCode)&&(identical(other.intensityClass, intensityClass) || other.intensityClass == intensityClass)&&(identical(other.instrumentalIntensity, instrumentalIntensity) || other.instrumentalIntensity == instrumentalIntensity)&&(identical(other.observedAt, observedAt) || other.observedAt == observedAt)&&(identical(other.maxAcceleration, maxAcceleration) || other.maxAcceleration == maxAcceleration)&&(identical(other.maxAccelTime, maxAccelTime) || other.maxAccelTime == maxAccelTime)&&(identical(other.periods, periods) || other.periods == periods)&&(identical(other.observationCount, observationCount) || other.observationCount == observationCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeCatalogStationRecord&&(identical(other.stationCode, stationCode) || other.stationCode == stationCode)&&(identical(other.intensityClass, intensityClass) || other.intensityClass == intensityClass)&&(identical(other.instrumentalIntensity, instrumentalIntensity) || other.instrumentalIntensity == instrumentalIntensity)&&(identical(other.observedAt, observedAt) || other.observedAt == observedAt)&&(identical(other.observedAtPrecision, observedAtPrecision) || other.observedAtPrecision == observedAtPrecision)&&(identical(other.maxAcceleration, maxAcceleration) || other.maxAcceleration == maxAcceleration)&&(identical(other.maxAccelTime, maxAccelTime) || other.maxAccelTime == maxAccelTime)&&(identical(other.maxAccelTimePrecision, maxAccelTimePrecision) || other.maxAccelTimePrecision == maxAccelTimePrecision)&&(identical(other.periods, periods) || other.periods == periods)&&(identical(other.observationCount, observationCount) || other.observationCount == observationCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,stationCode,intensityClass,instrumentalIntensity,observedAt,maxAcceleration,maxAccelTime,periods,observationCount);
+int get hashCode => Object.hash(runtimeType,stationCode,intensityClass,instrumentalIntensity,observedAt,observedAtPrecision,maxAcceleration,maxAccelTime,maxAccelTimePrecision,periods,observationCount);
 
 @override
 String toString() {
-  return 'EarthquakeCatalogStationRecord(stationCode: $stationCode, intensityClass: $intensityClass, instrumentalIntensity: $instrumentalIntensity, observedAt: $observedAt, maxAcceleration: $maxAcceleration, maxAccelTime: $maxAccelTime, periods: $periods, observationCount: $observationCount)';
+  return 'EarthquakeCatalogStationRecord(stationCode: $stationCode, intensityClass: $intensityClass, instrumentalIntensity: $instrumentalIntensity, observedAt: $observedAt, observedAtPrecision: $observedAtPrecision, maxAcceleration: $maxAcceleration, maxAccelTime: $maxAccelTime, maxAccelTimePrecision: $maxAccelTimePrecision, periods: $periods, observationCount: $observationCount)';
 }
 
 
@@ -892,7 +892,7 @@ abstract mixin class $EarthquakeCatalogStationRecordCopyWith<$Res>  {
   factory $EarthquakeCatalogStationRecordCopyWith(EarthquakeCatalogStationRecord value, $Res Function(EarthquakeCatalogStationRecord) _then) = _$EarthquakeCatalogStationRecordCopyWithImpl;
 @useResult
 $Res call({
- String stationCode, ShindoDbIntensityClass intensityClass, double? instrumentalIntensity, DateTime? observedAt, EarthquakeCatalogMaxAcceleration? maxAcceleration, DateTime? maxAccelTime, EarthquakeCatalogPeriods? periods, int? observationCount
+ String stationCode, ShindoDbIntensityClass intensityClass, double? instrumentalIntensity, DateTime? observedAt, EarthquakeCatalogTimePrecision? observedAtPrecision, EarthquakeCatalogMaxAcceleration? maxAcceleration, DateTime? maxAccelTime, EarthquakeCatalogTimePrecision? maxAccelTimePrecision, EarthquakeCatalogPeriods? periods, int? observationCount
 });
 
 
@@ -909,15 +909,17 @@ class _$EarthquakeCatalogStationRecordCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeCatalogStationRecord
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? stationCode = null,Object? intensityClass = null,Object? instrumentalIntensity = freezed,Object? observedAt = freezed,Object? maxAcceleration = freezed,Object? maxAccelTime = freezed,Object? periods = freezed,Object? observationCount = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? stationCode = null,Object? intensityClass = null,Object? instrumentalIntensity = freezed,Object? observedAt = freezed,Object? observedAtPrecision = freezed,Object? maxAcceleration = freezed,Object? maxAccelTime = freezed,Object? maxAccelTimePrecision = freezed,Object? periods = freezed,Object? observationCount = freezed,}) {
   return _then(EarthquakeCatalogStationRecord(
 stationCode: null == stationCode ? _self.stationCode : stationCode // ignore: cast_nullable_to_non_nullable
 as String,intensityClass: null == intensityClass ? _self.intensityClass : intensityClass // ignore: cast_nullable_to_non_nullable
 as ShindoDbIntensityClass,instrumentalIntensity: freezed == instrumentalIntensity ? _self.instrumentalIntensity : instrumentalIntensity // ignore: cast_nullable_to_non_nullable
 as double?,observedAt: freezed == observedAt ? _self.observedAt : observedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,maxAcceleration: freezed == maxAcceleration ? _self.maxAcceleration : maxAcceleration // ignore: cast_nullable_to_non_nullable
+as DateTime?,observedAtPrecision: freezed == observedAtPrecision ? _self.observedAtPrecision : observedAtPrecision // ignore: cast_nullable_to_non_nullable
+as EarthquakeCatalogTimePrecision?,maxAcceleration: freezed == maxAcceleration ? _self.maxAcceleration : maxAcceleration // ignore: cast_nullable_to_non_nullable
 as EarthquakeCatalogMaxAcceleration?,maxAccelTime: freezed == maxAccelTime ? _self.maxAccelTime : maxAccelTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,periods: freezed == periods ? _self.periods : periods // ignore: cast_nullable_to_non_nullable
+as DateTime?,maxAccelTimePrecision: freezed == maxAccelTimePrecision ? _self.maxAccelTimePrecision : maxAccelTimePrecision // ignore: cast_nullable_to_non_nullable
+as EarthquakeCatalogTimePrecision?,periods: freezed == periods ? _self.periods : periods // ignore: cast_nullable_to_non_nullable
 as EarthquakeCatalogPeriods?,observationCount: freezed == observationCount ? _self.observationCount : observationCount // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
@@ -1028,10 +1030,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String stationCode,  ShindoDbIntensityClass intensityClass,  double? instrumentalIntensity,  DateTime? observedAt,  EarthquakeCatalogMaxAcceleration? maxAcceleration,  DateTime? maxAccelTime,  EarthquakeCatalogPeriods? periods,  int? observationCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String stationCode,  ShindoDbIntensityClass intensityClass,  double? instrumentalIntensity,  DateTime? observedAt,  EarthquakeCatalogTimePrecision? observedAtPrecision,  EarthquakeCatalogMaxAcceleration? maxAcceleration,  DateTime? maxAccelTime,  EarthquakeCatalogTimePrecision? maxAccelTimePrecision,  EarthquakeCatalogPeriods? periods,  int? observationCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeCatalogStationRecord() when $default != null:
-return $default(_that.stationCode,_that.intensityClass,_that.instrumentalIntensity,_that.observedAt,_that.maxAcceleration,_that.maxAccelTime,_that.periods,_that.observationCount);case _:
+return $default(_that.stationCode,_that.intensityClass,_that.instrumentalIntensity,_that.observedAt,_that.observedAtPrecision,_that.maxAcceleration,_that.maxAccelTime,_that.maxAccelTimePrecision,_that.periods,_that.observationCount);case _:
   return orElse();
 
 }
@@ -1049,10 +1051,10 @@ return $default(_that.stationCode,_that.intensityClass,_that.instrumentalIntensi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String stationCode,  ShindoDbIntensityClass intensityClass,  double? instrumentalIntensity,  DateTime? observedAt,  EarthquakeCatalogMaxAcceleration? maxAcceleration,  DateTime? maxAccelTime,  EarthquakeCatalogPeriods? periods,  int? observationCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String stationCode,  ShindoDbIntensityClass intensityClass,  double? instrumentalIntensity,  DateTime? observedAt,  EarthquakeCatalogTimePrecision? observedAtPrecision,  EarthquakeCatalogMaxAcceleration? maxAcceleration,  DateTime? maxAccelTime,  EarthquakeCatalogTimePrecision? maxAccelTimePrecision,  EarthquakeCatalogPeriods? periods,  int? observationCount)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeCatalogStationRecord():
-return $default(_that.stationCode,_that.intensityClass,_that.instrumentalIntensity,_that.observedAt,_that.maxAcceleration,_that.maxAccelTime,_that.periods,_that.observationCount);case _:
+return $default(_that.stationCode,_that.intensityClass,_that.instrumentalIntensity,_that.observedAt,_that.observedAtPrecision,_that.maxAcceleration,_that.maxAccelTime,_that.maxAccelTimePrecision,_that.periods,_that.observationCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1069,10 +1071,10 @@ return $default(_that.stationCode,_that.intensityClass,_that.instrumentalIntensi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String stationCode,  ShindoDbIntensityClass intensityClass,  double? instrumentalIntensity,  DateTime? observedAt,  EarthquakeCatalogMaxAcceleration? maxAcceleration,  DateTime? maxAccelTime,  EarthquakeCatalogPeriods? periods,  int? observationCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String stationCode,  ShindoDbIntensityClass intensityClass,  double? instrumentalIntensity,  DateTime? observedAt,  EarthquakeCatalogTimePrecision? observedAtPrecision,  EarthquakeCatalogMaxAcceleration? maxAcceleration,  DateTime? maxAccelTime,  EarthquakeCatalogTimePrecision? maxAccelTimePrecision,  EarthquakeCatalogPeriods? periods,  int? observationCount)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeCatalogStationRecord() when $default != null:
-return $default(_that.stationCode,_that.intensityClass,_that.instrumentalIntensity,_that.observedAt,_that.maxAcceleration,_that.maxAccelTime,_that.periods,_that.observationCount);case _:
+return $default(_that.stationCode,_that.intensityClass,_that.instrumentalIntensity,_that.observedAt,_that.observedAtPrecision,_that.maxAcceleration,_that.maxAccelTime,_that.maxAccelTimePrecision,_that.periods,_that.observationCount);case _:
   return null;
 
 }
@@ -1084,15 +1086,17 @@ return $default(_that.stationCode,_that.intensityClass,_that.instrumentalIntensi
 
 
 class _EarthquakeCatalogStationRecord implements EarthquakeCatalogStationRecord {
-  const _EarthquakeCatalogStationRecord({required this.stationCode, required this.intensityClass, required this.instrumentalIntensity, required this.observedAt, required this.maxAcceleration, required this.maxAccelTime, required this.periods, required this.observationCount});
+  const _EarthquakeCatalogStationRecord({required this.stationCode, required this.intensityClass, required this.instrumentalIntensity, required this.observedAt, this.observedAtPrecision, required this.maxAcceleration, required this.maxAccelTime, this.maxAccelTimePrecision, required this.periods, required this.observationCount});
   
 
 @override final  String stationCode;
 @override final  ShindoDbIntensityClass intensityClass;
 @override final  double? instrumentalIntensity;
 @override final  DateTime? observedAt;
+@override final  EarthquakeCatalogTimePrecision? observedAtPrecision;
 @override final  EarthquakeCatalogMaxAcceleration? maxAcceleration;
 @override final  DateTime? maxAccelTime;
+@override final  EarthquakeCatalogTimePrecision? maxAccelTimePrecision;
 @override final  EarthquakeCatalogPeriods? periods;
 @override final  int? observationCount;
 
@@ -1106,16 +1110,16 @@ _$EarthquakeCatalogStationRecordCopyWith<_EarthquakeCatalogStationRecord> get co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeCatalogStationRecord&&(identical(other.stationCode, stationCode) || other.stationCode == stationCode)&&(identical(other.intensityClass, intensityClass) || other.intensityClass == intensityClass)&&(identical(other.instrumentalIntensity, instrumentalIntensity) || other.instrumentalIntensity == instrumentalIntensity)&&(identical(other.observedAt, observedAt) || other.observedAt == observedAt)&&(identical(other.maxAcceleration, maxAcceleration) || other.maxAcceleration == maxAcceleration)&&(identical(other.maxAccelTime, maxAccelTime) || other.maxAccelTime == maxAccelTime)&&(identical(other.periods, periods) || other.periods == periods)&&(identical(other.observationCount, observationCount) || other.observationCount == observationCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeCatalogStationRecord&&(identical(other.stationCode, stationCode) || other.stationCode == stationCode)&&(identical(other.intensityClass, intensityClass) || other.intensityClass == intensityClass)&&(identical(other.instrumentalIntensity, instrumentalIntensity) || other.instrumentalIntensity == instrumentalIntensity)&&(identical(other.observedAt, observedAt) || other.observedAt == observedAt)&&(identical(other.observedAtPrecision, observedAtPrecision) || other.observedAtPrecision == observedAtPrecision)&&(identical(other.maxAcceleration, maxAcceleration) || other.maxAcceleration == maxAcceleration)&&(identical(other.maxAccelTime, maxAccelTime) || other.maxAccelTime == maxAccelTime)&&(identical(other.maxAccelTimePrecision, maxAccelTimePrecision) || other.maxAccelTimePrecision == maxAccelTimePrecision)&&(identical(other.periods, periods) || other.periods == periods)&&(identical(other.observationCount, observationCount) || other.observationCount == observationCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,stationCode,intensityClass,instrumentalIntensity,observedAt,maxAcceleration,maxAccelTime,periods,observationCount);
+int get hashCode => Object.hash(runtimeType,stationCode,intensityClass,instrumentalIntensity,observedAt,observedAtPrecision,maxAcceleration,maxAccelTime,maxAccelTimePrecision,periods,observationCount);
 
 @override
 String toString() {
-  return 'EarthquakeCatalogStationRecord(stationCode: $stationCode, intensityClass: $intensityClass, instrumentalIntensity: $instrumentalIntensity, observedAt: $observedAt, maxAcceleration: $maxAcceleration, maxAccelTime: $maxAccelTime, periods: $periods, observationCount: $observationCount)';
+  return 'EarthquakeCatalogStationRecord(stationCode: $stationCode, intensityClass: $intensityClass, instrumentalIntensity: $instrumentalIntensity, observedAt: $observedAt, observedAtPrecision: $observedAtPrecision, maxAcceleration: $maxAcceleration, maxAccelTime: $maxAccelTime, maxAccelTimePrecision: $maxAccelTimePrecision, periods: $periods, observationCount: $observationCount)';
 }
 
 
@@ -1126,7 +1130,7 @@ abstract mixin class _$EarthquakeCatalogStationRecordCopyWith<$Res> implements $
   factory _$EarthquakeCatalogStationRecordCopyWith(_EarthquakeCatalogStationRecord value, $Res Function(_EarthquakeCatalogStationRecord) _then) = __$EarthquakeCatalogStationRecordCopyWithImpl;
 @override @useResult
 $Res call({
- String stationCode, ShindoDbIntensityClass intensityClass, double? instrumentalIntensity, DateTime? observedAt, EarthquakeCatalogMaxAcceleration? maxAcceleration, DateTime? maxAccelTime, EarthquakeCatalogPeriods? periods, int? observationCount
+ String stationCode, ShindoDbIntensityClass intensityClass, double? instrumentalIntensity, DateTime? observedAt, EarthquakeCatalogTimePrecision? observedAtPrecision, EarthquakeCatalogMaxAcceleration? maxAcceleration, DateTime? maxAccelTime, EarthquakeCatalogTimePrecision? maxAccelTimePrecision, EarthquakeCatalogPeriods? periods, int? observationCount
 });
 
 
@@ -1143,15 +1147,17 @@ class __$EarthquakeCatalogStationRecordCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeCatalogStationRecord
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? stationCode = null,Object? intensityClass = null,Object? instrumentalIntensity = freezed,Object? observedAt = freezed,Object? maxAcceleration = freezed,Object? maxAccelTime = freezed,Object? periods = freezed,Object? observationCount = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? stationCode = null,Object? intensityClass = null,Object? instrumentalIntensity = freezed,Object? observedAt = freezed,Object? observedAtPrecision = freezed,Object? maxAcceleration = freezed,Object? maxAccelTime = freezed,Object? maxAccelTimePrecision = freezed,Object? periods = freezed,Object? observationCount = freezed,}) {
   return _then(_EarthquakeCatalogStationRecord(
 stationCode: null == stationCode ? _self.stationCode : stationCode // ignore: cast_nullable_to_non_nullable
 as String,intensityClass: null == intensityClass ? _self.intensityClass : intensityClass // ignore: cast_nullable_to_non_nullable
 as ShindoDbIntensityClass,instrumentalIntensity: freezed == instrumentalIntensity ? _self.instrumentalIntensity : instrumentalIntensity // ignore: cast_nullable_to_non_nullable
 as double?,observedAt: freezed == observedAt ? _self.observedAt : observedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,maxAcceleration: freezed == maxAcceleration ? _self.maxAcceleration : maxAcceleration // ignore: cast_nullable_to_non_nullable
+as DateTime?,observedAtPrecision: freezed == observedAtPrecision ? _self.observedAtPrecision : observedAtPrecision // ignore: cast_nullable_to_non_nullable
+as EarthquakeCatalogTimePrecision?,maxAcceleration: freezed == maxAcceleration ? _self.maxAcceleration : maxAcceleration // ignore: cast_nullable_to_non_nullable
 as EarthquakeCatalogMaxAcceleration?,maxAccelTime: freezed == maxAccelTime ? _self.maxAccelTime : maxAccelTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,periods: freezed == periods ? _self.periods : periods // ignore: cast_nullable_to_non_nullable
+as DateTime?,maxAccelTimePrecision: freezed == maxAccelTimePrecision ? _self.maxAccelTimePrecision : maxAccelTimePrecision // ignore: cast_nullable_to_non_nullable
+as EarthquakeCatalogTimePrecision?,periods: freezed == periods ? _self.periods : periods // ignore: cast_nullable_to_non_nullable
 as EarthquakeCatalogPeriods?,observationCount: freezed == observationCount ? _self.observationCount : observationCount // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
