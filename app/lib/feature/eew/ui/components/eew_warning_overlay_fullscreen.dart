@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/util/jma_depth_formatter.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_display_model.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_top_stripe.dart';
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_arrival_formatter.dart';
@@ -36,11 +37,9 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
       null => '不明',
       final double magnitude => 'M${magnitude.toStringAsFixed(1)}',
     };
-    final depthText = switch (displayModel.depth) {
-      null => '不明',
-      0 => 'ごく浅い',
-      final int depth => '${depth}km',
-    };
+    final depthText = const JmaDepthFormatter().format(
+      depth: displayModel.depth,
+    );
 
     return BlockSemantics(
       child: Semantics(

@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/jma_depth_formatter.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -175,10 +176,10 @@ extension _EewTableColumnEx on _EewTableColumn {
       isNumeric: true,
     ),
     .epicenterDepth => _EewTableColumnValue(
-      value: switch (eew.isPlum ? null : eew.hypocenter?.depth) {
-        final depth? => '${depth}km',
-        null => '',
-      },
+      value: const JmaDepthFormatter().format(
+        depth: eew.isPlum ? null : eew.hypocenter?.depth,
+        unknownText: '',
+      ),
       isNumeric: true,
     ),
     .maxIntensity => _EewTableColumnValue(

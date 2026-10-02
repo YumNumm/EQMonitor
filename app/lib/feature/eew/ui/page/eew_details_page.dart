@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/jma_depth_formatter.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:material_ui/material_ui.dart';
@@ -120,7 +121,9 @@ class _EewCard extends StatelessWidget {
             Text('発生時刻: $originTime'),
             Text('報告時刻: $reportTime'),
             Text('震源地: ${hypocenter?.name ?? "不明"}'),
-            Text('深さ: ${hypocenter?.depth ?? "不明"}km'),
+            Text(
+              '深さ: ${const JmaDepthFormatter().format(depth: hypocenter?.depth)}',
+            ),
             Text('マグニチュード: ${hypocenter?.magnitude ?? "不明"}'),
             Text(
               '最大予測震度: ${eew.forecastIntensity?.maxIntensity?.label ?? '不明'}${eew.forecastIntensity?.maxIntensityIsOver ?? false ? '程度以上' : ''}',

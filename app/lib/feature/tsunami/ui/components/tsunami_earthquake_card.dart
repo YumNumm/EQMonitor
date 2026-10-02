@@ -25,9 +25,12 @@ class TsunamiEarthquakeCard extends StatelessWidget {
     final magnitudeStr = hypo.magnitudeType == MagnitudeType.normal
         ? 'M${hypo.magnitudeValue}'
         : 'M不明';
-    final depthStr = hypo.depthType == DepthType.normal
-        ? '深さ${hypo.depthValue}km'
-        : '深さ不明';
+    final depthStr = switch ((hypo.depthType, hypo.depthValue)) {
+      (DepthType.shallow, _) => '深さごく浅い',
+      (DepthType.over700, _) => '深さ700km以上',
+      (DepthType.normal, final value?) => '深さ${value}km',
+      _ => '深さ不明',
+    };
     final timeStr = earthquake.originTime.formatWithTz(
       DateTimeFormat.yearMonthDayHourMinute,
     );

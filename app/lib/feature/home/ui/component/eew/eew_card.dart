@@ -688,18 +688,19 @@ class _DepthRow extends StatelessWidget {
           ),
         ),
         Text(
-          '$depth',
+          depth == 0 ? 'ごく浅い' : '$depth',
           style: typography.titleLarge.copyWith(
             fontFamily: codeFontFamily,
             letterSpacing: -0.5,
           ),
         ),
-        Text(
-          ' km',
-          style: typography.labelSmall.copyWith(
-            color: colorTheme.onSurfaceVariant,
+        if (depth != 0)
+          Text(
+            depth == 700 ? ' km以上' : ' km',
+            style: typography.labelSmall.copyWith(
+              color: colorTheme.onSurfaceVariant,
+            ),
           ),
-        ),
       ],
     );
   }
