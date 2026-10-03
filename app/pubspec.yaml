@@ -194,6 +194,9 @@ dependencies:
   m3e_core: ^1.1.4
   pmtiles_v3:
     path: ../packages/pmtiles_v3
+  native_dio_adapter: ^1.8.0
+  cupertino_http: ^3.1.0
+  cronet_http: ^1.10.0
 
 dev_dependencies:
   build_runner: ^2.11.1
