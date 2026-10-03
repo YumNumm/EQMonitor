@@ -15,7 +15,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-const _legendIconSize = 32 * 0.9;
+const _legendIconSize = 24.0;
 
 class EarthquakeHistoryMapLegend extends StatelessWidget {
   const new({
