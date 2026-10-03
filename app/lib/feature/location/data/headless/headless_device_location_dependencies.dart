@@ -5,6 +5,7 @@ import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/data/network/native_dio_factory.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
@@ -63,20 +64,27 @@ class const HeadlessDeviceLocationDependencies({
 }
 
 class const HeadlessDeviceLocationTaskFactory() {
-  Future<HeadlessTaskResult> run({required String taskUpdateId}) {
-    return HeadlessDeviceLocationRunner(
-      bridge: const BackgroundLocationTrackerHeadlessBridge(),
-      createSyncService: () => HeadlessDeviceLocationSyncServiceLoader(
-        SharedPreferencesAsync(),
-      ).load(),
-      recordTerminalFailure: ({required updateId, required statusCode}) =>
-          HeadlessDeviceLocationDiagnosticRecorder(
-            SharedPreferencesAsync(),
-          ).recordTerminalFailure(
-            updateId: updateId,
-            statusCode: statusCode,
-          ),
-    ).run(taskUpdateId: taskUpdateId);
+  Future<HeadlessTaskResult> run({required String taskUpdateId}) async {
+    final loader = HeadlessDeviceLocationSyncServiceLoader(
+      SharedPreferencesAsync(),
+    );
+    try {
+      return await HeadlessDeviceLocationRunner(
+        bridge: BackgroundLocationTrackerHeadlessBridge(
+          beforeComplete: loader.close,
+        ),
+        createSyncService: loader.load,
+        recordTerminalFailure: ({required updateId, required statusCode}) =>
+            HeadlessDeviceLocationDiagnosticRecorder(
+              SharedPreferencesAsync(),
+            ).recordTerminalFailure(
+              updateId: updateId,
+              statusCode: statusCode,
+            ),
+      ).run(taskUpdateId: taskUpdateId);
+    } finally {
+      await loader.close();
+    }
   }
 }
 
@@ -84,6 +92,14 @@ class HeadlessDeviceLocationSyncServiceLoader {
   new(this.preferences);
 
   final SharedPreferencesAsync preferences;
+  Dio? _dio;
+
+  Future<void> close() async {
+    final dio = _dio;
+    if (dio != null) {
+      await const NativeDioFactory().close(dio);
+    }
+  }
 
   Future<DeviceLocationSyncService> load() async {
     final stateRepository = SharedPreferencesDeviceLocationSyncStateRepository(
@@ -103,6 +119,7 @@ class HeadlessDeviceLocationSyncServiceLoader {
       identity: identity,
       deviceToken: deviceToken,
     );
+    _dio = dio;
     return HeadlessDeviceLocationSyncServiceBuilder.build(
       scope: scope,
       stateRepository: stateRepository,
@@ -339,7 +356,9 @@ class const HeadlessApiDioFactory() {
     required HeadlessApiIdentity identity,
     required String? deviceToken,
   }) {
-    final dio = Dio(DioBaseOptionsFactory.build(baseUrl: baseUrl));
+    final dio = const NativeDioFactory().build(
+      options: DioBaseOptionsFactory.build(baseUrl: baseUrl),
+    );
     dio.options
       ..headers.addAll({
         HttpHeaders.userAgentHeader: identity.userAgent,

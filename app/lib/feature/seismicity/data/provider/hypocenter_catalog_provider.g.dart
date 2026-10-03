@@ -110,7 +110,7 @@ final class HypocenterArchiveAvailableProvider
 }
 
 String _$hypocenterArchiveAvailableHash() =>
-    r'6f8d5edf15c21f5827f382144ad4dad5e4d387d5';
+    r'8e3d30b2ce213636d6a178e76d7a6e28cfcd7419';
 
 final class HypocenterArchiveAvailableFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<void>, HypocenterArchive> {

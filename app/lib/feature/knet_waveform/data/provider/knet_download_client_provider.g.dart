@@ -61,4 +61,4 @@ final class KnetDownloadClientProvider
 }
 
 String _$knetDownloadClientHash() =>
-    r'1052415c1f1259a1043870504adb764c0ac002a7';
+    r'7e2d9a19dbff33f3579493b9d4fb521b0d64094c';

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/data/network/native_dio_factory.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/dio_base_options.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
@@ -14,10 +15,12 @@ part 'user_api_client.g.dart';
 @Riverpod(keepAlive: true)
 Future<UserApiGateway> userApiClient(Ref ref) async {
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
+  final dio = const NativeDioFactory().build(
+    options: DioBaseOptionsFactory.build(baseUrl: telegramUrl.restApiUrl),
+  );
+  ref.onDispose(() => dio.close(force: true));
   return UserApiClient(
-    dio: Dio(
-      DioBaseOptionsFactory.build(baseUrl: telegramUrl.restApiUrl),
-    ),
+    dio: dio,
     jwtProvider: await ref.watch(userJwtServiceProvider.future),
     invalidateSession: () =>
         ref.read(authSessionProvider.notifier).invalidate(),

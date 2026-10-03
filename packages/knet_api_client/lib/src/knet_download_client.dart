@@ -162,9 +162,9 @@ class KnetDownloadClient {
   /// Returns true if authentication succeeds.
   Future<bool> verifyAuthentication() async {
     try {
-      final response = await _dio.get<dynamic>(
+      final response = await _dio.get<List<int>>(
         'knet/',
-        options: Options(responseType: ResponseType.stream),
+        options: Options(responseType: ResponseType.bytes),
       );
       return response.statusCode == 200;
     } on DioException catch (e) {

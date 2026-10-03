@@ -7,5 +7,7 @@ part 'dio_provider.g.dart';
 @Riverpod(keepAlive: true)
 Future<Dio> dio(Ref ref) async {
   final factory = await ref.watch(apiDioFactoryProvider.future);
-  return factory.build();
+  final dio = factory.build();
+  ref.onDispose(() => dio.close(force: true));
+  return dio;
 }

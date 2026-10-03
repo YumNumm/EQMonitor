@@ -48,4 +48,4 @@ final class UserApiClientProvider
   }
 }
 
-String _$userApiClientHash() => r'428b997dc47908b1ccbec133345dc60c776e039b';
+String _$userApiClientHash() => r'da05dbea7785896dc10f138ec1d34c579bb69644';
