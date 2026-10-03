@@ -81,6 +81,11 @@ xcrun actool AppIcon-dev.icon \
 
 - 現行 `app/android/app/build.gradle.kts` は Java/Kotlin JVM 17、compileSdk 37。
   SDK・NDKの具体的な版は同ファイルと `mise.toml` を正本にする。
+- `cronet_http` の Play Services 経由では `cronet-api` / `cronet-shared` の
+  namespace が重複するため、AGP 9 の厳格な検査で Manifest 統合が失敗する。
+  [upstream issue #1932](https://github.com/dart-lang/http/issues/1932) が解消するまで
+  `gradle.properties` と `gradle.ci.properties` に `android.uniquePackageNames=false` を設定する。
+  配布 CI は後者を前者へコピーするため、両方の設定が必要。
 - AGP 9 の生成 assets は出力を `DirectoryProperty` として公開し、
   `androidComponents.onVariants` の `variant.sources.assets.addGeneratedSourceDirectory` へ登録する。
   `sourceSets.main.assets.srcDir(provider)` は使わない。Variant API がタスク依存も引き継ぐ。
