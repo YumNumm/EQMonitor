@@ -3,9 +3,9 @@
 import 'dart:async';
 
 import 'package:cache/cache.dart';
-import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/cache_only_api_client_provider.dart';
 import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
+import 'package:eqmonitor/core/data/network/native_dio_factory.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/http_cached_dio_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
@@ -135,13 +135,17 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
 
   Future<T> _fetchForceFresh(CachedOperationToken operation) async {
     final cachedDio = await ref.read(httpCachedDioProvider.future);
-    final dio = Dio(cachedDio.options);
+    final dio = const NativeDioFactory().build(options: cachedDio.options);
     dio.interceptors.add(ForceFreshInterceptor());
     dio.interceptors.addAll(cachedDio.interceptors);
-    return reconcile(
-      await fetch(ApiClient(dio)),
-      operation: operation,
-      source: CachedResultSource.fresh,
-    );
+    try {
+      return reconcile(
+        await fetch(ApiClient(dio)),
+        operation: operation,
+        source: CachedResultSource.fresh,
+      );
+    } finally {
+      await const NativeDioFactory().close(dio);
+    }
   }
 }

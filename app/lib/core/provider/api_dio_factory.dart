@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/data/network/native_dio_factory.dart';
 import 'package:eqmonitor/core/provider/api_user_agent_builder.dart';
 import 'package:eqmonitor/core/provider/chuck_provider.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
@@ -25,7 +26,9 @@ final class const ApiDioFactory({
   required final List<Interceptor> baseInterceptors,
 }) {
   Dio build({HttpCacheStore? httpCacheStore}) {
-    final dio = Dio(DioBaseOptionsFactory.build(baseUrl: baseUrl));
+    final dio = const NativeDioFactory().build(
+      options: DioBaseOptionsFactory.build(baseUrl: baseUrl),
+    );
     dio.options
       ..headers.addAll(headers)
       ..connectTimeout = const Duration(seconds: 10)
