@@ -8,12 +8,14 @@ class EarthquakeSortChips extends StatelessWidget {
     required this.sortBy,
     required this.sortOrder,
     required this.onChanged,
+    this.showRegionalIntensity = false,
     super.key,
   });
 
   final EarthquakeSortBy sortBy;
   final SortOrder sortOrder;
   final ValueChanged<EarthquakeSortBy> onChanged;
+  final bool showRegionalIntensity;
 
   static const options = [
     (EarthquakeSortBy.eventId, '発生時刻'),
@@ -24,13 +26,17 @@ class EarthquakeSortChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final availableOptions = [
+      if (showRegionalIntensity) (EarthquakeSortBy.regionalIntensity, '観測震度'),
+      ...options,
+    ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Wrap(
         spacing: 8,
         runSpacing: 4,
         children: [
-          for (final (value, label) in options)
+          for (final (value, label) in availableOptions)
             FilterChip(
               selected: sortBy == value,
               showCheckmark: false,

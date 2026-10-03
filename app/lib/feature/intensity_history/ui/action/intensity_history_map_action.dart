@@ -24,8 +24,8 @@ class const IntensityHistoryMapAction() {
   /// 地図タップを市区町村の選択として解釈する。
   ///
   /// ズームに依らずポリゴン判定で市区町村を特定する。都道府県・細分区域への
-  /// カメラ寄せは行わない。陸域外・所属都道府県を解決できない場合は選択を
-  /// 解除する。
+  /// カメラ寄せは行わず、市区町村の選択枠を詳細シートの上に収める。
+  /// 陸域外・所属都道府県を解決できない場合は選択を解除する。
   ///
   /// タップ地点の判定は Worker Isolate 上の
   /// [jmaMapAreaInformationCityInsideProvider] に委ね、UI スレッドを塞がない。
@@ -33,6 +33,7 @@ class const IntensityHistoryMapAction() {
     required WidgetRef ref,
     required BuildContext context,
     required Geographic point,
+    required MapController mapController,
   }) async {
     final prefectures = ref
         .read(parameterSetProvider)
@@ -56,6 +57,28 @@ class const IntensityHistoryMapAction() {
     if (target == null) {
       ref.read(intensityHistoryControllerProvider.notifier).deselectCity();
       return;
+    }
+    if (!context.mounted) {
+      return;
+    }
+    final bounds = city?.bounds;
+    if (bounds != null) {
+      await mapController.fitBounds(
+        bounds: LngLatBounds(
+          latitudeSouth: bounds.southWest.lat,
+          latitudeNorth: bounds.northEast.lat,
+          longitudeWest: bounds.southWest.lng,
+          longitudeEast: bounds.northEast.lng,
+        ),
+        padding: EdgeInsets.fromLTRB(
+          24,
+          MediaQuery.paddingOf(context).top + 96,
+          24,
+          MediaQuery.sizeOf(context).height *
+                  CityDetailModalAction.initialChildSize +
+              24,
+        ),
+      );
     }
     if (!context.mounted) {
       return;
