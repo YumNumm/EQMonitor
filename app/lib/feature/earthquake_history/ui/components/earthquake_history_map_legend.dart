@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart'
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
@@ -13,6 +14,8 @@ import 'package:flutter/physics.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
+
+const _legendIconSize = 24.0;
 
 class EarthquakeHistoryMapLegend extends StatelessWidget {
   const new({
@@ -66,13 +69,23 @@ class _JmaLegend extends StatelessWidget {
             null => <JmaIntensity>[],
           };
     levels.sort((a, b) => b.orderIndex.compareTo(a.orderIndex));
+    final estimatedColors = context.designSystem.colorTheme.estimatedIntensity;
     return _AnimatedLegend(
       label: estimated ? '推計震度' : '震度',
       entries: [
-        for (final level in levels)
+        for (final level in levels.where(
+          (level) => level != JmaIntensity.fiveUnknown,
+        ))
           (
             label: '震度${level.mainText}${level.suffix}',
-            icon: JmaIntensityIcon(intensity: level, type: .filled, size: 32),
+            icon: JmaIntensityIcon(
+              intensity: level,
+              type: .filled,
+              size: _legendIconSize,
+              colorEntry: estimated
+                  ? estimatedColors.fromJmaIntensity(level)
+                  : null,
+            ),
           ),
       ],
     );
@@ -102,7 +115,7 @@ class _LpgmLegend extends StatelessWidget {
             icon: JmaLpgmIntensityIcon(
               intensity: level,
               type: .filled,
-              size: 32,
+              size: _legendIconSize,
             ),
           ),
       ],
@@ -125,24 +138,27 @@ class _ShindoDbLegend extends StatelessWidget {
         for (final cls in classes.where((cls) => cls.colorJmaIntensity != null))
           (
             label: cls.sectionTitle,
-            icon: ShindoDbIntensityClassIcon(intensityClass: cls, size: 32),
+            icon: ShindoDbIntensityClassIcon(
+              intensityClass: cls,
+              size: _legendIconSize,
+            ),
           ),
         if (classes.any((cls) => cls.colorJmaIntensity == null))
           (
             label: '震度不明',
             icon: Container(
-              width: 32,
-              height: 32,
+              width: _legendIconSize,
+              height: _legendIconSize,
               decoration: BoxDecoration(
                 color: colorTheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(_legendIconSize / 4),
               ),
               child: Center(
                 child: Text(
                   '?',
                   style: TextStyle(
                     color: colorTheme.onSurface,
-                    fontSize: 16,
+                    fontSize: _legendIconSize / 2,
                     fontWeight: .bold,
                   ),
                 ),
@@ -192,9 +208,9 @@ class _AnimatedLegend extends HookWidget {
     }
 
     final visibleStackCount = entries.length.clamp(1, 3);
-    final stackedWidth = 32 + (visibleStackCount - 1) * spacing.sm;
+    final stackedWidth = _legendIconSize + (visibleStackCount - 1) * spacing.sm;
     final expandedWidth =
-        entries.length * 32 + (entries.length - 1) * spacing.xs;
+        entries.length * _legendIconSize + (entries.length - 1) * spacing.xs;
     return Semantics(
       expanded: expanded.value,
       child: M3EButton(
@@ -244,7 +260,7 @@ class _AnimatedLegend extends HookWidget {
                 final progress = animation.value;
                 return SizedBox(
                   width: lerpDouble(stackedWidth, expandedWidth, progress),
-                  height: 32,
+                  height: _legendIconSize,
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
@@ -252,7 +268,7 @@ class _AnimatedLegend extends HookWidget {
                         Positioned(
                           left: lerpDouble(
                             index.clamp(0, 2) * spacing.sm,
-                            index * (32 + spacing.xs),
+                            index * (_legendIconSize + spacing.xs),
                             progress,
                           ),
                           child: Opacity(
