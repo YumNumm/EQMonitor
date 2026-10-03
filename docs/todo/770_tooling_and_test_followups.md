@@ -11,6 +11,8 @@
 
 ## 770: 既存テスト失敗の再確認
 
+- Home の地図レイヤー、`map_operation_queue_scope_test.dart`、`test/core/util/map` を含む一括実行では、途中から進捗が止まる場合がある。テスト本体の待機と Flutter main のコンパイル待機を切り分け、単独実行と `--concurrency=1` で再確認する。途中で停止した実行結果は完走の証拠に使わない。
+
 - 通知の `slot_detail_page_test.dart` の警報設定2件と `notification_preset_selector_test.dart` の通知許可ダイアログ1件は、地域選択共通化時に変更前の `4e5708b38` でも失敗を再現した。期待する文言と現行UIを照合し、正しい仕様にテストを合わせる。通知・課金の本番挙動をテスト都合で変更しない。
 
 - `app/` で `mise exec -- flutter test test --dart-define=CI=true --file-reporter=json:test_report.log` を実行する。repository rootから `app/test` を指定するとasset rootが変わるため比較しない。

@@ -46,6 +46,11 @@
 - Intensity History と Earthquake History details は render hit で layer を識別した後、地理座標から最近傍 region/city/station を解決する二段階 query を fixture 化する。Home の gate にはしない。
 - 全 surface 共通の完了条件: layer順、Light/Dark、loading/degraded/error、camera/gesture/fitBounds、必要な hit test が一致する。全 consumer/test/debug route 移行後に MapLibre package、event/queue/style helper、platform asset 連携を削除する。`lockBearing` 設定/UI は rotation policy 決定まで維持する。
 
+## 780: EEW と強震モニタの描画順の実機確認
+
+- Home / Live Monitor で、P/S 波の線と震源マーク（点滅中を含む）が強震モニタ観測点より上に表示されることを iOS/Android で確認する。EEW 開始・終了、marker サイズ・枠設定変更、強震モニタ再有効化、P/S 波の表示切替、テーマ変更後も同じ順序を保つことを確認する。
+- S 波の塗りつぶしの位置・透明度と、警報区域の塗りつぶしが観測点の下に表示されることを確認する。native の可視出力は未検証。
+
 ## 780: 共通地域選択の実機確認
 
 - `app/lib/feature/region_selection` の一覧・地図・単一／複数選択は自動テストで確認する。iOS/Android の native 地図表示と hit test は未検証。

@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:eqmonitor/feature/home/data/provider/kyoshin_monitor_points_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -129,6 +130,7 @@ class _KyoshinMonitorObservationLayerBody extends HookConsumerWidget {
               markerType: markerType,
               hasActiveEew: hasActiveEew,
             ),
+            belowLayerId: BaseLayer.foregroundOverlayAnchor.name,
           );
           isLayerInitialized.value = true;
         }),
