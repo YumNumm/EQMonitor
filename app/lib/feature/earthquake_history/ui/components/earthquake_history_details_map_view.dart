@@ -23,7 +23,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_intensity_tree_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/action/earthquake_history_map_fit_bounds_action.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_camera.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_legend.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_popup.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_sheet.dart';
@@ -356,20 +355,6 @@ class _MapContent extends HookConsumerWidget {
             ),
           ),
         ),
-
-        // 震度凡例（右下）
-        if (showingDb || !showEstimated)
-          Positioned(
-            bottom: 8,
-            right: 8,
-            child: SafeArea(
-              child: EarthquakeHistoryMapLegend(
-                intensity: showingDb ? null : earthquake.intensity,
-                showingLpgmIntensity: showingLpgmIntensity,
-                shindoDbTree: showingDb ? dbTree : null,
-              ),
-            ),
-          ),
       ],
     );
   }
