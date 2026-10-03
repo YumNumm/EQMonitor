@@ -1,9 +1,9 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/feature/knet_waveform/data/data_source/knet_authentication_data_source.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_credentials_provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:knet_api_client/knet_api_client.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -97,11 +97,12 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
                           isVerifying.value = true;
                           verifyResult.value = null;
                           try {
-                            final client = KnetDownloadClient(
-                              userId: userId,
-                              password: password,
-                            );
-                            final ok = await client.verifyAuthentication();
+                            final ok =
+                                await const KnetAuthenticationDataSource()
+                                    .verify(
+                                      userId: userId,
+                                      password: password,
+                                    );
                             verifyResult.value = ok;
                           } on Exception catch (_) {
                             verifyResult.value = false;
