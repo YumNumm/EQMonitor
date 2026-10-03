@@ -65,6 +65,11 @@
 - `app/lib/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart` の trailing を種別対応し、噴火時は省略または短い種別labelにする。文言を決めてから実装する。
 - 完了条件: 履歴一覧/近傍地震カードの両方で噴火を地震のM欠損と誤表示せず、通常地震の既存表示は維持する。関連既存テストを確認する。
 
+## 400: 現在地震度カードの市区町村名
+
+- 対象: `app/lib/feature/earthquake_history/ui/components/current_location_intensity_card.dart`。iOS / Android 実機で、江戸川区・府中市・利島村の見出しが「東京都江戸川区」「東京都府中市」「東京都利島村」となり、観測点名と震度表示を維持することを確認する。実機表示は未検証。
+- 東京都以外にも、気象庁の識別用名称を連結した「青森県青森南部町」「大阪府大阪堺市堺区」などが表示されうる。正式市区町村名との対応を地域コードで照合し、表示方針を決める。完了条件: 識別用の県名接頭辞と政令市名の省略を適切に扱い、「青森市」「大阪狭山市」などの正式名称を損なわない。
+
 ## 400: iOS swipe back と PopScope
 
 - 対象: `app/lib/feature/earthquake_history/ui/earthquake_history_page.dart`、`intensity_history/ui/intensity_history_page.dart`、`live_monitor/ui/page/live_monitor_page.dart`（後2つは同feature root）。

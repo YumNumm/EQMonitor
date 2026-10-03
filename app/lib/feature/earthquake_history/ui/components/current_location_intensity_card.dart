@@ -98,8 +98,16 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
             .firstWhereOrNull((e) => e.city.code == effectiveCityCode),
       ),
     );
+    final cityName = cityParameter?.city.name.ja;
+    // 気象庁の東京都内の名称には識別用の「東京」が付くため、都名と重ねない。
+    final cityDisplayName =
+        cityName != null &&
+            cityParameter?.prefecture.code == '13' &&
+            cityName.startsWith('東京')
+        ? cityName.substring('東京'.length)
+        : cityName;
     final cityParameterName = cityParameter != null
-        ? '${cityParameter.prefecture.name.ja}${cityParameter.city.name.ja}'
+        ? '${cityParameter.prefecture.name.ja}$cityDisplayName'
         : null;
     final regionParameter = ref.watch(
       parameterSetProvider.select(
