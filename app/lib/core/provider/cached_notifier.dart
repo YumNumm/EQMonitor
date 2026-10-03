@@ -145,7 +145,7 @@ mixin CachedNotifier<T> on $AsyncNotifier<T> {
         source: CachedResultSource.fresh,
       );
     } finally {
-      await const NativeDioFactory().close(dio);
+      dio.close(force: true);
     }
   }
 }

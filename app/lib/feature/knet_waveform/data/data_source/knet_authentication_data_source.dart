@@ -14,7 +14,7 @@ final class const KnetAuthenticationDataSource() {
         dio: dio,
       ).verifyAuthentication();
     } finally {
-      await const NativeDioFactory().close(dio);
+      dio.close(force: true);
     }
   }
 }

@@ -5,10 +5,10 @@
 ## Dio のネイティブ HTTP 通信
 
 - アプリの Dio は `app/lib/core/data/network/native_dio_factory.dart` の `NativeDioFactory` で生成する。API・認証・キャッシュ再取得・強震モニタ・Hi-net・地震活動・headless 通信に共通適用し、K-NET のダウンロードと認証確認にも生成済み Dio を渡す。
-- `native_dio_adapter 1.8.0` を使用し、iOS/macOS は URLSession、Android は HTTP/2 と QUIC を有効にした Cronet を使う。実際の HTTP/2・HTTP/3 使用は接続先・OS・回線の対応で決まる。
+- `native_dio_adapter 1.8.0` の `NativeAdapter` を Dio の `httpClientAdapter` に直接設定する。iOS/macOS は URLSession、Android は HTTP/2 と QUIC を有効にした Cronet を使う。実際の HTTP/2・HTTP/3 使用は接続先・OS・回線の対応で決まる。
 - Android は [provider fallback](https://pub.dev/packages/native_dio_adapter#opt-in-cronet-provider-fallback-android) を有効にする。Cronet provider がすべて無効な場合だけ `IOHttpClientAdapter` に切り替え、通常の通信・TLS・タイムアウト・キャンセルエラーはそのまま返す。fallback 中は Dart の HTTP/1.1 通信になる。
-- ネイティブ HTTP cache は無効にし、URLSession の Cookie 自動保存・自動付与も無効にする。キャッシュと Cookie の管理は既存の Dio interceptor が担当する。provider 破棄時はその Dio の通信をキャンセルし、一時的な Dio と headless 通信は `NativeDioFactory.close` の完了を待つ。共通アダプターが native の終了を追跡してから接続を閉じ、headless は実行環境を破棄する完了通知の前に後片付けを終える。
-- 共通アダプターは送信準備からレスポンスヘッダー取得までを `connectTimeout + receiveTimeout` の期限で扱う。送信準備には既存の `sendTimeout` も適用し、レスポンス本文の無通信時間は Dio の `receiveTimeout` で扱う。Dart の標準アダプターとタイムアウト段階の区別が異なるため、設定値の一致だけで端末上の待ち時間やエラー分類の一致を判断しない。
+- ネイティブ HTTP cache は無効にし、URLSession の Cookie 自動保存・自動付与も無効にする。キャッシュと Cookie の管理は既存の Dio interceptor が担当する。provider 破棄時と一時的な通信の終了時は `dio.close(force: true)` を呼ぶ。headless も完了通知前に同じ方法で閉じる。
+- タイムアウト、キャンセル、接続の終了処理は Dio とプラグインに任せる。アプリ独自のリクエスト追跡、ストリームの読み続け、終了待ちやリトライは追加しない。ネイティブアダプターと Dart の標準アダプターではタイムアウト段階の区別が異なるため、設定値の一致だけで端末上の待ち時間やエラー分類の一致を判断しない。
 - `dart:io` を直接使う地図・推定震度アーカイブ取得、SDK の内部通信、Dart CLI の Dio はこのアプリ用 factory を通らない。端末での通信規格・認証・fallback・タイムアウト確認は [ビルド・配布の課題](../todo/950_build_and_release.md) に記録する。
 
 ## HTTP cache は明示的に選ぶ

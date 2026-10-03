@@ -83,7 +83,7 @@ class const HeadlessDeviceLocationTaskFactory() {
             ),
       ).run(taskUpdateId: taskUpdateId);
     } finally {
-      await loader.close();
+      loader.close();
     }
   }
 }
@@ -94,12 +94,7 @@ class HeadlessDeviceLocationSyncServiceLoader {
   final SharedPreferencesAsync preferences;
   Dio? _dio;
 
-  Future<void> close() async {
-    final dio = _dio;
-    if (dio != null) {
-      await const NativeDioFactory().close(dio);
-    }
-  }
+  void close() => _dio?.close(force: true);
 
   Future<DeviceLocationSyncService> load() async {
     final stateRepository = SharedPreferencesDeviceLocationSyncStateRepository(
