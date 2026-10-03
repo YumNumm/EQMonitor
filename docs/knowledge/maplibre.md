@@ -18,6 +18,7 @@
 
 - 同じ `belowLayerId` に追加すると後から追加した layer が上になる。順序に依存する layer 群は一括で下→上に構築し、`replaceMapStyleLayers` へ渡す。
 - 挿入アンカーは存在する `BaseLayer` を使う。`aboveLayerId` の web 制約にも注意する。
+- Home / Live Monitor の警報区域 fill と強震モニタ観測点は、常設の透明な `BaseLayer.foregroundOverlayAnchor` の下へ追加する。P/S 波の線と震源マークはその上に追加し、EEW 開始・終了、marker 設定変更、強震モニタ再有効化で観測点を作り直しても前景を隠さない。S 波 fill は従来の `areaForecastLocalEewLine` の下を維持する。
 - 震度色を持つ半透明の細分区域・市区町村 fill を重ねない。切替 zoom では下側の opacity を 0 にする。
 - iOS の zoom 依存 `interpolate` は式の最上位に置く。倍率は各 stop 値へ畳み込み、乗算式の内側へ zoom 式を入れない。
 - iOS の色 `match` は fork 側で型付きの `NSExpression(forMGLMatching:in:defaultValue:)` に変換する。Dart の式テストだけで native の色型変換を検証済みとしない。

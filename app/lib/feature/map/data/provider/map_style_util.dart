@@ -152,6 +152,12 @@ class MapStyleUtil {
             ],
           },
         },
+        // 観測点を再追加しても、EEWの線・震源より下に保つための常設アンカー。
+        {
+          'id': BaseLayer.foregroundOverlayAnchor.name,
+          'type': 'background',
+          'paint': {'background-opacity': 0},
+        },
       ],
     };
 
@@ -167,4 +173,5 @@ enum BaseLayer {
   areaForecastLocalEewLine,
   areaForecastLocalELine,
   areaInformationCityQuakeLine,
+  foregroundOverlayAnchor,
 }
