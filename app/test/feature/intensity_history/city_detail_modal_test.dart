@@ -392,13 +392,27 @@ void main() {
     await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
-    for (final label in ['発生時刻', 'M', '最大震度', '深さ']) {
+    for (final label in ['観測震度', '発生時刻', 'M', '最大震度', '深さ']) {
       expect(find.widgetWithText(FilterChip, label), findsOneWidget);
     }
 
     final initial = _RecordingEarthquakeHistoryNotifier.parameters.single;
     expect(initial.sortBy, EarthquakeSortBy.regionalIntensity);
     expect(initial.sortOrder, SortOrder.desc);
+    expect(
+      tester
+          .widget<FilterChip>(find.widgetWithText(FilterChip, '観測震度'))
+          .selected,
+      isTrue,
+    );
+
+    await tester.tap(find.widgetWithText(FilterChip, '観測震度'));
+    await tester.pumpAndSettle();
+
+    final byRegionalIntensity =
+        _RecordingEarthquakeHistoryNotifier.parameters.last;
+    expect(byRegionalIntensity.sortBy, EarthquakeSortBy.regionalIntensity);
+    expect(byRegionalIntensity.sortOrder, SortOrder.asc);
 
     await tester.tap(find.widgetWithText(FilterChip, 'M'));
     await tester.pumpAndSettle();

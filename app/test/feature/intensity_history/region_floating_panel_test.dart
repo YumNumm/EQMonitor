@@ -185,7 +185,7 @@ void main() {
         earthquakeHistoryProvider(
           const EarthquakeHistoryParameter.city(
             cityCode: '0410000',
-            sortBy: EarthquakeSortBy.eventId,
+            sortBy: EarthquakeSortBy.regionalIntensity,
             sortOrder: SortOrder.desc,
           ),
         ).overrideWith(_FakeEarthquakeHistoryNotifier.new),
