@@ -20,6 +20,11 @@
 - 優先順位の方針を決め、backend の候補選択を決定的にする。音と割り込みは選択した同じ候補から採用し、EEW 警報・Live Activity の別経路と混同しない。
 - [backend の既存 TODO](https://github.com/YumNumm/eqmonitor-backend/blob/a9a1d7987a0e4e8000d04ba3b464b1997e5f685f/docs/todo/250_notification_slots_minor_findings.md#L25-L30) の同値 tier に限らず、異なる対象震度の競合も対象にする。決定規則を修正するまでは UI で現在地優先・強い通知優先を保証しない。
 
+## 800: 通知トークン同期の実機確認
+
+- 対象: `app/lib/feature/devices/`。起動時の更新中表示が消え、登録・同期は継続することを iOS・Android 実機で確認する。未検証。
+- FCM・通知用 APNs・APNs Push-to-Start ごとに、同値で24時間未満は送信なし、変更時と24時間経過後は送信ありになることを再起動・復帰後の通信で確認する。失敗後の再試行とデバイス再登録も確認する。実機検証は未実施。
+
 ## 800: Android 前面通知の実機確認
 
 - 対象: `app/lib/core/fcm/local_notification_repository.dart`、`firebaseMessagingForegroundProvider`、通知タップ処理。
