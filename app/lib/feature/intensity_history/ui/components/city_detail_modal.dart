@@ -20,6 +20,8 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CityDetailModalAction {
+  static const initialChildSize = 0.6;
+
   Future<void> show(
     BuildContext context, {
     required String cityCode,
@@ -72,7 +74,7 @@ class _CityDetailModal extends HookConsumerWidget {
 
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.6,
+      initialChildSize: CityDetailModalAction.initialChildSize,
       minChildSize: 0.3,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
@@ -107,6 +109,7 @@ class _CityDetailModal extends HookConsumerWidget {
               child: EarthquakeSortChips(
                 sortBy: sort.value.sortBy,
                 sortOrder: sort.value.sortOrder,
+                showRegionalIntensity: true,
                 onChanged: (value) {
                   sort.value = sort.value.selecting(value);
                 },

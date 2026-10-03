@@ -46,6 +46,12 @@
 - `app/lib/core/router/` と onboarding/paywall の Hero は go_router が Flutter本体 MaterialApp を検出できず、素の `HeroController` となる問題を確認する。対応controllerの供給方法を決め、Hero軌跡を確認する。
 - 新たな material依存hook/localizations の導入時は型境界を確認する。既存の DefaultTabController、明示的delegate import、MaterialPageMixin は維持する。
 
+## 650: onboarding 権限読み取りの実機確認
+
+- 対象: `PermissionRepository.getNotificationPermission()` と onboarding の権限ステップ。
+- iOS 27.0 Simulatorで通知設定取得が未完了となり、通知サービス再起動で復帰する事象を確認。OSサービス側の根因は未確定。
+- iOS / Android実機で、通常の許可・拒否・復帰時再取得と、取得失敗時のエラー表示・再試行・戻る操作を確認する。実機検証は未実施。
+
 ## 650: onboarding 通知プリセットの build 中更新
 
 - 対象: `app/lib/feature/onboarding/ui/components/notification_settings_step_page.dart`、`app/lib/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart`。
