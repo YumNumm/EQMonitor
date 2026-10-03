@@ -1,5 +1,36 @@
 # Changelog (Beta)
 
+## [3.0.2-beta.1](https://github.com/YumNumm/EQMonitor/compare/v3.0.0...v3.0.2-beta.1) (2026-10-03)
+
+
+### Features
+
+* CronetとURLSessionの通信基盤を追加 ([44d2d6d](https://github.com/YumNumm/EQMonitor/commit/44d2d6da8ec826a257b11cf0367c9d71a57ba92c))
+* バックグラウンドと地震活動の通信をネイティブ化 ([1ac1e7c](https://github.com/YumNumm/EQMonitor/commit/1ac1e7c84ac51b9f1e124e7a80f7925d7b1f20cf))
+* 地震履歴のマーカー描画順を固定位置で制御 ([c90d976](https://github.com/YumNumm/EQMonitor/commit/c90d9762eb15eaa177ac4a4a6af3f17b19c09cd2))
+* 地震履歴詳細の表示設定を保存 ([153ed9a](https://github.com/YumNumm/EQMonitor/commit/153ed9a619041df4fc6e53f62487f337ad7a536f))
+* 地震履歴詳細の設定シートを追加 ([2405ceb](https://github.com/YumNumm/EQMonitor/commit/2405cebab150158c240e69701e2a6174e9830f43))
+* 詳細地図から表示設定を切り替え ([f2a9b0b](https://github.com/YumNumm/EQMonitor/commit/f2a9b0bbdf77dea21d04db06d00d801669142017))
+
+
+### Bug Fixes
+
+* AndroidのCronet Manifest統合エラーを回避 ([216bc80](https://github.com/YumNumm/EQMonitor/commit/216bc80bfef58e2f829604fe4bbb23153c487e1d))
+* EEWの線と震源を強震モニタ観測点の上に表示 ([1bc94c6](https://github.com/YumNumm/EQMonitor/commit/1bc94c65ed0e57f81b4fc4fe18db414fc44d27c3))
+* EEWの線と震源を強震モニタ観測点より前面に表示 ([d691583](https://github.com/YumNumm/EQMonitor/commit/d69158394de359609548201f33cbd033aab1735e))
+* アプリ名からβを削除して3.0.1を準備 ([d3f0471](https://github.com/YumNumm/EQMonitor/commit/d3f04715a7dcd88fe0e49e0915c48a3ab7117482))
+* アプリ名からβを削除して3.0.1を準備 ([7c04ea7](https://github.com/YumNumm/EQMonitor/commit/7c04ea79a8d0c7bab964ef06ed7cc74954150230))
+* カタログ時刻と加速度を原資料の精度で表示する ([b28f39d](https://github.com/YumNumm/EQMonitor/commit/b28f39dd7d8e23abe53c18599ebd94f6e41d0514))
+* カタログ時刻と加速度を原資料の精度で表示する ([6f112ac](https://github.com/YumNumm/EQMonitor/commit/6f112ac77aadbe10303d5ce038e12b8bf7f6b86c))
+* ネイティブ通信の終了を待って接続を破棄 ([c353d4c](https://github.com/YumNumm/EQMonitor/commit/c353d4cb38e4abdb2fc21addbb1f3db7920c5ae8))
+* 推計震度の観測点表示設定を分離 ([2d94323](https://github.com/YumNumm/EQMonitor/commit/2d94323f7be6bedd5e1a4692bad9722fe19c5fde))
+* 電文一覧と関連画面の深さをごく浅い表記に統一 ([2ca95dc](https://github.com/YumNumm/EQMonitor/commit/2ca95dcb4d23765c9ac529e02c10e80887de63d2))
+
+
+### Miscellaneous Chores
+
+* 次のリリースを3.0.2 beta1に指定 ([677e33e](https://github.com/YumNumm/EQMonitor/commit/677e33eba992836fc7b10e9539556f925777170f))
+
 ## [3.0.0](https://github.com/YumNumm/EQMonitor/compare/v3.0.0...v3.0.0) (2026-09-30)
 
 
