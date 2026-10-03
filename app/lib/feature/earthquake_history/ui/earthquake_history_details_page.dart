@@ -13,10 +13,12 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_teleg
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/estimated_intensity_notice_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_intensity_tree_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/collapsible_segmented_control.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/current_location_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_legend.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/estimated_intensity_notice_dialog.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/nearby_earthquake_card.dart';
@@ -164,6 +166,19 @@ class _LoadedContent extends HookConsumerWidget {
             child: BasicModalSheet(
               hasAppBar: false,
               expandToPane: onClose != null,
+              initialPositionOverlay: EarthquakeHistoryMapLegend(
+                intensity: showingDb ? null : earthquake.intensity,
+                displayMode: showingDb
+                    ? IntensityDisplayMode.jma
+                    : displayMode.value,
+                shindoDbTree: showingDb
+                    ? ref
+                          .watch(
+                            shindoDbIntensityTreeProvider(earthquake.eventId),
+                          )
+                          .value
+                    : null,
+              ),
               child: SingleChildScrollView(
                 physics: const BottomBouncingScrollPhysics(),
                 child: SafeArea(
