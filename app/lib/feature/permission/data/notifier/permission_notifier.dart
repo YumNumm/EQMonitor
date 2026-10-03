@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/permission/data/model/permission_state.dart';
 import 'package:eqmonitor/feature/permission/data/repository/permission_repository.dart';
 import 'package:flutter/widgets.dart';
@@ -22,7 +23,11 @@ class PermissionNotifier extends _$PermissionNotifier {
   Future<PermissionState> build() async {
     ref.listen(appLifecycleProvider, (_, next) async {
       if (next == AppLifecycleState.resumed) {
-        await _reload();
+        try {
+          await _reload();
+        } on Exception catch (error, stackTrace) {
+          talker.error('権限の再確認に失敗しました', error, stackTrace);
+        }
       }
     });
     return loadFromOs();
