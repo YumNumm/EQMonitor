@@ -1,5 +1,25 @@
 # Changelog (Beta)
 
+## [3.0.2-beta.2](https://github.com/YumNumm/EQMonitor/compare/v3.0.2-beta.1...v3.0.2-beta.2) (2026-10-03)
+
+
+### Features
+
+* Sheet移動量に連動する固定オーバーレイを追加 ([ba8aa59](https://github.com/YumNumm/EQMonitor/commit/ba8aa59aa9671f9f088880edc6e038f32ab98f31))
+* 地震詳細の震度凡例をM3Eでアニメーション表示 ([c01634b](https://github.com/YumNumm/EQMonitor/commit/c01634b51156192dc76a263297dcd74a99820ff3))
+
+
+### Bug Fixes
+
+* トークン同期を変更時または24時間経過時に限定 ([a3999e5](https://github.com/YumNumm/EQMonitor/commit/a3999e58a3454e26c048636bd4612c8ca11d36a1))
+* 最大震度マップの選択地域と並び順を表示 ([d1847ed](https://github.com/YumNumm/EQMonitor/commit/d1847ed23d880d0ee1a56da08eb75456eb3621f6))
+* 権限確認の無限待機を防ぎ再試行を追加 ([f612f93](https://github.com/YumNumm/EQMonitor/commit/f612f9332f50c75c66b6d4a2bca2ecd3f13505a9))
+* 現在地震度カードの東京都名の重複を解消 ([3fa37fa](https://github.com/YumNumm/EQMonitor/commit/3fa37fa9c9e680bccd8ff14a80d4602f6fe7e49f))
+* 起動時の通知設定更新バナーを非表示化 ([f97b515](https://github.com/YumNumm/EQMonitor/commit/f97b5150991c307721c2e5dfd809721eb7fb4164))
+* 通知トークンの種類別送信履歴を永続化 ([a6e47ab](https://github.com/YumNumm/EQMonitor/commit/a6e47ab59c7015e076dababac7d0a8da85abac92))
+* 震度凡例のアイコンを24に縮小 ([25d898a](https://github.com/YumNumm/EQMonitor/commit/25d898af032abf5db1af372e2e0c4aaf9dfce9e9))
+* 震度凡例のサイズと重なり順と推計配色を調整 ([c60fbc5](https://github.com/YumNumm/EQMonitor/commit/c60fbc5b35380e5dcfad23a056a12b8fa2870020))
+
 ## [3.0.2-beta.1](https://github.com/YumNumm/EQMonitor/compare/v3.0.0...v3.0.2-beta.1) (2026-10-03)
 
 
