@@ -127,30 +127,31 @@ void main() {
     },
   );
 
-  test('same token is upserted once in each fresh app session', () async {
-    SharedPreferences.setMockInitialValues({
-      SharedPreferencesKey.deviceProvisioned.key: true,
-    });
-    final prefs = await SharedPreferences.getInstance();
-    final first = _createHarness(prefs: prefs);
-    await first.start();
-    first.tokens.add(const NotificationToken(fcmToken: 'same-token'));
-    await first.waitFor((snapshot) => snapshot.fcm is SyncedTokenState);
-    await first.dispose();
+  test(
+    'same token is not upserted again in a fresh app session within a day',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        SharedPreferencesKey.deviceProvisioned.key: true,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final first = _createHarness(prefs: prefs);
+      await first.start();
+      first.tokens.add(const NotificationToken(fcmToken: 'same-token'));
+      await first.waitFor((snapshot) => snapshot.fcm is SyncedTokenState);
+      await first.dispose();
 
-    final second = _createHarness(prefs: prefs);
-    await second.start();
-    second.tokens.add(const NotificationToken(fcmToken: 'same-token'));
-    await second.waitFor((snapshot) => snapshot.fcm is SyncedTokenState);
-    await second.dispose();
+      final second = _createHarness(prefs: prefs);
+      await second.start();
+      second.tokens.add(const NotificationToken(fcmToken: 'same-token'));
+      await second.waitFor((snapshot) => snapshot.fcm is SyncedTokenState);
+      await second.dispose();
 
-    expect(first.repository.calls, [
-      (kind: PushTokenKind.fcm, token: 'same-token'),
-    ]);
-    expect(second.repository.calls, [
-      (kind: PushTokenKind.fcm, token: 'same-token'),
-    ]);
-  });
+      expect(first.repository.calls, [
+        (kind: PushTokenKind.fcm, token: 'same-token'),
+      ]);
+      expect(second.repository.calls, isEmpty);
+    },
+  );
 
   test(
     'startup provisions an already-required device and accepts initial token',
