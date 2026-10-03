@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
+import 'package:eqmonitor/core/data/network/native_dio_factory.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/cached_notifier.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -45,21 +46,25 @@ Future<void> hypocenterArchiveAvailable(
   Ref ref,
   HypocenterArchive archive,
 ) async {
-  final result = await HypocenterArchiveProbe(
-    dio: Dio(
-      BaseOptions(
-        connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 10),
+  final dio = const NativeDioFactory().build(
+    options: BaseOptions(
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ),
+  );
+  try {
+    final result = await HypocenterArchiveProbe(dio: dio)
+        .probe(url: archive.url);
+    return switch (result) {
+      Success() => null,
+      Failure(:final exception, :final stackTrace) => Error.throwWithStackTrace(
+        exception,
+        stackTrace ?? StackTrace.current,
       ),
-    ),
-  ).probe(url: archive.url);
-  return switch (result) {
-    Success() => null,
-    Failure(:final exception, :final stackTrace) => Error.throwWithStackTrace(
-      exception,
-      stackTrace ?? StackTrace.current,
-    ),
-  };
+    };
+  } finally {
+    await const NativeDioFactory().close(dio);
+  }
 }
 
 @riverpod

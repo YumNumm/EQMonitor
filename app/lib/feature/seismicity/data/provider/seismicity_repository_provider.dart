@@ -2,6 +2,7 @@ import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/http_cache_disabled_provider.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
+import 'package:eqmonitor/core/data/network/native_dio_factory.dart';
 import 'package:eqmonitor/core/provider/dio_base_options.dart';
 import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -12,7 +13,10 @@ part 'seismicity_repository_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<Dio> seismicityGeoJsonDio(Ref ref) async {
-  final dio = Dio(DioBaseOptionsFactory.build(baseUrl: ''));
+  final dio = const NativeDioFactory().build(
+    options: DioBaseOptionsFactory.build(baseUrl: ''),
+  );
+  ref.onDispose(() => dio.close(force: true));
   dio.options.connectTimeout = const Duration(milliseconds: 10000);
   dio.options.sendTimeout = const Duration(milliseconds: 10000);
   final disabled = await ref.watch(httpCacheDisabledProvider.future);
