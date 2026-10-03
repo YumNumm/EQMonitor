@@ -17,6 +17,12 @@
 - プリセット初期化の同期callback問題は[UI残件](../todo/800_ui_and_navigation.md)。
   `NotificationPresetSelector`のuseEffect内onChangedは現コードにも存在し、実機再現は未実施。
 
+## 現在地の市区町村名
+
+- `CurrentLocationIntensityCard` は都道府県名と市区町村名を組み合わせて表示する。東京都（コード `13`）では、市区町村名の先頭の識別用「東京」を表示時だけ除く。
+- 同梱 `earthquake_stations.json` では東京23区・府中市・利島村の25件が該当する（2026-10-04確認）。気象庁の原名称・地域コード・観測点名は維持する。
+- 都道府県名に似た接頭辞を全国一律に削らない。「青森市」「大阪狭山市」のように正式名称にも同じ文字を含む自治体がある。東京都以外の表示名の検討と実機確認は [UI残課題](../todo/800_ui_and_navigation.md) を参照する。
+
 ## 震度別設定の適用範囲
 
 - 通知する地域の一覧・地図・保存値は、地震情報の細分区域 `AreaForecastLocalE` に揃える。Asset Pack の `earthquake_stations.json` の地域・市区町村階層を使い、市区町村を選んだ場合も親の3桁コードを保存する。神奈川県東部は `360`、西部は `361`。`AreaForecastLocalEEW` の神奈川 `9140` は通知スロットに使用しない。既存設定の自動移行・補正は行わない。
