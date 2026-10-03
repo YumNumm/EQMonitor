@@ -63,8 +63,23 @@ class _PermissionsStepPage extends HookConsumerWidget {
     );
 
     return permissionState.when(
+      skipLoadingOnRefresh: false,
       loading: () => const Center(child: AccessibleCircularProgressIndicator()),
-      error: (error, stackTrace) => Center(child: Text('権限の確認に失敗しました: $error')),
+      error: (error, stackTrace) => ListView(
+        padding: EdgeInsets.symmetric(vertical: designSystem.spacing.xl),
+        children: [
+          ErrorCard(
+            title: '権限の確認に失敗しました',
+            error: error,
+            stackTrace: stackTrace,
+            suffixMessage: error is TimeoutException
+                ? '端末から権限の確認結果が返りませんでした。再試行してください。'
+                : null,
+            onReload: () async => ref.invalidate(permissionProvider),
+            showLoadingOverlayOnReload: false,
+          ),
+        ],
+      ),
       data: (state) => Padding(
         padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
         child: ListView(
