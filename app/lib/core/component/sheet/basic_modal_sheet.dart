@@ -78,7 +78,6 @@ class BasicModalSheet extends HookWidget {
               ? sheet
               : Stack(
                   children: [
-                    sheet,
                     Positioned(
                       left: spacing.sm,
                       right: spacing.sm,
@@ -108,6 +107,7 @@ class BasicModalSheet extends HookWidget {
                         },
                       ),
                     ),
+                    sheet,
                   ],
                 );
 

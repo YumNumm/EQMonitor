@@ -28,7 +28,7 @@
 - HistoryPaneは一覧/詳細に別PrimaryScrollControllerを与える。loading ListViewも対象。
   MediaQueryサイズ/余白は各ペイン、keyboard縮小は外側Scaffoldが担当する。
 - 地図上詳細シートはBasicModalSheet(expandToPane:true)で、横長ペインをさらに半幅にしない。
-- `BasicModalSheet.initialPositionOverlay` はSheetと同じSafeArea・ペイン制約内で、初期高さの直上に固定する。SheetControllerの実際の移動量から透明度を計算し、完全に消えたときは入力と読み上げも抑止する。
+- `BasicModalSheet.initialPositionOverlay` はSheetと同じSafeArea・ペイン制約内で、初期高さの直上かつSheetの背面に固定する。SheetControllerの実際の移動量から透明度を計算し、完全に消えたときは入力と読み上げも抑止する。
 - EEW各報シートは最新報から表示し、event選択変更/詳細closeで履歴再生を止める。
   選択は震度色を塗り替えず輪郭とSemanticsで伝える。
 
@@ -45,7 +45,7 @@
 
 ## M3E の選択状態とアクセシビリティ
 
-- 地震詳細の凡例は選択中の地図モードに合わせる。観測震度は観測点・地域の階級と発表済みの最大震度、長周期地震動は0以外の発表済み階級、推計震度は4〜7の6階級を表示する。
+- 地震詳細の凡例は選択中の地図モードに合わせる。観測震度は観測点・地域の階級と発表済みの最大震度から未確定の「5弱以上」を除外する。長周期地震動は0以外の発表済み階級、推計震度は4〜7の6階級を表示する。推計震度のアイコンにも地図と同じ `ThemeColorSet.estimatedIntensity` の配色を使う。
 - 凡例の展開・重ね合わせは `M3EMotion.expressiveSpatialDefault` のstiffnessとdamping ratioを `SpringSimulation` に渡す。アニメーションを減らす設定では即時切り替え、連続タップは現在の位置と速度から反転する。
 - 通常のボタンは `m3e_core` の部品を使い、既存の無効条件・処理中表示・色指定を維持する。
 - アプリ状態と同期するドロップダウンは `ControlledDropdown` を使う。
