@@ -1,21 +1,30 @@
 import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
-import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
+import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/feature/devices/data/repository/push_token_sync_state_repository.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'device_auth_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<DeviceAuthRepository> deviceAuthRepository(Ref ref) async =>
-    DeviceAuthRepository(
-      await ref.watch(securePreferencesDataSourceProvider.future),
-      onCredentialsWillChange: ref
-          .watch(deviceLocationSyncStateRepositoryProvider)
-          .clearLastSent,
-      onCredentialsChanged: () => ref.invalidate(deviceIdProvider),
-    );
+Future<DeviceAuthRepository> deviceAuthRepository(Ref ref) async {
+  final pushTokenSyncState = await ref.watch(
+    pushTokenSyncStateRepositoryProvider.future,
+  );
+  final locationSyncState = ref.watch(
+    deviceLocationSyncStateRepositoryProvider,
+  );
+  return DeviceAuthRepository(
+    await ref.watch(securePreferencesDataSourceProvider.future),
+    onCredentialsWillChange: () async {
+      await locationSyncState.clearLastSent();
+      await pushTokenSyncState.clearAll();
+    },
+    onCredentialsChanged: () => ref.invalidate(deviceIdProvider),
+  );
+}
 
 class const DeviceAuthRepository(
   final PreferencesDataSource<SecureStorageKey> _preferences, {
