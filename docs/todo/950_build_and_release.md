@@ -58,5 +58,5 @@
 - `NativeDioFactory` の URLSession / Cronet 通信について、HTTP/2・HTTP/3 対応の接続先で端末が実際に選択した通信規格を確認する。HTTP/3 非対応の回線・接続先でも通信が完了することを確認する。
 - Android の Cronet provider がすべて無効な環境で `IOHttpClientAdapter` に切り替わることと、通常の通信・TLS エラーで fallback しないことを確認する。
 - Better Auth と Hi-net のログイン・ログアウト・Cookie 更新、K-NET の認証確認とダウンロード、強震モニタの連続取得、headless 位置同期を実機で確認する。再取得・画面の再表示・provider 無効化後にネイティブ接続が残らないことも確認する。
-- 共通アダプターの送信準備・接続・レスポンスヘッダー待ちは `connectTimeout + receiveTimeout`。応答停止・本文受信停止・キャンセル時の完了と、認証・オンボーディングの待機表示が解除されることを実機で確認する。
-- 未検証: Android / iOS のネイティブビルドと実機通信。この変更を確認した Linux 環境には Android SDK と Xcode がない。
+- Dio と `NativeAdapter` の標準処理で、応答停止・本文受信停止・キャンセル時の完了と、認証・オンボーディングの待機表示が解除されることを実機で確認する。
+- 未検証: Android / iOS の配布用ビルドと実機通信。

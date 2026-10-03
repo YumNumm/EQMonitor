@@ -35,7 +35,7 @@ abstract interface class HeadlessBackgroundLocationBridge {
 }
 
 class const BackgroundLocationTrackerHeadlessBridge({
-  final Future<void> Function()? beforeComplete,
+  final void Function()? beforeComplete,
 }) implements HeadlessBackgroundLocationBridge {
   @override
   Future<bool> acknowledgePendingLocation({
@@ -51,7 +51,7 @@ class const BackgroundLocationTrackerHeadlessBridge({
     required String updateId,
     required HeadlessTaskResult result,
   }) async {
-    await beforeComplete?.call();
+    beforeComplete?.call();
     await BackgroundLocationTracker.completeHeadlessTask(
       updateId: updateId,
       result: result,

@@ -63,7 +63,7 @@ Future<void> hypocenterArchiveAvailable(
       ),
     };
   } finally {
-    await const NativeDioFactory().close(dio);
+    dio.close(force: true);
   }
 }
 
