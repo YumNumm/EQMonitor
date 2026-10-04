@@ -36,7 +36,7 @@ ParameterDataResponseUnion _$ParameterDataResponseUnionFromJson(
           return ParameterDataResponseUnionShindoDbStationsParameter.fromJson(
             json
           );
-        
+
           default:
             throw CheckedFromJsonException(
   json,
@@ -45,7 +45,7 @@ ParameterDataResponseUnion _$ParameterDataResponseUnionFromJson(
   'Invalid union type "${json['runtimeType']}"!'
 );
         }
-      
+
 }
 
 /// @nodoc
@@ -305,7 +305,7 @@ as JmaCodeTableParameterCodeTables,
 @override
 @pragma('vm:prefer-inline')
 $JmaCodeTableParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $JmaCodeTableParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -314,7 +314,7 @@ $JmaCodeTableParameterMetadataCopyWith<$Res> get metadata {
 @override
 @pragma('vm:prefer-inline')
 $JmaCodeTableParameterCodeTablesCopyWith<$Res> get codeTables {
-  
+
   return $JmaCodeTableParameterCodeTablesCopyWith<$Res>(_self.codeTables, (value) {
     return _then(_self.copyWith(codeTables: value));
   });
@@ -404,7 +404,7 @@ as List<KyoshinObservationPoint>,
 @override
 @pragma('vm:prefer-inline')
 $KyoshinObservationPointsParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $KyoshinObservationPointsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -494,7 +494,7 @@ as List<EarthquakeStationPrefecture>,
 @override
 @pragma('vm:prefer-inline')
 $ParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $ParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -584,7 +584,7 @@ as List<TsunamiStationPrefecture>,
 @override
 @pragma('vm:prefer-inline')
 $TsunamiStationsParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $TsunamiStationsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -674,7 +674,7 @@ as List<ShindoDbStation>,
 @override
 @pragma('vm:prefer-inline')
 $ShindoDbStationsParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $ShindoDbStationsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });

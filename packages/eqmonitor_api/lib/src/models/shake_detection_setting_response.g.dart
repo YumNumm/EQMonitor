@@ -16,15 +16,16 @@ _ShakeDetectionSettingResponse _$ShakeDetectionSettingResponseFromJson(
   ($checkedConvert) {
     final val = _ShakeDetectionSettingResponse(
       id: $checkedConvert('id', (v) => v as String),
-      targetType: $checkedConvert(
-        'target_type',
-        (v) => $enumDecode(_$ShakeDetectionTargetTypeEnumMap, v),
-      ),
-      regionCode: $checkedConvert('region_code', (v) => v as String?),
-      enabled: $checkedConvert('enabled', (v) => v as bool),
+      subRegionId: $checkedConvert('sub_region_id', (v) => v as String?),
+      prefectureCode: $checkedConvert('prefecture_code', (v) => v as String?),
+      cityCode: $checkedConvert('city_code', (v) => v as String?),
       minLevel: $checkedConvert(
         'min_level',
         (v) => $enumDecode(_$ShakeDetectionLevelEnumMap, v),
+      ),
+      isCurrentLocation: $checkedConvert(
+        'is_current_location',
+        (v) => v as bool,
       ),
       createdAt: $checkedConvert('created_at', (v) => v as String),
       updatedAt: $checkedConvert('updated_at', (v) => v as String),
@@ -32,9 +33,11 @@ _ShakeDetectionSettingResponse _$ShakeDetectionSettingResponseFromJson(
     return val;
   },
   fieldKeyMap: const {
-    'targetType': 'target_type',
-    'regionCode': 'region_code',
+    'subRegionId': 'sub_region_id',
+    'prefectureCode': 'prefecture_code',
+    'cityCode': 'city_code',
     'minLevel': 'min_level',
+    'isCurrentLocation': 'is_current_location',
     'createdAt': 'created_at',
     'updatedAt': 'updated_at',
   },
@@ -44,18 +47,13 @@ Map<String, dynamic> _$ShakeDetectionSettingResponseToJson(
   _ShakeDetectionSettingResponse instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'target_type': instance.targetType,
-  'region_code': instance.regionCode,
-  'enabled': instance.enabled,
+  'sub_region_id': instance.subRegionId,
+  'prefecture_code': instance.prefectureCode,
+  'city_code': instance.cityCode,
   'min_level': instance.minLevel,
+  'is_current_location': instance.isCurrentLocation,
   'created_at': instance.createdAt,
   'updated_at': instance.updatedAt,
-};
-
-const _$ShakeDetectionTargetTypeEnumMap = {
-  ShakeDetectionTargetType.currentLocation: 'current_location',
-  ShakeDetectionTargetType.nationwide: 'nationwide',
-  ShakeDetectionTargetType.region: 'region',
 };
 
 const _$ShakeDetectionLevelEnumMap = {

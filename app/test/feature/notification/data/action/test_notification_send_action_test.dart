@@ -29,7 +29,7 @@ void main() {
     expect(find.byType(AlertDialog), findsNothing);
     expect(repository.receivedKinds, [TestNotificationKind.normal]);
     expect(handled, isTrue);
-    expect(find.text('送信しました（FCM）: テスト通知を送信しました'), findsOneWidget);
+    expect(find.text('テスト通知の送信を受け付けました'), findsOneWidget);
   });
 
   testWidgets('重大通知は警告を表示し、キャンセルすると送信しない', (tester) async {

@@ -4,11 +4,9 @@ import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.
 import 'dart:async';
 import 'dart:io';
 
-import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
@@ -76,12 +74,6 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
                     deviceId: deviceIdAsync.requireValue,
                   ),
                 if (deviceIdAsync.hasValue) const _TestNotificationSection(),
-                if (deviceIdAsync.hasValue)
-                  _TestScenarioSection(deviceId: deviceIdAsync.requireValue),
-                if (deviceIdAsync.hasValue)
-                  _TestScenarioTypeSection(
-                    deviceId: deviceIdAsync.requireValue,
-                  ),
                 if (deviceIdAsync.hasValue)
                   _HistorySection(deviceId: deviceIdAsync.requireValue),
                 const SizedBox(height: 32),
@@ -904,6 +896,7 @@ class _TestNotificationSection extends HookConsumerWidget {
       title: 'テスト通知',
       subtitle: '通常・重大な通知をサーバー経由で送信します',
       child: TestNotificationKindButtons(
+        kinds: const [.normal, .critical],
         pendingKind: pendingKind.value,
         onPressed: (kind) async {
           pendingKind.value = kind;
@@ -914,209 +907,6 @@ class _TestNotificationSection extends HookConsumerWidget {
             pendingKind.value = null;
           }
         },
-      ),
-    );
-  }
-}
-
-// ── テストシナリオ実行 ───────────────────────────────────────────────────────
-
-class _TestScenarioSection extends HookConsumerWidget {
-  const new({required this.deviceId});
-
-  final String deviceId;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useTextEditingController();
-    final isPending = useState(false);
-    final lastResult = useState<TestScenarioDeliveryResult?>(null);
-
-    Future<void> run() async {
-      final eventId = controller.text.trim();
-      if (eventId.isEmpty || isPending.value) {
-        return;
-      }
-      isPending.value = true;
-      final messenger = ScaffoldMessenger.of(context);
-      final notificationRepository = await ref.read(
-        pushNotificationRepositoryProvider.future,
-      );
-      final result = await notificationRepository.sendTestScenario(
-        deviceId: deviceId,
-        eventId: eventId,
-      );
-      isPending.value = false;
-      if (!context.mounted) {
-        return;
-      }
-      switch (result) {
-        case Success(:final value):
-          lastResult.value = value;
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text(
-                'シナリオを実行しました（${value.stepsPlanned} ステップ）: '
-                '${value.telegramTypes.join(', ')}',
-              ),
-            ),
-          );
-        case Failure(:final exception):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text('実行に失敗: $exception'),
-              backgroundColor: context.designSystem.colorTheme.error,
-            ),
-          );
-      }
-    }
-
-    return _SectionCard(
-      title: 'テストシナリオ実行',
-      subtitle:
-          'イベントIDの実データをDBから取得し、実際の通知パイプライン経由で'
-          'この端末にのみ配信します（EEW + VXSE51/52/53）',
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          TextField(
-            controller: controller,
-            enabled: !isPending.value,
-            textInputAction: .go,
-            decoration: const InputDecoration(
-              labelText: 'イベントID',
-              border: OutlineInputBorder(),
-            ),
-            onSubmitted: (_) async => run(),
-          ),
-          const SizedBox(height: 12),
-          M3EFilledButton.icon(
-            onPressed: isPending.value ? null : () async => run(),
-            icon: isPending.value
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: AccessibleCircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.play_arrow),
-            label: const Text('シナリオを実行'),
-          ),
-          if (lastResult.value case final result?) ...[
-            const SizedBox(height: 16),
-            _KeyValueRow(label: 'event_id', value: result.eventId),
-            _KeyValueRow(
-              label: 'steps_planned',
-              value: result.stepsPlanned.toString(),
-            ),
-            _KeyValueRow(
-              label: 'telegram_types',
-              value: result.telegramTypes.isEmpty
-                  ? '(なし)'
-                  : result.telegramTypes.join(', '),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _TestScenarioTypeSection extends HookConsumerWidget {
-  const new({required this.deviceId});
-
-  final String deviceId;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectedScenario = useState(TestScenarioType.eewWarning);
-    final isPending = useState(false);
-
-    Future<void> run() async {
-      if (isPending.value) {
-        return;
-      }
-      isPending.value = true;
-      final messenger = ScaffoldMessenger.of(context);
-      final notificationRepository = await ref.read(
-        pushNotificationRepositoryProvider.future,
-      );
-      final result = await notificationRepository.sendTestScenarioType(
-        deviceId: deviceId,
-        scenario: selectedScenario.value,
-      );
-      isPending.value = false;
-      if (!context.mounted) {
-        return;
-      }
-      switch (result) {
-        case Success(:final value):
-          await showAdaptiveDialog<void>(
-            context: context,
-            builder: (context) => AlertDialog.adaptive(
-              title: Text(value.scenario),
-              content: SingleChildScrollView(
-                child: SelectableText(
-                  value.prettyJson,
-                  style: const TextStyle(fontFamily: FontFamily.googleSansCode),
-                ),
-              ),
-              actions: [
-                M3ETextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('閉じる'),
-                ),
-              ],
-            ),
-          );
-        case Failure(:final exception):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text('実行に失敗: $exception'),
-              backgroundColor: context.designSystem.colorTheme.error,
-            ),
-          );
-      }
-    }
-
-    return _SectionCard(
-      title: 'テストシナリオ種別実行',
-      subtitle:
-          'シナリオ種別を指定して通知パイプラインを実行し、'
-          'この端末にのみテスト通知を配信します',
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          ControlledDropdown<TestScenarioType>(
-            singleSelect: true,
-            enabled: !isPending.value,
-            fieldStyle: const M3EDropdownFieldStyle(hintText: 'シナリオ種別'),
-            items: [
-              for (final scenario in TestScenarioType.values)
-                M3EDropdownItem(
-                  value: scenario,
-                  label: scenario.displayLabel,
-                  selected: scenario == selectedScenario.value,
-                ),
-            ],
-            onSelectionChanged: (selection) {
-              if (selection.isNotEmpty) {
-                selectedScenario.value = selection.first.value;
-              }
-            },
-          ),
-          const SizedBox(height: 12),
-          M3EFilledButton.icon(
-            onPressed: isPending.value ? null : () async => run(),
-            icon: isPending.value
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: AccessibleCircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.play_arrow),
-            label: const Text('シナリオ種別を実行'),
-          ),
-        ],
       ),
     );
   }

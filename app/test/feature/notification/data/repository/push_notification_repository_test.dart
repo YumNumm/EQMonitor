@@ -9,38 +9,40 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('sendTestScenarioType', () {
-    test('posts selected scenario and returns dialog json', () async {
-      final adapter = _NotificationApiAdapter();
-      final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
-        ..httpClientAdapter = adapter;
-      final repository = PushNotificationRepository(api.ApiClient(dio));
+  group('sendTestNotification', () {
+    for (final entry in const {
+      TestNotificationKind.silent: 'SILENT',
+      TestNotificationKind.normal: 'NORMAL',
+      TestNotificationKind.critical: 'CRITICAL',
+      TestNotificationKind.shindoReport: 'SHINDO_REPORT',
+      TestNotificationKind.shindoReportWithHypocenter:
+          'SHINDO_REPORT_WITH_HYPOCENTER',
+      TestNotificationKind.hypocenterAndIntensity: 'HYPOCENTER_AND_INTENSITY',
+      TestNotificationKind.longPeriodGroundMotion: 'LONG_PERIOD_GROUND_MOTION',
+      TestNotificationKind.eewForecast: 'EEW_FORECAST',
+      TestNotificationKind.eewWarning: 'EEW_WARNING',
+    }.entries) {
+      test('posts selected type and preserves the existing response', () async {
+        final adapter = _NotificationApiAdapter();
+        final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+          ..httpClientAdapter = adapter;
+        final repository = PushNotificationRepository(api.ApiClient(dio));
 
-      final result = await repository.sendTestScenarioType(
-        deviceId: 'device-id',
-        scenario: TestScenarioType.eewWarning,
-      );
+        final result = await repository.sendTestNotification(
+          deviceId: 'device-id',
+          kind: entry.key,
+        );
 
-      expect(adapter.lastPath, '/v2/device/me/notification/test-scenario-type');
-      expect(adapter.lastRequestBody, {
-        'scenario': api.TestNotificationScenario.eewWarning,
+        expect(adapter.lastPath, '/v2/device/me/notification/test');
+        expect(adapter.lastRequestBody, {'type': entry.value});
+        final value = switch (result) {
+          Success(:final value) => value,
+          Failure(:final exception) => throw exception,
+        };
+        expect(value.message, 'Test notification sent');
+        expect(value.framework.name, 'apns');
       });
-      final value = switch (result) {
-        Success(:final value) => value,
-        Failure(:final exception) => throw exception,
-      };
-      expect(value.message, 'テスト通知を送信しました');
-      expect(value.scenario, 'EEW_WARNING');
-      expect(value.eventId, 'event-001');
-      expect(
-        value.prettyJson,
-        const JsonEncoder.withIndent('  ').convert({
-          'message': 'テスト通知を送信しました',
-          'scenario': 'EEW_WARNING',
-          'event_id': 'event-001',
-        }),
-      );
-    });
+    }
   });
 }
 
@@ -58,14 +60,14 @@ final class _NotificationApiAdapter implements HttpClientAdapter {
     Future<void>? cancelFuture,
   ) async {
     lastPath = options.path;
-    lastRequestBody = Map<String, dynamic>.from(options.data as Map);
+    lastRequestBody =
+        jsonDecode(jsonEncode(options.data)) as Map<String, dynamic>;
     return ResponseBody.fromString(
       jsonEncode({
-        'message': 'テスト通知を送信しました',
-        'scenario': 'EEW_WARNING',
-        'event_id': 'event-001',
+        'message': 'Test notification sent',
+        'framework': 'APNS',
       }),
-      200,
+      201,
       headers: {
         Headers.contentTypeHeader: [Headers.jsonContentType],
       },

@@ -7,7 +7,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'catalog_station_intensity.dart';
 import 'catalog_station_max_acceleration.dart';
 import 'catalog_station_periods.dart';
-import 'catalog_time_precision.dart';
 
 part 'catalog_station_record.freezed.dart';
 part 'catalog_station_record.g.dart';
@@ -20,16 +19,12 @@ abstract class CatalogStationRecord with _$CatalogStationRecord {
     required CatalogStationIntensity intensity,
     @JsonKey(includeIfNull: false,name: 'observed_at')
     DateTime? observedAt,
-    @JsonKey(includeIfNull: false,name: 'observed_at_precision')
-    CatalogTimePrecision? observedAtPrecision,
     @JsonKey(includeIfNull: false,name: 'max_acceleration')
     CatalogStationMaxAcceleration? maxAcceleration,
 
     /// 最大加速度（合成値）を観測した時刻
     @JsonKey(includeIfNull: false,name: 'max_accel_time')
     DateTime? maxAccelTime,
-    @JsonKey(includeIfNull: false,name: 'max_accel_time_precision')
-    CatalogTimePrecision? maxAccelTimePrecision,
     @JsonKey(includeIfNull: false)
     CatalogStationPeriods? periods,
 

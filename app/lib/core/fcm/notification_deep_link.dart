@@ -10,6 +10,7 @@ sealed class const NotificationDeepLink() {
   static const _allowedExactPaths = [
     '/earthquake-history',
     '/earthquake-history/search',
+    '/settings/notification/test',
   ];
 
   static NotificationDeepLink? fromUri(Uri uri) {
@@ -32,6 +33,11 @@ sealed class const NotificationDeepLink() {
   }
 
   static NotificationDeepLink? fromData(Map<String, Object?> data) {
+    if (data['isTest'] == 'true' || data['type'] == 'TEST') {
+      return const NotificationRouteLink(
+        location: '/settings/notification/test',
+      );
+    }
     final link = data['link'];
     if (link is String) {
       final uri = Uri.tryParse(link);

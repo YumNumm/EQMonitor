@@ -22,6 +22,11 @@ abstract interface class LiveActivityLocalController {
   /// この端末で Live Activity のローカル開始がサポートされているか。
   Future<bool> isSupported();
 
+  /// 通知テスト画面専用の Activity のみを照会・操作する。
+  Future<bool> hasTestActivity();
+  Future<void> showTestActivity({required Map<String, dynamic> contentState});
+  Future<void> endTestActivity();
+
   /// Live Activity を開始し、払い出された `activityId` を返す。
   Future<String> start({
     required DebugLiveActivityKind kind,
@@ -49,6 +54,17 @@ class const UnsupportedLiveActivityLocalController()
     implements LiveActivityLocalController {
   @override
   Future<bool> isSupported() async => false;
+
+  @override
+  Future<bool> hasTestActivity() async => false;
+
+  @override
+  Future<void> showTestActivity({required Map<String, dynamic> contentState}) =>
+      throw const LiveActivityLocalException('この端末ではサポートされていません');
+
+  @override
+  Future<void> endTestActivity() =>
+      throw const LiveActivityLocalException('この端末ではサポートされていません');
 
   @override
   Future<String> start({
@@ -83,6 +99,24 @@ class const MethodChannelLiveActivityLocalController()
   Future<bool> isSupported() async {
     final result = await _invoke<bool>('isSupported');
     return result ?? false;
+  }
+
+  @override
+  Future<bool> hasTestActivity() async =>
+      await _invoke<bool>('hasTestEew') ?? false;
+
+  @override
+  Future<void> showTestActivity({
+    required Map<String, dynamic> contentState,
+  }) async {
+    await _invoke<void>('showTestEew', <String, dynamic>{
+      'contentState': jsonEncode(contentState),
+    });
+  }
+
+  @override
+  Future<void> endTestActivity() async {
+    await _invoke<void>('endTestEew');
   }
 
   @override

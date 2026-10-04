@@ -80,7 +80,7 @@ as EstimatedIntensityEvent,
 @override
 @pragma('vm:prefer-inline')
 $EstimatedIntensityEventCopyWith<$Res> get record {
-  
+
   return $EstimatedIntensityEventCopyWith<$Res>(_self.record, (value) {
     return _then(_self.copyWith(record: value));
   });
@@ -295,7 +295,7 @@ as EstimatedIntensityEvent,
 @override
 @pragma('vm:prefer-inline')
 $EstimatedIntensityEventCopyWith<$Res> get record {
-  
+
   return $EstimatedIntensityEventCopyWith<$Res>(_self.record, (value) {
     return _then(_self.copyWith(record: value));
   });
