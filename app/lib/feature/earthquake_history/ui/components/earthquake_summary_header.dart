@@ -181,8 +181,8 @@ class _EarthquakeInformationBody extends StatelessWidget {
           hypocenterWidget,
         ],
         const Row(),
-        if (earthquakeType == EarthquakeType.volcano) const Text('大規模な火山の噴火'),
-        if (timeText != null)
+        if (earthquakeType ==.volcano) const Text('大規模な火山の噴火'),
+if (timeText != null)
           Text(
             timeText,
             style: TextStyle(
