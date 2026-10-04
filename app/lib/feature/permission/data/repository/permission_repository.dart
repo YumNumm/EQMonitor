@@ -55,6 +55,8 @@ class PermissionRepository({
 }) {
   Future<void> openLocationSettings() => _openLocationSettings();
 
+  Future<void> openNotificationSettings() => _openNotificationSettings();
+
   Future<OsNotificationPermission> getNotificationPermission() async {
     // OS の応答が返らない場合も、権限の確認画面から再試行できるようにする。
     final settings = await _readMessaging().getNotificationSettings().timeout(
@@ -84,7 +86,8 @@ class PermissionRepository({
     }
     // 一度拒否されると OS は権限ダイアログを表示しないため、設定アプリへ誘導する。
     // 設定変更の反映はフォアグラウンド復帰時の再確認に任せる
-    if (permission.authorizationStatus == .denied) {
+    if (permission.authorizationStatus == .denied ||
+        permission.authorizationStatus == .deniedPermanently) {
       await _openNotificationSettings();
     }
     return false;

@@ -15,6 +15,7 @@ class NotificationPresetSelector extends HookConsumerWidget {
     required this.onChanged,
     required this.style,
     this.onCustomSettingsTap,
+    this.isProcessing = false,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class NotificationPresetSelector extends HookConsumerWidget {
   final ValueChanged<NotificationPreset> onChanged;
   final NotificationPresetSelectorStyle style;
   final VoidCallback? onCustomSettingsTap;
+  final bool isProcessing;
 
   static const _onboardingPresetOrder = <NotificationPreset>[
     NotificationPreset.recommended,
@@ -46,7 +48,8 @@ class NotificationPresetSelector extends HookConsumerWidget {
     final isOsGranted = permission?.isOsNotificationGranted ?? false;
 
     useEffect(() {
-      if (permission != null &&
+      if (style == .onboarding &&
+          permission != null &&
           !permission.isOsNotificationGranted &&
           selectedPreset != NotificationPreset.none) {
         onChanged(NotificationPreset.none);
@@ -56,10 +59,13 @@ class NotificationPresetSelector extends HookConsumerWidget {
       // 親の再ビルドのたびにeffectが再実行される。ここで見たいのは
       // 権限と選択中プリセットの変化だけ。
       // ignore_keys: onChanged
-    }, [permission, selectedPreset]);
+    }, [permission, selectedPreset, style]);
 
     void handlePresetTap(NotificationPreset preset) {
-      if (!isOsGranted && preset != .none) {
+      if (isProcessing) {
+        return;
+      }
+      if (style == .onboarding && !isOsGranted && preset != .none) {
         ref
             .read(notificationPermissionDialogActionProvider)
             .showOsPermission(context, ref);
@@ -77,11 +83,14 @@ class NotificationPresetSelector extends HookConsumerWidget {
     }
 
     bool isPresetEnabled(NotificationPreset preset) {
-      return isOsGranted || preset == NotificationPreset.none;
+      return !isProcessing &&
+          (style == .settings ||
+              isOsGranted ||
+              preset == NotificationPreset.none);
     }
 
     bool shouldShowCriticalWarning(NotificationPreset preset) {
-      if (permission == null) {
+      if (style == .settings || permission == null) {
         return false;
       }
       return selectedPreset == preset &&

@@ -1,4 +1,3 @@
-import 'package:app_settings/app_settings.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
@@ -9,6 +8,7 @@ import 'package:eqmonitor/feature/notification/data/notifier/general_notificatio
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_applier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_region_add_action.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/notification_permission_requirements.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
@@ -21,11 +21,13 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/notification_plan_constraints_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_permission_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_settings_info_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_tile.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/dialog/notification_permission_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/sound_interruption_settings_page.dart';
@@ -33,6 +35,7 @@ import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -49,11 +52,12 @@ class NotificationSettingsPage extends StatelessWidget {
   }
 }
 
-class _Body extends ConsumerWidget {
+class _Body extends HookConsumerWidget {
   const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isApplyingPreset = useState(false);
     final notificationsEnabled = ref.watch(
       generalNotificationSettingsProvider.select(
         (s) => s.value?.notificationEnabled ?? true,
@@ -62,6 +66,14 @@ class _Body extends ConsumerWidget {
     final selectedPreset =
         ref.watch(notificationPresetProvider).value ??
         NotificationPreset.recommended;
+    final requiresCriticalAlert = const NotificationPermissionRequirements()
+        .requiresCriticalAlert(
+          preset: selectedPreset,
+          eew: ref.watch(eewGlobalSettingsProvider).value,
+          warning: ref.watch(eewWarningConfigProvider).value,
+          earthquake: ref.watch(earthquakeGlobalSettingsProvider).value,
+          slots: ref.watch(notificationSlotsProvider).value,
+        );
 
     ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (
       _,
@@ -88,6 +100,10 @@ class _Body extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.only(top: 16, bottom: 24),
       children: [
+        if (notificationsEnabled)
+          NotificationPermissionWarningCard(
+            requiresCriticalAlert: requiresCriticalAlert,
+          ),
         _MasterNotificationControl(
           value: notificationsEnabled,
           onChanged: (value) async {
@@ -104,17 +120,36 @@ class _Body extends ConsumerWidget {
           NotificationPresetSelector(
             selectedPreset: selectedPreset,
             onChanged: (preset) async {
+              if (isApplyingPreset.value) {
+                return;
+              }
+              isApplyingPreset.value = true;
               try {
                 await ref.read(notificationPresetApplierProvider).apply(preset);
+                if (context.mounted &&
+                    (preset == .recommended || preset == .all)) {
+                  await ref
+                      .read(notificationPermissionDialogActionProvider)
+                      .showMissingPermissions(
+                        context: context,
+                        ref: ref,
+                        requiresCriticalAlert: true,
+                      );
+                }
               } on Object catch (error) {
                 if (context.mounted) {
                   await ref
                       .read(errorDialogActionProvider)
                       .show(context, error: error);
                 }
+              } finally {
+                if (context.mounted) {
+                  isApplyingPreset.value = false;
+                }
               }
             },
             style: NotificationPresetSelectorStyle.settings,
+            isProcessing: isApplyingPreset.value,
             onCustomSettingsTap: () async {
               if (selectedPreset != NotificationPreset.custom) {
                 return;
@@ -130,7 +165,8 @@ class _Body extends ConsumerWidget {
         const SettingsSectionHeader(text: 'ツール'),
         const _NotificationHistoryTile(),
         const TestNotificationTile(),
-        const _AndroidNotificationSettingsTile(),
+        const SettingsSectionHeader(text: '端末の通知権限'),
+        const NotificationPermissionSettings(),
       ],
     );
   }
@@ -755,26 +791,6 @@ class _NotificationHistoryTile extends StatelessWidget {
       leading: const Icon(Icons.history),
       trailing: const Icon(Icons.chevron_right),
       onTap: () async => const NotificationHistoryRoute().push<void>(context),
-    );
-  }
-}
-
-class _AndroidNotificationSettingsTile extends StatelessWidget {
-  const new();
-
-  @override
-  Widget build(BuildContext context) {
-    // iOS では Android のチャンネル設定は不要
-    if (Theme.of(context).platform != TargetPlatform.android) {
-      return const SizedBox.shrink();
-    }
-    return ListTile(
-      title: const Text('Android 通知チャンネル設定'),
-      subtitle: const Text('チャンネルごとに音・バイブなどをカスタマイズできます'),
-      leading: const Icon(Icons.tune_outlined),
-      trailing: const Icon(Icons.open_in_new),
-      onTap: () async =>
-          AppSettings.openAppSettings(type: AppSettingsType.notification),
     );
   }
 }
