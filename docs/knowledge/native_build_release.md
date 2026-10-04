@@ -15,6 +15,11 @@ APNs・認証は [push_and_auth.md](push_and_auth.md) を参照する。
 
 ## iOS SDK と SwiftPM
 
+- `mise.toml` と配布 workflow は `FIREBASE_ANALYTICS_WITHOUT_ADID=true` を設定する。
+  `firebase_analytics` の SwiftPM はこの環境変数で `FirebaseAnalyticsCore` を選び、
+  広告 ID と on-device conversion の product をリンクしない。Xcode を直接使う場合も
+  package 解決とビルドに同じ環境変数を渡す。SwiftPM の `Package.resolved` には
+  Firebase の manifest が宣言する広告計測 package が残るため、リンク対象と区別する。
 - `.github/workflows/deploy-app.yaml` の build-ios は `runs-on: xcode-27`、
   `XCODE_VERSION: "27.0"` / `XCODE_BUILD_VERSION: "27A266a"` に固定する。
   選択後に Xcode の版・ビルド番号と iOS SDK `27.0` を検査し、不一致なら archive 前に停止する。
