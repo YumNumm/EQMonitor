@@ -28,8 +28,10 @@ enum SharedPreferencesKey(final String key) {
   /// v2.6アプリがSupabase device IDの保存に使用していたキー（移行用）
   legacyDeviceId('device_id'),
   deviceProvisioned('device_provisioned'),
+  fcmTokenLastSent('fcm_token_last_sent'),
+  apnsNotificationTokenLastSent('apns_notification_token_last_sent'),
+  apnsPushToStartTokenLastSent('apns_push_to_start_token_last_sent'),
   deviceMigratedFromLegacy('device_migrated_from_legacy'),
-  adsOptOut('ads_opt_out'),
   autoReturnToRealtime('auto_return_to_realtime'),
   earthquakeHistoryMapLayerParameter('earthquake_history_map_layer_parameter'),
   homeMapLabelParameter('home_map_label_parameter'),

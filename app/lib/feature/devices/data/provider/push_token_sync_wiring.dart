@@ -63,6 +63,14 @@ Future<void> pushTokenSyncWiring(Ref ref) async {
   }
 
   await ref.read(pushTokenSyncProvider.future);
+  ref.listen(appLifecycleProvider, (_, next) {
+    if (next == AppLifecycleState.resumed) {
+      final token = ref.read(notificationTokenStreamProvider).value;
+      if (token != null) {
+        ref.read(pushTokenSyncProvider.notifier).accept(token);
+      }
+    }
+  });
   ref.listen<AsyncValue<NotificationToken>>(notificationTokenStreamProvider, (
     _,
     next,

@@ -1,4 +1,4 @@
-# 認証・課金・広告の残課題
+# 認証・課金の残課題
 
 数値は元の優先度。Console/署名実機の確認は未完了。旧設計の大量のサンプルコードは Git 履歴を参照し、現行 API を正本とする。
 
@@ -25,7 +25,7 @@
 ## 150: Pro 配布後の動作確認
 
 - Pro機能の導線は常時有効。配布用SOPS設定の両SDKキーは2026-09-29にRevenueCat登録値との一致を確認済み。
-- 完了条件: 以下089/090の契約・Sandbox検証後に、Paywall、購入/復元、広告非表示、通知のPro項目、任意地域Widget/App Group同期、`/subscription/*` の遷移を署名実機で確認する。有料権限はserver確認値を正本とする。
+- 完了条件: 以下089/090の契約・Sandbox検証後に、Paywall、購入/復元、通知のPro項目、任意地域Widget/App Group同期、`/subscription/*` の遷移を署名実機で確認する。有料権限はserver確認値を正本とする。
 
 ## 091: User API の一般ユーザー向け scope
 
@@ -33,14 +33,13 @@
 - 残る判断: プロフィール表示/編集、紐付けデバイス/セッション一覧、アカウント削除、デバイス削除 UI の提供範囲を決める。`PATCH /v2/user/me` の requestBody は実装前に現行 OpenAPI を照合する。
 - 完了条件: 採用する UI/API と所有 feature を明記し、認証切れ・削除のテストを追加する。通常の device 登録・通知 token 同期を User API の前提にしない。
 
-## 090: 商品・広告・通知制限の整合と release gate
+## 090: 商品・通知制限の整合と release gate
 
-- `app/lib/feature/subscription/` に購入/復元/管理UI、`app/lib/feature/ads/` に広告判定/opt-out が存在する。新規実装計画としてやり直さず、未達契約を確認する。
+- `app/lib/feature/subscription/` に購入/復元/管理UIが存在する。新規実装計画としてやり直さず、未達契約を確認する。
 - 商品価格、月額/年額、trial、family sharing、premium機能範囲を最終決定し、Store/RevenueCat の product/package/entitlement `pro` と app の product ID を照合する。旧案の月300円/年3000円は確定値ではない。
 - 通知制限は `app/lib/feature/settings/features/notification_settings/` と backend の現行 `planConstraints` を照合する。旧案は Free=EEW/地震共有3地点・揺れ現在地のみ、Pro=EEW/地震各5・揺れ3。旧案の数値を現行契約へ無条件に上書きしない。
 - Free共有pool UI、Free→Proの地点引継ぎ、失効後の超過地点を非破壊で通知無効にする順序/表示を確定し、API制限と配信側が一致する境界値テストを追加する。
-- 広告は Pro、server `ads_enabled=false`、EEW活性、opt-out 時の非表示を維持する。配置（設定/履歴一覧/古い履歴詳細）、24時間境界、強い地震時の猶予、AdUnitId粒度を決め、Home/EEW/強震画面に即時性を妨げる広告を出さない。
-- 完了条件: Sandbox購入→Webhook→DB→app反映、強制終了/再起動、復元/端末変更、解約後期限までは有効、失効、通信失敗/キャンセル、広告一斉停止を検証する。Paywallの価格/期間/自動更新/規約/プライバシー/管理導線と読み上げ、必要なATT/同意/Store申告、削除要求時の扱いを整え段階公開する。
+- 完了条件: Sandbox購入→Webhook→DB→app反映、強制終了/再起動、復元/端末変更、解約後期限までは有効、失効、通信失敗/キャンセルを検証する。Paywallの価格/期間/自動更新/規約/プライバシー/管理導線と読み上げ、Store申告、削除要求時の扱いを整え段階公開する。
 
 ## 089: 購入状態の正本・identity とアプリ登録
 

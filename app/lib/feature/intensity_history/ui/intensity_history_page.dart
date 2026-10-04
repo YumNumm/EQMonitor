@@ -88,7 +88,7 @@ class _MapContent extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final action = ref.watch(intensityHistoryMapActionProvider);
-    final isMapCreated = useState(false);
+    final mapController = useState<MapController?>(null);
     final didInitializeDeepLink = useRef(false);
     // パラメータ到着を effect の再実行契機にするため watch する。
     final hasParameter =
@@ -100,7 +100,7 @@ class _MapContent extends HookConsumerWidget {
       () {
         final prefectureCode = initialPrefectureCode;
         if (didInitializeDeepLink.value ||
-            !isMapCreated.value ||
+            mapController.value == null ||
             !hasParameter ||
             prefectureCode == null ||
             initialCityCode == null) {
@@ -118,7 +118,7 @@ class _MapContent extends HookConsumerWidget {
         return null;
       },
       [
-        isMapCreated.value,
+        mapController.value,
         hasParameter,
         initialPrefectureCode,
         initialCityCode,
@@ -131,8 +131,8 @@ class _MapContent extends HookConsumerWidget {
         children: [
           MapOperationQueueScope(
             child: MapLibreMap(
-              onMapCreated: (_) {
-                isMapCreated.value = true;
+              onMapCreated: (controller) {
+                mapController.value = controller;
               },
               options: const MapZoomCalculator().japanViewMapOptions(
                 context: context,
@@ -144,13 +144,15 @@ class _MapContent extends HookConsumerWidget {
                   MapEventLongClick(:final point) => point,
                   _ => null,
                 };
-                if (point == null) {
+                final controller = mapController.value;
+                if (point == null || controller == null) {
                   return;
                 }
                 await action.handleMapTap(
                   ref: ref,
                   context: context,
                   point: point,
+                  mapController: controller,
                 );
               },
               children: const [IntensityHistoryMapLayers()],

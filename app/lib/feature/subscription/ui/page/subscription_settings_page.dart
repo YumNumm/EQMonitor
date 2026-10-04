@@ -158,7 +158,7 @@ class _InactiveSection extends ConsumerWidget {
               Text('Free', style: textTheme.titleLarge),
               const SizedBox(height: 12),
               Text(
-                'EQMonitor Pro にアップグレードすると、通知地点の拡張・広告非表示などの '
+                'EQMonitor Pro にアップグレードすると、通知地点の拡張などの '
                 '特典をご利用いただけます。',
                 style: textTheme.bodyMedium,
               ),

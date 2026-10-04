@@ -56,7 +56,10 @@ class PermissionRepository({
   Future<void> openLocationSettings() => _openLocationSettings();
 
   Future<OsNotificationPermission> getNotificationPermission() async {
-    final settings = await _readMessaging().getNotificationSettings();
+    // OS の応答が返らない場合も、権限の確認画面から再試行できるようにする。
+    final settings = await _readMessaging().getNotificationSettings().timeout(
+      const Duration(seconds: 10),
+    );
     return OsNotificationPermission.fromNotificationSettings(settings);
   }
 

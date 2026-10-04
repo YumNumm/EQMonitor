@@ -20,6 +20,11 @@
 - 優先順位の方針を決め、backend の候補選択を決定的にする。音と割り込みは選択した同じ候補から採用し、EEW 警報・Live Activity の別経路と混同しない。
 - [backend の既存 TODO](https://github.com/YumNumm/eqmonitor-backend/blob/a9a1d7987a0e4e8000d04ba3b464b1997e5f685f/docs/todo/250_notification_slots_minor_findings.md#L25-L30) の同値 tier に限らず、異なる対象震度の競合も対象にする。決定規則を修正するまでは UI で現在地優先・強い通知優先を保証しない。
 
+## 800: 通知トークン同期の実機確認
+
+- 対象: `app/lib/feature/devices/`。起動時の更新中表示が消え、登録・同期は継続することを iOS・Android 実機で確認する。未検証。
+- FCM・通知用 APNs・APNs Push-to-Start ごとに、同値で24時間未満は送信なし、変更時と24時間経過後は送信ありになることを再起動・復帰後の通信で確認する。失敗後の再試行とデバイス再登録も確認する。実機検証は未実施。
+
 ## 800: Android 前面通知の実機確認
 
 - 対象: `app/lib/core/fcm/local_notification_repository.dart`、`firebaseMessagingForegroundProvider`、通知タップ処理。
@@ -41,6 +46,12 @@
 - `app/lib/core/router/` と onboarding/paywall の Hero は go_router が Flutter本体 MaterialApp を検出できず、素の `HeroController` となる問題を確認する。対応controllerの供給方法を決め、Hero軌跡を確認する。
 - 新たな material依存hook/localizations の導入時は型境界を確認する。既存の DefaultTabController、明示的delegate import、MaterialPageMixin は維持する。
 
+## 650: onboarding 権限読み取りの実機確認
+
+- 対象: `PermissionRepository.getNotificationPermission()` と onboarding の権限ステップ。
+- iOS 27.0 Simulatorで通知設定取得が未完了となり、通知サービス再起動で復帰する事象を確認。OSサービス側の根因は未確定。
+- iOS / Android実機で、通常の許可・拒否・復帰時再取得と、取得失敗時のエラー表示・再試行・戻る操作を確認する。実機検証は未実施。
+
 ## 650: onboarding 通知プリセットの build 中更新
 
 - 対象: `app/lib/feature/onboarding/ui/components/notification_settings_step_page.dart`、`app/lib/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart`。
@@ -52,6 +63,8 @@
 - 対象: `app/lib/feature/earthquake_history/ui/components/modal/earthquake_history_details_settings_sheet.dart` と詳細地図の観測点・震央レイヤー。
 - iOS/Android 実機で右上の設定シートを開き、通常の観測点表示と推計震度への観測点の重ね合わせを独立して切り替えられること、震央との重なり順、画面を開き直した後・再起動後の設定保持を確認する。推計震度への重ね合わせは初期値オフ。実機表示は未検証。
 - 防災情報XML・長周期地震動・推計震度・震度データベースで、アイコンの遅延読み込み後と表示元切り替え後も重なり順が保たれ、非表示の観測点をタップできないことを確認する。地図の拡大率・中心の維持と、Light/Dark・文字拡大時のシート操作も確認する。
+- iOS/Android実機で、Sheet初期位置の上の凡例が地図モードに合い、タップで最大階級を手前にした上位3枚の重ね合わせへ往復することを確認する。推計震度の地図と凡例の専用配色、未確定の「5弱以上」の除外、Sheet背面への配置、Sheet移動量に応じたフェードと復帰、非表示時の地図操作、縦横・狭いペイン・文字拡大・アニメーションを減らす設定を確認する。実機検証は未実施。
+- 凡例を重ねた各アイコンの薄い影と、展開・折りたたみ時の軽い触覚フィードバックを実機で確認する。展開中は影が消え、単独アイコンには影が付かないことも確認する。未検証。
 
 ## 500: 地震/EEW履歴のタブレット検証
 
@@ -63,6 +76,11 @@
 
 - `app/lib/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart` の trailing を種別対応し、噴火時は省略または短い種別labelにする。文言を決めてから実装する。
 - 完了条件: 履歴一覧/近傍地震カードの両方で噴火を地震のM欠損と誤表示せず、通常地震の既存表示は維持する。関連既存テストを確認する。
+
+## 400: 現在地震度カードの市区町村名
+
+- 対象: `app/lib/feature/earthquake_history/ui/components/current_location_intensity_card.dart`。iOS / Android 実機で、江戸川区・府中市・利島村の見出しが「東京都江戸川区」「東京都府中市」「東京都利島村」となり、観測点名と震度表示を維持することを確認する。実機表示は未検証。
+- 東京都以外にも、気象庁の識別用名称を連結した「青森県青森南部町」「大阪府大阪堺市堺区」などが表示されうる。正式市区町村名との対応を地域コードで照合し、表示方針を決める。完了条件: 識別用の県名接頭辞と政令市名の省略を適切に扱い、「青森市」「大阪狭山市」などの正式名称を損なわない。
 
 ## 400: iOS swipe back と PopScope
 

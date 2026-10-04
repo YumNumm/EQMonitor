@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/theme/model/intensity_color_entry.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:material_ui/material_ui.dart';
@@ -13,6 +14,7 @@ class JmaIntensityIcon extends StatelessWidget {
     super.key,
     this.size = 50,
     this.showSuffix = true,
+    this.colorEntry,
   });
 
   final JmaIntensity intensity;
@@ -20,11 +22,13 @@ class JmaIntensityIcon extends StatelessWidget {
   final double size;
   final String? customText;
   final bool showSuffix;
+  final IntensityColorEntry? colorEntry;
 
   @override
   Widget build(BuildContext context) {
-    final colorEntry = context.designSystem.colorTheme.intensity
-        .fromJmaIntensity(intensity);
+    final colorEntry =
+        this.colorEntry ??
+        context.designSystem.colorTheme.intensity.fromJmaIntensity(intensity);
     final (fg, bg) = (colorEntry.resolvedForeground, colorEntry.background);
     final intensityMainText = intensity.mainText;
     final suffix = intensity.label.contains('-')

@@ -12,15 +12,18 @@ final class PushTokenSyncWorker {
     required InterruptibleBackoff backoff,
     PushTokenBackoff policy = const PushTokenBackoff(),
     DateTime Function()? clock,
+    Future<bool> Function(String token)? shouldSync,
   }) : _upsert = upsert,
        _backoff = backoff,
        _policy = policy,
-       _clock = clock ?? DateTime.now;
+       _clock = clock ?? DateTime.now,
+       _shouldSync = shouldSync;
 
   final PushTokenUpsert _upsert;
   final InterruptibleBackoff _backoff;
   final PushTokenBackoff _policy;
   final DateTime Function() _clock;
+  final Future<bool> Function(String token)? _shouldSync;
   final StreamController<PushTokenSyncWorkerState> _statesController =
       StreamController<PushTokenSyncWorkerState>.broadcast();
 
@@ -42,7 +45,8 @@ final class PushTokenSyncWorker {
     }
 
     final isNewToken = token != _latestToken;
-    if (!isNewToken) {
+    if (!isNewToken &&
+        (_shouldSync == null || _pumpFuture != null || _blockedToken != null)) {
       return;
     }
 
@@ -53,7 +57,7 @@ final class PushTokenSyncWorker {
     if (_pumpFuture != null) {
       return;
     }
-    if (token == _lastSyncedToken) {
+    if (token == _lastSyncedToken && _shouldSync == null) {
       _state = const PushTokenSyncWorkerState.synced();
       _statesController.add(_state);
       return;
@@ -113,10 +117,21 @@ final class PushTokenSyncWorker {
       if (attemptedToken == null || attemptedToken.isEmpty) {
         return;
       }
-      _state = PushTokenSyncWorkerState.syncing(attempt: _attempt);
-      _statesController.add(_state);
       try {
-        await _upsert(attemptedToken);
+        final shouldSync = _shouldSync;
+        final needsSync =
+            shouldSync == null || await shouldSync(attemptedToken);
+        if (_disposed) {
+          return;
+        }
+        if (_latestToken != attemptedToken) {
+          continue;
+        }
+        if (needsSync) {
+          _state = PushTokenSyncWorkerState.syncing(attempt: _attempt);
+          _statesController.add(_state);
+          await _upsert(attemptedToken);
+        }
         if (_disposed) {
           return;
         }

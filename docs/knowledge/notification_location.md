@@ -13,9 +13,23 @@
 - 警報はbackend側のcritical通知契約。実際の配信状態は別途確認する。
 - PermissionStateはOS状態だけを保持し、skipはonboarding中のWidget状態とする。
   NotifierがOS取得・変換・復帰時の再取得を担当し、Modelへ遷移ロジックを入れない。
+- オンボーディングの通知権限読み取りは10秒で打ち切り、取得失敗として再試行を案内する。
+  失敗時に許可・拒否の値を補わない。OSの許可ダイアログには時間制限を設けない。
+  iOSの通知設定取得はAPNs tokenやネットワーク通信と独立したOSへの問い合わせであり、
+  タイムアウトはAPNs登録失敗や通知拒否を意味しない。
+- iOS 27.0 Simulatorでは通知設定取得が未完了となり、`com.apple.usernotificationsd`
+  の再起動で同じアプリが復帰する事象を確認した。アプリ内の再試行はOS権限の読み取りだけをやり直し、
+  OSサービスは再起動しない。同じ環境でディスク容量不足も観測しており、iOSの版に固有の問題とは断定しない。
+  実機での発生条件・通知サービスが応答しなくなる根因は未確定。
 - Firebase AuthorizationStatusの`deniedPermanently`も明示的に扱い、端末設定からの変更を案内する。
 - プリセット初期化の同期callback問題は[UI残件](../todo/800_ui_and_navigation.md)。
   `NotificationPresetSelector`のuseEffect内onChangedは現コードにも存在し、実機再現は未実施。
+
+## 現在地の市区町村名
+
+- `CurrentLocationIntensityCard` は都道府県名と市区町村名を組み合わせて表示する。東京都（コード `13`）では、市区町村名の先頭の識別用「東京」を表示時だけ除く。
+- 同梱 `earthquake_stations.json` では東京23区・府中市・利島村の25件が該当する（2026-10-04確認）。気象庁の原名称・地域コード・観測点名は維持する。
+- 都道府県名に似た接頭辞を全国一律に削らない。「青森市」「大阪狭山市」のように正式名称にも同じ文字を含む自治体がある。東京都以外の表示名の検討と実機確認は [UI残課題](../todo/800_ui_and_navigation.md) を参照する。
 
 ## 震度別設定の適用範囲
 

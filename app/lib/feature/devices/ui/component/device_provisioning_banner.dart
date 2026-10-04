@@ -1,5 +1,3 @@
-import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
-
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/banner/app_banner.dart';
@@ -109,28 +107,7 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
         resumeAt: resumeAt,
         error: lastError,
       ),
-      RetryRunning(:final attempt) => _BannerTile(
-        icon: Icons.sync,
-        backgroundColor: colorTheme.secondaryContainer,
-        foregroundColor: colorTheme.onSecondaryContainer,
-        message: attempt == 0 ? '通知設定を更新しています…' : '再試行中… ($attempt 回目)',
-        trailing: const SizedBox(
-          width: 20,
-          height: 20,
-          child: AccessibleCircularProgressIndicator(strokeWidth: 2),
-        ),
-      ),
-      RetryIdle() when isLoading => _BannerTile(
-        icon: Icons.sync,
-        backgroundColor: colorTheme.secondaryContainer,
-        foregroundColor: colorTheme.onSecondaryContainer,
-        message: '通知設定を更新しています…',
-        trailing: const SizedBox(
-          width: 20,
-          height: 20,
-          child: AccessibleCircularProgressIndicator(strokeWidth: 2),
-        ),
-      ),
+      RetryRunning() || RetryIdle() when isLoading => const SizedBox.shrink(),
       RetryIdle() when isProvisioningRequired => _BannerTile(
         icon: Icons.warning_amber_outlined,
         backgroundColor: colorTheme.errorContainer,

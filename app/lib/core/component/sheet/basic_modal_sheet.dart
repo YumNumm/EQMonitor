@@ -9,11 +9,13 @@ class BasicModalSheet extends HookWidget {
     super.key,
     this.hasAppBar = true,
     this.expandToPane = false,
+    this.initialPositionOverlay,
   });
 
   final Widget child;
   final bool hasAppBar;
   final bool expandToPane;
+  final Widget? initialPositionOverlay;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,8 @@ class BasicModalSheet extends HookWidget {
     final colorTheme = designSystem.colorTheme;
     final shape = designSystem.shape;
     final spacing = designSystem.spacing;
+    final controller = useMemoized(SheetController.new);
+    useEffect(() => controller.dispose, [controller]);
 
     return SafeArea(
       bottom: false,
@@ -31,7 +35,9 @@ class BasicModalSheet extends HookWidget {
             height: constraints.maxHeight,
           );
           final isLandscape = size.width > size.height;
+          final initialExtent = size.height * 0.2;
           final sheet = Sheet(
+            controller: initialPositionOverlay == null ? null : controller,
             backgroundColor: colorTheme.surface,
             shape: RoundedSuperellipseBorder(
               borderRadius: BorderRadius.vertical(
@@ -39,7 +45,7 @@ class BasicModalSheet extends HookWidget {
               ),
               side: BorderSide(color: colorTheme.outlineVariant),
             ),
-            initialExtent: size.height * 0.2,
+            initialExtent: initialExtent,
             physics: const SnapSheetPhysics(
               stops: [
                 0.1,
@@ -67,6 +73,43 @@ class BasicModalSheet extends HookWidget {
               ],
             ),
           );
+          final overlay = initialPositionOverlay;
+          final content = overlay == null
+              ? sheet
+              : Stack(
+                  children: [
+                    Positioned(
+                      left: spacing.sm,
+                      right: spacing.sm,
+                      bottom: initialExtent + spacing.sm,
+                      child: AnimatedBuilder(
+                        animation: controller.animation,
+                        child: Align(alignment: .centerLeft, child: overlay),
+                        builder: (context, child) {
+                          final extent = controller.hasClients
+                              ? controller.offset
+                              : initialExtent;
+                          final opacity =
+                              (1 -
+                                      (extent - initialExtent).abs() /
+                                          (spacing.xxxxl * 2))
+                                  .clamp(0.0, 1.0);
+                          return ExcludeFocus(
+                            excluding: opacity == 0,
+                            child: IgnorePointer(
+                              ignoring: opacity == 0,
+                              child: ExcludeSemantics(
+                                excluding: opacity == 0,
+                                child: Opacity(opacity: opacity, child: child),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    sheet,
+                  ],
+                );
 
           if (isLandscape && !expandToPane) {
             return Align(
@@ -74,11 +117,11 @@ class BasicModalSheet extends HookWidget {
               child: SizedBox(
                 width: size.width * 0.5,
                 height: size.height,
-                child: sheet,
+                child: content,
               ),
             );
           }
-          return sheet;
+          return content;
         },
       ),
     );
