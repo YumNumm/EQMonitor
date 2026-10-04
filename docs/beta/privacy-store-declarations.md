@@ -13,9 +13,9 @@ Google Play Console と App Store Connect のプライバシー関連申告を�
 | 常時位置情報 | `NSLocationAlwaysAndWhenInUseUsageDescription` / `NSLocationAlwaysUsageDescription` / `NSLocationWhenInUseUsageDescription` + `UIBackgroundModes: location` | `app/ios/Runner/Info.plist:148-153,183-` |
 | Android位置情報 | `ACCESS_FINE_LOCATION` / `ACCESS_COARSE_LOCATION` / `ACCESS_BACKGROUND_LOCATION` | `app/android/app/src/main/AndroidManifest.xml:10-12` |
 | 位置情報実装 | `geolocator` (フォア/バック権限取得) + `background_location_tracker` (バックグラウンド追跡、`LocationUpdateReceiver`) | `app/pubspec.yaml:57,118`、`AndroidManifest.xml:64-66` |
-| 広告 | AdMob (`google_mobile_ads`)。Android`APPLICATION_ID`/iOS`GADApplicationIdentifier`をそれぞれ直書き。`SKAdNetworkItems`あり、ATTの利用目的キーは未設定 | `app/pubspec.yaml`、`app/android/app/src/main/AndroidManifest.xml`、`app/ios/Runner/Info.plist` |
+| 広告 | 広告 SDK・初期化・表示・非表示設定を削除。AdMob のアプリ ID と `SKAdNetworkItems` も削除 | `app/pubspec.yaml`、`app/lib/main.dart`、`app/android/app/src/main/AndroidManifest.xml`、`app/ios/Runner/Info.plist` |
 | 課金 | RevenueCat (`purchases_flutter`) | `app/pubspec.yaml:152` |
-| 計測/クラッシュ | Firebase Analytics / Crashlytics / Messaging / AppCheck / Installations | `app/pubspec.yaml:87-92` |
+| 計測/クラッシュ | Firebase Analytics / Crashlytics / Messaging / AppCheck / Installations。iOS の Analytics は広告 ID 対応なし、Android は広告 ID 収集を無効化 | `app/pubspec.yaml`、`mise.toml`、`.github/workflows/deploy-app.yaml`、`app/android/app/src/main/AndroidManifest.xml` |
 | Google Sign-In | Info.plistに`GIDClientID`と`com.googleusercontent.apps.*`のURL Schemeが残存するが、`app/lib`・全パッケージに`google_sign_in`/`firebase_auth`依存が無く、呼び出しコードも見つからない | `Info.plist:32-59` / `app/pubspec.yaml`(依存なし) / `grep`結果(該当なし) |
 | Critical Alerts | `com.apple.developer.usernotifications.critical-alerts` entitlement + `requestCriticalAlertPermission()` | `app/ios/Runner/Runner.entitlements`、`app/lib/feature/permission/data/repository/permission_repository.dart:35-40` |
 | Live Activities | `NSSupportsLiveActivities` / `NSSupportsLiveActivitiesFrequentUpdates` | `Info.plist:156-159`、`docs/live-activity-specification.md` |
@@ -108,7 +108,7 @@ App Store Connect の「App Privacy」→「Data Types」の質問票は、`.xcp
 プライバシーマニフェスト(SDKに同梱されているものを含む)から**自動入力されない**。
 これはXcode 15以降のビルド時プライバシーレポート(コンパイル警告・Privacy Manifest
 Summary)向けの別機構であり、App Store Connect上の質問票は**開発者が自身の判断で
-毎回手動回答する**必要がある。統合しているサードパーティSDK(AdMob/RevenueCat等)が
+毎回手動回答する**必要がある。統合しているサードパーティSDK(Firebase/RevenueCat等)が
 収集するデータも、SDKベンダーが公式に公開している「ASC回答ガイダンス」に従って
 **アプリ側の申告に含める**必要がある(SDKが自分の`.xcprivacy`を持っているからといって
 申告不要にはならない)。
@@ -119,23 +119,21 @@ Summary)向けの別機構であり、App Store Connect上の質問票は**開�
 | User ID | Yes | No | No | Analytics | 既存宣言(Firebase系識別子)。変更なし |
 | Crash Data | Yes | No | No | Analytics | 既存宣言(Crashlytics)。変更なし |
 | Performance Data | Yes | No | No | Analytics | 既存宣言(Firebase Performance系)。変更なし |
-| Device ID | **Yes** | No(EQMonitorはAdMobにアプリ独自の識別子/個人情報を紐付けていない。ATT未実装につきIDFAへのアクセスも無い) | No(ATT未呼出のためAppleの定義する「トラッキング」には該当しない。将来ATT+パーソナライズ広告を有効化する場合はYesへ見直し必須) | Third-Party Advertising, Analytics | AdMob公式ガイド「App store data disclosure」(`developers.google.com/admob/ios/privacy/data-disclosure`)が、Google Mobile Ads SDKはDevice ID(広告識別子含む)を「third-party advertising and analytics」目的で収集すると明記。ASCの質問票にはアプリ側で明示的にこの回答を入力する必要がある |
-| Advertising Data | **Yes** | 同上(No) | 同上(No、ATT未実装のため) | Third-Party Advertising, Analytics | 同ガイドが、ユーザーに表示した広告の履歴("advertisements the user has seen")を"may be used to power analytics and advertising features"と明記。同様にASCへの明示的な回答が必要 |
+| Device ID | 要再確認 | 要再確認 | 要再確認 | 残存 SDK の利用目的を確認 | AdMob 由来の収集は削除。Firebase 等の残存 SDK と配布成果物を確認して回答する |
+| Advertising Data | No（広告削除後の版） | — | No | — | 広告 SDK と広告表示を削除。配布成果物と Console の回答は未確認 |
 | Purchase History | **Yes** | **Yes（申告案）**: `revenue_cat_session.dart` が登録済みdevice IDへlogInし、backendでも購入と複数端末を対応付ける。匿名IDのみという旧根拠は適用不可 | No（今回、広告目的の購入情報連携は追加しない） | App Functionality, Analytics | RevenueCat公式Apple App Privacyと下記 #1843 の実装根拠。Console回答は未変更 |
 | User ID（RevenueCat） | **Yes** | **Yes（申告案）** | No | App Functionality, Analytics | custom App User IDとしてサーバー発行device IDを送信。既存Analytics向けUser IDとは別途集約して回答 |
 | Other Diagnostic Data / Product Interaction | Yes(既存宣言のAnalyticsで代替) | No | No | Analytics | Firebase Analytics |
 
-> 上記のDevice ID / Advertising DataのLinked/Tracking回答は、**EQMonitorが現状ATTを
-> 呼び出しておらずパーソナライズ広告を有効化していない**という前提に基づく。
-> ATT実装やユーザーID⇔広告識別子の紐付けを追加した場合は、この回答表を必ず更新すること。
+> 広告を削除したソースに合わせた申告案であり、Console の保存・公開は未実施。
+> 広告削除前の公開版と区別し、新しい配布成果物と残存 SDK のデータ収集を確認してから回答を更新する。
 
 ### 2.1 SDK同梱の`.xcprivacy`マニフェストとの重複宣言回避(参考情報)
 
 **この節は、あくまで`app/ios/PrivacyInfo.xcprivacy`(アプリ本体ターゲットのプライバシー
 マニフェスト)に何を追記すべきかの判断に限定した話であり、上記2.のApp Store Connect
 質問票の回答義務とは別問題である。** SDKが自身の`.xcprivacy`を同梱していても、
-App Store Connectの質問票への回答(Device ID / Advertising Data / Purchase History を
-Yesで申告すること)は免除されない。
+App Store Connectの質問票への回答は免除されない。残存 SDK の収集実態に合わせて回答する。
 
 Appleの仕様上、Xcodeのビルド時に生成される「プライバシーレポート」は、
 アプリ本体のPrivacyInfo.xcprivacyと、**ipaに含まれる全てのフレームワーク/リソースバンドル
@@ -150,12 +148,6 @@ Appleの仕様上、Xcodeのビルド時に生成される「プライバシー�
   `Firebase/*` CocoaPods) — firebase-ios-sdkリポジトリの各モジュール
   (`FirebaseCore`/`FirebaseMessaging`等)に`PrivacyInfo.xcprivacy`が同梱されている
   ことをGitHub上で確認した。**導入された正確なバージョン番号は要実測確認**。
-- Google Mobile Ads SDK (`google_mobile_ads: ^9.0.0` が依存する
-  `Google-Mobile-Ads-SDK` CocoaPod) — Google公式ドキュメント
-  (`developers.google.com/admob/ios/privacy/data-disclosure`)に
-  「Google Mobile Ads SDK version 11.2.0 and higher supports privacy manifest
-  declarations」と明記されている。**要実測確認**(pubspecの`^9.0.0`はFlutterプラグイン
-  バージョンであり、ネイティブSDKバージョンとは別管理のため)。
 - RevenueCat Purchases iOS SDK (`purchases_flutter: ^10.0.1` が依存する
   `RevenueCat`/`PurchasesHybridCommon` CocoaPod) — 公開情報ではPurchases iOS SDK
   4.37.0以降でPrivacyInfo.xcprivacyを同梱するとされる。**要実測確認**。
@@ -168,11 +160,11 @@ Appleの仕様上、Xcodeのビルド時に生成される「プライバシー�
 - [ ] Xcode Organizerのビルド時プライバシーレポートで、上記データ型がSDK起因で
       自動的に表示されることを確認する。表示されない場合は当該SDKのポッドが
       静的リンクでリソースバンドルが欠落している可能性があるため、
-      `pod install` ログ(`Google-Mobile-Ads-SDK`/`Firebase*`/`RevenueCat`の
+      `pod install` ログ(`Firebase*`/`RevenueCat`の
       `resource_bundles`)を確認する
 - [ ] このビルド時プライバシーレポートの確認は**App Store Connectの質問票への
-      回答を代替しない**(2.の表の通り、Device ID/Advertising Data/Purchase History は
-      質問票側でも明示的にYes回答が必要)ことを担当者間で認識合わせする
+      回答を代替しない**ことを担当者間で認識合わせする。質問票は残存 SDK の実態と
+      2.の表を照合して回答する
 
 ### 2.2 ATT(App Tracking Transparency)の設定
 
@@ -183,9 +175,8 @@ Appleの仕様上、Xcodeのビルド時に生成される「プライバシー�
 - `PrivacyInfo.xcprivacy` は `NSPrivacyTracking = false`、
   `NSPrivacyTrackingDomains` は空配列。ATTを呼ばないことだけでは
   トラッキングの有無を断定できないため、SDKを含む実際のデータ利用に基づいて申告する。
-- `GADApplicationIdentifier` と `SKAdNetworkItems` は広告配信に使用する。
-  [Googleの説明](https://developers.google.com/admob/ios/privacy/strategies)では、
-  SKAdNetworkによるコンバージョン計測はIDFAが利用できない場合にも対応している。
+- `GADApplicationIdentifier` と `SKAdNetworkItems` は削除済み。
+  配布成果物にも広告 SDK と設定が含まれないことを確認する。
 - 将来トラッキングを導入する場合は、ATTの許可要求と利用目的の説明文を実装し、
   `NSPrivacyTracking` / `NSPrivacyTrackingDomains` とストア申告を見直す。
 - 新しいビルドのアップロードとApp Store Connectでの警告解消は未確認。
@@ -200,18 +191,14 @@ Appleの仕様上、Xcodeのビルド時に生成される「プライバシー�
       Tracking: No / Purpose: App Functionality, Analytics。既存回答との差分を確認する
 - [ ] Diagnostics → Crash Data, Performance Data: Yes / Linked: No / Tracking: No /
       Purpose: Analytics(既存回答、変更なし)
-- [ ] Purchases → **AdMobのGoogle公式ASC回答ガイダンス(`developers.google.com/admob/ios/privacy/data-disclosure`)
-      とは別に**、RevenueCat公式ASC回答ガイダンス
+- [ ] Purchases → RevenueCat公式ASC回答ガイダンス
       (`revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy`)
       に従い、Purchase History を **Collected: Yes** で申告し、
       Purpose に **App Functionality と Analytics の両方**を選択したか確認する
       (Linked to you はdevice IDと購入の対応に基づきYesを申告案とする。
       §2表・末尾の #1843 追記参照。Consoleは未変更)
-- [ ] Identifiers/Usage Data(広告関連) は AdMob公式ASC回答ガイダンス
-      (`developers.google.com/admob/ios/privacy/data-disclosure`)に従い、
-      Device ID と Advertising Data を **Collected: Yes**、Purpose に
-      **Third-Party Advertising と Analytics** を選択したか確認する
-      (Linked to you / Tracking はATT未実装の現状に基づき No。§2表参照)
+- [ ] 広告削除を含む配布成果物を確認し、Advertising Data と Third-Party Advertising の
+      回答を見直す。Device ID は残存 SDK の利用実態を再確認する（§2表参照）
 - [ ] 上記の「Yesで申告」は`.xcprivacy`(SDK同梱分を含む)の内容確認では代替できない
       ことを担当者間で共有した(2.1参照。ビルド時プライバシーレポートの確認は
       あくまで補助的なダブルチェックとして扱う)
@@ -281,15 +268,12 @@ covered by the app's Analytics/Crash data collection.
       実際のアプリは高精度・バックグラウンド位置情報を収集しているため、
       現状のポリシーは実態と一致していない。**β配布前にポリシー文面の追記を
       ユーザー(法務判断者)に依頼することを推奨。**
-- [ ] **広告(AdMob)の記載が無い**: 第三者提供に関する第4条は「個人データは
-      同意なく提供しない」という一般論のみで、AdMob(Google)への広告関連データ
-      提供について具体的な言及がない。
 - [ ] **課金(RevenueCat)の記載が無い**: サブスクリプション/購入情報の収集・
       RevenueCatへの提供について言及がない。
 - [ ] **計測SDK(Firebase Analytics等)の名称が明記されていない**: 「行動履歴」
       という抽象的な表現のみで、Firebase Analytics/Crashlyticsという具体的な
       サービス名や、データがGoogle/Firebaseに送信される旨の記載がない。
-- [ ] 上記4点について、法務判断者(ユーザー)へ改訂の必要性を確認すること。
+- [ ] 上記3点について、法務判断者(ユーザー)へ改訂の必要性を確認すること。
       改訂する場合は本ポリシーの制定日(2023年12月1日)の更新も伴う。
 
 ---

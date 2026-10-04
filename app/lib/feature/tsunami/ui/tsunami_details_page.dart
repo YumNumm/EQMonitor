@@ -4,7 +4,6 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/effective_tsunami_state_provider.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_details_notifier.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_telegrams_provider.dart';
@@ -73,9 +72,6 @@ class TsunamiDetailsPage extends HookConsumerWidget {
                       TsunamiWarningStatusCard(tsunami: tsunami),
                       CurrentLocationTsunamiCard(tsunami: tsunami),
                       TsunamiRegionList(tsunami: tsunami),
-                      if (tsunami.updatedAt.difference(DateTime.now()).abs() >
-                          const Duration(hours: 24))
-                        const AdBanner(),
                       for (final earthquake in tsunami.earthquakes)
                         TsunamiEarthquakeCard(
                           earthquake: earthquake,

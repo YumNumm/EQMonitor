@@ -28,6 +28,13 @@
 - [ ] 新しいビルドを App Store Connect にアップロードし、そのビルドを審査対象に選択して警告の解消を確認する。アップロードと審査画面での確認は未実施。
 - 設定と申告の確認先: [ストア申告チェックリスト](../beta/privacy-store-declarations.md#22-attapp-tracking-transparencyの設定)。
 
+## 900: 広告削除後の配布確認
+
+- [ ] iOS simulator / Android debug の全体ビルドを空き容量のある環境で完走させる。ローカル実行は `No space left on device` で停止し、ネイティブのリンク・起動は未検証。
+- [ ] 署名済み IPA / AAB に Google Mobile Ads SDK と広告設定が含まれないことを確認する。iOS は `GADApplicationIdentifier` / `SKAdNetworkItems`、Android は AdMob の `APPLICATION_ID` と広告 SDK 由来の権限を確認する。
+- [ ] iOS / Android の実機で設定・地震詳細・津波詳細・Pro の説明に広告表示と広告非表示の設定が残っていないことを確認する。
+- [ ] 広告削除を含む版の公開に合わせ、App Store Connect / Play Console の広告・データ収集の申告を残存 SDK の実態に合わせて見直す。Console の変更・公開は未実施。
+
 ## 860: iOS cold archive の actool
 
 - 対象: `app/ios/Runner.xcodeproj/project.pbxproj`、`app/ios/AppIcon-dev.icon` / `AppIcon.icon`、`.github/workflows/deploy-app.yaml`。
