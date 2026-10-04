@@ -52,7 +52,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -297,15 +296,11 @@ class AppBootstrap {
     profiler.mark('before_run_app');
     runApp(UncontrolledProviderScope(container: container, child: const App()));
 
-    // 広告SDK・通知プラグインは override 値を生まないため runApp 後に遅延初期化する。
+    // ダウンローダー・通知プラグインは override 値を生まないため runApp 後に遅延初期化する。
     // 例外が発生しても起動フローを止めず talker に記録する。
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       GuardedUnawaitedUtil.run(
         () => FileDownloader().start(autoCleanDatabase: true),
-        onError: (error, stack) => talker.error(error, stack),
-      );
-      GuardedUnawaitedUtil.run(
-        () => MobileAds.instance.initialize(),
         onError: (error, stack) => talker.error(error, stack),
       );
     }

@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
-import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
 import 'package:eqmonitor/feature/settings/settings_page.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -29,7 +28,6 @@ Future<void> _pumpSettings(
         app_prefs.sharedPreferencesProvider.overrideWithValue(
           app_prefs.SharedPreferencesAsync(prefs),
         ),
-        adsOptOutProvider.overrideWithBuild((_, _) => false),
         buildConfigProvider.overrideWithValue(buildConfig),
         packageInfoProvider.overrideWithValue(_packageInfo),
       ],
@@ -71,7 +69,7 @@ void main() {
     );
 
     await tester.scrollUntilVisible(
-      find.text('広告を非表示'),
+      find.text('問い合わせ'),
       300,
       scrollable: find.byType(Scrollable),
     );

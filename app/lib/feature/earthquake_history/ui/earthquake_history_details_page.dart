@@ -6,7 +6,6 @@ import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.d
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment_selector.dart';
@@ -235,10 +234,6 @@ class _LoadedContent extends HookConsumerWidget {
                         source: effectiveSource,
                         showDatabaseBadge: isDbOnly,
                       ),
-                      if (earthquake.originTime case final originTime?
-                          when DateTime.now().difference(originTime) >
-                              const Duration(hours: 24))
-                        const AdBanner(),
                       NearbyEarthquakeCard(earthquake: earthquake),
                       if (telegramCommentLines.isNotEmpty ||
                           earthquake.dataSources.isNotEmpty)

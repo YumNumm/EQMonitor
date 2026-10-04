@@ -838,15 +838,6 @@ class _StartApiDebugContent extends ConsumerWidget {
             ),
           ),
         ),
-        AppSwitchListTile(
-          title: 'flags.ads_enabled',
-          subtitle: '広告有効フラグ',
-          value: data.flags.adsEnabled,
-          onChanged: (v) => _override(
-            ref,
-            data.copyWith(flags: data.flags.copyWith(adsEnabled: v)),
-          ),
-        ),
         ListTile(
           dense: true,
           title: const Text('latest.version'),
