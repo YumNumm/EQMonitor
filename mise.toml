@@ -37,6 +37,7 @@ plugin_autoupdate_last_check_duration = "1 week"
 
 [env]
 HK_MISE = "1"
+FIREBASE_ANALYTICS_WITHOUT_ADID = "true"
 
 [hooks]
 postinstall = "hk install --mise"
