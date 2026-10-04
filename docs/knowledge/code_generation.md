@@ -54,6 +54,9 @@ mise exec -- dart run pigeon --input pigeons/background_location.dart
 - `packages/eqmonitor_api/bin/generate.dart` は backend の `api/api/openapi.json` を読み、
   `lib/src` を全消し再生成する。必要な backend checkout とその指示を先に確認する。
   通常の API package の単体テストには backend は不要。
+- 生成に必要な型・operationが欠けた場合は、Backendの実装・ルート登録・OpenAPI生成を確認する。
+  アプリ側で未提供APIのスキーマを補完しない。Backendの正規生成結果を更新し、そのコミットを
+  `backend` submoduleに固定してクライアントを生成する。別ブランチの仕様を混ぜた入力は使わない。
 - package 内で `mise exec -- dart run bin/generate.dart`、続けて `mise exec -- dart test`。
   追加型だけでなく既存 API・モデル・export の削除差分も確認し、app 全体の解析も行う。
   過去には別機能の再生成で Live Activity 契約が欠落した。旧 endpoint を無条件に復元せず、
