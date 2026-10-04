@@ -28,4 +28,11 @@ const _$TestNotificationTypeEnumMap = {
   TestNotificationType.silent: 'SILENT',
   TestNotificationType.normal: 'NORMAL',
   TestNotificationType.critical: 'CRITICAL',
+  TestNotificationType.shindoReport: 'SHINDO_REPORT',
+  TestNotificationType.shindoReportWithHypocenter:
+      'SHINDO_REPORT_WITH_HYPOCENTER',
+  TestNotificationType.hypocenterAndIntensity: 'HYPOCENTER_AND_INTENSITY',
+  TestNotificationType.longPeriodGroundMotion: 'LONG_PERIOD_GROUND_MOTION',
+  TestNotificationType.eewForecast: 'EEW_FORECAST',
+  TestNotificationType.eewWarning: 'EEW_WARNING',
 };

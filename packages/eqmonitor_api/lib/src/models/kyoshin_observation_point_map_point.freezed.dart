@@ -78,7 +78,7 @@ as ParameterPoint,
 @override
 @pragma('vm:prefer-inline')
 $ParameterPointCopyWith<$Res> get center {
-  
+
   return $ParameterPointCopyWith<$Res>(_self.center, (value) {
     return _then(_self.copyWith(center: value));
   });
@@ -87,7 +87,7 @@ $ParameterPointCopyWith<$Res> get center {
 @override
 @pragma('vm:prefer-inline')
 $ParameterPointCopyWith<$Res> get offset {
-  
+
   return $ParameterPointCopyWith<$Res>(_self.offset, (value) {
     return _then(_self.copyWith(offset: value));
   });
@@ -298,7 +298,7 @@ as ParameterPoint,
 @override
 @pragma('vm:prefer-inline')
 $ParameterPointCopyWith<$Res> get center {
-  
+
   return $ParameterPointCopyWith<$Res>(_self.center, (value) {
     return _then(_self.copyWith(center: value));
   });
@@ -307,7 +307,7 @@ $ParameterPointCopyWith<$Res> get center {
 @override
 @pragma('vm:prefer-inline')
 $ParameterPointCopyWith<$Res> get offset {
-  
+
   return $ParameterPointCopyWith<$Res>(_self.offset, (value) {
     return _then(_self.copyWith(offset: value));
   });

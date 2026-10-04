@@ -24,7 +24,7 @@ TargetUnion _$TargetUnionFromJson(
           return TargetUnionVariant2.fromJson(
             json
           );
-        
+
           default:
             throw CheckedFromJsonException(
   json,
@@ -33,7 +33,7 @@ TargetUnion _$TargetUnionFromJson(
   'Invalid union type "${json['runtimeType']}"!'
 );
         }
-      
+
 }
 
 /// @nodoc

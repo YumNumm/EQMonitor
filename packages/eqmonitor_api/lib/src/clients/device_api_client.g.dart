@@ -361,6 +361,122 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
+  Future<HttpResponse<List<ShakeDetectionSettingResponse>>>
+  getV2DeviceMeSettingsShakeDetection() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<HttpResponse<List<ShakeDetectionSettingResponse>>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v2/device/me/settings/shake-detection',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<ShakeDetectionSettingResponse> _value;
+    try {
+      _value = _result.data!
+          .map(
+            (dynamic i) => ShakeDetectionSettingResponse.fromJson(
+              i as Map<String, dynamic>,
+            ),
+          )
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<List<ShakeDetectionSettingResponse>>>
+  putV2DeviceMeSettingsShakeDetection({
+    required List<ShakeDetectionSettingRequest> body,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = body.map((e) => e.toJson()).toList();
+    final _options =
+        _setStreamType<HttpResponse<List<ShakeDetectionSettingResponse>>>(
+          Options(method: 'PUT', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v2/device/me/settings/shake-detection',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<ShakeDetectionSettingResponse> _value;
+    try {
+      _value = _result.data!
+          .map(
+            (dynamic i) => ShakeDetectionSettingResponse.fromJson(
+              i as Map<String, dynamic>,
+            ),
+          )
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<List<ShakeDetectionSubRegionResponse>>>
+  getV2DeviceMeSettingsShakeDetectionSubRegions() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<HttpResponse<List<ShakeDetectionSubRegionResponse>>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v2/device/me/settings/shake-detection/sub-regions',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<ShakeDetectionSubRegionResponse> _value;
+    try {
+      _value = _result.data!
+          .map(
+            (dynamic i) => ShakeDetectionSubRegionResponse.fromJson(
+              i as Map<String, dynamic>,
+            ),
+          )
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
   Future<HttpResponse<TsunamiSettingsResponse>>
   getV2DeviceMeSettingsTsunami() async {
     final _extra = <String, dynamic>{};
@@ -1135,94 +1251,6 @@ class _DeviceApiClient implements DeviceApiClient {
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<ShakeDetectionSettingsResponse>>
-  getV2DeviceMeSettingsShakeDetection() async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options =
-        _setStreamType<HttpResponse<ShakeDetectionSettingsResponse>>(
-          Options(method: 'GET', headers: _headers, extra: _extra)
-              .compose(
-                _dio.options,
-                '/v2/device/me/settings/shake-detection',
-                queryParameters: queryParameters,
-                data: _data,
-              )
-              .copyWith(
-                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
-              ),
-        );
-    final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late ShakeDetectionSettingsResponse _value;
-    try {
-      _value = ShakeDetectionSettingsResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<ShakeDetectionSettingsResponse>>
-  putV2DeviceMeSettingsShakeDetection({
-    required List<ShakeDetectionSettingRequest> body,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = body.map((e) => e.toJson()).toList();
-    final _options =
-        _setStreamType<HttpResponse<ShakeDetectionSettingsResponse>>(
-          Options(method: 'PUT', headers: _headers, extra: _extra)
-              .compose(
-                _dio.options,
-                '/v2/device/me/settings/shake-detection',
-                queryParameters: queryParameters,
-                data: _data,
-              )
-              .copyWith(
-                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
-              ),
-        );
-    final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late ShakeDetectionSettingsResponse _value;
-    try {
-      _value = ShakeDetectionSettingsResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<void>>
-  getV2DeviceMeSettingsShakeDetectionSubRegions() async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<void>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/device/me/settings/shake-detection/sub-regions',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<void>(_options);
-    final httpResponse = HttpResponse(null, _result);
     return httpResponse;
   }
 

@@ -11,7 +11,19 @@ enum TestNotificationType {
   @JsonValue('NORMAL')
   normal('NORMAL'),
   @JsonValue('CRITICAL')
-  critical('CRITICAL');
+  critical('CRITICAL'),
+  @JsonValue('SHINDO_REPORT')
+  shindoReport('SHINDO_REPORT'),
+  @JsonValue('SHINDO_REPORT_WITH_HYPOCENTER')
+  shindoReportWithHypocenter('SHINDO_REPORT_WITH_HYPOCENTER'),
+  @JsonValue('HYPOCENTER_AND_INTENSITY')
+  hypocenterAndIntensity('HYPOCENTER_AND_INTENSITY'),
+  @JsonValue('LONG_PERIOD_GROUND_MOTION')
+  longPeriodGroundMotion('LONG_PERIOD_GROUND_MOTION'),
+  @JsonValue('EEW_FORECAST')
+  eewForecast('EEW_FORECAST'),
+  @JsonValue('EEW_WARNING')
+  eewWarning('EEW_WARNING');
 
   const TestNotificationType(this.json);
 

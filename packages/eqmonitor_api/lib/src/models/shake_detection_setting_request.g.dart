@@ -15,39 +15,37 @@ _ShakeDetectionSettingRequest _$ShakeDetectionSettingRequestFromJson(
   json,
   ($checkedConvert) {
     final val = _ShakeDetectionSettingRequest(
-      targetType: $checkedConvert(
-        'target_type',
-        (v) => $enumDecode(_$ShakeDetectionTargetTypeEnumMap, v),
-      ),
-      regionCode: $checkedConvert('region_code', (v) => v as String?),
-      enabled: $checkedConvert('enabled', (v) => v as bool),
+      subRegionId: $checkedConvert('sub_region_id', (v) => v as String?),
+      prefectureCode: $checkedConvert('prefecture_code', (v) => v as String?),
+      cityCode: $checkedConvert('city_code', (v) => v as String?),
       minLevel: $checkedConvert(
         'min_level',
         (v) => $enumDecode(_$ShakeDetectionLevelEnumMap, v),
+      ),
+      isCurrentLocation: $checkedConvert(
+        'is_current_location',
+        (v) => v as bool,
       ),
     );
     return val;
   },
   fieldKeyMap: const {
-    'targetType': 'target_type',
-    'regionCode': 'region_code',
+    'subRegionId': 'sub_region_id',
+    'prefectureCode': 'prefecture_code',
+    'cityCode': 'city_code',
     'minLevel': 'min_level',
+    'isCurrentLocation': 'is_current_location',
   },
 );
 
 Map<String, dynamic> _$ShakeDetectionSettingRequestToJson(
   _ShakeDetectionSettingRequest instance,
 ) => <String, dynamic>{
-  'target_type': instance.targetType,
-  'region_code': instance.regionCode,
-  'enabled': instance.enabled,
+  'sub_region_id': instance.subRegionId,
+  'prefecture_code': instance.prefectureCode,
+  'city_code': instance.cityCode,
   'min_level': instance.minLevel,
-};
-
-const _$ShakeDetectionTargetTypeEnumMap = {
-  ShakeDetectionTargetType.currentLocation: 'current_location',
-  ShakeDetectionTargetType.nationwide: 'nationwide',
-  ShakeDetectionTargetType.region: 'region',
+  'is_current_location': instance.isCurrentLocation,
 };
 
 const _$ShakeDetectionLevelEnumMap = {

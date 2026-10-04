@@ -79,7 +79,7 @@ as HypocenterCoverage,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterCoverageCopyWith<$Res> get coverage {
-  
+
   return $HypocenterCoverageCopyWith<$Res>(_self.coverage, (value) {
     return _then(_self.copyWith(coverage: value));
   });
@@ -292,7 +292,7 @@ as HypocenterCoverage,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterCoverageCopyWith<$Res> get coverage {
-  
+
   return $HypocenterCoverageCopyWith<$Res>(_self.coverage, (value) {
     return _then(_self.copyWith(coverage: value));
   });
