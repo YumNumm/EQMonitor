@@ -19,12 +19,6 @@ _ShakeDetectionState _$ShakeDetectionStateFromJson(
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
     expiresAt: $checkedConvert('expiresAt', (v) => DateTime.parse(v as String)),
     level: $checkedConvert('level', (v) => $enumDecode(_$LevelEnumMap, v)),
-    changeReasons: $checkedConvert(
-      'changeReasons',
-      (v) => (v as List<dynamic>)
-          .map((e) => $enumDecode(_$ChangeReasonsEnumMap, e))
-          .toList(),
-    ),
     mergedEvents: $checkedConvert(
       'mergedEvents',
       (v) => (v as List<dynamic>)
@@ -40,6 +34,12 @@ _ShakeDetectionState _$ShakeDetectionStateFromJson(
       'points',
       (v) => (v as List<dynamic>)
           .map((e) => Points.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    changeReasons: $checkedConvert(
+      'changeReasons',
+      (v) => (v as List<dynamic>)
+          .map((e) => $enumDecode(_$ChangeReasonsEnumMap, e))
           .toList(),
     ),
     test: $checkedConvert(
@@ -65,11 +65,11 @@ Map<String, dynamic> _$ShakeDetectionStateToJson(
   'updatedAt': instance.updatedAt.toIso8601String(),
   'expiresAt': instance.expiresAt.toIso8601String(),
   'level': instance.level,
-  'changeReasons': instance.changeReasons,
   'mergedEvents': instance.mergedEvents,
   'pointCount': instance.pointCount,
   'region': instance.region,
   'points': instance.points,
+  'changeReasons': instance.changeReasons,
   'test': ?instance.test,
   'correlatedEew': ?instance.correlatedEew,
 };

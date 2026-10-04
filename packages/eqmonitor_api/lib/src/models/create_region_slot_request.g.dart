@@ -15,7 +15,7 @@ _CreateRegionSlotRequest _$CreateRegionSlotRequestFromJson(
   json,
   ($checkedConvert) {
     final val = _CreateRegionSlotRequest(
-      regionId: $checkedConvert('region_id', (v) => v as num),
+      regionId: $checkedConvert('region_id', (v) => (v as num).toInt()),
       regionName: $checkedConvert('region_name', (v) => v as String?),
       cityCode: $checkedConvert('city_code', (v) => v as String?),
       cityName: $checkedConvert('city_name', (v) => v as String?),

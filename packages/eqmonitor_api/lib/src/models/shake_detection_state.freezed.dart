@@ -17,7 +17,7 @@ T _$identity<T>(T value) => value;
 mixin _$ShakeDetectionState {
 
 /// const: "shake_detection"
- String get type; String get eventId; int get serialNo; DateTime get createdAt; DateTime get updatedAt; DateTime get expiresAt; Level get level; List<ChangeReasons> get changeReasons; List<MergedEvents> get mergedEvents; int get pointCount; Region get region; List<Points> get points;@JsonKey(includeIfNull: false) Test? get test;@JsonKey(includeIfNull: false) CorrelatedEew? get correlatedEew;
+ String get type; String get eventId; int get serialNo; DateTime get createdAt; DateTime get updatedAt; DateTime get expiresAt; Level get level; List<MergedEvents> get mergedEvents; int get pointCount; Region get region; List<Points> get points; List<ChangeReasons> get changeReasons;@JsonKey(includeIfNull: false) Test? get test;@JsonKey(includeIfNull: false) CorrelatedEew? get correlatedEew;
 /// Create a copy of ShakeDetectionState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +30,16 @@ $ShakeDetectionStateCopyWith<ShakeDetectionState> get copyWith => _$ShakeDetecti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionState&&(identical(other.type, type) || other.type == type)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.level, level) || other.level == level)&&const DeepCollectionEquality().equals(other.changeReasons, changeReasons)&&const DeepCollectionEquality().equals(other.mergedEvents, mergedEvents)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.region, region) || other.region == region)&&const DeepCollectionEquality().equals(other.points, points)&&(identical(other.test, test) || other.test == test)&&(identical(other.correlatedEew, correlatedEew) || other.correlatedEew == correlatedEew));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionState&&(identical(other.type, type) || other.type == type)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.level, level) || other.level == level)&&const DeepCollectionEquality().equals(other.mergedEvents, mergedEvents)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.region, region) || other.region == region)&&const DeepCollectionEquality().equals(other.points, points)&&const DeepCollectionEquality().equals(other.changeReasons, changeReasons)&&(identical(other.test, test) || other.test == test)&&(identical(other.correlatedEew, correlatedEew) || other.correlatedEew == correlatedEew));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,eventId,serialNo,createdAt,updatedAt,expiresAt,level,const DeepCollectionEquality().hash(changeReasons),const DeepCollectionEquality().hash(mergedEvents),pointCount,region,const DeepCollectionEquality().hash(points),test,correlatedEew);
+int get hashCode => Object.hash(runtimeType,type,eventId,serialNo,createdAt,updatedAt,expiresAt,level,const DeepCollectionEquality().hash(mergedEvents),pointCount,region,const DeepCollectionEquality().hash(points),const DeepCollectionEquality().hash(changeReasons),test,correlatedEew);
 
 @override
 String toString() {
-  return 'ShakeDetectionState(type: $type, eventId: $eventId, serialNo: $serialNo, createdAt: $createdAt, updatedAt: $updatedAt, expiresAt: $expiresAt, level: $level, changeReasons: $changeReasons, mergedEvents: $mergedEvents, pointCount: $pointCount, region: $region, points: $points, test: $test, correlatedEew: $correlatedEew)';
+  return 'ShakeDetectionState(type: $type, eventId: $eventId, serialNo: $serialNo, createdAt: $createdAt, updatedAt: $updatedAt, expiresAt: $expiresAt, level: $level, mergedEvents: $mergedEvents, pointCount: $pointCount, region: $region, points: $points, changeReasons: $changeReasons, test: $test, correlatedEew: $correlatedEew)';
 }
 
 
@@ -50,7 +50,7 @@ abstract mixin class $ShakeDetectionStateCopyWith<$Res>  {
   factory $ShakeDetectionStateCopyWith(ShakeDetectionState value, $Res Function(ShakeDetectionState) _then) = _$ShakeDetectionStateCopyWithImpl;
 @useResult
 $Res call({
- String type, String eventId, int serialNo, DateTime createdAt, DateTime updatedAt, DateTime expiresAt, Level level, List<ChangeReasons> changeReasons, List<MergedEvents> mergedEvents, int pointCount, Region region, List<Points> points,@JsonKey(includeIfNull: false) Test? test,@JsonKey(includeIfNull: false) CorrelatedEew? correlatedEew
+ String type, String eventId, int serialNo, DateTime createdAt, DateTime updatedAt, DateTime expiresAt, Level level, List<MergedEvents> mergedEvents, int pointCount, Region region, List<Points> points, List<ChangeReasons> changeReasons,@JsonKey(includeIfNull: false) Test? test,@JsonKey(includeIfNull: false) CorrelatedEew? correlatedEew
 });
 
 
@@ -67,7 +67,7 @@ class _$ShakeDetectionStateCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? eventId = null,Object? serialNo = null,Object? createdAt = null,Object? updatedAt = null,Object? expiresAt = null,Object? level = null,Object? changeReasons = null,Object? mergedEvents = null,Object? pointCount = null,Object? region = null,Object? points = null,Object? test = freezed,Object? correlatedEew = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? eventId = null,Object? serialNo = null,Object? createdAt = null,Object? updatedAt = null,Object? expiresAt = null,Object? level = null,Object? mergedEvents = null,Object? pointCount = null,Object? region = null,Object? points = null,Object? changeReasons = null,Object? test = freezed,Object? correlatedEew = freezed,}) {
   return _then(ShakeDetectionState(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
@@ -76,12 +76,12 @@ as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cas
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
-as Level,changeReasons: null == changeReasons ? _self.changeReasons : changeReasons // ignore: cast_nullable_to_non_nullable
-as List<ChangeReasons>,mergedEvents: null == mergedEvents ? _self.mergedEvents : mergedEvents // ignore: cast_nullable_to_non_nullable
+as Level,mergedEvents: null == mergedEvents ? _self.mergedEvents : mergedEvents // ignore: cast_nullable_to_non_nullable
 as List<MergedEvents>,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
 as int,region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
 as Region,points: null == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
-as List<Points>,test: freezed == test ? _self.test : test // ignore: cast_nullable_to_non_nullable
+as List<Points>,changeReasons: null == changeReasons ? _self.changeReasons : changeReasons // ignore: cast_nullable_to_non_nullable
+as List<ChangeReasons>,test: freezed == test ? _self.test : test // ignore: cast_nullable_to_non_nullable
 as Test?,correlatedEew: freezed == correlatedEew ? _self.correlatedEew : correlatedEew // ignore: cast_nullable_to_non_nullable
 as CorrelatedEew?,
   ));
@@ -201,10 +201,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  String eventId,  int serialNo,  DateTime createdAt,  DateTime updatedAt,  DateTime expiresAt,  Level level,  List<ChangeReasons> changeReasons,  List<MergedEvents> mergedEvents,  int pointCount,  Region region,  List<Points> points, @JsonKey(includeIfNull: false)  Test? test, @JsonKey(includeIfNull: false)  CorrelatedEew? correlatedEew)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  String eventId,  int serialNo,  DateTime createdAt,  DateTime updatedAt,  DateTime expiresAt,  Level level,  List<MergedEvents> mergedEvents,  int pointCount,  Region region,  List<Points> points,  List<ChangeReasons> changeReasons, @JsonKey(includeIfNull: false)  Test? test, @JsonKey(includeIfNull: false)  CorrelatedEew? correlatedEew)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShakeDetectionState() when $default != null:
-return $default(_that.type,_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.changeReasons,_that.mergedEvents,_that.pointCount,_that.region,_that.points,_that.test,_that.correlatedEew);case _:
+return $default(_that.type,_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.mergedEvents,_that.pointCount,_that.region,_that.points,_that.changeReasons,_that.test,_that.correlatedEew);case _:
   return orElse();
 
 }
@@ -222,10 +222,10 @@ return $default(_that.type,_that.eventId,_that.serialNo,_that.createdAt,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  String eventId,  int serialNo,  DateTime createdAt,  DateTime updatedAt,  DateTime expiresAt,  Level level,  List<ChangeReasons> changeReasons,  List<MergedEvents> mergedEvents,  int pointCount,  Region region,  List<Points> points, @JsonKey(includeIfNull: false)  Test? test, @JsonKey(includeIfNull: false)  CorrelatedEew? correlatedEew)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  String eventId,  int serialNo,  DateTime createdAt,  DateTime updatedAt,  DateTime expiresAt,  Level level,  List<MergedEvents> mergedEvents,  int pointCount,  Region region,  List<Points> points,  List<ChangeReasons> changeReasons, @JsonKey(includeIfNull: false)  Test? test, @JsonKey(includeIfNull: false)  CorrelatedEew? correlatedEew)  $default,) {final _that = this;
 switch (_that) {
 case _ShakeDetectionState():
-return $default(_that.type,_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.changeReasons,_that.mergedEvents,_that.pointCount,_that.region,_that.points,_that.test,_that.correlatedEew);case _:
+return $default(_that.type,_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.mergedEvents,_that.pointCount,_that.region,_that.points,_that.changeReasons,_that.test,_that.correlatedEew);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -242,10 +242,10 @@ return $default(_that.type,_that.eventId,_that.serialNo,_that.createdAt,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  String eventId,  int serialNo,  DateTime createdAt,  DateTime updatedAt,  DateTime expiresAt,  Level level,  List<ChangeReasons> changeReasons,  List<MergedEvents> mergedEvents,  int pointCount,  Region region,  List<Points> points, @JsonKey(includeIfNull: false)  Test? test, @JsonKey(includeIfNull: false)  CorrelatedEew? correlatedEew)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  String eventId,  int serialNo,  DateTime createdAt,  DateTime updatedAt,  DateTime expiresAt,  Level level,  List<MergedEvents> mergedEvents,  int pointCount,  Region region,  List<Points> points,  List<ChangeReasons> changeReasons, @JsonKey(includeIfNull: false)  Test? test, @JsonKey(includeIfNull: false)  CorrelatedEew? correlatedEew)?  $default,) {final _that = this;
 switch (_that) {
 case _ShakeDetectionState() when $default != null:
-return $default(_that.type,_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.changeReasons,_that.mergedEvents,_that.pointCount,_that.region,_that.points,_that.test,_that.correlatedEew);case _:
+return $default(_that.type,_that.eventId,_that.serialNo,_that.createdAt,_that.updatedAt,_that.expiresAt,_that.level,_that.mergedEvents,_that.pointCount,_that.region,_that.points,_that.changeReasons,_that.test,_that.correlatedEew);case _:
   return null;
 
 }
@@ -257,7 +257,7 @@ return $default(_that.type,_that.eventId,_that.serialNo,_that.createdAt,_that.up
 @JsonSerializable()
 
 class _ShakeDetectionState implements ShakeDetectionState {
-  const _ShakeDetectionState({required this.type, required this.eventId, required this.serialNo, required this.createdAt, required this.updatedAt, required this.expiresAt, required this.level, required  List<ChangeReasons> changeReasons, required  List<MergedEvents> mergedEvents, required this.pointCount, required this.region, required  List<Points> points, @JsonKey(includeIfNull: false) this.test, @JsonKey(includeIfNull: false) this.correlatedEew}): _changeReasons = changeReasons,_mergedEvents = mergedEvents,_points = points;
+  const _ShakeDetectionState({required this.type, required this.eventId, required this.serialNo, required this.createdAt, required this.updatedAt, required this.expiresAt, required this.level, required  List<MergedEvents> mergedEvents, required this.pointCount, required this.region, required  List<Points> points, required  List<ChangeReasons> changeReasons, @JsonKey(includeIfNull: false) this.test, @JsonKey(includeIfNull: false) this.correlatedEew}): _mergedEvents = mergedEvents,_points = points,_changeReasons = changeReasons;
   factory _ShakeDetectionState.fromJson(Map<String, dynamic> json) => _$ShakeDetectionStateFromJson(json);
 
 /// const: "shake_detection"
@@ -268,13 +268,6 @@ class _ShakeDetectionState implements ShakeDetectionState {
 @override final  DateTime updatedAt;
 @override final  DateTime expiresAt;
 @override final  Level level;
- final  List<ChangeReasons> _changeReasons;
-@override List<ChangeReasons> get changeReasons {
-  if (_changeReasons is EqualUnmodifiableListView) return _changeReasons;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_changeReasons);
-}
-
  final  List<MergedEvents> _mergedEvents;
 @override List<MergedEvents> get mergedEvents {
   if (_mergedEvents is EqualUnmodifiableListView) return _mergedEvents;
@@ -289,6 +282,13 @@ class _ShakeDetectionState implements ShakeDetectionState {
   if (_points is EqualUnmodifiableListView) return _points;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_points);
+}
+
+ final  List<ChangeReasons> _changeReasons;
+@override List<ChangeReasons> get changeReasons {
+  if (_changeReasons is EqualUnmodifiableListView) return _changeReasons;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_changeReasons);
 }
 
 @override@JsonKey(includeIfNull: false) final  Test? test;
@@ -307,16 +307,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionState&&(identical(other.type, type) || other.type == type)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.level, level) || other.level == level)&&const DeepCollectionEquality().equals(other._changeReasons, _changeReasons)&&const DeepCollectionEquality().equals(other._mergedEvents, _mergedEvents)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.region, region) || other.region == region)&&const DeepCollectionEquality().equals(other._points, _points)&&(identical(other.test, test) || other.test == test)&&(identical(other.correlatedEew, correlatedEew) || other.correlatedEew == correlatedEew));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionState&&(identical(other.type, type) || other.type == type)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.level, level) || other.level == level)&&const DeepCollectionEquality().equals(other._mergedEvents, _mergedEvents)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.region, region) || other.region == region)&&const DeepCollectionEquality().equals(other._points, _points)&&const DeepCollectionEquality().equals(other._changeReasons, _changeReasons)&&(identical(other.test, test) || other.test == test)&&(identical(other.correlatedEew, correlatedEew) || other.correlatedEew == correlatedEew));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,eventId,serialNo,createdAt,updatedAt,expiresAt,level,const DeepCollectionEquality().hash(_changeReasons),const DeepCollectionEquality().hash(_mergedEvents),pointCount,region,const DeepCollectionEquality().hash(_points),test,correlatedEew);
+int get hashCode => Object.hash(runtimeType,type,eventId,serialNo,createdAt,updatedAt,expiresAt,level,const DeepCollectionEquality().hash(_mergedEvents),pointCount,region,const DeepCollectionEquality().hash(_points),const DeepCollectionEquality().hash(_changeReasons),test,correlatedEew);
 
 @override
 String toString() {
-  return 'ShakeDetectionState(type: $type, eventId: $eventId, serialNo: $serialNo, createdAt: $createdAt, updatedAt: $updatedAt, expiresAt: $expiresAt, level: $level, changeReasons: $changeReasons, mergedEvents: $mergedEvents, pointCount: $pointCount, region: $region, points: $points, test: $test, correlatedEew: $correlatedEew)';
+  return 'ShakeDetectionState(type: $type, eventId: $eventId, serialNo: $serialNo, createdAt: $createdAt, updatedAt: $updatedAt, expiresAt: $expiresAt, level: $level, mergedEvents: $mergedEvents, pointCount: $pointCount, region: $region, points: $points, changeReasons: $changeReasons, test: $test, correlatedEew: $correlatedEew)';
 }
 
 
@@ -327,7 +327,7 @@ abstract mixin class _$ShakeDetectionStateCopyWith<$Res> implements $ShakeDetect
   factory _$ShakeDetectionStateCopyWith(_ShakeDetectionState value, $Res Function(_ShakeDetectionState) _then) = __$ShakeDetectionStateCopyWithImpl;
 @override @useResult
 $Res call({
- String type, String eventId, int serialNo, DateTime createdAt, DateTime updatedAt, DateTime expiresAt, Level level, List<ChangeReasons> changeReasons, List<MergedEvents> mergedEvents, int pointCount, Region region, List<Points> points,@JsonKey(includeIfNull: false) Test? test,@JsonKey(includeIfNull: false) CorrelatedEew? correlatedEew
+ String type, String eventId, int serialNo, DateTime createdAt, DateTime updatedAt, DateTime expiresAt, Level level, List<MergedEvents> mergedEvents, int pointCount, Region region, List<Points> points, List<ChangeReasons> changeReasons,@JsonKey(includeIfNull: false) Test? test,@JsonKey(includeIfNull: false) CorrelatedEew? correlatedEew
 });
 
 
@@ -344,7 +344,7 @@ class __$ShakeDetectionStateCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? eventId = null,Object? serialNo = null,Object? createdAt = null,Object? updatedAt = null,Object? expiresAt = null,Object? level = null,Object? changeReasons = null,Object? mergedEvents = null,Object? pointCount = null,Object? region = null,Object? points = null,Object? test = freezed,Object? correlatedEew = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? eventId = null,Object? serialNo = null,Object? createdAt = null,Object? updatedAt = null,Object? expiresAt = null,Object? level = null,Object? mergedEvents = null,Object? pointCount = null,Object? region = null,Object? points = null,Object? changeReasons = null,Object? test = freezed,Object? correlatedEew = freezed,}) {
   return _then(_ShakeDetectionState(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
@@ -353,12 +353,12 @@ as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cas
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
-as Level,changeReasons: null == changeReasons ? _self._changeReasons : changeReasons // ignore: cast_nullable_to_non_nullable
-as List<ChangeReasons>,mergedEvents: null == mergedEvents ? _self._mergedEvents : mergedEvents // ignore: cast_nullable_to_non_nullable
+as Level,mergedEvents: null == mergedEvents ? _self._mergedEvents : mergedEvents // ignore: cast_nullable_to_non_nullable
 as List<MergedEvents>,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
 as int,region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
 as Region,points: null == points ? _self._points : points // ignore: cast_nullable_to_non_nullable
-as List<Points>,test: freezed == test ? _self.test : test // ignore: cast_nullable_to_non_nullable
+as List<Points>,changeReasons: null == changeReasons ? _self._changeReasons : changeReasons // ignore: cast_nullable_to_non_nullable
+as List<ChangeReasons>,test: freezed == test ? _self.test : test // ignore: cast_nullable_to_non_nullable
 as Test?,correlatedEew: freezed == correlatedEew ? _self.correlatedEew : correlatedEew // ignore: cast_nullable_to_non_nullable
 as CorrelatedEew?,
   ));

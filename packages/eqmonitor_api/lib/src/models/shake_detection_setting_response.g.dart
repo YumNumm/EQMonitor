@@ -16,16 +16,20 @@ _ShakeDetectionSettingResponse _$ShakeDetectionSettingResponseFromJson(
   ($checkedConvert) {
     final val = _ShakeDetectionSettingResponse(
       id: $checkedConvert('id', (v) => v as String),
-      subRegionId: $checkedConvert('sub_region_id', (v) => v as String?),
-      prefectureCode: $checkedConvert('prefecture_code', (v) => v as String?),
-      cityCode: $checkedConvert('city_code', (v) => v as String?),
+      targetType: $checkedConvert(
+        'target_type',
+        (v) => $enumDecode(_$ShakeDetectionTargetTypeEnumMap, v),
+      ),
+      regionCode: $checkedConvert('region_code', (v) => v as String?),
+      enabled: $checkedConvert('enabled', (v) => v as bool),
       minLevel: $checkedConvert(
         'min_level',
         (v) => $enumDecode(_$ShakeDetectionLevelEnumMap, v),
       ),
-      isCurrentLocation: $checkedConvert(
-        'is_current_location',
-        (v) => v as bool,
+      sound: $checkedConvert('sound', (v) => v as String),
+      interruptionLevel: $checkedConvert(
+        'interruption_level',
+        (v) => $enumDecode(_$InterruptionLevelEnumMap, v),
       ),
       createdAt: $checkedConvert('created_at', (v) => v as String),
       updatedAt: $checkedConvert('updated_at', (v) => v as String),
@@ -33,11 +37,10 @@ _ShakeDetectionSettingResponse _$ShakeDetectionSettingResponseFromJson(
     return val;
   },
   fieldKeyMap: const {
-    'subRegionId': 'sub_region_id',
-    'prefectureCode': 'prefecture_code',
-    'cityCode': 'city_code',
+    'targetType': 'target_type',
+    'regionCode': 'region_code',
     'minLevel': 'min_level',
-    'isCurrentLocation': 'is_current_location',
+    'interruptionLevel': 'interruption_level',
     'createdAt': 'created_at',
     'updatedAt': 'updated_at',
   },
@@ -47,13 +50,20 @@ Map<String, dynamic> _$ShakeDetectionSettingResponseToJson(
   _ShakeDetectionSettingResponse instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'sub_region_id': instance.subRegionId,
-  'prefecture_code': instance.prefectureCode,
-  'city_code': instance.cityCode,
+  'target_type': instance.targetType,
+  'region_code': instance.regionCode,
+  'enabled': instance.enabled,
   'min_level': instance.minLevel,
-  'is_current_location': instance.isCurrentLocation,
+  'sound': instance.sound,
+  'interruption_level': instance.interruptionLevel,
   'created_at': instance.createdAt,
   'updated_at': instance.updatedAt,
+};
+
+const _$ShakeDetectionTargetTypeEnumMap = {
+  ShakeDetectionTargetType.currentLocation: 'current_location',
+  ShakeDetectionTargetType.nationwide: 'nationwide',
+  ShakeDetectionTargetType.region: 'region',
 };
 
 const _$ShakeDetectionLevelEnumMap = {
@@ -62,4 +72,11 @@ const _$ShakeDetectionLevelEnumMap = {
   ShakeDetectionLevel.medium: 'Medium',
   ShakeDetectionLevel.strong: 'Strong',
   ShakeDetectionLevel.stronger: 'Stronger',
+};
+
+const _$InterruptionLevelEnumMap = {
+  InterruptionLevel.passive: 'passive',
+  InterruptionLevel.active: 'active',
+  InterruptionLevel.timeSensitive: 'time_sensitive',
+  InterruptionLevel.critical: 'critical',
 };
