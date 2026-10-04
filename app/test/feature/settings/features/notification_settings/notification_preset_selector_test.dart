@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/provider/notification/os_notification_permission.
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_permission_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -117,14 +118,14 @@ void main() {
       await tester.tap(find.text('推奨設定'));
       await tester.pumpAndSettle();
 
-      expect(find.text('通知権限が無効です'), findsOneWidget);
+      expect(find.text('通知の許可が不足しています'), findsOneWidget);
       expect(
-        find.text('通知を受け取るには、通知の許可が必要です。許可しますか？'),
+        find.text('緊急地震速報や地震情報の通知を受け取るには、通知の許可が必要です。'),
         findsOneWidget,
       );
     });
 
-    testWidgets('推奨設定選択中かつ重大通知未許可のとき警告リンクを表示する', (
+    testWidgets('設定画面では重大通知未許可を独立したカードに表示する', (
       tester,
     ) async {
       final messaging = _FakeFirebaseMessaging(
@@ -144,16 +145,24 @@ void main() {
         _buildTestWidget(
           messaging: messaging,
           permission: permission,
-          child: NotificationPresetSelector(
-            selectedPreset: NotificationPreset.recommended,
-            onChanged: (_) {},
-            style: NotificationPresetSelectorStyle.settings,
+          child: Column(
+            children: [
+              const NotificationPermissionWarningCard(
+                requiresCriticalAlert: true,
+              ),
+              NotificationPresetSelector(
+                selectedPreset: NotificationPreset.recommended,
+                onChanged: (_) {},
+                style: NotificationPresetSelectorStyle.settings,
+              ),
+            ],
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('重大な通知が許可されていません'), findsOneWidget);
+      expect(find.text('通知に必要な権限が不足しています'), findsOneWidget);
+      expect(find.text('重大な通知が許可されていません'), findsNothing);
     });
 
     testWidgets('重大通知非対応端末では警告リンクを表示しない', (tester) async {
@@ -186,7 +195,7 @@ void main() {
       expect(find.text('重大な通知が許可されていません'), findsNothing);
     });
 
-    testWidgets('OS権限オフかつ推奨設定選択中は通知しないへ自動切り替えする', (
+    testWidgets('設定画面ではOS権限オフでもプリセットの選択を維持する', (
       tester,
     ) async {
       NotificationPreset? changedPreset;
@@ -207,13 +216,16 @@ void main() {
           child: NotificationPresetSelector(
             selectedPreset: NotificationPreset.recommended,
             onChanged: (preset) => changedPreset = preset,
-            style: NotificationPresetSelectorStyle.onboarding,
+            style: NotificationPresetSelectorStyle.settings,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(changedPreset, NotificationPreset.none);
+      expect(changedPreset, isNull);
+      await tester.tap(find.text('すべて'));
+      await tester.pumpAndSettle();
+      expect(changedPreset, NotificationPreset.all);
     });
   });
 }
