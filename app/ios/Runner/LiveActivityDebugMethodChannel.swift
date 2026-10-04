@@ -16,6 +16,9 @@ import Foundation
 ///   - `start`  (kind, eventId, contentState[JSON String]) → `String`(activityId)
 ///   - `update` (kind, activityId, contentState[JSON String]) → `nil`
 ///   - `end`    (kind, activityId, contentState[JSON String?]) → `nil`
+///   - `hasTestEew` → `Bool` (通知テスト専用の Activity を復元)
+///   - `showTestEew` (contentState[JSON String]) → `nil` (開始または更新)
+///   - `endTestEew` → `nil` (通知テスト専用の Activity のみ終了)
 ///
 /// - Important: ここで定義する `EewLiveActivityAttributes` は、Widget Extension 側の
 ///   同名型（`app/ios/Widget/LiveActivity/...`）と **型名・Codable フィールド名** を
@@ -23,6 +26,9 @@ import Foundation
 ///   `ActivityConfiguration` と紐付けるため、ローカル開始した Activity は既存の
 ///   Widget レイアウトで描画される。フィールドを変更する場合は両方を同期すること。
 final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
+    private static let testEventId = "eqmonitor-local-test-eew"
+    private var testOperationInProgress = false
+
     private static let channelName = "net.yumnumm.eqmonitor/live_activity_debug"
 
     static func register(with registrar: any FlutterPluginRegistrar) {
@@ -38,6 +44,14 @@ final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
         switch call.method {
         case "isSupported":
             result(Self.isSupported())
+        case "hasTestEew":
+            if #available(iOS 16.1, *) {
+                result(!Self.testActivities.isEmpty)
+            } else {
+                result(false)
+            }
+        case "showTestEew", "endTestEew":
+            handleTestEew(call, result: result)
         case "start":
             handleStart(call, result: result)
         case "update":
@@ -54,6 +68,80 @@ final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
             return ActivityAuthorizationInfo().areActivitiesEnabled
         }
         return false
+    }
+
+    // テスト専用の eventId だけを操作する。再起動後も ActivityKit から復元する。
+    @available(iOS 16.1, *)
+    private static var testActivities: [Activity<EewLiveActivityAttributes>] {
+        Activity<EewLiveActivityAttributes>.activities.filter {
+            $0.attributes.eventId == testEventId
+                && $0.activityState != .dismissed
+        }
+    }
+
+    private func handleTestEew(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard #available(iOS 16.1, *) else {
+            result(Self.unsupportedError())
+            return
+        }
+        guard !testOperationInProgress else {
+            result(Self.failure("テストの操作が完了するまでお待ちください"))
+            return
+        }
+        testOperationInProgress = true
+        Task { @MainActor in
+            defer { self.testOperationInProgress = false }
+            do {
+                let activities = Self.testActivities
+                if call.method == "endTestEew" {
+                    for activity in activities {
+                        await activity.end(nil, dismissalPolicy: .immediate)
+                    }
+                    result(nil)
+                    return
+                }
+                guard Self.isSupported() else {
+                    result(Self.unsupportedError())
+                    return
+                }
+                guard
+                    let args = call.arguments as? [String: Any],
+                    let json = args["contentState"] as? String,
+                    let data = json.data(using: .utf8)
+                else {
+                    result(Self.argumentError())
+                    return
+                }
+                let state = try JSONDecoder().decode(
+                    EewLiveActivityAttributes.ContentState.self, from: data
+                )
+                guard state.eventId == Self.testEventId, state.type == "eew" else {
+                    result(Self.argumentError("invalid test event"))
+                    return
+                }
+                let content = ActivityContent(state: state, staleDate: Self.eewStaleDate())
+                if let activity = activities.first(where: {
+                    $0.activityState == .active || $0.activityState == .stale
+                }) {
+                    await activity.update(content)
+                    for duplicate in activities where duplicate.id != activity.id {
+                        await duplicate.end(nil, dismissalPolicy: .immediate)
+                    }
+                } else {
+                    for ended in activities {
+                        await ended.end(nil, dismissalPolicy: .immediate)
+                    }
+                    _ = try Activity.request(
+                        attributes: EewLiveActivityAttributes(eventId: Self.testEventId),
+                        content: content,
+                        pushType: nil
+                    )
+                }
+                result(nil)
+            } catch {
+                result(Self.failure("テストの操作に失敗しました: \(error.localizedDescription)"))
+            }
+        }
     }
 
     // MARK: - start

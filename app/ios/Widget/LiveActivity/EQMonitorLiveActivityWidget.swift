@@ -79,14 +79,20 @@ struct EewCompactTrailingView: View {
     let state: EewContentState
 
     var body: some View {
-        if let remaining = ArrivalCountdown.remaining(until: state.display.countdownArrivalDate) {
-            ArrivalCountdownText(remaining: remaining, size: 14, color: .white)
-        } else {
-            EewStatusPill(
-                isWarning: state.display.isWarning,
-                isCanceled: state.display.isCanceled,
-                compact: true
-            )
+        HStack(spacing: 2) {
+            if state.isLocalTest {
+                Text("試").font(.system(size: 8, weight: .bold))
+                    .accessibilityLabel("テスト")
+            }
+            if let remaining = ArrivalCountdown.remaining(until: state.display.countdownArrivalDate) {
+                ArrivalCountdownText(remaining: remaining, size: 14, color: .white)
+            } else {
+                EewStatusPill(
+                    isWarning: state.display.isWarning,
+                    isCanceled: state.display.isCanceled,
+                    compact: true
+                )
+            }
         }
     }
 }
@@ -96,12 +102,18 @@ struct EewMinimalView: View {
     let state: EewContentState
 
     var body: some View {
-        if state.display.isCanceled {
-            EewCanceledSymbol(size: 18)
-        } else if let intensity = state.display.localIntensity {
-            EewLocalIntensityView(intensity: intensity, size: 24)
-        } else {
-            EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 19)
+        HStack(spacing: 1) {
+            if state.isLocalTest {
+                Text("試").font(.system(size: 7, weight: .bold))
+                    .accessibilityLabel("テスト")
+            }
+            if state.display.isCanceled {
+                EewCanceledSymbol(size: 18)
+            } else if let intensity = state.display.localIntensity {
+                EewLocalIntensityView(intensity: intensity, size: 24)
+            } else {
+                EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 19)
+            }
         }
     }
 }
@@ -145,7 +157,7 @@ struct EewExpandedBottomView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text(state.display.typeLabel)
+            Text((state.isLocalTest ? "【テスト】" : "") + state.display.typeLabel)
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.white.opacity(0.8))
                 .fixedSize(horizontal: true, vertical: true)

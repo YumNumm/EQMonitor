@@ -17,6 +17,7 @@ private let eewHeaderSecondaryTextColor: Color = liveActivityHeaderSecondaryText
 struct HeaderContainer: View {
     let display: EewDisplay
     let headline: String?
+    var isTest = false
 
     private let stripeHeight: CGFloat = 5
 
@@ -28,7 +29,7 @@ struct HeaderContainer: View {
             HStack(alignment: .center, spacing: 8) {
                 VStack(alignment: .leading, spacing: 2) {
                     // 「緊急地震速報(警報|予報|取消) 第N報」または「… 最終 第N報」
-                    Text(display.headerLabel)
+                    Text((isTest ? "【テスト】" : "") + display.headerLabel)
                         .font(AppFonts.flex(size: 11, weight: .semibold))
                         .foregroundColor(eewHeaderSecondaryTextColor)
                         .lineLimit(1)
@@ -87,7 +88,8 @@ struct EewLockScreenView: View {
         VStack(alignment: .leading, spacing: 8) {
             HeaderContainer(
                 display: state.display,
-                headline: state.display.headline(from: state.headline) ?? state.hypocenterName
+                headline: state.display.headline(from: state.headline) ?? state.hypocenterName,
+                isTest: state.isLocalTest
             )
 
             if !state.display.isCanceled {

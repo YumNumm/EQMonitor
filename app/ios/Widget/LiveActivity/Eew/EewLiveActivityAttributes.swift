@@ -32,6 +32,8 @@ struct EewContentState: Codable, Hashable {
     let isOnePoint: Bool?
     let location: LocationInfo?
 
+    var isLocalTest: Bool { eventId == "eqmonitor-local-test-eew" }
+
     var intensityValue: IntensityValue? {
         guard let maxIntensity = maxIntensity else { return nil }
         return IntensityValue(rawValue: maxIntensity)
