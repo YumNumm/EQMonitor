@@ -188,7 +188,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         EarthquakeType.normal => null,
       },
       trailing: switch ((earthquake.earthquakeType, magnitude)) {
-        (EarthquakeType.volcano, null || EarthquakeMagnitudeUnknown()) => null,
+        (.volcano, null || EarthquakeMagnitudeUnknown()) => null,
         _ => MagnitudeText(magnitude: magnitude, color: magnitudeTextColor),
       },
       dense: dense,
