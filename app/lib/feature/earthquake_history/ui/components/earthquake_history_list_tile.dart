@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_type_icon.dart';
@@ -113,6 +114,11 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         crossAxisAlignment: .start,
         mainAxisSize: .min,
         children: [
+          if (earthquake.earthquakeType == EarthquakeType.volcano)
+            Text(
+              '大規模な火山の噴火',
+              style: TextStyle(color: descriptionTextColor),
+            ),
           Text.rich(
             TextSpan(
               children: [
@@ -181,7 +187,10 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         ),
         EarthquakeType.normal => null,
       },
-      trailing: MagnitudeText(magnitude: magnitude, color: magnitudeTextColor),
+      trailing: switch ((earthquake.earthquakeType, magnitude)) {
+        (.volcano, null || EarthquakeMagnitudeUnknown()) => null,
+        _ => MagnitudeText(magnitude: magnitude, color: magnitudeTextColor),
+      },
       dense: dense,
       contentPadding: contentPadding,
     );

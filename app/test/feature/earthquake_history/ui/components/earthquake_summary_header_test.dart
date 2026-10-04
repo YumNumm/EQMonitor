@@ -84,7 +84,7 @@ void main() {
       expect(find.text('最大震度'), findsNothing);
     });
 
-    testWidgets('マグニチュード不明時は"火山の噴火"を表示する', (tester) async {
+    testWidgets('マグニチュード不明時はMを表示せず補足に噴火の種別を表示する', (tester) async {
       await pumpHeader(
         tester,
         buildEarthquake(
@@ -94,7 +94,9 @@ void main() {
         ),
       );
 
-      expect(find.text('火山の噴火'), findsOneWidget);
+      expect(find.byType(MagnitudeText), findsNothing);
+      expect(find.text('火山の噴火'), findsNothing);
+      expect(find.text('大規模な火山の噴火'), findsOneWidget);
       expect(find.text('不明'), findsNothing);
       expect(find.text('調査中'), findsNothing);
     });
@@ -123,7 +125,8 @@ void main() {
         ),
       );
 
-      expect(find.text('火山の噴火'), findsOneWidget);
+      expect(find.byType(MagnitudeText), findsNothing);
+      expect(find.text('大規模な火山の噴火'), findsOneWidget);
       expect(find.byType(DepthText), findsOneWidget);
       expect(find.text('深さごく浅い', findRichText: true), findsOneWidget);
     });
@@ -173,7 +176,7 @@ void main() {
       expect(find.text('7.7'), findsOneWidget);
       expect(find.byType(DepthText), findsNothing);
       expect(find.text('調査中'), findsNothing);
-      expect(find.text('火山の噴火'), findsNothing);
+      expect(find.text('大規模な火山の噴火'), findsNothing);
     });
 
     testWidgets('マグニチュードが不明なら深さのみ表示する', (tester) async {
@@ -189,7 +192,7 @@ void main() {
       expect(find.text('深さ30km', findRichText: true), findsOneWidget);
       expect(find.byType(MagnitudeText), findsNothing);
       expect(find.text('不明'), findsNothing);
-      expect(find.text('火山の噴火'), findsNothing);
+      expect(find.text('大規模な火山の噴火'), findsNothing);
     });
 
     testWidgets('震源地の接頭辞は震源地のままとする', (tester) async {

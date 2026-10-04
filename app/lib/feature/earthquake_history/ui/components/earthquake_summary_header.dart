@@ -163,9 +163,7 @@ class _EarthquakeInformationBody extends StatelessWidget {
         const Row(),
         if (isOverseasEvent) ...[
           if (!isMagnitudeUnknown)
-            MagnitudeText(magnitude: magnitude, variant: .display)
-          else if (earthquakeType == EarthquakeType.volcano)
-            const _VolcanoEruptionWidget(),
+            MagnitudeText(magnitude: magnitude, variant: .display),
           if (!isDepthUnknown) DepthText(depth: depth),
           const SizedBox(width: double.infinity),
           hypocenterWidget,
@@ -183,7 +181,8 @@ class _EarthquakeInformationBody extends StatelessWidget {
           hypocenterWidget,
         ],
         const Row(),
-        if (timeText != null)
+        if (earthquakeType ==.volcano) const Text('大規模な火山の噴火'),
+if (timeText != null)
           Text(
             timeText,
             style: TextStyle(
@@ -248,19 +247,6 @@ class _HypocenterWidget extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-/// 火山噴火でマグニチュードが発表されない場合に、
-/// 「M不明」の代わりに事象そのものを示す表示。
-class _VolcanoEruptionWidget extends StatelessWidget {
-  const new();
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return Text('火山の噴火', style: textTheme.valueStyle(textTheme.headlineMedium));
   }
 }
 
