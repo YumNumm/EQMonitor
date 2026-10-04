@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
-import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery_result.dart';
+import 'package:eqmonitor/feature/notification/data/model/test_notification_error.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -23,7 +23,7 @@ class const TestNotificationSendAction() {
     VoidCallback? onConfirmed,
   }) async {
     final messenger = ScaffoldMessenger.of(context);
-    if (kind == TestNotificationKind.critical) {
+    if (kind.isCritical) {
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (dialogContext) => AlertDialog(
@@ -63,18 +63,16 @@ class const TestNotificationSendAction() {
         return true;
       }
       switch (result) {
-        case Success(:final value):
+        case Success():
           messenger.showSnackBar(
-            SnackBar(
-              content: Text(
-                '送信しました（${value.framework.displayLabel}）: ${value.message}',
-              ),
+            const SnackBar(
+              content: Text('テスト通知の送信を受け付けました'),
             ),
           );
         case Failure(:final exception):
           messenger.showSnackBar(
             SnackBar(
-              content: Text('送信に失敗しました: $exception'),
+              content: Text(exception.testNotificationMessage),
               backgroundColor: context.designSystem.colorTheme.error,
             ),
           );

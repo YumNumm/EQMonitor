@@ -46,6 +46,7 @@ import 'package:eqmonitor/feature/onboarding/ui/page/onboarding_page.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
 import 'package:eqmonitor/feature/region_selection/ui/page/region_selection_page.dart';
 import 'package:eqmonitor/feature/seismicity/ui/seismicity_page.dart';
+import 'package:eqmonitor/feature/notification/ui/page/test_notification_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
@@ -370,6 +371,7 @@ class const TalkerRoute()
       routes: [
         TypedGoRoute<ShakeDetectionSettingsRoute>(path: 'shake'),
         TypedGoRoute<NotificationHistoryRoute>(path: 'history'),
+        TypedGoRoute<TestNotificationRoute>(path: 'test'),
       ],
     ),
     TypedGoRoute<EarthquakeHistoryConfigRoute>(path: 'earthquake-history'),
@@ -490,6 +492,14 @@ class const ThemeEditorRoute({required final String mode})
     );
     return ThemeEditorPage(mode: brightnessMode);
   }
+}
+
+class const TestNotificationRoute()
+    extends GoRouteData
+    with $TestNotificationRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const TestNotificationPage();
 }
 
 class const NotificationSettingsRoute()

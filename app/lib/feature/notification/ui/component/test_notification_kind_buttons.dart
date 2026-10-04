@@ -6,20 +6,20 @@ import 'package:material_ui/material_ui.dart';
 class TestNotificationKindButtons extends StatelessWidget {
   const new({
     required this.pendingKind,
+    required this.kinds,
     required this.onPressed,
     super.key,
   });
 
   final TestNotificationKind? pendingKind;
+  final List<TestNotificationKind> kinds;
   final Future<void> Function(TestNotificationKind) onPressed;
 
   @override
   Widget build(BuildContext context) => Wrap(
     spacing: 8,
     runSpacing: 8,
-    children: [TestNotificationKind.normal, TestNotificationKind.critical].map((
-      kind,
-    ) {
+    children: kinds.map((kind) {
       final isPending = pendingKind == kind;
       return M3EFilledButton.tonal(
         onPressed: pendingKind == null ? () async => onPressed(kind) : null,

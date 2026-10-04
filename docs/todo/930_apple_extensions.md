@@ -34,6 +34,7 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 
 ## 800: backend Live Activity API の復元・再生成
 
+- テスト通知改修に伴うDart API全再生成の差分は保持している。生成元と現行アプリの契約を揃え、`CatalogTimePrecision`・観測時刻精度、揺れ検知設定の対象種別/有効状態/レスポンス形式、`POST /v2/subscription/sync` の欠落によるコンパイルエラーを解消する。生成物の手修正ではなく、OpenAPIの正本と呼び出し側の契約を確認する。解消後にアプリ全体の静的解析と通知テスト関連の既存テストを再実行する。
 - 対象: `backend/api/api/src/features/device/routes/live-activity-test.ts`、OpenAPI、`packages/eqmonitor_api/`、Swift EQMonitorAPI。backend commit `83448697` / `6757aee5` 周辺を参照し、現行 submodule と照合する。
 - 旧記録で欠落していた `POST /v2/device/me/live-activity/test`、`/{id}/update`、`/{id}/end` と updateToken get/put/delete を復元または正式な現行契約へ統一する。
 - 完了条件: `/v2/shake-detection/active` と共存し、OpenAPI→Dart/Swift 再生成後の start/update/end・token 同期回帰テストが通る。生成物だけを手修正しない。
@@ -52,3 +53,9 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 - Mの数値部分の字間をフォントサイズの-22%に戻した表示を、Lock ScreenとDynamic Island Expandedの実機で確認する。共通部品を使う地震情報のM8+も確認する。
 - Android Widget は未実装。採用する場合は `app/android/` に AppWidgetProvider/Glance を実装し、Pro未加入・未設定時の全国 fallback を iOS の `WidgetRegionResolver` と揃えてテストする。
 - extension 版番号は [ビルド・配布](950_build_and_release.md) の300を参照。
+
+## 800: テスト通知と旧EEW Live Activityの実機確認
+
+- テスト通知画面で6種類のプッシュ通知を受信し、表示・音・テスト画面への遷移を確認する。通知条件が無効・不一致でも本人の端末だけに配信されることを確認する。
+- 旧EEW専用の予報・警報・最終報・取消をローカルで開始・更新・終了し、ロック画面とDynamic Islandのテスト表記を確認する。画面の再表示・アプリ再起動後の復元、Live Activity許可を無効にした場合の終了も確認する。
+- LinuxでのDart解析はApple SDKによるビルドや実機での表示・到着の検証を代替しない。今回のSwift変更はApple SDKで未ビルド。サーバからのLive Activity配信検証は別途行う。

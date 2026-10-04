@@ -642,6 +642,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           hasOverriddenOnExit: false,
           factory: $NotificationHistoryRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'test',
+          hasOverriddenOnExit: false,
+          factory: $TestNotificationRoute._fromState,
+        ),
       ],
     ),
     GoRouteData.$route(
@@ -1139,6 +1144,27 @@ mixin $NotificationHistoryRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/notification/history');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $TestNotificationRoute on GoRouteData {
+  static TestNotificationRoute _fromState(GoRouterState state) =>
+      const TestNotificationRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/notification/test');
 
   @override
   void go(BuildContext context) => context.go(location);

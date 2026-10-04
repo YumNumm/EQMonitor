@@ -1,22 +1,21 @@
-import 'package:m3e_core/m3e_core.dart';
-
 import 'dart:async';
 
-import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery_result.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_sheet.dart';
+import 'package:eqmonitor/feature/notification/ui/page/test_notification_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_tile.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
-  testWidgets('タップするとAppSheetRouteでテスト通知Sheetを表示する', (tester) async {
+  testWidgets('タップするとテスト通知ページに6種類を表示する', (tester) async {
     final repository = _PendingPushNotificationRepository();
 
     await tester.pumpWidget(_TestNotificationApp(repository: repository));
@@ -24,29 +23,38 @@ void main() {
     await tester.tap(find.text('テスト通知を送信'));
     await tester.pumpAndSettle();
 
-    final sheetContext = tester.element(find.byType(TestNotificationSheet));
-    expect(ModalRoute.of(sheetContext), isA<AppSheetRoute<void>>());
+    expect(find.byType(TestNotificationPage), findsOneWidget);
+    for (final label in [
+      '震度速報',
+      '震度速報＋震源に関する情報',
+      '震度・震源情報',
+      '長周期地震動に関する観測情報',
+      '緊急地震速報（予報）',
+      '緊急地震速報（警報）',
+    ]) {
+      expect(find.text(label), findsOneWidget);
+    }
   });
 
-  testWidgets('Sheetを閉じた後も送信完了までタイルを無効化して重複送信を防ぐ', (tester) async {
+  testWidgets('送信完了まで各ボタンを無効化して重複送信を防ぐ', (tester) async {
     final repository = _PendingPushNotificationRepository();
 
     await tester.pumpWidget(_TestNotificationApp(repository: repository));
 
     await tester.tap(find.text('テスト通知を送信'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('通常'));
+    await tester.tap(find.text('震度速報'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.byType(TestNotificationSheet), findsNothing);
+    expect(find.byType(TestNotificationPage), findsOneWidget);
     expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     expect(repository.sendCount, 1);
 
-    await tester.tap(find.text('テスト通知を送信'));
+    await tester.tap(find.text('緊急地震速報（予報）'));
     await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.byType(TestNotificationSheet), findsNothing);
+    expect(find.byType(TestNotificationPage), findsOneWidget);
     expect(repository.sendCount, 1);
 
     repository.complete();
@@ -55,52 +63,52 @@ void main() {
     expect(find.byType(M3ECircularProgressIndicator), findsNothing);
   });
 
-  testWidgets('通常通知を選ぶとSheetを閉じて送信する', (tester) async {
+  testWidgets('震度速報を送信してもテスト画面を維持する', (tester) async {
     final repository = _SuccessPushNotificationRepository();
 
     await tester.pumpWidget(_TestNotificationApp(repository: repository));
 
     await tester.tap(find.text('テスト通知を送信'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('通常'));
+    await tester.tap(find.text('震度速報'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(TestNotificationSheet), findsNothing);
-    expect(repository.receivedKinds, [TestNotificationKind.normal]);
+    expect(find.byType(TestNotificationPage), findsOneWidget);
+    expect(repository.receivedKinds, [TestNotificationKind.shindoReport]);
   });
 
-  testWidgets('重大通知をキャンセルするとSheetを閉じず送信しない', (tester) async {
+  testWidgets('警報をキャンセルすると送信しない', (tester) async {
     final repository = _SuccessPushNotificationRepository();
 
     await tester.pumpWidget(_TestNotificationApp(repository: repository));
 
     await tester.tap(find.text('テスト通知を送信'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('重大な通知'));
+    await tester.tap(find.text('緊急地震速報（警報）'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
     await tester.tap(find.text('キャンセル'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(TestNotificationSheet), findsOneWidget);
+    expect(find.byType(TestNotificationPage), findsOneWidget);
     expect(repository.receivedKinds, isEmpty);
   });
 
-  testWidgets('重大通知を確認するとSheetを閉じて送信する', (tester) async {
+  testWidgets('警報を確認すると送信する', (tester) async {
     final repository = _SuccessPushNotificationRepository();
 
     await tester.pumpWidget(_TestNotificationApp(repository: repository));
 
     await tester.tap(find.text('テスト通知を送信'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('重大な通知'));
+    await tester.tap(find.text('緊急地震速報（警報）'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
     await tester.tap(find.text('送信する'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(TestNotificationSheet), findsNothing);
-    expect(repository.receivedKinds, [TestNotificationKind.critical]);
+    expect(find.byType(TestNotificationPage), findsOneWidget);
+    expect(repository.receivedKinds, [TestNotificationKind.eewWarning]);
   });
 }
 
@@ -124,9 +132,20 @@ class _TestNotificationApp extends StatelessWidget {
           (ref) async => repository,
         ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         theme: theme,
-        home: const Scaffold(body: TestNotificationTile()),
+        routerConfig: GoRouter(
+          routes: [
+            GoRoute(
+              path: '/',
+              builder: (_, _) => const Scaffold(body: TestNotificationTile()),
+            ),
+            GoRoute(
+              path: '/settings/notification/test',
+              builder: (_, _) => const TestNotificationPage(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -145,7 +164,7 @@ final class _PendingPushNotificationRepository extends Fake
     required TestNotificationKind kind,
   }) {
     expect(deviceId, 'test-device-id');
-    expect(kind, TestNotificationKind.normal);
+    expect(kind, TestNotificationKind.shindoReport);
     sendCount++;
     return completion.future;
   }

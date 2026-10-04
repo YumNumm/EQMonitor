@@ -13,6 +13,7 @@ void main() {
         home: Scaffold(
           body: TestNotificationKindButtons(
             pendingKind: null,
+            kinds: const [.normal, .critical],
             onPressed: (kind) async => pressedKind = kind,
           ),
         ),
@@ -37,6 +38,7 @@ void main() {
         home: Scaffold(
           body: TestNotificationKindButtons(
             pendingKind: TestNotificationKind.normal,
+            kinds: const [.normal, .critical],
             onPressed: (_) async => pressedCount++,
           ),
         ),
