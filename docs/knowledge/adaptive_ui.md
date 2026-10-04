@@ -47,6 +47,7 @@
 
 - 地震詳細の凡例は選択中の地図モードに合わせる。観測震度は観測点・地域の階級と発表済みの最大震度から未確定の「5弱以上」を除外する。長周期地震動は0以外の発表済み階級、推計震度は4〜7の6階級を表示する。推計震度のアイコンにも地図と同じ `ThemeColorSet.estimatedIntensity` の配色を使う。
 - 凡例の展開・重ね合わせは `M3EMotion.expressiveSpatialDefault` のstiffnessとdamping ratioを `SpringSimulation` に渡す。アニメーションを減らす設定では即時切り替え、連続タップは現在の位置と速度から反転する。
+- 重ね合わせ時は各アイコンと同じ角丸で薄い影を描き、展開に合わせて影を消す。タップの触覚フィードバックは `M3EButtonDecoration.styleFrom(haptic: .light)` で設定する。
 - 通常のボタンは `m3e_core` の部品を使い、既存の無効条件・処理中表示・色指定を維持する。
 - アプリ状態と同期するドロップダウンは `ControlledDropdown` を使う。
   `m3e_core 1.1.4` は項目の再設定でも選択コールバックを呼ぶため、

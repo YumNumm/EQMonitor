@@ -78,6 +78,7 @@ class _JmaLegend extends StatelessWidget {
         ))
           (
             label: '震度${level.mainText}${level.suffix}',
+            borderRadius: BorderRadius.circular(_legendIconSize / 4),
             icon: JmaIntensityIcon(
               intensity: level,
               type: .filled,
@@ -112,6 +113,7 @@ class _LpgmLegend extends StatelessWidget {
         for (final level in levels)
           (
             label: '階級${level.label}',
+            borderRadius: BorderRadius.circular(_legendIconSize / 5),
             icon: JmaLpgmIntensityIcon(
               intensity: level,
               type: .filled,
@@ -138,6 +140,7 @@ class _ShindoDbLegend extends StatelessWidget {
         for (final cls in classes.where((cls) => cls.colorJmaIntensity != null))
           (
             label: cls.sectionTitle,
+            borderRadius: BorderRadius.circular(_legendIconSize / 4),
             icon: ShindoDbIntensityClassIcon(
               intensityClass: cls,
               size: _legendIconSize,
@@ -146,6 +149,7 @@ class _ShindoDbLegend extends StatelessWidget {
         if (classes.any((cls) => cls.colorJmaIntensity == null))
           (
             label: '震度不明',
+            borderRadius: BorderRadius.circular(_legendIconSize / 4),
             icon: Container(
               width: _legendIconSize,
               height: _legendIconSize,
@@ -174,7 +178,7 @@ class _AnimatedLegend extends HookWidget {
   const new({required this.label, required this.entries});
 
   final String label;
-  final List<({String label, Widget icon})> entries;
+  final List<({String label, BorderRadius borderRadius, Widget icon})> entries;
 
   @override
   Widget build(BuildContext context) {
@@ -228,6 +232,7 @@ class _AnimatedLegend extends HookWidget {
           minimumSize: const Size(48, 48),
           borderRadius: designSystem.shape.card,
           motion: motion,
+          haptic: .light,
         ),
         onPressed: () async {
           expanded.value = !expanded.value;
@@ -258,6 +263,9 @@ class _AnimatedLegend extends HookWidget {
               animation: animation,
               builder: (context, child) {
                 final progress = animation.value;
+                final shadowOpacity = entries.length > 1
+                    ? 0.2 * (1 - progress.clamp(0.0, 1.0))
+                    : 0.0;
                 return SizedBox(
                   width: lerpDouble(stackedWidth, expandedWidth, progress),
                   height: _legendIconSize,
@@ -273,7 +281,22 @@ class _AnimatedLegend extends HookWidget {
                           ),
                           child: Opacity(
                             opacity: index < 3 ? 1 : progress.clamp(0.0, 1.0),
-                            child: entries[index].icon,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                borderRadius: entries[index].borderRadius,
+                                boxShadow: [
+                                  if (shadowOpacity > 0)
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: shadowOpacity,
+                                      ),
+                                      blurRadius: spacing.xs,
+                                      offset: Offset(0, spacing.xs / 4),
+                                    ),
+                                ],
+                              ),
+                              child: entries[index].icon,
+                            ),
                           ),
                         ),
                     ],
