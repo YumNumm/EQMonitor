@@ -67,3 +67,8 @@
 - Better Auth と Hi-net のログイン・ログアウト・Cookie 更新、K-NET の認証確認とダウンロード、強震モニタの連続取得、headless 位置同期を実機で確認する。再取得・画面の再表示・provider 無効化後にネイティブ接続が残らないことも確認する。
 - Dio と `NativeAdapter` の標準処理で、応答停止・本文受信停止・キャンセル時の完了と、認証・オンボーディングの待機表示が解除されることを実機で確認する。
 - 未検証: Android / iOS の配布用ビルドと実機通信。
+
+## 800: API再生成後の配布ビルドと既存テスト
+
+- Backend mainの正規OpenAPIからDart APIを再生成後、Android arm64 releaseのDart kernel生成は確認済み。Android SDK・Apple SDKがない環境のため、GradleによるAABとiOS archiveはCIで再確認する。
+- `app/test/feature/notification/data/logic/notification_delivery_log_detail_builder_test.dart` の3件は、既存の表示変更（ミリ秒表示・成功時の結果行非表示・失敗文言とエラー詳細非表示）に期待値が追従していない。`1dea1519d` の変更意図を確認して整理する。API生成・テスト通知の変更とは独立した不一致。

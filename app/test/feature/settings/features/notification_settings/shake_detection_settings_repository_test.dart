@@ -84,18 +84,24 @@ void main() {
           'region_code': null,
           'enabled': true,
           'min_level': 'Strong',
+          'sound': 'default',
+          'interruption_level': 'active',
         },
         {
           'target_type': 'nationwide',
           'region_code': null,
           'enabled': false,
           'min_level': 'Strong',
+          'sound': 'default',
+          'interruption_level': 'active',
         },
         {
           'target_type': 'region',
           'region_code': '350',
           'enabled': true,
           'min_level': 'Strong',
+          'sound': 'default',
+          'interruption_level': 'active',
         },
       ]);
       adapter.reject = true;

@@ -34,7 +34,6 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 
 ## 800: backend Live Activity API の復元・再生成
 
-- テスト通知改修に伴うDart API全再生成の差分は保持している。生成元と現行アプリの契約を揃え、`CatalogTimePrecision`・観測時刻精度、揺れ検知設定の対象種別/有効状態/レスポンス形式、`POST /v2/subscription/sync` の欠落によるコンパイルエラーを解消する。生成物の手修正ではなく、OpenAPIの正本と呼び出し側の契約を確認する。解消後にアプリ全体の静的解析と通知テスト関連の既存テストを再実行する。
 - 対象: `backend/api/api/src/features/device/routes/live-activity-test.ts`、OpenAPI、`packages/eqmonitor_api/`、Swift EQMonitorAPI。backend commit `83448697` / `6757aee5` 周辺を参照し、現行 submodule と照合する。
 - 旧記録で欠落していた `POST /v2/device/me/live-activity/test`、`/{id}/update`、`/{id}/end` と updateToken get/put/delete を復元または正式な現行契約へ統一する。
 - 完了条件: `/v2/shake-detection/active` と共存し、OpenAPI→Dart/Swift 再生成後の start/update/end・token 同期回帰テストが通る。生成物だけを手修正しない。

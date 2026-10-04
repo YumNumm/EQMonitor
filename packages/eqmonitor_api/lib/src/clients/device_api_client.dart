@@ -27,8 +27,7 @@ import '../models/notification_settings_request.dart';
 import '../models/notification_settings_response.dart';
 import '../models/replace_slot_entry.dart';
 import '../models/shake_detection_setting_request.dart';
-import '../models/shake_detection_setting_response.dart';
-import '../models/shake_detection_sub_region_response.dart';
+import '../models/shake_detection_settings_response.dart';
 import '../models/slot_response.dart';
 import '../models/tsunami_region_setting_patch_request.dart';
 import '../models/tsunami_region_setting_request.dart';
@@ -109,17 +108,17 @@ abstract class DeviceApiClient {
 
   /// 揺れ検知通知設定一覧を取得
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsShakeDetection)
-  Future<HttpResponse<List<ShakeDetectionSettingResponse>>> getV2DeviceMeSettingsShakeDetection();
+  Future<HttpResponse<ShakeDetectionSettingsResponse>> getV2DeviceMeSettingsShakeDetection();
 
   /// 揺れ検知通知設定を一括更新（全件上書き）
   @PUT(DeviceApiClientUrls.putV2DeviceMeSettingsShakeDetection)
-  Future<HttpResponse<List<ShakeDetectionSettingResponse>>> putV2DeviceMeSettingsShakeDetection({
+  Future<HttpResponse<ShakeDetectionSettingsResponse>> putV2DeviceMeSettingsShakeDetection({
     @Body() required List<ShakeDetectionSettingRequest> body,
   });
 
-  /// 揺れ検知サブ地域マスター一覧を取得
+  /// 廃止済み。観測点マスターは Asset Pack を使用してください
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsShakeDetectionSubRegions)
-  Future<HttpResponse<List<ShakeDetectionSubRegionResponse>>> getV2DeviceMeSettingsShakeDetectionSubRegions();
+  Future<HttpResponse<void>> getV2DeviceMeSettingsShakeDetectionSubRegions();
 
   /// 津波通知設定を取得
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsTsunami)
@@ -253,7 +252,7 @@ abstract class DeviceApiClient {
     @Path('id') required String id,
   });
 
-  /// 旧 Supabase のデバイス設定を新 DB に移行
+  /// 旧クライアント互換用。設定のコピーは行わず即時成功を返す。移行済み日時は定期処理で反映する。
   @POST(DeviceApiClientUrls.postV2DeviceMeMigrate)
   Future<HttpResponse<MigrationResponse>> postV2DeviceMeMigrate({
     @Body() required MigrateRequest body,

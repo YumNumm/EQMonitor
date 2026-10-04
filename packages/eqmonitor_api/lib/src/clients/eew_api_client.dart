@@ -63,7 +63,7 @@ abstract class EewApiClient {
   @GET(EewApiClientUrls.getV2EewEventIdSerialNo)
   Future<HttpResponse<EewItemWithRelations>> getV2EewEventIdSerialNo({
     @Path('eventId') required String eventId,
-    @Path('serialNo') required String serialNo,
+    @Path('serialNo') required num serialNo,
   });
 }
 

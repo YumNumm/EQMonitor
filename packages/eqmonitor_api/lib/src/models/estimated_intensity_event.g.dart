@@ -18,6 +18,7 @@ _EstimatedIntensityEvent _$EstimatedIntensityEventFromJson(
       (v) => v as String,
     ),
     createdAt: $checkedConvert('createdAt', (v) => v as String),
+    reportTime: $checkedConvert('reportTime', (v) => v as String?),
     hypocenter: $checkedConvert(
       'hypocenter',
       (v) => v == null
@@ -34,5 +35,6 @@ Map<String, dynamic> _$EstimatedIntensityEventToJson(
   'eventId': instance.eventId,
   'estimatedIntensityKey': instance.estimatedIntensityKey,
   'createdAt': instance.createdAt,
+  'reportTime': ?instance.reportTime,
   'hypocenter': ?instance.hypocenter,
 };

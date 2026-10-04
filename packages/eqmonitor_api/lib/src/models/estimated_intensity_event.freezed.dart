@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EstimatedIntensityEvent {
 
- String get eventId; String get estimatedIntensityKey; String get createdAt;@JsonKey(includeIfNull: false) EstimatedIntensityHypocenter? get hypocenter;
+ String get eventId; String get estimatedIntensityKey; String get createdAt;@JsonKey(includeIfNull: false) String? get reportTime;@JsonKey(includeIfNull: false) EstimatedIntensityHypocenter? get hypocenter;
 /// Create a copy of EstimatedIntensityEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $EstimatedIntensityEventCopyWith<EstimatedIntensityEvent> get copyWith => _$Esti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EstimatedIntensityEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.estimatedIntensityKey, estimatedIntensityKey) || other.estimatedIntensityKey == estimatedIntensityKey)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EstimatedIntensityEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.estimatedIntensityKey, estimatedIntensityKey) || other.estimatedIntensityKey == estimatedIntensityKey)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.reportTime, reportTime) || other.reportTime == reportTime)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eventId,estimatedIntensityKey,createdAt,hypocenter);
+int get hashCode => Object.hash(runtimeType,eventId,estimatedIntensityKey,createdAt,reportTime,hypocenter);
 
 @override
 String toString() {
-  return 'EstimatedIntensityEvent(eventId: $eventId, estimatedIntensityKey: $estimatedIntensityKey, createdAt: $createdAt, hypocenter: $hypocenter)';
+  return 'EstimatedIntensityEvent(eventId: $eventId, estimatedIntensityKey: $estimatedIntensityKey, createdAt: $createdAt, reportTime: $reportTime, hypocenter: $hypocenter)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $EstimatedIntensityEventCopyWith<$Res>  {
   factory $EstimatedIntensityEventCopyWith(EstimatedIntensityEvent value, $Res Function(EstimatedIntensityEvent) _then) = _$EstimatedIntensityEventCopyWithImpl;
 @useResult
 $Res call({
- String eventId, String estimatedIntensityKey, String createdAt,@JsonKey(includeIfNull: false) EstimatedIntensityHypocenter? hypocenter
+ String eventId, String estimatedIntensityKey, String createdAt,@JsonKey(includeIfNull: false) String? reportTime,@JsonKey(includeIfNull: false) EstimatedIntensityHypocenter? hypocenter
 });
 
 
@@ -66,12 +66,13 @@ class _$EstimatedIntensityEventCopyWithImpl<$Res>
 
 /// Create a copy of EstimatedIntensityEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? estimatedIntensityKey = null,Object? createdAt = null,Object? hypocenter = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? estimatedIntensityKey = null,Object? createdAt = null,Object? reportTime = freezed,Object? hypocenter = freezed,}) {
   return _then(EstimatedIntensityEvent(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,estimatedIntensityKey: null == estimatedIntensityKey ? _self.estimatedIntensityKey : estimatedIntensityKey // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String,hypocenter: freezed == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
+as String,reportTime: freezed == reportTime ? _self.reportTime : reportTime // ignore: cast_nullable_to_non_nullable
+as String?,hypocenter: freezed == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
 as EstimatedIntensityHypocenter?,
   ));
 }
@@ -169,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String eventId,  String estimatedIntensityKey,  String createdAt, @JsonKey(includeIfNull: false)  EstimatedIntensityHypocenter? hypocenter)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String eventId,  String estimatedIntensityKey,  String createdAt, @JsonKey(includeIfNull: false)  String? reportTime, @JsonKey(includeIfNull: false)  EstimatedIntensityHypocenter? hypocenter)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EstimatedIntensityEvent() when $default != null:
-return $default(_that.eventId,_that.estimatedIntensityKey,_that.createdAt,_that.hypocenter);case _:
+return $default(_that.eventId,_that.estimatedIntensityKey,_that.createdAt,_that.reportTime,_that.hypocenter);case _:
   return orElse();
 
 }
@@ -190,10 +191,10 @@ return $default(_that.eventId,_that.estimatedIntensityKey,_that.createdAt,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String eventId,  String estimatedIntensityKey,  String createdAt, @JsonKey(includeIfNull: false)  EstimatedIntensityHypocenter? hypocenter)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String eventId,  String estimatedIntensityKey,  String createdAt, @JsonKey(includeIfNull: false)  String? reportTime, @JsonKey(includeIfNull: false)  EstimatedIntensityHypocenter? hypocenter)  $default,) {final _that = this;
 switch (_that) {
 case _EstimatedIntensityEvent():
-return $default(_that.eventId,_that.estimatedIntensityKey,_that.createdAt,_that.hypocenter);case _:
+return $default(_that.eventId,_that.estimatedIntensityKey,_that.createdAt,_that.reportTime,_that.hypocenter);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +211,10 @@ return $default(_that.eventId,_that.estimatedIntensityKey,_that.createdAt,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String eventId,  String estimatedIntensityKey,  String createdAt, @JsonKey(includeIfNull: false)  EstimatedIntensityHypocenter? hypocenter)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String eventId,  String estimatedIntensityKey,  String createdAt, @JsonKey(includeIfNull: false)  String? reportTime, @JsonKey(includeIfNull: false)  EstimatedIntensityHypocenter? hypocenter)?  $default,) {final _that = this;
 switch (_that) {
 case _EstimatedIntensityEvent() when $default != null:
-return $default(_that.eventId,_that.estimatedIntensityKey,_that.createdAt,_that.hypocenter);case _:
+return $default(_that.eventId,_that.estimatedIntensityKey,_that.createdAt,_that.reportTime,_that.hypocenter);case _:
   return null;
 
 }
@@ -225,12 +226,13 @@ return $default(_that.eventId,_that.estimatedIntensityKey,_that.createdAt,_that.
 @JsonSerializable()
 
 class _EstimatedIntensityEvent implements EstimatedIntensityEvent {
-  const _EstimatedIntensityEvent({required this.eventId, required this.estimatedIntensityKey, required this.createdAt, @JsonKey(includeIfNull: false) this.hypocenter});
+  const _EstimatedIntensityEvent({required this.eventId, required this.estimatedIntensityKey, required this.createdAt, @JsonKey(includeIfNull: false) this.reportTime, @JsonKey(includeIfNull: false) this.hypocenter});
   factory _EstimatedIntensityEvent.fromJson(Map<String, dynamic> json) => _$EstimatedIntensityEventFromJson(json);
 
 @override final  String eventId;
 @override final  String estimatedIntensityKey;
 @override final  String createdAt;
+@override@JsonKey(includeIfNull: false) final  String? reportTime;
 @override@JsonKey(includeIfNull: false) final  EstimatedIntensityHypocenter? hypocenter;
 
 /// Create a copy of EstimatedIntensityEvent
@@ -246,16 +248,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EstimatedIntensityEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.estimatedIntensityKey, estimatedIntensityKey) || other.estimatedIntensityKey == estimatedIntensityKey)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EstimatedIntensityEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.estimatedIntensityKey, estimatedIntensityKey) || other.estimatedIntensityKey == estimatedIntensityKey)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.reportTime, reportTime) || other.reportTime == reportTime)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eventId,estimatedIntensityKey,createdAt,hypocenter);
+int get hashCode => Object.hash(runtimeType,eventId,estimatedIntensityKey,createdAt,reportTime,hypocenter);
 
 @override
 String toString() {
-  return 'EstimatedIntensityEvent(eventId: $eventId, estimatedIntensityKey: $estimatedIntensityKey, createdAt: $createdAt, hypocenter: $hypocenter)';
+  return 'EstimatedIntensityEvent(eventId: $eventId, estimatedIntensityKey: $estimatedIntensityKey, createdAt: $createdAt, reportTime: $reportTime, hypocenter: $hypocenter)';
 }
 
 
@@ -266,7 +268,7 @@ abstract mixin class _$EstimatedIntensityEventCopyWith<$Res> implements $Estimat
   factory _$EstimatedIntensityEventCopyWith(_EstimatedIntensityEvent value, $Res Function(_EstimatedIntensityEvent) _then) = __$EstimatedIntensityEventCopyWithImpl;
 @override @useResult
 $Res call({
- String eventId, String estimatedIntensityKey, String createdAt,@JsonKey(includeIfNull: false) EstimatedIntensityHypocenter? hypocenter
+ String eventId, String estimatedIntensityKey, String createdAt,@JsonKey(includeIfNull: false) String? reportTime,@JsonKey(includeIfNull: false) EstimatedIntensityHypocenter? hypocenter
 });
 
 
@@ -283,12 +285,13 @@ class __$EstimatedIntensityEventCopyWithImpl<$Res>
 
 /// Create a copy of EstimatedIntensityEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? estimatedIntensityKey = null,Object? createdAt = null,Object? hypocenter = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? estimatedIntensityKey = null,Object? createdAt = null,Object? reportTime = freezed,Object? hypocenter = freezed,}) {
   return _then(_EstimatedIntensityEvent(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,estimatedIntensityKey: null == estimatedIntensityKey ? _self.estimatedIntensityKey : estimatedIntensityKey // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String,hypocenter: freezed == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
+as String,reportTime: freezed == reportTime ? _self.reportTime : reportTime // ignore: cast_nullable_to_non_nullable
+as String?,hypocenter: freezed == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
 as EstimatedIntensityHypocenter?,
   ));
 }
