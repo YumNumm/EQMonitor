@@ -138,7 +138,7 @@ class _EewApiClient implements EewApiClient {
   @override
   Future<HttpResponse<EewItemWithRelations>> getV2EewEventIdSerialNo({
     required String eventId,
-    required String serialNo,
+    required num serialNo,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

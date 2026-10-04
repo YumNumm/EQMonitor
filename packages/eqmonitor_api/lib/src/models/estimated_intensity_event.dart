@@ -16,6 +16,8 @@ abstract class EstimatedIntensityEvent with _$EstimatedIntensityEvent {
     required String estimatedIntensityKey,
     required String createdAt,
     @JsonKey(includeIfNull: false)
+    String? reportTime,
+    @JsonKey(includeIfNull: false)
     EstimatedIntensityHypocenter? hypocenter,
   }) = _EstimatedIntensityEvent;
   

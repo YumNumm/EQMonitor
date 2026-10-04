@@ -16,8 +16,10 @@ abstract class ReplaceSlotEntry with _$ReplaceSlotEntry {
   const factory ReplaceSlotEntry({
     @JsonKey(name: 'slot_type')
     required SlotType slotType,
+
+    /// 地震情報／細分区域（AreaForecastLocalE）の3桁コード。EEW府県予報区（AreaForecastLocalEEW）は指定できません。
     @JsonKey(includeIfNull: false,name: 'region_id')
-    num? regionId,
+    int? regionId,
     @JsonKey(includeIfNull: false,name: 'region_name')
     String? regionName,
     @JsonKey(includeIfNull: false,name: 'city_code')

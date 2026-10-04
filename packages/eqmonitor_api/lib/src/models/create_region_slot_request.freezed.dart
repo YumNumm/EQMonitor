@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateRegionSlotRequest {
 
-@JsonKey(name: 'region_id') num get regionId;@JsonKey(includeIfNull: false, name: 'region_name') String? get regionName;@JsonKey(includeIfNull: false, name: 'city_code') String? get cityCode;@JsonKey(includeIfNull: false, name: 'city_name') String? get cityName;@JsonKey(includeIfNull: false, name: 'eew_enabled') bool? get eewEnabled;@JsonKey(includeIfNull: false, name: 'eew_min_intensity') JmaIntensity? get eewMinIntensity;@JsonKey(includeIfNull: false, name: 'eew_overrides') List<SlotOverride>? get eewOverrides;@JsonKey(includeIfNull: false, name: 'earthquake_enabled') bool? get earthquakeEnabled;@JsonKey(includeIfNull: false, name: 'earthquake_min_intensity') JmaIntensity? get earthquakeMinIntensity;@JsonKey(includeIfNull: false, name: 'earthquake_overrides') List<SlotOverride>? get earthquakeOverrides;
+/// 地震情報／細分区域（AreaForecastLocalE）の3桁コード。EEW府県予報区（AreaForecastLocalEEW）は指定できません。
+@JsonKey(name: 'region_id') int get regionId;@JsonKey(includeIfNull: false, name: 'region_name') String? get regionName;@JsonKey(includeIfNull: false, name: 'city_code') String? get cityCode;@JsonKey(includeIfNull: false, name: 'city_name') String? get cityName;@JsonKey(includeIfNull: false, name: 'eew_enabled') bool? get eewEnabled;@JsonKey(includeIfNull: false, name: 'eew_min_intensity') JmaIntensity? get eewMinIntensity;@JsonKey(includeIfNull: false, name: 'eew_overrides') List<SlotOverride>? get eewOverrides;@JsonKey(includeIfNull: false, name: 'earthquake_enabled') bool? get earthquakeEnabled;@JsonKey(includeIfNull: false, name: 'earthquake_min_intensity') JmaIntensity? get earthquakeMinIntensity;@JsonKey(includeIfNull: false, name: 'earthquake_overrides') List<SlotOverride>? get earthquakeOverrides;
 /// Create a copy of CreateRegionSlotRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +50,7 @@ abstract mixin class $CreateRegionSlotRequestCopyWith<$Res>  {
   factory $CreateRegionSlotRequestCopyWith(CreateRegionSlotRequest value, $Res Function(CreateRegionSlotRequest) _then) = _$CreateRegionSlotRequestCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'region_id') num regionId,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName,@JsonKey(includeIfNull: false, name: 'city_code') String? cityCode,@JsonKey(includeIfNull: false, name: 'city_name') String? cityName,@JsonKey(includeIfNull: false, name: 'eew_enabled') bool? eewEnabled,@JsonKey(includeIfNull: false, name: 'eew_min_intensity') JmaIntensity? eewMinIntensity,@JsonKey(includeIfNull: false, name: 'eew_overrides') List<SlotOverride>? eewOverrides,@JsonKey(includeIfNull: false, name: 'earthquake_enabled') bool? earthquakeEnabled,@JsonKey(includeIfNull: false, name: 'earthquake_min_intensity') JmaIntensity? earthquakeMinIntensity,@JsonKey(includeIfNull: false, name: 'earthquake_overrides') List<SlotOverride>? earthquakeOverrides
+@JsonKey(name: 'region_id') int regionId,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName,@JsonKey(includeIfNull: false, name: 'city_code') String? cityCode,@JsonKey(includeIfNull: false, name: 'city_name') String? cityName,@JsonKey(includeIfNull: false, name: 'eew_enabled') bool? eewEnabled,@JsonKey(includeIfNull: false, name: 'eew_min_intensity') JmaIntensity? eewMinIntensity,@JsonKey(includeIfNull: false, name: 'eew_overrides') List<SlotOverride>? eewOverrides,@JsonKey(includeIfNull: false, name: 'earthquake_enabled') bool? earthquakeEnabled,@JsonKey(includeIfNull: false, name: 'earthquake_min_intensity') JmaIntensity? earthquakeMinIntensity,@JsonKey(includeIfNull: false, name: 'earthquake_overrides') List<SlotOverride>? earthquakeOverrides
 });
 
 
@@ -69,7 +70,7 @@ class _$CreateRegionSlotRequestCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? regionId = null,Object? regionName = freezed,Object? cityCode = freezed,Object? cityName = freezed,Object? eewEnabled = freezed,Object? eewMinIntensity = freezed,Object? eewOverrides = freezed,Object? earthquakeEnabled = freezed,Object? earthquakeMinIntensity = freezed,Object? earthquakeOverrides = freezed,}) {
   return _then(CreateRegionSlotRequest(
 regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
-as num,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
+as int,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
 as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
 as String?,cityName: freezed == cityName ? _self.cityName : cityName // ignore: cast_nullable_to_non_nullable
 as String?,eewEnabled: freezed == eewEnabled ? _self.eewEnabled : eewEnabled // ignore: cast_nullable_to_non_nullable
@@ -163,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName, @JsonKey(includeIfNull: false, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: false, name: 'city_name')  String? cityName, @JsonKey(includeIfNull: false, name: 'eew_enabled')  bool? eewEnabled, @JsonKey(includeIfNull: false, name: 'eew_min_intensity')  JmaIntensity? eewMinIntensity, @JsonKey(includeIfNull: false, name: 'eew_overrides')  List<SlotOverride>? eewOverrides, @JsonKey(includeIfNull: false, name: 'earthquake_enabled')  bool? earthquakeEnabled, @JsonKey(includeIfNull: false, name: 'earthquake_min_intensity')  JmaIntensity? earthquakeMinIntensity, @JsonKey(includeIfNull: false, name: 'earthquake_overrides')  List<SlotOverride>? earthquakeOverrides)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  int regionId, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName, @JsonKey(includeIfNull: false, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: false, name: 'city_name')  String? cityName, @JsonKey(includeIfNull: false, name: 'eew_enabled')  bool? eewEnabled, @JsonKey(includeIfNull: false, name: 'eew_min_intensity')  JmaIntensity? eewMinIntensity, @JsonKey(includeIfNull: false, name: 'eew_overrides')  List<SlotOverride>? eewOverrides, @JsonKey(includeIfNull: false, name: 'earthquake_enabled')  bool? earthquakeEnabled, @JsonKey(includeIfNull: false, name: 'earthquake_min_intensity')  JmaIntensity? earthquakeMinIntensity, @JsonKey(includeIfNull: false, name: 'earthquake_overrides')  List<SlotOverride>? earthquakeOverrides)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateRegionSlotRequest() when $default != null:
 return $default(_that.regionId,_that.regionName,_that.cityCode,_that.cityName,_that.eewEnabled,_that.eewMinIntensity,_that.eewOverrides,_that.earthquakeEnabled,_that.earthquakeMinIntensity,_that.earthquakeOverrides);case _:
@@ -184,7 +185,7 @@ return $default(_that.regionId,_that.regionName,_that.cityCode,_that.cityName,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName, @JsonKey(includeIfNull: false, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: false, name: 'city_name')  String? cityName, @JsonKey(includeIfNull: false, name: 'eew_enabled')  bool? eewEnabled, @JsonKey(includeIfNull: false, name: 'eew_min_intensity')  JmaIntensity? eewMinIntensity, @JsonKey(includeIfNull: false, name: 'eew_overrides')  List<SlotOverride>? eewOverrides, @JsonKey(includeIfNull: false, name: 'earthquake_enabled')  bool? earthquakeEnabled, @JsonKey(includeIfNull: false, name: 'earthquake_min_intensity')  JmaIntensity? earthquakeMinIntensity, @JsonKey(includeIfNull: false, name: 'earthquake_overrides')  List<SlotOverride>? earthquakeOverrides)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  int regionId, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName, @JsonKey(includeIfNull: false, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: false, name: 'city_name')  String? cityName, @JsonKey(includeIfNull: false, name: 'eew_enabled')  bool? eewEnabled, @JsonKey(includeIfNull: false, name: 'eew_min_intensity')  JmaIntensity? eewMinIntensity, @JsonKey(includeIfNull: false, name: 'eew_overrides')  List<SlotOverride>? eewOverrides, @JsonKey(includeIfNull: false, name: 'earthquake_enabled')  bool? earthquakeEnabled, @JsonKey(includeIfNull: false, name: 'earthquake_min_intensity')  JmaIntensity? earthquakeMinIntensity, @JsonKey(includeIfNull: false, name: 'earthquake_overrides')  List<SlotOverride>? earthquakeOverrides)  $default,) {final _that = this;
 switch (_that) {
 case _CreateRegionSlotRequest():
 return $default(_that.regionId,_that.regionName,_that.cityCode,_that.cityName,_that.eewEnabled,_that.eewMinIntensity,_that.eewOverrides,_that.earthquakeEnabled,_that.earthquakeMinIntensity,_that.earthquakeOverrides);case _:
@@ -204,7 +205,7 @@ return $default(_that.regionId,_that.regionName,_that.cityCode,_that.cityName,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName, @JsonKey(includeIfNull: false, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: false, name: 'city_name')  String? cityName, @JsonKey(includeIfNull: false, name: 'eew_enabled')  bool? eewEnabled, @JsonKey(includeIfNull: false, name: 'eew_min_intensity')  JmaIntensity? eewMinIntensity, @JsonKey(includeIfNull: false, name: 'eew_overrides')  List<SlotOverride>? eewOverrides, @JsonKey(includeIfNull: false, name: 'earthquake_enabled')  bool? earthquakeEnabled, @JsonKey(includeIfNull: false, name: 'earthquake_min_intensity')  JmaIntensity? earthquakeMinIntensity, @JsonKey(includeIfNull: false, name: 'earthquake_overrides')  List<SlotOverride>? earthquakeOverrides)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'region_id')  int regionId, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName, @JsonKey(includeIfNull: false, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: false, name: 'city_name')  String? cityName, @JsonKey(includeIfNull: false, name: 'eew_enabled')  bool? eewEnabled, @JsonKey(includeIfNull: false, name: 'eew_min_intensity')  JmaIntensity? eewMinIntensity, @JsonKey(includeIfNull: false, name: 'eew_overrides')  List<SlotOverride>? eewOverrides, @JsonKey(includeIfNull: false, name: 'earthquake_enabled')  bool? earthquakeEnabled, @JsonKey(includeIfNull: false, name: 'earthquake_min_intensity')  JmaIntensity? earthquakeMinIntensity, @JsonKey(includeIfNull: false, name: 'earthquake_overrides')  List<SlotOverride>? earthquakeOverrides)?  $default,) {final _that = this;
 switch (_that) {
 case _CreateRegionSlotRequest() when $default != null:
 return $default(_that.regionId,_that.regionName,_that.cityCode,_that.cityName,_that.eewEnabled,_that.eewMinIntensity,_that.eewOverrides,_that.earthquakeEnabled,_that.earthquakeMinIntensity,_that.earthquakeOverrides);case _:
@@ -222,7 +223,8 @@ class _CreateRegionSlotRequest implements CreateRegionSlotRequest {
   const _CreateRegionSlotRequest({@JsonKey(name: 'region_id') required this.regionId, @JsonKey(includeIfNull: false, name: 'region_name') this.regionName, @JsonKey(includeIfNull: false, name: 'city_code') this.cityCode, @JsonKey(includeIfNull: false, name: 'city_name') this.cityName, @JsonKey(includeIfNull: false, name: 'eew_enabled') this.eewEnabled, @JsonKey(includeIfNull: false, name: 'eew_min_intensity') this.eewMinIntensity, @JsonKey(includeIfNull: false, name: 'eew_overrides')  List<SlotOverride>? eewOverrides, @JsonKey(includeIfNull: false, name: 'earthquake_enabled') this.earthquakeEnabled, @JsonKey(includeIfNull: false, name: 'earthquake_min_intensity') this.earthquakeMinIntensity, @JsonKey(includeIfNull: false, name: 'earthquake_overrides')  List<SlotOverride>? earthquakeOverrides}): _eewOverrides = eewOverrides,_earthquakeOverrides = earthquakeOverrides;
   factory _CreateRegionSlotRequest.fromJson(Map<String, dynamic> json) => _$CreateRegionSlotRequestFromJson(json);
 
-@override@JsonKey(name: 'region_id') final  num regionId;
+/// 地震情報／細分区域（AreaForecastLocalE）の3桁コード。EEW府県予報区（AreaForecastLocalEEW）は指定できません。
+@override@JsonKey(name: 'region_id') final  int regionId;
 @override@JsonKey(includeIfNull: false, name: 'region_name') final  String? regionName;
 @override@JsonKey(includeIfNull: false, name: 'city_code') final  String? cityCode;
 @override@JsonKey(includeIfNull: false, name: 'city_name') final  String? cityName;
@@ -282,7 +284,7 @@ abstract mixin class _$CreateRegionSlotRequestCopyWith<$Res> implements $CreateR
   factory _$CreateRegionSlotRequestCopyWith(_CreateRegionSlotRequest value, $Res Function(_CreateRegionSlotRequest) _then) = __$CreateRegionSlotRequestCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'region_id') num regionId,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName,@JsonKey(includeIfNull: false, name: 'city_code') String? cityCode,@JsonKey(includeIfNull: false, name: 'city_name') String? cityName,@JsonKey(includeIfNull: false, name: 'eew_enabled') bool? eewEnabled,@JsonKey(includeIfNull: false, name: 'eew_min_intensity') JmaIntensity? eewMinIntensity,@JsonKey(includeIfNull: false, name: 'eew_overrides') List<SlotOverride>? eewOverrides,@JsonKey(includeIfNull: false, name: 'earthquake_enabled') bool? earthquakeEnabled,@JsonKey(includeIfNull: false, name: 'earthquake_min_intensity') JmaIntensity? earthquakeMinIntensity,@JsonKey(includeIfNull: false, name: 'earthquake_overrides') List<SlotOverride>? earthquakeOverrides
+@JsonKey(name: 'region_id') int regionId,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName,@JsonKey(includeIfNull: false, name: 'city_code') String? cityCode,@JsonKey(includeIfNull: false, name: 'city_name') String? cityName,@JsonKey(includeIfNull: false, name: 'eew_enabled') bool? eewEnabled,@JsonKey(includeIfNull: false, name: 'eew_min_intensity') JmaIntensity? eewMinIntensity,@JsonKey(includeIfNull: false, name: 'eew_overrides') List<SlotOverride>? eewOverrides,@JsonKey(includeIfNull: false, name: 'earthquake_enabled') bool? earthquakeEnabled,@JsonKey(includeIfNull: false, name: 'earthquake_min_intensity') JmaIntensity? earthquakeMinIntensity,@JsonKey(includeIfNull: false, name: 'earthquake_overrides') List<SlotOverride>? earthquakeOverrides
 });
 
 
@@ -302,7 +304,7 @@ class __$CreateRegionSlotRequestCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? regionId = null,Object? regionName = freezed,Object? cityCode = freezed,Object? cityName = freezed,Object? eewEnabled = freezed,Object? eewMinIntensity = freezed,Object? eewOverrides = freezed,Object? earthquakeEnabled = freezed,Object? earthquakeMinIntensity = freezed,Object? earthquakeOverrides = freezed,}) {
   return _then(_CreateRegionSlotRequest(
 regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
-as num,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
+as int,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
 as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
 as String?,cityName: freezed == cityName ? _self.cityName : cityName // ignore: cast_nullable_to_non_nullable
 as String?,eewEnabled: freezed == eewEnabled ? _self.eewEnabled : eewEnabled // ignore: cast_nullable_to_non_nullable
