@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
-import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
@@ -8,8 +7,6 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/byte_size_formatter.dart';
-import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
-import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_manifest_provider.dart';
 import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
 import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
@@ -187,15 +184,6 @@ class SettingsPage extends ConsumerWidget {
                       onTap: () async =>
                           ref.read(openContactProvider).call(ref, context),
                     ),
-                    AppSwitchListTile(
-                      title: '広告を非表示',
-                      value: ref.watch(adsOptOutProvider).value ?? false,
-                      onChanged: (_) => AdsOptOutNotifier.saveMutation.run(
-                        ref,
-                        (tsx) async =>
-                            tsx.get(adsOptOutProvider.notifier).toggle(),
-                      ),
-                    ),
                   ],
                 ),
                 if (isDeveloperUiEnabled) ...[
@@ -261,7 +249,6 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           ),
-          const AdBanner(),
         ],
       ),
     );

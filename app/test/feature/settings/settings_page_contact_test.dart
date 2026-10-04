@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
-import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/settings_page.dart';
 import 'package:material_ui/material_ui.dart';
@@ -28,7 +27,6 @@ void main() {
           app_prefs.sharedPreferencesProvider.overrideWithValue(
             app_prefs.SharedPreferencesAsync(prefs),
           ),
-          adsOptOutProvider.overrideWithBuild((_, _) => false),
           buildConfigProvider.overrideWithValue(_buildConfig),
           packageInfoProvider.overrideWithValue(_packageInfo),
         ],
@@ -60,7 +58,6 @@ void main() {
           app_prefs.sharedPreferencesProvider.overrideWithValue(
             app_prefs.SharedPreferencesAsync(prefs),
           ),
-          adsOptOutProvider.overrideWithBuild((ref, notifier) => false),
           buildConfigProvider.overrideWithValue(_buildConfig),
           openContactProvider.overrideWithValue(
             _FakeOpenContactAction(() => opened = true),

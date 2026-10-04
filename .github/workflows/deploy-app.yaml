@@ -28,6 +28,7 @@ permissions:
   contents: read
 
 env:
+  FIREBASE_ANALYTICS_WITHOUT_ADID: "true"
   # App Store builds must use the stable release, not the runner's latest beta.
   XCODE_VERSION: "27.0"
   XCODE_BUILD_VERSION: "27A266a"
