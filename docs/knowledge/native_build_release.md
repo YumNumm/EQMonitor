@@ -46,9 +46,14 @@ APNs・認証は [push_and_auth.md](push_and_auth.md) を参照する。
 - CI は `CODE_SIGNING_ALLOWED=NO` で archive し、
   `scripts/ci/sign_ios_archive_for_export.sh` で entitlement を付けて ad-hoc 署名してから export する。
 - App Store / Ad-Hoc の export は `scripts/ci/export_ios_archive.sh` を使う。
-  `error: exportArchive The request timed out.` の場合だけ、20秒・40秒待って最大3回試行する。
-  このタイムアウトに続いて extension の profile 不足が出る場合もある。
+  `error: exportArchive The request timed out.` または
+  `error: exportArchive The Internet connection appears to be offline.` の場合だけ、
+  20秒・40秒待って最大3回試行する。
+  この接続失敗に続いて extension の profile 不足が出る場合もある。
   profile 不足だけのエラーや署名設定エラーは再試行せず失敗させる。
+  2026-10-05 に確認した同設定の[成功ログ](https://github.com/YumNumm/EQMonitor/actions/runs/37226036319/job/111505794635)と、offline 後に初回で停止した
+  [失敗ログ](https://github.com/YumNumm/EQMonitor/actions/runs/37226055514/job/111505851569)が根拠。
+  実 export とアップロードの再確認は [配布TODO](../todo/950_build_and_release.md) を参照する。
 - 署名順は内側から framework → 各 `.appex` → Runner.app。
   extension を追加するときは同スクリプトへ target 固有の entitlement mapping も追加する。
 - 全 target の team は `ExportOptions.plist` / `ExportOptionsAdHoc.plist` と揃える。
