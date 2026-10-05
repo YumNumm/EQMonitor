@@ -24,14 +24,16 @@ for attempt in 1 2 3; do
     fi
   done
 
-  # A provisioning request timeout can also report missing extension profiles.
-  # Only retry the explicit timeout, not signing/configuration errors on their own.
+  # A provisioning connection failure can also report missing extension profiles.
+  # Only retry explicit connection errors, not signing/configuration errors on their own.
   if [[ "$attempt" -eq 3 ]] ||
-    ! grep -Fq 'error: exportArchive The request timed out.' "$log_path"; then
+    ! grep -Fq \
+      -e 'error: exportArchive The request timed out.' \
+      -e 'error: exportArchive The Internet connection appears to be offline.' "$log_path"; then
     exit "${pipeline_status[0]}"
   fi
 
   delay_seconds=$((attempt * 20))
-  echo "::warning::Apple provisioning request timed out; retrying export in ${delay_seconds}s."
+  echo "::warning::Apple provisioning connection failed; retrying export in ${delay_seconds}s."
   sleep "$delay_seconds"
 done

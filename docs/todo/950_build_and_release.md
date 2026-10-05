@@ -2,6 +2,12 @@
 
 数値は元の優先度。設定の修正と署名済み成果物の検証は分けて完了判定する。
 
+## 900: iOS export の接続失敗からの復旧確認
+
+- `scripts/ci/export_ios_archive.sh` はタイムアウトと明示的な offline エラーを最大3回まで再試行する。profile 不足のみ、署名設定エラー、ログ出力の失敗は再試行しない。
+- [失敗したCI](https://github.com/YumNumm/EQMonitor/actions/runs/37226055514/job/111505851569)は App Store 用 export に成功し、Ad-Hoc 用で offline と AppIntentExtension の profile 不足が併発した。両 IPA の artifact 保存と iOS 配布は未実行。
+- 完了条件: 修正を含むリビジョンで App Store 用・Ad-Hoc 用 IPA の export と artifact 保存が成功し、最終 bundle の entitlement を確認する。配布を伴う再実行は承認後に行い、App Store Connect と Firebase のアップロード結果も別途確認する。
+
 ## 950 / 880: Android AGP 移行と成果物確認
 
 - 950: `app/android/app/build.gradle.kts` は `StageBundledAssetPackTask` と `variant.sources.assets.addGeneratedSourceDirectory` に移行済み。旧 Provider→SourceSet の build blocker は解消したが、実 SDK で release AAB を作り `assets/platform` の同梱と task dependency を確認する作業は残る。
