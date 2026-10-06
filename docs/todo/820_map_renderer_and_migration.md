@@ -18,6 +18,11 @@
 - 可視確認後に `MeshGeometry.fromArrays` の不要な法線生成、`retainCpuData` 二重保持、pack→unpack、UI isolate packer の負荷を計測して最適化する。GPU buffer の決定的解放は API が利用可能になった時点で検討する。
 - 完了条件: 上記の自動検証と端末別 smoke 記録が揃い、GPU 型を使う adapter/material 適用も可視出力で確認できること。
 
+## 800: 地震履歴の観測点キャッシュの実機性能確認
+
+- Android の profile/release で、観測点の多い地震詳細を移動・拡大縮小し、通常震度・長周期・震度DBの表示とフレーム時間を確認する。GeoJSON の再生成抑止による実機での改善幅は未計測。
+- 観測データ・配色・表示種別の変更と地図の再作成で最新データが表示されることを確認する。
+
 ## 800: MVT / mesh の残る機能・fixture
 
 - 対象: `packages/eqmonitor_map/lib/src/tile/mvt/mvt_decoder.dart`、`lib/src/mesh/line_mesh_builder.dart`、関連 `test/`、`packages/pmtiles_v3/test/`。

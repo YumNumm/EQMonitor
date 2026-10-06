@@ -46,8 +46,13 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
     final isLayerInitialized = useRef(false);
     final imagesAdded = useRef(false);
     final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
-    final geoJson = const EarthquakeHistoryShindoDbStationGeoJsonBuilder()
-        .build(tree: tree);
+    // カメラ移動でも再buildされるため、観測データに変更がない間は再利用する。
+    final geoJson = useMemoized(
+      () => const EarthquakeHistoryShindoDbStationGeoJsonBuilder().build(
+        tree: tree,
+      ),
+      [tree],
+    );
 
     useEffect(() {
       if (styleController == null) {

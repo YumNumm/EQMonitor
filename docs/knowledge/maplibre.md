@@ -13,6 +13,7 @@
 - 非同期データの初回取得前はレイヤー Widget をマウントしない。`AsyncValue.valueOrPrevious` を使い、再取得中・失敗時も既存表示を維持する。
 - loading overlay は戻る操作を遮らない。再試行 Future の例外は画面の provider 状態で扱い、ボタンから再伝播させない。
 - EEW が既に活性中なら controller 接続直後にも現在値を同期する。空の EEW 領域には非表示 filter を返す。
+- `MapController.maybeOf(context)` を参照するレイヤーはカメラ移動でも再構築される。観測点の GeoJSON は `useMemoized` で生成結果を保持し、通常表示は観測データ・配色・長周期表示、震度DB表示は観測ツリーの変更時だけ再生成する。送信時の重複抑止だけでは生成コストを避けられない。
 
 ## 描画順・式
 
