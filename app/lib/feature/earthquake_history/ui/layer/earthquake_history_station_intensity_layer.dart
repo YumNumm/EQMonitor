@@ -72,10 +72,14 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     latestShowStationLabel.value = showStationLabel;
     final latestIconData = useRef(iconData);
     latestIconData.value = iconData;
-    final geoJson = geoJsonBuilder.build(
-      intensity: intensity,
-      colorModel: colorModel,
-      showingLpgmIntensity: showingLpgmIntensity,
+    // カメラ移動でも再buildされるため、観測データに変更がない間は再利用する。
+    final geoJson = useMemoized(
+      () => geoJsonBuilder.build(
+        intensity: intensity,
+        colorModel: colorModel,
+        showingLpgmIntensity: showingLpgmIntensity,
+      ),
+      [intensity, colorModel, showingLpgmIntensity],
     );
 
     useEffect(() {
