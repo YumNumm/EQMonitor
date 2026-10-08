@@ -21,6 +21,10 @@ local linters = new Mapping<String, Step> {
     ["gitleaks"] {
         check = "mise exec -- gitleaks git --staged --baseline-path .gitleaks.baseline.json"
     }
+    ["jactionlint"] {
+        glob = workflowGlobs
+        check = "mise exec -- jactionlint {{files}}"
+    }
     ["zizmor"] {
         glob = workflowGlobs
         check = "mise exec -- zizmor {{files}}"

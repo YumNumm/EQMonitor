@@ -129,6 +129,29 @@ jobs:
               });
             }
 
+  jactionlint:
+    name: jactionlint
+    timeout-minutes: 5
+    runs-on: ubuntu-slim
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        with:
+          install_args: "github:jdx/jactionlint shellcheck"
+
+      - name: Add matcher
+        run: echo "::add-matcher::.github/problem_matcher/jactionlint.json"
+
+      - name: Run jactionlint
+        run: jactionlint -color
+
   pinact:
     name: pinact
     timeout-minutes: 5
