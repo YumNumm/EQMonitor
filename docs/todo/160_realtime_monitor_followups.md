@@ -13,6 +13,9 @@
 
 対象: `app/lib/feature/kyoshin_monitor/data/`。
 
+- 高: Android実機で、保存済みの取得元が `kmoni` の状態から更新し、時刻・観測点の表示を確認する。
+  `network_security_config.xml` で `www.kmoni.bosai.go.jp` のHTTP通信を許可しているが、
+  Cronetでの取得と報告端末での復旧は未検証。`lmoni` への切替と再起動後の表示も確認する。
 - 高: `KyoshinMonitorNotifier._fetchAndAnalyzeImage` を注入可能な専用クラスへ分離し、毎秒 `AsyncLoading` に戻す点滅を解消する。補正量の正本をSettings/Adjustmentで二重化せず、永続化をRepositoryへ集約する。
 - 高: `timer_stream` の scheduling 時にNTPを引く処理と、補正済みclockから対象時刻を発行する処理の意味を確認する。二重補正の不具合とは断定せず、端末時計＋30秒と小数秒offsetで秒境界・発行時刻の契約をテストする。
 - 中: `KyoshinMonitorTimerNotifier` のTimer/StreamControllerと `unawaited` バースト、`delayAdjustType` の4値/2挙動を整理する。`lastUpdatedAt` をappClockへ揃え、未使用色mapファイル3件の参照を確認して削除する。
