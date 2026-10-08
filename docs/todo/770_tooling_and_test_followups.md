@@ -6,8 +6,14 @@
 
 - `wc-check-dart-{analyze,test}.yaml` はjobの `MISE_ENABLE_TOOLS=flutter,node,python` で対象を制限する。clean runnerで全ツール導入が再発せず、Asset Pack配置後に解析・テストが起動することはCI検証待ち。
 - workspace全体の導入では `vfox:gcloud` の `module 'metadata' not found` が残る。gcloudのplugin設定を確認する。
-- `pipx:codemagic-cli-tools` の lockfile が参照する `.mise/locks/pipx-codemagic-cli-tools/0.69.0` も未配置。Android CD からは未使用依存として除去したが、workspace 全体の導入では修復が必要。
 - 完了条件: clean runner で PR の解析とテストが起動・完走し、必要なツールだけを再現可能に導入できる。
+
+## 770: Codemagic CLI の macOS 検証
+
+- Codemagic CLI 0.70.0 の locked install と CLI 起動は Linux / Python 3.14.7 で確認済み。
+  macOS のインストールと XcResult 変換は未検証。既存 CI に該当する Codemagic 呼び出しはない。
+- 完了条件: macOS で `mise install --locked pipx:codemagic-cli-tools` を実行し、
+  Xcode 16 以上の実 XcResult を `xcode-project junit-test-results` で変換できることを確認する。
 
 ## 770: 既存テスト失敗の再確認
 
