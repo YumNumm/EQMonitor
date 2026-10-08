@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -143,12 +145,13 @@ class SettingsPage extends ConsumerWidget {
                     //   onTap: () async =>
                     //       const SeismicityRoute().push<void>(context),
                     // ),
-                    ListTile(
-                      title: const Text('ホーム画面ウィジェット'),
-                      leading: const Icon(Icons.widgets_outlined),
-                      onTap: () async =>
-                          const HomeWidgetSettingsRoute().push<void>(context),
-                    ),
+                    if (Platform.isIOS)
+                      ListTile(
+                        title: const Text('ホーム画面ウィジェット'),
+                        leading: const Icon(Icons.widgets_outlined),
+                        onTap: () async =>
+                            const HomeWidgetSettingsRoute().push<void>(context),
+                      ),
                   ],
                 ),
                 const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
