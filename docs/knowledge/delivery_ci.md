@@ -34,7 +34,15 @@
 | --- | --- | --- | --- |
 | `develop` push | 内部、`[external]` を含むと外部 | `internal` | true |
 | `v*-beta.*` push | TestFlight 外部 | `external` | true |
-| 手動実行 | `ios` / `external` 入力 | `android` 入力、trackは `internal` | true |
+| 手動実行 | `ios` / `external` 入力 | `android` / `android_track` 入力（既定 `internal`） | true |
+
+- Android オープンテストは `android_track=beta`。`external` は独自のクローズドテスト。
+- 手動実行の `source_run_id` に完了済み `Deploy App` run ID を指定すると、再ビルドせず
+  元のバイナリと配布ノートを再利用する。元runのビルド成功・artifact有効期限・versionを検査する。
+  iOS は ASC 登録済みの同version/build numberを選び、Android はAABのSHA-256を照合して
+  対象trackへ設定する。Firebaseへの重複配布は行わない。
+- ベータ後の一般公開でも iOS はこの ASC build、Android は同じversionCodeを選択する。
+  Release PRのmergeによる新しいビルドは別バイナリになるため、同一バイナリの一般公開に使わない。
 
 - 両OSとも対応する Firebase App Distribution へ配布する。iOSストアuploadとFirebaseは別job。
 - `BuildConfig.isShakeDetectionAvailable` は `!isProduction && isShakeDetectionEnabled`。

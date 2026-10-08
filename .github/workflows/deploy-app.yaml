@@ -23,6 +23,20 @@ on:
         required: false
         default: false
         type: boolean
+      android_track:
+        description: "Google Play track (beta is open testing)"
+        required: false
+        default: internal
+        type: choice
+        options:
+          - internal
+          - beta
+          - external
+      source_run_id:
+        description: "Reuse this Deploy App run's binaries and notes without rebuilding"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -65,12 +79,40 @@ jobs:
           INPUT_IOS: ${{ inputs.ios || false }}
           INPUT_ANDROID: ${{ inputs.android || false }}
           INPUT_EXTERNAL: ${{ inputs.external || false }}
+          INPUT_ANDROID_TRACK: ${{ inputs.android_track || 'internal' }}
         run: scripts/ci/resolve_deploy_app_policy.sh >> "$GITHUB_OUTPUT"
+
+  validate-source-run:
+    name: Validate existing binaries
+    if: ${{ inputs.source_run_id != '' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      build-number: ${{ steps.source.outputs.build-number }}
+      version: ${{ steps.source.outputs.version }}
+      head-sha: ${{ steps.source.outputs.head-sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate source run and artifacts
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          INPUT_IOS: ${{ inputs.ios }}
+          INPUT_ANDROID: ${{ inputs.android }}
+        run: scripts/release/resolve_source_run.sh >> "$GITHUB_OUTPUT"
 
   generate-release-note-ios:
     name: Generate Release Note (iOS)
     needs: define-matrix
-    if: ${{ needs.define-matrix.outputs.deploy-ios }}
+    if: ${{ needs.define-matrix.outputs.deploy-ios && inputs.source_run_id == '' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -136,7 +178,7 @@ jobs:
       cancel-in-progress: false
       queue: max
     needs: define-matrix
-    if: ${{ needs.define-matrix.outputs.deploy-android }}
+    if: ${{ needs.define-matrix.outputs.deploy-android && inputs.source_run_id == '' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -206,7 +248,7 @@ jobs:
   build-ios:
     name: Build iOS
     needs: define-matrix
-    if: ${{ needs.define-matrix.outputs.deploy-ios }}
+    if: ${{ needs.define-matrix.outputs.deploy-ios && inputs.source_run_id == '' }}
     # SearchEarthquakesIntent uses the iOS 27 system.searchInApp schema.
     runs-on: xcode-27
     permissions:
@@ -425,9 +467,17 @@ jobs:
       - build-ios
       - define-matrix
       - generate-release-note-ios
+      - validate-source-run
+    if: >-
+      ${{ !cancelled() && needs.define-matrix.result == 'success' &&
+          needs.define-matrix.outputs.deploy-ios == 'true' &&
+          ((inputs.source_run_id == '' && needs.build-ios.result == 'success' &&
+            needs.generate-release-note-ios.result == 'success') ||
+           (inputs.source_run_id != '' && needs.validate-source-run.result == 'success')) }}
     runs-on: macos-26
     permissions:
       contents: read
+      actions: read
     environment:
       name: EQMonitor-iOS
     timeout-minutes: 60
@@ -441,6 +491,7 @@ jobs:
 
       # https://github.com/actions/download-artifact
       - name: Download ipa
+        if: ${{ inputs.source_run_id == '' }}
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: EQMonitor-ios.ipa
@@ -451,6 +502,8 @@ jobs:
         with:
           name: EQMonitor-release-notes-ios
           path: notes
+          run-id: ${{ inputs.source_run_id || github.run_id }}
+          github-token: ${{ github.token }}
 
       - name: Extract SOPS Age Key File
         run: |
@@ -484,12 +537,28 @@ jobs:
           ASC_BETA_GROUP_ID: bd75f066-fd92-4175-b2d6-f34952737557
           ASC_BYPASS_KEYCHAIN: "1"
           DEPLOY_IOS_EXTERNAL: ${{ needs.define-matrix.outputs.deploy-ios-external }}
+          SOURCE_BUILD_NUMBER: ${{ needs.validate-source-run.outputs.build-number }}
+          SOURCE_VERSION: ${{ needs.validate-source-run.outputs.version }}
         run: |
           export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
           export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
           export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
           TEST_NOTES="$(cat notes/release-notes-ios.txt)"
-          if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
+          if [ -n "$SOURCE_BUILD_NUMBER" ]; then
+            asc builds info --app "$ASC_APP_ID" \
+              --build-number "$SOURCE_BUILD_NUMBER" --version "$SOURCE_VERSION" \
+              --platform IOS --output json > source-build.json
+            jq -e '.data.attributes.processingState == "VALID" and .data.attributes.expired == false' source-build.json
+            BUILD_ID=$(jq -er '.data.id' source-build.json)
+            cat source-build.json
+            if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
+              asc publish testflight --app "$ASC_APP_ID" --build-id "$BUILD_ID" \
+                --group "$ASC_BETA_GROUP_ID" --test-notes "$TEST_NOTES" \
+                --locale ja --submit --confirm --output json
+            fi
+            asc testflight distribution view --build-id "$BUILD_ID" --output json
+            asc testflight groups list --build-id "$BUILD_ID" --output json
+          elif [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
             asc publish testflight \
               --app "$ASC_APP_ID" \
               --ipa build/EQMonitor.ipa \
@@ -608,7 +677,7 @@ jobs:
   build-android:
     name: Build Android
     needs: define-matrix
-    if: ${{ needs.define-matrix.outputs.deploy-android }}
+    if: ${{ needs.define-matrix.outputs.deploy-android && inputs.source_run_id == '' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
@@ -833,11 +902,19 @@ jobs:
       - build-android
       - define-matrix
       - generate-release-note-android
+      - validate-source-run
+    if: >-
+      ${{ !cancelled() && needs.define-matrix.result == 'success' &&
+          needs.define-matrix.outputs.deploy-android == 'true' &&
+          ((inputs.source_run_id == '' && needs.build-android.result == 'success' &&
+            needs.generate-release-note-android.result == 'success') ||
+           (inputs.source_run_id != '' && needs.validate-source-run.result == 'success')) }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
     permissions:
       contents: read
       id-token: write
+      actions: read
     environment:
       name: EQMonitor-Android
     steps:
@@ -854,12 +931,16 @@ jobs:
         with:
           name: EQMonitor-android.aab
           path: download
+          run-id: ${{ inputs.source_run_id || github.run_id }}
+          github-token: ${{ github.token }}
 
       - name: Download Android release notes
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: EQMonitor-release-notes-android
           path: notes
+          run-id: ${{ inputs.source_run_id || github.run_id }}
+          github-token: ${{ github.token }}
 
       - name: Move AAB to root
         run: mv download/*.aab app.aab
@@ -896,8 +977,10 @@ jobs:
 
       - name: Output release version
         id: output_release_version
+        env:
+          SOURCE_VERSION: ${{ needs.validate-source-run.outputs.version }}
         run: |
-          VERSION=$(yq .version app/pubspec.yaml -r)
+          VERSION=${SOURCE_VERSION:-$(yq .version app/pubspec.yaml -r)}
           echo "release_version=${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Prepare release notes
@@ -929,6 +1012,7 @@ jobs:
         run: scripts/release/ensure_google_play_track.sh
 
       - name: Upload AAB to Google Play
+        if: ${{ inputs.source_run_id == '' }}
         env:
           RELEASE_NAME: ${{ steps.output_release_version.outputs.release_version }}
           GOOGLE_PLAY_TRACK: ${{ needs.define-matrix.outputs.android-track }}
@@ -939,3 +1023,13 @@ jobs:
             --release-notes="$(cat release-notes.json)" \
             --release-name "$RELEASE_NAME" \
             --package-name "net.yumnumm.eqmonitor"
+
+      - name: Publish existing binary to Google Play and verify track
+        if: ${{ inputs.source_run_id != '' }}
+        env:
+          GOOGLE_PLAY_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          PACKAGE_NAME: net.yumnumm.eqmonitor
+          TRACK_NAME: ${{ needs.define-matrix.outputs.android-track }}
+          BUILD_NUMBER: ${{ needs.validate-source-run.outputs.build-number }}
+          RELEASE_VERSION: ${{ needs.validate-source-run.outputs.version }}
+        run: scripts/release/publish_existing_android_beta.sh
