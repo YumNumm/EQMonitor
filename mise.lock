@@ -479,7 +479,7 @@ provenance = "github-attestations"
 version = "0.69.0"
 backend = "pipx:codemagic-cli-tools"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pipx-codemagic-cli-tools/0.69.0", digest = "sha256:c1113c4e79b88a0e2432e16a7d04a8b6a3719b56ebaf245508aeb5fdb44f0ff0" }
+uv = { path = ".mise/locks/pipx-codemagic-cli-tools/0.69.0", digest = "sha256:f396a0748577ad7c38e09da83c023cae55a9ed34c0e91ac204ca91c72ce0713d" }
 
 [[tools.pkl]]
 version = "0.32.1"

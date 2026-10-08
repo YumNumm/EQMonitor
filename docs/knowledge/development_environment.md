@@ -4,6 +4,10 @@
 
 - Flutter と同梱 Dart は `mise.toml` / `mise.lock`、依存解決は `pubspec.lock` を正本とする。
   過去の stable SDK や文書中の revision に切り替えて検証しない。
+- `mise.lock` が参照する `.mise/locks/` の依存ロックも Git 管理に含める。
+  `dependency sidecar ... No such file or directory` が出る場合は、
+  `mise lock pipx:codemagic-cli-tools` で固定バージョンの依存ロックを再生成し、
+  `mise.lock` と対応するディレクトリを一緒に更新する。
 - Dart workspace は root `pubspec.yaml` の `app`、`packages/*`、map example、`tools/*`。
   root `package.json` は Markdown tooling 用で、private `backend` は別 submodule。
 - Flutter Scene と `scene` は同じ `third_party/flutter_scene` 内の path 依存。
