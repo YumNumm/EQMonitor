@@ -198,4 +198,7 @@ app/assets/platform/parameters/*
 app/assets/platform/manifest.json
 app/assets/platform/**/*.pmtiles
 
-/.mise
+# Keep dependency sidecars referenced by mise.lock in version control.
+/.mise/*
+!/.mise/locks/
+/.mise/locks/*.local/
