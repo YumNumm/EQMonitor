@@ -2,4 +2,4 @@
 name = "mise-pypi-tool-environment"
 version = "0.0.0"
 requires-python = ">=3.10, <4"
-dependencies = ["codemagic-cli-tools==0.70.0", "PyJWT==2.14.0", "cryptography==49.0.0", "urllib3==2.8.0"]
+dependencies = ["codemagic-cli-tools==0.70.0", "PyJWT==2.14.0", "cryptography==50.0.0", "urllib3==2.8.0"]
