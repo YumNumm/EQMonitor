@@ -27,10 +27,13 @@ class const TestNotificationSendAction() {
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: const Text('重大な通知を送信しますか？'),
-          content: const Text(
-            '重大な通知は、端末のマナーモードの設定に関わらず音が鳴ります。'
-            '周囲の状況を確認してから送信してください。',
+          title: Text('${kind.displayLabel}を送信しますか？'),
+          content: Text(
+            Theme.of(context).platform == TargetPlatform.iOS
+                ? '重大な通知は、端末のマナーモードの設定に関わらず音が鳴ります。'
+                      '周囲の状況を確認してから送信してください。'
+                : '通知音は端末の通知チャンネルやマナーモードなどの設定に従います。'
+                      '周囲の状況を確認してから送信してください。',
           ),
           actions: [
             M3ETextButton(

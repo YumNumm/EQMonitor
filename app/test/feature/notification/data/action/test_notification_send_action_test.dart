@@ -51,7 +51,10 @@ void main() {
 
     expect(repository.receivedKinds, isEmpty);
     expect(find.text('重大な通知を送信しますか？'), findsOneWidget);
-    expect(find.textContaining('マナーモードの設定に関わらず音が鳴ります'), findsOneWidget);
+    expect(
+      find.textContaining('通知音は端末の通知チャンネルやマナーモードなどの設定に従います'),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('キャンセル'));
     await tester.pumpAndSettle();

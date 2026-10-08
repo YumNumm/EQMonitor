@@ -220,7 +220,8 @@ void main() {
       isPro: true,
     );
 
-    expect(find.text('Android 通知チャンネル設定'), findsOneWidget);
+    expect(find.text('端末の通知設定を開く'), findsOneWidget);
+    expect(find.text('通知の許可やチャンネルごとの音・バイブを変更できます'), findsOneWidget);
   });
 }
 
