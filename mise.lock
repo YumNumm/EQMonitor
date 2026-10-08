@@ -476,10 +476,13 @@ url_api = "https://api.github.com/repos/suzuki-shunsuke/pinact/releases/assets/5
 provenance = "github-attestations"
 
 [[tools."pipx:codemagic-cli-tools"]]
-version = "0.69.0"
+version = "0.70.0"
 backend = "pipx:codemagic-cli-tools"
-specifiers = ["latest"]
-uv = { path = ".mise/locks/pipx-codemagic-cli-tools/0.69.0", digest = "sha256:f396a0748577ad7c38e09da83c023cae55a9ed34c0e91ac204ca91c72ce0713d" }
+specifiers = ["0.70.0"]
+uv = { path = ".mise/locks/pipx-codemagic-cli-tools/0.70.0~5c99daeb", digest = "sha256:6cc56d42d66d0b4b4983763578f7b2b0c97351e20fc82302b7886d97823787da" }
+
+[tools."pipx:codemagic-cli-tools".options]
+with = '["PyJWT==2.14.0","cryptography==49.0.0","urllib3==2.8.0"]'
 
 [[tools.pkl]]
 version = "0.32.1"
