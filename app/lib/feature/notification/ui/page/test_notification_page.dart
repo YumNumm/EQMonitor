@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:eqmonitor/feature/notification/data/action/test_notification_send_action.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/ui/component/test_live_activity_panel.dart';
@@ -12,18 +14,21 @@ class TestNotificationPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pendingKind = useState<TestNotificationKind?>(null);
+    final isIOS = Platform.isIOS;
 
     return DefaultTabController(
-      length: 2,
+      length: isIOS ? 2 : 1,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('テスト通知'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'プッシュ通知'),
-              Tab(text: 'Live Activity'),
-            ],
-          ),
+          bottom: isIOS
+              ? const TabBar(
+                  tabs: [
+                    Tab(text: 'プッシュ通知'),
+                    Tab(text: 'Live Activity'),
+                  ],
+                )
+              : null,
         ),
         body: TabBarView(
           children: [
@@ -68,10 +73,11 @@ class TestNotificationPage extends HookConsumerWidget {
                 ],
               ],
             ),
-            ListView(
-              padding: const EdgeInsets.all(16),
-              children: const [TestLiveActivityPanel()],
-            ),
+            if (isIOS)
+              ListView(
+                padding: const EdgeInsets.all(16),
+                children: const [TestLiveActivityPanel()],
+              ),
           ],
         ),
       ),
