@@ -35,11 +35,6 @@ class TestNotificationPage extends HookConsumerWidget {
             ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                const Text(
-                  '通知条件の設定にかかわらず、この端末にサンプル通知を送信します。'
-                  '端末の通知許可や通知音の設定は適用されます。',
-                ),
-                const SizedBox(height: 24),
                 for (final kinds in const <List<TestNotificationKind>>[
                   [
                     .shindoReport,

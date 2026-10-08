@@ -23,7 +23,7 @@ class LocalNotificationRepository {
             AndroidNotificationChannelInitializer.forCurrentPlatform(
               isShakeDetectionEnabled: isShakeDetectionEnabled,
             ),
-        isAndroid: !kIsWeb && defaultTargetPlatform == TargetPlatform.android,
+        isAndroid: !kIsWeb && defaultTargetPlatform == .android,
         foregroundMessages: FirebaseMessaging.onMessage,
       );
 
@@ -110,10 +110,10 @@ class LocalNotificationRepository {
           channelDescription: channel.description,
           importance: channel.importance,
           priority: switch (channel.importance) {
-            Importance.max || Importance.high => Priority.high,
-            Importance.low => Priority.low,
-            Importance.min || Importance.none => Priority.min,
-            _ => Priority.defaultPriority,
+            .max || .high => .high,
+            .low => .low,
+            .min || .none => .min,
+            _ => .defaultPriority,
           },
           playSound: channel.playSound,
           sound: channel.sound,
@@ -122,6 +122,8 @@ class LocalNotificationRepository {
           icon: 'ic_notification_icon',
           tag: tag,
           styleInformation: BigTextStyleInformation(notification.body ?? ''),
+          category: .message,
+          visibility: .public,
         ),
       ),
     );

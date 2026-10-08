@@ -29,7 +29,7 @@ class const TestNotificationSendAction() {
         builder: (dialogContext) => AlertDialog(
           title: Text('${kind.displayLabel}を送信しますか？'),
           content: Text(
-            Theme.of(context).platform == TargetPlatform.iOS
+            Theme.of(context).platform == .iOS
                 ? '重大な通知は、端末のマナーモードの設定に関わらず音が鳴ります。'
                       '周囲の状況を確認してから送信してください。'
                 : '通知音は端末の通知チャンネルやマナーモードなどの設定に従います。'
@@ -42,7 +42,7 @@ class const TestNotificationSendAction() {
             ),
             M3EFilledButton(
               onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: const Text('送信する'),
+              child: const Text('送信'),
             ),
           ],
         ),
@@ -69,7 +69,7 @@ class const TestNotificationSendAction() {
         case Success():
           messenger.showSnackBar(
             const SnackBar(
-              content: Text('テスト通知の送信を受け付けました'),
+              content: Text('テスト通知を送信しました'),
             ),
           );
         case Failure(:final exception):
