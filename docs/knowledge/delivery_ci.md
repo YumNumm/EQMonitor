@@ -39,8 +39,10 @@
 - Android オープンテストは `android_track=beta`。`external` は独自のクローズドテスト。
 - 手動実行の `source_run_id` に完了済み `Deploy App` run ID を指定すると、再ビルドせず
   元のバイナリと配布ノートを再利用する。元runのビルド成功・artifact有効期限・versionを検査する。
-  iOS は ASC 登録済みの同version/build numberを選び、Android はAABのSHA-256を照合して
+  iOS は署名済みIPA内のversion/build numberに一致する ASC buildを選び、Android はAABのSHA-256を照合して
   対象trackへ設定する。Firebaseへの重複配布は行わない。
+- iOS の署名済みIPAのbuild numberはCI run numberと一致するとは限らない。
+  export時の採番が入るため、CI番号をASCのビルド選択へそのまま渡さない。
 - ベータ後の一般公開でも iOS はこの ASC build、Android は同じversionCodeを選択する。
   Release PRのmergeによる新しいビルドは別バイナリになるため、同一バイナリの一般公開に使わない。
 
