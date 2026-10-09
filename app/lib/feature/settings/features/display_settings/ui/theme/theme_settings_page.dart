@@ -22,16 +22,18 @@ class ThemeSettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('テーマ設定')),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            SettingsSectionHeader(text: 'ライト用テーマ'),
-            _ModeSection(mode: ThemeBrightnessMode.light),
-            SettingsSectionHeader(text: 'ダーク用テーマ'),
-            _ModeSection(mode: ThemeBrightnessMode.dark),
-            SettingsSectionHeader(text: 'JSON入出力'),
-            ThemeImportExportSection(),
-          ],
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: .start,
+            children: [
+              SettingsSectionHeader(text: 'ライト用テーマ'),
+              _ModeSection(mode: ThemeBrightnessMode.light),
+              SettingsSectionHeader(text: 'ダーク用テーマ'),
+              _ModeSection(mode: ThemeBrightnessMode.dark),
+              SettingsSectionHeader(text: 'JSON入出力'),
+              ThemeImportExportSection(),
+            ],
+          ),
         ),
       ),
     );
