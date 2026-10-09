@@ -37,6 +37,7 @@
 ## 800: Android 前面通知の実機確認
 
 - 対象: `app/lib/core/fcm/local_notification_repository.dart`、`firebaseMessagingForegroundProvider`、通知タップ処理。
+- アイコン保持指定を含む release AAB / APK で `drawable/ic_notification_icon` の画像とリソース登録が残ることを確認する。その成果物を Android 実機に入れ、テスト通知の前面表示時に `invalid_icon` が発生しないことを確認する。修正後の成果物・実機検証は未実施。
 - Android 実機でアプリ表示中の通常・重大テスト通知と地震通知を送り、通知欄への表示・音・チャンネルの利用者設定を確認する。前面・バックグラウンド・アプリ終了後に通知をタップし、リンク先へ遷移することを確認する。実機検証は未実施。
 - 同じ tag の通知を前面・バックグラウンドをまたいで更新した場合の重複を確認する。ローカル通知はタップ先の上書きを避けるため通知ごとの ID を使い、FCM の通知 ID `0` と一致しない。
 - 配信側の `test` / `test_critical` などの旧チャンネル ID を現行 registry と照合し、現行 ID へ更新する。未登録 ID の通知が既定チャンネルへ流れる状態を解消する。

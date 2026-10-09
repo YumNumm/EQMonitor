@@ -18,6 +18,7 @@
 
 - `notification` のないデータ通知は表示しない。チャンネル初期化を待ってから表示し、音・importance は既存 channel の設定を使う。旧 `test` / `test_critical` は移行先の `service_test` / `service_test_critical` を使う。
 - 前面通知のアイコンは同梱 drawable の `ic_notification_icon` を使う。FCM の `@mipmap/...` 形式をローカル通知へ直接渡さない。
+- Dart から名前で参照するアイコンは Android の resource shrinking が参照を追跡できないため、`app/android/app/src/main/res/raw/eqmonitor_notification_keep.xml` で保持する。削除されると通知プラグインの初期化が `invalid_icon` で失敗する。release 成果物の画像とリソース登録を確認し、debug の表示成功だけで判断しない。
 - ローカル通知の payload に FCM の data を保存し、タップは既存の通知リンク判定・計測へ接続する。通知による起動の確認が完了するまで splash は待機し、通知がない場合や確認に失敗した場合も待機を解除する。
 - Android だけローカル表示し、Apple の前面通知と二重表示しない。個別の表示失敗は記録し、次の受信を処理する。
 
