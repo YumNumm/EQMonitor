@@ -1,5 +1,64 @@
 # Changelog
 
+## [3.0.2-beta.1](https://github.com/YumNumm/EQMonitor/compare/v3.0.1...v3.0.2-beta.1) (2026-10-09)
+
+
+### Features
+
+* CronetとURLSessionの通信基盤を追加 ([44d2d6d](https://github.com/YumNumm/EQMonitor/commit/44d2d6da8ec826a257b11cf0367c9d71a57ba92c))
+* Sheet移動量に連動する固定オーバーレイを追加 ([ba8aa59](https://github.com/YumNumm/EQMonitor/commit/ba8aa59aa9671f9f088880edc6e038f32ab98f31))
+* サーバ通知テスト画面へ移行 ([fc57b97](https://github.com/YumNumm/EQMonitor/commit/fc57b97a1937e5c13d20bad9031246896797d248))
+* バックグラウンドと地震活動の通信をネイティブ化 ([1ac1e7c](https://github.com/YumNumm/EQMonitor/commit/1ac1e7c84ac51b9f1e124e7a80f7925d7b1f20cf))
+* プリセットを保持して保存後に権限不足を案内する ([18e8ad3](https://github.com/YumNumm/EQMonitor/commit/18e8ad319719aa68a6033bb0d465481a24eed2c9))
+* 不足する通知権限を一つのモーダルで案内する ([d79708d](https://github.com/YumNumm/EQMonitor/commit/d79708d5a5dd37ce96ca8c13dcd9b9ea53dee8b1))
+* 地震詳細の震度凡例をM3Eでアニメーション表示 ([c01634b](https://github.com/YumNumm/EQMonitor/commit/c01634b51156192dc76a263297dcd74a99820ff3))
+* 旧EEWのLive Activityテスト操作を追加 ([e9f34fa](https://github.com/YumNumm/EQMonitor/commit/e9f34fa77af0ecea317dcca2d2b4d3587010241a))
+* 通知権限の不足カードと常設設定を追加する ([3092301](https://github.com/YumNumm/EQMonitor/commit/30923011c637a7594ebc1a9a44a171b183e752a7))
+* 通知権限の状態を復帰時に再取得する ([bfd8174](https://github.com/YumNumm/EQMonitor/commit/bfd817439d93aa89441fac5a15a58954b2dda1d0))
+* 通知設定から通知権限を確認・変更できるようにする ([9a899b6](https://github.com/YumNumm/EQMonitor/commit/9a899b65a7beccb7ede32bac12571bed72a09b42))
+
+
+### Bug Fixes
+
+* AndroidでLive Activityの表示テストを非表示にする ([d4d5020](https://github.com/YumNumm/EQMonitor/commit/d4d5020250b08a6a0ac371d59a3be2eb61744e6d))
+* AndroidでLive Activityの表示テストを非表示にする ([38ab1ae](https://github.com/YumNumm/EQMonitor/commit/38ab1ae43ce437947d007f0e3c46f7653eee0c15))
+* Androidで強震モニタのHTTP通信をホスト限定で許可 ([5f5a2f4](https://github.com/YumNumm/EQMonitor/commit/5f5a2f4b36c4488c2e127715a245eafd297290ad))
+* AndroidのCronet Manifest統合エラーを回避 ([216bc80](https://github.com/YumNumm/EQMonitor/commit/216bc80bfef58e2f829604fe4bbb23153c487e1d))
+* Androidの設定からiOS専用の導線と説明を除く ([956b468](https://github.com/YumNumm/EQMonitor/commit/956b4680d6bd5a0ae58e894d9f7834735158c7d9))
+* Androidの設定からiOS専用の導線と説明を除く ([bf105b4](https://github.com/YumNumm/EQMonitor/commit/bf105b4185c9dbec3d17b5e2471da5feb729c729))
+* Android通知アイコンをリリースビルドで保持 ([123f071](https://github.com/YumNumm/EQMonitor/commit/123f071786a3b83a219d52f3476c2efbc306af94))
+* Backend mainの正式なOpenAPIからクライアントを再生成 ([344f050](https://github.com/YumNumm/EQMonitor/commit/344f050074736588b95c9fb179c95d61ae0ccbde))
+* Codemagic CLIを0.70.0へ更新し脆弱な依存を解消 ([58f1abe](https://github.com/YumNumm/EQMonitor/commit/58f1abe60ff22088f8765d50287b17b4750fba58))
+* Codemagic CLIを更新し脆弱な依存を解消 ([e01cbd9](https://github.com/YumNumm/EQMonitor/commit/e01cbd9ab193563bca1110fb337b60d00bbafa1e))
+* EEWの線と震源を強震モニタ観測点の上に表示 ([1bc94c6](https://github.com/YumNumm/EQMonitor/commit/1bc94c65ed0e57f81b4fc4fe18db414fc44d27c3))
+* EEWの線と震源を強震モニタ観測点より前面に表示 ([d691583](https://github.com/YumNumm/EQMonitor/commit/d69158394de359609548201f33cbd033aab1735e))
+* iOS IPA書き出しの一時的なオフラインエラーを再試行 ([130aa5c](https://github.com/YumNumm/EQMonitor/commit/130aa5c8a343bd9fdc13e2c48a9c89ed6a6a66e7))
+* miseの依存ロック欠落によるセットアップ失敗を修復 ([97a324d](https://github.com/YumNumm/EQMonitor/commit/97a324d817230f81c688e214ca8829d809ae57d0))
+* TestFlight再配信で署名済みIPAのビルド番号を使う ([4c8a61b](https://github.com/YumNumm/EQMonitor/commit/4c8a61b3f40334f95e64e900d1393afc2b60e3b9))
+* カメラ移動時の観測点GeoJSON再生成を抑止 ([7fe693d](https://github.com/YumNumm/EQMonitor/commit/7fe693d0bd968a9bd970cfb50d87920dcd3dbbfb))
+* テーマ設定の下端に安全領域を確保 ([ae00f7a](https://github.com/YumNumm/EQMonitor/commit/ae00f7adf8879331210cb21191c292c497e59e12))
+* トークン同期を変更時または24時間経過時に限定 ([a3999e5](https://github.com/YumNumm/EQMonitor/commit/a3999e58a3454e26c048636bd4612c8ca11d36a1))
+* ネイティブ通信の終了を待って接続を破棄 ([c353d4c](https://github.com/YumNumm/EQMonitor/commit/c353d4cb38e4abdb2fc21addbb1f3db7920c5ae8))
+* 最大震度マップの選択地域と並び順を表示 ([d1847ed](https://github.com/YumNumm/EQMonitor/commit/d1847ed23d880d0ee1a56da08eb75456eb3621f6))
+* 同一AABをGoogle Playテストへ配信して検証 ([1500362](https://github.com/YumNumm/EQMonitor/commit/1500362657d530342d5082ee4d3e1c5b6d1fa7aa))
+* 権限確認の無限待機を防ぎ再試行を追加 ([f612f93](https://github.com/YumNumm/EQMonitor/commit/f612f9332f50c75c66b6d4a2bca2ecd3f13505a9))
+* 火山噴火のM欠損表示と補足を修正 ([947c569](https://github.com/YumNumm/EQMonitor/commit/947c569a311f3db986f47091cc1846c3e074d575))
+* 現在地震度カードの東京都名の重複を解消 ([3fa37fa](https://github.com/YumNumm/EQMonitor/commit/3fa37fa9c9e680bccd8ff14a80d4602f6fe7e49f))
+* 起動時の通知設定更新バナーを非表示化 ([f97b515](https://github.com/YumNumm/EQMonitor/commit/f97b5150991c307721c2e5dfd809721eb7fb4164))
+* 通知トークンの種類別送信履歴を永続化 ([a6e47ab](https://github.com/YumNumm/EQMonitor/commit/a6e47ab59c7015e076dababac7d0a8da85abac92))
+* 震度凡例のアイコンを24に縮小 ([25d898a](https://github.com/YumNumm/EQMonitor/commit/25d898af032abf5db1af372e2e0c4aaf9dfce9e9))
+* 震度凡例のサイズと重なり順と推計配色を調整 ([c60fbc5](https://github.com/YumNumm/EQMonitor/commit/c60fbc5b35380e5dcfad23a056a12b8fa2870020))
+
+
+### Reverts
+
+* 依頼範囲外のテスト期待値変更を戻す ([baee5a1](https://github.com/YumNumm/EQMonitor/commit/baee5a1e9fcc2d8e2242aa683fb7201ae1b7f4bb))
+
+
+### Miscellaneous Chores
+
+* 次のリリースを3.0.2 beta1に指定 ([677e33e](https://github.com/YumNumm/EQMonitor/commit/677e33eba992836fc7b10e9539556f925777170f))
+
 ## [3.0.1](https://github.com/YumNumm/EQMonitor/compare/v3.0.0...v3.0.1) (2026-10-02)
 
 
