@@ -101,6 +101,7 @@
 
 ## 400 / 200: scroll と共有見出し
 
+- 400: `theme_settings_page.dart` のスクロール内容に `SafeArea` を追加済み。Android の3ボタン・ジェスチャーナビゲーションと iOS 実機で、末尾の「JSONをインポート」をシステムUIに重ねず表示・操作できることを確認する。横画面・文字拡大時のスクロールも未検証。
 - 400: 地震詳細・EEW履歴・津波詳細のシート内スクロールを Home と同じ `BottomBouncingScrollPhysics` に設定済み。iOS / Android 実機で上端からのシート縮小、下端のバウンド、EEW表の横スクロールを確認する。実機検証は未実施。
 - 400: `app/lib/page/home_page.dart` の `_SheetBody` を遅延list/sliverへ移す場合は、sheet drag・`BottomBouncingScrollPhysics` の追従/bounceを確認する。
 - 400: `app/lib/feature/home/ui/component/sheet/sheet_header.dart` を利用featureに依存しない `app/lib/core/component/` へ移し、earthquake history / kyoshin monitor の呼び出しとspacing/typographyを揃える。
