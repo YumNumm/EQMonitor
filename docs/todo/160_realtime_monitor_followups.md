@@ -9,6 +9,12 @@
 - このflagはclient表示/購読だけを止める。無効ビルドで既登録のserver pushも止める必要があるなら、server抑止または登録設定削除の仕様を決めて配信テストを追加する。
 - 完了条件: 配布trackごとの表示/REST/WebSocket/pushの挙動が仕様と一致する。削除済みの揺れ検知履歴が必要なら、RESTを持つ履歴として別途設計する。
 
+## 150: WebSocket固定heartbeatの実機確認
+
+- iOS/Android実機で、デバッグ画面を開かずにNodeとDurable Objectsそれぞれの接続を維持できることを確認する。
+- background復帰・ネットワーク切替後の再接続と、デバッグ画面のRTT表示を確認する。
+- 新サーバーを旧アプリへ公開する前に、queryのないlegacy接続でserver pingが継続し、30秒の無受信監視で切断されないことを確認する。
+
 ## 080: 強震モニタ data 層
 
 対象: `app/lib/feature/kyoshin_monitor/data/`。
