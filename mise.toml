@@ -7,7 +7,7 @@ gcloud = "https://github.com/jthegedus/asdf-gcloud"
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"
 java = "temurin-17.0.20+8"
-gradle = "9.7.1"
+gradle = "9.8.1"
 node = "lts"
 python = "latest"
 # Exact dependency pins also raise the generated lock's Python floor to 3.10.
@@ -28,7 +28,7 @@ hk = "latest"
 pkl = "latest"
 zizmor = "latest"
 ghalint = "latest"
-"github:jdx/jactionlint" = "1.8.2"
+"github:jdx/jactionlint" = "2.1.0"
 gitleaks = "latest"
 flutter = "19946f91c8d9de18a4674460d015229cc0b2534f"
 "github:rorkai/App-Store-Connect-CLI" = { version = "latest", rename_exe = "asc" }
