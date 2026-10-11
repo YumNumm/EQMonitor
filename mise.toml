@@ -10,7 +10,8 @@ java = "temurin-17.0.20+8"
 gradle = "9.7.1"
 node = "lts"
 python = "latest"
-"pipx:codemagic-cli-tools" = "latest"
+# Exact dependency pins also raise the generated lock's Python floor to 3.10.
+"pipx:codemagic-cli-tools" = { version = "0.70.0", with = ["PyJWT==2.14.0", "cryptography==49.0.0", "urllib3==2.8.0"] }
 pnpm = "latest"
 tflint = "latest"
 uv = "latest"
@@ -27,6 +28,7 @@ hk = "latest"
 pkl = "latest"
 zizmor = "latest"
 ghalint = "latest"
+"github:jdx/jactionlint" = "1.8.2"
 gitleaks = "latest"
 flutter = "19946f91c8d9de18a4674460d015229cc0b2534f"
 "github:rorkai/App-Store-Connect-CLI" = { version = "latest", rename_exe = "asc" }

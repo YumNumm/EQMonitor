@@ -21,6 +21,11 @@ if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
     platforms+=(android)
   fi
   ios_external=$INPUT_EXTERNAL
+  android_track=${INPUT_ANDROID_TRACK:-internal}
+  case "$android_track" in
+    internal|beta|external) ;;
+    *) echo "Unsupported Android track: $android_track" >&2; exit 1 ;;
+  esac
 elif [[ "$EVENT_NAME" == "push" && "$REF_TYPE" == "tag" && "$REF_NAME" == v*-beta.* ]]; then
   platforms+=(ios android)
   ios_external=true

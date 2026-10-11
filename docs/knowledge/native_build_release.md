@@ -89,6 +89,12 @@ xcrun actool AppIcon-dev.icon \
 
 ## Android / AGP
 
+- `app/android/app/src/main/AndroidManifest.xml` は `@xml/network_security_config` を参照する。
+  保存済みの取得元が `kmoni` の場合、時刻情報・観測画像をHTTPで取得するため、
+  `www.kmoni.bosai.go.jp` だけ平文通信を許可する。サブドメインは許可対象に含めない。
+  設定ファイルは `app/android/app/src/main/res/xml/network_security_config.xml`。
+  [Androidのドメイン別通信設定](https://developer.android.com/privacy-and-security/security-config#CleartextTrafficPermitted)に従い、
+  それ以外のホストは平文通信を禁止する。Cronetでの実機確認は[強震モニタTODO](../todo/160_realtime_monitor_followups.md)に残す。
 - 現行 `app/android/app/build.gradle.kts` は Java/Kotlin JVM 17、compileSdk 37。
   SDK・NDKの具体的な版は同ファイルと `mise.toml` を正本にする。
 - `cronet_http` の Play Services 経由では `cronet-api` / `cronet-shared` の

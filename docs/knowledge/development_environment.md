@@ -8,6 +8,15 @@
   `dependency sidecar ... No such file or directory` が出る場合は、
   `mise lock pipx:codemagic-cli-tools` で固定バージョンの依存ロックを再生成し、
   `mise.lock` と対応するディレクトリを一緒に更新する。
+- Codemagic CLI の更新は `mise.toml` の本体・`with` の依存 pin を更新し、
+  `mise lock --bump pipx:codemagic-cli-tools` で再生成する。参照されなくなった旧 sidecar は削除する。
+  `with` の exact pin は依存の Python 要件を生成範囲へ反映するため、旧 Python 向けの脆弱な分岐を残さない。
+  現在の依存構成は Python 3.10 以上が必要。実行環境の Python 更新だけでは sidecar の範囲は変わらない。
+  生成ファイルを直接編集せず、`mise install --locked pipx:codemagic-cli-tools` で再現性を確認する。
+  詳細は [mise の依存ロック仕様](https://mise.jdx.dev/dev-tools/backends/pypi.html#dependency-locking) を参照する。
+- Codemagic CLI 0.70.0 の XcResult 変換は Xcode 16 以上が必要。
+  `xcode-project run-tests` / `test-summary` / `junit-test-results` と旧 Python API の変更は
+  [上流の変更履歴](https://github.com/codemagic-ci-cd/cli-tools/blob/v0.70.0/CHANGELOG.md) を参照する。
 - Dart workspace は root `pubspec.yaml` の `app`、`packages/*`、map example、`tools/*`。
   root `package.json` は Markdown tooling 用で、private `backend` は別 submodule。
 - Flutter Scene と `scene` は同じ `third_party/flutter_scene` 内の path 依存。
