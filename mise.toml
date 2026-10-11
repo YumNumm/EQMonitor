@@ -35,7 +35,6 @@ flutter = "19946f91c8d9de18a4674460d015229cc0b2534f"
 
 [settings]
 lockfile = true
-plugin_autoupdate_last_check_duration = "1 week"
 
 [env]
 HK_MISE = "1"
