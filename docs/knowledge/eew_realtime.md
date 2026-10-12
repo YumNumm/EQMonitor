@@ -49,6 +49,22 @@
 - 実機残件は[EEW・推計震度](../todo/800_eew_and_estimated_intensity.md)。
   resumed/ready/REST開始・終了、loading/hasValue、eventId/serialを同じ時系列で確認する。
 
+## WebSocket heartbeat の互換性
+
+- 接続URLには `heartbeat=fixed-v1` を付与し、接続直後と15秒ごとに
+  `{"type":"ping","pingId":"heartbeat"}` を送る。ticketと配信先はAPIの応答を使う。
+- 応答は `{"type":"pong","pingId":"heartbeat"}`。Durable Objectsの自動応答は
+  文字列全体で照合するため、JSONのキー順序と空白も固定する。
+- heartbeatは接続層で動き、デバッグ画面の表示に依存しない。
+  受信が30秒途絶えた場合の再接続、切断・provider破棄時のtimer停止を維持する。
+- 既存Nodeサーバーは追加queryを無視し、同じpingIdを返せる。
+  アプリからサーバー起因の `{"type":"ping"}` へのpong応答も維持する。
+- 旧アプリは通常画面でclient pingを送らない。新サーバーではqueryのない接続を
+  legacy扱いし、従来のserver pingを送る必要がある。旧アプリも接続できるが、
+  legacy接続が残るDOでは定期的に処理が起動する。
+- デバッグ画面のRTT計測は従来の連番pingIdを使い、固定heartbeatのpongは無視する。
+  RTT計測中はDOで通常のmessage処理が起動する。
+
 ## 再生と派生画面
 
 - 履歴シミュレーションの報切替、P/S波、カードは共通の再生経過時間を参照する。

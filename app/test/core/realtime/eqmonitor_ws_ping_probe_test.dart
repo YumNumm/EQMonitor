@@ -46,10 +46,10 @@ final class _RecordingWebSocket implements WebSocket {
   }
 }
 
-/// 送信済み ping フレームから pingId を取り出す。
+/// 固定heartbeatを除き、送信済みRTT pingのpingIdを取り出す。
 List<String> _pingIdsOf(_RecordingWebSocket ws) => ws.sent
     .map((e) => jsonDecode(e) as Map<String, dynamic>)
-    .where((e) => e['type'] == 'ping')
+    .where((e) => e['type'] == 'ping' && e['pingId'] != 'heartbeat')
     .map((e) => e['pingId']! as String)
     .toList();
 
