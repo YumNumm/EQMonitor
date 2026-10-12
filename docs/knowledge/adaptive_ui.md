@@ -28,7 +28,7 @@
 - HistoryPaneは一覧/詳細に別PrimaryScrollControllerを与える。loading ListViewも対象。
   MediaQueryサイズ/余白は各ペイン、keyboard縮小は外側Scaffoldが担当する。
 - 地図上詳細シートはBasicModalSheet(expandToPane:true)で、横長ペインをさらに半幅にしない。
-- `BasicModalSheet.initialPositionOverlay` はSheetと同じSafeArea・ペイン制約内で、初期高さの直上かつSheetの背面に固定する。SheetControllerの実際の移動量から透明度を計算し、完全に消えたときは入力と読み上げも抑止する。
+- `BasicModalSheet.initialPositionOverlay` はSheetと同じSafeArea・ペイン制約内で、初期高さの直上かつSheetの背面に固定する。SheetControllerの実際の移動量から透明度を計算し、透明度が0になったときは入力と読み上げも抑止する。
 - EEW各報シートは最新報から表示し、event選択変更/詳細closeで履歴再生を止める。
   選択は震度色を塗り替えず輪郭とSemanticsで伝える。
 
@@ -79,16 +79,25 @@ mise exec -- flutter test test/core/component/selector \
   別用途responseAtを混ぜない。時刻nullでもitemsは表示する。
 - API更新は現在の元スキーマから生成し、古い調査時タグへsubmoduleを戻す手順を常用しない。
 
-## Live Monitorの画面点灯
+## 画面点灯と Android のロック画面表示
 
-- wakelock_plusを呼ぶcontrollerはsession・keepScreenAwake・lifecycleを監視する。
-  active sessionかつ設定有効かつresumedの場合だけenableする。
-- background、exit、設定無効はdisableへ収束する。plugin処理は直列化し、generationで古い未実行状態を捨てる。
-  enable完了後にpause/exitが残れば続けてdisableする。同じdesired stateを重複実行しない。
-- adapter/queue/generation/適用状態はRef非依存ownerが保持し、await区間でRefを読まない。
-  controller依存変更のたびにownerを破棄せず、owner寿命終了時に実行中処理後の強制disableをqueueする。
-- plugin例外はログに記録し、地震情報UIのerrorへ置き換えない。
-- 実機で自動ロック時間超過、background/foreground、exit、設定変更、高速な状態切替を確認する。
+- 表示設定の「画面の点灯を維持」は初期値 OFF。アプリが前面表示中の場合に適用する。
+  未公開の Live Monitor の設定・名称・導線は公開設定に出さず、既存の内部設定を保持する。
+- `ScreenWakeLockOwner` が公開設定と内部セッションの要求を OR で合成し、
+  `wakelock_plus` の呼び出しを直列化する。既存の owner provider を両 controller が共有する。
+  各 controller は lifecycle を監視し、background で要求を解除する。
+- generation で古い未実行状態を捨てる。owner 寿命終了時には実行中処理後の強制 disable を queue する。
+  plugin 例外はログに記録し、地震情報 UI の error へ置き換えない。
+- Android の「ロック画面上に表示」は初期値 ON。`showWhenLocked` と `turnScreenOn` を連動させる。
+  Manifest では常時有効にせず、`ScreenBehaviorPreferences` が Activity 作成・復帰時に復元する。
+  ロック解除や通知受信時のアプリ自動起動は行わない。
+- Android は `SharedPreferences.getInstance()` の legacy 保存先 `FlutterSharedPreferences` にある
+  `flutter.show_when_locked` を読み、変更 listener で即時反映する。Dart の
+  `SharedPreferencesKey.showWhenLocked` と保存形式を一致させる。DataStore への移行時には両側を変更する。
+- 端末再起動後の初回 unlock 前は credential protected storage を開かず、ロック画面表示を無効にする。
+  保存値の書き込みは Dart の `SharedPreferencesDataSource` に限定する。
+- 実機で自動ロック時間超過、background/foreground、設定変更、高速な状態切替、
+  ロック中の cold start と Activity 再生成を確認する。
 
 ## 検証
 

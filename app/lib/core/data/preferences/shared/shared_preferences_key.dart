@@ -11,6 +11,9 @@ enum SharedPreferencesKey(final String key) {
   locationTrackingMode('location_tracking_mode'),
   homeConfiguration('home_configuration'),
   liveMonitorSettings('live_monitor_settings'),
+  keepScreenAwake('keep_screen_awake'),
+  // Android の ScreenBehaviorPreferences も同じ保存値を起動時に読み取る。
+  showWhenLocked('show_when_locked'),
   onboardingCompleted('onboarding_completed'),
   betaTestingAgreed('beta_testing_agreed'),
   startEtag('start_etag'),
