@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/shake_detection/data/provider/local_shake_detection_provider.dart';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/decoration/warning_stripe_decoration.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
@@ -38,6 +39,10 @@ class EewCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final now = ref.watch(timeTickerProvider());
     final isWarning = eew.isWarning ?? false;
+    final observed = ref
+        .watch(localShakeDetectionProvider)
+        .value
+        ?.eewSummaries[eew.eventId];
 
     // 取消報は発生時刻を持たないが、取消の旨を表示するためカードは描画する。
     final happenedTime = eew.originTime ?? eew.arrivalTime;
@@ -119,6 +124,9 @@ class EewCard extends ConsumerWidget {
         if (index case final index?) _BackgroundIndexText(index: index),
         _EewMainCard(
           eew: eew,
+          observationSummary: observed == null
+              ? null
+              : '観測: 最大計測震度 ${observed.maxIntensity.toStringAsFixed(1)}・${observed.stations}地点',
           isWarning: isWarning,
           happenedTime: happenedTime,
           localForecastIntensity: effectiveLocalIntensity,
@@ -163,6 +171,7 @@ class _EewMainCard extends StatelessWidget {
     required this.showArrived,
     required this.showDeepHypocenterIntensityNotice,
     this.secondsUntilArrival,
+    this.observationSummary,
   });
 
   final EewTelegramItem eew;
@@ -173,6 +182,7 @@ class _EewMainCard extends StatelessWidget {
   final bool showArrived;
   final bool showDeepHypocenterIntensityNotice;
   final int? secondsUntilArrival;
+  final String? observationSummary;
 
   static const _warningHeaderColor = Color.fromRGBO(179, 26, 26, 1);
   static const _forecastHeaderColor = Color.fromRGBO(255, 167, 4, 1);
@@ -234,6 +244,7 @@ class _EewMainCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: .start,
               children: [
+                if (observationSummary case final summary?) Text(summary),
                 if (eew.isCanceled)
                   Text(
                     '緊急地震速報は取り消されました',
