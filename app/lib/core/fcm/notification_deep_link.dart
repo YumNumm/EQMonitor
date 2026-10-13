@@ -49,7 +49,11 @@ sealed class const NotificationDeepLink() {
       }
     }
     final eventId = data['eventId'];
-    if (eventId is String && eventId.isNotEmpty) {
+    // Legacy earthquake notifications may have an eventId without a link.
+    // EEW eventIds do not necessarily have an earthquake detail record.
+    if (data['type'] == 'EARTHQUAKE' &&
+        eventId is String &&
+        eventId.isNotEmpty) {
       return NotificationRouteLink(
         location: '/earthquake-history-details/$eventId',
       );

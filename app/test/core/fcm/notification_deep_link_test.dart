@@ -48,6 +48,7 @@ void main() {
 
     test('allowlist 外の内部パスは無視して eventId フォールバックする', () {
       final link = NotificationDeepLink.fromData({
+        'type': 'EARTHQUAKE',
         'link': 'eqmonitor:///settings/debug',
         'eventId': '20260703123456',
       });
@@ -62,7 +63,10 @@ void main() {
     });
 
     test('link 無しは eventId フォールバック', () {
-      final link = NotificationDeepLink.fromData({'eventId': 'ev1'});
+      final link = NotificationDeepLink.fromData({
+        'type': 'EARTHQUAKE',
+        'eventId': 'ev1',
+      });
       expect(
         link,
         isA<NotificationRouteLink>().having(
@@ -79,6 +83,7 @@ void main() {
 
     test('不正な URI は eventId フォールバック', () {
       final link = NotificationDeepLink.fromData({
+        'type': 'EARTHQUAKE',
         'link': '::not a uri::',
         'eventId': 'ev1',
       });
