@@ -71,7 +71,7 @@ class EewTable extends StatelessWidget {
                   if (states.contains(WidgetState.selected)) {
                     return designSystem.colorTheme.primaryContainer;
                   }
-                  return eew.isWarning ?? false
+                  return !eew.isCanceled && (eew.isWarning ?? false)
                       ? designSystem.colorTheme.errorContainer.withValues(
                           alpha: 0.7,
                         )
@@ -132,6 +132,12 @@ enum _EewTableColumn {
 
 extension _EewTableColumnEx on _EewTableColumn {
   _EewTableColumnValue value(EewTelegramItem eew) => switch (this) {
+    _
+        when eew.isCanceled &&
+            this != .serialNo &&
+            this != .type &&
+            this != .reportTime =>
+      const _EewTableColumnValue(value: '-', isNumeric: false),
     .serialNo => _EewTableColumnValue(
       value: eew.serialNo.toString(),
       isNumeric: true,
@@ -215,7 +221,11 @@ extension _EewTableColumnEx on _EewTableColumn {
       null => const _EewTableColumnValue(value: '', isNumeric: false),
     },
     .type => _EewTableColumnValue(
-      value: (eew.isWarning ?? false) ? '緊急地震速報 (警報)' : '緊急地震速報 (予報)',
+      value: eew.isCanceled
+          ? '緊急地震速報 (取消)'
+          : (eew.isWarning ?? false)
+          ? '緊急地震速報 (警報)'
+          : '緊急地震速報 (予報)',
       isNumeric: false,
     ),
   };
