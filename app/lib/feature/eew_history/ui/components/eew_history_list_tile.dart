@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/core/util/jma_depth_formatter.dart';
@@ -23,16 +24,22 @@ class EewHistoryListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final hypocenter = item.hypocenter;
-    final maxIntensity = item.forecastIntensity?.maxIntensity;
-    final isWarning = item.isWarning ?? false;
+    final isCanceled = item.isCanceled;
+    final hypocenter = isCanceled ? null : item.hypocenter;
+    final maxIntensity = isCanceled
+        ? null
+        : item.forecastIntensity?.maxIntensity;
+    final isWarning = !isCanceled && (item.isWarning ?? false);
 
-    final title = hypocenter?.name ?? '震源不明';
+    final title = isCanceled ? '緊急地震速報は取り消されました' : hypocenter?.name ?? '震源不明';
     final time = item.originTime ?? item.reportTime;
     final depth = hypocenter?.depth;
     final magnitude = hypocenter?.magnitude;
     final subtitleParts = [
-      '${time.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}発生',
+      if (isCanceled)
+        '${item.reportTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}取消発表'
+      else
+        '${time.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}発生',
       if (depth != null) '深さ ${const JmaDepthFormatter().format(depth: depth)}',
       if (magnitude != null) 'M${magnitude.toStringAsFixed(1)}',
     ];
@@ -47,9 +54,17 @@ class EewHistoryListTile extends StatelessWidget {
       visualDensity: visualDensity,
       tileColor: maxIntensityColor?.withValues(alpha: 0.4),
       onTap: onTap,
-      leading: maxIntensity != null
-          ? JmaIntensityIcon(intensity: maxIntensity, type: .filled, size: 40)
-          : null,
+      leading: isCanceled
+          ? Icon(
+              Icons.cancel_outlined,
+              size: 40,
+              color: context.designSystem.colorTheme.onSurfaceVariant,
+            )
+          : JmaIntensityIcon(
+              intensity: maxIntensity ?? JmaIntensity.unknown,
+              type: .filled,
+              size: 40,
+            ),
       title: Row(
         spacing: 4,
         children: [
