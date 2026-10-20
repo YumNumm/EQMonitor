@@ -48,7 +48,7 @@ final class EqmonitorWebSocketProvider
 }
 
 String _$eqmonitorWebSocketHash() =>
-    r'e45ef136053c01f5f8bc088bc0ad2b6173c45f2c';
+    r'0acff643d5d8d37d2b76a63df3c759e6370a95ad';
 
 /// WebSocket イベントストリーム。
 ///
@@ -170,4 +170,4 @@ final class EqmonitorWebSocketTicketProvider
 }
 
 String _$eqmonitorWebSocketTicketHash() =>
-    r'47c39d4339fb81572b99acb7d9577eac1f2a2f33';
+    r'6691bd64dbf6b7b2e0cee1fb3e892c53461b7f34';
