@@ -2,6 +2,7 @@ import 'package:cupertino_ui/cupertino_ui.dart'
     show GlobalCupertinoLocalizations;
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
+import 'package:eqmonitor/core/screen_behavior/data/provider/screen_wake_lock_controller.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
@@ -24,6 +25,7 @@ class App extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(liveMonitorWakeLockControllerProvider);
+    ref.watch(screenWakeLockControllerProvider);
     final theme = ref.watch(themeModeProvider);
     final routerConfig = ref.watch(goRouterProvider);
     final lightColorSet = ref.watch(

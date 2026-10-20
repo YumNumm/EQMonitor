@@ -46,7 +46,7 @@ final class AppLifecycleProvider
   }
 }
 
-String _$appLifecycleHash() => r'9e357a2c4983fa88f3ed65162de86ce5813fb838';
+String _$appLifecycleHash() => r'190a148cdd12a7f6939ce9691909d73fb73049c4';
 
 /// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
 

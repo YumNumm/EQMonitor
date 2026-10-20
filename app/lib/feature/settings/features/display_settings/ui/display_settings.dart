@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/display_settings/ui/screen_behavior_settings_section.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -31,6 +32,7 @@ class _Body extends StatelessWidget {
         child: Column(
           crossAxisAlignment: .start,
           children: [
+            const ScreenBehaviorSettingsSection(),
             const SettingsSectionHeader(text: '配色設定'),
             const _ThemeSelector(),
             ListTile(

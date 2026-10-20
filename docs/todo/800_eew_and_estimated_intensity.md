@@ -18,3 +18,9 @@
 
 - 対象: `app/lib/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart` の `_targetHypocenters` / `_toHypocenterInput` と関連test。
 - 完了条件: magnitude/depth/latitude/longitudeを個別に欠損させたEEWで例外が出ず、その地震だけ計算対象から除外され、完全な地震は残る。値を捏造せず、未知震度の表示契約も維持する。
+
+## 400: EEW 履歴の取消表示の実機確認
+
+- 対象: 緊急地震速報の履歴一覧と詳細の報一覧。実機での表示確認は未実施。
+- 完了条件: 取消報で取消表示と発表時刻を確認する。警報の強調色や震度・震源情報が表示されず、詳細から取消前の各報を選択できることを確認する。
+- ライト・ダークテーマ、文字サイズ拡大、縦・横画面で表示崩れがないことを確認する。

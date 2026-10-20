@@ -2,12 +2,29 @@
 
 数値は元の優先度。
 
+## 800: チケット取得失敗後の実機復旧確認
+
+- iOS / Android で端末トークン未登録・読み取り失敗・不正なトークンを確認する。
+  チケット要求が送信されず、端末 ID が任意の API は利用できることを確認する。
+- 64回以上の接続失敗でも再試行間隔が60秒を維持し、トークン復旧後の再試行、
+  background復帰、ネットワーク切替で接続できることを確認する。
+- 401を継続した端末でトークンが取得できない理由は、サーバー側ログでは判別できない。
+  トークン値を記録せず、端末側で未保存・ストレージ読み取り失敗・解析失敗を切り分ける。
+- 修正版配布後に本番の `/v2/realtime/ticket` の401件数と再送間隔を確認する。
+  旧バージョンからの大量再送はアプリの修正だけでは即時に止まらない。
+
 ## 160: 揺れ検知の公開テスト再有効化
 
 - 対象: `.github/workflows/deploy-app.yaml`、`app/lib/core/model/environment.dart`、`app/lib/feature/shake_detection/`。
 - iOS external / Android external の `IS_SHAKE_DETECTION_ENABLED=false` を解除し、ホームgrid/card、Live Monitor、timeshift自動復帰、`/settings/notification/shake` を確認する。
 - このflagはclient表示/購読だけを止める。無効ビルドで既登録のserver pushも止める必要があるなら、server抑止または登録設定削除の仕様を決めて配信テストを追加する。
 - 完了条件: 配布trackごとの表示/REST/WebSocket/pushの挙動が仕様と一致する。削除済みの揺れ検知履歴が必要なら、RESTを持つ履歴として別途設計する。
+
+## 150: WebSocket固定heartbeatの実機確認
+
+- iOS/Android実機で、デバッグ画面を開かずにNodeとDurable Objectsそれぞれの接続を維持できることを確認する。
+- background復帰・ネットワーク切替後の再接続と、デバッグ画面のRTT表示を確認する。
+- 新サーバーを旧アプリへ公開する前に、queryのないlegacy接続でserver pingが継続し、30秒の無受信監視で切断されないことを確認する。
 
 ## 080: 強震モニタ data 層
 

@@ -13,8 +13,8 @@ class AppLifecycle extends _$AppLifecycle with WidgetsBindingObserver {
     final binding = WidgetsBinding.instance..addObserver(this);
     // プロバイダが破棄された時に監視を解除。
     ref.onDispose(() => binding.removeObserver(this));
-    // 初期値として `resumed` を返している。
-    return AppLifecycleState.resumed;
+    // 非同期の起動処理中に background へ移った場合も実際の状態から開始する。
+    return binding.lifecycleState ?? AppLifecycleState.detached;
   }
 
   @override
