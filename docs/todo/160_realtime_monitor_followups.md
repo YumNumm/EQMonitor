@@ -11,6 +11,7 @@
 
 ## 150: WebSocket固定heartbeatの実機確認
 
+- サーバ選択で `https://cf.v2.api.eqmonitor.app` を手入力し、保存直後のREST・WebSocket再接続、再起動後のURL復元、既定サーバへの復帰をiOS/Android実機で確認する。カスタムURLでは既存の環境チェックによりGoogle・Apple・Passkey認証は利用できないため、Workersへの全面切替には認証の対応と検証が別途必要。
 - iOS/Android実機で、デバッグ画面を開かずにNodeとDurable Objectsそれぞれの接続を維持できることを確認する。
 - background復帰・ネットワーク切替後の再接続と、デバッグ画面のRTT表示を確認する。
 - 新サーバーを旧アプリへ公開する前に、queryのないlegacy接続でserver pingが継続し、30秒の無受信監視で切断されないことを確認する。
