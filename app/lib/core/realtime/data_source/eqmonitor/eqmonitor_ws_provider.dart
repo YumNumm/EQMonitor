@@ -17,7 +17,7 @@ part 'eqmonitor_ws_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
-  final ticket = await ref.read(eqmonitorWebSocketTicketProvider.future);
+  final ticket = await ref.watch(eqmonitorWebSocketTicketProvider.future);
   final ticketUri = Uri.parse(ticket.url);
   final ws = await WebSocket.connect(
     ticketUri.replace(
@@ -27,6 +27,10 @@ Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
       },
     ),
   );
+  if (!ref.mounted) {
+    await ws.close();
+    throw StateError('WebSocket connection was replaced');
+  }
   ref.onDispose(() => ws.close().ignore());
   return ws;
 }
@@ -180,7 +184,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
 @riverpod
 Future<RealtimeTicketResponse> eqmonitorWebSocketTicket(Ref ref) async {
   try {
-    final api = await ref.read(apiClientProvider.future);
+    final api = await ref.watch(apiClientProvider.future);
     final response = await api.realtime.getV2RealtimeTicket();
     return response.data;
   } on Exception catch (e) {

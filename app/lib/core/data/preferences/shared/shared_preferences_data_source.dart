@@ -23,7 +23,12 @@ class SharedPreferencesDataSource
   Future<void> setString({
     required SharedPreferencesKey key,
     required String value,
-  }) => _sharedPreferences.setString(key.key, value);
+  }) async {
+    final didPersist = await _sharedPreferences.setString(key.key, value);
+    if (!didPersist) {
+      throw StateError('Failed to persist SharedPreferences key: ${key.key}');
+    }
+  }
 
   @override
   Future<String?> getString({required SharedPreferencesKey key}) =>

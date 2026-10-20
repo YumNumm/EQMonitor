@@ -1,9 +1,12 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/custom_api_endpoint_dialog.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod/experimental/mutation.dart';
 
 enum _ServerPreset { prod, dev, stub, custom }
 
@@ -16,6 +19,7 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
     final current = ref.watch(
       telegramUrlProvider.select((v) => v.requireValue),
     );
+    final isSaving = ref.watch(TelegramUrl.updateMutation) is MutationPending;
 
     final prodRest = buildCfg.restApiUrl;
     final prodWs = buildCfg.wsApiUrl;
@@ -24,16 +28,12 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
     const stubRest = 'https://stub.api.eqmonitor.app';
     final stubWs = devWs;
 
-    _ServerPreset selectedPreset;
-    if (current.restApiUrl == prodRest && current.wsApiUrl == prodWs) {
-      selectedPreset = _ServerPreset.prod;
-    } else if (current.restApiUrl == devRest && current.wsApiUrl == devWs) {
-      selectedPreset = _ServerPreset.dev;
-    } else if (current.restApiUrl == stubRest) {
-      selectedPreset = _ServerPreset.stub;
-    } else {
-      selectedPreset = _ServerPreset.custom;
-    }
+    final selectedPreset = switch (current.restApiUrl) {
+      final url when url == prodRest => _ServerPreset.prod,
+      final url when url == devRest => _ServerPreset.dev,
+      stubRest => _ServerPreset.stub,
+      _ => _ServerPreset.custom,
+    };
 
     Future<void> selectPreset(_ServerPreset preset) async {
       final (String rest, String ws) = switch (preset) {
@@ -42,9 +42,22 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
         .stub => (stubRest, stubWs),
         .custom => (current.restApiUrl, current.wsApiUrl),
       };
-      await ref
-          .read(telegramUrlProvider.notifier)
-          .updateServer(restApiUrl: rest, wsApiUrl: ws);
+      try {
+        await TelegramUrl.updateMutation.run(
+          ref,
+          (tsx) => tsx
+              .get(telegramUrlProvider.notifier)
+              .updateServer(restApiUrl: rest, wsApiUrl: ws),
+        );
+        // ignore: avoid_catches_without_on_clauses
+      } catch (error, stackTrace) {
+        talker.error('API接続先の保存に失敗しました', error, stackTrace);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('接続先を保存できませんでした')),
+          );
+        }
+      }
     }
 
     return Scaffold(
@@ -55,39 +68,51 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
             label: 'Prod',
             description: '本番サーバ',
             restUrl: prodRest,
-            wsUrl: prodWs,
             selected: selectedPreset == _ServerPreset.prod,
-            onTap: () => selectPreset(_ServerPreset.prod),
+            onTap: isSaving ? null : () => selectPreset(_ServerPreset.prod),
             accentColor: Colors.green,
           ),
           _ServerTile(
             label: 'Dev',
             description: '開発サーバ',
             restUrl: devRest,
-            wsUrl: devWs,
             selected: selectedPreset == _ServerPreset.dev,
-            onTap: () => selectPreset(_ServerPreset.dev),
+            onTap: isSaving ? null : () => selectPreset(_ServerPreset.dev),
             accentColor: Colors.blue,
           ),
           _ServerTile(
             label: 'Stub',
             description: 'API スタブ（固定レスポンス）',
             restUrl: stubRest,
-            wsUrl: stubWs,
             selected: selectedPreset == _ServerPreset.stub,
-            onTap: () => selectPreset(_ServerPreset.stub),
+            onTap: isSaving ? null : () => selectPreset(_ServerPreset.stub),
             accentColor: Colors.orange,
           ),
-          if (selectedPreset == _ServerPreset.custom)
-            _ServerTile(
-              label: 'Custom',
-              description: 'カスタム設定',
-              restUrl: current.restApiUrl,
-              wsUrl: current.wsApiUrl,
-              selected: true,
-              onTap: null,
-              accentColor: Colors.purple,
-            ),
+          _ServerTile(
+            label: 'Custom',
+            description: 'URLを手入力',
+            restUrl: selectedPreset == _ServerPreset.custom
+                ? current.restApiUrl
+                : null,
+            selected: selectedPreset == _ServerPreset.custom,
+            onTap: isSaving
+                ? null
+                : () async {
+                    TelegramUrl.updateMutation.reset(ref);
+                    await showDialog<void>(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) => CustomApiEndpointDialog(
+                        initialUrl: current.restApiUrl,
+                      ),
+                    );
+                  },
+            accentColor: Colors.purple,
+          ),
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text('WebSocketは選択したAPIが案内する接続先に自動で接続します。'),
+          ),
         ],
       ),
     );
@@ -99,7 +124,6 @@ class _ServerTile extends StatelessWidget {
     required this.label,
     required this.description,
     required this.restUrl,
-    required this.wsUrl,
     required this.selected,
     required this.onTap,
     required this.accentColor,
@@ -107,8 +131,7 @@ class _ServerTile extends StatelessWidget {
 
   final String label;
   final String description;
-  final String restUrl;
-  final String wsUrl;
+  final String? restUrl;
   final bool selected;
   final VoidCallback? onTap;
   final Color accentColor;
@@ -153,18 +176,20 @@ class _ServerTile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      description,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorTheme.onSurfaceVariant,
+                    Flexible(
+                      child: Text(
+                        description,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: colorTheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                _UrlRow(icon: Icons.http, label: 'REST', url: restUrl),
-                const SizedBox(height: 2),
-                _UrlRow(icon: Icons.wifi, label: 'WS', url: wsUrl),
+                if (restUrl case final url?) ...[
+                  const SizedBox(height: 4),
+                  _UrlRow(icon: Icons.http, label: 'REST', url: url),
+                ],
               ],
             ),
           ),
