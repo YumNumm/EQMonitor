@@ -49,6 +49,19 @@
 - 実機残件は[EEW・推計震度](../todo/800_eew_and_estimated_intensity.md)。
   resumed/ready/REST開始・終了、loading/hasValue、eventId/serialを同じ時系列で確認する。
 
+## WebSocket の再接続とチケット取得
+
+- 再接続の待ち時間は1、2、4、8、16、32、60秒と増やし、以後は60秒を維持する。
+  失敗回数から整数のべき乗を計算しない。Dart VM の `pow(2, 63)` は負数、
+  `pow(2, 64)` 以降は0になり、待ち時間なしの再送を引き起こす。
+- 接続成功・アプリ復帰・ネットワーク変更で待ち時間を初期化する。
+- `/v2/realtime/ticket` は `x-eqmonitor-device-id` が必須。
+  保存トークンの欠落・読み取り失敗・解析失敗時は interceptor でローカルエラーにし、
+  HTTP リクエストを送らない。再接続時にトークンを読み直して復旧を試みる。
+  端末 ID が任意の API は引き続き利用できる。
+- 端末固有のトークン欠落原因と実機での長時間失敗・復帰の確認は、
+  [リアルタイム監視の残課題](../todo/160_realtime_monitor_followups.md)で追跡する。
+
 ## WebSocket heartbeat の互換性
 
 - 接続URLには `heartbeat=fixed-v1` を付与し、接続直後と15秒ごとに

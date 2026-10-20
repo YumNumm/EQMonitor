@@ -52,7 +52,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
   // RTT probe の連番 pingId と分離し、固定 pong を RTT に計上しない。
   static const heartbeatMessage = '{"type":"ping","pingId":"heartbeat"}';
 
-  var _retryCount = 0;
+  var _retryDelaySeconds = 1;
   final _random = math.Random();
 
   /// これは状態ではなくイベント列なので、同じ値でも必ず通知する。
@@ -70,7 +70,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
   Stream<WebSocketEvent> build() async* {
     ref.listen(appLifecycleProvider, (_, next) {
       if (next == AppLifecycleState.resumed) {
-        _retryCount = 0;
+        _retryDelaySeconds = 1;
         _reconnect();
       }
     });
@@ -100,7 +100,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       );
       connectivityReconnectTimer?.cancel();
       connectivityReconnectTimer = Timer(jitter, () {
-        _retryCount = 0;
+        _retryDelaySeconds = 1;
         _reconnect();
       });
     });
@@ -125,7 +125,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
     try {
       final websocket = await ref.watch(eqmonitorWebSocketProvider.future);
       const heartbeatResponder = WsHeartbeatResponder();
-      _retryCount = 0;
+      _retryDelaySeconds = 1;
       armSilenceWatchdog();
       websocket.sendText(heartbeatMessage);
       heartbeatTimer = Timer.periodic(heartbeatInterval, (timer) {
@@ -160,11 +160,11 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       heartbeatTimer?.cancel();
     }
 
-    final delaySeconds = math.min(math.pow(2, _retryCount).toInt(), 60);
-    _retryCount++;
+    // 失敗回数のべき乗は整数オーバーフローで 0 になるため、待ち時間自体を制限する。
+    final delaySeconds = _retryDelaySeconds;
+    _retryDelaySeconds = math.min(_retryDelaySeconds * 2, 60);
     talker.info(
-      'EQMonitor WebSocket: reconnecting in ${delaySeconds}s '
-      '(attempt $_retryCount)',
+      'EQMonitor WebSocket: reconnecting in ${delaySeconds}s',
     );
 
     final timer = Timer(Duration(seconds: delaySeconds), _reconnect);
