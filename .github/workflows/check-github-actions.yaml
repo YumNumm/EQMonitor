@@ -150,7 +150,7 @@ jobs:
         run: echo "::add-matcher::.github/problem_matcher/jactionlint.json"
 
       - name: Run jactionlint
-        run: jactionlint -color
+        run: jactionlint --color
 
   pinact:
     name: pinact
