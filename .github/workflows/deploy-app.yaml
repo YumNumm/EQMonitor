@@ -8,6 +8,11 @@ on:
       - "v*-beta.*"
   workflow_dispatch:
     inputs:
+      inspect_android:
+        description: "Inspect Google Play versions without building or publishing"
+        required: false
+        default: false
+        type: boolean
       ios:
         description: "Build iOS app"
         required: false
@@ -41,6 +46,11 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: deploy-app-${{ github.ref }}
+  cancel-in-progress: false
+  queue: max
+
 env:
   FIREBASE_ANALYTICS_WITHOUT_ADID: "true"
   # App Store builds must use the stable release, not the runner's latest beta.
@@ -50,8 +60,42 @@ env:
   GOOGLE_CLOUD_SERVICE_ACCOUNT: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
 
 jobs:
+  inspect-android-google-play:
+    name: Inspect Google Play versions
+    if: ${{ inputs.inspect_android }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    concurrency:
+      group: eqmonitor-google-play-edit
+      cancel-in-progress: false
+      queue: max
+    permissions:
+      contents: read
+      id-token: write
+    environment:
+      name: EQMonitor-Android
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Authenticate to Google Cloud Platform
+        id: auth
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/androidpublisher
+      - name: Read current tracks and bundle versions
+        env:
+          GOOGLE_PLAY_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          PACKAGE_NAME: net.yumnumm.eqmonitor
+        run: bash scripts/release/inspect_google_play_versions.sh
+
   define-matrix:
     name: Define Matrix
+    if: ${{ !inputs.inspect_android }}
     runs-on: ubuntu-slim
     permissions:
       contents: read
@@ -84,7 +128,7 @@ jobs:
 
   validate-source-run:
     name: Validate existing binaries
-    if: ${{ inputs.source_run_id != '' }}
+    if: ${{ !inputs.inspect_android && inputs.source_run_id != '' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
@@ -93,7 +137,6 @@ jobs:
     outputs:
       build-number: ${{ steps.source.outputs.build-number }}
       version: ${{ steps.source.outputs.version }}
-      head-sha: ${{ steps.source.outputs.head-sha }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

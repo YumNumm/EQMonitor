@@ -42,6 +42,9 @@
 | 手動実行 | `ios` / `external` 入力 | `android` / `android_track` 入力（既定 `internal`） | true |
 
 - Android オープンテストは `android_track=beta`。`external` は独自のクローズドテスト。
+- 配布前の現状確認は `Deploy App` を `inspect_android=true` で手動実行する。
+  ビルド・配布をスキップし、全トラックのリリース名・versionCode・状態とbundleの最大versionCodeを出力する。
+  照会も同じGoogle Play editキューを使い、一時editはコミットせず破棄する。
 - 手動実行の `source_run_id` に完了済み `Deploy App` run ID を指定すると、再ビルドせず
   元のバイナリと配布ノートを再利用する。元runのビルド成功・artifact有効期限・versionを検査する。
   iOS は署名済みIPA内のversion/build numberに一致する ASC buildを選び、Android はAABのSHA-256を照合して
