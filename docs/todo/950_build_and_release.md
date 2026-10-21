@@ -2,6 +2,12 @@
 
 数値は元の優先度。設定の修正と署名済み成果物の検証は分けて完了判定する。
 
+## 900: iOS 3.0.3 の提出確認
+
+- `app/pubspec.yaml` は `3.0.3-beta.1`、iOS 提出用versionは `3.0.3` に更新済み。正式版 manifest は公開済み `3.0.2` と同期した。
+- [ ] 修正を含む新しい署名済み IPA の `CFBundleShortVersionString` が `3.0.3` であることを確認する。旧 `3.0.2` の IPA を再利用しない。
+- [ ] App Store Connect へのアップロードと処理完了を確認し、`ITMS-90186` / `ITMS-90062` が解消したことを確認する。再ビルド・アップロードは未実施。
+
 ## 900: iOS export の接続失敗からの復旧確認
 
 - `scripts/ci/export_ios_archive.sh` はタイムアウトと明示的な offline エラーを最大3回まで再試行する。profile 不足のみ、署名設定エラー、ログ出力の失敗は再試行しない。

@@ -25,6 +25,11 @@
 - commit search depth の既定500を超えたfooterは検出されない。古い指定が効かないときは
   footer付きコミットを入れ直す。検索深度の拡大はchangelogの範囲にも影響する。
 - beta manifest がずれた場合は直近betaタグのversionと照合して `develop` 側で修正する。
+- 正式版を手動公開した場合も、正式版 manifest を公開済みタグのversionへ同期する。
+  manifest は公開済み版を記録し、これからビルドする版を先取りしない。
+- iOS 提出時は `app/pubspec.yaml` のプレリリース識別子を除いた `X.Y.Z` を使う。
+  承認済み版の受付が終了すると `ITMS-90186` / `ITMS-90062` になるため、次のビルドは
+  `X.Y.Z` 自体を承認済み版より上げる。beta番号やbuild番号だけの更新では解消しない。
 
 ## 配布ポリシー
 
