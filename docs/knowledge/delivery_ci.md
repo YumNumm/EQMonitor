@@ -45,6 +45,7 @@
 - 配布前の現状確認は `Deploy App` を `inspect_android=true` で手動実行する。
   ビルド・配布をスキップし、全トラックのリリース名・versionCode・状態とbundleの最大versionCodeを出力する。
   照会も同じGoogle Play editキューを使い、一時editはコミットせず破棄する。
+  internal / beta / production の `releaseLifecycleState` も取得し、配布設定の `completed` と審査完了を区別する。
 - 手動実行の `source_run_id` に完了済み `Deploy App` run ID を指定すると、再ビルドせず
   元のバイナリと配布ノートを再利用する。元runのビルド成功・artifact有効期限・versionを検査する。
   iOS は署名済みIPA内のversion/build numberに一致する ASC buildを選び、Android はAABのSHA-256を照合して

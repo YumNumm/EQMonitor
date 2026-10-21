@@ -55,7 +55,9 @@ jq -n --arg track "$TRACK_NAME" --arg version "$RELEASE_VERSION" \
 api --request PUT --data-binary @target-track.json "$edits_url/$edit_id/tracks/$TRACK_NAME" > updated-track.json
 api --request POST "$edits_url/$edit_id:validate" > /dev/null
 curl --fail-with-body --silent --show-error --retry 3 --retry-delay 2 \
-  --request POST --header "$authorization" "$edits_url/$edit_id:commit" > committed-edit.json
+  --request POST --header "$authorization" \
+  "$edits_url/$edit_id:commit?changesNotSentForReview=false&changesInReviewBehavior=ERROR_IF_IN_REVIEW" \
+  > committed-edit.json
 edit_id=
 
 # Read back committed store state under the shared Google Play edit queue.

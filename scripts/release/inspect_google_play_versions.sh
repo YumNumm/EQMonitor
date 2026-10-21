@@ -28,3 +28,9 @@ api "$edits_url/$edit_id/bundles" | jq '{
   versionCodes: [(.bundles // [])[] | .versionCode] | sort,
   maxVersionCode: ([(.bundles // [])[] | .versionCode] | max)
 }'
+for track in internal beta production; do
+  api "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/$PACKAGE_NAME/tracks/$track/releases" \
+    | jq --arg track "$track" '{track: $track, releases: [.releases[]? | {
+      releaseName, activeArtifacts, releaseLifecycleState
+    }]}'
+done
