@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intens
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_descriptor.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_stop_reason.dart';
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'estimated_intensity_archive_transport_test_support.dart';
@@ -31,27 +32,39 @@ void main() {
       idleTimeout: const Duration(seconds: 1),
       totalTimeout: const Duration(milliseconds: 10),
     );
-    final resultFuture =
-        EstimatedIntensityArchiveHttpDataSource(
-          operationFactory: () => operation,
-          streamVerifier: EstimatedIntensityArchiveStreamVerifier(
-            fileVerifier: fileVerifier,
+    final totalTimeoutClock = FakeAsync();
+    final resultFuture = runZoned(
+      () =>
+          EstimatedIntensityArchiveHttpDataSource(
+            operationFactory: () => operation,
+            streamVerifier: EstimatedIntensityArchiveStreamVerifier(
+              fileVerifier: fileVerifier,
+            ),
+          ).download(
+            descriptor: estimatedIntensityTestDescriptor(),
+            temporaryDirectory: temporaryDirectory,
+            limits: limits,
           ),
-        ).download(
-          descriptor: estimatedIntensityTestDescriptor(),
-          temporaryDirectory: temporaryDirectory,
-          limits: limits,
-        );
-    await hashStarted.future;
-
-    final result = await resultFuture.timeout(
-      const Duration(milliseconds: 200),
+      zoneSpecification: ZoneSpecification(
+        createTimer: (self, parent, zone, duration, callback) =>
+            duration == limits.totalTimeout
+            ? totalTimeoutClock.run((_) => Timer(duration, callback))
+            : parent.createTimer(zone, duration, callback),
+      ),
     );
+    await hashStarted.future;
+    totalTimeoutClock.elapse(
+      limits.totalTimeout - const Duration(microseconds: 1),
+    );
+    expect(operation.abortCount, 0);
+    totalTimeoutClock.elapse(const Duration(microseconds: 1));
+    final result = await resultFuture;
 
     expectEstimatedIntensityDownloadFailure(
       result: result,
       failure: EstimatedIntensityArchiveDownloadFailure.timeout,
     );
+    expect(operation.abortCount, greaterThanOrEqualTo(1));
     expect(temporaryDirectory.listSync(recursive: true), isEmpty);
   });
 

@@ -173,7 +173,7 @@ void main() {
         ),
       );
 
-      expect(find.text('7.7'), findsOneWidget);
+      expect(find.text('M7.7', findRichText: true), findsOneWidget);
       expect(find.byType(DepthText), findsNothing);
       expect(find.text('調査中'), findsNothing);
       expect(find.text('大規模な火山の噴火'), findsNothing);
@@ -240,7 +240,7 @@ void main() {
 
       expect(find.byType(EarthquakeTypeIcon), findsNothing);
       expect(find.text('最大震度'), findsOneWidget);
-      expect(find.text('5.5'), findsOneWidget);
+      expect(find.text('M5.5', findRichText: true), findsOneWidget);
       expect(find.text('震源地'), findsOneWidget);
     });
   });

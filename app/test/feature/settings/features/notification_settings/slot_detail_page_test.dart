@@ -16,11 +16,9 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 const _currentLocationWarningDescription =
-    '現在地が警報地域に入ったときに配信されます。'
-    'クリティカルにすると、おやすみモードやマナーモードを無視して通知します。';
-const _nationwideWarningDescription =
-    '日本のどこかで緊急地震速報（警報）が発表されるたびに配信されます。'
-    '発表回数が多いため、既定は「時間重要」です。';
+    '現在地が緊急地震速報の警報地域になった場合に通知を配信します。'
+    '重大な通知に設定すると、おやすみモードやマナーモードを無視して通知します。';
+const _nationwideWarningDescription = '緊急地震速報(警報)が発表された時に通知します。';
 
 void main() {
   testWidgets('current location updates warning and selected EEW intensity', (
@@ -44,7 +42,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('緊急地震速報（警報）'), findsOneWidget);
+    expect(find.text('緊急地震速報(警報)'), findsOneWidget);
     expect(find.text(_currentLocationWarningDescription), findsOneWidget);
     expect(find.byType(ControlledDropdown<JmaIntensity>), findsNWidgets(2));
     expect(slotsNotifier.lastEewMinIntensity, isNull);
@@ -121,7 +119,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('緊急地震速報（警報）'), findsOneWidget);
+    expect(find.text('緊急地震速報(警報)'), findsOneWidget);
     expect(find.text(_nationwideWarningDescription), findsOneWidget);
 
     final warningTile = find.widgetWithText(ListTile, '有効').at(1);
@@ -159,7 +157,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('緊急地震速報（警報）'), findsNothing);
+    expect(find.text('緊急地震速報(警報)'), findsNothing);
     expect(find.text(_currentLocationWarningDescription), findsNothing);
     expect(find.text(_nationwideWarningDescription), findsNothing);
     expect(find.byType(AppSwitch), findsNWidgets(2));
@@ -293,6 +291,7 @@ class _TestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(
+      platform: TargetPlatform.iOS,
       extensions: [DesignSystemThemeExtension.light()],
     );
     return ProviderScope(

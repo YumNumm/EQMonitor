@@ -4,19 +4,29 @@ import 'package:test/test.dart';
 
 const fixtureTime = '2026-01-01T00:00:00.000Z';
 
+const fixtureHypocenter = {
+  'code': '100',
+  'name': '石狩地方北部',
+  'coordinates': {'latitude': 43.5, 'longitude': 141.5},
+  'magnitude': {'type': 'NORMAL', 'value': 5.1},
+  'depth': {'type': 'NORMAL', 'value': 20},
+};
+
 const fullEarthquake = <String, Object?>{
   'event_id': '20260101000000',
   'status': 'NORMAL',
   'earthquake_type': 'NORMAL',
   'origin_time': fixtureTime,
   'origin_time_precision': 'SECOND',
-  'hypocenter': {
-    'code': '100',
-    'name': '石狩地方北部',
-    'coordinates': {'latitude': 43.5, 'longitude': 141.5},
-    'magnitude': {'type': 'NORMAL', 'value': 5.1},
-    'depth': {'type': 'NORMAL', 'value': 20},
-  },
+  'hypocenter': fixtureHypocenter,
+  'hypocenters': [
+    {
+      'datasource': 'JMA_DISASTER_INFORMATION_XML',
+      'reported_at': fixtureTime,
+      'source_telegram_id': 'telegram-1',
+      'hypocenter': fixtureHypocenter,
+    },
+  ],
   'intensity': {
     'max_intensity': '4',
     'intensity_tree': [

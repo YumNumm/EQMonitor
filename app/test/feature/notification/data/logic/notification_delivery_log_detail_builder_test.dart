@@ -15,20 +15,19 @@ void main() {
       expect(
         detail.rows.map((row) => (label: row.label, value: row.value)).toList(),
         [
-          (label: '配信日時', value: '2026/08/16 21:34:56'),
-          (label: '配信結果', value: '成功'),
+          (label: '配信日時', value: '2026/08/16 21:34:56.000'),
           (label: 'タイトル', value: '地震情報'),
           (label: '本文', value: '最大震度3を観測しました'),
         ],
       );
-      expect(detail.copyText, contains('配信結果: 成功'));
+      expect(detail.copyText, isNot(contains('配信結果')));
       expect(detail.copyText, isNot(contains('internal-device-id')));
       expect(detail.copyText, isNot(contains('internal-stream-id')));
       expect(detail.copyText, isNot(contains('internal-event-id')));
       expect(detail.copyText, isNot(contains('FCM')));
     });
 
-    test('失敗ログは空でないエラー内容を追加する', () {
+    test('失敗ログは配信失敗を表示し内部エラーを含めない', () {
       final detail = NotificationDeliveryLogDetailBuilder().build(
         entry: createLogEntry(
           result: PushNotificationDeliveryResult.ng,
@@ -36,13 +35,12 @@ void main() {
         ),
       );
 
-      expect(detail.rows[1].value, '失敗');
+      expect(detail.rows[1].value, '配信失敗');
       expect(
-        detail.rows.last,
-        isA<NotificationDeliveryLogDetailRow>()
-            .having((row) => row.label, 'label', 'エラー内容')
-            .having((row) => row.value, 'value', '通知を配信できませんでした'),
+        detail.rows.map((row) => row.label),
+        ['配信日時', '配信結果', 'タイトル', '本文'],
       );
+      expect(detail.copyText, isNot(contains('通知を配信できませんでした')));
     });
 
     test('成功ログではエラー内容を表示せず空白だけの通知内容を除外する', () {
@@ -50,7 +48,7 @@ void main() {
         entry: createLogEntry(title: ' ', body: '\n', errorMessage: '内部エラー'),
       );
 
-      expect(detail.rows.map((row) => row.label), ['配信日時', '配信結果']);
+      expect(detail.rows.map((row) => row.label), ['配信日時']);
       expect(detail.copyText, isNot(contains('内部エラー')));
     });
 

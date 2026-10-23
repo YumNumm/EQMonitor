@@ -220,7 +220,16 @@ void main() {
       isPro: true,
     );
 
-    expect(find.text('Android 通知チャンネル設定'), findsOneWidget);
+    final settingsEntry = find.widgetWithText(ListTile, '端末の通知設定を開く');
+    expect(settingsEntry, findsOneWidget);
+    expect(
+      find.descendant(
+        of: settingsEntry,
+        matching: find.text('通知の許可やチャンネルごとの音・バイブを変更できます'),
+      ),
+      findsOneWidget,
+    );
+    expect(tester.widget<ListTile>(settingsEntry).onTap, isNotNull);
   });
 }
 

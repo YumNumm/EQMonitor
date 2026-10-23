@@ -27,7 +27,7 @@ void main() {
 
     expect(tapCount, 0);
   });
-  testWidgets('native toolbar preserves actions and light haptic feedback', (
+  testWidgets('vertical toolbar preserves actions and light haptic feedback', (
     tester,
   ) async {
     final actions = <String>[];
@@ -56,7 +56,16 @@ void main() {
         ),
       ),
     );
-    expect(find.byType(M3EVerticalFloatingToolbar), findsOneWidget);
+    final toolbar = find.byType(HomeMapControllerCard);
+    final column = tester.widget<Column>(
+      find.descendant(of: toolbar, matching: find.byType(Column)),
+    );
+    expect(column.mainAxisSize, MainAxisSize.min);
+    expect(
+      find.descendant(of: toolbar, matching: find.byType(InkWell)),
+      findsNWidgets(4),
+    );
+    expect(find.byType(M3EFloatingToolbarDivider), findsNWidgets(3));
     for (final label in [
       '地図レイヤー設定',
       'ホームの表示範囲に戻す',
