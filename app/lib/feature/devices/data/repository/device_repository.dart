@@ -42,6 +42,16 @@ class DeviceRepository {
         return response.data.toRegisteredDevice;
       });
 
+  Future<Result<RegisteredDevice, Exception>> updateLocale({
+    required DeviceLocale locale,
+  }) => Result.capture(() async {
+    await _api.device.patchV2DeviceMeLocale(
+      body: api.DeviceLocaleUpdateRequest(locale: locale.toDeviceLocale),
+    );
+    final response = await _api.device.getV2DeviceMe();
+    return response.data.toRegisteredDevice;
+  });
+
   /// このデバイスのロールを取得する。
   ///
   /// backend は `ADMIN_DEVICE_IDS` に列挙されたデバイスにのみ `ADMIN` を返す。
