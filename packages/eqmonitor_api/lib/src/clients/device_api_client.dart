@@ -8,6 +8,7 @@ import 'package:retrofit/retrofit.dart';
 import '../models/challenge_response.dart';
 import '../models/create_device_notification_webhook_request.dart';
 import '../models/create_region_slot_request.dart';
+import '../models/device_locale_update_request.dart';
 import '../models/device_location_request.dart';
 import '../models/device_location_response.dart';
 import '../models/device_me_response.dart';
@@ -62,6 +63,12 @@ abstract class DeviceApiClient {
   /// デバイスを削除（JWTを無効化後に削除）
   @DELETE(DeviceApiClientUrls.deleteV2DeviceMe)
   Future<HttpResponse<void>> deleteV2DeviceMe();
+
+  /// 認証済みデバイスの通知言語を更新
+  @PATCH(DeviceApiClientUrls.patchV2DeviceMeLocale)
+  Future<HttpResponse<void>> patchV2DeviceMeLocale({
+    @Body() required DeviceLocaleUpdateRequest body,
+  });
 
   /// FCMトークンを更新
   @PATCH(DeviceApiClientUrls.patchV2DeviceMeFcm)
@@ -269,6 +276,8 @@ abstract class DeviceApiClientUrls {
 	static const getV2DeviceMe = "/v2/device/me";
 	/// /v2/device/me
 	static const deleteV2DeviceMe = "/v2/device/me";
+	/// /v2/device/me/locale
+	static const patchV2DeviceMeLocale = "/v2/device/me/locale";
 	/// /v2/device/me/fcm
 	static const patchV2DeviceMeFcm = "/v2/device/me/fcm";
 	/// /v2/device/me/apns/{kind}

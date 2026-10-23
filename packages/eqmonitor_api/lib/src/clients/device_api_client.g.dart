@@ -131,6 +131,30 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
+  Future<HttpResponse<void>> patchV2DeviceMeLocale({
+    required DeviceLocaleUpdateRequest body,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<void>>(
+      Options(method: 'PATCH', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v2/device/me/locale',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<void>(_options);
+    final httpResponse = HttpResponse(null, _result);
+    return httpResponse;
+  }
+
+  @override
   Future<HttpResponse<void>> patchV2DeviceMeFcm({
     required V2DeviceMeFcmRequestBody body,
   }) async {
