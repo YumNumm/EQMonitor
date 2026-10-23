@@ -54,14 +54,14 @@ Future<ModalRoute<void>?> _pushDetail(
 
 void main() {
   group('MaterialPageMixin', () {
-    testWidgets('mixin なしでは遷移アニメーションを持たないページになる', (tester) async {
-      // go_router は Flutter SDK の `MaterialApp` を祖先から探して既定の Page を
-      // 決めるため、`material_ui` の `MaterialApp` では検出できず
-      // `NoTransitionPage` にフォールバックする。この mixin が必要な理由。
+    testWidgets('mixin なしでも既定の MaterialPage が iOS の遷移アニメーションを持つ', (
+      tester,
+    ) async {
       final route = await _pushDetail(tester, const _PlainRoute());
 
-      expect(route?.transitionDuration, Duration.zero);
-      expect(find.byType(CupertinoPageTransition), findsNothing);
+      expect(route?.settings, isA<MaterialPage<void>>());
+      expect(route?.transitionDuration, greaterThan(Duration.zero));
+      expect(find.byType(CupertinoPageTransition), findsWidgets);
     });
 
     testWidgets('mixin ありでは iOS の遷移アニメーションを持つ', (tester) async {
@@ -82,13 +82,14 @@ void main() {
       expect(find.text('home'), findsOneWidget);
     });
 
-    testWidgets('mixin なしでは左端スワイプでは戻れない', (tester) async {
+    testWidgets('mixin なしでも既定の MaterialPage は左端スワイプで前の画面に戻れる', (tester) async {
       await _pushDetail(tester, const _PlainRoute());
 
       await tester.dragFrom(const Offset(2, 300), const Offset(600, 0));
       await tester.pumpAndSettle();
 
-      expect(find.text('detail'), findsOneWidget);
+      expect(find.text('detail'), findsNothing);
+      expect(find.text('home'), findsOneWidget);
     });
 
     testWidgets('遷移ログ・状態復元に使うページ情報を引き継ぐ', (tester) async {
@@ -107,16 +108,14 @@ void main() {
     });
   });
 
-  // go_router の Page 生成はルートごとの opt-in であり、mixin を付け忘れても
-  // コンパイルエラーにならず遷移アニメーションだけが静かに失われる。
-  // ルート定義の追加時に取りこぼしを検知するため、宣言を静的に検査する。
   test('router.dart の全ルートが Page の生成方法を明示している', () {
     /// 独自に [Page] を組み立てるため [MaterialPageMixin] を適用しないルート。
     const routesWithOwnPage = {'HomeRoute'};
 
     final source = File('lib/core/router/router.dart').readAsStringSync();
     final declarations = RegExp(
-      r'class (\w+) extends GoRouteData\s+with ([^{]+)\{',
+      r'class\s+(?:const\s+)?(\w+)(?:\([^;]*?\))?\s+'
+      r'extends GoRouteData\s+with ([^{]+)\{',
     ).allMatches(source).toList();
 
     // 正規表現の取りこぼしがないことを確認する。
@@ -135,7 +134,7 @@ void main() {
         contains('MaterialPageMixin'),
         reason:
             '$name に MaterialPageMixin が適用されていません。'
-            'go_router の既定では遷移アニメーションと iOS のスワイプバックが失われます。',
+            'ルートごとに Page の生成方法を明示してください。',
       );
     }
   });
