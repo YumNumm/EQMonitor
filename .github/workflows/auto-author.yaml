@@ -5,14 +5,19 @@ on:
     types:
       - opened
 
-permissions:
-  pull-requests: write
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   auto-author:
     name: Assign author to PR
     runs-on: ubuntu-slim
     timeout-minutes: 1
+    permissions:
+      pull-requests: write
     steps:
       # https://github.com/technote-space/assign-author
       - name: Assign author to PR

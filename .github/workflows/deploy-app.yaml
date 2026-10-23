@@ -41,6 +41,13 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  # Serialize branch, tag and manual deployments without cancelling releases.
+  # Keep this separate from the Google Play jobs' shared edit lock.
+  group: eqmonitor-app-deploy
+  cancel-in-progress: false
+  queue: max
+
 env:
   FIREBASE_ANALYTICS_WITHOUT_ADID: "true"
   # App Store builds must use the stable release, not the runner's latest beta.
@@ -93,7 +100,6 @@ jobs:
     outputs:
       build-number: ${{ steps.source.outputs.build-number }}
       version: ${{ steps.source.outputs.version }}
-      head-sha: ${{ steps.source.outputs.head-sha }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
