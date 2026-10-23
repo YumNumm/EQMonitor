@@ -1,0 +1,10 @@
+packages:
+  - .
+
+minimumReleaseAgeExclude:
+  - '@modelcontextprotocol/core@2.4.0'
+  - '@modelcontextprotocol/server@2.4.0'
+
+overrides:
+  '@modelcontextprotocol/core': '2.4.0'
+  '@modelcontextprotocol/server': '2.4.0'
