@@ -41,6 +41,7 @@
 | `v*-beta.*` push | TestFlight 外部 | `external` | true |
 | 手動実行 | `ios` / `external` 入力 | `android` / `android_track` 入力（既定 `internal`） | true |
 
+- `develop` push はその時点の `app/pubspec.yaml` を配布する。未マージのRelease PRのバージョンは使わないため、新しいバージョンの配布前にRelease PRを取り込む。Release PleaseはApp Store側の承認済みバージョンを自動照合しない。
 - Android オープンテストは `android_track=beta`。`external` は独自のクローズドテスト。
 - 手動実行の `source_run_id` に完了済み `Deploy App` run ID を指定すると、再ビルドせず
   元のバイナリと配布ノートを再利用する。元runのビルド成功・artifact有効期限・versionを検査する。
@@ -91,6 +92,7 @@
   節がない場合は失敗させる。比較リンクは直前betaからの差分、コミットリンクは除去する。
 - その他のiOSは ASC test-notes、Androidは対象Play trackの前回ノートにある `rev:` を差分起点にする。
   iOS内部配布にもノートを書き、履歴をつなぐ。
+- iOS内部配布は `asc builds upload --wait --test-notes` でApple側の処理完了を待ち、返却された `buildId` で処理状態と内部グループを確認する。アップロード成功だけでは配布成功とみなさず、ノートの更新に `--latest` を使わない。
 - `truncate_release_note.py` は `rev:` を残して、TestFlight 4,000 / Firebase 2,000 /
   Google Play 500文字へ制限する。deploy jobの切り詰めは runner の `python3` を使う。
 - `/beta` コメントは廃止。緊急タグ作成・既存本文修復だけ `create-beta-release.yaml` を手動実行する。
