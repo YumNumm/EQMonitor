@@ -21,7 +21,6 @@ jobs:
 
   flutter-analyze:
     needs: changes
-    if: needs.changes.outputs.flutter == 'true'
     permissions:
       contents: read
     uses: $/.github/workflows/wc-check-dart-analyze.yaml
