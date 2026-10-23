@@ -40,8 +40,9 @@ void main() {
           .widget<TextFormField>(find.byKey(const Key('reported-at-field')))
           .controller
           ?.text,
-      '2026-07-24T08:00:00.000Z',
+      '2026-07-24T17:00:00.000+0900',
     );
+    expect((await _readDraft(tester)).reportedAt, DateTime.utc(2026, 7, 24, 8));
   });
 
   testWidgets('invalid typed datetimeはrawを保持してApplyを無効にする', (tester) async {
@@ -122,9 +123,10 @@ void main() {
           .widget<TextFormField>(find.byKey(const Key('reported-at-field')))
           .controller
           ?.text,
-      '2026-07-24T12:00:00.000Z',
+      '2026-07-24T21:00:00.000+0900',
     );
     final draft = await _readDraft(tester) as EarthquakeVxse52DebugDraft;
+    expect(draft.reportedAt, DateTime.utc(2026, 7, 24, 12));
     expect(draft.status, TelegramStatus.training);
     expect(draft.comments.single.additional, 'latest-vxse52-comment');
   });
@@ -989,20 +991,18 @@ Future<void> _selectType(
 }
 
 Future<void> _selectDropdownOption(WidgetTester tester, String label) async {
-  final option = find.text(label).hitTestable();
-  await tester.scrollUntilVisible(
-    option,
-    80,
-    scrollable: find
-        .byWidgetPredicate(
-          (widget) =>
-              widget is Scrollable &&
-              widget.axisDirection == AxisDirection.down,
-        )
-        .hitTestable()
-        .last,
-  );
-  await tester.tap(option.last);
+  final scrollable = find
+      .byWidgetPredicate(
+        (widget) =>
+            widget is Scrollable && widget.axisDirection == AxisDirection.down,
+      )
+      .hitTestable()
+      .last;
+  final option = find
+      .descendant(of: scrollable, matching: find.text(label))
+      .hitTestable();
+  await tester.scrollUntilVisible(option, 80, scrollable: scrollable);
+  await tester.tap(option);
 }
 
 Future<EarthquakeVxseDebugDraft> _readDraft(WidgetTester tester) async {
