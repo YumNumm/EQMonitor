@@ -97,15 +97,22 @@ void main() {
   });
 
   group('MagnitudeText display', () {
-    testWidgets('value: "M"ラベルと値を別々に表示する', (tester) async {
+    testWidgets('value: "M"ラベルと値を異なるスタイルで表示する', (tester) async {
       await pumpMagnitudeText(
         tester,
         magnitude: const EarthquakeMagnitude.value(value: 7.3),
         variant: MagnitudeTextVariant.display,
       );
 
-      expect(find.text('M'), findsOneWidget);
-      expect(find.text('7.3'), findsOneWidget);
+      expect(plainText(tester), 'M7.3');
+      final text = tester.widget<Text>(find.byType(Text));
+      final spans = (text.textSpan as TextSpan).children
+          ?.whereType<TextSpan>()
+          .toList();
+      expect(spans, hasLength(2));
+      expect(spans?.first.text, 'M');
+      expect(spans?.last.text, '7.3');
+      expect(spans?.first.style, isNot(spans?.last.style));
     });
 
     testWidgets('unknown: "M"を出さず "不明" を表示する', (tester) async {
@@ -119,15 +126,14 @@ void main() {
       expect(find.text('不明'), findsOneWidget);
     });
 
-    testWidgets('overM8: "M"ラベルと "8超" を表示する', (tester) async {
+    testWidgets('overM8: "M"ラベルと "8+" を表示する', (tester) async {
       await pumpMagnitudeText(
         tester,
         magnitude: const EarthquakeMagnitude.overM8(),
         variant: MagnitudeTextVariant.display,
       );
 
-      expect(find.text('M'), findsOneWidget);
-      expect(find.text('8超'), findsOneWidget);
+      expect(plainText(tester), 'M8+');
     });
 
     testWidgets('null: "M"を出さず "調査中" を表示する', (tester) async {

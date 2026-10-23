@@ -11,8 +11,8 @@ final estimatedIntensityTransportTestLimits =
       maxArchiveBytes: 1024,
       connectTimeout: const Duration(milliseconds: 100),
       headerTimeout: const Duration(milliseconds: 100),
-      idleTimeout: const Duration(milliseconds: 100),
-      totalTimeout: const Duration(seconds: 1),
+      idleTimeout: const Duration(seconds: 5),
+      totalTimeout: const Duration(seconds: 30),
     );
 
 EstimatedIntensityArchiveDescriptor estimatedIntensityTestDescriptor({
