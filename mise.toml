@@ -11,7 +11,7 @@ gradle = "9.8.1"
 node = "lts"
 python = "latest"
 # Exact dependency pins also raise the generated lock's Python floor to 3.10.
-"pipx:codemagic-cli-tools" = { version = "0.70.0", with = ["PyJWT==2.14.0", "cryptography==49.0.0", "urllib3==2.8.0"] }
+"pipx:codemagic-cli-tools" = { version = "0.70.0", with = ["PyJWT==2.15.0", "cryptography==50.0.2", "urllib3==2.8.0"] }
 pnpm = "latest"
 tflint = "latest"
 uv = "latest"
