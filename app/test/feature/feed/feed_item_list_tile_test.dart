@@ -14,7 +14,7 @@ FeedItem _item({
   feedType: FeedType.developerMessage,
   priority: priority,
   isImportant: isImportant,
-  publishedAt: DateTime(2026, 7, 1, 12, 34),
+  publishedAt: DateTime.utc(2026, 7, 1, 3, 34),
   expiresAt: null,
   title: title,
   summary: summary,

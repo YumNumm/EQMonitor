@@ -21,7 +21,7 @@ void main() {
     await dataSource.getRealtimeImageData(
       type: RealtimeDataType.shindo,
       layer: RealtimeLayer.surface,
-      dateTime: DateTime(2026, 8, 16, 22, 58, 3),
+      dateTime: DateTime.parse('2026-08-16T22:58:03+09:00'),
     );
 
     expect(
@@ -35,7 +35,7 @@ void main() {
     await dataSource.getRealtimeImageData(
       type: RealtimeDataType.shindo,
       layer: RealtimeLayer.underground,
-      dateTime: DateTime(2026, 8, 16, 22, 58, 3),
+      dateTime: DateTime.parse('2026-08-16T22:58:03+09:00'),
     );
 
     expect(
@@ -49,7 +49,7 @@ void main() {
     await dataSource.getRealtimeImageData(
       type: RealtimeDataType.abrspmx,
       layer: RealtimeLayer.underground,
-      dateTime: DateTime(2026, 8, 16, 22, 58, 3),
+      dateTime: DateTime.parse('2026-08-16T22:58:03+09:00'),
     );
 
     expect(

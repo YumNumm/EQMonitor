@@ -29,7 +29,7 @@ void main() {
     expect(find.byType(AlertDialog), findsNothing);
     expect(repository.receivedKinds, [TestNotificationKind.normal]);
     expect(handled, isTrue);
-    expect(find.text('テスト通知の送信を受け付けました'), findsOneWidget);
+    expect(find.text('テスト通知を送信しました'), findsOneWidget);
   });
 
   testWidgets('重大通知は警告を表示し、キャンセルすると送信しない', (tester) async {
@@ -82,7 +82,7 @@ void main() {
     await tester.pump();
     expect(repository.receivedKinds, isEmpty);
 
-    await tester.tap(find.text('送信する'));
+    await tester.tap(find.text('送信'));
     await tester.pumpAndSettle();
 
     expect(confirmedCount, 1);
@@ -139,6 +139,7 @@ class _TestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(
+      platform: TargetPlatform.iOS,
       extensions: <ThemeExtension<dynamic>>[
         DesignSystemThemeExtension.light(),
       ],

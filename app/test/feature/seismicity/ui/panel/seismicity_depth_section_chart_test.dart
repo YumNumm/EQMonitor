@@ -94,7 +94,7 @@ void main() {
     expect(spots[1].x, 37);
     expect(spots[1].y, -50);
 
-    await tester.tap(find.text('経度方向'));
+    await tester.tap(find.text('経度方向').hitTestable());
     await tester.pumpAndSettle();
 
     // 軸切替後: x が緯度から経度の値へ切り替わる。

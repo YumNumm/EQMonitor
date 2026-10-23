@@ -6,10 +6,7 @@ on:
       - "**"
   merge_group:
 
-permissions:
-  contents: read
-  pull-requests: read
-  checks: write
+permissions: {}
 
 concurrency:
   group: pr-flutter-check-${{ github.ref }}
@@ -27,7 +24,6 @@ jobs:
     if: needs.changes.outputs.flutter == 'true'
     permissions:
       contents: read
-      checks: write
     uses: $/.github/workflows/wc-check-dart-analyze.yaml
 
   flutter-test:
