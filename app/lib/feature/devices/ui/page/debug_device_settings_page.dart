@@ -20,6 +20,7 @@ import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
+import 'package:eqmonitor/feature/devices/ui/component/debug_notification_language_setting.dart';
 import 'package:eqmonitor/feature/notification/data/action/test_notification_send_action.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
@@ -828,9 +829,13 @@ class _NotificationSettingsSection extends HookConsumerWidget {
 
     return _SectionCard(
       title: '全般通知設定',
-      child: settings == null
-          ? const Center(child: AccessibleCircularProgressIndicator())
-          : Column(
+      child: Column(
+        children: [
+          const DebugNotificationLanguageSetting(),
+          if (settings == null)
+            const Center(child: AccessibleCircularProgressIndicator())
+          else
+            Column(
               children: [
                 AppSwitchListTile(
                   contentPadding: EdgeInsets.zero,
@@ -863,6 +868,8 @@ class _NotificationSettingsSection extends HookConsumerWidget {
                 ),
               ],
             ),
+        ],
+      ),
     );
   }
 }
