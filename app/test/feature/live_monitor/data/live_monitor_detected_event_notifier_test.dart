@@ -6,7 +6,10 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/clock/time_mode.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
@@ -44,6 +47,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
+import '../../../fixtures/build_config.dart';
 
 final _now = DateTime.utc(2026, 7, 27, 12);
 final _reportedAt = DateTime.utc(2026, 7, 27, 11, 59);
@@ -92,6 +97,12 @@ final class _FixedAppClock extends AppClock {
 
   @override
   DateTime now() => _now;
+}
+
+final class _DisconnectedWsStatus extends EqMonitorWsStatus {
+  @override
+  EqMonitorWsStatusState build() =>
+      const EqMonitorWsStatusState(phase: WsPhase.disconnected);
 }
 
 final class _PageStore {
@@ -1798,6 +1809,8 @@ _IntegratedCanonicalFixture createIntegratedCanonicalFixture() {
   final lifecycle = _MutableLifecycle();
   final container = ProviderContainer(
     overrides: [
+      buildConfigProvider.overrideWithValue(const BuildConfigFixture().build()),
+      eqMonitorWsStatusProvider.overrideWith(_DisconnectedWsStatus.new),
       realtimeEventsProvider.overrideWith(
         () => _StubRealtimeEvents(realtime.stream),
       ),
