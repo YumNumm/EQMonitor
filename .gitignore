@@ -202,3 +202,8 @@ app/assets/platform/**/*.pmtiles
 /.mise/*
 !/.mise/locks/
 /.mise/locks/*.local/
+
+# Optional local native analysis artifacts
+app/android/app/src/main/jniLibs/
+app/ios/NativeShake/
+app/ios/Flutter/NativeShake.xcconfig
