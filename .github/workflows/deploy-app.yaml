@@ -788,6 +788,31 @@ jobs:
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses
 
+      # package:jni は flutter.ndkVersion (28.2) を参照する。Gradle の自動取得は
+      # ネットワーク不調で ZipException になりやすいので、先に sdkmanager で入れる。
+      - name: Install Android NDK for package:jni
+        env:
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+        run: |
+          set -euo pipefail
+          ndk_pkg="ndk;28.2.13676358"
+          sdkmanager_bin="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager"
+          if [[ ! -x "${sdkmanager_bin}" ]]; then
+            sdkmanager_bin="$(command -v sdkmanager)"
+          fi
+          for attempt in 1 2 3; do
+            rm -rf "${ANDROID_SDK_ROOT}/ndk/28.2.13676358"
+            rm -rf "${ANDROID_SDK_ROOT}/.temp"
+            if yes | "${sdkmanager_bin}" --install "${ndk_pkg}"; then
+              echo "Installed ${ndk_pkg} on attempt ${attempt}"
+              exit 0
+            fi
+            echo "::warning::NDK install attempt ${attempt} failed; retrying..."
+            sleep 15
+          done
+          echo "::error::Failed to install ${ndk_pkg} after 3 attempts"
+          exit 1
+
       - name: Resolve dependencies
         working-directory: app
         run: flutter pub get --enforce-lockfile

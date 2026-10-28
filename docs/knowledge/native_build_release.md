@@ -110,6 +110,10 @@ xcrun actool AppIcon-dev.icon \
   それ以外のホストは平文通信を禁止する。Cronetでの実機確認は[強震モニタTODO](../todo/160_realtime_monitor_followups.md)に残す。
 - 現行 `app/android/app/build.gradle.kts` は Java/Kotlin JVM 17、compileSdk 37。
   SDK・NDKの具体的な版は同ファイルと `mise.toml` を正本にする。
+- Deploy App の Android ジョブでは、transitive な `package:jni` が `flutter.ndkVersion`（NDK 28.2）を参照する。
+  Gradle 実行中の NDK 自動取得は ZipException で失敗することがあるため、
+  `.github/workflows/deploy-app.yaml` の Build Android 前に `sdkmanager --install "ndk;28.2.13676358"` を
+  リトライ付きで実行する（2026-10-28 時点）。
 - `cronet_http` の Play Services 経由では `cronet-api` / `cronet-shared` の
   namespace が重複するため、AGP 9 の厳格な検査で Manifest 統合が失敗する。
   [upstream issue #1932](https://github.com/dart-lang/http/issues/1932) が解消するまで
