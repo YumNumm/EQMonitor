@@ -124,6 +124,10 @@ xcrun actool AppIcon-dev.icon \
   その個別修正手順は不要だが、deprecated diagnostic が warnings-as-errors で失敗する点は維持する。
 - Gradle の設定変更は Dart の解析だけでは確認できない。Android SDK がある環境で
   project evaluation または対象の APK/AAB ビルドを行う。
+- `Deploy App` の build-android は Gradle 実行前に `scripts/ci/install_android_ndk.sh` で
+  Flutter プラグイン用 NDK と `app/android/app/build.gradle.kts` の NDK を
+  `sdkmanager` へ先に入れる。Google 側の ZIP 破損で `Archive is not a ZIP archive` が
+  出た場合は部分ダウンロードを削除して最大 3 回再試行する。
 - 現行 release は minify/shrink 有効。配布時は AAB と R8 mapping、iOS は IPA と dSYM を保管する。
 
 ## Android release の JNI / R8

@@ -788,6 +788,9 @@ jobs:
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses
 
+      - name: Install Android NDK
+        run: bash scripts/ci/install_android_ndk.sh
+
       - name: Resolve dependencies
         working-directory: app
         run: flutter pub get --enforce-lockfile
