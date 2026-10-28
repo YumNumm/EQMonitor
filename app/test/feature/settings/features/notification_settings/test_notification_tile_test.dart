@@ -104,7 +104,7 @@ void main() {
     await tester.tap(find.text('緊急地震速報（警報）'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
-    await tester.tap(find.text('送信する'));
+    await tester.tap(find.text('送信'));
     await tester.pumpAndSettle();
 
     expect(find.byType(TestNotificationPage), findsOneWidget);

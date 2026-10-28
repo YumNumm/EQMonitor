@@ -8,6 +8,8 @@ import 'package:eqmonitor/feature/settings/features/display_settings/data/notifi
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_editor_page.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'
+    as flutter_localizations;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +23,14 @@ class _TestApp extends StatelessWidget {
     final theme = ThemeData.light().copyWith(
       extensions: [DesignSystemThemeExtension.light()],
     );
-    return MaterialApp(theme: theme, home: home);
+    return MaterialApp(
+      theme: theme,
+      localizationsDelegates: const [
+        // ignore: deprecated_member_use
+        flutter_localizations.GlobalMaterialLocalizations.delegate,
+      ],
+      home: home,
+    );
   }
 }
 

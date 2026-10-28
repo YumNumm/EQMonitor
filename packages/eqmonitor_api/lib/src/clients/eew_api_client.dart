@@ -19,7 +19,7 @@ part 'eew_api_client.g.dart';
 abstract class EewApiClient {
   factory EewApiClient(Dio dio, {String? baseUrl}) = _EewApiClient;
 
-  /// 最終報の緊急地震速報一覧を取得.
+  /// 取消報を除いた最終報の緊急地震速報一覧を取得.
   ///
   /// [limit] - 1~100 の整数(string).
   ///

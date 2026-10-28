@@ -2,11 +2,10 @@
 
 数値は元の優先度。過去の失敗件数を現在のbaselineとはみなさず、対象packageで再現して未達だけを直す。
 
-## 770: PR の Flutter 検証での mise 全ツール解決
+## 770: workspace 全体での gcloud 導入
 
-- `wc-check-dart-{analyze,test}.yaml` はjobの `MISE_ENABLE_TOOLS=flutter,node,python` で対象を制限する。clean runnerで全ツール導入が再発せず、Asset Pack配置後に解析・テストが起動することはCI検証待ち。
-- workspace全体の導入では `vfox:gcloud` の `module 'metadata' not found` が残る。gcloudのplugin設定を確認する。
-- 完了条件: clean runner で PR の解析とテストが起動・完走し、必要なツールだけを再現可能に導入できる。
+- workspace全体の導入で `vfox:gcloud` の `module 'metadata' not found` が再現するか確認し、gcloudのplugin設定を見直す。
+- 完了条件: clean環境でworkspace全体のツールを再現可能に導入できる。
 
 ## 770: Codemagic CLI の macOS 検証
 
@@ -14,22 +13,6 @@
   macOS のインストールと XcResult 変換は未検証。既存 CI に該当する Codemagic 呼び出しはない。
 - 完了条件: macOS で `mise install --locked pipx:codemagic-cli-tools` を実行し、
   Xcode 16 以上の実 XcResult を `xcode-project junit-test-results` で変換できることを確認する。
-
-## 770: 既存テスト失敗の再確認
-
-- Home の地図レイヤー、`map_operation_queue_scope_test.dart`、`test/core/util/map` を含む一括実行では、途中から進捗が止まる場合がある。テスト本体の待機と Flutter main のコンパイル待機を切り分け、単独実行と `--concurrency=1` で再確認する。途中で停止した実行結果は完走の証拠に使わない。
-
-- 通知の `slot_detail_page_test.dart` の警報設定2件と `notification_preset_selector_test.dart` の通知許可ダイアログ1件は、地域選択共通化時に変更前の `4e5708b38` でも失敗を再現した。期待する文言と現行UIを照合し、正しい仕様にテストを合わせる。通知・課金の本番挙動をテスト都合で変更しない。
-
-- `app/` で `mise exec -- flutter test test --dart-define=CI=true --file-reporter=json:test_report.log` を実行する。repository rootから `app/test` を指定するとasset rootが変わるため比較しない。
-- 旧失敗対象: `theme_settings_page_test.dart` / `theme_editor_page_test.dart`（theme ready待ち）、`home_earthquake_history_parameter_provider_test.dart`（asc/desc）、`feed_item_list_tile_test.dart`（「頃発表」）、`background_location_update_notifier_test.dart`（fake adapterのenum→wire JSON）、`live_monitor_detected_event_notifier_test.dart`、`override_edit_page_test.dart`（通知UIの「震度0以上」表現）。`app/test/` で該当名を検索し、現行仕様とassertionを照合する。
-- 完了条件: 対象テストとpackage suiteが成功し、緊急情報の本番挙動をfixture都合で変更していない。
-
-## 700: CI の10分 timeout
-
-- `.github/workflows/wc-check-dart-test.yaml` の timeout は10分。旧実測は完走9m37s〜9m50s/時間切れ10m18sでrunner差に敏感だった。
-- JSON reporterで遅いpackage/testを計測し、必要ならpackage matrixへ分割してから予算を決める。reporter の対象に workspace 内の `tools/*/test_report.log` も含める。
-- 完了条件: 通常CIで余裕を持って完走し、テスト失敗とtimeoutを区別して把握できる。
 
 ## 700 / 100: Melos・起動設定
 
@@ -76,12 +59,7 @@
 - `app/lib/feature/fnet_catalog/ui/components/fnet_catalog_list_tile.dart` は詳細modal/pageのUXを決めて古いコメントを整理する。`packages/extensions/README.md` / `packages/lat_lng/README.md` のtemplate TODOを実態に合わせる。
 - map utility/asset generator のgeometry guardは入力shape契約をfixtureで確認する。問い合わせ画面の非mobile対応を採用するなら `app/lib/feature/settings/data/contact/contact_action.dart` の案内を設計する。
 
-## 750: Flutter main 更新時点で再現する既存の検証失敗
+## 750: Flutter Material 互換delegateの整理
 
-- Flutter `19946f91c8d9de18a4674460d015229cc0b2534f` のUI移行前でも、関連テスト12件が失敗する。
-- `theme_editor_page_test.dart` の3件はColorPicker内部のFlutter Materialと `material_ui` の境界で `No Material widget found` となる。依存の境界をそろえて色選択を検証する。
-- `notification_delivery_log_detail_builder_test.dart` の3件は時刻・表示文言、`notification_preset_selector_test.dart` の1件と `slot_detail_page_test.dart` の2件は通知文言の全角・半角差を現行仕様と照合する。
-- `earthquake_vxse_debug_editor_test.dart` のJSON手動編集2件はコメント欠損・未知の型の期待値を確認する。データ保持の要件を弱めず修正する。
-- `earthquake_history_debug_sheet_test.dart` の1件は `earthquake_summary_header.dart` のWrap直下のExpandedで `ParentDataWidget` エラーになる。地震情報の時刻表示を保ってレイアウトを修正する。
 - Flutter Materialを使う依存の移行完了後に、互換用の `flutter_localizations.GlobalMaterialLocalizations.delegate` と局所的な非推奨抑制を削除する。現在は `material_ui` と両方のdelegateが必要。
-- 完了条件: 上記テストと全体解析が成功し、通知内容・時刻・地震データの意味を維持する。
+- 完了条件: 依存の移行後に互換delegateを整理し、関連UIテストが成功する。
