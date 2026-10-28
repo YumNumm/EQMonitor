@@ -108,11 +108,11 @@ abstract class AppTheme with _$AppTheme {
       ),
       estimatedIntensity: EstimatedIntensityColors(
         four: IntensityColorEntry(
-          background: Color.fromARGB(255, 202, 158, 0),
+          background: Color(0xFFFFE600),
           foreground: IntensityTextColor.auto(),
         ),
         fiveLower: IntensityColorEntry(
-          background: Color(0xFFFFE600),
+          background: Color.fromARGB(255, 202, 158, 0),
           foreground: IntensityTextColor.auto(),
         ),
         fiveUpper: IntensityColorEntry(
@@ -217,11 +217,11 @@ abstract class AppTheme with _$AppTheme {
       ),
       estimatedIntensity: EstimatedIntensityColors(
         four: IntensityColorEntry(
-          background: Color.fromARGB(255, 202, 158, 0),
+          background: Color(0xFFFFE600),
           foreground: IntensityTextColor.auto(),
         ),
         fiveLower: IntensityColorEntry(
-          background: Color(0xFFFFE600),
+          background: Color.fromARGB(255, 202, 158, 0),
           foreground: IntensityTextColor.auto(),
         ),
         fiveUpper: IntensityColorEntry(
