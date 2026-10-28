@@ -41,7 +41,7 @@ private struct LockScreenPreviewFrame<Content: View>: View {
     return ScrollView {
         VStack(alignment: .leading, spacing: 20) {
             ForEach([320, 360, 400], id: \.self) { width in
-                ForEach(["東京都２３区", "石狩地方中部"], id: \.self) { regionName in
+                ForEach(["東京都２３区", "山梨県東部・富士五湖", "新島"], id: \.self) { regionName in
                     LockScreenPreviewFrame(title: "\(width)pt / \(regionName)", width: CGFloat(width)) {
                         UnifiedLockScreenView(state: .preview(
                             primary: "eew",

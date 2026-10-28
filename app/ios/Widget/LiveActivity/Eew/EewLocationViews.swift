@@ -43,7 +43,7 @@ struct EewArrivalView: View {
                 Text("到達まで")
                     .font(AppFonts.flex(size: 10, weight: .bold))
                     .foregroundStyle(.white.opacity(0.8))
-                ArrivalCountdownText(remaining: remaining, size: size, color: .white)
+                ArrivalCountdownText(remaining: remaining, size: size, color: .white, alignment: .leading)
             }
         }
     }
