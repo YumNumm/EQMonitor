@@ -142,7 +142,7 @@ struct UnifiedLiveActivityDisplay {
         case .empty: nil
         }
         guard let name, !name.isEmpty else { return nil }
-        return name
+        return LiveActivityLocationName.format(name)
     }
 
     /// 現在地の震度。EEW は既存方針（予報は震度4以上のみ）を引き継ぐ

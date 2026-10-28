@@ -60,10 +60,12 @@ struct EewLockScreenLocationView: View {
                     Text(state.display.locationNotice == .warning ? "現在地に警報" : "現在地")
                         .font(AppFonts.flex(size: 9, weight: .bold))
                         .foregroundStyle(.white.opacity(0.8))
-                    if let regionName = state.location?.regionName, !regionName.isEmpty {
+                    if let regionName = state.location?.displayRegionName, !regionName.isEmpty {
                         Text(regionName)
                             .font(AppFonts.flex(size: 10, weight: .heavy))
                             .lineLimit(2)
+                            .minimumScaleFactor(0.8)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 if let arrivalDate = state.display.countdownArrivalDate {
@@ -72,6 +74,7 @@ struct EewLockScreenLocationView: View {
             }
             if let intensity = state.display.localIntensity {
                 EewLocalIntensityView(intensity: intensity, size: 48)
+                    .fixedSize()
             }
         }
         .foregroundStyle(.white)

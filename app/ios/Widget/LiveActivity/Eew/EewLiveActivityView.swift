@@ -108,6 +108,7 @@ struct EewLockScreenView: View {
 
                     if state.display.usesLocalIntensity || state.display.locationNotice == .warning {
                         EewLockScreenLocationView(state: state)
+                            .layoutPriority(1)
                     }
                 }
 

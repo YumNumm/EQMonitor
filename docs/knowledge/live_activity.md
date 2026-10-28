@@ -49,6 +49,7 @@
 - Live Activityのbodyは秒読みだけで再評価されない。到達後も`主要動到達まで 00:00`を維持し、
   到達時の文言切替に`staleDate`を使わない。EEWのstaleは開始/更新から30分後の別契約。
 - タイマーと幅確保用のhidden placeholderは同じフォントを使用する。
+- 現在地の地域名は表示時に全角数字のみ半角化する。EEWのLock Screenでは現在地欄の幅を優先し、地域名は最大2行で表示する。
 - 濃色ヘッダーは白、補助文字は白70%。現在の黒背景EEW本文も白を明示し、
   Light AppearanceのLock Screenには黒背景を明示する。旧「本文は常に.primary」を流用しない。
 - ヘッダーのしましまは`StripePattern`、取消の灰色を維持する。

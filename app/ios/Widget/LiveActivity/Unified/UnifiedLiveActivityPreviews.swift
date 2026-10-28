@@ -18,6 +18,7 @@ import WidgetKit
 @available(iOS 17.0, *)
 private struct LockScreenPreviewFrame<Content: View>: View {
     let title: String
+    var width: CGFloat = 360
     @ViewBuilder let content: Content
 
     var body: some View {
@@ -26,13 +27,40 @@ private struct LockScreenPreviewFrame<Content: View>: View {
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.secondary)
             content
-                .frame(width: 360)
+                .frame(width: width)
                 .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         }
     }
 }
 
 // MARK: - 主表示ごとのレイアウト
+
+@available(iOS 17.0, *)
+#Preview("Lock Screen - 現在地の地域名と到達予想") {
+    let now = Date()
+    return ScrollView {
+        VStack(alignment: .leading, spacing: 20) {
+            ForEach([320, 360, 400], id: \.self) { width in
+                ForEach(["東京都２３区", "石狩地方中部"], id: \.self) { regionName in
+                    LockScreenPreviewFrame(title: "\(width)pt / \(regionName)", width: CGFloat(width)) {
+                        UnifiedLockScreenView(state: .preview(
+                            primary: "eew",
+                            eew: .preview(
+                                time: now,
+                                location: UnifiedEew.previewLocation(
+                                    regionName: regionName,
+                                    arrivalTime: now.addingTimeInterval(31)
+                                )
+                            ),
+                            now: now
+                        ))
+                    }
+                }
+            }
+        }
+        .padding()
+    }
+}
 
 @available(iOS 17.0, *)
 #Preview("Lock Screen - 主表示 3 種") {
