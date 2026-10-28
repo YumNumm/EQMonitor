@@ -1,5 +1,50 @@
 # Changelog
 
+## [3.0.4](https://github.com/YumNumm/EQMonitor/compare/v3.0.2...v3.0.4) (2026-10-23)
+
+
+### Features
+
+* Androidのロック画面表示を設定値に連動 ([66cc86d](https://github.com/YumNumm/EQMonitor/commit/66cc86d95aeb9bfb78c68fd2346eeaf24a24a1d5))
+* API接続先の手入力とSharedPreferencesへの保存を追加 ([4cc90d9](https://github.com/YumNumm/EQMonitor/commit/4cc90d9c5cc7b88c0a93b4d1ae8f9253a9f6dd24))
+* API接続先の手入力と保存画面を追加する ([5d3e345](https://github.com/YumNumm/EQMonitor/commit/5d3e345c0f4599cd858d8321990283b7d01c38bf))
+* WebSocketのHeartbeatを固定のペイロードにし、WebSocket Hibernetesに対応 ([c1244ca](https://github.com/YumNumm/EQMonitor/commit/c1244ca09ff33a0f24c7fcb6e0bf02007f5660e4))
+* WebSocket固定heartbeatで休眠配信に対応 ([8346abc](https://github.com/YumNumm/EQMonitor/commit/8346abc3db62fdcb2c196b48a9b7354e0a45239e))
+* デバッグの通知設定に言語選択を追加 ([fa25fa2](https://github.com/YumNumm/EQMonitor/commit/fa25fa296f204258aebdb7d3f0fca7782598d08a))
+* 接続先の保存とWebSocket再接続を連動させる ([3648e85](https://github.com/YumNumm/EQMonitor/commit/3648e854bb0594973c961f96746a3e2d8444143b))
+* 画面動作設定の保存と状態管理を追加 ([a91b23c](https://github.com/YumNumm/EQMonitor/commit/a91b23cde1b2daddfc28f2fa26e7ef78dfcf6572))
+* 画面点灯維持とAndroidロック画面表示を設定可能にする ([0a046a2](https://github.com/YumNumm/EQMonitor/commit/0a046a2dec4b9afbe8edce893ffa3f251cbcc5e4))
+* 表示設定に画面動作の切替を追加 ([8ffad2e](https://github.com/YumNumm/EQMonitor/commit/8ffad2e4b4911fc43e1ee500d891773cc64099ae))
+* 通知言語の更新APIクライアントを生成 ([5b5e325](https://github.com/YumNumm/EQMonitor/commit/5b5e3256cb74c59354c4a0d555354ad96a26bdf3))
+* 通知言語を保存する状態管理を追加 ([453ac2a](https://github.com/YumNumm/EQMonitor/commit/453ac2abb4640d5354cd787fae41783f7c80aa99))
+
+
+### Bug Fixes
+
+* Androidで強震モニタのHTTP通信をホスト限定で許可 ([5f5a2f4](https://github.com/YumNumm/EQMonitor/commit/5f5a2f4b36c4488c2e127715a245eafd297290ad))
+* Android通知アイコンをリリースビルドで保持 ([123f071](https://github.com/YumNumm/EQMonitor/commit/123f071786a3b83a219d52f3476c2efbc306af94))
+* CIワークフローの権限と同時実行制御を修正 ([01dd74f](https://github.com/YumNumm/EQMonitor/commit/01dd74f825ce2432298100750d557d131e2e8970))
+* EEW履歴と報一覧に取消報の表示を追加 ([52731e2](https://github.com/YumNumm/EQMonitor/commit/52731e275d692694be398a6ec1ac0c45ace05069))
+* iOS提出バージョンを3.0.3へ進める ([0b04c1a](https://github.com/YumNumm/EQMonitor/commit/0b04c1a375a18d2d9010add86e2893aeed732266))
+* jactionlint のフラグを --color に修正 ([ecf03c2](https://github.com/YumNumm/EQMonitor/commit/ecf03c2ce8b7f7f753479650c895a9ec55a27a38))
+* jactionlint のフラグを --color に修正 ([00f6c4d](https://github.com/YumNumm/EQMonitor/commit/00f6c4d279172cb0cb033b59b3f248c2547d8743))
+* PR更新後も必須の作成者チェックを実行 ([88ffe3c](https://github.com/YumNumm/EQMonitor/commit/88ffe3c0372fa4078b2f7ba4aa92900b07a16cc3))
+* realtime ticketの再接続オーバーフローと未登録時の送信を修正 ([ff5e548](https://github.com/YumNumm/EQMonitor/commit/ff5e548b2debbd1447cdb94059de6cbfeafd54ac))
+* realtime ticketの再接続オーバーフローと未登録時の送信を修正 ([23037d2](https://github.com/YumNumm/EQMonitor/commit/23037d25491e92939a6369b5ec9fccabe157036b))
+* TestFlight内部配信の処理完了を検証 ([04cc52a](https://github.com/YumNumm/EQMonitor/commit/04cc52ac979036e1b6977a7d8d6d3b609157e3d8))
+* TestFlight内部配信の処理完了を検証 ([3f41b21](https://github.com/YumNumm/EQMonitor/commit/3f41b2117da5b7b65baa256da3c9faa9c193d2d0))
+* TestFlight再配信で署名済みIPAのビルド番号を使う ([4c8a61b](https://github.com/YumNumm/EQMonitor/commit/4c8a61b3f40334f95e64e900d1393afc2b60e3b9))
+* UIテストと色選択のMaterial境界を修正 ([6e2ccca](https://github.com/YumNumm/EQMonitor/commit/6e2ccca69ab0d9c9b507bd84b2e1eb8c358bdea6))
+* アーカイブ検証テストの時間制御を安定化 ([acec4b2](https://github.com/YumNumm/EQMonitor/commit/acec4b226e4aba659cb95903aba2be7953ba8943))
+* テーマ設定の下端に安全領域を確保 ([ae00f7a](https://github.com/YumNumm/EQMonitor/commit/ae00f7adf8879331210cb21191c292c497e59e12))
+* マグニチュード表示テストをRichTextに合わせる ([b6b3e95](https://github.com/YumNumm/EQMonitor/commit/b6b3e955d10d696bc9b5c3100ba34c12cc2203bc))
+* ルート検証を現行のページ生成と構文に合わせる ([c205759](https://github.com/YumNumm/EQMonitor/commit/c205759835ba6019d82c1575ee9ed7383399f604))
+* 同一AABをGoogle Playテストへ配信して検証 ([1500362](https://github.com/YumNumm/EQMonitor/commit/1500362657d530342d5082ee4d3e1c5b6d1fa7aa))
+* 地震デバッグ編集テストと完了TODOを整理 ([dfe0afe](https://github.com/YumNumm/EQMonitor/commit/dfe0afe0ad54e20a111392874179ee0c3a896772))
+* 必須のFlutter解析チェックを全PRで実行 ([627a73a](https://github.com/YumNumm/EQMonitor/commit/627a73acd3a3b640593e397c298e1ede61bd95d6))
+* 既存テストの地震fixtureと環境依存を修正 ([ffbf038](https://github.com/YumNumm/EQMonitor/commit/ffbf038f6d5d4dd6dbb428a484769d30429cd321))
+* 通知配信ログの既存テストを現行表示に合わせる ([02594e1](https://github.com/YumNumm/EQMonitor/commit/02594e1af6e856ce80f99542be10fac3445e3ba9))
+
 ## [3.0.1](https://github.com/YumNumm/EQMonitor/compare/v3.0.0...v3.0.1) (2026-10-02)
 
 

@@ -33,14 +33,14 @@ abstract class EewTelegramItem with _$EewTelegramItem {
   bool get isLowPreciseHypocenter =>
       isPlum || accuracy == null || accuracy?.epicenter == 1;
 
-  /// レベル法: 震央精度が1点相当かつ発震時刻なし（Live Activity `isLevel` と同義）
+  /// レベル法: 震央精度が1点相当かつ地震発生時刻なし
   bool get isLevelMethod => accuracy?.epicenter == 1 && originTime == null;
 
-  /// IPF法1点検知: 震央精度1点相当・発震時刻あり・PLUMでない（Live Activity `isOnePoint` と同義）
+  /// IPF法1点検知: 震央精度1点相当・地震発生時刻あり・PLUMでない
   bool get isOnePointDetection =>
       accuracy?.epicenter == 1 && originTime != null && !isPlum;
 
-  /// PLUM / レベル法 / 1点のいずれか（M・深さを出さない）
+  /// PLUM / レベル法 / 1点のいずれか（マグニチュード・深さを出さない）
   bool get shouldHideMagnitudeAndDepth =>
       isPlum || isLevelMethod || isOnePointDetection;
 }
