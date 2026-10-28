@@ -67,6 +67,19 @@ APNs・認証は [push_and_auth.md](push_and_auth.md) を参照する。
 
 ## archive エラーの読み方
 
+### Crashlytics の dSYM
+
+- CD は IPA と dSYM の artifact 保存後、SwiftPM で取得した Firebase SDK の
+  `Crashlytics/upload-symbols` で archive 内の dSYM 一式を同期送信する。
+  送信先は archive 内の `Runner.app/GoogleService-Info.plist` から決定する。
+- SDK の checkout は archive の `-clonedSourcePackagesDirPath build/ios/SourcePackages` で固定する。
+  `Runner.app.dSYM`・`App.framework.dSYM` の欠落、送信失敗、5分のタイムアウトは build-ios を失敗させる。
+- `source_run_id` による既存 IPA の再配布は build-ios を実行しないため、dSYM を再送信しない。
+  過去の未送信分は、そのビルドの dSYM artifact を使った別途アップロードが必要。
+- 手順は [Firebase の dSYM アップロード](https://firebase.google.com/docs/crashlytics/ios/get-deobfuscated-reports#upload-dsyms)。
+
+### Xcode のログ
+
 - `xcodebuild ... | xcbeautify` は archive/export ともに `set -o pipefail` が必要。
   `Runner.app: No such file or directory` より前の archive 失敗を先に調べる。
 - archive は stderr も `tee` し、`PhaseScriptExecution` / `Run Script` / `actool` の生ログを読む。

@@ -388,6 +388,7 @@ jobs:
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
             -archivePath build/ios/Runner.xcarchive \
+            -clonedSourcePackagesDirPath build/ios/SourcePackages \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
@@ -466,6 +467,29 @@ jobs:
           name: EQMonitor-ios-dSYMs
           path: app/build/ios/Runner.xcarchive/dSYMs
           if-no-files-found: error
+
+      - name: Upload dSYMs to Firebase Crashlytics
+        working-directory: app
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          UPLOAD_SYMBOLS="build/ios/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/upload-symbols"
+          ARCHIVE="build/ios/Runner.xcarchive"
+          GOOGLE_SERVICE_INFO="$ARCHIVE/Products/Applications/Runner.app/GoogleService-Info.plist"
+          if [[ ! -x "$UPLOAD_SYMBOLS" || ! -f "$GOOGLE_SERVICE_INFO" ]]; then
+            echo "::error::Crashlytics upload-symbols or archived GoogleService-Info.plist is missing."
+            exit 1
+          fi
+          for required_dsym in Runner.app.dSYM App.framework.dSYM; do
+            if [[ ! -d "$ARCHIVE/dSYMs/$required_dsym" ]]; then
+              echo "::error::Required dSYM is missing: $required_dsym"
+              exit 1
+            fi
+          done
+          "$UPLOAD_SYMBOLS" \
+            -gsp "$GOOGLE_SERVICE_INFO" \
+            -p ios \
+            "$ARCHIVE/dSYMs"
 
   deploy-ios:
     name: Deploy iOS (App Store Connect)
