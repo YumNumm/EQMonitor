@@ -18,6 +18,7 @@ import WidgetKit
 @available(iOS 17.0, *)
 private struct LockScreenPreviewFrame<Content: View>: View {
     let title: String
+    var width: CGFloat = 360
     @ViewBuilder let content: Content
 
     var body: some View {
@@ -26,13 +27,48 @@ private struct LockScreenPreviewFrame<Content: View>: View {
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.secondary)
             content
-                .frame(width: 360)
+                .frame(width: width)
                 .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         }
     }
 }
 
 // MARK: - 主表示ごとのレイアウト
+
+@available(iOS 17.0, *)
+#Preview("Lock Screen - 現在地の地域名と到達予想") {
+    let now = Date()
+    return ScrollView {
+        VStack(alignment: .leading, spacing: 20) {
+            ForEach([280, 300, 320, 360, 400], id: \.self) { width in
+                ForEach(["東京都２３区", "山梨県東部・富士五湖", "新島"], id: \.self) { regionName in
+                    LockScreenPreviewFrame(title: "\(width)pt / \(regionName)", width: CGFloat(width)) {
+                        UnifiedLockScreenView(state: .preview(
+                            primary: "eew",
+                            eew: .preview(
+                                headline: "茨城県沖で地震\n関東地方で強い揺れ",
+                                time: now,
+                                location: UnifiedEew.previewLocation(
+                                    regionName: regionName,
+                                    arrivalTime: now.addingTimeInterval(31)
+                                )
+                            ),
+                            now: now
+                        ))
+                    }
+                }
+                LockScreenPreviewFrame(title: "\(width)pt / 現在地情報なし", width: CGFloat(width)) {
+                    UnifiedLockScreenView(state: .preview(
+                        primary: "eew",
+                        eew: .preview(time: now),
+                        now: now
+                    ))
+                }
+            }
+        }
+        .padding()
+    }
+}
 
 @available(iOS 17.0, *)
 #Preview("Lock Screen - 主表示 3 種") {

@@ -51,6 +51,7 @@ struct ArrivalCountdownText: View {
     let remaining: ClosedRange<Date>
     let size: CGFloat
     var color: Color = .primary
+    var alignment: TextAlignment = .trailing
 
     var body: some View {
         // Workaround: timerInterval は横いっぱいに広がろうとするため、
@@ -59,10 +60,11 @@ struct ArrivalCountdownText: View {
         Text("00:00")
             .font(font)
             .hidden()
-            .overlay(alignment: .trailing) {
+            .overlay(alignment: alignment == .leading ? .leading : .trailing) {
                 Text(timerInterval: remaining, countsDown: true)
                     .font(font)
                     .monospacedDigit()
+                    .multilineTextAlignment(alignment)
                     .foregroundColor(color)
                     .contentTransition(.numericText(countsDown: true))
             }

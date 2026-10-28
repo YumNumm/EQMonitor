@@ -81,6 +81,32 @@ struct HeaderContainer: View {
 
 
 @available(iOS 16.1, *)
+struct EewEventTimeView: View {
+    let label: String
+    let date: Date
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            Text("\(label)  \(JSTDateFormat.monthDay(date)) \(JSTDateFormat.timeWithSeconds(date))")
+                .fixedSize()
+            VStack(alignment: .leading, spacing: 2) {
+                Text(label)
+                Text("\(JSTDateFormat.monthDay(date)) \(JSTDateFormat.timeWithSeconds(date))")
+            }
+            .fixedSize()
+            VStack(alignment: .leading, spacing: 2) {
+                Text(label)
+                Text(JSTDateFormat.monthDay(date))
+                Text(JSTDateFormat.timeWithSeconds(date))
+            }
+            .fixedSize()
+        }
+        .font(AppFonts.code(size: 10, weight: .medium))
+        .foregroundStyle(.white.opacity(0.8))
+    }
+}
+
+@available(iOS 16.1, *)
 struct EewLockScreenView: View {
     let state: EewContentState
 
@@ -93,21 +119,19 @@ struct EewLockScreenView: View {
             )
 
             if !state.display.isCanceled {
+                let showsLocation = state.display.usesLocalIntensity || state.display.locationNotice == .warning
                 HStack(alignment: .bottom, spacing: 8) {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: showsLocation ? 8 : 4) {
                         if let date = state.timeDate {
-                            Text("\(state.timeLabel)  \(JSTDateFormat.monthDay(date)) \(JSTDateFormat.timeWithSeconds(date))")
-                                .font(AppFonts.code(size: 10, weight: .medium))
-                                .foregroundStyle(.white.opacity(0.8))
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.8)
+                            EewEventTimeView(label: state.timeLabel, date: date)
                         }
                         EewSourceMetricsView(state: state)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                    if state.display.usesLocalIntensity || state.display.locationNotice == .warning {
+                    if showsLocation {
                         EewLockScreenLocationView(state: state)
+                            .layoutPriority(1)
                     }
                 }
 

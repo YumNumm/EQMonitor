@@ -89,13 +89,13 @@ struct UnifiedLiveActivityDisplay {
     var headline: String? {
         switch primary {
         case .shakeDetection:
-            return state.shakeDetection?.headline
+            return LiveActivityHeadline.format(state.shakeDetection?.headline)
         case .eew:
             guard let eew = state.eew else { return nil }
             return eew.display.headerHeadline(from: eew.headline)
         case .earthquake:
             guard let earthquake = state.earthquake else { return nil }
-            return earthquake.headline
+            return LiveActivityHeadline.format(earthquake.headline)
         case .empty:
             return nil
         }
@@ -142,7 +142,7 @@ struct UnifiedLiveActivityDisplay {
         case .empty: nil
         }
         guard let name, !name.isEmpty else { return nil }
-        return name
+        return LiveActivityLocationName.format(name)
     }
 
     /// 現在地の震度。EEW は既存方針（予報は震度4以上のみ）を引き継ぐ

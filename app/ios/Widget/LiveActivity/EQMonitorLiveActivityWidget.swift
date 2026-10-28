@@ -200,10 +200,11 @@ private struct EewExpandedLocationView: View {
                     Text("現在地")
                         .font(AppFonts.flex(size: 10, weight: .medium))
                         .foregroundStyle(.white.opacity(0.75))
-                    if let regionName = state.location?.regionName, !regionName.isEmpty {
+                    if let regionName = state.location?.displayRegionName, !regionName.isEmpty {
                         Text(regionName)
                             .font(AppFonts.flex(size: 12, weight: .bold))
                             .lineLimit(2)
+                            .minimumScaleFactor(0.8)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
