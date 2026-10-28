@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:eqmonitor/feature/telegram_list/data/repository/earthquake_body_diff_calculator.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/hypocenter_summary.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/intensity_region_list.dart';
+import 'package:eqmonitor/feature/telegram_list/ui/components/lpgm_intensity_region_list.dart';
 import 'package:extensions/extensions.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -50,14 +51,12 @@ class EarthquakeTelegramTile extends ConsumerWidget {
     final currentRegions = switch (telegram.type) {
       .vxse51 => body.intensityRegions,
       .vxse53 => body.intensityCities ?? body.intensityRegions,
-      .vxse62 => body.intensityRegions,
       _ => null,
     };
     final previousRegions = switch (telegram.type) {
       .vxse51 => previousBody?.intensityRegions,
       .vxse53 =>
         previousBody?.intensityCities ?? previousBody?.intensityRegions,
-      .vxse62 => previousBody?.intensityRegions,
       _ => null,
     };
     final intensityPrefectures = body.intensityPrefectures;
@@ -131,6 +130,7 @@ class EarthquakeTelegramTile extends ConsumerWidget {
             _EarthquakeTelegramTileContent(
               telegramType: telegram.type,
               body: body,
+              previousBody: previousBody,
               regionDiff: regionDiff,
               hypocenterDiff: hypocenterDiff,
               prefectureMap: prefectureMap,
@@ -163,6 +163,7 @@ class _EarthquakeTelegramTileContent extends StatelessWidget {
   const new({
     required this.telegramType,
     required this.body,
+    required this.previousBody,
     required this.regionDiff,
     required this.hypocenterDiff,
     required this.prefectureMap,
@@ -170,6 +171,7 @@ class _EarthquakeTelegramTileContent extends StatelessWidget {
 
   final TelegramType telegramType;
   final EarthquakeTelegramBodyModel body;
+  final EarthquakeTelegramBodyModel? previousBody;
   final List<IntensityRegionDiffEntry>? regionDiff;
   final HypocenterDiff? hypocenterDiff;
   final Map<String, String>? prefectureMap;
@@ -210,9 +212,11 @@ class _EarthquakeTelegramTileContent extends StatelessWidget {
         children: [
           if (quake != null)
             HypocenterSummary(quake: quake, diff: hypocenterDiff),
-          if (quake != null && regionDiff != null) const SizedBox(height: 8),
-          if (regionDiff case final entries?)
-            IntensityRegionList(entries: entries),
+          if (body.intensityRegions case final regions?)
+            LpgmIntensityRegionList(
+              regions: regions,
+              previousRegions: previousBody?.intensityRegions,
+            ),
         ],
       ),
       _ => const SizedBox.shrink(),
