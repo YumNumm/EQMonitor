@@ -21,6 +21,7 @@ class const EewForecastRegionIntensityFilterUpdater() {
     JmaIntensity.two,
     JmaIntensity.three,
     JmaIntensity.four,
+    JmaIntensity.fiveUnknown,
     JmaIntensity.fiveLower,
     JmaIntensity.fiveUpper,
     JmaIntensity.sixUnknown,
