@@ -119,8 +119,9 @@ struct EewLockScreenView: View {
             )
 
             if !state.display.isCanceled {
+                let showsLocation = state.display.usesLocalIntensity || state.display.locationNotice == .warning
                 HStack(alignment: .bottom, spacing: 8) {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: showsLocation ? 8 : 4) {
                         if let date = state.timeDate {
                             EewEventTimeView(label: state.timeLabel, date: date)
                         }
@@ -128,7 +129,7 @@ struct EewLockScreenView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                    if state.display.usesLocalIntensity || state.display.locationNotice == .warning {
+                    if showsLocation {
                         EewLockScreenLocationView(state: state)
                             .layoutPriority(1)
                     }
