@@ -11,17 +11,17 @@ part 'eew_by_event_id.g.dart';
 
 @riverpod
 class EewsByEventId extends _$EewsByEventId {
-  new({this.merger = const EewReportHistoryMerger()});
-
-  final EewReportHistoryMerger merger;
-
   @override
   Future<List<EewTelegramItem>> build(String eventId) async {
     if (!ref.watch(isProProvider)) return const [];
-    final initialReports = <EewTelegramItem>[];
+    final merger = ref.watch(eewReportHistoryMergerProvider);
+    final initialReports = switch (ref.read(eewProvider)) {
+      AsyncData(:final value) =>
+        value.where((eew) => eew.eventId == eventId).toList(),
+      _ => <EewTelegramItem>[],
+    };
     var receivedReports = <EewTelegramItem>[];
-    var lastRealtimeReports = <EewTelegramItem>[];
-    var isReadingInitialValue = true;
+    var lastRealtimeReports = initialReports;
 
     ref.listen(
       eewProvider,
@@ -35,18 +35,10 @@ class EewsByEventId extends _$EewsByEventId {
             return;
           }
           lastRealtimeReports = updates;
-          if (isReadingInitialValue) {
-            initialReports.addAll(updates);
-            return;
-          }
           if (updates.isEmpty) {
             return;
           }
-          receivedReports = merger.merge(
-            eventId: eventId,
-            reports: [...receivedReports, ...updates],
-          );
-          if (state case AsyncData(:final value)) {
+          if (state case AsyncData(:final value, isLoading: false)) {
             final merged = merger.merge(
               eventId: eventId,
               reports: [...value, ...updates],
@@ -54,13 +46,16 @@ class EewsByEventId extends _$EewsByEventId {
             if (!const ListEquality<EewTelegramItem>().equals(value, merged)) {
               state = AsyncData(merged);
             }
+          } else {
+            receivedReports = merger.merge(
+              eventId: eventId,
+              reports: [...receivedReports, ...updates],
+            );
           }
         }
       },
-      fireImmediately: true,
       onError: (error, stackTrace) => talker.handle(error, stackTrace),
     );
-    isReadingInitialValue = false;
 
     final client = await ref.watch(apiClientProvider.future);
     if (!ref.mounted || !ref.read(isProProvider)) return const [];

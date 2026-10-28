@@ -1,5 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'eew_report_history_merger.g.dart';
+
+@riverpod
+EewReportHistoryMerger eewReportHistoryMerger(Ref ref) =>
+    const EewReportHistoryMerger();
 
 class const EewReportHistoryMerger() {
   List<EewTelegramItem> merge({
