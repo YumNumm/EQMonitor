@@ -526,10 +526,10 @@ provenance = "github-attestations"
 version = "0.70.0"
 backend = "pipx:codemagic-cli-tools"
 specifiers = ["0.70.0"]
-uv = { path = ".mise/locks/pipx-codemagic-cli-tools/0.70.0~5c99daeb", digest = "sha256:c6fe74ddd9d25e319fc66f43cf14cb2038477698fd289ef8b4dae2d7984b67a9" }
+uv = { path = ".mise/locks/pipx-codemagic-cli-tools/0.70.0~74b20f8f", digest = "sha256:663b1f2114d401a06870cfe7cc63311710d570c79f524e3084359a6bde9eb024" }
 
 [tools."pipx:codemagic-cli-tools".options]
-with = '["PyJWT==2.14.0","cryptography==49.0.0","urllib3==2.8.0"]'
+with = '["PyJWT==2.15.0","cryptography==50.0.2","urllib3==2.8.0"]'
 
 [[tools.pkl]]
 version = "0.32.1"
