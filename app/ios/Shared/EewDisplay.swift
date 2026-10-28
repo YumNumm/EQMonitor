@@ -126,11 +126,11 @@ struct EewDisplay: Equatable {
         return "\(typeLabel) \(serialLabel)"
     }
 
-    /// backend の headline をそのまま出してよいか判断する。
+    /// backend の headline の改行を除去して表示する。
     /// 取消報では「地震発生」等が残るため出さない。
     func headline(from raw: String?) -> String? {
-        guard !isCanceled, let raw, !raw.isEmpty else { return nil }
-        return raw
+        guard !isCanceled else { return nil }
+        return LiveActivityHeadline.format(raw)
     }
 
     /// ヘッダーの見出し行。取消報では backend の headline を捨て、取消の主文に差し替える。
@@ -148,6 +148,14 @@ struct EewDisplay: Equatable {
     /// `EewDeepHypocenterIntensityNotice` と同じ基準にする。
     static let deepHypocenterDepthThreshold: Double = 150
     static let deepHypocenterIntensityNotice = "震源の深さが150kmより深いため、予想震度は発表されていません"
+}
+
+enum LiveActivityHeadline {
+    static func format(_ raw: String?) -> String? {
+        guard let raw else { return nil }
+        let text = raw.filter { !$0.isNewline }
+        return text.isEmpty ? nil : text
+    }
 }
 
 enum EewLocationNotice: Equatable {

@@ -40,12 +40,13 @@ private struct LockScreenPreviewFrame<Content: View>: View {
     let now = Date()
     return ScrollView {
         VStack(alignment: .leading, spacing: 20) {
-            ForEach([320, 360, 400], id: \.self) { width in
+            ForEach([280, 300, 320, 360, 400], id: \.self) { width in
                 ForEach(["東京都２３区", "山梨県東部・富士五湖", "新島"], id: \.self) { regionName in
                     LockScreenPreviewFrame(title: "\(width)pt / \(regionName)", width: CGFloat(width)) {
                         UnifiedLockScreenView(state: .preview(
                             primary: "eew",
                             eew: .preview(
+                                headline: "茨城県沖で地震\n関東地方で強い揺れ",
                                 time: now,
                                 location: UnifiedEew.previewLocation(
                                     regionName: regionName,
