@@ -4,9 +4,8 @@
 
 ## 900: Crashlytics の dSYM 受信確認
 
-- [ ] 変更後の CD で `Upload dSYMs to Firebase Crashlytics` が成功することを確認する。ローカルでは実送信・配布ビルドは未実施。
+- [ ] 変更後の CD で `Upload dSYMs to Firebase Crashlytics` が成功することを確認する。CD での自動送信は未検証。
 - [ ] Firebase Crashlytics で対象ビルドの dSYM 受信とクラッシュのシンボリケートを確認する。
-- [ ] 過去のビルドで不足している dSYM があれば、対応する GitHub Actions artifact を使って補完する。
 
 ## 900: iOS 3.0.3 の提出確認
 
