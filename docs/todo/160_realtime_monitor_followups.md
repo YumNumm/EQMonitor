@@ -15,6 +15,7 @@
 
 ## 160: 揺れ検知の公開テスト再有効化
 
+- 実機未検証: 揺れ検知が無効なビルドで、デバッグメニューへのアクセス権がある場合に `/settings/debug/shake-detection-settings` を開けること。一般向けルートの制限と通知設定の変更抑止も確認する。
 - 対象: `.github/workflows/deploy-app.yaml`、`app/lib/core/model/environment.dart`、`app/lib/feature/shake_detection/`。
 - iOS external / Android external の `IS_SHAKE_DETECTION_ENABLED=false` を解除し、ホームgrid/card、Live Monitor、timeshift自動復帰、`/settings/notification/shake` を確認する。
 - このflagはclient表示/購読だけを止める。無効ビルドで既登録のserver pushも止める必要があるなら、server抑止または登録設定削除の仕様を決めて配信テストを追加する。

@@ -128,7 +128,6 @@ GoRouter goRouter(Ref ref) => GoRouter(
     if (!buildConfig.isShakeDetectionAvailable &&
         [
           const ShakeDetectionSettingsRoute().location,
-          const DebugShakeDetectionSettingsRoute().location,
           const DebugShakeDetectionCardRoute().location,
           const DebugShakeDetectionInsertRoute().location,
         ].any(state.matchedLocation.startsWith)) {
