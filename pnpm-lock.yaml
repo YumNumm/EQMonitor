@@ -4,6 +4,10 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@modelcontextprotocol/core': 2.4.0
+  '@modelcontextprotocol/server': 2.4.0
+
 importers:
 
   .:
@@ -61,12 +65,12 @@ packages:
   '@kvs/types@2.2.2':
     resolution: {integrity: sha512-5lmBuah+wOdypBf0O9t6BoHrnq5hX5MlhEPTDPBNKN38ayQwVc5gYgJOBR3Dg4EF7OwL+1c7JNtWXQEJXXVXlg==}
 
-  '@modelcontextprotocol/core@2.0.0':
-    resolution: {integrity: sha512-pJCEwGG7Lfr/+PQp9ZTwKXNeO5wzbfKL7H3MYpCorM4oFBoQrdjnBgEoqG+RjhsvS1FKrDbKux+M1HhlnGWqcA==}
+  '@modelcontextprotocol/core@2.4.0':
+    resolution: {integrity: sha512-z8QBKqdfXLPzkLQuG4xp8hrVEMm1PZ1IgxMN2sMbJiFiAKOWXnAzogXn2W4aqIBlP1ea6U5yiqVquvUNM1Cj6Q==}
     engines: {node: '>=20'}
 
-  '@modelcontextprotocol/server@2.0.0':
-    resolution: {integrity: sha512-YhHWdHfpFMQfd0prsEnxKeS3Qz3ytIGmsS0sth4KDjnacIT7hxk6hXHkJ9KysxlkvTM+WZAtQbbcUhdoP4Hvtw==}
+  '@modelcontextprotocol/server@2.4.0':
+    resolution: {integrity: sha512-rgR9yxSaAJ+bcsi/XroT/S2AfPiIWloXAnrdfYSCms9ivVju0ishu/wW0J21Ho6+ZOR1r7RyeRbjiRuF87ix5Q==}
     engines: {node: '>=20'}
 
   '@textlint-ja/textlint-rule-preset-ai-writing@1.7.0':
@@ -729,13 +733,13 @@ snapshots:
 
   '@kvs/types@2.2.2': {}
 
-  '@modelcontextprotocol/core@2.0.0':
+  '@modelcontextprotocol/core@2.4.0':
     dependencies:
       zod: 4.4.3
 
-  '@modelcontextprotocol/server@2.0.0':
+  '@modelcontextprotocol/server@2.4.0':
     dependencies:
-      '@modelcontextprotocol/core': 2.0.0
+      '@modelcontextprotocol/core': 2.4.0
       zod: 4.4.3
 
   '@textlint-ja/textlint-rule-preset-ai-writing@1.7.0':
@@ -1413,7 +1417,7 @@ snapshots:
 
   textlint@15.8.0:
     dependencies:
-      '@modelcontextprotocol/server': 2.0.0
+      '@modelcontextprotocol/server': 2.4.0
       '@textlint/ast-node-types': 15.8.0
       '@textlint/ast-traverse': 15.8.0
       '@textlint/config-loader': 15.8.0
