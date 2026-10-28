@@ -86,8 +86,13 @@
 - 過去のリプレイ注入で時刻をシフトする方式では、report/origin/arrivalだけでなく
   `forecastIntensity.regions[].arrivalTime.value`にも同じoffsetが必要だった。
   現在の共通clock方式へ旧debug実装のパスや欠損値補完を無条件に持ち込まない。
-- eventId別画面はfamily NotifierがRealtimeを購読し、種別とeventId一致時だけinvalidateする。
+- 電文一覧のeventId別画面はfamily NotifierがRealtimeを購読し、種別とeventId一致時だけinvalidateする。
   一覧と詳細キャッシュは別所有者なので、それぞれに更新を接続する。
+- EEW詳細は初回API取得前からライブ状態を購読し、取得前の現在値・API応答・取得中の更新を統合する。
+  対象eventIdと報番号で照合し、同一報は発表時刻が新しい値、同時刻なら後から統合した値を採用する。
+  初期のライブ値よりAPI応答を優先し、取得中の更新を最後に適用する。取得後の同一報番号の訂正・取消も置き換える。
+- ライブ状態のLoading・ErrorはEEW詳細のAPI結果を置き換えない。購読エラーはログへ渡し、初回API取得の完了を妨げない。
+- EEW詳細地図は`fiveUnknown`（震度5弱以上）も震度別レイヤーの対象とし、震度5弱の色を使う。
 - 非同期テストはイベント送出→`container.pump()`→`container.read(provider.future)`で
   完了を待つ。不一致イベントでは取得回数が増えないことも確認する。
 

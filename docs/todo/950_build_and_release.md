@@ -2,6 +2,11 @@
 
 数値は元の優先度。設定の修正と署名済み成果物の検証は分けて完了判定する。
 
+## 900: Crashlytics の dSYM 受信確認
+
+- [ ] 変更後の CD で `Upload dSYMs to Firebase Crashlytics` が成功することを確認する。CD での自動送信は未検証。
+- [ ] Firebase Crashlytics で対象ビルドの dSYM 受信とクラッシュのシンボリケートを確認する。
+
 ## 900: iOS 3.0.3 の提出確認
 
 - `app/pubspec.yaml` は `3.0.3-beta.1`、iOS 提出用versionは `3.0.3` に更新済み。正式版 manifest は公開済み `3.0.2` と同期した。
