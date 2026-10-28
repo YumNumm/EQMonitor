@@ -15,6 +15,7 @@
 - 分割中のloading/error AppBarもautomaticallyImplyLeading:falseとする。
   明示ボタンを消すだけでは親Navigatorが戻るボタンを補完する。
 - 直接開いた詳細ルートはNavigatorの戻る操作を使う。
+- 電文一覧のVXSE62は地域の`lpgmIntensity`を使い、長周期地震動階級の降順で専用アイコンと地域名を表示する。階級が欠けた地域を震度で代用しない。前報との差分注記も長周期地震動階級で比較する。
 
 ## 折りたたみとペイン内制約
 
