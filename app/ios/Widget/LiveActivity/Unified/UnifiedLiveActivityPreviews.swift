@@ -57,6 +57,13 @@ private struct LockScreenPreviewFrame<Content: View>: View {
                         ))
                     }
                 }
+                LockScreenPreviewFrame(title: "\(width)pt / 現在地情報なし", width: CGFloat(width)) {
+                    UnifiedLockScreenView(state: .preview(
+                        primary: "eew",
+                        eew: .preview(time: now),
+                        now: now
+                    ))
+                }
             }
         }
         .padding()
