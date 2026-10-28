@@ -108,7 +108,7 @@
 - time-shift自動復帰のbaselineは採用済みcanonical snapshot。通常復帰では保持する。
   disconnectでは破棄し、reconnectのconnected時に保持中snapshotから明示的に再確立する。
 - 既知IDの更新・削除・同一接続での再出現は新規イベントとして自動復帰させない。
-- `IS_SHAKE_DETECTION_ENABLED` は既定 true。無効時は canonical snapshot で REST/WS 購読と適用を止め、debug overlay 経由の表示や設定 route も無効にする。配布別の指定は [配布と CI](delivery_ci.md) を参照する。
+- `IS_SHAKE_DETECTION_ENABLED` は既定 true。無効時は canonical snapshot で REST/WS 購読と適用を止め、debug overlay 経由の表示や一般向け設定 route も無効にする。デバッグ用通知設定 route はデバッグメニューへのアクセス権で開ける。配布別の指定は [配布と CI](delivery_ci.md) を参照する。
 - provider test は `BuildConfigFixture` で `buildConfigProvider` を override し、dart-define 未指定の flavor 例外を避ける。
 
 ## 確認箇所と検証
