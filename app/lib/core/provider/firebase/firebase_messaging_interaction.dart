@@ -97,8 +97,11 @@ Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
       );
       final link = NotificationDeepLink.fromData(message.data);
       switch (link) {
+        case NotificationRouteLink(location: '/'):
+          ref.read(goRouterProvider).go(const HomeRoute().location);
         case NotificationRouteLink(:final location):
-          await ref.read(goRouterProvider).push(location);
+          // 詳細画面を閉じる前でも、後続の EEW 通知タップを受け付ける。
+          unawaited(ref.read(goRouterProvider).push<void>(location));
         case NotificationUrlLink(:final uri):
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         case null:
