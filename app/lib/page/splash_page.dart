@@ -57,6 +57,8 @@ class SplashPage extends HookConsumerWidget {
                 .consumePending() ??
             ref.read(appLinksColdStartGateProvider).consumePending();
         switch (pending) {
+          case NotificationRouteLink(location: '/'):
+            break;
           case NotificationRouteLink(:final location):
             await GoRouter.of(context).push<void>(location);
           case NotificationUrlLink(:final uri):

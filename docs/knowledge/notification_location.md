@@ -5,6 +5,9 @@
 
 ## 通知・権限の所有
 
+- 通知の `link` がない、または許可対象外の場合、`eventId` のある `EEW` / `EEW_WARNING` はホームへ遷移する。EEW 発表時点では地震情報が未作成のことがあるため、地震情報の詳細 API へ誘導しない。ホームの最新 EEW 表示を使い、Pro 限定の EEW 履歴詳細へ誘導しない。
+- 通知による起動ではホームを二重に積まず、起動済みならホームへ戻す。詳細画面の終了を待たず次の通知タップを受け付ける。テスト通知はテスト画面、許可された `link` は指定先を優先する。
+
 - デバッグ画面の「デバイス・通知」→全般通知設定から通知言語を変更する。通知言語は端末の `locale`（`ja` / `en` / `zh`）を正本とし、認証付き `PATCH /v2/device/me/locale` で保存する。アプリの表示言語・通知条件・端末登録は変更しない。
 
 - EEW/地震情報のglobal enabledは常にtrue、有効/無効はslotが所有する。
@@ -137,7 +140,7 @@ Android の通知 channel は [channel 運用](android_notification_channels.md)
 
 コード確認: `app/lib/feature/location/data/headless/headless_device_location_runner.dart`、
 `app/lib/feature/location/data/repository/device_location_sync_state_repository.dart`。
-Flutter の自動検証は `app/` から:
+Flutter の自動検証は `app/` から実行する。
 
 ```sh
 mise exec -- flutter test test/feature/location \
@@ -145,7 +148,7 @@ mise exec -- flutter test test/feature/location \
 mise exec -- dart analyze lib/feature/location
 ```
 
-native の検証は `app/android/` から（fresh checkout の未生成 gradlew へ依存しない）:
+native の検証は `app/android/` から実行する。fresh checkout の未生成 gradlew へ依存しない。
 
 ```sh
 mise exec -- gradle :background_location_tracker:testDebugUnitTest --console=plain
@@ -164,7 +167,7 @@ mise exec -- gradle :background_location_tracker:lintDebug --console=plain
 - native各stageが常時ログされるとは限らない。詳細はbreakpointで追い、変数の個人情報を転記しない。
 - 旧記録のlint/ビルド失敗は当時のbaseline。現在の結果は全文reportと対象差分で判断する。
 
-実機debugのLLDBでのApp Refresh handler確認例（OSによる自然起動の証明ではない）:
+実機debugのLLDBでは、次のコマンドでApp Refresh handlerを確認する。OSによる自然起動の証明にはならない。
 
 ```text
 e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"net.yumnumm.eqmonitor.background-location-refresh"]

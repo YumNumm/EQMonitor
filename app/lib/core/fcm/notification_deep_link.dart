@@ -51,7 +51,10 @@ sealed class const NotificationDeepLink() {
     final eventId = data['eventId'];
     if (eventId is String && eventId.isNotEmpty) {
       return NotificationRouteLink(
-        location: '/earthquake-history-details/$eventId',
+        location: switch (data['type']) {
+          'EARTHQUAKE' => '/earthquake-history-details/$eventId',
+          _ => '/',
+        },
       );
     }
     return null;
