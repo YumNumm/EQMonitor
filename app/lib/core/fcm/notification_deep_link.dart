@@ -51,11 +51,9 @@ sealed class const NotificationDeepLink() {
     final eventId = data['eventId'];
     if (eventId is String && eventId.isNotEmpty) {
       return NotificationRouteLink(
-        // EEW 発表時点では同じイベントの地震情報がまだ存在しないため、
-        // 契約状態に関係なく最新の EEW を確認できるホームへ戻す。
         location: switch (data['type']) {
-          'EEW' || 'EEW_WARNING' => '/',
-          _ => '/earthquake-history-details/$eventId',
+          'EARTHQUAKE' => '/earthquake-history-details/$eventId',
+          _ => '/',
         },
       );
     }
