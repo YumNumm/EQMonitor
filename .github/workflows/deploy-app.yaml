@@ -796,14 +796,19 @@ jobs:
         run: |
           set -euo pipefail
           ndk_pkg="ndk;28.2.13676358"
+          ndk_dir="${ANDROID_SDK_ROOT}/ndk/28.2.13676358"
           sdkmanager_bin="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager"
           if [[ ! -x "${sdkmanager_bin}" ]]; then
             sdkmanager_bin="$(command -v sdkmanager)"
           fi
           for attempt in 1 2 3; do
-            rm -rf "${ANDROID_SDK_ROOT}/ndk/28.2.13676358"
+            rm -rf "${ndk_dir}"
             rm -rf "${ANDROID_SDK_ROOT}/.temp"
-            if yes | "${sdkmanager_bin}" --install "${ndk_pkg}"; then
+            # pipefail では yes の SIGPIPE(141) がパイプライン全体を失敗扱いにする。
+            set +o pipefail
+            yes | "${sdkmanager_bin}" --install "${ndk_pkg}" || true
+            set -o pipefail
+            if [[ -x "${ndk_dir}/ndk-build" ]]; then
               echo "Installed ${ndk_pkg} on attempt ${attempt}"
               exit 0
             fi
