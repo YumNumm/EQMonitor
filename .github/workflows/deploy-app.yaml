@@ -803,7 +803,10 @@ jobs:
           for attempt in 1 2 3; do
             rm -rf "${ANDROID_SDK_ROOT}/ndk/28.2.13676358"
             rm -rf "${ANDROID_SDK_ROOT}/.temp"
-            if yes | "${sdkmanager_bin}" --install "${ndk_pkg}"; then
+            yes | "${sdkmanager_bin}" --install "${ndk_pkg}"
+            sdkmanager_status="${PIPESTATUS[1]}"
+            if [[ "${sdkmanager_status}" -eq 0 ]] &&
+              [[ -d "${ANDROID_SDK_ROOT}/ndk/28.2.13676358" ]]; then
               echo "Installed ${ndk_pkg} on attempt ${attempt}"
               exit 0
             fi
