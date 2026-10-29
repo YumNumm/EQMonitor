@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.0.5](https://github.com/YumNumm/EQMonitor/compare/v3.0.4...v3.0.5) (2026-10-29)
+
+
+### Bug Fixes
+
+* Android CIでNDK 28.2を事前インストールする ([b7f89f1](https://github.com/YumNumm/EQMonitor/commit/b7f89f1f004a9789dd470df779324b09e144a402))
+* CDでCrashlyticsへiOSのdSYMを送信 ([3b5a670](https://github.com/YumNumm/EQMonitor/commit/3b5a67074132497ad745520535468e690feab0dc))
+* CDでCrashlyticsへiOSのdSYMを送信 ([f23f07e](https://github.com/YumNumm/EQMonitor/commit/f23f07efc6e2c92adc1765ec499011b494848a80))
+* Dependabot セキュリティ更新の失敗を解消 ([f28a742](https://github.com/YumNumm/EQMonitor/commit/f28a742fcc17fed106306389698c791cef91d702))
+* EEW詳細の報更新と震度5弱以上の塗り潰しを修正 ([9b8dc4f](https://github.com/YumNumm/EQMonitor/commit/9b8dc4fe341d9af5d9711192623da65efb4deb37))
+* EEW詳細の報更新と震度5弱以上の塗り潰しを修正 ([9c99052](https://github.com/YumNumm/EQMonitor/commit/9c99052860d1e2bb6f27a39106c98059f268255c))
+* EEW通知から地震詳細へ誤遷移する不具合を修正 ([ceabefb](https://github.com/YumNumm/EQMonitor/commit/ceabefb300ba0bcc6804e82f71f9971d0805af69))
+* jactionlintのカラーフラグを--colorに修正 ([7ed4243](https://github.com/YumNumm/EQMonitor/commit/7ed4243abb98d27be58731dbea75dc2a903944fc))
+* ローカルセットアップで既存のmiseロックを使用 ([8d9f85d](https://github.com/YumNumm/EQMonitor/commit/8d9f85d95d9147372f877fbbd33f71cd46674522))
+* ローカルセットアップで既存のmiseロックを使用 ([f250a8e](https://github.com/YumNumm/EQMonitor/commit/f250a8e75ba97e098ae43ea33b27572911231b76))
+* 推計震度の既定色で震度4と5弱を入れ替え ([e060dae](https://github.com/YumNumm/EQMonitor/commit/e060dae7d6b72dad6095b2ba37af64716e6c3944))
+* 揺れ検知のデバッグ通知設定へのアクセスを許可 ([3b05904](https://github.com/YumNumm/EQMonitor/commit/3b05904db23962573a037e3df64b6cf0893cae7e))
+* 緊急地震速報の予想震度塗り潰し色を修正 ([f26634c](https://github.com/YumNumm/EQMonitor/commit/f26634c98b69fb36c24d95a2a07cf3cb65ad3b89))
+* 長周期地震動電文の地域一覧を階級表示に修正 ([38b1e2c](https://github.com/YumNumm/EQMonitor/commit/38b1e2caf199f8e88ec578ea5b9746e508c5f543))
+* 長周期地震動電文の地域一覧を階級表示に修正 ([3af293d](https://github.com/YumNumm/EQMonitor/commit/3af293d0bc0ae0f2bd6d6da59368971d5b07e9f8))
+
 ## [3.0.4](https://github.com/YumNumm/EQMonitor/compare/v3.0.2...v3.0.4) (2026-10-23)
 
 
