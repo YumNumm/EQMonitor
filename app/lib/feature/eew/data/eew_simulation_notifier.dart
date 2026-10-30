@@ -17,22 +17,19 @@ class const EewSimulationState({
   EewTelegramItem get currentReport => reports[currentIndex];
   bool get isComplete => currentIndex >= reports.length - 1;
 
-  Duration playbackElapsedAt(DateTime now) =>
-      elapsedBeforeRun +
-      (isPlaying ? now.difference(startedAt) : Duration.zero);
+  Duration playbackElapsedAt(DateTime now) => Duration(
+    microseconds:
+        (elapsedBeforeRun +
+                (isPlaying ? now.difference(startedAt) : Duration.zero))
+            .inMicroseconds
+            .clamp(0, reportPlaybackOffset(reports.length - 1).inMicroseconds),
+  );
 
-  Duration reportPlaybackOffset(int index) {
-    var elapsed = Duration.zero;
-    for (var i = 1; i <= index; i += 1) {
-      final interval = reports[i].reportTime.difference(
-        reports[i - 1].reportTime,
-      );
-      elapsed += Duration(
-        milliseconds: interval.inMilliseconds.clamp(500, 5000),
-      );
-    }
-    return elapsed;
-  }
+  DateTime playbackTimeAt(DateTime now) =>
+      reports.first.reportTime.add(playbackElapsedAt(now));
+
+  Duration reportPlaybackOffset(int index) =>
+      reports[index].reportTime.difference(reports.first.reportTime);
 
   EewSimulationState copyWith({
     List<EewTelegramItem>? reports,
@@ -62,7 +59,12 @@ class EewSimulation extends _$EewSimulation {
   void start(List<EewTelegramItem> reports) {
     stop();
     final sorted = [...reports]
-      ..sort((a, b) => a.reportTime.compareTo(b.reportTime));
+      ..sort((a, b) {
+        final timeComparison = a.reportTime.compareTo(b.reportTime);
+        return timeComparison != 0
+            ? timeComparison
+            : a.serialNo.compareTo(b.serialNo);
+      });
     if (sorted.isEmpty) {
       return;
     }
