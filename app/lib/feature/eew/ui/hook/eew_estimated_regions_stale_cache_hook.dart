@@ -21,12 +21,19 @@ class EewEstimatedRegionsStaleCacheHook {
     required bool isEnabled,
   }) {
     final cache = useRef<List<EewEstimatedRegion>?>(null);
+    final previousEew = useRef<EewTelegramItem?>(null);
+    final previous = previousEew.value;
+    if (previous?.eventId != eew?.eventId ||
+        (previous != null && eew != null && eew.serialNo < previous.serialNo)) {
+      cache.value = null;
+    }
+    previousEew.value = eew;
 
-    final asyncValue = isEnabled && eew != null
+    final asyncValue = isEnabled && eew != null && !eew.isCanceled
         ? ref.watch(eewEstimatedRegionIntensityProvider(eew))
         : null;
 
-    if (!isEnabled || eew == null) {
+    if (!isEnabled || eew == null || eew.isCanceled) {
       cache.value = null;
       return null;
     }

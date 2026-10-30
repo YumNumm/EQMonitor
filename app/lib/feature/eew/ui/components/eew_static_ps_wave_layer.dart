@@ -149,7 +149,7 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     EewTelegramItem? eew,
     TravelTimeDepthMap travelTimeMap,
   ) async {
-    if (eew == null) {
+    if (eew == null || eew.isCanceled) {
       await _clearLayers(styleController);
       return;
     }

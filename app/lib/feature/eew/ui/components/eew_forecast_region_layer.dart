@@ -49,6 +49,9 @@ class EewForecastRegionLayer extends HookConsumerWidget {
     );
 
     final regionMaxIntensities = useMemoized(() {
+      if (eew?.isCanceled ?? false) {
+        return const <EewForecastRegionInfo>[];
+      }
       final regions = <EewForecastRegionInfo>[
         ...eew?.forecastIntensity?.regions ?? const [],
         ...?additionalRegions,
