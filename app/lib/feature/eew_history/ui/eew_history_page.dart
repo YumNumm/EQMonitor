@@ -2,7 +2,6 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/component/layout/history_adaptive_view.dart';
 import 'package:eqmonitor/core/component/layout/history_selection.dart';
-import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew_history/data/flow/show_eew_history_notice_flow.dart';
@@ -41,7 +40,6 @@ class _EewHistoryContent extends HookConsumerWidget {
     final eventId = selectedEventId.value;
     final ValueChanged<String?> selectEvent = (value) {
       if (selectedEventId.value != value) {
-        ref.read(eewSimulationProvider.notifier).stop();
         selectedEventId.value = value;
       }
     };
