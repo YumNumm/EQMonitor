@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.6](https://github.com/YumNumm/EQMonitor/compare/v3.0.5...v3.0.6) (2026-10-31)
+
+
+### Bug Fixes
+
+* Admin端末の揺れ検知通知設定を許可 ([1d87d4a](https://github.com/YumNumm/EQMonitor/commit/1d87d4a611c08cb1085bf0f0d99be8f1030e4d9c))
+* 揺れ検知通知の画面と前面表示を権限に連動 ([e200aaf](https://github.com/YumNumm/EQMonitor/commit/e200aaf0b3e53b055fadb73ab4ff765bc7f04475))
+
 ## [3.0.5](https://github.com/YumNumm/EQMonitor/compare/v3.0.4...v3.0.5) (2026-10-29)
 
 
