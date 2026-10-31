@@ -113,7 +113,9 @@ xcrun actool AppIcon-dev.icon \
 - Deploy App の Android ジョブでは、transitive な `package:jni` が `flutter.ndkVersion`（NDK 28.2）を参照する。
   Gradle 実行中の NDK 自動取得は ZipException で失敗することがあるため、
   `.github/workflows/deploy-app.yaml` の Build Android 前に `sdkmanager --install "ndk;28.2.13676358"` を
-  リトライ付きで実行する（2026-10-28 時点）。
+  リトライ付きで実行する（2026-10-28 時点）。`set -o pipefail` 下で `yes | sdkmanager` を使うと
+  インストール完了後も yes の SIGPIPE で失敗扱いになるため、当該行だけ pipefail を無効化し、
+  NDK ディレクトリの存在で成功判定する（2026-10-31 時点）。
 - `cronet_http` の Play Services 経由では `cronet-api` / `cronet-shared` の
   namespace が重複するため、AGP 9 の厳格な検査で Manifest 統合が失敗する。
   [upstream issue #1932](https://github.com/dart-lang/http/issues/1932) が解消するまで
