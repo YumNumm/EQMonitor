@@ -41,7 +41,7 @@ final class ShakeDetectionSettingsNotifierProvider
 }
 
 String _$shakeDetectionSettingsNotifierHash() =>
-    r'18ad3eb27de227ee1671e75bb6d1ed17a334fb14';
+    r'a9c72859aae87cbd6d5273229ee33816925239f7';
 
 abstract class _$ShakeDetectionSettingsNotifier
     extends $AsyncNotifier<ShakeDetectionState> {
