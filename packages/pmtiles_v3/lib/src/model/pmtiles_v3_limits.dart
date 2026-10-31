@@ -40,12 +40,8 @@ abstract class PmTilesV3Limits with _$PmTilesV3Limits {
     /// `open`時にarchive全体のleaf directoryを先行走査し、clustered
     /// ordering・件数などをarchive全体について再検証するかどうか。
     ///
-    /// 既定は`false`（何もscanしない）。安全な既定値である理由は、
-    /// 「先行検証を省いても安全だから」ではなく、設計正本
-    /// (`docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`)
-    /// が「runtimeはheader/metadataの整合と各tile読み取り時のbounded検証を
-    /// 正とし、archive全体をscanしてglobal coverageや件数を再検証すること
-    /// はしない」と定めているためである。archive全体の整合性検証は
+    /// 既定は`false`（何もscanしない）。runtimeはheader/metadataの整合と
+    /// 各tile読み取り時のbounded検証を行う。archive全体の整合性検証は
     /// producer/release validatorの責務であり、runtimeが毎回開くたびに
     /// 全leaf directoryを読む契約はここでは負わない。
     ///

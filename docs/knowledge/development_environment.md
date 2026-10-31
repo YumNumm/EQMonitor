@@ -17,24 +17,17 @@
 - Codemagic CLI 0.70.0 の XcResult 変換は Xcode 16 以上が必要。
   `xcode-project run-tests` / `test-summary` / `junit-test-results` と旧 Python API の変更は
   [上流の変更履歴](https://github.com/codemagic-ci-cd/cli-tools/blob/v0.70.0/CHANGELOG.md) を参照する。
-- Dart workspace は root `pubspec.yaml` の `app`、`packages/*`、map example、`tools/*`。
+- Dart workspace は root `pubspec.yaml` の `app`、`packages/*`、`tools/*`。
   root `package.json` は Markdown tooling 用で、private `backend` は別 submodule。
-- Flutter Scene と `scene` は同じ `third_party/flutter_scene` 内の path 依存。
-  revision の正本は submodule commit。hosted 版や別 revision に置き換えない。
 
-リポジトリルートで次を実行する。新規 worktree でも submodule 初期化を先に行う。
+リポジトリルートで次を実行する。
 
 ```sh
 mise install
-git submodule update --init third_party/flutter_scene
 mise exec -- dart pub get --enforce-lockfile
 mise exec -- dart run melos bootstrap
 mise exec -- flutter --version --machine
 ```
-
-Scene 更新時は `git submodule status third_party/flutter_scene` と
-`pubspec.lock` の `flutter_scene` / `scene` がともに submodule の path を指すことを確認する。
-`scene` override の削除は必要 API が揃った revision で別途検証する。
 
 ## M3E の SDK 制約と main の固定
 
@@ -44,8 +37,7 @@ Scene 更新時は `git submodule status third_party/flutter_scene` と
 - Flutter main を利用する場合も、ブランチ名ではなく取得したコミットを
   `mise.toml` / `mise.lock` に固定する。
 - 新しい SDK は初回起動後にアーティファクトの取得が必要。
-  `flutter_gpu from sdk doesn't exist` は初期化不足でも発生するため、
-  パッケージ削除と判断する前に `flutter precache` を実行する。
+  対象 platform の `flutter precache` を実行する。
 - SDK が固定する `test` / `test_api` / `test_core` が変わった場合は、
   lockfile を更新したうえで `--enforce-lockfile` による再解決を確認する。
 
@@ -75,8 +67,6 @@ mise exec -- dart run melos bootstrap
   worktree の `rsync ... SourcePackages ... No such file or directory` は、実行する package 内で
   `mkdir -p build/ios/SourcePackages build/macos/SourcePackages` を実行して再試行する。
 
-CI の Flutter ジョブで使う初期化 action は `.github/actions/init-flutter-scene-submodule`。
-現行 workflow の `uses: $/.github/...` は正しい相対指定 `./.github/...` と異なるため、修正対象として TODO で追跡する。
 checkout の `submodules: true` も `recursive` も private backend を取得するため、
 通常の Flutter 解析・テストには指定しない。backend が必要な作業はその指示を別途読む。
 再帰取得が本当に必要なら、GitHub App のインストール先とトークンの `repositories` に

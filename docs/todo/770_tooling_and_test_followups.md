@@ -40,7 +40,7 @@
 
 ## 450: primary constructor 残件
 
-- 対象: `packages/{lat_lng,kyoshin_monitor_image_parser,eqmonitor_map}/lib/`、`app/lib/`、`tools/eqmonitor_lints_plugin/` の `prefer_primary_constructor`。
+- 対象: `packages/{lat_lng,kyoshin_monitor_image_parser}/lib/`、`app/lib/`、`tools/eqmonitor_lints_plugin/` の `prefer_primary_constructor`。
 - initializer/body/super/assert、複数生成constructor、非finalフィールドの残件はlintの機械変換対象外。Widget/State subclassは方針どおり `const new()` を維持する。
 - private DI引数のpositional化、assertのbody化、named constructorのredirect可否を必要なクラスごとに判断する。完了条件: 公開API/情報を失わず変換できるものだけ変換し、残る言語制約をルール側で説明できる。
 

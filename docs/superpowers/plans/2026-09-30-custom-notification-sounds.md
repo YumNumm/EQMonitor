@@ -109,7 +109,7 @@
 
 ## Task 6: 既存検証と実通知での受け入れ
 
-- [x] 実装 worktree で pinned Flutter/Dart を使い、`git submodule update --init third_party/flutter_scene` → `mise exec -- dart pub get --enforce-lockfile` → `mise exec -- dart run melos bootstrap`、`mise exec -- tool/asset_pack/stage_from_r2.sh --target bundled` を実行した。任意の codemagic tool が未取得のため `MISE_AUTO_INSTALL=0` を付け、27 package の bootstrap と Asset Pack 検証が成功した。
+- [x] 実装 worktree で pinned Flutter/Dart を使い、`mise exec -- dart pub get --enforce-lockfile` → `mise exec -- dart run melos bootstrap`、`mise exec -- tool/asset_pack/stage_from_r2.sh --target bundled` を実行した。任意の codemagic tool が未取得のため `MISE_AUTO_INSTALL=0` を付け、27 package の bootstrap と Asset Pack 検証が成功した。
 - [x] app で `mise exec -- dart run build_runner build --delete-conflicting-outputs`、root で変更した Dart に `mise exec -- dart format <paths>` と `mise exec -- dart analyze app --fatal-infos --format machine`。既存失敗があれば差分起因かを分けて記録する。
 - [x] app で `mise exec -- flutter test test/feature/settings/features/notification_settings --dart-define=CI=true` を実行した。91件成功・3件失敗。3件は基準 commit `4e853b5b1` の別 worktree でも再現した既存文言不一致で、通知音変更による失敗はない。失敗名は `slot_detail_page_test.dart` の現在地・全国警報の2件と、`notification_preset_selector_test.dart` の権限ダイアログの1件。
 - [ ] macOS で SPM を有効にし、Runner と FcmServiceExtension を含む Simulator build と署名済み実機 build を行う。共有 source の所属、生成 Flutter 設定、App Group の entitlement を確認する。

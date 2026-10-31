@@ -1,6 +1,6 @@
 # 地震履歴モーダルの実機確認
 
-2026-09-28: 最新 develop を取り込んだ分離 worktree では、以前の BuildConfig・flutter_scene のコンパイル不整合は再現せず、以下の関連テスト16件が成功した。
+2026-09-28: 最新 develop を取り込んだ分離 worktree では、以前の BuildConfig のコンパイル不整合は再現せず、以下の関連テスト16件が成功した。
 
 ```sh
 cd app

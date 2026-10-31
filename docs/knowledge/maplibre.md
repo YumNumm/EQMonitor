@@ -1,6 +1,6 @@
 # MapLibre の表示・ライフサイクル
 
-確認日: 2026-09-21。Home は引き続き MapLibre を使用する。Flutter Scene への移行完了を前提にしない。
+確認日: 2026-09-21。地図描画には MapLibre を使用する。
 対象: `app/lib/core/util/map/`、`app/lib/feature/home/ui/component/map/`、各機能の地図レイヤー。
 
 ## 初期化と更新
@@ -27,6 +27,7 @@
 
 ## 座標・選択・初期カメラ
 
+- カメラの bounds 計算は `app/lib/feature/map/data/logic/map_camera_bounds_fitter.dart`、モデルは同 `data/model/map_camera.dart`・`map_camera_bounds.dart` に集約し、既存の fitBounds テスト・fixture は `app/test/feature/map/data/logic/` に置く。
 - `LatLng` は `(latitude, longitude)`。bounds の southwest は `(latitudeSouth, longitudeWest)` とし、保存・再読込まで異なる緯度経度値で確認する。
 - 緯度経度グリッドは 12 桁スケールの整数 ceil/floor と index の積から生成する。浮動小数の反復加算を避け、負値・`-0.0`・`0.3 / 0.1` などの境界を確認する。
 - ポリゴンの地域判定は `nearest_jma_feature.dart` の常駐 worker provider を使う。main isolate で `JmaMapUtility.findNearestItem` を実行しない。全画面地図は worker を事前に温める。
@@ -73,4 +74,4 @@ mise exec -- flutter test test/core/util/map --dart-define=CI=true
 mise exec -- flutter test test/feature/intensity_history --dart-define=CI=true
 ```
 
-関連: [PMTiles](pmtiles.md) / [新レンダラ](map_renderer.md)
+関連: [PMTiles](pmtiles.md)

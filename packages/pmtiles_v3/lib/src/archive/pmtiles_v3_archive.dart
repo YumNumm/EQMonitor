@@ -95,11 +95,8 @@ final class const PmTilesV3ArchiveOpener({
         validator: validator,
         limits: limits,
       );
-      // 設計正本(docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md
-      // :210)は、runtimeがarchive全体をscanしてglobal coverageや件数を
-      // 再検証するとはしないと定めている。archive全体の先行検証は
-      // producer契約がclustered orderingと件数一致を保証する呼び出し側
-      // (`limits.validateFullArchiveOnOpen`)だけが明示的に有効化する。
+      // archive全体の先行検証は、producer契約がclustered orderingと
+      // 件数一致を保証する呼び出し側だけが明示的に有効化する。
       if (limits.validateFullArchiveOnOpen) {
         await traversal.validateArchive(
           entries: rootEntries,

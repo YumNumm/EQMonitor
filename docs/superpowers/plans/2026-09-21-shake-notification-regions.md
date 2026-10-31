@@ -236,7 +236,7 @@ expect(payload.data.level).toBe('Strong');
 
 **Interfaces:** アプリモデルは対象種別・地域コード・enabled・minLevelと再設定案内フラグを保持する。Repositoryの `fetch()` と `replace(entries)` は新GET / PUTだけを呼ぶ。カタログbuilderは `EarthquakeParameter` の都道府県→地域を返す。
 
-- [ ] アプリworktreeで指示どおりmise・Flutter Scene・依存をセットアップする。実装前に既存の通知設定と位置同期テストの基準結果を記録する。
+- [ ] アプリworktreeで指示どおりmise・依存をセットアップする。実装前に既存の通知設定と位置同期テストの基準結果を記録する。
 - [ ] backend submoduleを必要な範囲だけ初期化し、Task 2を含むバックエンドコミットをcheckoutする。`packages/eqmonitor_api`で `mise exec -- dart run bin/generate.dart` を実行する。生成差分の無関係部分は勝手に戻さず原因を確認する。
 - [ ] APIアクセスをRepositoryへ移し、NotifierはRepositoryとアプリモデルのみを扱う。旧観測点一覧の取得と `updateCurrentLocationSubRegion` を削除する。
 - [ ] `parameterRepositoryProvider` の `loadAsset()` が返す `earthquake` を使って都道府県別の選択肢を構成する。既存のEEW地域pickerをそのまま転用しない。

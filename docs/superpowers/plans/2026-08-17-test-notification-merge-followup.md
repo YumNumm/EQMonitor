@@ -17,43 +17,6 @@
 
 ---
 
-### Task 1: Audit the map changes attributed to PR #1672
-
-**Files:**
-- Inspect: `.cursor/rules/map-renderer-references.mdc`
-- Inspect: `docs/knowledge/map_renderer_references.md`
-- Inspect: `docs/todo/820_map_renderer_and_migration.md`
-- Inspect: `packages/eqmonitor_map/**`
-
-**Interfaces:**
-- Consumes: PR #1672 merge commit `6df329db5247ac868aff154eeeb5cf1bde2de464`
-- Produces: A decision on whether any map revert belongs in the follow-up
-
-- [x] **Step 1: Compare the merge commit with its first parent**
-
-Run:
-
-```bash
-git diff --stat 6df329db^1 6df329db -- \
-  .cursor/rules/map-renderer-references.mdc \
-  docs/knowledge/map_renderer_references.md \
-  docs/todo/820_map_renderer_and_migration.md \
-  packages/eqmonitor_map
-```
-
-Expected: no output, proving the merge commit introduced no map delta.
-
-- [x] **Step 2: Verify both map commits are ancestors of the first parent**
-
-Run:
-
-```bash
-git merge-base --is-ancestor 4dfb90ad4 6df329db^1
-git merge-base --is-ancestor 92865ae0a 6df329db^1
-```
-
-Expected: both commands exit with status 0. Do not revert these commits in this follow-up.
-
 ### Task 2: Restore notification compilation on current develop
 
 **Files:**
