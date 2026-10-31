@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - Base branch is `feat/seismicity-pmtiles-network-reader`; this branch is `feat/seismicity-pmtiles-decoder` and must remain its direct stacked child.
-- Scope is Issue #1601 only. Do not reimplement #1600 HTTP/File/Asset random access, and do not add #1602 projection, Flutter Scene, GPU, Shader, camera, or app UI code.
+- Scope is Issue #1601 only. Do not reimplement #1600 HTTP/File/Asset random access, and do not add #1602 projection, GPU, Shader, camera, or app UI code.
 - Every Flutter/Dart command runs through `mise exec --`. Add dependencies only with `(cd packages/seismicity_pmtiles && mise exec -- flutter pub add 'vector_tile:^4.0.0' 'uuid:^4.6.0')`; do not hand-edit dependency declarations.
 - Follow RED/GREEN TDD for every production behavior change. A later integration/regression task may begin GREEN when it only proves an already-implemented contract; in that case, do not manufacture a production diff. Every task is one independently reviewable logical commit targeting 30–100 production-plus-test handwritten changed lines in total; generated Freezed files and deterministic fixture bytes are recorded separately and committed with their source task.
 - Use only named parameters for functions or constructors with two or more arguments. Do not add `dynamic`, `any`, explicit `Object`/`Object?`, null assertions, `print`, or private class methods.
@@ -29,7 +29,7 @@
 
 - Adopt the PMTiles official `tileIdToZxy` inverse Hilbert algorithm, ported with Dart integer arithmetic, from `protomaps/PMTiles` at `8b8ddea4dbff1b0104cf2bebf2f7ff35c91b41d5`. Keep forward/inverse round-trip tests in `pmtiles_v3`.
 - Adopt `vector_tile` 4.0.0 only through its public `package:vector_tile/raw/raw_vector_tile.dart` protobuf model. Do not use its GeoJSON conversion, mutable high-level geometry decoder, or `VectorTileValue.value`: those paths allocate nested feature/GeoJSON objects, expose `Object`, and do not enforce this archive's strict single-Point/property contract.
-- Adopt `bdero/dashmap` at `a6ff92edd999e922f81d26d209d8f589faee3fd0` as evidence for typed-data-only CPU worker jobs and keeping GPU/UI work outside the worker. Do not copy its per-job `Isolate.run`, web synchronous fallback, terrain streaming, tile selection, network cache, or Flutter Scene code; this issue requires one long-lived decoder isolate and has no renderer.
+- Adopt `bdero/dashmap` at `a6ff92edd999e922f81d26d209d8f589faee3fd0` as evidence for typed-data-only CPU worker jobs and keeping GPU/UI work outside the worker. Do not copy its per-job `Isolate.run`, web synchronous fallback, terrain streaming, tile selection, network cache, or renderer code; this issue requires one long-lived decoder isolate and has no renderer.
 - Adopt `ingen084/KyoshinEewViewerIngen` at `3e9d6a01f62e754c9c6da4a413330c4cfcb4afab` only for the invariant that a complete point cache is built before replacing the visible dataset. Do not adopt its Avalonia/Skia renderer, zoom-dependent point layout, hover cache, Mercator UI layer, or earthquake presentation types as PMTiles/decode contracts.
 - The backend producer at gitlink `8bdda33cd0ae0860a395d9b8465b5d226e422de5` defines layer `hypocenters`; required properties `hypocenter_id` and `origin_time_unix_ms`; optional `magnitude`, `depth_km`, `max_intensity`, `determination_flag`, `earthquake_event_id`, and `geometry_clamped`. Schema v1 rejects every other property name; internal-only properties are still typed and retained through duplicate classification.
 - The producer validator accepts nullable arbitrary strings for `max_intensity` and `determination_flag`, but applies `nonEmpty` to a present `earthquake_event_id`. Preserve the first two byte-for-byte including empty and reject the third when present empty.
@@ -3288,7 +3288,7 @@ while IFS= read -r source; do
   fi
 done < "$changed_sources"
 if git diff --name-only feat/seismicity-pmtiles-network-reader...HEAD | \
-  rg '(^app/|flutter_scene|MapLibre|shader|gpu)'; then
+  rg '(^app/|MapLibre|shader|gpu)'; then
   exit 1
 fi
 git --no-pager diff --name-only feat/seismicity-pmtiles-network-reader...HEAD
@@ -3331,7 +3331,7 @@ Review every commit's production-plus-test handwritten line count against 30–1
 - [ ] Tasks 1–71 map one-to-one to commits; each commit's production-plus-test handwritten total is 30–100 lines, with generated outputs and deterministic fixture bytes reported separately.
 - [ ] Final prohibited-type audit covers only changed authored source, excludes generated files, and allows only `Map<String, dynamic>`.
 - [ ] Backend manifest drift is documented as a separate stacked dependency.
-- [ ] No #1600 I/O reimplementation and no #1602 Scene/projection/GPU code is present.
+- [ ] No #1600 I/O reimplementation and no #1602 projection/GPU code is present.
 
 ## References
 

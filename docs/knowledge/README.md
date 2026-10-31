@@ -7,7 +7,7 @@
 
 | 作業 | 要点と参照先 |
 | --- | --- |
-| セットアップ・worktree・解析 | [開発環境](development_environment.md)。SDK は mise、依存は lockfile、Scene は submodule commit が正本。package 単位で検証する。 |
+| セットアップ・worktree・解析 | [開発環境](development_environment.md)。SDK は mise、依存は lockfile が正本。package 単位で検証する。 |
 | テスト方針 | [修正依頼時のテスト方針](test_strategy.md)。修正依頼での回帰テストの新規作成・TDD は、ユーザーが明示的に依頼した場合のみ行う。関連する既存テストと静的解析で確認する。 |
 | テスト環境の問題 | [テスト実行](testing.md)。実行 cwd、Native Assets、family override、フォントを確認し、古い失敗記録を免除に使わない。 |
 | Freezed・OpenAPI・Pigeon | [コード生成](code_generation.md)。生成元と現行依存を直し、生成物を手編集しない。 |
@@ -29,8 +29,7 @@
 | Siri・Control Center | [App Intents](app_intents.md)。同じ snapshot から音声と表示を作り、欠測や保存地域の鮮度を正しく扱う。 |
 | SwiftUI Preview | [軽量 Preview](apple_previews.md)。host と Widget extension の所属・resource を揃え、配信検証とは区別する。 |
 | 履歴画面・画面遷移 | [画面構成](adaptive_ui.md)。幅と選択状態に応じたペイン、戻る操作、wakelock の所有境界を確認する。 |
-| 既存の地図 | [MapLibre](maplibre.md)。style 単位の初期化と可変データ更新を分離し、async 完了・dispose・描画順を制御する。 |
-| 新しい地図 | [eqmonitor_map](map_renderer.md) / [固定参照実装](map_renderer_references.md)。source/revision・snapshot・座標空間・GPU lifetime を明示する。全画面の移行は未完了。 |
+| 地図 | [MapLibre](maplibre.md)。style 単位の初期化と可変データ更新を分離し、async 完了・dispose・描画順を制御する。 |
 | タイル・震源データ | [PMTiles](pmtiles.md)。descriptor、実 bytes、公開件数、decode 上限を検証する。ETag の一貫性と暗号学的保証は別物。 |
 
 ## 改善の着手先
@@ -38,8 +37,8 @@
 2026-09-21 の文書整理で、現行コード・設定と過去の記録を照合しました。実機・本番配信・private backend の動作確認は行っていません。
 
 - **CI と開発コマンド:** Melos の生成タスク・Dart-only filter、起動設定の相対パスを直す。完了条件は [ビルド・配布](../todo/950_build_and_release.md) と [開発ツール](../todo/770_tooling_and_test_followups.md)。
-- **データ契約と性能:** seismicity descriptor の公開、remote range の内容検証、CPU/GPU 合計保持量、cover 外 decode の受入を改善する。[地図データ](../todo/950_map_data_pipeline.md) に集約。
-- **表示とライフサイクル:** GPU の復帰・remount、App Intents、EEW 再取得、通知 preset の build 中更新を確認する。[TODO 一覧](../todo/README.md) から対象分野を選ぶ。
+- **データ契約と性能:** seismicity descriptor の公開、PMTiles の展開メモリ予算を改善する。[地図データ](../todo/950_map_data_pipeline.md) に集約。
+- **表示とライフサイクル:** MapLibre の描画・操作、App Intents、EEW 再取得、通知 preset の build 中更新を確認する。[TODO 一覧](../todo/README.md) から対象分野を選ぶ。
 - **文書の劣化防止:** 相対リンク・参照パスの CI 検査を追加する。完了済みの障害や削除済み package の作業を残さない。[開発ツール](../todo/770_tooling_and_test_followups.md) で追跡。
 
 ## 更新・削除の基準

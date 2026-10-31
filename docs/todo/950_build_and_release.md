@@ -19,13 +19,12 @@
 - [失敗したCI](https://github.com/YumNumm/EQMonitor/actions/runs/37226055514/job/111505851569)は App Store 用 export に成功し、Ad-Hoc 用で offline と AppIntentExtension の profile 不足が併発した。両 IPA の artifact 保存と iOS 配布は未実行。
 - 完了条件: 修正を含むリビジョンで App Store 用・Ad-Hoc 用 IPA の export と artifact 保存が成功し、最終 bundle の entitlement を確認する。配布を伴う再実行は承認後に行い、App Store Connect と Firebase のアップロード結果も別途確認する。
 
-## 950 / 880: Android AGP 移行と成果物確認
+## 950: Android AGP 移行と成果物確認
 
 - 950: `app/android/app/build.gradle.kts` は `StageBundledAssetPackTask` と `variant.sources.assets.addGeneratedSourceDirectory` に移行済み。旧 Provider→SourceSet の build blocker は解消したが、実 SDK で release AAB を作り `assets/platform` の同梱と task dependency を確認する作業は残る。
-- 880: `packages/eqmonitor_map/example/android/app/build.gradle.kts` は `getByName("profile")` へ変更済み。profile/release build と `validateSigningProfile` を現行 pin で再確認し、失敗時は stacktrace で切り分ける。
-- app/example の `gradle.properties` に `android.newDsl=false` / `android.builtInKotlin=false` が残る。app・自前 plugin を公開 DSL / Built-in Kotlin へ移行し、両フラグを削除する。`android.sourceset.disallowProvider=false` による回避は採用しない。
+- app の `gradle.properties` に `android.newDsl=false` / `android.builtInKotlin=false` が残る。app・自前 plugin を公開 DSL / Built-in Kotlin へ移行し、両フラグを削除する。`android.sourceset.disallowProvider=false` による回避は採用しない。
 - app の `gradle.properties` / `gradle.ci.properties` は Cronet の namespace 重複を `android.uniquePackageNames=false` で暫定回避する。[upstream issue #1932](https://github.com/dart-lang/http/issues/1932) の解消後に両方から削除し、release Manifest 統合と AAB ビルドを確認する。AGP 10 ではこの無効化設定が使えなくなるため、更新前に解消する。
-- 完了条件: app release AAB の内容検査と example profile/release CI が成功し、legacy opt-out が不要になること。
+- 完了条件: app release AAB の内容検査が成功し、legacy opt-out が不要になること。
 
 ## 900: Google Play versionCode
 

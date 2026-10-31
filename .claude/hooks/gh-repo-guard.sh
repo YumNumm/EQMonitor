@@ -26,7 +26,7 @@ printf '%s\n' "$cmd" | tr ';|&\n' '\n\n\n\n' | while IFS= read -r seg; do
   # `--repo YumNumm/x`, `--repo=YumNumm/x` and `-R YumNumm/x` all count.
   printf '%s' "$seg" | grep -Eq '(--repo|-R)[[:space:]=]+YumNumm/' && continue
 
-  printf '%s' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"PR/Issue の作成先は YumNumm org のみです。この Bash 呼び出しの中に、--repo YumNumm/<repo> を明示していない gh の作成コマンドがあります。各コマンドごとに明示してください。third_party/flutter_scene のような fork 配下では gh が upstream(bdero/flutter_scene 等)を既定にするため、省略すると upstream へ送られます。"}}'
+  printf '%s' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"PR/Issue の作成先は YumNumm org のみです。この Bash 呼び出しの中に、--repo YumNumm/<repo> を明示していない gh の作成コマンドがあります。各コマンドごとに明示してください。fork 配下では gh が upstream を既定にする場合があるため、送信先を明示してください。"}}'
   break
 done
 

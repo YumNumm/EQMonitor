@@ -356,11 +356,6 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async => const DebugJmaMapRoute().push(context),
             ),
             ListTile(
-              title: const Text('EQMonitor Map (Flutter Scene)'),
-              leading: const Icon(Icons.layers),
-              onTap: () async => const EqmonitorMapDebugRoute().push(context),
-            ),
-            ListTile(
               title: const Text('NIED'),
               leading: const Icon(Icons.science),
               onTap: () async => const NiedRoute().push(context),

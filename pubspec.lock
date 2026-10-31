@@ -441,14 +441,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  dart_earcut:
-    dependency: transitive
-    description:
-      name: dart_earcut
-      sha256: e485001bfc05dcbc437d7bfb666316182e3522d4c3f9668048e004d0eb2ce43b
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
   dart_jsonwebtoken:
     dependency: transitive
     description:
@@ -473,14 +465,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  data_assets:
-    dependency: transitive
-    description:
-      name: data_assets
-      sha256: "8bfdbf25ec8a0f4b5a3c993042c4ab9996ba354f0b03d40f4e360f3730d71cae"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.20.0"
   dbus:
     dependency: transitive
     description:
@@ -801,14 +785,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  flat_buffers:
-    dependency: transitive
-    description:
-      name: flat_buffers
-      sha256: "7c1de2d6eb5f3e61e5c50040841109f509deaaf2b12ec0d57b92456d9ea50345"
-      url: "https://pub.dev"
-    source: hosted
-    version: "25.9.23"
   flutter:
     dependency: transitive
     description: flutter
@@ -847,19 +823,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.15.0"
-  flutter_gpu:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
-  flutter_gpu_shaders:
-    dependency: transitive
-    description:
-      name: flutter_gpu_shaders
-      sha256: "1e8c5438c24e79629f5688c7b5dfd2b7cf09b36b443a806bc8c083cd8c04644a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.2"
   flutter_hooks:
     dependency: transitive
     description:
@@ -1009,13 +972,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.3"
-  flutter_scene:
-    dependency: transitive
-    description:
-      path: "third_party/flutter_scene/packages/flutter_scene"
-      relative: true
-    source: path
-    version: "0.21.0"
   flutter_secure_storage:
     dependency: transitive
     description:
@@ -2232,13 +2188,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
-  scene:
-    dependency: "direct overridden"
-    description:
-      path: "third_party/flutter_scene/packages/scene"
-      relative: true
-    source: path
-    version: "0.2.0"
   screenshot:
     dependency: transitive
     description:

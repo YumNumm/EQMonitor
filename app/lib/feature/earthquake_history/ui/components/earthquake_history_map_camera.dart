@@ -5,7 +5,9 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_map_focus.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
-import 'package:eqmonitor_map/eqmonitor_map.dart';
+import 'package:eqmonitor/feature/map/data/logic/map_camera_bounds_fitter.dart';
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds_fit_result.dart';
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
 import 'package:flutter/widgets.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
