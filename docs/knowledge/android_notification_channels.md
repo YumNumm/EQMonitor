@@ -8,7 +8,7 @@
 - ID 変更は利用者の旧設定を引き継げないため影響を確認する。同 ID の delete/recreate でも旧設定が復元される場合があり、既定値の強制更新には使えない。
 - 現役 channel を毎起動で削除しない。再作成までの受信が Manifest fallback へ流れる競合を作る。
 - initializer は legacy ID から現行 registry を除外して削除し、group、channel の順に全操作を await する。`eew_forecast` と `bgl_debug` は削除対象から除外する。
-- `IS_PRODUCTION=true` では揺れ検知 channel を作成せず、既存の同 channel を削除する。前面で届いた揺れ検知通知もローカル表示しない。
+- 揺れ検知 channel は配布ビルドでも登録し、起動時の権限確認に伴って削除・再作成しない。前面の揺れ検知通知は通知設定と同じ利用可否判定を使い、機能が有効なビルド、または Admin ロールかつデバッグモードが有効な端末で表示する。背面の FCM 通知は OS が表示するため、配信対象はサーバーに保存する通知条件で制御する。
 - group は EEW・地震・津波・防災・service。ID 全一覧や件数を文書へ複製せず、registry とそのテストで重複・group 参照を確認する。
 - Android で通知 plugin を取得できない場合は `StateError`。no-op で未作成を隠さない。no-op platform は non-Android に限定する。
 - Manifest の `service_fallback` は Channel 未指定・OS 未登録 ID に対する標準 FCM と同じ既定値。イベント型から重要度を推測して別 channel を選ばず、意味別 channel の選択漏れは配信側で修正する。

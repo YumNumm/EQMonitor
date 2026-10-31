@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
+import 'package:eqmonitor/feature/devices/data/provider/device_role_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/location/data/notifier/current_device_location_notifier.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
@@ -7,6 +8,7 @@ import 'package:eqmonitor/feature/permission/ui/component/notification_permissio
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/shake_detection_settings_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_availability_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_regions_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,7 +26,15 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
     final regions = ref.watch(shakeDetectionRegionsProvider);
     final permission = ref.watch(backgroundLocationPermissionProvider);
     final mutation = ref.watch(ShakeDetectionSettingsNotifier.saveMutation);
-    final busy = settings.isLoading || mutation is MutationPending;
+    final availability = ref.watch(
+      isShakeDetectionNotificationAvailableProvider,
+    );
+    final busy =
+        availability.value != true ||
+        availability.isLoading ||
+        availability.hasError ||
+        settings.isLoading ||
+        mutation is MutationPending;
     const action = ShakeDetectionSettingsAction();
     ref.listen(ShakeDetectionSettingsNotifier.saveMutation, (_, next) {
       if (next is MutationError) {
@@ -33,15 +43,20 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
         );
       }
     });
-    final state = settings.value;
+    final state = settings.hasError ? null : settings.value;
     return Scaffold(
       appBar: AppBar(title: const Text('揺れ検知の通知')),
       body: state == null
           ? Center(
               child: settings.hasError
                   ? M3EFilledButton(
-                      onPressed: () =>
-                          ref.invalidate(shakeDetectionSettingsProvider),
+                      onPressed: () {
+                        ref.invalidate(deviceRoleProvider);
+                        ref.invalidate(
+                          isShakeDetectionNotificationAvailableProvider,
+                        );
+                        ref.invalidate(shakeDetectionSettingsProvider);
+                      },
                       child: const Text('設定の読み込みを再試行'),
                     )
                   : const AccessibleCircularProgressIndicator(),
@@ -49,7 +64,13 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
           : ListView(
               children: [
                 const NotificationPermissionBanner(),
-                if (busy) const AccessibleLinearProgressIndicator(),
+                if (settings.isLoading || mutation is MutationPending)
+                  const AccessibleLinearProgressIndicator(),
+                if (availability.value == false)
+                  const ListTile(
+                    leading: Icon(Icons.lock_outline),
+                    title: Text('このビルドでは Admin ロールとデバッグモードが必要です'),
+                  ),
                 if (state.requiresReconfiguration)
                   const ListTile(
                     leading: Icon(Icons.info_outline),
