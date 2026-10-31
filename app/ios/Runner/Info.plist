@@ -58,8 +58,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1287</string>
-	<key>FLTEnableFlutterGPU</key>
-	<true/>
 	<key>FlutterDeepLinkingEnabled</key>
 	<false/>
 	<key>GIDClientID</key>

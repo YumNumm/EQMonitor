@@ -38,7 +38,7 @@ class FlutterJobSetupTest(unittest.TestCase):
                     "queue": "max",
                 })
 
-    def test_public_submodule_after_checkout(self):
+    def test_flutter_jobs_do_not_initialize_submodules(self):
         cases = {
             "deploy-app.yaml": ("build-ios", "build-android"),
             "wc-check-dart-analyze.yaml": ("flutter-analyze",),
@@ -54,15 +54,9 @@ class FlutterJobSetupTest(unittest.TestCase):
                     steps = workflow["jobs"][job]["steps"]
                     checkout = next(i for i, step in enumerate(steps)
                                     if step.get("uses", "").startswith("actions/checkout@"))
-                    init = next(i for i, step in enumerate(steps)
-                                if step.get("name") == "Init flutter_scene submodule")
-                    self.assertLess(checkout, init)
                     self.assertNotIn("submodules", steps[checkout].get("with", {}))
-                    self.assertEqual(
-                        steps[init]["run"],
-                        "git submodule update --init --depth 1 third_party/flutter_scene",
-                    )
                     for step in steps:
+                        self.assertNotIn("git submodule", step.get("run", ""))
                         self.assertFalse(step.get("uses", "").startswith(
                             ("$/", "YumNumm/EQMonitor@", "YumNumm/EQMonitor/")),
                             "Repo action downloads encounter dangling symlinks")
