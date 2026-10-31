@@ -114,6 +114,9 @@ xcrun actool AppIcon-dev.icon \
   Gradle 実行中の NDK 自動取得は ZipException で失敗することがあるため、
   `.github/workflows/deploy-app.yaml` の Build Android 前に `sdkmanager --install "ndk;28.2.13676358"` を
   リトライ付きで実行する（2026-10-28 時点）。
+  成功判定は `${ANDROID_SDK_ROOT}/ndk/28.2.13676358/source.properties` の存在とする。
+  `yes | sdkmanager` はインストール完了後も pipefail 下で SIGPIPE 141 になり得るため、
+  パイプライン終了コードだけでは判定しない（2026-10-31 時点）。
 - `cronet_http` の Play Services 経由では `cronet-api` / `cronet-shared` の
   namespace が重複するため、AGP 9 の厳格な検査で Manifest 統合が失敗する。
   [upstream issue #1932](https://github.com/dart-lang/http/issues/1932) が解消するまで
