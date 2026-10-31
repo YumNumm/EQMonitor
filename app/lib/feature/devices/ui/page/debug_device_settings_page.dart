@@ -1,4 +1,3 @@
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 
 import 'dart:async';
@@ -29,6 +28,7 @@ import 'package:eqmonitor/feature/notification/data/repository/push_notification
 import 'package:eqmonitor/feature/notification/ui/component/test_notification_kind_buttons.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_availability_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -689,9 +689,8 @@ class _SettingsProviderStatusSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final slots = ref.watch(notificationSlotsProvider);
-    final isShakeDetectionAvailable = ref
-        .watch(buildConfigProvider)
-        .isShakeDetectionAvailable;
+    final isShakeDetectionAvailable =
+        ref.watch(isShakeDetectionNotificationAvailableProvider).value == true;
     final shakeDetection = isShakeDetectionAvailable
         ? ref.watch(shakeDetectionSettingsProvider)
         : null;
