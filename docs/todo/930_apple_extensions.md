@@ -22,7 +22,6 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 - Flutter 履歴の時刻表示を `originTimePrecision` に従わせ、日時精度別の回帰テストを追加する。
 - Swift の元スキーマにない旧 Live Activity 操作5件を整理し、限定生成から全生成へ戻す。下記800と合わせて契約を照合する。
 - Siri の自然文の日付・震度・複合条件検索は未対応。採用する条件を定義して地域候補選択から拡張し、意図した query と結果をテストする。
-- Flutter map / `flutter_scene` の API が一致する pin で Runner 全体を再ビルドする。過去の `FmatType` / `parameterTypeOf` / `interfaceManifestFileName` 不整合は現行環境で再確認する。
 - 完了条件: 上記の契約テスト・端末別結果を Issue に記録する。実機未確認のまま Issue を閉じない。
 
 ## 920: Widget deployment target 引き下げの検証

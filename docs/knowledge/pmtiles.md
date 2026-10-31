@@ -1,6 +1,6 @@
 # PMTiles の取得・検証・デコード
 
-確認日: 2026-09-21。対象は `packages/pmtiles_v3`、`packages/seismicity_pmtiles`、`packages/eqmonitor_map/lib/src/tile/`。
+確認日: 2026-09-21。対象は `packages/pmtiles_v3`、`packages/seismicity_pmtiles`。
 以下の契約と、将来の暗号学的検証・合計メモリ制御の課題は区別する。
 
 ## 入力と archive identity
@@ -16,10 +16,8 @@
 ## HTTP の境界
 
 - MapLibre の source エラーは Flutter 側へ確実に戻らないため、追加前に `Range: bytes=0-127` の preflight を行う。206・Content-Range・PMTiles v3 magic を確認し、必要な先頭 bytes を読んだら stream を閉じる。200 への全体取得 fallback はしない。
-- `eqmonitor_map` の remote reader は redirect を拒否し、`Accept-Encoding: identity`、206、範囲・実 body 長・total length の一致、strong ETag 等の一貫した validator を検証する。412 や snapshot drift は混在 bytes を破棄する。
-- これをすべての reader の実装済み保証とみなさない。`seismicity_pmtiles` の request/identity validator は Range・If-Match・status・ETag を扱うが、同じ encoding 検証を実装したものではない。取得経路を変更するときは差を確認する。
+- `seismicity_pmtiles` の request/identity validator は Range・If-Match・status・ETag を扱う。取得経路を変更するときは encoding を含めて検証範囲を確認する。
 - ヘッダ preflight、ETag による一貫性、whole-file SHA-256 は異なる保証。部分 range を whole-file digest へ暗号学的に結び付けたと説明しない。
-- `MapRemotePmTilesRandomAccessReader` の per-chunk digest/attestation 対応は未完了。validator なしの代替を入れる場合も、上限付き full-stream と全件検証の契約を別途満たす必要がある。手動の archive identity 確認でも redirect を追わず、API descriptor の取得先を検証する。
 - manifest の `query_revision` は矩形検索の全ページへ `expected_revision` として渡す。途中変更時は部分結果を出さず、manifest を一度更新して論理 archive ID を対応付け直し、先頭から再取得する。
 
 ## リソース上限と壊れた入力
@@ -27,10 +25,7 @@
 - gzip は一括展開せず、encoded bytes は read/展開前、decoded bytes は chunk 蓄積前に制限する。directory entry 数は配列確保前に制限する。
 - leaf cache は件数上限付き LRU。`PmTilesV3Limits` の上限は source owner が明示する。
 - `resourceLimitExceeded` は `corruptArchive` と区別し、byte/entry の単位を残す。エラーへ URL・payload・codec の生ログを含めない。
-- per-tile 上限だけで並列 decode・CPU/GPU cache の合計保持量を制御したことにしない。in-flight 数と aggregate byte budget の対応は改善課題。
-- `dart_earcut` の成功は geometry の妥当性を保証しない。`FillMeshBuilder` が自己交差・穴の包含・外形の包含を検証する。hole 内の独立した島は許可する。
-- 交差候補を X 範囲で絞り、同 ring の隣接辺を除外する。orientation と面積は安全な整数範囲を超える場合だけ BigInt を用いる。
-- `maxIntersectionChecks` は tile 内の全 build で共有し、境界候補と包含検査の合計を制限する。limit、self-intersection、invalid topology を型付き例外で区別する。
+- per-tile 上限だけで並列 decode・cache の合計保持量を制御したことにしない。in-flight 数と aggregate byte budget の対応は改善課題。
 
 ## 震源データの publication
 
@@ -44,6 +39,6 @@
 ## 確認
 
 各パッケージのディレクトリで `mise exec -- dart test`（Flutter package は `mise exec -- flutter test --dart-define=CI=true`）を実行する。
-公開境界を変えた場合は `public_api_compile_test.dart`、geometry は自己交差・fill・推計震度 decoder の既存テストも確認する。
+公開境界を変えた場合は `public_api_compile_test.dart`、デコード契約を変えた場合は関連する既存テストも確認する。
 
-関連: [MapLibre](maplibre.md) / [新レンダラ](map_renderer.md)
+関連: [MapLibre](maplibre.md)

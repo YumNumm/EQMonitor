@@ -50,7 +50,7 @@ cd EQMonitor
 > [!NOTE]
 > 本リポジトリは、submoduleとして[`YumNumm/eqmonitor-backend`](https://github.com/YumNumm/eqmonitor-backend)を含んでいます。
 > eqmonitor-backendはPrivate Repositoryであるため、クローンできない場合があります。
-> 通常のアプリテストにバックエンドは不要ですが、公開の `third_party/flutter_scene` submodule は依存解決に必要です。
+> 通常のアプリテストにバックエンドは不要です。
 > バックエンド実装をオープンソースにする予定はありません。
 
 1. [mise-en-place](https://mise.jdx.dev/)をインストールしてください
@@ -79,7 +79,6 @@ cd EQMonitor
 1. Dart workspaceの依存関係を解決し、[melos](https://melos.invertase.dev/)で各packageをbootstrapします。
 
    ```bash
-   git submodule update --init third_party/flutter_scene
    mise exec -- dart pub get --enforce-lockfile
    mise exec -- dart run melos bootstrap
    ```

@@ -48,7 +48,7 @@ import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
-import 'package:eqmonitor_map/eqmonitor_map.dart';
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds_fit_result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

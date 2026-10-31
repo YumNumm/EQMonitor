@@ -18,20 +18,20 @@
 
 DENY::gh pr create --title x
 DENY::gh issue create -t x
-DENY::gh pr create --repo bdero/flutter_scene
+DENY::gh pr create --repo other-owner/example
 # フラグがサブコマンドより前（gh はこれを受理する）
-DENY::gh pr --repo bdero/flutter_scene create
+DENY::gh pr --repo other-owner/example create
 # create のエイリアス
 DENY::gh pr new
-DENY::gh issue new -R bdero/flutter_scene
+DENY::gh issue new -R other-owner/example
 # 複合コマンド: 1つ目の許可が2つ目を通してはならない
-DENY::gh pr create -R YumNumm/EQMonitor && gh issue create -R bdero/flutter_scene
+DENY::gh pr create -R YumNumm/EQMonitor && gh issue create -R other-owner/example
 DENY::gh issue create -R YumNumm/x; gh pr create
 
 ALLOW::gh pr create --repo YumNumm/EQMonitor --base develop
 ALLOW::gh pr create --repo=YumNumm/EQMonitor
-ALLOW::gh issue create -R YumNumm/flutter_scene -t x
-ALLOW::gh pr create -R YumNumm/EQMonitor && gh issue create -R YumNumm/flutter_scene
+ALLOW::gh issue create -R YumNumm/eqmonitor-backend -t x
+ALLOW::gh pr create -R YumNumm/EQMonitor && gh issue create -R YumNumm/eqmonitor-backend
 ALLOW::gh pr view 1640 --repo YumNumm/EQMonitor
 ALLOW::gh pr checks 1643 --repo YumNumm/EQMonitor
 ALLOW::gh auth status

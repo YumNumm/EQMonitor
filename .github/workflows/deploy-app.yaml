@@ -269,12 +269,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
-      - name: Init flutter_scene submodule
-        # Avoid downloading this repository as an action: its archive contains
-        # dangling Terraform symlinks. Only the public Dart dependency is needed.
-        run: git submodule update --init --depth 1 third_party/flutter_scene
-
       - name: Extract SOPS Age Key File
         run: |
           echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
@@ -750,12 +744,6 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-
-      # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
-      - name: Init flutter_scene submodule
-        # Avoid downloading this repository as an action: its archive contains
-        # dangling Terraform symlinks. Only the public Dart dependency is needed.
-        run: git submodule update --init --depth 1 third_party/flutter_scene
 
       - name: Extract SOPS Age Key File
         run: |

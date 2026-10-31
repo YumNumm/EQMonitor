@@ -4,10 +4,9 @@
 
 ## Repository boundaries
 
-- Root `pubspec.yaml` defines the Dart workspace and Melos tasks: `app`, `packages/*`, `packages/eqmonitor_map/example`, and `tools/*`. Root `package.json` is Markdown tooling, not the backend workspace.
+- Root `pubspec.yaml` defines the Dart workspace and Melos tasks: `app`, `packages/*`, and `tools/*`. Root `package.json` is Markdown tooling, not the backend workspace.
 - Startup is `app/lib/main.dart` → `AppBootstrap.run()` → `app/lib/app.dart`. Features live in `app/lib/feature/` (singular); shared startup, realtime wiring, and preferences live in `app/lib/core/`.
 - `backend/` is a private Git submodule; read its instructions before backend work. App/API unit tests do not require it; avoid blanket recursive submodule initialization for app work.
-- `packages/eqmonitor_map` uses `third_party/flutter_scene` through path dependencies. Its submodule commit is the version pin; initialize it in each new worktree before resolving pub dependencies.
 
 ## Setup and commands
 
@@ -15,7 +14,6 @@
 - Bootstrap from the repository root in order:
   ```sh
   mise install
-  git submodule update --init third_party/flutter_scene
   mise exec -- dart pub get --enforce-lockfile
   mise exec -- dart run melos bootstrap
   ```
@@ -48,13 +46,13 @@
 - No null assertions, `print()`, or broad `dynamic`/`Object` types except the documented `Map<String, dynamic>` allowance. Extract logic into injectable classes rather than private methods or Widget helper methods/getters; follow the detailed Flutter rule.
 - Preferences: `.cursor/rules/preferences-key-management.mdc`. Keys belong in `SharedPreferencesKey` / `SecureStorageKey` under `app/lib/core/data/preferences/{shared,secure}/`; access goes through `SharedPreferencesDataSource` / `SecurePreferencesDataSource`.
 - Never substitute invented fixed or random values for missing earthquake data. EEW display changes must follow `.cursor/rules/eew-depth-forecast-intensity.mdc`: depth and published intensity are independent; unavailable intensity retains a `-` badge.
-- Estimated-intensity changes: `.cursor/rules/estimated-intensity-isolate.mdc` (reuse the persistent worker rather than per-frame `Isolate.run()`). Map renderer changes: `.cursor/rules/map-renderer-references.mdc` (required pinned reference implementations).
+- Estimated-intensity changes: `.cursor/rules/estimated-intensity-isolate.mdc` (reuse the persistent worker rather than per-frame `Isolate.run()`).
 - 未完了の課題は `docs/todo/{3-digit-priority}_{title}.md` に記録する（数値が大きいほど高優先度）。関連する既存 TODO に追記し、完了が確認できた項目は削除する。実機検証待ちは未検証として残す。
 - 知見は `docs/knowledge/README.md` を入口に、作業に関係する分野だけ読む。知見・TODO の全件読み込みは不要。新しい知見は既存の分野別文書へ統合し、独立した話題のみ新規作成する。経緯やログは Git 履歴・PR に残し、本文は現行の制約・対処・参照先を中心に保つ。
 
 ## Git and GitHub
 
 - Use a separate Git worktree and topic branch from `origin/develop`; publish changes as a PR to `develop`.
-- Create PRs/issues only in YumNumm repositories, always explicitly passing `--repo YumNumm/<repo>`. In the Flutter Scene fork, `gh` can otherwise target upstream `bdero/flutter_scene`; OpenCode has no Claude hook enforcing this.
+- Create PRs/issues only in YumNumm repositories, always explicitly passing `--repo YumNumm/<repo>`. OpenCode has no Claude hook enforcing this.
 - Use `git --no-pager diff` to review changes. Commit in roughly 30–100-line logical units, with an English one-word prefix and concise Japanese description; push after committing.
 - `mise install` installs hk hooks via `postinstall`. Stage intended changes before `mise exec -- hk check`: its secret scan uses `gitleaks git --staged`; other checks cover keys, symlinks, conflict markers, workflows, and shell scripts.

@@ -138,7 +138,7 @@ abstract interface class SeismicityPmTilesArchive {
 
 **Files:**
 - Create: `packages/seismicity_pmtiles/README.md`
-- Modify: `docs/knowledge/map_renderer.md` only if a cross-component invariant changed
+- Modify: `docs/knowledge/pmtiles.md` only if a cross-component invariant changed
 
 - [ ] `mise exec -- dart format packages/seismicity_pmtiles`を実行する。
 - [ ] `mise exec -- dart analyze packages/seismicity_pmtiles --fatal-infos`を通す。

@@ -136,8 +136,7 @@ asc testflight crashes list --paginate --sort=-createdDate --output json
 ## CI の依存・権限・起動条件
 
 - repository内scriptを実行するjobは、そのstepより前にcheckoutする。
-- Flutter jobは public な `third_party/flutter_scene` だけを
-  checkout 後の `git submodule update --init --depth 1 third_party/flutter_scene` で初期化する。private backendは通常不要。
+- Flutter jobにprivate backendは通常不要。
   `submodules: true` は直下backendも取得するため、`recursive` から変えるだけでは404を防げない。
 - private repositoryが本当に必要なjobだけGitHub App tokenの対象に追加する。
   再帰取得ならnested private repoもinstall対象と `repositories` 一覧に必要。
