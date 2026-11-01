@@ -11,7 +11,7 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
   起動 / resume / push token 同期失敗で Telemetry DB 作成・保存・API 送信がないことを確認する。
   ホーム画面 Widget の地域設定と Live Activity の表示は維持されることも確認する。
 - production への更新時に、登録済み揺れ検知通知の無効化が同期されること、
-  揺れ検知だけの位置監視が停止すること、統合 Live Activity の揺れ検知表示が出ないことを確認する。
+  揺れ検知だけの位置監視が停止することを確認する。
 
 - 署名実機で「EQMonitorで最新の地震を確認」、Snippet 表示/明示更新、Pro失効、保存地域変更、オフライン音声を確認する。メタデータ生成や Swift テストだけで登録成功とは判断しない。
 - Control Center の「最新の地震を確認」「地震履歴を開く」を起動済み/終了状態から実タップし、履歴が開くことを確認する。
@@ -44,11 +44,9 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 
 ## 400: Widget の検証・Android 対応
 
-- Live Activity の共通 `SourceMetricsView` で、深さ0が「ごく浅い」、700が「700km以上」と表示される変更はApple SDK・実機で未検証。EEW/地震情報のLock Screen・Dynamic Island ExpandedをSimulatorと実機で確認する。
+- Live Activity の共通 `SourceMetricsView` で、深さ0が「ごく浅い」、700が「700km以上」と表示される変更はApple SDK・実機で未検証。EEWのLock Screen・Dynamic Island ExpandedをSimulatorと実機で確認する。
 - `WidgetModelsTests` で判断ロジックを継続検証し、取消報・未入電バッジ・Dynamic Island 展開時の切れを Preview/実機で確認する。必要な SwiftUI snapshot fixture と macOS CI の採否を決める。
-- 統合 Live Activity の実機表示は未検証。地震情報の M・深さが EEW と同じ余白・配置（展開時は縦積み）になり、ヘッダー右に最大観測震度がなく、State 9 の M8+ が白文字で収まることを確認する。
-- 統合型 Live Activity の上下配置の最大震度で、`MAX` と数字・未発表の `-` が左右中央に揃うことを実機で確認する。5弱〜6強の配置も確認する。
-- Mの数値部分の字間をフォントサイズの-22%に戻した表示を、Lock ScreenとDynamic Island Expandedの実機で確認する。共通部品を使う地震情報のM8+も確認する。
+- Mの数値部分の字間をフォントサイズの-22%に戻した表示を、Lock ScreenとDynamic Island Expandedの実機で確認する。
 - Android Widget は未実装。採用する場合は `app/android/` に AppWidgetProvider/Glance を実装し、Pro未加入・未設定時の全国 fallback を iOS の `WidgetRegionResolver` と揃えてテストする。
 - extension 版番号は [ビルド・配布](950_build_and_release.md) の300を参照。
 
@@ -57,3 +55,8 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 - テスト通知画面で6種類のプッシュ通知を受信し、表示・音・テスト画面への遷移を確認する。通知条件が無効・不一致でも本人の端末だけに配信されることを確認する。
 - 旧EEW専用の予報・警報・最終報・取消をローカルで開始・更新・終了し、ロック画面とDynamic Islandのテスト表記を確認する。画面の再表示・アプリ再起動後の復元、Live Activity許可を無効にした場合の終了も確認する。
 - LinuxでのDart解析はApple SDKによるビルドや実機での表示・到着の検証を代替しない。今回のSwift変更はApple SDKで未ビルド。サーバからのLive Activity配信検証は別途行う。
+
+## 800: 統合 Live Activity 撤去後の確認
+
+- 統合専用 Widget と Preview を削除した構成で、`EQMonitorPreview` と Runner を Apple SDK でビルドする。Linux では未検証。
+- 実機で従来の EEW Live Activity の開始・更新・終了と通常の地震 Widget の表示を確認する。

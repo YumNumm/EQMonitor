@@ -5,13 +5,13 @@
 
 ## 入力と配信
 
+- Live Activity は `EewLiveActivityAttributes` を受け取る EEW 専用表示を使用する。通常の地震情報はホーム画面の `EarthquakeWidget` で表示する。
 - `EQMLiveActivityUtil.isLiveActivitySupported()`はiOS 16.1以上でMac・Vision上の実行を除外する。
   `isiOSAppOnVision`のavailabilityはVision判定だけに適用し、通常のiPhoneをiOS 26.1未満で
   非対応にしない。push-to-startの対応判定は引き続きiOS 18.0以上。
 - 本番表示の入力はbackendがAPNsへ渡す`content-state`。アプリのカードから表示をコピーしない。
 - Codableの1フィールドの失敗でActivity全体が出なくなるため、未使用・欠損し得る項目を
   安易に必須化しない。`docs/live-activity-specification.md`と受信モデルを照合する。
-- 未知の揺れ検知enum等でcompact/minimalを空にせず、値を偽らない代替表示を用意する。
 - 日時は`app/ios/Shared/LiveActivityDate.swift`の`LiveActivityDate.parse`で解析する。
   ISO8601既定formatterだけでは小数秒やDB由来表現を受理できない。
 - 固定時刻は`JSTDateFormat`でJST表示する。`Text(date, style: .time)`の端末timezoneに依存しない。

@@ -14,7 +14,6 @@ struct EQMonitorWidgetBundle: WidgetBundle {
         EarthquakeWidget()
         if #available(iOS 16.1, *) {
             EewLiveActivityWidget()
-            EarthquakeLiveActivityWidget()
         }
         #if !IS_PRODUCTION
         if #available(iOS 18.0, *) {

@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 const JmaIntensity currentLocationEewMinIntensity = JmaIntensity.four;
 const JmaIntensity currentLocationEarthquakeMinIntensity = JmaIntensity.one;
 
-/// 最小の震度0。配信判定は `最小震度 <= イベント震度` のため常に条件を満たす。
+/// 通知設定の「すべて」を表す最小値。全国EEWでは予想震度未発表も対象。
 const JmaIntensity allMinIntensity = JmaIntensity.zero;
 
 /// スロット種別・通知種別ごとに選べる最小震度を決める。
