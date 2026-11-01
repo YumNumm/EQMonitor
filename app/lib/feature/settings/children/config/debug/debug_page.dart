@@ -151,7 +151,7 @@ class _DebugWidget extends ConsumerWidget {
               ListTile(
                 title: const Text('Live Activity テスト'),
                 subtitle: const Text(
-                  'アプリ内から EEW / 揺れ検知の Live Activity を開始・更新・終了',
+                  'アプリ内から EEW の Live Activity を開始・更新・終了',
                 ),
                 leading: const Icon(Icons.bolt_outlined),
                 onTap: () => Navigator.of(context).push<void>(
