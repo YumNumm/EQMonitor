@@ -28,17 +28,22 @@ class CityDetailModalAction {
     required String cityName,
     required String prefectureName,
     JmaIntensity? maxIntensity,
-  }) => showM3EModalBottomSheet<void>(
+  }) => showModalBottomSheet<void>(
     useSafeArea: false,
-    style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
     context: context,
     isScrollControlled: true,
+    showDragHandle: false,
+    backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
     clipBehavior: .antiAlias,
-    builder: (context) => _CityDetailModal(
-      cityCode: cityCode,
-      cityName: cityName,
-      prefectureName: prefectureName,
-      maxIntensity: maxIntensity,
+    builder: (context) => SafeArea(
+      top: false,
+      bottom: false,
+      child: _CityDetailModal(
+        cityCode: cityCode,
+        cityName: cityName,
+        prefectureName: prefectureName,
+        maxIntensity: maxIntensity,
+      ),
     ),
   );
 }
