@@ -791,7 +791,11 @@ jobs:
           for attempt in 1 2 3; do
             rm -rf "${ANDROID_SDK_ROOT}/ndk/28.2.13676358"
             rm -rf "${ANDROID_SDK_ROOT}/.temp"
-            if yes | "${sdkmanager_bin}" --install "${ndk_pkg}"; then
+            # sdkmanager が先に終了すると yes が SIGPIPE になり pipefail 下では失敗扱いになる。
+            set +o pipefail
+            yes | "${sdkmanager_bin}" --install "${ndk_pkg}"
+            set -o pipefail
+            if [[ -d "${ANDROID_SDK_ROOT}/ndk/28.2.13676358" ]]; then
               echo "Installed ${ndk_pkg} on attempt ${attempt}"
               exit 0
             fi
