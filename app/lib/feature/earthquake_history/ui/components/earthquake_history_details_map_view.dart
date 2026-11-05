@@ -35,7 +35,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_error_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_marker_anchors_layer.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_shindo_db_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_shindo_db_station_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_station_intensity_layer.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -204,7 +203,7 @@ class _MapContent extends HookConsumerWidget {
     final tileUrl = earthquake.estimatedIntensityTileUrl;
     final showingLpgmIntensity = displayMode == IntensityDisplayMode.lpgm;
     final showEstimated = displayMode == IntensityDisplayMode.estimated;
-    final showStations = !showingDb && showEstimated
+    final showStations = showEstimated
         ? details.showStationsOnEstimatedIntensity
         : details.showStations;
 
@@ -278,20 +277,13 @@ class _MapContent extends HookConsumerWidget {
           children: [
             const EarthquakeHistoryMarkerAnchorsLayer(),
             if (showingDb) ...[
-              if (dbTree != null) ...[
-                EarthquakeHistoryShindoDbFillLayer(
-                  key: const ValueKey('shindo-db-fill'),
+              if (dbTree != null)
+                EarthquakeHistoryShindoDbStationLayer(
+                  key: const ValueKey('shindo-db-station'),
+                  belowLayerId: stationAnchor,
                   tree: dbTree,
                   parameter: parameter,
                 ),
-                if (showStations)
-                  EarthquakeHistoryShindoDbStationLayer(
-                    key: const ValueKey('shindo-db-station'),
-                    belowLayerId: stationAnchor,
-                    tree: dbTree,
-                    parameter: parameter,
-                  ),
-              ],
             ] else ...[
               if (showEstimated && tileUrl != null)
                 EarthquakeHistoryDetailsEstimatedIntensityLayer(
@@ -331,6 +323,7 @@ class _MapContent extends HookConsumerWidget {
           right: 8,
           child: SafeArea(
             child: _MapControllerCard(
+              showingDb: showingDb,
               onFitBoundsTap: () async {
                 final controller = mapController.value;
                 if (controller == null) {
@@ -632,10 +625,12 @@ class _MapContent extends HookConsumerWidget {
 
 class _MapControllerCard extends StatelessWidget {
   const new({
+    required this.showingDb,
     required this.onFitBoundsTap,
     required this.onDebugTap,
   });
 
+  final bool showingDb;
   final Future<void> Function() onFitBoundsTap;
   final Future<void> Function()? onDebugTap;
 
@@ -662,8 +657,9 @@ class _MapControllerCard extends StatelessWidget {
               onPressed: () async {
                 await Navigator.of(context).push<void>(
                   AppSheetRoute(
-                    builder: (_) =>
-                        const EarthquakeHistoryDetailsSettingsSheet(),
+                    builder: (_) => EarthquakeHistoryDetailsSettingsSheet(
+                      showingDb: showingDb,
+                    ),
                   ),
                 );
               },
