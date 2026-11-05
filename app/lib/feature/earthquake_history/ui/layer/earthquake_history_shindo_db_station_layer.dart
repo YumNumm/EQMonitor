@@ -176,7 +176,6 @@ class EarthquakeHistoryShindoDbStationLayerBuilder {
   }) => SymbolStyleLayer(
     id: EarthquakeHistoryShindoDbStationLayer.iconLayerId,
     sourceId: EarthquakeHistoryShindoDbStationLayer.sourceId,
-    minZoom: parameter.stationMinZoom,
     layout: {
       'icon-image': const StationIconImageExpressionBuilder().build(
         stationDisplayMode: stationDisplayMode,
