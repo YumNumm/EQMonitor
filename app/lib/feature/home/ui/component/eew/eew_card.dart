@@ -84,14 +84,14 @@ class EewCard extends ConsumerWidget {
         localRegion?.intensity ?? estimate?.jmaIntensity;
     final effectiveRegionName = regionDisplayName ?? estimate?.regionName;
 
-    // PLUM法の地域は到達予想時刻が意味を持たないため、カウントダウンを出さない
-    final isRegionPlum = localRegion?.isPlum ?? false;
+    // 取消報とPLUM法の地域では到達予想を表示しない。
+    final hideArrival = eew.isCanceled || (localRegion?.isPlum ?? false);
 
     // 到達時間: JMA値を優先、なければ推定値
-    final effectiveArrivalTime = isRegionPlum
+    final effectiveArrivalTime = hideArrival
         ? null
         : (localRegion?.arrivalTime ?? estimate?.sWaveArrivalTime);
-    final effectiveIsArrived = isRegionPlum
+    final effectiveIsArrived = hideArrival
         ? false
         : (localRegion?.isArrived ?? estimate?.isArrived ?? false);
 
@@ -100,15 +100,14 @@ class EewCard extends ConsumerWidget {
         effectiveIsArrived ||
         (effectiveArrivalTime != null &&
             nowValue != null &&
-            nowValue.isAfter(effectiveArrivalTime));
+            !nowValue.isBefore(effectiveArrivalTime));
 
-    int? secondsUntilArrival;
-    if (!hasArrived && effectiveArrivalTime != null && nowValue != null) {
-      final diff = effectiveArrivalTime.difference(nowValue).inSeconds;
-      if (diff > 0) {
-        secondsUntilArrival = diff;
-      }
-    }
+    final secondsUntilArrival =
+        !hasArrived && effectiveArrivalTime != null && nowValue != null
+        ? (effectiveArrivalTime.difference(nowValue).inMicroseconds /
+                  Duration.microsecondsPerSecond)
+              .ceil()
+        : null;
 
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
@@ -124,11 +123,7 @@ class EewCard extends ConsumerWidget {
           localForecastIntensity: effectiveLocalIntensity,
           regionDisplayName: effectiveRegionName,
           secondsUntilArrival: secondsUntilArrival,
-          showArrived:
-              (localRegion != null || estimate != null) &&
-              (hasArrived ||
-                  (effectiveArrivalTime != null &&
-                      secondsUntilArrival == null)),
+          showArrived: (localRegion != null || estimate != null) && hasArrived,
           showDeepHypocenterIntensityNotice: ref
               .watch(eewDeepHypocenterIntensityNoticeProvider)
               .shouldShow(eew: eew),

@@ -48,6 +48,9 @@ extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
       if (p1 == null || p2 == null) {
         return null;
       }
+      if (p1.p == p2.p) {
+        return p1.distance.toDouble();
+      }
       final p =
           (duration - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
           p1.distance;
@@ -58,6 +61,9 @@ extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
       final s2 = lists.firstWhereOrNull((e) => e.s >= duration);
       if (s1 == null || s2 == null) {
         return null;
+      }
+      if (s1.s == s2.s) {
+        return s1.distance.toDouble();
       }
       final s =
           (duration - s1.s) / (s2.s - s1.s) * (s2.distance - s1.distance) +

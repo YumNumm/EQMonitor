@@ -35,7 +35,11 @@ class EewDetailsByEventIdPage extends StatelessWidget {
     title: '緊急地震速報の履歴',
     isPage: true,
     onClose: onClose,
-    child: _EewDetailsByEventIdContent(eventId: eventId, onClose: onClose),
+    child: ProviderScope(
+      key: ValueKey(eventId),
+      overrides: [eewSimulationProvider.overrideWith(EewSimulation.new)],
+      child: _EewDetailsByEventIdContent(eventId: eventId, onClose: onClose),
+    ),
   );
 }
 
@@ -52,14 +56,20 @@ class _EewDetailsByEventIdContent extends HookConsumerWidget {
     final selectedIndex = useState<int?>(null);
     final displayMode = useState(EewDisplayMode.intensity);
 
-    // Auto-select the latest report during simulation
     useEffect(() {
-      if (simulation != null && simulation.isPlaying) {
-        selectedIndex.value = simulation.currentIndex;
+      if (simulation != null) {
+        final reports = eewsAsyncValue.value?.sorted(
+          (a, b) => a.serialNo.compareTo(b.serialNo),
+        );
+        final index = reports?.indexWhere(
+          (report) => report.serialNo == simulation.currentReport.serialNo,
+        );
+        if (index != null && index >= 0) {
+          selectedIndex.value = index;
+        }
       }
       return null;
-      // isPlaying だけが変わる場合も追従する必要があるため simulation 全体を見る
-    }, [simulation]);
+    }, [simulation, eewsAsyncValue]);
 
     return Scaffold(
       appBar: AppBar(
@@ -68,9 +78,19 @@ class _EewDetailsByEventIdContent extends HookConsumerWidget {
         actions: [
           if (simulation != null) ...[
             IconButton(
-              icon: Icon(simulation.isPlaying ? Icons.pause : Icons.play_arrow),
+              icon: Icon(
+                simulation.isComplete
+                    ? Icons.replay
+                    : simulation.isPlaying
+                    ? Icons.pause
+                    : Icons.play_arrow,
+              ),
               onPressed: () {
-                if (simulation.isPlaying) {
+                if (simulation.isComplete) {
+                  ref
+                      .read(eewSimulationProvider.notifier)
+                      .start(simulation.reports);
+                } else if (simulation.isPlaying) {
                   ref.read(eewSimulationProvider.notifier).pause();
                 } else {
                   ref.read(eewSimulationProvider.notifier).resume();
@@ -191,13 +211,7 @@ class _SimulationView extends HookConsumerWidget {
     // timeTickerProvider を watch して毎秒リビルドさせる
     ref.watch(timeTickerProvider());
 
-    // シミュレーション仮想時刻: P/S波円と同じ計算
-    DateTime? virtualNow;
-    if (simulation != null) {
-      final firstReportTime = simulation.reports.first.reportTime;
-      final elapsed = simulation.playbackElapsedAt(clock.now());
-      virtualNow = firstReportTime.add(elapsed);
-    }
+    final virtualNow = simulation?.playbackTimeAt(clock.now());
 
     final estimatedRegions = EewEstimatedRegionsStaleCacheHook.use(
       ref: ref,
