@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.7](https://github.com/YumNumm/EQMonitor/compare/v3.0.6...v3.0.7) (2026-11-05)
+
+
+### Bug Fixes
+
+* Android CIのNDKインストール判定をpipefail対応に修正 ([8dacee6](https://github.com/YumNumm/EQMonitor/commit/8dacee64b2a60ae35a6fbe2d70253eba1d02888f))
+* Android CIのNDKインストール判定をpipefail対応に修正 ([306708f](https://github.com/YumNumm/EQMonitor/commit/306708f150cd1adbe858b2c2632fa5438e3b2b70))
+* 市区町村詳細シートの不要な下端余白を解消 ([aae1cef](https://github.com/YumNumm/EQMonitor/commit/aae1cef0342ef3f3bd6ae653e3cfabf8e07b74a8))
+* 未使用の統合Live Activityを削除 ([2afdc5f](https://github.com/YumNumm/EQMonitor/commit/2afdc5ff3dc686d3232f0f16c704a0c395e46c39))
+* 震度データベースの地図を観測点表示に統一 ([23de384](https://github.com/YumNumm/EQMonitor/commit/23de3841f6629b90b12039ab88791f601915e4bb))
+
 ## [3.0.6](https://github.com/YumNumm/EQMonitor/compare/v3.0.5...v3.0.6) (2026-10-31)
 
 
