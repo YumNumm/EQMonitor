@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/shake_detection/data/provider/local_shake_detection_provider.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
@@ -17,6 +18,14 @@ List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) {
   final tickerTime = ref.watch(timeTickerProvider());
   final now = (tickerTime.value ?? ref.read(appClockProvider.notifier).now())
       .toUtc();
+
+  final local = ref.watch(localShakeDetectionProvider).value;
+  if (local != null) {
+    return [
+      ...local.events.where((event) => event.expiresAt.isAfter(now)),
+      ...ref.watch(shakeDetectionDebugOverlayProvider),
+    ];
+  }
 
   final live = ref
       .watch(shakeDetectionProvider)

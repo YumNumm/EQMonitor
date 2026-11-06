@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/shake_detection/data/provider/local_shake_detection_provider.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
@@ -20,6 +21,10 @@ class ShakeDetectionCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final regionsAsync = ref.watch(shakeDetectionRegionsProvider(event));
+    final estimate = ref
+        .watch(localShakeDetectionProvider)
+        .value
+        ?.estimates[event.eventId];
 
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
@@ -41,6 +46,13 @@ class ShakeDetectionCard extends ConsumerWidget {
           children: [
             _ShakeDetectionCardHeader(event: event),
             _ShakeDetectionCardBody(event: event, regionsAsync: regionsAsync),
+            if (estimate != null)
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  '推定震源: 緯度 ${estimate.latitude.toStringAsFixed(2)} / 経度 ${estimate.longitude.toStringAsFixed(2)}・深さ ${estimate.depthKm.round()} km',
+                ),
+              ),
           ],
         ),
       ),

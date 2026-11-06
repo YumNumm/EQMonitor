@@ -57,4 +57,4 @@ final class ShakeDetectionVisibleProvider
 }
 
 String _$shakeDetectionVisibleHash() =>
-    r'3e662435881156beccd3f79b3e8e541a5082a49e';
+    r'495b06334ac2b82783145e9afc7377d30ad1a7c2';
