@@ -5,9 +5,35 @@ set -euo pipefail
 log_path="$(mktemp "${RUNNER_TEMP:-${TMPDIR:-/tmp}}/eqmonitor-ios-export.XXXXXX")"
 trap 'rm -f "$log_path"' EXIT
 
+print_export_logs() {
+  echo "::group::xcodebuild export output (timestamped)"
+  cat "$log_path"
+  echo "::endgroup::"
+  local distribution_logs
+  distribution_logs="$(sed -n 's/.*Created bundle at path "\(.*\.xcdistributionlogs\)".*/\1/p' "$log_path" | tail -1)"
+  if [[ -z "$distribution_logs" ]]; then
+    # Fallback for Xcode versions that do not print the bundle path.
+    distribution_logs="$(find "${TMPDIR:-/tmp}" -maxdepth 2 -name '*.xcdistributionlogs' \
+      -newer "$log_path" 2>/dev/null | head -1)"
+  fi
+  if [[ -n "$distribution_logs" && -f "$distribution_logs/IDEDistribution.standard.log" ]]; then
+    echo "::group::IDEDistribution.standard.log"
+    cat "$distribution_logs/IDEDistribution.standard.log"
+    echo "::endgroup::"
+  else
+    echo "IDEDistribution logs were not found."
+  fi
+}
+
 for attempt in 1 2 3; do
   echo "Exporting iOS archive (attempt $attempt/3)"
-  if xcodebuild -exportArchive "$@" 2>&1 | tee "$log_path" | xcbeautify --renderer github-actions; then
+  # Timestamp raw lines so slow export phases can be found; xcbeautify hides them.
+  if xcodebuild -exportArchive "$@" 2>&1 |
+    perl -MPOSIX=strftime -pe 'BEGIN { $| = 1 } $_ = strftime("%H:%M:%S ", localtime) . $_' |
+    tee "$log_path" |
+    sed -u 's/^[0-9:]\{8\} //' |
+    xcbeautify --renderer github-actions; then
+    print_export_logs
     exit 0
   else
     pipeline_status=("${PIPESTATUS[@]}")

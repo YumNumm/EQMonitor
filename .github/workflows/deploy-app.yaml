@@ -404,7 +404,15 @@ jobs:
             echo "::error::unexpected build-name '${BUILD_NAME}' derived from app/pubspec.yaml"
             exit 1
           fi
-          flutter build ios --config-only \
+          # Keep the verbose log off the public job log: it can contain the
+          # production dart-defines. Print only commands and slow steps.
+          verbose_log="$RUNNER_TEMP/flutter-config-only.log"
+          print_config_summary() {
+            grep -nE "executing:|\[ *\+[0-9]{4,} ms\]|[Ee]rror|Exception" "$verbose_log" \
+              | grep -viE "dart.?define" | cut -c1-240 || true
+          }
+          trap print_config_summary EXIT
+          flutter -v build ios --config-only \
             --no-codesign \
             --no-pub \
             --build-name="$BUILD_NAME" \
@@ -413,7 +421,8 @@ jobs:
             --dart-define IS_PRODUCTION="true" \
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
             --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
-            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE"
+            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE" \
+            > "$verbose_log" 2>&1
 
       - name: Extract App Store Connect API Key
         run: |
