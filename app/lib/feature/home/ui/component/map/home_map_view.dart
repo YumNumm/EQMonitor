@@ -18,6 +18,7 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_ob
 import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/modal/home_map_label_debug_modal.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_plum_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/connection_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_status_card.dart';
@@ -126,6 +127,19 @@ class _MapContent extends ConsumerWidget {
                   .warning => EewWarningRegionsLayer(eews: eews),
                   .none => const SizedBox.shrink(),
                 };
+              },
+            ),
+            Consumer(
+              builder: (context, ref, _) {
+                if (!ref.watch(kyoshinMonitorPlumEnabledProvider)) {
+                  return const SizedBox.shrink();
+                }
+                return EewEstimatedIntensityLayer(
+                  eewRegions: ref.watch(
+                    kyoshinMonitorPlumForecastRegionsProvider,
+                  ),
+                  layerIdPrefix: 'kyoshin-monitor-plum-intensity-fill',
+                );
               },
             ),
             const KyoshinMonitorObservationLayer(),

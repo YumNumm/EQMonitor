@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/home/ui/page/home_map_bounds_selector_page.dar
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_request_provider.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_plum_provider.dart';
 import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
@@ -102,6 +103,7 @@ class HomeMapLayerPage extends ConsumerWidget {
                       _KyoshinMonitorAboutTile(),
                       _KyoshinRealtimeDataTypeTile(),
                       _KyoshinRealtimeLayerTile(),
+                      _KyoshinPlumIntensityTile(),
                       _KyoshinMarkerTypeTile(),
                       _KyoshinShowScaleTile(),
                       _KyoshinMinShindoTile(),
@@ -855,6 +857,28 @@ class _KyoshinRealtimeLayerTile extends ConsumerWidget {
         await ref
             .read(kyoshinMonitorSettingsProvider.notifier)
             .save(setting.copyWith(realtimeLayer: next));
+      },
+    );
+  }
+}
+
+class _KyoshinPlumIntensityTile extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final setting = ref.watch(kyoshinMonitorSettingsProvider).requireValue;
+    if (!ref.watch(kyoshinMonitorPlumAvailableProvider)) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: 'PLUM法の予測震度を表示 (実験的)',
+      subtitle: '各地点から30km以内で観測された最大のリアルタイム震度を、その地点の予測震度として地域を塗ります。',
+      value: setting.showPlumIntensity,
+      onChanged: (next) async {
+        await ref
+            .read(kyoshinMonitorSettingsProvider.notifier)
+            .save(setting.copyWith(showPlumIntensity: next));
       },
     );
   }
