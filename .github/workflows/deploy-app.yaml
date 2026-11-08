@@ -275,12 +275,14 @@ jobs:
           cp mise.local.toml.example mise.local.toml
 
       # https://github.com/jdx/mise-action
-      - name: Install Mise dependencies
+      - name: Install Mise dependencies  # zizmor: ignore[cache-poisoning] -- cache is disabled for tag runs
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
-          cache: false
+          # Restores the Flutter SDK with its precached iOS artifacts.
+          # Release tags always build from a clean toolchain.
+          cache: ${{ github.ref_type != 'tag' }}
           install_args: "flutter xcbeautify"
 
       - name: Precache Flutter iOS artifacts
@@ -319,6 +321,37 @@ jobs:
       - name: Enable Swift Package Manager
         run: |
           flutter config --enable-swift-package-manager
+
+      # Build caches speed up develop and manual builds only. Release tags never
+      # restore or save them, so a poisoned cache cannot reach a tagged release.
+      # https://github.com/actions/cache
+      - name: Restore pub cache
+        id: pub-cache
+        if: ${{ github.ref_type != 'tag' }}
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.pub-cache
+          key: ios-pub-${{ hashFiles('pubspec.lock') }}
+
+      - name: Restore Swift packages
+        id: spm-cache
+        if: ${{ github.ref_type != 'tag' }}
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: app/build/ios/SourcePackages
+          key: ios-spm-${{ env.XCODE_BUILD_VERSION }}-${{ hashFiles('app/ios/Runner.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+
+      # Content-addressed Clang/Swift compilation cache (native code only;
+      # Dart AOT is not cached). The newest entry is always reused.
+      - name: Restore Xcode compilation cache
+        id: xcode-cas-cache
+        if: ${{ github.ref_type != 'tag' }}
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData/CompilationCache.noindex
+          key: ios-xcode-cas-${{ env.XCODE_BUILD_VERSION }}-${{ github.sha }}
+          restore-keys: |
+            ios-xcode-cas-${{ env.XCODE_BUILD_VERSION }}-
 
       - name: Resolve dependencies
         working-directory: app
@@ -381,6 +414,8 @@ jobs:
             -archivePath build/ios/Runner.xcarchive \
             -clonedSourcePackagesDirPath build/ios/SourcePackages \
             -skipPackageUpdates \
+            -showBuildTimingSummary \
+            COMPILATION_CACHE_ENABLE_CACHING=YES \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
@@ -401,6 +436,32 @@ jobs:
             echo "::error::xcodebuild archive failed. See the extracted error sections above."
             exit 1
           fi
+
+      - name: Report build cache sizes
+        run: |
+          du -sh ~/.pub-cache app/build/ios/SourcePackages \
+            ~/Library/Developer/Xcode/DerivedData/CompilationCache.noindex || true
+
+      - name: Save pub cache
+        if: ${{ github.ref_type != 'tag' && steps.pub-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.pub-cache
+          key: ${{ steps.pub-cache.outputs.cache-primary-key }}
+
+      - name: Save Swift packages
+        if: ${{ github.ref_type != 'tag' && steps.spm-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: app/build/ios/SourcePackages
+          key: ${{ steps.spm-cache.outputs.cache-primary-key }}
+
+      - name: Save Xcode compilation cache
+        if: ${{ github.ref_type != 'tag' && steps.xcode-cas-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData/CompilationCache.noindex
+          key: ${{ steps.xcode-cas-cache.outputs.cache-primary-key }}
 
       - name: Embed entitlements and ad-hoc sign
         working-directory: app
