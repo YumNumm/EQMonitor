@@ -285,8 +285,28 @@ jobs:
           cache: ${{ github.ref_type != 'tag' }}
           install_args: "flutter xcbeautify"
 
+      # mise-action saves its cache right after installing tools, so the Dart
+      # SDK and engine artifacts that precache downloads need their own cache.
+      - name: Locate Flutter artifact cache
+        run: echo "FLUTTER_BIN_CACHE=$(mise where flutter)/bin/cache" >> "$GITHUB_ENV"
+
+      - name: Restore Flutter artifact cache
+        id: flutter-bin-cache
+        if: ${{ github.ref_type != 'tag' }}
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.FLUTTER_BIN_CACHE }}
+          key: ios-flutter-bin-${{ hashFiles('mise.toml', 'mise.lock') }}
+
       - name: Precache Flutter iOS artifacts
         run: flutter precache --ios
+
+      - name: Save Flutter artifact cache
+        if: ${{ github.ref_type != 'tag' && steps.flutter-bin-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.FLUTTER_BIN_CACHE }}
+          key: ${{ steps.flutter-bin-cache.outputs.cache-primary-key }}
 
       - name: Set environment variables
         run: |
