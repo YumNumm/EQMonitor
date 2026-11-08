@@ -1,6 +1,10 @@
 name: Deploy App
 
-on:
+# Runs may build side by side. The jobs that change external state serialize
+# themselves: deploy-ios (App Store Connect) and deploy-android-google-play
+# (Google Play edits) each hold a job-level lock with queue: max, so no
+# release is cancelled or skipped.
+on: # jactionlint ignore=concurrency-limits
   push:
     branches:
       - develop
@@ -40,13 +44,6 @@ on:
 
 permissions:
   contents: read
-
-concurrency:
-  # Serialize branch, tag and manual deployments without cancelling releases.
-  # Keep this separate from the Google Play jobs' shared edit lock.
-  group: eqmonitor-app-deploy
-  cancel-in-progress: false
-  queue: max
 
 env:
   FIREBASE_ANALYTICS_WITHOUT_ADID: "true"
@@ -487,6 +484,13 @@ jobs:
 
   deploy-ios:
     name: Deploy iOS (App Store Connect)
+    # Builds of different runs may overlap; only serialize the App Store Connect
+    # upload and TestFlight distribution, without cancelling releases. Google
+    # Play has its own edit lock below.
+    concurrency:
+      group: eqmonitor-app-store-connect
+      cancel-in-progress: false
+      queue: max
     needs:
       - build-ios
       - define-matrix
