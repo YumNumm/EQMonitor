@@ -20,6 +20,12 @@ print_export_logs() {
     echo "::group::IDEDistribution.standard.log"
     cat "$distribution_logs/IDEDistribution.standard.log"
     echo "::endgroup::"
+    if [[ -f "$distribution_logs/IDEDistribution.verbose.log" ]]; then
+      echo "::group::IDEDistribution.verbose.log (signing and packaging)"
+      grep -nE 'Running step|[Cc]loud|[Rr]emote|[Ss]ign(ing|ed)? |codesign|[Cc]ertificate|[Pp]rofile|[Ww]aiting|[Rr]equest|[Cc]ompress|[Zz]ip|[Tt]hin|[Ss]ymbol' \
+        "$distribution_logs/IDEDistribution.verbose.log" | cut -c1-260 | head -400 || true
+      echo "::endgroup::"
+    fi
   else
     echo "IDEDistribution logs were not found."
   fi

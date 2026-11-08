@@ -341,6 +341,11 @@ jobs:
       - name: Enable Swift Package Manager
         run: |
           flutter config --enable-swift-package-manager
+          # flutter build --config-only resolves packages without
+          # -skipPackageUpdates and spends ~100s fetching every remote. Pin
+          # resolution to the committed Package.resolved instead.
+          defaults write com.apple.dt.Xcode IDEPackageOnlyUseVersionsFromResolvedFile -bool YES
+          defaults write com.apple.dt.Xcode IDEDisableAutomaticPackageResolution -bool YES
 
       # Build caches speed up develop and manual builds only. Release tags never
       # restore or save them, so a poisoned cache cannot reach a tagged release.
@@ -465,6 +470,10 @@ jobs:
             echo "::error::xcodebuild archive failed. See the extracted error sections above."
             exit 1
           fi
+
+      - name: Report build timing summary
+        run: |
+          sed -n '/Build Timing Summary/,$p' /tmp/xcodebuild-archive.log | head -120
 
       - name: Report build cache sizes
         run: |
