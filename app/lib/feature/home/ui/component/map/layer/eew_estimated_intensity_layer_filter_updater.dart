@@ -9,6 +9,7 @@ class const EewEstimatedIntensityLayerFilterUpdater() {
   Future<void> update({
     required StyleController styleController,
     required List<EewForecastRegionInfo> regionMaxIntensities,
+    required String layerIdPrefix,
   }) async {
     await JmaIntensity.values
         .where((intensity) => intensity != JmaIntensity.unknown)
@@ -18,7 +19,7 @@ class const EewEstimatedIntensityLayerFilterUpdater() {
               .map((r) => r.code)
               .toList();
           return styleController.updateFilter(
-            id: intensity.layerId,
+            id: intensity.layerId(layerIdPrefix),
             filter: _areaFilterBuilder.build(codes),
           );
         })
@@ -27,5 +28,5 @@ class const EewEstimatedIntensityLayerFilterUpdater() {
 }
 
 extension EewEstimatedIntensityJmaIntensityLayerId on JmaIntensity {
-  String get layerId => 'eew-estimated-intensity-fill-$name';
+  String layerId(String prefix) => '$prefix-$name';
 }

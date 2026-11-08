@@ -15,9 +15,19 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EewEstimatedIntensityLayer extends HookConsumerWidget {
-  const new({required this.eewRegions, super.key});
+  const new({
+    required this.eewRegions,
+    this.layerIdPrefix = defaultLayerIdPrefix,
+    super.key,
+  });
+
+  /// 緊急地震速報の予測震度で使う layer ID の接頭辞。
+  static const defaultLayerIdPrefix = 'eew-estimated-intensity-fill';
 
   final List<EewForecastRegionInfo> eewRegions;
+
+  /// 同じ地図に複数のインスタンスを置くときに layer ID が衝突しないよう変える。
+  final String layerIdPrefix;
 
   static const _areaFilterBuilder = EewAreaFilterBuilder();
   static const _filterUpdater = EewEstimatedIntensityLayerFilterUpdater();
@@ -60,7 +70,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           await JmaIntensity.values
               .where((intensity) => intensity != JmaIntensity.unknown)
               .map((intensity) {
-                final layerId = intensity.layerId;
+                final layerId = intensity.layerId(layerIdPrefix);
                 final color = colorModel.fromJmaIntensity(intensity).background;
 
                 final codes = regionMaxIntensities
@@ -88,6 +98,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           await _filterUpdater.update(
             styleController: styleController,
             regionMaxIntensities: latestRegionMaxIntensities.value,
+            layerIdPrefix: layerIdPrefix,
           );
         }),
       );
@@ -99,7 +110,9 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
             final futures = JmaIntensity.values
                 .where((intensity) => intensity != JmaIntensity.unknown)
                 .map(
-                  (intensity) => styleController.removeLayer(intensity.layerId),
+                  (intensity) => styleController.removeLayer(
+                    intensity.layerId(layerIdPrefix),
+                  ),
                 );
             await Future.wait(futures);
           }),
@@ -109,7 +122,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
       // colorModel は addLayer の paint 生成に使っているため keys から外せない
       // (プラグインがネストしたクロージャ内の参照を拾えず誤検出する)。
       // ignore_keys: BaseLayer, colorModel
-    }, [styleController, colorModel]);
+    }, [styleController, colorModel, layerIdPrefix]);
 
     // データ更新
     useEffect(() {
@@ -122,12 +135,13 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           () => _filterUpdater.update(
             styleController: styleController,
             regionMaxIntensities: regionMaxIntensities,
+            layerIdPrefix: layerIdPrefix,
           ),
         ),
       );
 
       return null;
-    }, [styleController, regionMaxIntensities]);
+    }, [styleController, regionMaxIntensities, layerIdPrefix]);
 
     return const SizedBox.shrink();
   }
