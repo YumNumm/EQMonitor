@@ -448,7 +448,6 @@ jobs:
             -archivePath build/ios/Runner.xcarchive \
             -clonedSourcePackagesDirPath build/ios/SourcePackages \
             -skipPackageUpdates \
-            -showBuildTimingSummary \
             COMPILATION_CACHE_ENABLE_CACHING=YES \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
@@ -470,10 +469,6 @@ jobs:
             echo "::error::xcodebuild archive failed. See the extracted error sections above."
             exit 1
           fi
-
-      - name: Report build timing summary
-        run: |
-          sed -n '/Build Timing Summary/,$p' /tmp/xcodebuild-archive.log | head -120
 
       - name: Report build cache sizes
         run: |
@@ -508,6 +503,18 @@ jobs:
             --app build/ios/Runner.xcarchive/Products/Applications/Runner.app \
             --ios-dir ios
 
+      # Without local profiles, automatic signing regenerates the App Store
+      # and Ad-Hoc profiles for every target on each export (~5 minutes).
+      - name: Restore provisioning profiles
+        id: profiles-cache
+        if: ${{ github.ref_type != 'tag' }}
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/Library/Developer/Xcode/UserData/Provisioning Profiles
+          key: ios-profiles-${{ github.run_id }}
+          restore-keys: |
+            ios-profiles-
+
       # Both exports only read the signed archive, so run them side by side.
       - parallel:
           - name: Create IPA
@@ -535,6 +542,13 @@ jobs:
                 -authenticationKeyIssuerID "$APP_STORE_CONNECT_API_ISSUER_ID" \
                 -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
                 -authenticationKeyPath "$KEY_PATH"
+
+      - name: Save provisioning profiles
+        if: ${{ github.ref_type != 'tag' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/Library/Developer/Xcode/UserData/Provisioning Profiles
+          key: ${{ steps.profiles-cache.outputs.cache-primary-key }}
 
       # https://github.com/actions/upload-artifact
       - name: Upload ipa as artifact
