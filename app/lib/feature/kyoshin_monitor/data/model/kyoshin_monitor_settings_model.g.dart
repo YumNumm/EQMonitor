@@ -49,6 +49,10 @@ _KyoshinMonitorSettingsModel _$KyoshinMonitorSettingsModelFromJson(
             $enumDecodeNullable(_$RealtimeLayerEnumMap, v) ??
             RealtimeLayer.surface,
       ),
+      showPlumIntensity: $checkedConvert(
+        'show_plum_intensity',
+        (v) => v as bool? ?? false,
+      ),
       api: $checkedConvert(
         'api',
         (v) => v == null
@@ -68,6 +72,7 @@ _KyoshinMonitorSettingsModel _$KyoshinMonitorSettingsModelFromJson(
     'monitorSource': 'monitor_source',
     'realtimeDataType': 'realtime_data_type',
     'realtimeLayer': 'realtime_layer',
+    'showPlumIntensity': 'show_plum_intensity',
   },
 );
 
@@ -82,6 +87,7 @@ Map<String, dynamic> _$KyoshinMonitorSettingsModelToJson(
   'monitor_source': _$KyoshinMonitorSourceEnumMap[instance.monitorSource]!,
   'realtime_data_type': _$RealtimeDataTypeEnumMap[instance.realtimeDataType]!,
   'realtime_layer': _$RealtimeLayerEnumMap[instance.realtimeLayer]!,
+  'show_plum_intensity': instance.showPlumIntensity,
   'api': instance.api,
 };
 

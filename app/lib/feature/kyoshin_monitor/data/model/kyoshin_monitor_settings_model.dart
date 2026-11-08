@@ -32,6 +32,11 @@ abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
     /// 強震モニタのリアルタイムデータのレイヤー
     @Default(RealtimeLayer.surface) RealtimeLayer realtimeLayer,
 
+    /// 強震モニタのリアルタイム震度を入力にした PLUM 法の予測震度を表示するかどうか
+    ///
+    /// リアルタイム震度・地表のときだけ有効。
+    @Default(false) bool showPlumIntensity,
+
     /// 強震モニタ API関連の設定
     @Default(KyoshinMonitorSettingsApiModel())
     KyoshinMonitorSettingsApiModel api,
