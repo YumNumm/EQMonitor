@@ -875,16 +875,39 @@ jobs:
           cp mise.local.toml.example mise.local.toml
 
       # https://github.com/jdx/mise-action
-      - name: Install Mise dependencies
+      - name: Install Mise dependencies  # zizmor: ignore[cache-poisoning] -- cache is disabled for tag runs
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
-          cache: false
+          # Build caches speed up develop and manual builds only. Release tags
+          # never restore or save them, so a poisoned cache cannot reach them.
+          cache: ${{ github.ref_type != 'tag' }}
           install_args: "flutter java python"
+
+      # mise-action saves its cache right after installing tools, so the Dart
+      # SDK and engine artifacts that precache downloads need their own cache.
+      - name: Locate Flutter artifact cache
+        run: echo "FLUTTER_BIN_CACHE=$(mise where flutter)/bin/cache" >> "$GITHUB_ENV"
+
+      # https://github.com/actions/cache
+      - name: Restore Flutter artifact cache
+        id: flutter-bin-cache
+        if: ${{ github.ref_type != 'tag' }}
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.FLUTTER_BIN_CACHE }}
+          key: android-flutter-bin-${{ hashFiles('mise.toml', 'mise.lock') }}
 
       - name: Precache Flutter Android artifacts
         run: flutter precache --android
+
+      - name: Save Flutter artifact cache
+        if: ${{ github.ref_type != 'tag' && steps.flutter-bin-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.FLUTTER_BIN_CACHE }}
+          key: ${{ steps.flutter-bin-cache.outputs.cache-primary-key }}
 
       - name: Set environment variables
         run: |
@@ -925,6 +948,30 @@ jobs:
           done
           echo "::error::Failed to install ${ndk_pkg} after 3 attempts"
           exit 1
+
+      - name: Restore pub cache
+        id: pub-cache
+        if: ${{ github.ref_type != 'tag' }}
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.pub-cache
+          key: android-pub-${{ hashFiles('pubspec.lock') }}
+
+      # Dependency jars and the Gradle build cache. The key changes with the
+      # build scripts; the newest entry is reused otherwise.
+      - name: Restore Gradle cache
+        id: gradle-cache
+        if: ${{ github.ref_type != 'tag' }}
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/caches/build-cache-1
+            ~/.gradle/wrapper
+          key: android-gradle-${{ hashFiles('app/android/**/*.gradle.kts', 'app/android/gradle/wrapper/gradle-wrapper.properties', 'pubspec.lock') }}-${{ github.sha }}
+          restore-keys: |
+            android-gradle-${{ hashFiles('app/android/**/*.gradle.kts', 'app/android/gradle/wrapper/gradle-wrapper.properties', 'pubspec.lock') }}-
+            android-gradle-
 
       - name: Resolve dependencies
         working-directory: app
@@ -972,7 +1019,15 @@ jobs:
             echo "::error::unexpected build-name '${BUILD_NAME}' derived from app/pubspec.yaml"
             exit 1
           fi
-          flutter build appbundle \
+          # Keep the verbose log off the public job log: it can contain the
+          # production dart-defines. Print only Gradle tasks and slow steps.
+          verbose_log="$RUNNER_TEMP/flutter-build-appbundle.log"
+          print_build_summary() {
+            grep -nE "> Task |BUILD (SUCCESSFUL|FAILED)|\[ *\+[0-9]{4,} ms\]|[Ee]rror|Exception|FAILURE" "$verbose_log" \
+              | grep -viE "dart.?define" | cut -c1-240 || true
+          }
+          trap print_build_summary EXIT
+          flutter -v build appbundle \
             --release \
             --no-pub \
             --build-name="$BUILD_NAME" \
@@ -981,7 +1036,25 @@ jobs:
             --dart-define IS_PRODUCTION="true" \
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
             --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
-            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE"
+            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE" \
+            > "$verbose_log" 2>&1
+
+      - name: Save pub cache
+        if: ${{ github.ref_type != 'tag' && steps.pub-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.pub-cache
+          key: ${{ steps.pub-cache.outputs.cache-primary-key }}
+
+      - name: Save Gradle cache
+        if: ${{ github.ref_type != 'tag' && steps.gradle-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/caches/build-cache-1
+            ~/.gradle/wrapper
+          key: ${{ steps.gradle-cache.outputs.cache-primary-key }}
 
       - name: Copy AAB to expected location
         run: |
