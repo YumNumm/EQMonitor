@@ -409,15 +409,7 @@ jobs:
             echo "::error::unexpected build-name '${BUILD_NAME}' derived from app/pubspec.yaml"
             exit 1
           fi
-          # Keep the verbose log off the public job log: it can contain the
-          # production dart-defines. Print only commands and slow steps.
-          verbose_log="$RUNNER_TEMP/flutter-config-only.log"
-          print_config_summary() {
-            grep -nE "executing:|\[ *\+[0-9]{4,} ms\]|[Ee]rror|Exception" "$verbose_log" \
-              | grep -viE "dart.?define" | cut -c1-240 || true
-          }
-          trap print_config_summary EXIT
-          flutter -v build ios --config-only \
+          flutter build ios --config-only \
             --no-codesign \
             --no-pub \
             --build-name="$BUILD_NAME" \
@@ -426,8 +418,7 @@ jobs:
             --dart-define IS_PRODUCTION="true" \
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
             --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
-            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE" \
-            > "$verbose_log" 2>&1
+            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE"
 
       - name: Extract App Store Connect API Key
         run: |
@@ -967,6 +958,7 @@ jobs:
           path: |
             ~/.gradle/caches/modules-2
             ~/.gradle/caches/build-cache-1
+            ~/.gradle/caches/[0-9]*
             ~/.gradle/wrapper
           key: android-gradle-${{ hashFiles('app/android/**/*.gradle.kts', 'app/android/gradle/wrapper/gradle-wrapper.properties', 'pubspec.lock') }}-${{ github.sha }}
           restore-keys: |
@@ -1019,15 +1011,7 @@ jobs:
             echo "::error::unexpected build-name '${BUILD_NAME}' derived from app/pubspec.yaml"
             exit 1
           fi
-          # Keep the verbose log off the public job log: it can contain the
-          # production dart-defines. Print only Gradle tasks and slow steps.
-          verbose_log="$RUNNER_TEMP/flutter-build-appbundle.log"
-          print_build_summary() {
-            grep -nE "> Task |BUILD (SUCCESSFUL|FAILED)|\[ *\+[0-9]{4,} ms\]|[Ee]rror|Exception|FAILURE" "$verbose_log" \
-              | grep -viE "dart.?define" | cut -c1-240 || true
-          }
-          trap print_build_summary EXIT
-          flutter -v build appbundle \
+          flutter build appbundle \
             --release \
             --no-pub \
             --build-name="$BUILD_NAME" \
@@ -1036,8 +1020,7 @@ jobs:
             --dart-define IS_PRODUCTION="true" \
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
             --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
-            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE" \
-            > "$verbose_log" 2>&1
+            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE"
 
       - name: Save pub cache
         if: ${{ github.ref_type != 'tag' && steps.pub-cache.outputs.cache-hit != 'true' }}
@@ -1053,6 +1036,7 @@ jobs:
           path: |
             ~/.gradle/caches/modules-2
             ~/.gradle/caches/build-cache-1
+            ~/.gradle/caches/[0-9]*
             ~/.gradle/wrapper
           key: ${{ steps.gradle-cache.outputs.cache-primary-key }}
 
