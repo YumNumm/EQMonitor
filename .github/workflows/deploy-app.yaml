@@ -367,14 +367,15 @@ jobs:
           key: ios-spm-${{ env.XCODE_BUILD_VERSION }}-${{ hashFiles('app/ios/Runner.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
 
       # Content-addressed Clang/Swift compilation cache (native code only;
-      # Dart AOT is not cached). The newest entry is always reused.
+      # Dart AOT is not cached). ~0.5GB per entry, so a new entry is saved only
+      # when native sources or plugin versions change.
       - name: Restore Xcode compilation cache
         id: xcode-cas-cache
         if: ${{ github.ref_type != 'tag' }}
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/Library/Developer/Xcode/DerivedData/CompilationCache.noindex
-          key: ios-xcode-cas-${{ env.XCODE_BUILD_VERSION }}-${{ github.sha }}
+          key: ios-xcode-cas-${{ env.XCODE_BUILD_VERSION }}-${{ hashFiles('pubspec.lock', 'app/ios/**/*.swift', 'app/ios/**/*.[hm]', 'app/ios/**/*.pbxproj', 'app/ios/**/Package.resolved') }}
           restore-keys: |
             ios-xcode-cas-${{ env.XCODE_BUILD_VERSION }}-
 
@@ -948,8 +949,8 @@ jobs:
           path: ~/.pub-cache
           key: android-pub-${{ hashFiles('pubspec.lock') }}
 
-      # Dependency jars and the Gradle build cache. The key changes with the
-      # build scripts; the newest entry is reused otherwise.
+      # Dependency jars, Kotlin DSL script classes, transforms and the Gradle
+      # build cache.
       - name: Restore Gradle cache
         id: gradle-cache
         if: ${{ github.ref_type != 'tag' }}
@@ -960,9 +961,9 @@ jobs:
             ~/.gradle/caches/build-cache-1
             ~/.gradle/caches/[0-9]*
             ~/.gradle/wrapper
-          key: android-gradle-${{ hashFiles('app/android/**/*.gradle.kts', 'app/android/gradle/wrapper/gradle-wrapper.properties', 'pubspec.lock') }}-${{ github.sha }}
+          # ~3GB per entry: save only when the build inputs change, not per commit.
+          key: android-gradle-${{ hashFiles('app/android/**/*.gradle.kts', 'app/android/gradle/wrapper/gradle-wrapper.properties', 'pubspec.lock') }}
           restore-keys: |
-            android-gradle-${{ hashFiles('app/android/**/*.gradle.kts', 'app/android/gradle/wrapper/gradle-wrapper.properties', 'pubspec.lock') }}-
             android-gradle-
 
       - name: Resolve dependencies
