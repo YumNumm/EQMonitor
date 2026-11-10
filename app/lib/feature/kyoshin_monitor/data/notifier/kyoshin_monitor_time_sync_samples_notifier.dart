@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_trimmed_mean_calculator.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_time_sync_estimator.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_time_sync_samples.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,7 +16,7 @@ class KyoshinMonitorTimeSyncSamplesNotifier
   }
 
   void add({required Duration roundTripTime, required Duration shift}) {
-    final calculator = ref.read(kyoshinMonitorTrimmedMeanCalculatorProvider);
+    final calculator = ref.read(kyoshinMonitorTimeSyncEstimatorProvider);
     state = KyoshinMonitorTimeSyncSamples(
       roundTripTimes: calculator.append(
         samples: state.roundTripTimes,

@@ -37,7 +37,7 @@
   `network_security_config.xml` で `www.kmoni.bosai.go.jp` のHTTP通信を許可しているが、
   Cronetでの取得と報告端末での復旧は未検証。`lmoni` への切替と再起動後の表示も確認する。
 - 高: `KyoshinMonitorNotifier._fetchAndAnalyzeImage` を注入可能な専用クラスへ分離し、毎秒 `AsyncLoading` に戻す点滅を解消する。補正量の正本をSettings/Adjustmentで二重化せず、永続化をRepositoryへ集約する。
-- 高: `timer_stream` の scheduling 時にNTPを引く処理と、補正済みclockから対象時刻を発行する処理の意味を確認する。二重補正の不具合とは断定せず、端末時計＋30秒と小数秒offsetで秒境界・発行時刻の契約をテストする。
+- 高: 時刻同期エンジン（初回即時→連続測定→画像取得による二分探索の較正）を実機で確認する。起動から収束までの時間、較正後の404頻度、kmoni/長周期の切替、background復帰、端末時計＋30秒と小数秒のNTP offsetを見る。`timer_stream` の秒境界はappClock基準へ修正済みだが、発行時刻の契約テストは未作成。
 - 中: `KyoshinMonitorTimerNotifier` のTimer/StreamControllerと `unawaited` バースト、`delayAdjustType` の4値/2挙動を整理する。`lastUpdatedAt` をappClockへ揃え、未使用色mapファイル3件の参照を確認して削除する。
 - 中: lmoniを既定にした状態で長周期階級・周期別画像の実機表示を確認する。最低震度フィルターに影響されないこと、地表固定、種類切替後の更新を確認する。EEW発表中のP/S波画像は未検証。
 - 低: 遅延設定UIをhomeから `kyoshin_monitor/ui` へ移す。Mutation/flowは副作用・画面遷移の実際の必要に合わせて導入する。

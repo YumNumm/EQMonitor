@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
@@ -52,6 +53,32 @@ class const KyoshinMonitorRepository({
       dateTime: dateTime,
     ),
   };
+
+  /// 指定時刻の画像が公開済みかどうか。
+  ///
+  /// 404 は「まだ公開されていない」として false を返す。
+  /// それ以外の失敗は公開状況を判断できないため Failure とする。
+  Future<Result<bool, Exception>> isRealtimeImagePublished({
+    required KyoshinMonitorSource source,
+    required RealtimeDataType type,
+    required RealtimeLayer layer,
+    required DateTime dateTime,
+  }) => Result.capture(() async {
+    try {
+      await fetchRealtimeImage(
+        source: source,
+        type: type,
+        layer: layer,
+        dateTime: dateTime,
+      );
+      return true;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        return false;
+      }
+      rethrow;
+    }
+  });
 
   Future<MaintenanceMessage> fetchMaintenanceMessage() =>
       kmoni.getMaintenanceMessage();

@@ -1,54 +1,12 @@
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_delay_resolver.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_time_sample_calculator.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_trimmed_mean_calculator.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_delay.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_time_sample.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const trimmedMean = KyoshinMonitorTrimmedMeanCalculator();
   const timeSample = KyoshinMonitorTimeSampleCalculator();
   const delayResolver = KyoshinMonitorDelayResolver();
-
-  group('KyoshinMonitorTrimmedMeanCalculator', () {
-    test('サンプルが無い場合はnull', () {
-      expect(trimmedMean.mean(const []), isNull);
-    });
-
-    test('2件以下は単純平均', () {
-      final samples = trimmedMean.append(
-        samples: const [Duration(milliseconds: 100)],
-        value: const Duration(milliseconds: 300),
-      );
-      expect(trimmedMean.mean(samples), const Duration(milliseconds: 200));
-    });
-
-    test('3件以上は最小・最大を除いた平均', () {
-      var samples = <Duration>[];
-      for (final value in [
-        const Duration(milliseconds: 200),
-        const Duration(milliseconds: 1000),
-        const Duration(milliseconds: 100),
-        const Duration(milliseconds: 300),
-      ]) {
-        samples = trimmedMean.append(samples: samples, value: value);
-      }
-      expect(trimmedMean.mean(samples), const Duration(milliseconds: 250));
-    });
-
-    test('capacityを超えると古いものから捨てる', () {
-      var samples = <Duration>[];
-      for (var i = 1; i <= 5; i++) {
-        samples = trimmedMean.append(
-          samples: samples,
-          value: Duration(milliseconds: i * 100),
-          capacity: 3,
-        );
-      }
-      expect(samples.length, 3);
-      expect(trimmedMean.mean(samples), const Duration(milliseconds: 400));
-    });
-  });
 
   group('KyoshinMonitorTimeSampleCalculator', () {
     test('往復時間は送信から受信までの差', () {
@@ -138,8 +96,6 @@ void main() {
       maxOffset: Duration(milliseconds: 5000),
       maxAdjustment: Duration(seconds: 5),
     );
-    final onTheMinute = DateTime.utc(2026, 8, 19, 0, 17);
-    final midMinute = DateTime.utc(2026, 8, 19, 0, 17, 30);
 
     test('実測値に補正量を足したものが画像遅延', () {
       expect(
@@ -170,30 +126,6 @@ void main() {
           config: config,
         ),
         config.step,
-      );
-    });
-
-    test('成功しても秒が0以外なら補正量は変わらない', () {
-      expect(
-        delayResolver.onFetchSucceeded(
-          adjustment: Duration.zero,
-          publishDelay: const Duration(milliseconds: 1230),
-          targetTime: midMinute,
-          config: config,
-        ),
-        Duration.zero,
-      );
-    });
-
-    test('成功して秒が0なら補正量をstepぶん詰める', () {
-      expect(
-        delayResolver.onFetchSucceeded(
-          adjustment: Duration.zero,
-          publishDelay: const Duration(milliseconds: 1230),
-          targetTime: onTheMinute,
-          config: config,
-        ),
-        -config.step,
       );
     });
   });

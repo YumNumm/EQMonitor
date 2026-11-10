@@ -10,6 +10,14 @@
 - providerは計算の合成だけでI/O・状態保持なし、logicはmodelだけに依存しRef・可変fieldなし。
   modelから他層へ依存しない。画面遷移が必要になるまでdata/flowを作らない。
 - 処理はTimeSync→ImageDelay→TargetTime→画像取得→Adjustment（404学習）。
+- TimeSyncは初回の`latest.json`1件で即公開し、約230ms間隔の連続測定で位相を散らして詰める。
+  `latest_time`は1秒粒度の切り捨てなので、平均ではなく最小遅延（最大shift）を採用する。
+  確定後の定期測定は見積もりを動かさず、矛盾の検出時だけ測り直す。
+- 確定後はKyoshinMonitorDelayCalibrationが表示用とは別に画像を数回取得し、
+  公開の境目を二分探索して補正量へ反映し、5分ごとにやり直す。実機での収束時間・404頻度は未検証。
+- 遅延を短くするのは較正だけ。表示用の取得成功で詰めると境目を割って毎回フレームを落とす。
+  表示用の取得は404のときに補正量を増やすだけにする。
+- 公開遅延の下限は200msで永続化しない。保存済みの旧値に縛られると較正で詰められない。
 - サンプル保持はKyoshinMonitorTimeSyncSamplesNotifier、公開遅延はkyoshinMonitorImageDelayProvider。
   layer/source/delayProfileはKyoshinMonitorImageRequestが持つ。曖昧なeffectiveXxxを増やさない。
 - 補正量のruntime正本はAdjustment Notifier。現状はSettings.api.offsetAdjustmentsへ永続化を書き戻す。
@@ -20,8 +28,8 @@
 - `app/lib/core/provider/clock/app_clock.dart`のnowはclock.nowにNTP offsetを加え、
   realtime/time-shift/replayで共通の基準を返す。
 - `app/lib/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart`は
-  発行時にappClockから公開遅延を引く。schedule側ではappClockからNTP offsetを引いており、
-  秒境界の意味を別途確認する必要がある。静的確認だけで二重補正による不具合と断定しない。
+  発行時にappClockから公開遅延を引く。scheduleの秒境界も同じappClockで数える。
+  端末時計で数えるとNTP offsetの小数部だけ発火が遅れる。較正の送信時刻も同じ時計に揃える。
 - `app/lib/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart`には
   privateの_fetchAndAnalyzeImage、取得ごとのAsyncLoading代入が残る。
   lastUpdatedAtは画像の観測時刻(targetTime)で、404以外の取得失敗でも直前の表示を遅延扱いにする。

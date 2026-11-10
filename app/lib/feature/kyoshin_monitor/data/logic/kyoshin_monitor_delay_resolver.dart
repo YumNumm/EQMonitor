@@ -7,11 +7,10 @@ part 'kyoshin_monitor_delay_resolver.g.dart';
 KyoshinMonitorDelayResolver kyoshinMonitorDelayResolver(Ref ref) =>
     const KyoshinMonitorDelayResolver();
 
-/// `latest.json` で測った公開遅延を、画像取得の 404 を手がかりに詰めていくロジック。
+/// `latest.json` で測った公開遅延に、パイプライン別の補正量を適用するロジック。
 ///
-/// `latest.json` の `latest_time` は 1 秒粒度で、かつ実際の画像公開より
-/// 保守的に遅れている (実測: 長周期地震動モニタは画像が 0.57 秒で公開されるのに
-/// `latest_time` は約 1 秒遅れ)。そのぶんをここで取り戻す。
+/// `latest.json` の `latest_time` は 1 秒粒度で、実際に画像が取得可能になる
+/// タイミングとは 1 秒未満のずれがある。そのぶんをここで調整する。
 ///
 /// 補正は公開遅延そのものではなく「測定値からの差分」として保持する。
 /// こうすることで、`latest.json` の再同期が端末時計のドリフトやサーバ側の
@@ -39,34 +38,6 @@ class const KyoshinMonitorDelayResolver() {
     min: -config.maxAdjustment,
     max: config.maxAdjustment,
   );
-
-  /// 取得に成功したときの補正量。
-  ///
-  /// 毎ティック詰めると 404 と往復して発振するため、
-  /// KyoshinEewViewer と同じく毎分 1 回だけ試す。
-  Duration onFetchSucceeded({
-    required Duration adjustment,
-    required Duration publishDelay,
-    required DateTime targetTime,
-    required KyoshinMonitorDelayAdjustConfig config,
-  }) {
-    if (targetTime.second != 0) {
-      return adjustment;
-    }
-    final current = imageDelay(
-      publishDelay: publishDelay,
-      adjustment: adjustment,
-      config: config,
-    );
-    if (current <= config.minOffset) {
-      return adjustment;
-    }
-    return clamp(
-      value: adjustment - config.step,
-      min: -config.maxAdjustment,
-      max: config.maxAdjustment,
-    );
-  }
 
   Map<KyoshinMonitorDelayProfile, Duration> setAdjustment({
     required Map<KyoshinMonitorDelayProfile, Duration> adjustments,

@@ -5,7 +5,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_time_sample_calculator.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_trimmed_mean_calculator.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_time_sync_estimator.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_time_sample.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_time_sync_samples.dart';
@@ -23,16 +23,23 @@ part 'kyoshin_monitor_timer_notifier.g.dart';
 /// 初回成功までの再試行間隔
 const _firstSyncRetryInterval = Duration(seconds: 5);
 
-/// トリム平均を成立させるため、起動直後は短い間隔で連続して測る。
-///
-/// 長周期地震動モニタの公式フロントエンドと同じ「最初の5回は1秒間隔」。
-const _initialBurstCount = 5;
-const _initialBurstInterval = Duration(seconds: 1);
+/// 起動直後に連続して測る回数 (初回を含む)。
+const _burstSampleCount = 5;
 
-/// `latest.json` を定期的に取得し、サーバ時刻と端末時計のずれを測り続ける。
+/// 連続測定の間隔。
 ///
-/// 単発の測定では往復時間のゆらぎがそのまま残るため、往復時間とずれの
-/// どちらもトリム平均 (直近5件から最小・最大を除いた平均) で扱う。
+/// `latest_time` は 1 秒粒度のため、1 秒間隔で測ると毎回同じ位相を引いて
+/// しまい精度が上がらない。1 秒を割り切らない短い間隔にして位相を散らす。
+const _burstSampleGap = Duration(milliseconds: 230);
+
+/// `latest.json` でサーバ時刻と端末時計のずれを測る時刻同期エンジン。
+///
+/// 1. 最初の 1 サンプルが取れた時点でその値を公開し、すぐ画像取得を始められるようにする。
+/// 2. 続けて位相をずらした測定を数回行い、1 秒粒度の切り捨て誤差を詰める。
+///    確定したら `settledAt` を立て、画像取得による較正
+///    (`KyoshinMonitorDelayCalibration`) へ引き継ぐ。
+/// 3. 以後の定期測定は見積もりを動かさず、矛盾の検出だけに使う。
+///    矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は最初から測り直す。
 @riverpod
 class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
   @override
@@ -59,28 +66,14 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
       timeSampleCalculator: ref.read(
         kyoshinMonitorTimeSampleCalculatorProvider,
       ),
-      trimmedMeanCalculator: ref.read(
-        kyoshinMonitorTrimmedMeanCalculatorProvider,
-      ),
+      estimator: ref.read(kyoshinMonitorTimeSyncEstimatorProvider),
     );
 
-    Future<KyoshinMonitorTimerState?> syncOnce() async {
-      final samplesNotifier = ref.read(
-        kyoshinMonitorTimeSyncSamplesProvider.notifier,
-      );
+    Future<KyoshinMonitorTimeSample?> sampleOnce() async {
       final result = await sync.sample(source);
       switch (result) {
         case Success(:final value):
-          samplesNotifier.add(
-            roundTripTime: sync.timeSampleCalculator.roundTripTime(value),
-            shift: sync.timeSampleCalculator.shift(value),
-          );
-          final samples = ref.read(kyoshinMonitorTimeSyncSamplesProvider);
-          return sync.stateFrom(
-            samples: samples,
-            source: source,
-            lastSyncedAt: clock.now(),
-          );
+          return value;
         case Failure(:final exception):
           talker.logCustom(
             KyoshinMonitorLog(
@@ -92,34 +85,70 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
       }
     }
 
+    // サンプルを蓄積し、蓄積後の見積もりを返す。
+    KyoshinMonitorTimerState? accept(KyoshinMonitorTimeSample sample) {
+      ref
+          .read(kyoshinMonitorTimeSyncSamplesProvider.notifier)
+          .add(
+            roundTripTime: sync.timeSampleCalculator.roundTripTime(sample),
+            shift: sync.timeSampleCalculator.shift(sample),
+          );
+      return sync.stateFrom(
+        samples: ref.read(kyoshinMonitorTimeSyncSamplesProvider),
+        source: source,
+        lastSyncedAt: clock.now(),
+      );
+    }
+
+    // 1. 最初の 1 サンプルをそのまま使う。
+    KyoshinMonitorTimerState? first;
     while (!disposed) {
-      final next = await syncOnce();
-      if (next != null) {
-        yield next;
+      final sample = await sampleOnce();
+      if (disposed) {
+        return;
+      }
+      first = sample == null ? null : accept(sample);
+      if (first != null) {
         break;
       }
       await Future<void>.delayed(_firstSyncRetryInterval);
     }
+    if (first == null) {
+      return;
+    }
+    var current = first;
+    yield current;
 
+    // 2. 位相をずらした連続測定で見積もりを詰める。
+    var isSettled = false;
     unawaited(
       Future<void>(() async {
-        for (var i = 1; i < _initialBurstCount; i++) {
-          await Future<void>.delayed(_initialBurstInterval);
+        for (var i = 1; i < _burstSampleCount; i++) {
+          await Future<void>.delayed(_burstSampleGap);
           if (disposed || controller.isClosed) {
             return;
           }
-          final next = await syncOnce();
-          if (next != null && !controller.isClosed) {
-            controller.add(next);
+          final sample = await sampleOnce();
+          if (disposed || controller.isClosed) {
+            return;
+          }
+          final next = sample == null ? null : accept(sample);
+          if (next != null) {
+            current = next;
+            controller.add(current);
           }
         }
+        current = current.copyWith(settledAt: clock.now());
+        isSettled = true;
+        controller.add(current);
       }),
     );
 
+    // 3. 定期測定は矛盾の検出だけに使う。
     var isResyncing = false;
     Timer? resyncTimer;
     resyncTimer = Timer.periodic(resyncInterval, (_) async {
-      if (disposed || controller.isClosed || isResyncing) {
+      if (disposed || controller.isClosed || isResyncing || !isSettled) {
         return;
       }
       if (KyoshinMonitorBackground.isBackground(
@@ -129,10 +158,27 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
       }
       isResyncing = true;
       try {
-        final next = await syncOnce();
-        if (next != null && !controller.isClosed) {
-          controller.add(next);
+        final sample = await sampleOnce();
+        if (sample == null || disposed || controller.isClosed) {
+          return;
         }
+        final sampleShift = sync.timeSampleCalculator.shift(sample);
+        if (sync.estimator.isConsistent(
+          estimate: current.shift,
+          sampleShift: sampleShift,
+        )) {
+          current = current.copyWith(lastSyncedAt: clock.now());
+          controller.add(current);
+          return;
+        }
+        talker.logCustom(
+          KyoshinMonitorLog(
+            'time sync drifted: source=${source.name} '
+            'estimate=${current.shift.inMilliseconds}ms '
+            'sample=${sampleShift.inMilliseconds}ms, resyncing',
+          ),
+        );
+        ref.invalidateSelf();
       } finally {
         isResyncing = false;
       }
@@ -146,7 +192,7 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
 class const KyoshinMonitorTimeSync({
   required final KyoshinMonitorRepository repository,
   required final KyoshinMonitorTimeSampleCalculator timeSampleCalculator,
-  required final KyoshinMonitorTrimmedMeanCalculator trimmedMeanCalculator,
+  required final KyoshinMonitorTimeSyncEstimator estimator,
 }) {
   Future<Result<KyoshinMonitorTimeSample, Exception>> sample(
     KyoshinMonitorSource source,
@@ -157,8 +203,8 @@ class const KyoshinMonitorTimeSync({
     required KyoshinMonitorSource source,
     required DateTime lastSyncedAt,
   }) {
-    final shift = trimmedMeanCalculator.mean(samples.shifts);
-    final roundTripTime = trimmedMeanCalculator.mean(samples.roundTripTimes);
+    final shift = estimator.shift(samples.shifts);
+    final roundTripTime = estimator.roundTripTime(samples.roundTripTimes);
     if (shift == null || roundTripTime == null) {
       return null;
     }

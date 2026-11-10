@@ -53,7 +53,7 @@ final class KyoshinMonitorTimeSyncSamplesNotifierProvider
 }
 
 String _$kyoshinMonitorTimeSyncSamplesNotifierHash() =>
-    r'448b1b84139a04b8cb6e5d60a3e5ebf76cd830d1';
+    r'ec942272e218d1e84f46a74d9f72c174961ebe53';
 
 abstract class _$KyoshinMonitorTimeSyncSamplesNotifier
     extends $Notifier<KyoshinMonitorTimeSyncSamples> {

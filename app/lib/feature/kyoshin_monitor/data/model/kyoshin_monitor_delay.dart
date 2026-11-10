@@ -44,3 +44,40 @@ class const KyoshinMonitorDelayAdjustConfig({
   /// 補正量の絶対値の上限
   final Duration maxAdjustment = const Duration(seconds: 5),
 });
+
+/// 画像が公開される境目を挟む遅延の区間。
+class const KyoshinMonitorDelayEdgeBracket({
+  /// これより短い遅延では未公開 (404) とみなしている値
+  required final Duration lower,
+
+  /// 公開済みとみなしている遅延
+  required final Duration upper,
+
+  /// [upper] で実際に取得できることを確認済みか
+  required final bool isUpperVerified,
+}) {
+  KyoshinMonitorDelayEdgeBracket copyWith({
+    Duration? lower,
+    Duration? upper,
+    bool? isUpperVerified,
+  }) => KyoshinMonitorDelayEdgeBracket(
+    lower: lower ?? this.lower,
+    upper: upper ?? this.upper,
+    isUpperVerified: isUpperVerified ?? this.isUpperVerified,
+  );
+}
+
+/// 画像取得による公開遅延の較正状態。
+enum KyoshinMonitorDelayCalibrationStatus {
+  /// 較正の条件を満たしていない、または時刻同期の完了待ち
+  idle,
+
+  /// 二分探索で公開の境目を探している
+  probing,
+
+  /// 較正結果を補正量へ反映済み
+  calibrated,
+
+  /// 通信失敗などで較正できなかった (404 フィードバックに任せる)
+  failed,
+}

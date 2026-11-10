@@ -12,8 +12,9 @@ part of 'kyoshin_monitor_offset_adjustment_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 /// パイプライン別の、`latest.json` 実測値からの補正量。
 ///
-/// 画像取得の 404 / 成功をフィードバックとして受け取り、公開遅延の見積もりを
-/// 詰めていく。値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
+/// 短くする方向は画像取得による較正 (`KyoshinMonitorDelayCalibration`) が、
+/// 長くする方向は表示用の取得で起きた 404 が担う。
+/// 値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
 
 @ProviderFor(KyoshinMonitorOffsetAdjustment)
 final kyoshinMonitorOffsetAdjustmentProvider =
@@ -21,8 +22,9 @@ final kyoshinMonitorOffsetAdjustmentProvider =
 
 /// パイプライン別の、`latest.json` 実測値からの補正量。
 ///
-/// 画像取得の 404 / 成功をフィードバックとして受け取り、公開遅延の見積もりを
-/// 詰めていく。値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
+/// 短くする方向は画像取得による較正 (`KyoshinMonitorDelayCalibration`) が、
+/// 長くする方向は表示用の取得で起きた 404 が担う。
+/// 値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
 final class KyoshinMonitorOffsetAdjustmentProvider
     extends
         $NotifierProvider<
@@ -31,8 +33,9 @@ final class KyoshinMonitorOffsetAdjustmentProvider
         > {
   /// パイプライン別の、`latest.json` 実測値からの補正量。
   ///
-  /// 画像取得の 404 / 成功をフィードバックとして受け取り、公開遅延の見積もりを
-  /// 詰めていく。値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
+  /// 短くする方向は画像取得による較正 (`KyoshinMonitorDelayCalibration`) が、
+  /// 長くする方向は表示用の取得で起きた 404 が担う。
+  /// 値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
   KyoshinMonitorOffsetAdjustmentProvider._()
     : super(
         from: null,
@@ -62,12 +65,13 @@ final class KyoshinMonitorOffsetAdjustmentProvider
 }
 
 String _$kyoshinMonitorOffsetAdjustmentHash() =>
-    r'd9dff952ae70b6d9d09962a730e2fbcda90800b0';
+    r'09b884f9c6d31eee0c253af2ad54df113a492fa8';
 
 /// パイプライン別の、`latest.json` 実測値からの補正量。
 ///
-/// 画像取得の 404 / 成功をフィードバックとして受け取り、公開遅延の見積もりを
-/// 詰めていく。値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
+/// 短くする方向は画像取得による較正 (`KyoshinMonitorDelayCalibration`) が、
+/// 長くする方向は表示用の取得で起きた 404 が担う。
+/// 値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
 
 abstract class _$KyoshinMonitorOffsetAdjustment
     extends $Notifier<Map<KyoshinMonitorDelayProfile, Duration>> {

@@ -75,14 +75,19 @@ abstract class KyoshinMonitorSettingsApiModel
 
     /// パイプライン別の、`latest.json` 実測値からの補正量。
     ///
-    /// 強震モニタと長周期地震動階級では画像の公開遅延が約 0.66 秒違う
-    /// (実測: 1.23s と 0.57s) ため、共通の値にすると切り替えのたびに
+    /// 強震モニタと長周期地震動階級では画像が取得可能になるまでの時間が
+    /// 異なるため、共通の値にすると切り替えのたびに
     /// 再収束のための 404 が発生する。永続化して次回起動時も引き継ぐ。
     @Default(<KyoshinMonitorDelayProfile, Duration>{})
     Map<KyoshinMonitorDelayProfile, Duration> offsetAdjustments,
 
     /// 公開遅延の下限
-    @Default(Duration(milliseconds: 600)) Duration minOffset,
+    ///
+    /// 変更する UI はなく、保存済みの旧既定値 (600ms) が残ると較正で
+    /// 詰められないため、永続化の対象から外して常にこの既定値を使う。
+    @Default(Duration(milliseconds: 200))
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    Duration minOffset,
 
     /// 公開遅延の上限
     @Default(Duration(milliseconds: 5000)) Duration maxOffset,
