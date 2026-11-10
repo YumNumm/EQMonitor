@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer_geojson_updater.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_grid_cell_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
@@ -89,6 +90,7 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
               'line-opacity': 1,
             },
           ),
+          belowLayerId: BaseLayer.markerLowerAnchor.name,
         );
 
         isInitialized.value = true;

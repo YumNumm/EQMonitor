@@ -49,7 +49,7 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
               filter: _areaFilterBuilder.build(codes),
               paint: const {'fill-color': '#FF0000', 'fill-opacity': 0.25},
             ),
-            belowLayerId: BaseLayer.foregroundOverlayAnchor.name,
+            belowLayerId: BaseLayer.regionOverlayAnchor.name,
           );
           isInitialized.value = true;
           await styleController.updateFilter(

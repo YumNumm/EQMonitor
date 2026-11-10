@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_station_intensity_layer.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -48,6 +49,7 @@ class LiveMonitorEarthquakeLayers extends ConsumerWidget {
         ),
         EarthquakeHistoryStationIntensityLayer(
           key: const ValueKey('live-monitor-earthquake-station'),
+          belowLayerId: BaseLayer.markerLowerAnchor.name,
           earthquake: earthquake,
           parameter: parameter,
           showingLpgmIntensity: showingLpgmIntensity,
@@ -61,6 +63,7 @@ class LiveMonitorEarthquakeLayers extends ConsumerWidget {
         if (coordinates is CoordinateLatLng)
           EarthquakeHistoryHypocenterLayer(
             key: const ValueKey('live-monitor-earthquake-hypocenter'),
+            belowLayerId: BaseLayer.markerUpperAnchor.name,
             earthquake: earthquake,
             parameter: parameter,
           ),

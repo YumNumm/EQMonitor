@@ -233,6 +233,7 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
           sourceId: _pWaveSourceId,
           paint: {'line-color': '#0000FF', 'line-width': 1},
         ),
+        belowLayerId: BaseLayer.waveLineAnchor.name,
       ),
       styleController.addLayer(
         const LineStyleLayer(
@@ -243,6 +244,7 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
             'line-width': 2,
           },
         ),
+        belowLayerId: BaseLayer.waveLineAnchor.name,
       ),
       styleController.addLayer(
         const FillStyleLayer(
