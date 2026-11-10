@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/clock/time_mode.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_image_delay_status.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_delay_calibration_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_offset_adjustment_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
@@ -40,6 +41,9 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         }
       }
     });
+
+    // 画像取得による公開遅延の較正を、強震モニタの表示中だけ動かす。
+    ref.listen(kyoshinMonitorDelayCalibrationProvider, (_, _) {});
 
     ref.listen(
       appLifecycleProvider,
@@ -143,14 +147,6 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         },
       );
       workerSw.stop();
-
-      // 取得できたので、オフセットを詰められないか試す。
-      ref
-          .read(kyoshinMonitorOffsetAdjustmentProvider.notifier)
-          .onFetchSucceeded(
-            profile: request.delayProfile,
-            targetTime: targetTime,
-          );
 
       return KyoshinMonitorState(
         // 表示時刻は取得完了時の端末時計ではなく、画像の観測時刻とする。

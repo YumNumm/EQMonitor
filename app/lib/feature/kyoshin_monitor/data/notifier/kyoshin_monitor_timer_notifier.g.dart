@@ -10,28 +10,40 @@ part of 'kyoshin_monitor_timer_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// `latest.json` を定期的に取得し、サーバ時刻と端末時計のずれを測り続ける。
+/// `latest.json` でサーバ時刻と端末時計のずれを測る時刻同期エンジン。
 ///
-/// 単発の測定では往復時間のゆらぎがそのまま残るため、往復時間とずれの
-/// どちらもトリム平均 (直近5件から最小・最大を除いた平均) で扱う。
+/// 1. 最初の 1 サンプルが取れた時点でその値を公開し、すぐ画像取得を始められるようにする。
+/// 2. 続けて位相をずらした測定を数回行い、1 秒粒度の切り捨て誤差を詰める。
+///    確定したら `settledAt` を立て、画像取得による較正
+///    (`KyoshinMonitorDelayCalibration`) へ引き継ぐ。
+/// 3. 以後の定期測定は見積もりを動かさず、矛盾の検出だけに使う。
+///    矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は最初から測り直す。
 
 @ProviderFor(KyoshinMonitorTimerNotifier)
 final kyoshinMonitorTimerProvider = KyoshinMonitorTimerNotifierProvider._();
 
-/// `latest.json` を定期的に取得し、サーバ時刻と端末時計のずれを測り続ける。
+/// `latest.json` でサーバ時刻と端末時計のずれを測る時刻同期エンジン。
 ///
-/// 単発の測定では往復時間のゆらぎがそのまま残るため、往復時間とずれの
-/// どちらもトリム平均 (直近5件から最小・最大を除いた平均) で扱う。
+/// 1. 最初の 1 サンプルが取れた時点でその値を公開し、すぐ画像取得を始められるようにする。
+/// 2. 続けて位相をずらした測定を数回行い、1 秒粒度の切り捨て誤差を詰める。
+///    確定したら `settledAt` を立て、画像取得による較正
+///    (`KyoshinMonitorDelayCalibration`) へ引き継ぐ。
+/// 3. 以後の定期測定は見積もりを動かさず、矛盾の検出だけに使う。
+///    矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は最初から測り直す。
 final class KyoshinMonitorTimerNotifierProvider
     extends
         $StreamNotifierProvider<
           KyoshinMonitorTimerNotifier,
           KyoshinMonitorTimerState
         > {
-  /// `latest.json` を定期的に取得し、サーバ時刻と端末時計のずれを測り続ける。
+  /// `latest.json` でサーバ時刻と端末時計のずれを測る時刻同期エンジン。
   ///
-  /// 単発の測定では往復時間のゆらぎがそのまま残るため、往復時間とずれの
-  /// どちらもトリム平均 (直近5件から最小・最大を除いた平均) で扱う。
+  /// 1. 最初の 1 サンプルが取れた時点でその値を公開し、すぐ画像取得を始められるようにする。
+  /// 2. 続けて位相をずらした測定を数回行い、1 秒粒度の切り捨て誤差を詰める。
+  ///    確定したら `settledAt` を立て、画像取得による較正
+  ///    (`KyoshinMonitorDelayCalibration`) へ引き継ぐ。
+  /// 3. 以後の定期測定は見積もりを動かさず、矛盾の検出だけに使う。
+  ///    矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は最初から測り直す。
   KyoshinMonitorTimerNotifierProvider._()
     : super(
         from: null,
@@ -52,12 +64,16 @@ final class KyoshinMonitorTimerNotifierProvider
 }
 
 String _$kyoshinMonitorTimerNotifierHash() =>
-    r'5c8837bc97c3943fe980eb7d043827adf45eead5';
+    r'37d86861d875f569181d0e9c16ed795de93970ad';
 
-/// `latest.json` を定期的に取得し、サーバ時刻と端末時計のずれを測り続ける。
+/// `latest.json` でサーバ時刻と端末時計のずれを測る時刻同期エンジン。
 ///
-/// 単発の測定では往復時間のゆらぎがそのまま残るため、往復時間とずれの
-/// どちらもトリム平均 (直近5件から最小・最大を除いた平均) で扱う。
+/// 1. 最初の 1 サンプルが取れた時点でその値を公開し、すぐ画像取得を始められるようにする。
+/// 2. 続けて位相をずらした測定を数回行い、1 秒粒度の切り捨て誤差を詰める。
+///    確定したら `settledAt` を立て、画像取得による較正
+///    (`KyoshinMonitorDelayCalibration`) へ引き継ぐ。
+/// 3. 以後の定期測定は見積もりを動かさず、矛盾の検出だけに使う。
+///    矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は最初から測り直す。
 
 abstract class _$KyoshinMonitorTimerNotifier
     extends $StreamNotifier<KyoshinMonitorTimerState> {

@@ -1,13 +1,10 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_delay_resolver.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_image_request_resolver.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_time_sample_calculator.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_delay.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_offset_adjustment_notifier.g.dart';
@@ -20,8 +17,9 @@ const _persistDebounce = Duration(seconds: 30);
 
 /// パイプライン別の、`latest.json` 実測値からの補正量。
 ///
-/// 画像取得の 404 / 成功をフィードバックとして受け取り、公開遅延の見積もりを
-/// 詰めていく。値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
+/// 短くする方向は画像取得による較正 (`KyoshinMonitorDelayCalibration`) が、
+/// 長くする方向は表示用の取得で起きた 404 が担う。
+/// 値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
 @Riverpod(keepAlive: true)
 class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
   Timer? _persistTimer;
@@ -108,41 +106,6 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
       ref
           .read(kyoshinMonitorDelayResolverProvider)
           .onFetchFailed(adjustment: of(profile), config: config),
-    );
-  }
-
-  /// 画像の取得に成功した。
-  ///
-  /// [targetTime] の秒が 0 のときだけ、オフセットを詰められないか試す。
-  void onFetchSucceeded({
-    required KyoshinMonitorDelayProfile profile,
-    required DateTime targetTime,
-  }) {
-    final api = ref.read(kyoshinMonitorSettingsProvider).value?.api;
-    if (api == null || !api.autoOffsetIncrement) {
-      return;
-    }
-    final timerState = ref.read(kyoshinMonitorTimerProvider).value;
-    if (timerState == null) {
-      return;
-    }
-    final ntp = ref.read(ntpProvider).value;
-    final publishDelay = ref
-        .read(kyoshinMonitorTimeSampleCalculatorProvider)
-        .publishDelay(shift: timerState.shift, ntpOffset: ntp?.offset);
-    final config = ref
-        .read(kyoshinMonitorImageRequestResolverProvider)
-        .delayAdjustConfig(api);
-    apply(
-      profile,
-      ref
-          .read(kyoshinMonitorDelayResolverProvider)
-          .onFetchSucceeded(
-            adjustment: of(profile),
-            publishDelay: publishDelay,
-            targetTime: targetTime,
-            config: config,
-          ),
     );
   }
 
