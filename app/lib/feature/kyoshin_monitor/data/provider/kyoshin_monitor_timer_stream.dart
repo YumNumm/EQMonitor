@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
-import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_delay_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
@@ -62,8 +61,10 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) {
     if (controller.isClosed) {
       return;
     }
-    final offset = ref.read(ntpProvider).value?.offset ?? Duration.zero;
-    final now = appClock.now().subtract(offset);
+    // `emit` は `appClock.now()` (NTP 補正済み) から対象時刻を求めるため、
+    // 秒境界も同じ時計で数える。端末時計で数えると NTP offset の小数部だけ
+    // 発火が遅れ、そのぶん取得が遅くなる。
+    final now = appClock.now();
     var fireAt = now.truncateToSecond().add(phase);
     while (!fireAt.isAfter(now)) {
       fireAt = fireAt.add(const Duration(seconds: 1));
