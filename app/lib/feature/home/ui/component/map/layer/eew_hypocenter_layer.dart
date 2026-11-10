@@ -228,9 +228,9 @@ class EewHypocenterLayer extends HookConsumerWidget {
           }),
         );
       };
-      // Assets は flutter_gen の静的クラス、latestIconOpacity は useRef。
-      // どちらもビルド間で変化しない。
-      // ignore_keys: Assets, latestIconOpacity
+      // Assets は flutter_gen の静的クラス、BaseLayer は静的メンバ参照、
+      // latestIconOpacity は useRef。いずれもビルド間で変化しない。
+      // ignore_keys: Assets, BaseLayer, latestIconOpacity
     }, [styleController]);
 
     useEffect(() {
