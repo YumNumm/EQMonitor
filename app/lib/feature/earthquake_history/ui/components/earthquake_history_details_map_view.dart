@@ -34,7 +34,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_error_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_layer.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_marker_anchors_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_shindo_db_station_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_station_intensity_layer.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -43,6 +42,7 @@ import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
@@ -142,11 +142,11 @@ class _MapContent extends HookConsumerWidget {
         ref.watch(earthquakeHistoryConfigProvider).value?.details ??
         const EarthquakeHistoryDetailsConfig();
     final stationAnchor = details.hypocenterAboveStations
-        ? EarthquakeHistoryMarkerAnchorsLayer.lower
-        : EarthquakeHistoryMarkerAnchorsLayer.upper;
+        ? BaseLayer.markerLowerAnchor.name
+        : BaseLayer.markerUpperAnchor.name;
     final hypocenterAnchor = details.hypocenterAboveStations
-        ? EarthquakeHistoryMarkerAnchorsLayer.upper
-        : EarthquakeHistoryMarkerAnchorsLayer.lower;
+        ? BaseLayer.markerUpperAnchor.name
+        : BaseLayer.markerLowerAnchor.name;
     final parameter = ref.watch(
       earthquakeHistoryMapLayerParameterProvider.select(
         (v) => v.value ?? const EarthquakeHistoryMapLayerParameter(),
@@ -275,7 +275,6 @@ class _MapContent extends HookConsumerWidget {
             }
           },
           children: [
-            const EarthquakeHistoryMarkerAnchorsLayer(),
             if (showingDb) ...[
               if (dbTree != null)
                 EarthquakeHistoryShindoDbStationLayer(
@@ -299,7 +298,7 @@ class _MapContent extends HookConsumerWidget {
                 ),
                 EarthquakeHistoryHypocenterErrorLayer(
                   key: const ValueKey('hypocenter-error'),
-                  belowLayerId: EarthquakeHistoryMarkerAnchorsLayer.background,
+                  belowLayerId: BaseLayer.markerBackgroundAnchor.name,
                   earthquake: earthquake,
                   parameter: parameter,
                 ),

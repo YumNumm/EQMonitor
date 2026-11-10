@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tsunami_offshore_station.dart';
@@ -222,6 +223,7 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
           }
           await styleController.addLayer(
             TsunamiMapLayerBuilder.buildRegionLineLayer(kind: kind),
+            belowLayerId: BaseLayer.markerBackgroundAnchor.name,
           );
         }
       });
@@ -320,6 +322,7 @@ class _TsunamiHypocenterLayer extends HookConsumerWidget {
         }
         await styleController.addLayer(
           TsunamiMapLayerBuilder.buildHypocenterLayer(),
+          belowLayerId: BaseLayer.markerLowerAnchor.name,
         );
       });
 
@@ -411,12 +414,14 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
         }
         await styleController.addLayer(
           TsunamiMapLayerBuilder.buildStationCircleLayer(),
+          belowLayerId: BaseLayer.markerUpperAnchor.name,
         );
         if (lifecycleToken.value != token) {
           return;
         }
         await styleController.addLayer(
           TsunamiMapLayerBuilder.buildStationLabelLayer(),
+          belowLayerId: BaseLayer.markerUpperAnchor.name,
         );
       });
 

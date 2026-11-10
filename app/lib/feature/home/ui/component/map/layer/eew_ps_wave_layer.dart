@@ -133,6 +133,7 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
               sourceId: EewPsWaveLayer.sourceId.pWave,
               paint: const {'line-color': '#0000FF', 'line-width': 1},
             ),
+            belowLayerId: BaseLayer.waveLineAnchor.name,
           ),
           styleController.addLayer(
             LineStyleLayer(
@@ -143,6 +144,7 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
                 'line-width': 2,
               },
             ),
+            belowLayerId: BaseLayer.waveLineAnchor.name,
           ),
           styleController.addLayer(
             FillStyleLayer(

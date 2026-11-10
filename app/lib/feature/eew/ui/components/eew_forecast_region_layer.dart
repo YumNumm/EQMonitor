@@ -184,7 +184,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
               filter: filter,
               paint: const {'fill-color': '#DD0000', 'fill-opacity': 1},
             ),
-            belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
+            belowLayerId: BaseLayer.regionFillAnchor.name,
           );
           await styleController.addLayer(
             LineStyleLayer(
@@ -197,6 +197,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
                 'line-width': 1,
               },
             ),
+            belowLayerId: BaseLayer.markerBackgroundAnchor.name,
           );
           final latestFilter = _areaFilterBuilder.build(
             latestWarningCodes.value,
