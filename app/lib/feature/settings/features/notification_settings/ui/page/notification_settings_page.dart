@@ -434,8 +434,11 @@ class _SlotListSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
+    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
+    final shape = designSystem.shape;
 
+    final isPro = ref.watch(isProProvider);
     final slotsAsync = ref.watch(notificationSlotsProvider);
     final warningEnabled = ref.watch(
       eewGlobalSettingsProvider.select((s) => s.value?.warningEnabled ?? true),
@@ -465,7 +468,8 @@ class _SlotListSection extends ConsumerWidget {
     final isAdding = ref.watch(
       NotificationSlotsNotifier.addRegionMutation,
     ) is MutationPending;
-    final canAddRegion = !isAdding && regionSlotCount < maxRegions;
+    final isRegionLimitReached = regionSlotCount >= maxRegions;
+    final canAddRegion = !isAdding && (!isRegionLimitReached || !isPro);
     ref.listen(NotificationSlotsNotifier.addRegionMutation, (_, next) async {
       if (next is! MutationError || !context.mounted) {
         return;
@@ -520,18 +524,49 @@ class _SlotListSection extends ConsumerWidget {
           ),
         if (slotsAsync.hasError && !slotsAsync.isLoading)
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: spacing.lg,
-              vertical: spacing.md,
-            ),
-            child: Text(
-              'スロットの読み込みに失敗しました',
-              style: designSystem.typography.bodySmall.copyWith(
-                color: context.designSystem.colorTheme.error,
-              ),
+            padding: EdgeInsets.fromLTRB(spacing.lg, 0, spacing.sm, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '通知地域を読み込めませんでした',
+                    style: designSystem.typography.bodyMedium.copyWith(
+                      color: colorTheme.error,
+                    ),
+                  ),
+                ),
+                M3ETextButton(
+                  onPressed: () => ref.invalidate(notificationSlotsProvider),
+                  child: const Text('再試行'),
+                ),
+              ],
             ),
           ),
-        ...tiles,
+        if (tiles.isNotEmpty)
+          Card.outlined(
+            margin: EdgeInsets.fromLTRB(
+              spacing.lg,
+              spacing.sm,
+              spacing.lg,
+              spacing.sm,
+            ),
+            color: colorTheme.surfaceContainerHigh,
+            clipBehavior: .antiAlias,
+            elevation: 0,
+            shape: RoundedSuperellipseBorder(
+              borderRadius: BorderRadius.circular(shape.card),
+              side: BorderSide(color: colorTheme.outlineVariant),
+            ),
+            child: Column(
+              mainAxisSize: .min,
+              children: [
+                for (final (index, tile) in tiles.indexed) ...[
+                  if (index > 0) const Divider(height: 1),
+                  tile,
+                ],
+              ],
+            ),
+          ),
         if (!hasNationwide)
           Padding(
             padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
@@ -560,6 +595,10 @@ class _SlotListSection extends ConsumerWidget {
           child: M3EFilledButton.tonalIcon(
             onPressed: canAddRegion
                 ? () async {
+                    if (isRegionLimitReached) {
+                      await const ProUpgradeDialogAction().show(context);
+                      return;
+                    }
                     await ref
                         .read(notificationRegionAddActionProvider)
                         .pickAndAdd(context: context, ref: ref);
@@ -571,6 +610,18 @@ class _SlotListSection extends ConsumerWidget {
             ),
           ),
         ),
+        if (isRegionLimitReached)
+          Padding(
+            padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
+            child: Text(
+              isPro
+                  ? '登録できる地域数の上限に達しています'
+                  : '登録できる地域数の上限に達しています。Proプランで上限を増やせます',
+              style: designSystem.typography.bodySmall.copyWith(
+                color: colorTheme.onSurfaceVariant,
+              ),
+            ),
+          ),
       ],
     );
   }

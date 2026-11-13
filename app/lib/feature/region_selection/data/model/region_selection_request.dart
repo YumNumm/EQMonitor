@@ -10,4 +10,10 @@ final class const RegionSelectionRequest({
   final String initialQuery = '',
   final bool notification = false,
   final bool allowEmpty = false,
+
+  final bool hierarchical = false,
+
+  final List<RegionOption> unavailable = const [],
+
+  final String unavailableLabel = '選択不可',
 });

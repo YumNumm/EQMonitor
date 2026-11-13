@@ -1,8 +1,10 @@
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/location/data/jma_map_isolate.dart';
+import 'package:eqmonitor/feature/region_selection/data/logic/region_bounds_resolver.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_map_layers.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_map_matcher.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,6 +16,35 @@ RegionSelectionMapAction regionSelectionMapAction(Ref ref) =>
     const RegionSelectionMapAction();
 
 final class const RegionSelectionMapAction() {
+  Future<void> focus({
+    required WidgetRef ref,
+    required MapController controller,
+    required List<RegionOption> catalog,
+    required List<RegionOption> targets,
+    required EdgeInsets padding,
+  }) async {
+    if (targets.isEmpty) {
+      return;
+    }
+    final bounds = const RegionBoundsResolver().resolve(
+      maps: await ref.read(jmaMapProvider.future),
+      catalog: catalog,
+      targets: targets,
+    );
+    if (bounds == null) {
+      return;
+    }
+    await controller.fitBounds(
+      bounds: LngLatBounds(
+        latitudeSouth: bounds.south,
+        latitudeNorth: bounds.north,
+        longitudeWest: bounds.west,
+        longitudeEast: bounds.east,
+      ),
+      padding: padding,
+    );
+  }
+
   Future<List<RegionOption>> resolve({
     required WidgetRef ref,
     required MapController controller,

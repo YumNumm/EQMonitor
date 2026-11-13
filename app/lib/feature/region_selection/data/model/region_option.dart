@@ -29,6 +29,7 @@ abstract class RegionOption with _$RegionOption {
     String? parentCode,
     String? parentName,
     String? prefectureCode,
+    String? prefectureName,
   }) = _RegionOption;
 
   /// 通知では同一市区町村が複数のEEW区域に属し得る。

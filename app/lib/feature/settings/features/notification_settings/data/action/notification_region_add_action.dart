@@ -19,11 +19,17 @@ final class const NotificationRegionAddAction() {
     required BuildContext context,
     required WidgetRef ref,
   }) async {
+    final slots = ref.read(notificationSlotsProvider).value ?? const [];
     final selected = await RegionSelectionRoute(
-      $extra: const RegionSelectionRequest(
+      $extra: RegionSelectionRequest(
         title: '通知する地域を選択',
-        kinds: [.region, .city],
+        kinds: const [.region, .city],
         notification: true,
+        hierarchical: true,
+        unavailable: const NotificationRegionSelectionConverter().registered(
+          slots,
+        ),
+        unavailableLabel: '追加済み',
       ),
     ).push<List<RegionOption>>(context);
     final option = selected?.firstOrNull;

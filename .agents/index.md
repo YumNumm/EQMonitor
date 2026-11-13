@@ -44,6 +44,7 @@
 
 - Dart: `.cursor/rules/flutter-rules.mdc` and `.cursor/rules/data-layer-architecture-rules.mdc`. Key departures from defaults: generated Riverpod providers, Hooks instead of StatefulWidget, Riverpod 3 Mutation for notifier side effects, provider-only files, and external access through Repository/DataSource. Pass `ref`/`context` only at the designated Action/flow boundaries, never into Action constructors.
 - No null assertions, `print()`, or broad `dynamic`/`Object` types except the documented `Map<String, dynamic>` allowance. Extract logic into injectable classes rather than private methods or Widget helper methods/getters; follow the detailed Flutter rule.
+- コード内のコメントは原則として書かない。doc comment も同様。読んだだけでは分からない非自明な理由・制約がある場合のみ、簡潔に書く。
 - Preferences: `.cursor/rules/preferences-key-management.mdc`. Keys belong in `SharedPreferencesKey` / `SecureStorageKey` under `app/lib/core/data/preferences/{shared,secure}/`; access goes through `SharedPreferencesDataSource` / `SecurePreferencesDataSource`.
 - Never substitute invented fixed or random values for missing earthquake data. EEW display changes must follow `.cursor/rules/eew-depth-forecast-intensity.mdc`: depth and published intensity are independent; unavailable intensity retains a `-` badge.
 - Estimated-intensity changes: `.cursor/rules/estimated-intensity-isolate.mdc` (reuse the persistent worker rather than per-frame `Isolate.run()`).

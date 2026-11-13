@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_min_intensity_field.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/region_delete_confirm_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -59,16 +60,13 @@ class SlotDetailPage extends HookConsumerWidget {
     listenMutationError(EewGlobalSettingsNotifier.updateSettingsMutation);
     listenMutationError(EewWarningConfigNotifier.updateConfigMutation);
 
-    final String title;
-    if (slot == null) {
-      title = '通知設定';
-    } else {
-      final slotName = switch (slot.slotType) {
-        NotificationSlotType.region => slot.regionName ?? slot.slotType.label,
-        _ => slot.slotType.label,
-      };
-      title = '$slotNameの通知設定';
-    }
+    final slotName = switch (slot?.slotType) {
+      null => null,
+      NotificationSlotType.region =>
+        slot?.cityName ?? slot?.regionName ?? NotificationSlotType.region.label,
+      final type => type.label,
+    };
+    final title = slotName == null ? '通知設定' : '$slotNameの通知設定';
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
@@ -180,6 +178,14 @@ class SlotDetailPage extends HookConsumerWidget {
                   _DeleteRegionTile(
                     onTap: () async {
                       final navigator = Navigator.of(context);
+                      final confirmed =
+                          await const RegionDeleteConfirmDialogAction().show(
+                            context,
+                            name: slotName ?? slot.slotType.label,
+                          );
+                      if (!confirmed) {
+                        return;
+                      }
                       try {
                         await NotificationSlotsNotifier.removeRegionMutation
                             .run(ref, (tsx) async {
