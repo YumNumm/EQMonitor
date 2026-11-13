@@ -191,7 +191,6 @@ void main() {
     await tester.tap(find.text('府中市').first);
     await tester.pump();
     await tester.tap(find.text('府中市').at(1));
-    // 「決定」ボタンの出現アニメーションを待つ。
     await tester.pumpAndSettle();
     await tester.tap(find.text('決定（2）'));
     expect(result, cities);
@@ -266,12 +265,8 @@ void main() {
     );
     await tester.pumpAndSettle();
     await tester.tap(find.text('府中市').at(1));
-    await tester.pump();
-    await tester.tap(find.text('決定'));
     expect(result, [cities.last]);
-    await tester.tap(find.text('府中市').at(1));
-    await tester.pump();
-    await tester.tap(find.text('決定'));
+    await tester.tap(find.text('指定を解除'));
     expect(result, isEmpty);
   });
 

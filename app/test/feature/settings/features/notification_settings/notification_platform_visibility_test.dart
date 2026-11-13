@@ -63,7 +63,6 @@ void main() {
         subscriptionProvider.notifier,
       ) as _FakeSubscriptionNotifier;
       final addButton = regionAddButton('地域を追加（2/1）');
-      // 無料プランの上限到達時は、無効化せず Pro の案内へつなげる。
       expect(tester.widget<M3EFilledButton>(addButton).onPressed, isNotNull);
       expect(find.textContaining('Proプランで上限を増やせます'), findsOneWidget);
       expect(

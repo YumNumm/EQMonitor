@@ -26,7 +26,6 @@ final class const NotificationRegionSelectionConverter() {
     throw ArgumentError('通知地域には細分区域または親細分区域付きの市区町村が必要です');
   }
 
-  /// 登録済みの通知地域を、地域選択画面で照合できる形へ変換する。
   List<RegionOption> registered(List<NotificationSlot> slots) => [
     for (final slot in slots)
       if (slot.slotType == .region)

@@ -469,7 +469,6 @@ class _SlotListSection extends ConsumerWidget {
       NotificationSlotsNotifier.addRegionMutation,
     ) is MutationPending;
     final isRegionLimitReached = regionSlotCount >= maxRegions;
-    // 無料プランで上限に達した場合は、無効化せず Pro の案内へつなげる。
     final canAddRegion = !isAdding && (!isRegionLimitReached || !isPro);
     ref.listen(NotificationSlotsNotifier.addRegionMutation, (_, next) async {
       if (next is! MutationError || !context.mounted) {

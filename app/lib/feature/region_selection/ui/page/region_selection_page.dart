@@ -109,13 +109,11 @@ class _RegionSelectionContent extends HookWidget {
     final canConfirm = selected.isNotEmpty || request.allowEmpty;
     final multiple = request.mode == .multiple;
     final hasKindFilter = request.kinds.length > 1 && kind.value != null;
-    // 選択済みの地域がある場合は、その地域が見える階層から始める。
     final initialLocation = useMemoized(
       () => const RegionHierarchy().location(
         catalog: catalog,
         option: request.hierarchical ? selected.firstOrNull : null,
       ),
-      // 開いた時点の選択だけを使う。選択のたびに階層を動かさない。
       // ignore_keys: selected
       [catalog, request.hierarchical],
     );
@@ -127,12 +125,24 @@ class _RegionSelectionContent extends HookWidget {
           : const <RegionOption>[],
       [catalog, request.hierarchical],
     );
-    // 検索中は階層を跨いで探せるよう、従来の一覧へ切り替える。
     final isBrowsing =
         request.hierarchical && !showMap.value && controller.text.isEmpty;
     final canLeave = !isBrowsing || browsePrefecture.value == null;
 
+    void confirm(List<RegionOption> value) {
+      final callback = onConfirmed;
+      if (callback != null) {
+        callback(value);
+      } else {
+        Navigator.of(context).pop(value);
+      }
+    }
+
     void select(RegionOption option) {
+      if (!multiple) {
+        confirm([option]);
+        return;
+      }
       selection.value = reducer.select(
         selected: selected,
         option: option,
@@ -140,14 +150,10 @@ class _RegionSelectionContent extends HookWidget {
       );
     }
 
-    void confirm() {
-      final callback = onConfirmed;
-      if (callback != null) {
-        callback(selected);
-      } else {
-        Navigator.of(context).pop(selected);
-      }
-    }
+    final hasConfirmButton = multiple
+        ? canConfirm
+        : showMap.value && selected.isNotEmpty;
+    final actionInset = hasConfirmButton ? 88.0 : 0.0;
 
     return PopScope(
       canPop: canLeave,
@@ -155,7 +161,6 @@ class _RegionSelectionContent extends HookWidget {
         if (didPop) {
           return;
         }
-        // 戻る操作では画面を閉じず、階層を 1 つ上へ戻す。
         if (browseRegion.value != null) {
           browseRegion.value = null;
         } else {
@@ -173,6 +178,13 @@ class _RegionSelectionContent extends HookWidget {
                 },
                 child: const Text('すべて解除'),
               ),
+            if (!multiple &&
+                request.allowEmpty &&
+                request.initialSelection.isNotEmpty)
+              M3ETextButton(
+                onPressed: () => confirm(const []),
+                child: const Text('指定を解除'),
+              ),
             M3ETextButton.icon(
               onPressed: () {
                 showMap.value = !showMap.value;
@@ -188,9 +200,9 @@ class _RegionSelectionContent extends HookWidget {
             ),
           ],
         ),
-        floatingActionButton: canConfirm
+        floatingActionButton: hasConfirmButton
             ? M3EExtendedFloatingActionButton(
-                onPressed: confirm,
+                onPressed: () => confirm(selected),
                 icon: const Icon(Icons.check),
                 label: Text(
                   multiple && selected.isNotEmpty
@@ -285,9 +297,7 @@ class _RegionSelectionContent extends HookWidget {
                         catalog: catalog,
                         selected: selected,
                         parent: parent.value,
-                        bottomInset: canConfirm
-                            ? regionSelectionActionInset
-                            : 0,
+                        bottomInset: actionInset,
                         onSelected: (option) {
                           if (unavailable.contains(option.identity)) {
                             ScaffoldMessenger.of(context)
@@ -323,6 +333,7 @@ class _RegionSelectionContent extends HookWidget {
                         unavailable: unavailable,
                         unavailableLabel: request.unavailableLabel,
                         multiple: multiple,
+                        bottomInset: actionInset,
                         onPrefectureSelected: (value) {
                           browsePrefecture.value = value;
                         },
@@ -352,9 +363,7 @@ class _RegionSelectionContent extends HookWidget {
                       )
                     : ListView.builder(
                         keyboardDismissBehavior: .onDrag,
-                        padding: const EdgeInsets.only(
-                          bottom: regionSelectionActionInset,
-                        ),
+                        padding: EdgeInsets.only(bottom: actionInset),
                         itemCount: items.length,
                         itemBuilder: (context, index) {
                           final item = items[index];
@@ -378,17 +387,13 @@ class _RegionSelectionContent extends HookWidget {
                           return ListTile(
                             selected: isSelected,
                             enabled: !isUnavailable,
-                            leading: Icon(
-                              isUnavailable
-                                  ? Icons.check
-                                  : multiple
-                                  ? (isSelected
+                            leading: multiple
+                                ? Icon(
+                                    isSelected
                                         ? Icons.check_box
-                                        : Icons.check_box_outline_blank)
-                                  : (isSelected
-                                        ? Icons.radio_button_checked
-                                        : Icons.radio_button_unchecked),
-                            ),
+                                        : Icons.check_box_outline_blank,
+                                  )
+                                : null,
                             title: Text(item.name),
                             subtitle: Text(
                               isUnavailable
@@ -396,15 +401,11 @@ class _RegionSelectionContent extends HookWidget {
                                         '・${request.unavailableLabel}'
                                   : const RegionOptionLabel().subtitle(item),
                             ),
-                            onTap: () {
-                              selection.value = reducer.select(
-                                selected: selected,
-                                option: item,
-                                mode: request.mode,
-                              );
-                            },
+                            onTap: () => select(item),
                             trailing: !canBrowse
-                                ? null
+                                ? (!multiple && (isSelected || isUnavailable)
+                                      ? const Icon(Icons.check)
+                                      : null)
                                 : IconButton(
                                     tooltip:
                                         '${item.name}の${childKind.label}を探す',

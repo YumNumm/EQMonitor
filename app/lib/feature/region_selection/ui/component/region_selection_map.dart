@@ -34,7 +34,6 @@ class RegionSelectionMap extends HookConsumerWidget {
   final RegionOption? parent;
   final ValueChanged<RegionOption> onSelected;
 
-  /// 画面下端に重なるボタンを避けるための、案内カードの下余白。
   final double bottomInset;
 
   @override

@@ -60,7 +60,6 @@ class SlotDetailPage extends HookConsumerWidget {
     listenMutationError(EewGlobalSettingsNotifier.updateSettingsMutation);
     listenMutationError(EewWarningConfigNotifier.updateConfigMutation);
 
-    // 市区町村を登録した地域は、細分区域名ではなく市区町村名で示す。
     final slotName = switch (slot?.slotType) {
       null => null,
       NotificationSlotType.region =>

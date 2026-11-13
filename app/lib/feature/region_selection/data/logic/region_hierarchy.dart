@@ -1,11 +1,6 @@
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 
-/// 都道府県 → 細分化地域 → 市区町村 の階層で地域を辿るための絞り込み。
 final class const RegionHierarchy() {
-  /// カタログに含まれる地域が属する都道府県を、カタログの並び順で返す。
-  ///
-  /// 都道府県を選択肢に持たないカタログでも辿れるよう、各地域が持つ
-  /// 都道府県コード・名称から組み立てる。
   List<RegionOption> prefectures(List<RegionOption> catalog) {
     final result = <String, RegionOption>{};
     for (final item in catalog) {
@@ -24,9 +19,6 @@ final class const RegionHierarchy() {
     return result.values.toList();
   }
 
-  /// [option] が一覧に現れる階層（都道府県・細分化地域）を返す。
-  ///
-  /// 選択済みの地域がある状態で開いたとき、その地域が見える階層から始める。
   ({RegionOption? prefecture, RegionOption? region}) location({
     required List<RegionOption> catalog,
     required RegionOption? option,

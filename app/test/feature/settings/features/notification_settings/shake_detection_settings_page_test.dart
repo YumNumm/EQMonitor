@@ -145,8 +145,6 @@ void main() {
       expect(duplicate.enabled, isFalse);
       await tester.tap(find.text('東京都多摩東部'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('決定'));
-      await tester.pumpAndSettle();
       expect(settings.saved?.last.regionCode, '351');
       expect(settings.saved?.last.targetType, ShakeDetectionTargetType.region);
       expect(find.text('通知地域を設定し直してください'), findsNothing);

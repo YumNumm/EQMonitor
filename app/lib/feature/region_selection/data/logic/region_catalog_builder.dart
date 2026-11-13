@@ -12,8 +12,6 @@ final class const RegionCatalogBuilder() {
       final catalog = const NotificationRegionCatalogBuilder().build(
         earthquake: earthquake,
       );
-      // 通知地域は細分区域が最上位のため、都道府県名でも検索・判別できるよう
-      // 所属する都道府県を引き当てる。
       final prefectureByRegion = {
         for (final prefecture in earthquake.prefectures)
           for (final region in prefecture.regions) region.code: prefecture,

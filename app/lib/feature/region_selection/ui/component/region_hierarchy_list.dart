@@ -3,10 +3,6 @@ import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// 一覧の末尾が「決定」ボタンに隠れないようにする下端の余白。
-const double regionSelectionActionInset = 88;
-
-/// 階層のどこを表示しているかを示し、上位の階層へ戻れるパンくず。
 class RegionHierarchyBreadcrumb extends StatelessWidget {
   const new({
     required this.prefecture,
@@ -74,10 +70,6 @@ class RegionHierarchyBreadcrumb extends StatelessWidget {
   }
 }
 
-/// 都道府県 → 細分化地域 → 市区町村 の順に辿る一覧。
-///
-/// 下位の地域を選べる行は次の階層へ進み、その地域自体も選べる場合は
-/// 進んだ先の先頭に「全体」の行を置く。下位を選べない行はその場で選択する。
 class RegionHierarchyList extends StatelessWidget {
   const new({
     required this.catalog,
@@ -89,6 +81,7 @@ class RegionHierarchyList extends StatelessWidget {
     required this.unavailable,
     required this.unavailableLabel,
     required this.multiple,
+    required this.bottomInset,
     required this.onPrefectureSelected,
     required this.onRegionSelected,
     required this.onOptionSelected,
@@ -104,6 +97,7 @@ class RegionHierarchyList extends StatelessWidget {
   final Set<String> unavailable;
   final String unavailableLabel;
   final bool multiple;
+  final double bottomInset;
   final ValueChanged<RegionOption> onPrefectureSelected;
   final ValueChanged<RegionOption> onRegionSelected;
   final ValueChanged<RegionOption> onOptionSelected;
@@ -119,7 +113,7 @@ class RegionHierarchyList extends StatelessWidget {
       return ListView.builder(
         key: const PageStorageKey('region-hierarchy-prefectures'),
         keyboardDismissBehavior: .onDrag,
-        padding: const EdgeInsets.only(bottom: regionSelectionActionInset),
+        padding: EdgeInsets.only(bottom: bottomInset),
         itemCount: prefectures.length,
         itemBuilder: (context, index) {
           final item = prefectures[index];
@@ -131,7 +125,6 @@ class RegionHierarchyList extends StatelessWidget {
         },
       );
     }
-    // 先頭の「全体」は、その階層の地域自体を選べる場合だけ表示する。
     final whole = region == null
         ? (kinds.contains(RegionKind.prefecture) ? prefecture : null)
         : (kinds.contains(RegionKind.region) ? region : null);
@@ -142,7 +135,7 @@ class RegionHierarchyList extends StatelessWidget {
     return ListView.builder(
       key: ValueKey('region-hierarchy-${prefecture.code}-${region?.code}'),
       keyboardDismissBehavior: .onDrag,
-      padding: const EdgeInsets.only(bottom: regionSelectionActionInset),
+      padding: EdgeInsets.only(bottom: bottomInset),
       itemCount: children.length + offset,
       itemBuilder: (context, index) {
         if (whole != null && index == 0) {
@@ -180,7 +173,6 @@ class RegionHierarchyList extends StatelessWidget {
   }
 }
 
-/// 次の階層へ進む行。配下に選択中の地域があれば示す。
 class _BranchTile extends StatelessWidget {
   const new({
     required this.option,
@@ -210,7 +202,6 @@ class _BranchTile extends StatelessWidget {
   }
 }
 
-/// その場で選択する行。
 class _LeafTile extends StatelessWidget {
   const new({
     required this.option,
@@ -245,15 +236,12 @@ class _LeafTile extends StatelessWidget {
     return ListTile(
       selected: isSelected,
       enabled: !isUnavailable,
-      leading: Icon(
-        isUnavailable
-            ? Icons.check
-            : multiple
-            ? (isSelected ? Icons.check_box : Icons.check_box_outline_blank)
-            : (isSelected
-                  ? Icons.radio_button_checked
-                  : Icons.radio_button_unchecked),
-      ),
+      leading: multiple
+          ? Icon(isSelected ? Icons.check_box : Icons.check_box_outline_blank)
+          : null,
+      trailing: !multiple && (isSelected || isUnavailable)
+          ? const Icon(Icons.check)
+          : null,
       title: Text(title),
       subtitle: subtitle.isEmpty ? null : Text(subtitle),
       onTap: onTap,
