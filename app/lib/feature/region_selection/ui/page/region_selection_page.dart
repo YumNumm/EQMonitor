@@ -201,7 +201,7 @@ class _RegionSelectionContent extends HookWidget {
           ],
         ),
         floatingActionButton: hasConfirmButton
-            ? M3EExtendedFloatingActionButton(
+            ? FloatingActionButton.extended(
                 onPressed: () => confirm(selected),
                 icon: const Icon(Icons.check),
                 label: Text(
