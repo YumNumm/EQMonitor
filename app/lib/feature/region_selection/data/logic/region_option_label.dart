@@ -14,10 +14,4 @@ final class const RegionOptionLabel() {
       ?parentName,
     ].join('・');
   }
-
-  /// 選択中の地域を 1 行で示す。
-  String selected(RegionOption option) {
-    final parentName = option.parentName;
-    return parentName == null ? option.name : '${option.name}（$parentName）';
-  }
 }

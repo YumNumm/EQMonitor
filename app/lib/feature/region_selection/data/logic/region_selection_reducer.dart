@@ -7,7 +7,11 @@ final class const RegionSelectionReducer() {
     required RegionOption option,
     required RegionSelectionMode mode,
   }) => switch (mode) {
-    .single => [option],
+    // 選択中の地域をもう一度選ぶと解除する。
+    .single =>
+      selected.any((item) => item.identity == option.identity)
+          ? const []
+          : [option],
     .multiple =>
       selected.any((item) => item.identity == option.identity)
           ? remove(selected: selected, option: option)

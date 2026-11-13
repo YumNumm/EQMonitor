@@ -3,6 +3,9 @@ import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
+/// 一覧の末尾が「決定」ボタンに隠れないようにする下端の余白。
+const double regionSelectionActionInset = 88;
+
 /// 階層のどこを表示しているかを示し、上位の階層へ戻れるパンくず。
 class RegionHierarchyBreadcrumb extends StatelessWidget {
   const new({
@@ -112,6 +115,7 @@ class RegionHierarchyList extends StatelessWidget {
       return ListView.builder(
         key: const PageStorageKey('region-hierarchy-prefectures'),
         keyboardDismissBehavior: .onDrag,
+        padding: const EdgeInsets.only(bottom: regionSelectionActionInset),
         itemCount: prefectures.length,
         itemBuilder: (context, index) {
           final item = prefectures[index];
@@ -131,6 +135,7 @@ class RegionHierarchyList extends StatelessWidget {
       return ListView.builder(
         key: ValueKey('region-hierarchy-regions-${prefecture.code}'),
         keyboardDismissBehavior: .onDrag,
+        padding: const EdgeInsets.only(bottom: regionSelectionActionInset),
         itemCount: regions.length,
         itemBuilder: (context, index) {
           final item = regions[index];
@@ -155,6 +160,7 @@ class RegionHierarchyList extends StatelessWidget {
     return ListView.builder(
       key: ValueKey('region-hierarchy-cities-${region.code}'),
       keyboardDismissBehavior: .onDrag,
+      padding: const EdgeInsets.only(bottom: regionSelectionActionInset),
       itemCount: cities.length + 1,
       itemBuilder: (context, index) {
         final item = index == 0 ? region : cities[index - 1];

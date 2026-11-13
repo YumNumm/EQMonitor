@@ -105,7 +105,7 @@ void main() {
     await tester.tap(find.text('地図'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Asset Packを更新'), findsOneWidget);
-    expect(find.text('選択中（1）'), findsOneWidget);
+    expect(find.text('決定（1）'), findsOneWidget);
     final delayedSelection = tester
         .widget<RegionSelectionMap>(find.byType(RegionSelectionMap))
         .onSelected;
@@ -115,7 +115,7 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('一覧'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('決定'));
+    await tester.tap(find.text('決定（1）'));
     expect(result, [second]);
     expect(tester.takeException(), isNull);
   });
@@ -191,9 +191,9 @@ void main() {
     await tester.tap(find.text('府中市').first);
     await tester.pump();
     await tester.tap(find.text('府中市').at(1));
-    await tester.pump();
-    expect(find.text('選択中（2）'), findsOneWidget);
-    await tester.tap(find.text('決定'));
+    // 「決定」ボタンの出現アニメーションを待つ。
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('決定（2）'));
     expect(result, cities);
   });
 
@@ -229,13 +229,13 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('東京都').first);
     await tester.pump();
-    expect(find.text('選択中（2）'), findsOneWidget);
+    expect(find.text('決定（2）'), findsOneWidget);
+    await tester.tap(find.text('東京都').first);
+    await tester.pump();
     await tester.tap(find.widgetWithText(ChoiceChip, '市区町村'));
     await tester.enterText(find.byType(SearchBar), 'ﾌﾁｭｳ');
     await tester.pump();
-    await tester.tap(find.byTooltip('東京都の選択を解除'));
-    await tester.pump();
-    await tester.tap(find.text('決定'));
+    await tester.tap(find.text('決定（1）'));
     expect(result, [cities.first]);
     expect(tester.takeException(), isNull);
   });
@@ -269,7 +269,7 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('決定'));
     expect(result, [cities.last]);
-    await tester.tap(find.byTooltip('府中市の選択を解除'));
+    await tester.tap(find.text('府中市').at(1));
     await tester.pump();
     await tester.tap(find.text('決定'));
     expect(result, isEmpty);

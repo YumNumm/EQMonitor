@@ -24,6 +24,7 @@ class RegionSelectionMap extends HookConsumerWidget {
     required this.selected,
     required this.onSelected,
     this.parent,
+    this.bottomInset = 0,
     super.key,
   });
 
@@ -32,6 +33,9 @@ class RegionSelectionMap extends HookConsumerWidget {
   final List<RegionOption> selected;
   final RegionOption? parent;
   final ValueChanged<RegionOption> onSelected;
+
+  /// 画面下端に重なるボタンを避けるための、案内カードの下余白。
+  final double bottomInset;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -210,7 +214,7 @@ class RegionSelectionMap extends HookConsumerWidget {
         Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.fromLTRB(12, 12, 12, 12 + bottomInset),
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(12),

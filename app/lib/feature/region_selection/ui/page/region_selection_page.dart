@@ -156,6 +156,13 @@ class _RegionSelectionContent extends HookWidget {
         appBar: AppBar(
           title: Text(request.title),
           actions: [
+            if (multiple && selected.isNotEmpty)
+              M3ETextButton(
+                onPressed: () {
+                  selection.value = const [];
+                },
+                child: const Text('すべて解除'),
+              ),
             M3ETextButton.icon(
               onPressed: () {
                 showMap.value = !showMap.value;
@@ -171,6 +178,17 @@ class _RegionSelectionContent extends HookWidget {
             ),
           ],
         ),
+        floatingActionButton: canConfirm
+            ? M3EExtendedFloatingActionButton(
+                onPressed: confirm,
+                icon: const Icon(Icons.check),
+                label: Text(
+                  multiple && selected.isNotEmpty
+                      ? '決定（${selected.length}）'
+                      : '決定',
+                ),
+              )
+            : null,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: .stretch,
@@ -257,6 +275,9 @@ class _RegionSelectionContent extends HookWidget {
                         catalog: catalog,
                         selected: selected,
                         parent: parent.value,
+                        bottomInset: canConfirm
+                            ? regionSelectionActionInset
+                            : 0,
                         onSelected: (option) {
                           if (unavailable.contains(option.identity)) {
                             ScaffoldMessenger.of(context)
@@ -320,6 +341,9 @@ class _RegionSelectionContent extends HookWidget {
                       )
                     : ListView.builder(
                         keyboardDismissBehavior: .onDrag,
+                        padding: const EdgeInsets.only(
+                          bottom: regionSelectionActionInset,
+                        ),
                         itemCount: items.length,
                         itemBuilder: (context, index) {
                           final item = items[index];
@@ -384,115 +408,9 @@ class _RegionSelectionContent extends HookWidget {
                         },
                       ),
               ),
-              const Divider(height: 1),
-              _SelectionBar(
-                selected: selected,
-                multiple: multiple,
-                allowEmpty: request.allowEmpty,
-                onRemoved: (item) {
-                  selection.value = reducer.remove(
-                    selected: selected,
-                    option: item,
-                  );
-                },
-                onCleared: () {
-                  selection.value = const [];
-                },
-                onConfirmed: canConfirm ? confirm : null,
-              ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// 選択中の地域と決定操作をまとめた下部バー。
-///
-/// キーボード表示中も一覧の高さを確保できるよう、選択中の地域は
-/// 横スクロールするチップ 1 行に収める。
-class _SelectionBar extends StatelessWidget {
-  const new({
-    required this.selected,
-    required this.multiple,
-    required this.allowEmpty,
-    required this.onRemoved,
-    required this.onCleared,
-    required this.onConfirmed,
-  });
-
-  final List<RegionOption> selected;
-  final bool multiple;
-  final bool allowEmpty;
-  final ValueChanged<RegionOption> onRemoved;
-  final VoidCallback onCleared;
-  final VoidCallback? onConfirmed;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final hintColor = theme.colorScheme.onSurfaceVariant;
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      child: Column(
-        mainAxisSize: .min,
-        crossAxisAlignment: .stretch,
-        children: [
-          if (multiple && selected.isNotEmpty)
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '選択中（${selected.length}）',
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: hintColor,
-                    ),
-                  ),
-                ),
-                M3ETextButton(
-                  onPressed: onCleared,
-                  child: const Text('すべて解除'),
-                ),
-              ],
-            ),
-          Row(
-            children: [
-              Expanded(
-                child: selected.isEmpty
-                    ? Text(
-                        allowEmpty ? '地域を指定しない' : '地域を選択してください',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: hintColor,
-                        ),
-                      )
-                    : SingleChildScrollView(
-                        scrollDirection: .horizontal,
-                        child: Row(
-                          spacing: 8,
-                          children: [
-                            for (final item in selected)
-                              InputChip(
-                                label: Text(
-                                  const RegionOptionLabel().selected(item),
-                                ),
-                                deleteButtonTooltipMessage:
-                                    '${item.name}の選択を解除',
-                                onDeleted: () => onRemoved(item),
-                              ),
-                          ],
-                        ),
-                      ),
-              ),
-              const SizedBox(width: 12),
-              M3EFilledButton(
-                onPressed: onConfirmed,
-                child: const Text('決定'),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
