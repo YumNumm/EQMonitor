@@ -1,11 +1,13 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
+import 'package:eqmonitor/feature/region_selection/data/logic/region_hierarchy.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_option_label.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_search.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_selection_reducer.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
 import 'package:eqmonitor/feature/region_selection/data/provider/region_catalog_provider.dart';
+import 'package:eqmonitor/feature/region_selection/ui/component/region_hierarchy_list.dart';
 import 'package:eqmonitor/feature/region_selection/ui/component/region_selection_map.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -107,6 +109,26 @@ class _RegionSelectionContent extends HookWidget {
     final canConfirm = selected.isNotEmpty || request.allowEmpty;
     final multiple = request.mode == .multiple;
     final hasKindFilter = request.kinds.length > 1 && kind.value != null;
+    final browsePrefecture = useState<RegionOption?>(null);
+    final browseRegion = useState<RegionOption?>(null);
+    final prefectures = useMemoized(
+      () => request.hierarchical
+          ? const RegionHierarchy().prefectures(catalog)
+          : const <RegionOption>[],
+      [catalog, request.hierarchical],
+    );
+    // 検索中は階層を跨いで探せるよう、従来の一覧へ切り替える。
+    final isBrowsing =
+        request.hierarchical && !showMap.value && controller.text.isEmpty;
+    final canLeave = !isBrowsing || browsePrefecture.value == null;
+
+    void select(RegionOption option) {
+      selection.value = reducer.select(
+        selected: selected,
+        option: option,
+        mode: request.mode,
+      );
+    }
 
     void confirm() {
       final callback = onConfirmed;
@@ -117,224 +139,269 @@ class _RegionSelectionContent extends HookWidget {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(request.title),
-        actions: [
-          M3ETextButton.icon(
-            onPressed: () {
-              showMap.value = !showMap.value;
-              if (showMap.value) {
-                kind.value ??=
-                    selected.firstOrNull?.kind ?? request.kinds.first;
-                controller.clear();
-                FocusScope.of(context).unfocus();
-              }
-            },
-            icon: Icon(showMap.value ? Icons.list : Icons.map_outlined),
-            label: Text(showMap.value ? '一覧' : '地図'),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: SearchBar(
-                controller: controller,
-                hintText: '地域名・ふりがなで検索',
-                leading: const Icon(Icons.search),
-                onChanged: (_) {
-                  showMap.value = false;
-                },
-                trailing: [
-                  if (controller.text.isNotEmpty)
-                    IconButton(
-                      onPressed: controller.clear,
-                      tooltip: '検索語を消去',
-                      icon: const Icon(Icons.clear),
-                    ),
-                ],
-              ),
+    return PopScope(
+      canPop: canLeave,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) {
+          return;
+        }
+        // 戻る操作では画面を閉じず、階層を 1 つ上へ戻す。
+        if (browseRegion.value != null) {
+          browseRegion.value = null;
+        } else {
+          browsePrefecture.value = null;
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(request.title),
+          actions: [
+            M3ETextButton.icon(
+              onPressed: () {
+                showMap.value = !showMap.value;
+                if (showMap.value) {
+                  kind.value ??=
+                      selected.firstOrNull?.kind ?? request.kinds.first;
+                  controller.clear();
+                  FocusScope.of(context).unfocus();
+                }
+              },
+              icon: Icon(showMap.value ? Icons.list : Icons.map_outlined),
+              label: Text(showMap.value ? '一覧' : '地図'),
             ),
-            if (request.kinds.length > 1)
-              SingleChildScrollView(
-                scrollDirection: .horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  spacing: 8,
-                  children: [
-                    if (!showMap.value)
-                      ChoiceChip(
-                        label: const Text('すべて'),
-                        selected: kind.value == null,
-                        onSelected: (_) {
-                          kind.value = null;
-                          parent.value = null;
-                        },
-                      ),
-                    for (final value in request.kinds)
-                      ChoiceChip(
-                        label: Text(value.label),
-                        selected: kind.value == value,
-                        onSelected: (_) {
-                          kind.value = value;
-                          parent.value = null;
-                        },
+          ],
+        ),
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: .stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: SearchBar(
+                  controller: controller,
+                  hintText: '地域名・ふりがなで検索',
+                  leading: const Icon(Icons.search),
+                  onChanged: (_) {
+                    showMap.value = false;
+                  },
+                  trailing: [
+                    if (controller.text.isNotEmpty)
+                      IconButton(
+                        onPressed: controller.clear,
+                        tooltip: '検索語を消去',
+                        icon: const Icon(Icons.clear),
                       ),
                   ],
                 ),
               ),
-            if (parent.value case final scope?)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
-                child: Align(
-                  alignment: .centerLeft,
-                  child: InputChip(
-                    avatar: const Icon(Icons.filter_alt_outlined, size: 18),
-                    label: Text('${scope.name}の地域'),
-                    deleteButtonTooltipMessage: '絞り込みを解除',
-                    onDeleted: () {
-                      parent.value = null;
-                    },
+              if (isBrowsing)
+                RegionHierarchyBreadcrumb(
+                  prefecture: browsePrefecture.value,
+                  region: browseRegion.value,
+                  onRootSelected: () {
+                    browsePrefecture.value = null;
+                    browseRegion.value = null;
+                  },
+                  onPrefectureSelected: () {
+                    browseRegion.value = null;
+                  },
+                )
+              else if (request.kinds.length > 1)
+                SingleChildScrollView(
+                  scrollDirection: .horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    spacing: 8,
+                    children: [
+                      if (!showMap.value)
+                        ChoiceChip(
+                          label: const Text('すべて'),
+                          selected: kind.value == null,
+                          onSelected: (_) {
+                            kind.value = null;
+                            parent.value = null;
+                          },
+                        ),
+                      for (final value in request.kinds)
+                        ChoiceChip(
+                          label: Text(value.label),
+                          selected: kind.value == value,
+                          onSelected: (_) {
+                            kind.value = value;
+                            parent.value = null;
+                          },
+                        ),
+                    ],
                   ),
                 ),
-              ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: showMap.value
-                  ? RegionSelectionMap(
-                      kind: kind.value ?? request.kinds.first,
-                      catalog: catalog,
-                      selected: selected,
-                      parent: parent.value,
-                      onSelected: (option) {
-                        if (unavailable.contains(option.identity)) {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  '${option.name}は${request.unavailableLabel}です',
-                                ),
-                              ),
-                            );
-                          return;
-                        }
-                        selection.value = reducer.select(
-                          selected: reducer.restore(
-                            selected: selection.value,
-                            catalog: catalog,
-                            mode: request.mode,
-                          ),
-                          option: option,
-                          mode: request.mode,
-                        );
-                      },
-                    )
-                  : items.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisSize: .min,
-                        children: [
-                          const Text('該当する地域がありません'),
-                          if (hasKindFilter || parent.value != null)
-                            M3ETextButton(
-                              onPressed: () {
-                                if (request.kinds.length > 1) {
-                                  kind.value = null;
-                                }
-                                parent.value = null;
-                              },
-                              child: const Text('絞り込みを解除して探す'),
-                            ),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      keyboardDismissBehavior: .onDrag,
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        final item = items[index];
-                        final isSelected = selected.any(
-                          (value) => value.identity == item.identity,
-                        );
-                        final isUnavailable = unavailable.contains(
-                          item.identity,
-                        );
-                        final childKind = switch (item.kind) {
-                          .prefecture =>
-                            request.kinds.contains(RegionKind.region)
-                                ? RegionKind.region
-                                : RegionKind.city,
-                          .region || .eewRegion => RegionKind.city,
-                          _ => null,
-                        };
-                        final canBrowse =
-                            childKind != null &&
-                            request.kinds.contains(childKind);
-                        return ListTile(
-                          selected: isSelected,
-                          enabled: !isUnavailable,
-                          leading: Icon(
-                            isUnavailable
-                                ? Icons.check
-                                : multiple
-                                ? (isSelected
-                                      ? Icons.check_box
-                                      : Icons.check_box_outline_blank)
-                                : (isSelected
-                                      ? Icons.radio_button_checked
-                                      : Icons.radio_button_unchecked),
-                          ),
-                          title: Text(item.name),
-                          subtitle: Text(
-                            isUnavailable
-                                ? '${const RegionOptionLabel().subtitle(item)}'
-                                      '・${request.unavailableLabel}'
-                                : const RegionOptionLabel().subtitle(item),
-                          ),
-                          onTap: () {
-                            selection.value = reducer.select(
-                              selected: selected,
-                              option: item,
-                              mode: request.mode,
-                            );
-                          },
-                          trailing: !canBrowse
-                              ? null
-                              : IconButton(
-                                  tooltip: '${item.name}の${childKind.label}を探す',
-                                  icon: const Icon(Icons.chevron_right),
-                                  onPressed: () {
-                                    parent.value = item;
-                                    kind.value = childKind;
-                                    controller.clear();
-                                  },
-                                ),
-                        );
+              if (parent.value case final scope?)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                  child: Align(
+                    alignment: .centerLeft,
+                    child: InputChip(
+                      avatar: const Icon(Icons.filter_alt_outlined, size: 18),
+                      label: Text('${scope.name}の地域'),
+                      deleteButtonTooltipMessage: '絞り込みを解除',
+                      onDeleted: () {
+                        parent.value = null;
                       },
                     ),
-            ),
-            const Divider(height: 1),
-            _SelectionBar(
-              selected: selected,
-              multiple: multiple,
-              allowEmpty: request.allowEmpty,
-              onRemoved: (item) {
-                selection.value = reducer.remove(
-                  selected: selected,
-                  option: item,
-                );
-              },
-              onCleared: () {
-                selection.value = const [];
-              },
-              onConfirmed: canConfirm ? confirm : null,
-            ),
-          ],
+                  ),
+                ),
+              const SizedBox(height: 8),
+              Expanded(
+                child: showMap.value
+                    ? RegionSelectionMap(
+                        kind: kind.value ?? request.kinds.first,
+                        catalog: catalog,
+                        selected: selected,
+                        parent: parent.value,
+                        onSelected: (option) {
+                          if (unavailable.contains(option.identity)) {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '${option.name}は${request.unavailableLabel}です',
+                                  ),
+                                ),
+                              );
+                            return;
+                          }
+                          selection.value = reducer.select(
+                            selected: reducer.restore(
+                              selected: selection.value,
+                              catalog: catalog,
+                              mode: request.mode,
+                            ),
+                            option: option,
+                            mode: request.mode,
+                          );
+                        },
+                      )
+                    : isBrowsing
+                    ? RegionHierarchyList(
+                        catalog: available,
+                        prefectures: prefectures,
+                        prefecture: browsePrefecture.value,
+                        region: browseRegion.value,
+                        selected: selected,
+                        unavailable: unavailable,
+                        unavailableLabel: request.unavailableLabel,
+                        multiple: multiple,
+                        onPrefectureSelected: (value) {
+                          browsePrefecture.value = value;
+                        },
+                        onRegionSelected: (value) {
+                          browseRegion.value = value;
+                        },
+                        onOptionSelected: select,
+                      )
+                    : items.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: .min,
+                          children: [
+                            const Text('該当する地域がありません'),
+                            if (hasKindFilter || parent.value != null)
+                              M3ETextButton(
+                                onPressed: () {
+                                  if (request.kinds.length > 1) {
+                                    kind.value = null;
+                                  }
+                                  parent.value = null;
+                                },
+                                child: const Text('絞り込みを解除して探す'),
+                              ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        keyboardDismissBehavior: .onDrag,
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          final item = items[index];
+                          final isSelected = selected.any(
+                            (value) => value.identity == item.identity,
+                          );
+                          final isUnavailable = unavailable.contains(
+                            item.identity,
+                          );
+                          final childKind = switch (item.kind) {
+                            .prefecture =>
+                              request.kinds.contains(RegionKind.region)
+                                  ? RegionKind.region
+                                  : RegionKind.city,
+                            .region || .eewRegion => RegionKind.city,
+                            _ => null,
+                          };
+                          final canBrowse =
+                              childKind != null &&
+                              request.kinds.contains(childKind);
+                          return ListTile(
+                            selected: isSelected,
+                            enabled: !isUnavailable,
+                            leading: Icon(
+                              isUnavailable
+                                  ? Icons.check
+                                  : multiple
+                                  ? (isSelected
+                                        ? Icons.check_box
+                                        : Icons.check_box_outline_blank)
+                                  : (isSelected
+                                        ? Icons.radio_button_checked
+                                        : Icons.radio_button_unchecked),
+                            ),
+                            title: Text(item.name),
+                            subtitle: Text(
+                              isUnavailable
+                                  ? '${const RegionOptionLabel().subtitle(item)}'
+                                        '・${request.unavailableLabel}'
+                                  : const RegionOptionLabel().subtitle(item),
+                            ),
+                            onTap: () {
+                              selection.value = reducer.select(
+                                selected: selected,
+                                option: item,
+                                mode: request.mode,
+                              );
+                            },
+                            trailing: !canBrowse
+                                ? null
+                                : IconButton(
+                                    tooltip:
+                                        '${item.name}の${childKind.label}を探す',
+                                    icon: const Icon(Icons.chevron_right),
+                                    onPressed: () {
+                                      parent.value = item;
+                                      kind.value = childKind;
+                                      controller.clear();
+                                    },
+                                  ),
+                          );
+                        },
+                      ),
+              ),
+              const Divider(height: 1),
+              _SelectionBar(
+                selected: selected,
+                multiple: multiple,
+                allowEmpty: request.allowEmpty,
+                onRemoved: (item) {
+                  selection.value = reducer.remove(
+                    selected: selected,
+                    option: item,
+                  );
+                },
+                onCleared: () {
+                  selection.value = const [];
+                },
+                onConfirmed: canConfirm ? confirm : null,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -25,6 +25,7 @@ final class const NotificationRegionAddAction() {
         title: '通知する地域を選択',
         kinds: const [.region, .city],
         notification: true,
+        hierarchical: true,
         unavailable: const NotificationRegionSelectionConverter().registered(
           slots,
         ),
