@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RegionOption {
 
- RegionKind get kind; String get code; String get name; String? get kana; String? get englishName; RegionKind? get parentKind; String? get parentCode; String? get parentName; String? get prefectureCode;
+ RegionKind get kind; String get code; String get name; String? get kana; String? get englishName; RegionKind? get parentKind; String? get parentCode; String? get parentName; String? get prefectureCode; String? get prefectureName;
 /// Create a copy of RegionOption
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $RegionOptionCopyWith<RegionOption> get copyWith => _$RegionOptionCopyWithImpl<R
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegionOption&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.englishName, englishName) || other.englishName == englishName)&&(identical(other.parentKind, parentKind) || other.parentKind == parentKind)&&(identical(other.parentCode, parentCode) || other.parentCode == parentCode)&&(identical(other.parentName, parentName) || other.parentName == parentName)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegionOption&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.englishName, englishName) || other.englishName == englishName)&&(identical(other.parentKind, parentKind) || other.parentKind == parentKind)&&(identical(other.parentCode, parentCode) || other.parentCode == parentCode)&&(identical(other.parentName, parentName) || other.parentName == parentName)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.prefectureName, prefectureName) || other.prefectureName == prefectureName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,kind,code,name,kana,englishName,parentKind,parentCode,parentName,prefectureCode);
+int get hashCode => Object.hash(runtimeType,kind,code,name,kana,englishName,parentKind,parentCode,parentName,prefectureCode,prefectureName);
 
 @override
 String toString() {
-  return 'RegionOption(kind: $kind, code: $code, name: $name, kana: $kana, englishName: $englishName, parentKind: $parentKind, parentCode: $parentCode, parentName: $parentName, prefectureCode: $prefectureCode)';
+  return 'RegionOption(kind: $kind, code: $code, name: $name, kana: $kana, englishName: $englishName, parentKind: $parentKind, parentCode: $parentCode, parentName: $parentName, prefectureCode: $prefectureCode, prefectureName: $prefectureName)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $RegionOptionCopyWith<$Res>  {
   factory $RegionOptionCopyWith(RegionOption value, $Res Function(RegionOption) _then) = _$RegionOptionCopyWithImpl;
 @useResult
 $Res call({
- RegionKind kind, String code, String name, String? kana, String? englishName, RegionKind? parentKind, String? parentCode, String? parentName, String? prefectureCode
+ RegionKind kind, String code, String name, String? kana, String? englishName, RegionKind? parentKind, String? parentCode, String? parentName, String? prefectureCode, String? prefectureName
 });
 
 
@@ -63,7 +63,7 @@ class _$RegionOptionCopyWithImpl<$Res>
 
 /// Create a copy of RegionOption
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? kind = null,Object? code = null,Object? name = null,Object? kana = freezed,Object? englishName = freezed,Object? parentKind = freezed,Object? parentCode = freezed,Object? parentName = freezed,Object? prefectureCode = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? kind = null,Object? code = null,Object? name = null,Object? kana = freezed,Object? englishName = freezed,Object? parentKind = freezed,Object? parentCode = freezed,Object? parentName = freezed,Object? prefectureCode = freezed,Object? prefectureName = freezed,}) {
   return _then(RegionOption(
 kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
 as RegionKind,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
@@ -74,6 +74,7 @@ as String?,parentKind: freezed == parentKind ? _self.parentKind : parentKind // 
 as RegionKind?,parentCode: freezed == parentCode ? _self.parentCode : parentCode // ignore: cast_nullable_to_non_nullable
 as String?,parentName: freezed == parentName ? _self.parentName : parentName // ignore: cast_nullable_to_non_nullable
 as String?,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
+as String?,prefectureName: freezed == prefectureName ? _self.prefectureName : prefectureName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RegionKind kind,  String code,  String name,  String? kana,  String? englishName,  RegionKind? parentKind,  String? parentCode,  String? parentName,  String? prefectureCode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RegionKind kind,  String code,  String name,  String? kana,  String? englishName,  RegionKind? parentKind,  String? parentCode,  String? parentName,  String? prefectureCode,  String? prefectureName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegionOption() when $default != null:
-return $default(_that.kind,_that.code,_that.name,_that.kana,_that.englishName,_that.parentKind,_that.parentCode,_that.parentName,_that.prefectureCode);case _:
+return $default(_that.kind,_that.code,_that.name,_that.kana,_that.englishName,_that.parentKind,_that.parentCode,_that.parentName,_that.prefectureCode,_that.prefectureName);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.kind,_that.code,_that.name,_that.kana,_that.englishName,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RegionKind kind,  String code,  String name,  String? kana,  String? englishName,  RegionKind? parentKind,  String? parentCode,  String? parentName,  String? prefectureCode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RegionKind kind,  String code,  String name,  String? kana,  String? englishName,  RegionKind? parentKind,  String? parentCode,  String? parentName,  String? prefectureCode,  String? prefectureName)  $default,) {final _that = this;
 switch (_that) {
 case _RegionOption():
-return $default(_that.kind,_that.code,_that.name,_that.kana,_that.englishName,_that.parentKind,_that.parentCode,_that.parentName,_that.prefectureCode);case _:
+return $default(_that.kind,_that.code,_that.name,_that.kana,_that.englishName,_that.parentKind,_that.parentCode,_that.parentName,_that.prefectureCode,_that.prefectureName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.kind,_that.code,_that.name,_that.kana,_that.englishName,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RegionKind kind,  String code,  String name,  String? kana,  String? englishName,  RegionKind? parentKind,  String? parentCode,  String? parentName,  String? prefectureCode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RegionKind kind,  String code,  String name,  String? kana,  String? englishName,  RegionKind? parentKind,  String? parentCode,  String? parentName,  String? prefectureCode,  String? prefectureName)?  $default,) {final _that = this;
 switch (_that) {
 case _RegionOption() when $default != null:
-return $default(_that.kind,_that.code,_that.name,_that.kana,_that.englishName,_that.parentKind,_that.parentCode,_that.parentName,_that.prefectureCode);case _:
+return $default(_that.kind,_that.code,_that.name,_that.kana,_that.englishName,_that.parentKind,_that.parentCode,_that.parentName,_that.prefectureCode,_that.prefectureName);case _:
   return null;
 
 }
@@ -215,7 +216,7 @@ return $default(_that.kind,_that.code,_that.name,_that.kana,_that.englishName,_t
 
 
 class _RegionOption extends RegionOption {
-  const _RegionOption({required this.kind, required this.code, required this.name, this.kana, this.englishName, this.parentKind, this.parentCode, this.parentName, this.prefectureCode}): super._();
+  const _RegionOption({required this.kind, required this.code, required this.name, this.kana, this.englishName, this.parentKind, this.parentCode, this.parentName, this.prefectureCode, this.prefectureName}): super._();
   
 
 @override final  RegionKind kind;
@@ -227,6 +228,7 @@ class _RegionOption extends RegionOption {
 @override final  String? parentCode;
 @override final  String? parentName;
 @override final  String? prefectureCode;
+@override final  String? prefectureName;
 
 /// Create a copy of RegionOption
 /// with the given fields replaced by the non-null parameter values.
@@ -238,16 +240,16 @@ _$RegionOptionCopyWith<_RegionOption> get copyWith => __$RegionOptionCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegionOption&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.englishName, englishName) || other.englishName == englishName)&&(identical(other.parentKind, parentKind) || other.parentKind == parentKind)&&(identical(other.parentCode, parentCode) || other.parentCode == parentCode)&&(identical(other.parentName, parentName) || other.parentName == parentName)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegionOption&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.englishName, englishName) || other.englishName == englishName)&&(identical(other.parentKind, parentKind) || other.parentKind == parentKind)&&(identical(other.parentCode, parentCode) || other.parentCode == parentCode)&&(identical(other.parentName, parentName) || other.parentName == parentName)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.prefectureName, prefectureName) || other.prefectureName == prefectureName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,kind,code,name,kana,englishName,parentKind,parentCode,parentName,prefectureCode);
+int get hashCode => Object.hash(runtimeType,kind,code,name,kana,englishName,parentKind,parentCode,parentName,prefectureCode,prefectureName);
 
 @override
 String toString() {
-  return 'RegionOption(kind: $kind, code: $code, name: $name, kana: $kana, englishName: $englishName, parentKind: $parentKind, parentCode: $parentCode, parentName: $parentName, prefectureCode: $prefectureCode)';
+  return 'RegionOption(kind: $kind, code: $code, name: $name, kana: $kana, englishName: $englishName, parentKind: $parentKind, parentCode: $parentCode, parentName: $parentName, prefectureCode: $prefectureCode, prefectureName: $prefectureName)';
 }
 
 
@@ -258,7 +260,7 @@ abstract mixin class _$RegionOptionCopyWith<$Res> implements $RegionOptionCopyWi
   factory _$RegionOptionCopyWith(_RegionOption value, $Res Function(_RegionOption) _then) = __$RegionOptionCopyWithImpl;
 @override @useResult
 $Res call({
- RegionKind kind, String code, String name, String? kana, String? englishName, RegionKind? parentKind, String? parentCode, String? parentName, String? prefectureCode
+ RegionKind kind, String code, String name, String? kana, String? englishName, RegionKind? parentKind, String? parentCode, String? parentName, String? prefectureCode, String? prefectureName
 });
 
 
@@ -275,7 +277,7 @@ class __$RegionOptionCopyWithImpl<$Res>
 
 /// Create a copy of RegionOption
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? kind = null,Object? code = null,Object? name = null,Object? kana = freezed,Object? englishName = freezed,Object? parentKind = freezed,Object? parentCode = freezed,Object? parentName = freezed,Object? prefectureCode = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? kind = null,Object? code = null,Object? name = null,Object? kana = freezed,Object? englishName = freezed,Object? parentKind = freezed,Object? parentCode = freezed,Object? parentName = freezed,Object? prefectureCode = freezed,Object? prefectureName = freezed,}) {
   return _then(_RegionOption(
 kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
 as RegionKind,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
@@ -286,6 +288,7 @@ as String?,parentKind: freezed == parentKind ? _self.parentKind : parentKind // 
 as RegionKind?,parentCode: freezed == parentCode ? _self.parentCode : parentCode // ignore: cast_nullable_to_non_nullable
 as String?,parentName: freezed == parentName ? _self.parentName : parentName // ignore: cast_nullable_to_non_nullable
 as String?,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
+as String?,prefectureName: freezed == prefectureName ? _self.prefectureName : prefectureName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

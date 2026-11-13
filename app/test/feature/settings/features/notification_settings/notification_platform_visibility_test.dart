@@ -63,7 +63,8 @@ void main() {
         subscriptionProvider.notifier,
       ) as _FakeSubscriptionNotifier;
       final addButton = regionAddButton('地域を追加（2/1）');
-      expect(tester.widget<M3EFilledButton>(addButton).onPressed, isNull);
+      expect(tester.widget<M3EFilledButton>(addButton).onPressed, isNotNull);
+      expect(find.textContaining('Proプランで上限を増やせます'), findsOneWidget);
       expect(
         tester.widget<ListTile>(find.widgetWithText(ListTile, '地域1')).enabled,
         isFalse,
@@ -113,7 +114,7 @@ void main() {
       expect(find.textContaining('地域を追加'), findsNothing);
       pending.complete(const SubscriptionStatus.inactive());
       await tester.pumpAndSettle();
-      expect(tester.widget<M3EFilledButton>(addButton).onPressed, isNull);
+      expect(tester.widget<M3EFilledButton>(addButton).onPressed, isNotNull);
       expect(
         tester.widget<ListTile>(find.widgetWithText(ListTile, '地域1')).enabled,
         isFalse,

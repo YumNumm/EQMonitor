@@ -68,7 +68,7 @@ class OverrideEditPage extends HookConsumerWidget {
       );
 
     final title = switch (overrideType) {
-      NotificationKind.eew => 'EEW 震度別設定',
+      NotificationKind.eew => '緊急地震速報(予報) 震度別設定',
       NotificationKind.earthquake => '地震情報 震度別設定',
     };
 
@@ -96,7 +96,9 @@ class OverrideEditPage extends HookConsumerWidget {
     listenError(NotificationSlotsNotifier.updateRegionMutation, '設定の保存に失敗しました');
 
     final usedIntensities = sorted.map((o) => o.minJmaIntensity).toSet();
-    final canAdd = sorted.length < _maxOverrides;
+    final canAdd =
+        sorted.length < _maxOverrides &&
+        _overrideIntensities.any((i) => !usedIntensities.contains(i));
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
@@ -337,7 +339,7 @@ class _OverrideTile extends ConsumerWidget {
       leading: _IntensityBadge(intensity: entry.minJmaIntensity),
       title: Text(entry.minJmaIntensity.minIntensityThresholdLabel),
       subtitle: Text(
-        '${sound?.displayName ?? '利用不可の通知音'} / ${entry.interruptionLevel.name}',
+        '${sound?.displayName ?? '利用不可の通知音'} / ${entry.interruptionLevel.label}',
       ),
       trailing: const Icon(Icons.chevron_right),
     );

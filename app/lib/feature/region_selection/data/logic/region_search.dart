@@ -35,6 +35,7 @@ final class const RegionSearch() {
             item.kana,
             item.englishName,
             item.parentName,
+            item.prefectureName,
           ].whereType<String>().any((value) => normalize(value).contains(term));
     }).toList();
   }

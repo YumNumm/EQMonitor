@@ -3,8 +3,10 @@ import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/feature/devices/data/provider/device_role_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/location/data/notifier/current_device_location_notifier.dart';
-import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
+import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
+import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
+import 'package:eqmonitor/feature/region_selection/ui/page/region_selection_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/shake_detection_settings_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
@@ -162,23 +164,30 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
                     onPressed: busy || !regions.hasValue
                         ? null
                         : () async {
-                            final selected =
-                                await showModalBottomSheet<
-                                  EarthquakeParameterRegionItem
-                                >(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  builder: (context) => FractionallySizedBox(
-                                    heightFactor: 0.8,
-                                    child: _ShakeRegionPicker(
-                                      prefectures: regions.requireValue,
-                                      selectedCodes: state.entries
-                                          .map((e) => e.regionCode)
-                                          .nonNulls
-                                          .toSet(),
+                            final result = await Navigator.of(context)
+                                .push<List<RegionOption>>(
+                                  MaterialPageRoute(
+                                    builder: (_) => RegionSelectionPage(
+                                      request: RegionSelectionRequest(
+                                        title: '通知する細分化地域を選択',
+                                        kinds: const [.region],
+                                        hierarchical: true,
+                                        unavailable: [
+                                          for (final entry in state.entries)
+                                            if (entry.regionCode
+                                                case final code?)
+                                              RegionOption(
+                                                kind: .region,
+                                                code: code,
+                                                name: code,
+                                              ),
+                                        ],
+                                        unavailableLabel: '追加済み',
+                                      ),
                                     ),
                                   ),
                                 );
+                            final selected = result?.firstOrNull;
                             if (selected == null || !context.mounted) return;
                             await action.save(ref, [
                               ...state.entries,
@@ -302,35 +311,6 @@ class _ShakeEntryCard extends StatelessWidget {
             icon: const Icon(Icons.delete_outline),
           ),
         ),
-      ],
-    ),
-  );
-}
-
-class _ShakeRegionPicker extends StatelessWidget {
-  const new({required this.prefectures, required this.selectedCodes});
-  final List<EarthquakeParameterPrefectureItem> prefectures;
-  final Set<String> selectedCodes;
-  @override
-  Widget build(BuildContext context) => SafeArea(
-    child: ListView(
-      children: [
-        const ListTile(title: Text('通知する細分化地域を選択')),
-        for (final prefecture in prefectures)
-          ExpansionTile(
-            title: Text(prefecture.name.ja),
-            children: [
-              for (final region in prefecture.regions)
-                ListTile(
-                  title: Text(region.name.ja),
-                  enabled: !selectedCodes.contains(region.code),
-                  trailing: selectedCodes.contains(region.code)
-                      ? const Icon(Icons.check)
-                      : null,
-                  onTap: () => Navigator.of(context).pop(region),
-                ),
-            ],
-          ),
       ],
     ),
   );

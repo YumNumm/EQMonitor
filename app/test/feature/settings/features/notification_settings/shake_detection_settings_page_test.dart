@@ -4,6 +4,8 @@ import 'package:eqmonitor/feature/parameter/data/model/common/parameter_common.d
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
+import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
+import 'package:eqmonitor/feature/region_selection/data/provider/region_catalog_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_availability_provider.dart';
@@ -62,6 +64,31 @@ Widget app(_Settings settings) => ProviderScope(
     ),
     isNotificationPermissionGrantedProvider.overrideWith((ref) async => true),
     notificationPermissionBannerDismissedProvider.overrideWith(_Dismissed.new),
+    regionCatalogProvider().overrideWith(
+      (ref) async => const [
+        RegionOption(kind: .prefecture, code: '13', name: '東京都'),
+        RegionOption(
+          kind: .region,
+          code: '350',
+          name: '東京都23区',
+          parentKind: .prefecture,
+          parentCode: '13',
+          parentName: '東京都',
+          prefectureCode: '13',
+          prefectureName: '東京都',
+        ),
+        RegionOption(
+          kind: .region,
+          code: '351',
+          name: '東京都多摩東部',
+          parentKind: .prefecture,
+          parentCode: '13',
+          parentName: '東京都',
+          prefectureCode: '13',
+          prefectureName: '東京都',
+        ),
+      ],
+    ),
     shakeDetectionRegionsProvider.overrideWith(
       (ref) async => [
         const EarthquakeParameterPrefectureItem(
