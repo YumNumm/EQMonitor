@@ -6,6 +6,7 @@ import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.d
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/latest_map_operation_guard.dart';
+import 'package:eqmonitor/feature/region_selection/data/logic/region_option_label.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:eqmonitor/feature/region_selection/data/repository/prefecture_boundary_repository.dart';
 import 'package:eqmonitor/feature/region_selection/data/provider/region_map_metadata_provider.dart';
@@ -226,8 +227,16 @@ class RegionSelectionMap extends HookConsumerWidget {
                         onPressed: () => retry.value++,
                         child: const Text('再試行'),
                       ),
-                    ] else
+                    ] else ...[
+                      if (selected.isNotEmpty)
+                        Text(
+                          selected.length == 1
+                              ? const RegionOptionLabel().title(selected.first)
+                              : '${selected.length}件を選択中',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                       Text(message.value ?? '地図をタップして${kind.label}を選択'),
+                    ],
                     if (kind == .epicenter)
                       const Text('地図に範囲のない震央地名は一覧から選択できます'),
                     for (final candidate in candidates.value)
@@ -237,7 +246,7 @@ class RegionSelectionMap extends HookConsumerWidget {
                           candidates.value = const [];
                         },
                         child: Text(
-                          '${candidate.name}(${candidate.parentName ?? candidate.kind.label})',
+                          const RegionOptionLabel().title(candidate),
                         ),
                       ),
                   ],

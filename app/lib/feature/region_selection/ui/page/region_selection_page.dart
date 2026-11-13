@@ -190,7 +190,12 @@ class _RegionSelectionContent extends HookWidget {
                 showMap.value = !showMap.value;
                 if (showMap.value) {
                   kind.value ??=
-                      selected.firstOrNull?.kind ?? request.kinds.first;
+                      selected.firstOrNull?.kind ??
+                      (isBrowsing &&
+                              browseRegion.value != null &&
+                              request.kinds.contains(RegionKind.city)
+                          ? RegionKind.city
+                          : request.kinds.first);
                   controller.clear();
                   FocusScope.of(context).unfocus();
                 }
