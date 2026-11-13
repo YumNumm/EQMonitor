@@ -48,6 +48,7 @@ class RegionIntensityFilterChip extends StatelessWidget {
           $extra: RegionSelectionRequest(
             title: '観測地域を選択',
             allowEmpty: true,
+            hierarchical: true,
             initialSelection: [
               if (code != null && type != null)
                 RegionOption(

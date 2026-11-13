@@ -62,6 +62,7 @@ class _WidgetRegionSection extends ConsumerWidget {
         $extra: RegionSelectionRequest(
           title: '任意地域を選択',
           kinds: const [.prefecture, .city],
+          hierarchical: true,
           initialSelection: [
             if (region != null)
               RegionOption(

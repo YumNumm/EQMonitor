@@ -9,7 +9,9 @@ final class const RegionHierarchy() {
   List<RegionOption> prefectures(List<RegionOption> catalog) {
     final result = <String, RegionOption>{};
     for (final item in catalog) {
-      if ((item.prefectureCode, item.prefectureName) case (
+      if (item.kind == .prefecture) {
+        result[item.code] = item;
+      } else if ((item.prefectureCode, item.prefectureName) case (
         final code?,
         final name?,
       )) {
@@ -20,6 +22,36 @@ final class const RegionHierarchy() {
       }
     }
     return result.values.toList();
+  }
+
+  /// [option] が一覧に現れる階層（都道府県・細分化地域）を返す。
+  ///
+  /// 選択済みの地域がある状態で開いたとき、その地域が見える階層から始める。
+  ({RegionOption? prefecture, RegionOption? region}) location({
+    required List<RegionOption> catalog,
+    required RegionOption? option,
+  }) {
+    if (option == null) {
+      return (prefecture: null, region: null);
+    }
+    final prefectureCode = option.kind == .prefecture
+        ? option.code
+        : option.prefectureCode;
+    final prefecture = prefectures(
+      catalog,
+    ).where((item) => item.code == prefectureCode).firstOrNull;
+    if (prefecture == null || option.kind != .city) {
+      return (prefecture: prefecture, region: null);
+    }
+    final region = catalog
+        .where(
+          (item) =>
+              item.kind == .region &&
+              option.parentKind == .region &&
+              item.code == option.parentCode,
+        )
+        .firstOrNull;
+    return (prefecture: prefecture, region: region);
   }
 
   List<RegionOption> regions({

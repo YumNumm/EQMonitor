@@ -74,12 +74,14 @@ class RegionHierarchyBreadcrumb extends StatelessWidget {
   }
 }
 
-/// 都道府県 → 細分化地域 → 「全体」または市区町村 の順に辿る一覧。
+/// 都道府県 → 細分化地域 → 市区町村 の順に辿る一覧。
 ///
-/// 都道府県と細分化地域の行は次の階層へ進むだけで、選択は最下層で行う。
+/// 下位の地域を選べる行は次の階層へ進み、その地域自体も選べる場合は
+/// 進んだ先の先頭に「全体」の行を置く。下位を選べない行はその場で選択する。
 class RegionHierarchyList extends StatelessWidget {
   const new({
     required this.catalog,
+    required this.kinds,
     required this.prefectures,
     required this.prefecture,
     required this.region,
@@ -94,6 +96,7 @@ class RegionHierarchyList extends StatelessWidget {
   });
 
   final List<RegionOption> catalog;
+  final List<RegionKind> kinds;
   final List<RegionOption> prefectures;
   final RegionOption? prefecture;
   final RegionOption? region;
@@ -110,6 +113,7 @@ class RegionHierarchyList extends StatelessWidget {
     const hierarchy = RegionHierarchy();
     final prefecture = this.prefecture;
     final region = this.region;
+    final citySelectable = kinds.contains(RegionKind.city);
 
     if (prefecture == null) {
       return ListView.builder(
@@ -119,76 +123,140 @@ class RegionHierarchyList extends StatelessWidget {
         itemCount: prefectures.length,
         itemBuilder: (context, index) {
           final item = prefectures[index];
-          return ListTile(
-            title: Text(item.name),
-            trailing: const Icon(Icons.chevron_right),
+          return _BranchTile(
+            option: item,
+            selected: selected,
             onTap: () => onPrefectureSelected(item),
           );
         },
       );
     }
-    if (region == null) {
-      final regions = hierarchy.regions(
-        catalog: catalog,
-        prefecture: prefecture,
-      );
-      return ListView.builder(
-        key: ValueKey('region-hierarchy-regions-${prefecture.code}'),
-        keyboardDismissBehavior: .onDrag,
-        padding: const EdgeInsets.only(bottom: regionSelectionActionInset),
-        itemCount: regions.length,
-        itemBuilder: (context, index) {
-          final item = regions[index];
-          final selectedCount = selected
-              .where(
-                (value) =>
-                    value.identity == item.identity ||
-                    (value.parentKind == .region &&
-                        value.parentCode == item.code),
-              )
-              .length;
-          return ListTile(
-            title: Text(item.name),
-            subtitle: selectedCount == 0 ? null : const Text('選択中'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => onRegionSelected(item),
-          );
-        },
-      );
-    }
-    final cities = hierarchy.cities(catalog: catalog, region: region);
+    // 先頭の「全体」は、その階層の地域自体を選べる場合だけ表示する。
+    final whole = region == null
+        ? (kinds.contains(RegionKind.prefecture) ? prefecture : null)
+        : (kinds.contains(RegionKind.region) ? region : null);
+    final children = region == null
+        ? hierarchy.regions(catalog: catalog, prefecture: prefecture)
+        : hierarchy.cities(catalog: catalog, region: region);
+    final offset = whole == null ? 0 : 1;
     return ListView.builder(
-      key: ValueKey('region-hierarchy-cities-${region.code}'),
+      key: ValueKey('region-hierarchy-${prefecture.code}-${region?.code}'),
       keyboardDismissBehavior: .onDrag,
       padding: const EdgeInsets.only(bottom: regionSelectionActionInset),
-      itemCount: cities.length + 1,
+      itemCount: children.length + offset,
       itemBuilder: (context, index) {
-        final item = index == 0 ? region : cities[index - 1];
-        final isSelected = selected.any(
-          (value) => value.identity == item.identity,
-        );
-        final isUnavailable = unavailable.contains(item.identity);
-        final description = [
-          if (index == 0) '${RegionKind.region.label}全体を対象にする',
-          if (isUnavailable) unavailableLabel,
-        ].join('・');
-        return ListTile(
-          selected: isSelected,
-          enabled: !isUnavailable,
-          leading: Icon(
-            isUnavailable
-                ? Icons.check
-                : multiple
-                ? (isSelected ? Icons.check_box : Icons.check_box_outline_blank)
-                : (isSelected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked),
-          ),
-          title: Text(index == 0 ? '${item.name} 全体' : item.name),
-          subtitle: description.isEmpty ? null : Text(description),
+        if (whole != null && index == 0) {
+          return _LeafTile(
+            option: whole,
+            title: '${whole.name} 全体',
+            description: '${whole.kind.label}全体を対象にする',
+            selected: selected,
+            unavailable: unavailable,
+            unavailableLabel: unavailableLabel,
+            multiple: multiple,
+            onTap: () => onOptionSelected(whole),
+          );
+        }
+        final item = children[index - offset];
+        if (region == null && citySelectable) {
+          return _BranchTile(
+            option: item,
+            selected: selected,
+            onTap: () => onRegionSelected(item),
+          );
+        }
+        return _LeafTile(
+          option: item,
+          title: item.name,
+          description: null,
+          selected: selected,
+          unavailable: unavailable,
+          unavailableLabel: unavailableLabel,
+          multiple: multiple,
           onTap: () => onOptionSelected(item),
         );
       },
+    );
+  }
+}
+
+/// 次の階層へ進む行。配下に選択中の地域があれば示す。
+class _BranchTile extends StatelessWidget {
+  const new({
+    required this.option,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final RegionOption option;
+  final List<RegionOption> selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final containsSelection = selected.any(
+      (value) =>
+          value.identity == option.identity ||
+          (value.parentKind == option.kind &&
+              value.parentCode == option.code) ||
+          (option.kind == .prefecture && value.prefectureCode == option.code),
+    );
+    return ListTile(
+      title: Text(option.name),
+      subtitle: containsSelection ? const Text('選択中') : null,
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
+    );
+  }
+}
+
+/// その場で選択する行。
+class _LeafTile extends StatelessWidget {
+  const new({
+    required this.option,
+    required this.title,
+    required this.description,
+    required this.selected,
+    required this.unavailable,
+    required this.unavailableLabel,
+    required this.multiple,
+    required this.onTap,
+  });
+
+  final RegionOption option;
+  final String title;
+  final String? description;
+  final List<RegionOption> selected;
+  final Set<String> unavailable;
+  final String unavailableLabel;
+  final bool multiple;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = selected.any(
+      (value) => value.identity == option.identity,
+    );
+    final isUnavailable = unavailable.contains(option.identity);
+    final subtitle = [
+      ?description,
+      if (isUnavailable) unavailableLabel,
+    ].join('・');
+    return ListTile(
+      selected: isSelected,
+      enabled: !isUnavailable,
+      leading: Icon(
+        isUnavailable
+            ? Icons.check
+            : multiple
+            ? (isSelected ? Icons.check_box : Icons.check_box_outline_blank)
+            : (isSelected
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked),
+      ),
+      title: Text(title),
+      subtitle: subtitle.isEmpty ? null : Text(subtitle),
+      onTap: onTap,
     );
   }
 }

@@ -109,8 +109,18 @@ class _RegionSelectionContent extends HookWidget {
     final canConfirm = selected.isNotEmpty || request.allowEmpty;
     final multiple = request.mode == .multiple;
     final hasKindFilter = request.kinds.length > 1 && kind.value != null;
-    final browsePrefecture = useState<RegionOption?>(null);
-    final browseRegion = useState<RegionOption?>(null);
+    // 選択済みの地域がある場合は、その地域が見える階層から始める。
+    final initialLocation = useMemoized(
+      () => const RegionHierarchy().location(
+        catalog: catalog,
+        option: request.hierarchical ? selected.firstOrNull : null,
+      ),
+      // 開いた時点の選択だけを使う。選択のたびに階層を動かさない。
+      // ignore_keys: selected
+      [catalog, request.hierarchical],
+    );
+    final browsePrefecture = useState(initialLocation.prefecture);
+    final browseRegion = useState(initialLocation.region);
     final prefectures = useMemoized(
       () => request.hierarchical
           ? const RegionHierarchy().prefectures(catalog)
@@ -305,6 +315,7 @@ class _RegionSelectionContent extends HookWidget {
                     : isBrowsing
                     ? RegionHierarchyList(
                         catalog: available,
+                        kinds: request.kinds,
                         prefectures: prefectures,
                         prefecture: browsePrefecture.value,
                         region: browseRegion.value,
