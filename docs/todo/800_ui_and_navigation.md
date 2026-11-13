@@ -62,6 +62,12 @@
 
 - 対象: `app/lib/feature/region_selection/`。iOS 実機で地図の初期表示、選択・全解除、地域種別切り替え、震央選択からの切り替えを確認する。クラッシュせず、解除後のハイライトと不要な震央領域が消えることを完了条件とする。実機の画面操作は未検証。
 
+## 800: 地域選択・通知地域 UI 改修後の実機確認
+
+- 対象: `app/lib/feature/region_selection/ui/page/region_selection_page.dart`、通知設定のカスタム設定・地域別設定。widget test と解析は通過済みで、実機の画面操作は未検証。
+- 小型端末でキーボード表示中に検索結果の一覧と下部の「決定」が操作できること、文字拡大時に下部バーの選択チップが溢れないことを確認する。
+- 通知地域の追加画面で登録済みの地域が「追加済み」となり選択できないこと、無料プランの上限到達時に Pro の案内が開くこと、地域削除の確認ダイアログを確認する。
+
 ## 800: material_ui 境界
 
 - `app/lib/feature/settings/children/application_info/{about_this_app,term_of_service_page,privacy_policy_page}.dart` の Markdown に明示的なstyleまたは共通rendererを渡し、`feature/changelog/ui/page/changelog_page.dart` と共通化する。完了条件: Light/Darkで本文/リンクが読める。
