@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/location/data/jma_map_isolate.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
@@ -127,6 +128,31 @@ class RegionSelectionMap extends HookConsumerWidget {
       return const Center(child: Text('観測点は一覧から選択してください'));
     }
     final action = ref.watch(regionSelectionMapActionProvider);
+    final focusTargets = useRef(selected)
+      ..value = selected.isNotEmpty ? selected : [?parent];
+    useEffect(
+      () {
+        final map = controller.value;
+        if (!ready.value || map == null) {
+          return null;
+        }
+        unawaited(() async {
+          try {
+            await action.focus(
+              ref: ref,
+              controller: map,
+              catalog: catalog,
+              targets: focusTargets.value,
+              padding: EdgeInsets.fromLTRB(32, 32, 32, 160 + bottomInset),
+            );
+          } on Exception catch (error, stack) {
+            talker.handle(error, stack);
+          }
+        }());
+        return null;
+      },
+      [ready.value, parent, catalog, action, focusTargets],
+    );
     return Stack(
       children: [
         MapOperationQueueScope(
@@ -235,7 +261,12 @@ class RegionSelectionMap extends HookConsumerWidget {
                               : '${selected.length}件を選択中',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                      Text(message.value ?? '地図をタップして${kind.label}を選択'),
+                      Text(
+                        message.value ??
+                            (parent == null
+                                ? '地図をタップして${kind.label}を選択'
+                                : '地図をタップして${parent?.name}の${kind.label}を選択'),
+                      ),
                     ],
                     if (kind == .epicenter)
                       const Text('地図に範囲のない震央地名は一覧から選択できます'),

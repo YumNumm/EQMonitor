@@ -150,6 +150,15 @@ class _RegionSelectionContent extends HookWidget {
       );
     }
 
+    final mapKind = kind.value ?? request.kinds.first;
+    final mapScope =
+        parent.value ??
+        switch (mapKind) {
+          .city => browseRegion.value ?? browsePrefecture.value,
+          .region => browsePrefecture.value,
+          _ => null,
+        };
+
     final hasConfirmButton = multiple
         ? canConfirm
         : showMap.value && selected.isNotEmpty;
@@ -239,7 +248,10 @@ class _RegionSelectionContent extends HookWidget {
                   ],
                 ),
               ),
-              if (isBrowsing)
+              if (isBrowsing ||
+                  (request.hierarchical &&
+                      showMap.value &&
+                      browsePrefecture.value != null))
                 RegionHierarchyBreadcrumb(
                   prefecture: browsePrefecture.value,
                   region: browseRegion.value,
@@ -250,8 +262,8 @@ class _RegionSelectionContent extends HookWidget {
                   onPrefectureSelected: () {
                     browseRegion.value = null;
                   },
-                )
-              else if (request.kinds.length > 1)
+                ),
+              if (!isBrowsing && request.kinds.length > 1)
                 SingleChildScrollView(
                   scrollDirection: .horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -298,10 +310,10 @@ class _RegionSelectionContent extends HookWidget {
               Expanded(
                 child: showMap.value
                     ? RegionSelectionMap(
-                        kind: kind.value ?? request.kinds.first,
+                        kind: mapKind,
                         catalog: catalog,
                         selected: selected,
-                        parent: parent.value,
+                        parent: mapScope,
                         bottomInset: actionInset,
                         onSelected: (option) {
                           if (unavailable.contains(option.identity)) {
