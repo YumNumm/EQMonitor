@@ -74,8 +74,8 @@ void main() {
     final cities = catalog.where((item) => item.kind == .city).toList();
     expect(cities.map((item) => item.name), ['府中市', '府中市']);
     expect(cities.map((item) => item.parentName), [
-      '東京都・東京都多摩東部',
-      '広島県・広島県南東部',
+      '東京都多摩東部',
+      '広島県南東部',
     ]);
     expect(cities.map((item) => item.prefectureCode), ['13', '34']);
     expect(

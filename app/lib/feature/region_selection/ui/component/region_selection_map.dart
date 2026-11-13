@@ -237,7 +237,7 @@ class RegionSelectionMap extends HookConsumerWidget {
                           candidates.value = const [];
                         },
                         child: Text(
-                          '${candidate.name}（${candidate.parentName ?? candidate.kind.label}）',
+                          '${candidate.name}(${candidate.parentName ?? candidate.kind.label})',
                         ),
                       ),
                   ],

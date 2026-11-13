@@ -194,6 +194,7 @@ class _BranchTile extends StatelessWidget {
           (option.kind == .prefecture && value.prefectureCode == option.code),
     );
     return ListTile(
+      visualDensity: .compact,
       title: Text(option.name),
       subtitle: containsSelection ? const Text('選択中') : null,
       trailing: const Icon(Icons.chevron_right),
@@ -234,6 +235,7 @@ class _LeafTile extends StatelessWidget {
       if (isUnavailable) unavailableLabel,
     ].join('・');
     return ListTile(
+      visualDensity: .compact,
       selected: isSelected,
       enabled: !isUnavailable,
       leading: multiple

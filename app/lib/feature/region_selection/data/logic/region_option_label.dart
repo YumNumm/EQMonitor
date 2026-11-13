@@ -1,15 +1,17 @@
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 
 final class const RegionOptionLabel() {
-  String subtitle(RegionOption option) {
-    final parentName = option.parentName;
+  String title(RegionOption option) {
     final prefectureName = option.prefectureName;
-    return [
-      option.kind.label,
-      if (prefectureName != null &&
-          !(parentName?.contains(prefectureName) ?? false))
-        prefectureName,
-      ?parentName,
-    ].join('・');
+    return prefectureName == null ||
+            option.kind == .prefecture ||
+            option.name.startsWith(prefectureName)
+        ? option.name
+        : '$prefectureName${option.name}';
   }
+
+  String subtitle(RegionOption option) => switch (option.kind) {
+    .city || .station => option.parentName ?? option.kind.label,
+    _ => option.kind.label,
+  };
 }

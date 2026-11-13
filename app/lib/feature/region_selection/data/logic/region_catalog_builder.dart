@@ -1,6 +1,7 @@
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/notification_region_catalog_builder.dart';
+import 'package:unorm_dart/unorm_dart.dart' as unorm;
 
 final class const RegionCatalogBuilder() {
   List<RegionOption> build({
@@ -21,7 +22,7 @@ final class const RegionCatalogBuilder() {
           RegionOption(
             kind: .region,
             code: region.code,
-            name: region.name,
+            name: unorm.nfkc(region.name),
             kana: region.kana,
             prefectureCode: prefectureByRegion[region.code]?.code,
             prefectureName: prefectureByRegion[region.code]?.name.ja,
@@ -30,11 +31,11 @@ final class const RegionCatalogBuilder() {
             RegionOption(
               kind: .city,
               code: city.code,
-              name: city.name,
+              name: unorm.nfkc(city.name),
               kana: city.kana,
               parentKind: .region,
               parentCode: region.code,
-              parentName: region.name,
+              parentName: unorm.nfkc(region.name),
               prefectureCode: prefectureByRegion[region.code]?.code,
               prefectureName: prefectureByRegion[region.code]?.name.ja,
             ),
@@ -59,7 +60,7 @@ final class const RegionCatalogBuilder() {
           RegionOption(
             kind: .region,
             code: region.code,
-            name: region.name.ja,
+            name: unorm.nfkc(region.name.ja),
             kana: region.kana,
             englishName: region.name.en,
             parentKind: .prefecture,
@@ -72,12 +73,12 @@ final class const RegionCatalogBuilder() {
             RegionOption(
               kind: .city,
               code: city.code,
-              name: city.name.ja,
+              name: unorm.nfkc(city.name.ja),
               kana: city.kana,
               englishName: city.name.en,
               parentKind: .region,
               parentCode: region.code,
-              parentName: '${prefecture.name.ja}・${region.name.ja}',
+              parentName: unorm.nfkc(region.name.ja),
               prefectureCode: prefecture.code,
               prefectureName: prefecture.name.ja,
             ),
@@ -85,10 +86,10 @@ final class const RegionCatalogBuilder() {
               RegionOption(
                 kind: .station,
                 code: station.code,
-                name: station.name.ja,
+                name: unorm.nfkc(station.name.ja),
                 parentKind: .city,
                 parentCode: city.code,
-                parentName: city.name.ja,
+                parentName: unorm.nfkc(city.name.ja),
                 prefectureCode: prefecture.code,
                 prefectureName: prefecture.name.ja,
               ),
@@ -96,13 +97,15 @@ final class const RegionCatalogBuilder() {
         ],
       ],
       for (final epicenter in codeTable.codeTables.areaEpicenter)
-        RegionOption(
-          kind: .epicenter,
-          code: epicenter.code,
-          name: epicenter.name.ja,
-          kana: epicenter.kana,
-          englishName: epicenter.name.en,
-        ),
+        // 100 未満は PLUM 法の仮定震源で使う広域区分で、地震情報には現れない。
+        if ((int.tryParse(epicenter.code) ?? 0) >= 100)
+          RegionOption(
+            kind: .epicenter,
+            code: epicenter.code,
+            name: unorm.nfkc(epicenter.name.ja),
+            kana: epicenter.kana,
+            englishName: epicenter.name.en,
+          ),
     ];
   }
 }

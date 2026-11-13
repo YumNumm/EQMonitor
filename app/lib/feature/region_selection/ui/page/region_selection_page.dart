@@ -206,7 +206,7 @@ class _RegionSelectionContent extends HookWidget {
                 icon: const Icon(Icons.check),
                 label: Text(
                   multiple && selected.isNotEmpty
-                      ? '決定（${selected.length}）'
+                      ? '決定(${selected.length})'
                       : '決定',
                 ),
               )
@@ -385,6 +385,7 @@ class _RegionSelectionContent extends HookWidget {
                               childKind != null &&
                               request.kinds.contains(childKind);
                           return ListTile(
+                            visualDensity: .compact,
                             selected: isSelected,
                             enabled: !isUnavailable,
                             leading: multiple
@@ -394,7 +395,7 @@ class _RegionSelectionContent extends HookWidget {
                                         : Icons.check_box_outline_blank,
                                   )
                                 : null,
-                            title: Text(item.name),
+                            title: Text(const RegionOptionLabel().title(item)),
                             subtitle: Text(
                               isUnavailable
                                   ? '${const RegionOptionLabel().subtitle(item)}'
