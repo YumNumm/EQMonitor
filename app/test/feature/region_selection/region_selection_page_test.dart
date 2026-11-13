@@ -269,7 +269,7 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('決定'));
     expect(result, [cities.last]);
-    await tester.tap(find.text('すべて解除'));
+    await tester.tap(find.byTooltip('府中市の選択を解除'));
     await tester.pump();
     await tester.tap(find.text('決定'));
     expect(result, isEmpty);
