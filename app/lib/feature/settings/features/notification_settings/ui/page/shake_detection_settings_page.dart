@@ -289,13 +289,7 @@ class _ShakeEntryCard extends StatelessWidget {
                 .map(
                   (level) => M3EDropdownItem(
                     value: level,
-                    label: switch (level) {
-                      .weaker => '微弱な揺れ以上',
-                      .weak => '弱い揺れ以上',
-                      .medium => 'やや強い揺れ以上',
-                      .strong => '強い揺れ以上',
-                      .stronger => '非常に強い揺れ',
-                    },
+                    label: level.minLevelThresholdLabel,
                     selected: level == entry.minLevel,
                   ),
                 )
