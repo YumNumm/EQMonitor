@@ -24,6 +24,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/notification_plan_constraints_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_access_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/current_location_permission_warning_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_permission_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
@@ -103,10 +104,12 @@ class _Body extends HookConsumerWidget {
     return ListView(
       padding: const EdgeInsets.only(top: 16, bottom: 24),
       children: [
-        if (notificationsEnabled)
+        if (notificationsEnabled) ...[
           NotificationPermissionWarningCard(
             requiresCriticalAlert: requiresCriticalAlert,
           ),
+          const CurrentLocationPermissionWarningCard(),
+        ],
         _MasterNotificationControl(
           value: notificationsEnabled,
           onChanged: (value) async {

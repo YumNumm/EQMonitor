@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_access_provider.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/current_location_permission_warning_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_min_intensity_field.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
@@ -82,6 +83,8 @@ class SlotDetailPage extends HookConsumerWidget {
           : ListView(
               padding: const EdgeInsets.only(top: 16, bottom: 24),
               children: [
+                if (slot.slotType == NotificationSlotType.currentLocation)
+                  const CurrentLocationPermissionWarningCard(),
                 const SettingsSectionHeader(text: '緊急地震速報(予報)'),
                 _NotificationConditionCard(
                   slotType: slot.slotType,
