@@ -107,12 +107,12 @@ void main() {
     expect(find.text('最大震度5を観測'), findsOneWidget);
   });
 
-  testWidgets('旧震度階級がない5弱は従来の表示を維持すること', (tester) async {
+  testWidgets('旧震度階級がない5弱は5弱として表示すること', (tester) async {
     await pumpTile(tester, maxIntensityClass: null);
 
     expect(find.byType(ShindoDbIntensityClassIcon), findsNothing);
     expect(find.byType(JmaIntensityIcon), findsOneWidget);
-    expect(find.text('最大震度5-を観測'), findsOneWidget);
+    expect(find.text('最大震度5弱を観測'), findsOneWidget);
   });
 }
 
