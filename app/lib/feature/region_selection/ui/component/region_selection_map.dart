@@ -261,12 +261,14 @@ class RegionSelectionMap extends HookConsumerWidget {
                               : '${selected.length}件を選択中',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                      Text(
-                        message.value ??
-                            (parent == null
-                                ? '地図をタップして${kind.label}を選択'
-                                : '地図をタップして${parent?.name}の${kind.label}を選択'),
-                      ),
+                      if (message.value case final text?)
+                        Text(text)
+                      else if (selected.isEmpty)
+                        Text(
+                          parent == null
+                              ? '地図をタップして${kind.label}を選択'
+                              : '地図をタップして${parent?.name}の${kind.label}を選択',
+                        ),
                     ],
                     if (kind == .epicenter)
                       const Text('地図に範囲のない震央地名は一覧から選択できます'),

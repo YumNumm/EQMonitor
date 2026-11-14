@@ -162,7 +162,8 @@ class _RegionSelectionContent extends HookWidget {
     final hasConfirmButton = multiple
         ? canConfirm
         : showMap.value && selected.isNotEmpty;
-    final actionInset = hasConfirmButton ? 88.0 : 0.0;
+    final actionInset =
+        (hasConfirmButton ? 88.0 : 0.0) + MediaQuery.paddingOf(context).bottom;
 
     return PopScope(
       canPop: canLeave,
@@ -226,6 +227,7 @@ class _RegionSelectionContent extends HookWidget {
               )
             : null,
         body: SafeArea(
+          bottom: false,
           child: Column(
             crossAxisAlignment: .stretch,
             children: [

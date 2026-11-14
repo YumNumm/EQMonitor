@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_hypocenter_points_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_map_bounds_calculator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
@@ -207,9 +208,13 @@ class _MapContent extends HookConsumerWidget {
         ? details.showStationsOnEstimatedIntensity
         : details.showStations;
 
+    // マーカー・初期カメラ・全体表示が同じ震源を指すよう、ここで一度だけ決める。
+    final hypocenterPoints = const EarthquakeHistoryHypocenterPointsResolver()
+        .resolve(earthquake: earthquake, showingDb: showingDb);
+
     const mapCamera = EarthquakeHistoryMapCamera();
-    var center = mapCamera.initialCenter(earthquake);
-    var zoom = mapCamera.initialZoom(earthquake);
+    var center = mapCamera.initialCenter(hypocenterPoints);
+    var zoom = mapCamera.initialZoom(hypocenterPoints);
     final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
       mapSettings,
     );
@@ -240,7 +245,7 @@ class _MapContent extends HookConsumerWidget {
     final hypocenterLayer = EarthquakeHistoryHypocenterLayer(
       key: const ValueKey('hypocenter'),
       belowLayerId: hypocenterAnchor,
-      earthquake: earthquake,
+      points: hypocenterPoints,
       parameter: parameter,
     );
 
@@ -334,6 +339,7 @@ class _MapContent extends HookConsumerWidget {
                       ref: ref,
                       controller: controller,
                       earthquake: earthquake,
+                      hypocenterPoints: hypocenterPoints,
                       dbTree: dbTree,
                     );
               },

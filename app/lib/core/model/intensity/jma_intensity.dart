@@ -24,11 +24,11 @@ enum JmaIntensity {
     .three => '3',
     .four => '4',
     .fiveUnknown => '5',
-    .fiveLower => '5-',
-    .fiveUpper => '5+',
+    .fiveLower => '5弱',
+    .fiveUpper => '5強',
     .sixUnknown => '6',
-    .sixLower => '6-',
-    .sixUpper => '6+',
+    .sixLower => '6弱',
+    .sixUpper => '6強',
     .seven => '7',
   };
 
@@ -42,7 +42,7 @@ enum JmaIntensity {
     .sixUnknown => '6',
     .sixLower => '6',
     .sixUpper => '6',
-    _ => label.replaceAll('-', '').replaceAll('+', ''),
+    _ => label,
   };
 
   String get suffix => switch (this) {

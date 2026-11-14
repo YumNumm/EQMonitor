@@ -203,7 +203,7 @@ void main() {
 
     expect(find.text('震度1以上'), findsOneWidget);
     expect(find.text('震度3以上'), findsOneWidget);
-    expect(find.text('震度5+以上'), findsOneWidget);
+    expect(find.text('震度5強以上'), findsOneWidget);
     expect(notifier.lastEarthquakeOverrides, isNull);
     expect(find.textContaining('設定の保存に失敗しました'), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -240,7 +240,7 @@ void main() {
     );
     expect(find.text('震度1以上'), findsOneWidget);
     expect(find.text('震度3以上'), findsNothing);
-    expect(find.text('震度5+以上'), findsOneWidget);
+    expect(find.text('震度5強以上'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

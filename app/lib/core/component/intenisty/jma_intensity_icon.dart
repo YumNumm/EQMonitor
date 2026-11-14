@@ -31,11 +31,11 @@ class JmaIntensityIcon extends StatelessWidget {
         context.designSystem.colorTheme.intensity.fromJmaIntensity(intensity);
     final (fg, bg) = (colorEntry.resolvedForeground, colorEntry.background);
     final intensityMainText = intensity.mainText;
-    final suffix = intensity.label.contains('-')
-        ? '-'
-        : intensity.label.contains('+')
-        ? '+'
-        : '';
+    final suffix = switch (intensity) {
+      .fiveLower || .sixLower => '-',
+      .fiveUpper || .sixUpper => '+',
+      _ => '',
+    };
     final intensitySubText = intensity.suffix;
     final borderColor = Color.lerp(bg, fg, 0.3) ?? bg;
     return switch (type) {

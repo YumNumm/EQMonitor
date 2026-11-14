@@ -573,7 +573,7 @@ class const _NotificationPresetLabel() {
   };
 
   String settingsSubtitle(NotificationPreset preset) => switch (preset) {
-    NotificationPreset.recommended => '現在地の震度に応じて、EEWと地震情報を自動で通知します',
+    NotificationPreset.recommended => '現在地の震度に応じて、緊急地震速報(予報・警報)と地震情報を自動で通知します',
     NotificationPreset.all => '推奨設定に加え、全国のすべての地震・南海トラフ地震関連情報も通知します',
     NotificationPreset.custom => '通知の種類ごとに条件を細かく設定します',
     NotificationPreset.none => '通知を受け取りません。後から設定で変更できます',

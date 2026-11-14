@@ -549,7 +549,7 @@ void main() {
     await _scrollFinderTo(tester, dropdown);
     await tester.tap(dropdown.hitTestable());
     await tester.pumpAndSettle();
-    await _selectDropdownOption(tester, '5-');
+    await _selectDropdownOption(tester, '5弱');
     await tester.pumpAndSettle();
 
     final draft = await _readDraft(tester) as EarthquakeVxse53DebugDraft;
@@ -768,7 +768,7 @@ void main() {
       await _scrollFinderTo(tester, dropdown);
       await tester.tap(dropdown.hitTestable().first);
       await tester.pumpAndSettle();
-      await _selectDropdownOption(tester, '5-');
+      await _selectDropdownOption(tester, '5弱');
       await tester.pumpAndSettle();
 
       final state = container.read(
