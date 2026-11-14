@@ -1,5 +1,50 @@
 # Changelog
 
+## [3.1.0](https://github.com/YumNumm/EQMonitor/compare/v3.0.6...v3.1.0) (2026-11-14)
+
+
+### Features
+
+* カスタム設定の通知地域に揺れ検知通知を結合 ([1e692e4](https://github.com/YumNumm/EQMonitor/commit/1e692e4a7adb83523167b14a852177b7eab05359))
+* 単一の地域選択をタップで確定に変更しコメント方針を追加 ([70411e3](https://github.com/YumNumm/EQMonitor/commit/70411e396aaeacd4853166346d01fd16370aa851))
+* 地図での地域選択で選択地域へカメラを寄せ、絞り込みを引き継ぐ ([e91fabd](https://github.com/YumNumm/EQMonitor/commit/e91fabd0b36258aa46d869d3b4139355b5d1ccf9))
+* 地域選択の下部バーを廃止し決定を Floating Action Button へ変更 ([f885cd7](https://github.com/YumNumm/EQMonitor/commit/f885cd7485ddbec9238bb45807b4852bfebcf092))
+* 地域選択の行を詰め、名称を半角化し、PLUM 用の震央区分を除外 ([b035249](https://github.com/YumNumm/EQMonitor/commit/b03524984864abcf7247b65773edd2661933dd82))
+* 地域選択画面の下部バーを集約し都道府県名での検索に対応 ([450d52d](https://github.com/YumNumm/EQMonitor/commit/450d52d8235bc14a57345ec6a5e91850201816c5))
+* 強震モニタの時刻同期エンジンを作り直す ([05e1f88](https://github.com/YumNumm/EQMonitor/commit/05e1f88f04e2ab18b70d37ec7372665e0734a085))
+* 強震モニタの時刻同期エンジンを作り直す ([bb43700](https://github.com/YumNumm/EQMonitor/commit/bb43700a6db1f729e738734f1798a7ac5e7956d9))
+* 揺れ検知条件を通知スロットへ対応付けるロジックを追加 ([5f85724](https://github.com/YumNumm/EQMonitor/commit/5f857246232d465915f5621eea6608ff8748d58c))
+* 現在地の揺れ検知を位置情報の常に許可がある場合のみ選択可能にする ([84e1a1e](https://github.com/YumNumm/EQMonitor/commit/84e1a1e00d7cb95b409bdadd646aab62c81c1875))
+* 現在地の通知に位置情報の権限不足を知らせる警告を追加 ([b5ffe5c](https://github.com/YumNumm/EQMonitor/commit/b5ffe5c61cb87937a8984f21091ab57dc7f965e3))
+* 通知地域の追加画面で登録済みの地域を選択不可として表示 ([67ba8f0](https://github.com/YumNumm/EQMonitor/commit/67ba8f092219783aca167084123d4acb8133473b))
+* 通知地域の選択を都道府県・細分化地域・市区町村の階層で辿れるように変更 ([1ee29bf](https://github.com/YumNumm/EQMonitor/commit/1ee29bfd49b9d0c9307a67301d0cd578aa2287be))
+* 通知設定と地域選択画面の UI を改善 ([f6eb09d](https://github.com/YumNumm/EQMonitor/commit/f6eb09d74f64e7af71e33789669ae7a76056d966))
+* 階層での地域選択を共通化し揺れ検知・ホーム・履歴・ウィジェットへ適用 ([1f68ce5](https://github.com/YumNumm/EQMonitor/commit/1f68ce518f873c70941549a99f93972672918d22))
+* 震度データベースの複数震源を地図へ番号付きで表示 ([388d326](https://github.com/YumNumm/EQMonitor/commit/388d32601fc4164c46753063353ca206a6404372))
+* 震度データベースの震源の表示順と地図用の解決処理を追加 ([0e675df](https://github.com/YumNumm/EQMonitor/commit/0e675df5a3f25a46846d37663f3f307928efde70))
+
+
+### Bug Fixes
+
+* Android CIのNDKインストール判定をpipefail対応に修正 ([8dacee6](https://github.com/YumNumm/EQMonitor/commit/8dacee64b2a60ae35a6fbe2d70253eba1d02888f))
+* Android CIのNDKインストール判定をpipefail対応に修正 ([306708f](https://github.com/YumNumm/EQMonitor/commit/306708f150cd1adbe858b2c2632fa5438e3b2b70))
+* Dependabotのpub監視をワークスペースルートのみに限定 ([b117656](https://github.com/YumNumm/EQMonitor/commit/b1176568fe1742713a448652908ba9f0cb4637b2))
+* minimatch を 11.0.1 以上に pnpm override で固定し Dependabot セキュリティ更新を解消 ([34ab77d](https://github.com/YumNumm/EQMonitor/commit/34ab77dd70c74edf9ced48b94d24944aa7da4821))
+* ベーススタイルに描画順固定用の常設アンカーを追加 ([b1c677c](https://github.com/YumNumm/EQMonitor/commit/b1c677cc393aafedad91916b07a69599db893255))
+* 地図からの地域選択で選択中の地域名を表示 ([2407ab2](https://github.com/YumNumm/EQMonitor/commit/2407ab21f373377e6a97ac2988602e5399c21104))
+* 地図レイヤーの挿入位置を常設アンカーへ統一 ([04a69a7](https://github.com/YumNumm/EQMonitor/commit/04a69a7da31b67d6f5250c702f4d784b7898702e))
+* 地域選択の決定ボタンでラベルが欠ける問題を修正 ([8321549](https://github.com/YumNumm/EQMonitor/commit/8321549566d444377dc5ac86c1911ec5692c931c))
+* 地域選択画面の下端をセーフエリアまで広げ、選択済みなら地図の操作案内を隠す ([29ae31b](https://github.com/YumNumm/EQMonitor/commit/29ae31bac4ad2df1e9d9ebc2035d1c492af57f18))
+* 市区町村詳細シートの不要な下端余白を解消 ([aae1cef](https://github.com/YumNumm/EQMonitor/commit/aae1cef0342ef3f3bd6ae653e3cfabf8e07b74a8))
+* 強震モニタの公開遅延の下限を200msに下げる ([f9add9b](https://github.com/YumNumm/EQMonitor/commit/f9add9b67af6d8f6972bc2ed26c8024d33ccfd48))
+* 強震モニタの取得タイマーの秒境界をNTP補正済みの時計で数える ([e25f7df](https://github.com/YumNumm/EQMonitor/commit/e25f7dfa602c7bedeac10a6ed49fcf16b18c180a))
+* 推奨設定の説明文の EEW 表記を緊急地震速報(予報・警報)に変更 ([f9a4458](https://github.com/YumNumm/EQMonitor/commit/f9a4458e038a495edc501fd16f6de2efdfaa4db1))
+* 未使用の統合Live Activityを削除 ([2afdc5f](https://github.com/YumNumm/EQMonitor/commit/2afdc5ff3dc686d3232f0f16c704a0c395e46c39))
+* 通知地域一覧の上限導線・削除確認・割り込みレベル表示を改善 ([360ad0f](https://github.com/YumNumm/EQMonitor/commit/360ad0fb82181756626c76d49dcfca1288d54f8c))
+* 震度データベースの地図を観測点表示に統一 ([23de384](https://github.com/YumNumm/EQMonitor/commit/23de3841f6629b90b12039ab88791f601915e4bb))
+* 震度の文字表記を5-/5+から5弱/5強へ統一 ([6653fba](https://github.com/YumNumm/EQMonitor/commit/6653fbae871f7fbbc33e3ad8bb017287ec890e26))
+* 震源レイヤーの effect で BaseLayer を keys 検査の対象外に指定 ([8a34512](https://github.com/YumNumm/EQMonitor/commit/8a34512d2aaa46919e1578cb4f0827751c8cd78d))
+
 ## [3.0.6](https://github.com/YumNumm/EQMonitor/compare/v3.0.5...v3.0.6) (2026-10-31)
 
 
