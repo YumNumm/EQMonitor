@@ -1,7 +1,6 @@
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/extension/jma_forecast_intensity.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
@@ -199,7 +198,7 @@ class _PreliminaryIntensityLevelSection extends StatelessWidget {
             '震度${switch (intensity) {
               .fiveUnknown => "5弱以上 未入電",
               .sixUnknown => "6弱以上 未入電",
-              _ => intensity.label.fromPlusMinus,
+              _ => intensity.label,
             }}',
             style: theme.textTheme.titleSmall,
           ),
@@ -256,7 +255,7 @@ class _IntensityLevelSection extends HookWidget {
             '震度${switch (intensity) {
               .fiveUnknown => "5弱以上 未入電",
               .sixUnknown => "6弱以上 未入電",
-              _ => intensity.label.fromPlusMinus,
+              _ => intensity.label,
             }}',
             style: theme.textTheme.titleSmall,
           ),
