@@ -22,6 +22,7 @@
 - 複数の Widget が同じ位置（最前面や同じアンカーの直下）へ追加すると、重なり順が初期化順・再追加のタイミングで変わる。Widget ごとに `BaseLayer` の常設アンカーを分ける。アンカーは透明な `background` layer で、下から `regionFillAnchor`（不透明な区域 fill。S 波 fill はこの上、`areaForecastLocalEewLine` の下）→ 境界線 → `regionOverlayAnchor`（Home / Live Monitor の警報区域 fill）→ `foregroundOverlayAnchor`（強震モニタ観測点）→ `markerBackgroundAnchor`（震源誤差範囲・警報区域や津波予報区の線）→ `waveLineAnchor`（P/S 波の線）→ `markerLowerAnchor` → `markerUpperAnchor`（震源マーク・観測点）。
 - アンカーを増やすときは `BaseLayer` と `MapStyleUtil.buildStyleJson` の両方へ同じ順で追加する。順序は `test/feature/map/data/provider/map_style_util_test.dart` で固定している。
 - 震度色を持つ半透明の細分区域・市区町村 fill を重ねない。切替 zoom では下側の opacity を 0 にする。
+- 英数字を描く `text-field` には `text-font` へ `Noto Sans CJK JP Regular` か `Noto Sans CJK JP Bold` を明示する。glyph の配信元 `glyphs.geolonia.com` は、MapLibre 既定の fontstack（`Open Sans Regular,Arial Unicode MS Regular`）へ 403 を返す。
 - iOS の zoom 依存 `interpolate` は式の最上位に置く。倍率は各 stop 値へ畳み込み、乗算式の内側へ zoom 式を入れない。
 - iOS の色 `match` は fork 側で型付きの `NSExpression(forMGLMatching:in:defaultValue:)` に変換する。Dart の式テストだけで native の色型変換を検証済みとしない。
 - 非表示 filter に `['==', 1, 0]` を使わない。MapLibre Native はこれを旧形式の比較と解釈し、数値の属性名を拒否する。iOS では predicate 設定時に `NSInvalidArgumentException` が発生し、Dart の catch では捕捉できない。地域選択は `RegionMapLayers.hiddenFilter` の空集合への所属判定を使う。
