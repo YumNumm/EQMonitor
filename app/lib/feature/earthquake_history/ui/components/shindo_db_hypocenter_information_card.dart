@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_catalog_hypocenter_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_info_text_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
@@ -20,15 +21,13 @@ class ShindoDbHypocenterInformationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hypocenters = catalog.hypocenters;
-    if (hypocenters.isEmpty) {
+    final hypocenters = const EarthquakeCatalogHypocenterOrder().sort(
+      catalog.hypocenters,
+    );
+    final primary = hypocenters.firstOrNull;
+    if (primary == null) {
       return const SizedBox.shrink();
     }
-
-    final primary = hypocenters.firstWhere(
-      (h) => h.seq == 0,
-      orElse: () => hypocenters.first,
-    );
 
     final intensityColors = context.designSystem.colorTheme.intensity;
     final colorJma = primary.maxIntensity?.colorJmaIntensity;
@@ -64,7 +63,10 @@ class ShindoDbHypocenterInformationCard extends StatelessWidget {
                 ),
               ],
             ),
-            _DetailsTile(catalog: catalog, primary: primary),
+            _DetailsTile(
+              primary: primary,
+              others: hypocenters.skip(1).toList(),
+            ),
           ],
         ),
       ),
@@ -297,17 +299,14 @@ class _EpicenterWidget extends StatelessWidget {
 }
 
 class _DetailsTile extends StatelessWidget {
-  const new({required this.catalog, required this.primary});
+  const new({required this.primary, required this.others});
 
-  final EarthquakeCatalog catalog;
   final EarthquakeCatalogHypocenter primary;
+  final List<EarthquakeCatalogHypocenter> others;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final others = catalog.hypocenters
-        .where((h) => h.seq != primary.seq)
-        .toList();
 
     return ExpandableSection(
       title: Text(

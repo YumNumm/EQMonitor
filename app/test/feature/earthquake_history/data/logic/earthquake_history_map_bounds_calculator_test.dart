@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_hypocenter_points_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_map_bounds_calculator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
@@ -18,11 +19,13 @@ import 'package:test/test.dart';
 
 void main() {
   const calculator = EarthquakeHistoryMapBoundsCalculator();
+  const hypocenterPointsResolver = EarthquakeHistoryHypocenterPointsResolver();
 
   test('震度速報のみの場合は対象細分区域の境界を表示領域に含める', () {
     final points = calculator.calculate(
       earthquake: _earthquake(intensity: _regionOnlyIntensity),
       regionMap: _regionMap,
+      hypocenterPoints: const [],
     );
 
     expect(points, const [
@@ -32,12 +35,17 @@ void main() {
   });
 
   test('震度速報と震源情報がある場合は対象地域と震源を表示領域に含める', () {
+    final earthquake = _earthquake(
+      intensity: _regionOnlyIntensity,
+      hypocenter: _hypocenter,
+    );
     final points = calculator.calculate(
-      earthquake: _earthquake(
-        intensity: _regionOnlyIntensity,
-        hypocenter: _hypocenter,
-      ),
+      earthquake: earthquake,
       regionMap: _regionMap,
+      hypocenterPoints: hypocenterPointsResolver.resolve(
+        earthquake: earthquake,
+        showingDb: false,
+      ),
     );
 
     expect(points, const [
@@ -48,12 +56,17 @@ void main() {
   });
 
   test('観測点がある場合は従来どおり観測点と震源だけを表示領域に含める', () {
+    final earthquake = _earthquake(
+      intensity: _stationIntensity,
+      hypocenter: _hypocenter,
+    );
     final points = calculator.calculate(
-      earthquake: _earthquake(
-        intensity: _stationIntensity,
-        hypocenter: _hypocenter,
-      ),
+      earthquake: earthquake,
       regionMap: _regionMap,
+      hypocenterPoints: hypocenterPointsResolver.resolve(
+        earthquake: earthquake,
+        showingDb: false,
+      ),
     );
 
     expect(points, const [

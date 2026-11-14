@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_hypocenter_points_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
@@ -30,7 +30,8 @@ class LiveMonitorEarthquakeLayers extends ConsumerWidget {
     );
     final showingLpgmIntensity = displayMode == IntensityDisplayMode.lpgm;
     final tileUrl = earthquake.estimatedIntensityTileUrl;
-    final coordinates = earthquake.hypocenter?.coordinates;
+    final hypocenterPoints = const EarthquakeHistoryHypocenterPointsResolver()
+        .resolve(earthquake: earthquake, showingDb: false);
 
     final intensityLayers = switch (displayMode) {
       IntensityDisplayMode.estimated => <Widget>[
@@ -60,11 +61,11 @@ class LiveMonitorEarthquakeLayers extends ConsumerWidget {
     return Stack(
       children: [
         ...intensityLayers,
-        if (coordinates is CoordinateLatLng)
+        if (hypocenterPoints.isNotEmpty)
           EarthquakeHistoryHypocenterLayer(
             key: const ValueKey('live-monitor-earthquake-hypocenter'),
             belowLayerId: BaseLayer.markerUpperAnchor.name,
-            earthquake: earthquake,
+            points: hypocenterPoints,
             parameter: parameter,
           ),
       ],

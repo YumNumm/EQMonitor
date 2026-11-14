@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_map_bounds_calculator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_hypocenter_point.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,6 +20,7 @@ class const EarthquakeHistoryMapFitBoundsAction() {
     required WidgetRef ref,
     required MapController controller,
     required Earthquake earthquake,
+    required List<EarthquakeHistoryHypocenterPoint> hypocenterPoints,
     required ShindoDbIntensityTree? dbTree,
   }) async {
     final calculator = ref.read(earthquakeHistoryMapBoundsCalculatorProvider);
@@ -33,6 +35,7 @@ class const EarthquakeHistoryMapFitBoundsAction() {
         .calculate(
           earthquake: earthquake,
           regionMap: regionMap,
+          hypocenterPoints: hypocenterPoints,
           dbTree: dbTree,
         )
         .map(
