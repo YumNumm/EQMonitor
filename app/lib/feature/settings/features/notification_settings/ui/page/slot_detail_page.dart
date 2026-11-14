@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/shake_detection_settings_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/eew_warning_settings_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
@@ -14,10 +15,13 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_access_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_min_intensity_field.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/region_delete_confirm_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/shake_detection_slot_section.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -42,6 +46,8 @@ class SlotDetailPage extends HookConsumerWidget {
     );
     final warningConfig = ref.watch(eewWarningConfigProvider).value;
     final warningTarget = warningConfig?.target;
+    final isShakeDetectionEditable =
+        ref.watch(shakeDetectionNotificationAccessProvider) == .editable;
 
     void listenMutationError(Mutation<void> mutation) {
       ref.listen(mutation, (_, next) async {
@@ -59,6 +65,7 @@ class SlotDetailPage extends HookConsumerWidget {
     listenMutationError(NotificationSlotsNotifier.removeRegionMutation);
     listenMutationError(EewGlobalSettingsNotifier.updateSettingsMutation);
     listenMutationError(EewWarningConfigNotifier.updateConfigMutation);
+    listenMutationError(ShakeDetectionSettingsNotifier.saveMutation);
 
     final slotName = switch (slot?.slotType) {
       null => null,
@@ -173,6 +180,7 @@ class SlotDetailPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
+                ShakeDetectionSlotSection(slot: slot),
                 if (slot.slotType == NotificationSlotType.region) ...[
                   const SettingsSectionHeader(text: '削除'),
                   _DeleteRegionTile(
@@ -187,6 +195,14 @@ class SlotDetailPage extends HookConsumerWidget {
                         return;
                       }
                       try {
+                        // スロット削除後に通知だけ残る状態を避けるため、対応する
+                        // 揺れ検知条件を先に外す。
+                        if (isShakeDetectionEditable) {
+                          await const ShakeDetectionSettingsAction().detachSlot(
+                            ref,
+                            slot: slot,
+                          );
+                        }
                         await NotificationSlotsNotifier.removeRegionMutation
                             .run(ref, (tsx) async {
                               await tsx
