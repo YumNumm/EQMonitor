@@ -3,7 +3,6 @@ import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
-import 'package:eqmonitor/feature/location/data/notifier/current_device_location_notifier.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/shake_detection_settings_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/shake_detection_slot_entry_resolver.dart';
@@ -12,7 +11,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_access_provider.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_regions_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
@@ -109,14 +107,11 @@ class _ShakeDetectionCondition extends ConsumerWidget {
     final minLevel =
         entry?.minLevel ?? ShakeDetectionSlotEntryResolver.defaultMinLevel;
     final busy = settings.isLoading || isSaving;
-    final description = switch (slot.slotType) {
-      .currentLocation => '現在地を含む細分化地域で揺れを検知した場合に通知します。',
-      .nationwide => '全国のいずれかの地域で揺れを検知した場合に通知します。',
-      .region when slot.cityName != null =>
-        '${slot.regionName ?? 'この地域'}で揺れを検知した場合に通知します。'
-            '揺れ検知は市区町村ではなく細分化地域単位で判定します。',
-      .region => '${slot.regionName ?? 'この地域'}で揺れを検知した場合に通知します。',
-    };
+    final isLocationPermissionMissing =
+        slot.slotType == .currentLocation &&
+        ref.watch(backgroundLocationPermissionProvider).value !=
+            LocationPermission.always;
+    final isSelectable = enabled || !isLocationPermissionMissing;
 
     return Column(
       mainAxisSize: .min,
@@ -126,13 +121,16 @@ class _ShakeDetectionCondition extends ConsumerWidget {
         ListTile(
           enabled: !busy,
           title: const Text('有効'),
+          subtitle: isSelectable ? null : const Text('位置情報を「常に許可」にすると選択できます'),
           trailing: AppSwitch(
             value: enabled,
-            onChanged: busy
+            onChanged: busy || !isSelectable
                 ? null
-                : (next) => action.updateSlot(ref, slot: slot, enabled: next),
+                : (next) =>
+                      action.setSlotEnabled(ref, slot: slot, enabled: next),
           ),
-          onTap: () => action.updateSlot(ref, slot: slot, enabled: !enabled),
+          onTap: () =>
+              action.setSlotEnabled(ref, slot: slot, enabled: !enabled),
         ),
         const Divider(height: 1),
         ListTile(
@@ -158,75 +156,6 @@ class _ShakeDetectionCondition extends ConsumerWidget {
             ),
           ),
         ),
-        if (slot.slotType == .currentLocation && enabled) ...[
-          const Divider(height: 1),
-          const _CurrentLocationStatusTile(),
-        ],
-        const Divider(height: 1),
-        Padding(
-          padding: EdgeInsets.all(designSystem.spacing.md),
-          child: Text(
-            description,
-            style: designSystem.typography.bodySmall.copyWith(
-              color: designSystem.colorTheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _CurrentLocationStatusTile extends ConsumerWidget {
-  const new();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    const action = ShakeDetectionSettingsAction();
-    final location = ref.watch(currentDeviceLocationProvider);
-    final permission = ref.watch(backgroundLocationPermissionProvider);
-    final code = location.value?.region;
-    final name = ref
-        .watch(shakeDetectionRegionsProvider)
-        .value
-        ?.expand((prefecture) => prefecture.regions)
-        .where((region) => region.code == code)
-        .firstOrNull
-        ?.name
-        .ja;
-    final status = location.isLoading
-        ? '現在地を確認しています…'
-        : location.hasError
-        ? '現在地の取得・同期に失敗しました。位置情報と通信を確認して再試行してください。'
-        : code == null
-        ? '現在地は未取得です。地域を判定できるまで現在地の通知は届きません。'
-        : '最後に同期した地域: ${name ?? code}';
-
-    return Column(
-      mainAxisSize: .min,
-      children: [
-        ListTile(
-          leading: const Icon(Icons.my_location),
-          title: const Text('現在地の細分化地域'),
-          subtitle: Text(status),
-          trailing: M3ETextButton(
-            onPressed: location.isLoading
-                ? null
-                : () => action.refreshLocation(ref),
-            child: const Text('更新'),
-          ),
-        ),
-        if (permission.hasValue &&
-            permission.value != LocationPermission.always)
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: const Text('位置情報の「常に許可」が必要です'),
-            subtitle: const Text(
-              'バックグラウンドでも現在地を更新できるよう、位置情報の権限を確認してください。',
-            ),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => action.requestLocationPermission(ref),
-          ),
       ],
     );
   }
