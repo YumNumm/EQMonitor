@@ -9,21 +9,25 @@ import 'package:eqmonitor/feature/settings/component/settings_section_header.dar
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_applier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_region_add_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/notification_permission_requirements.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/shake_detection_slot_entry_resolver.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/notification_plan_constraints_provider.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_access_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/current_location_permission_warning_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_permission_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_settings_info_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_tile.dart';
@@ -100,10 +104,12 @@ class _Body extends HookConsumerWidget {
     return ListView(
       padding: const EdgeInsets.only(top: 16, bottom: 24),
       children: [
-        if (notificationsEnabled)
+        if (notificationsEnabled) ...[
           NotificationPermissionWarningCard(
             requiresCriticalAlert: requiresCriticalAlert,
           ),
+          const CurrentLocationPermissionWarningCard(),
+        ],
         _MasterNotificationControl(
           value: notificationsEnabled,
           onChanged: (value) async {
@@ -236,6 +242,8 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final constraints = ref.watch(notificationPlanConstraintsProvider);
     final isPro = ref.watch(isProProvider);
+    final isShakeDetectionLocked =
+        ref.watch(shakeDetectionNotificationAccessProvider) == .locked;
     final earthquakeSettings = ref
         .watch(earthquakeGlobalSettingsProvider)
         .value;
@@ -279,14 +287,14 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
         data: (plan) => ListView(
           padding: const EdgeInsets.only(top: 16, bottom: 24),
           children: [
-            const NotificationSettingsInfoCard(
-              text: '通知地域のいずれかの条件を満たした場合に通知します',
-            ),
+            const _CustomSettingsDescription(),
+            const _ShakeDetectionReconfigurationNotice(),
             const SettingsSectionHeader(text: '通知地域'),
             _SlotListSection(maxRegions: plan.maxRegions.toInt()),
             const SettingsSectionHeader(text: '通知の種類'),
             _CustomSettingsSection(
               isPro: isPro,
+              isShakeDetectionLocked: isShakeDetectionLocked,
               estimatedIntensityEnabled:
                   earthquakeSettings?.estimatedIntensityEnabled ?? true,
               onEstimatedIntensityChanged: ({required value}) async {
@@ -310,14 +318,63 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
   }
 }
 
+class _CustomSettingsDescription extends StatelessWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+    final spacing = designSystem.spacing;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(spacing.lg, 0, spacing.lg, spacing.md),
+      child: Text(
+        '通知地域のいずれかの条件を満たした場合に通知します',
+        style: designSystem.typography.bodyMedium.copyWith(
+          color: designSystem.colorTheme.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+}
+
+class _ShakeDetectionReconfigurationNotice extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isEditable =
+        ref.watch(shakeDetectionNotificationAccessProvider) == .editable;
+    final requiresReconfiguration =
+        isEditable &&
+        (ref
+                .watch(shakeDetectionSettingsProvider)
+                .value
+                ?.requiresReconfiguration ??
+            false);
+    if (!requiresReconfiguration) {
+      return const SizedBox.shrink();
+    }
+    return const ListTile(
+      leading: Icon(Icons.info_outline),
+      title: Text('揺れ検知の通知条件を設定し直してください'),
+      subtitle: Text(
+        '以前の観測点・市区町村・都道府県の条件は停止しています。通知地域ごとに揺れ検知を設定してください。',
+      ),
+    );
+  }
+}
+
 class _CustomSettingsSection extends StatelessWidget {
   const new({
     required this.isPro,
+    required this.isShakeDetectionLocked,
     required this.estimatedIntensityEnabled,
     required this.onEstimatedIntensityChanged,
   });
 
   final bool isPro;
+  final bool isShakeDetectionLocked;
   final bool estimatedIntensityEnabled;
   final Future<void> Function({required bool value})
   onEstimatedIntensityChanged;
@@ -384,6 +441,15 @@ class _CustomSettingsSection extends StatelessWidget {
                   : () async => const ProUpgradeDialogAction().show(context),
             ),
           ],
+          if (isShakeDetectionLocked) ...[
+            const Divider(height: 1),
+            LockedSettingTile(
+              title: '揺れ検知の通知',
+              subtitle: '通知地域ごとに揺れの検知を通知できます',
+              locked: true,
+              onTap: () async => const ProUpgradeDialogAction().show(context),
+            ),
+          ],
           const Divider(height: 1),
           LockedSettingTile(
             title: '低精度の緊急地震速報',
@@ -444,6 +510,13 @@ class _SlotListSection extends ConsumerWidget {
       eewGlobalSettingsProvider.select((s) => s.value?.warningEnabled ?? true),
     );
     final warningTarget = ref.watch(eewWarningConfigProvider).value?.target;
+    final shakeDetectionAccess = ref.watch(
+      shakeDetectionNotificationAccessProvider,
+    );
+    final shakeDetectionEntries = shakeDetectionAccess == .editable
+        ? ref.watch(shakeDetectionSettingsProvider).value?.entries
+        : null;
+    const shakeDetectionResolver = ShakeDetectionSlotEntryResolver();
 
     ref.listen(NotificationSlotsNotifier.putNationwideMutation, (
       _,
@@ -492,12 +565,26 @@ class _SlotListSection extends ConsumerWidget {
       } else {
         isActive = true;
       }
+      final shakeDetectionEntry = shakeDetectionEntries == null
+          ? null
+          : shakeDetectionResolver.find(
+              entries: shakeDetectionEntries,
+              slot: slot,
+            );
       tiles.add(
         _SlotListTile(
           slot: slot,
           isActive: isActive,
           warningEnabled: warningEnabled,
           warningTarget: warningTarget,
+          shakeDetectionText:
+              shakeDetectionEntries == null ||
+                  !shakeDetectionResolver.isConfigurable(slot)
+              ? null
+              : shakeDetectionEntry != null && shakeDetectionEntry.enabled
+              ? '揺れ検知: '
+                    '${shakeDetectionEntry.minLevel.minLevelThresholdLabel}'
+              : '揺れ検知: 無効',
           onTap: isActive
               ? () async => Navigator.of(context).push<void>(
                   MaterialPageRoute<void>(
@@ -633,6 +720,7 @@ class _SlotListTile extends StatelessWidget {
     required this.isActive,
     required this.warningEnabled,
     required this.warningTarget,
+    required this.shakeDetectionText,
     required this.onTap,
   });
 
@@ -640,6 +728,7 @@ class _SlotListTile extends StatelessWidget {
   final bool isActive;
   final bool warningEnabled;
   final EewWarningTarget? warningTarget;
+  final String? shakeDetectionText;
   final VoidCallback? onTap;
 
   @override
@@ -680,7 +769,14 @@ class _SlotListTile extends StatelessWidget {
       enabled: isActive,
       leading: icon,
       title: Text(title, style: TextStyle(color: textColor)),
-      subtitle: Text([eewText, ?warningText, earthquakeText].join('\n')),
+      subtitle: Text(
+        [
+          eewText,
+          ?warningText,
+          earthquakeText,
+          ?shakeDetectionText,
+        ].join('\n'),
+      ),
       trailing: isActive ? const Icon(Icons.chevron_right) : const ProBadge(),
       onTap: onTap,
     );

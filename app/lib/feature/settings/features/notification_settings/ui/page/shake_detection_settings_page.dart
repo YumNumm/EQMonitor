@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/permission/ui/component/notification_permissio
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
 import 'package:eqmonitor/feature/region_selection/ui/page/region_selection_page.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/current_location_permission_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/shake_detection_settings_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
@@ -95,7 +96,8 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
                       subtitle: const Text(
                         'バックグラウンドでも現在地を更新できるよう、位置情報の権限を確認してください。',
                       ),
-                      onTap: () => action.requestLocationPermission(ref),
+                      onTap: () =>
+                          const CurrentLocationPermissionAction().request(ref),
                     ),
                 ],
                 for (final entry in state.entries)
@@ -289,13 +291,7 @@ class _ShakeEntryCard extends StatelessWidget {
                 .map(
                   (level) => M3EDropdownItem(
                     value: level,
-                    label: switch (level) {
-                      .weaker => '微弱な揺れ以上',
-                      .weak => '弱い揺れ以上',
-                      .medium => 'やや強い揺れ以上',
-                      .strong => '強い揺れ以上',
-                      .stronger => '非常に強い揺れ',
-                    },
+                    label: level.minLevelThresholdLabel,
                     selected: level == entry.minLevel,
                   ),
                 )
