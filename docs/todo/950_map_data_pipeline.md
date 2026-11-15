@@ -18,5 +18,5 @@
 
 ## 750: 推計震度 PMTiles の低 zoom
 
-- API descriptor が指す content-addressed archive を対象に、地震履歴・Live Monitor の低 zoom 表示を確認する。legacy URL の minzoom 5 と別 archive の minzoom 0 が観測されており、配信全体の生成不具合と断定しない。
-- 完了条件: 現行配信の header・実 tile・両画面の結果を記録する。必要な範囲で欠ける場合だけ producer の minzoom を修正して対象イベントを再生成する。MapLibre は minzoom 未満を underzoom しない。
+- API descriptor が指す content-addressed archive を対象に、地震履歴の低 zoom 表示を確認する。legacy URL の minzoom 5 と別 archive の minzoom 0 が観測されており、配信全体の生成不具合と断定しない。
+- 完了条件: 現行配信の header・実 tile・画面の結果を記録する。必要な範囲で欠ける場合だけ producer の minzoom を修正して対象イベントを再生成する。MapLibre は minzoom 未満を underzoom しない。

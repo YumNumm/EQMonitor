@@ -117,7 +117,6 @@ class _SheetBody extends ConsumerWidget {
                 padding: EdgeInsets.only(bottom: spacing.md),
                 child: ShakeDetectionCard(event: event),
               ),
-            // const LiveMonitorEntryCard(), // TODO(YumNumm): 後で戻す
             Column(
               crossAxisAlignment: .stretch,
               spacing: spacing.md,

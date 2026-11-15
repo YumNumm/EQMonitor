@@ -21,7 +21,6 @@ List<RouteBase> get $appRoutes => [
   $intensityHistoryRoute,
   $earthquakeHistoryDetailsRoute,
   $earthquakeActivityRoute,
-  $liveMonitorRoute,
   $telegramListByEventIdRoute,
   $homeRoute,
   $talkerRoute,
@@ -401,33 +400,6 @@ mixin $EarthquakeActivityRoute on GoRouteData {
   @override
   void replace(BuildContext context) =>
       context.replace(location, extra: _self.$extra);
-}
-
-RouteBase get $liveMonitorRoute => GoRouteData.$route(
-  path: '/live-monitor',
-  hasOverriddenOnExit: false,
-  factory: $LiveMonitorRoute._fromState,
-);
-
-mixin $LiveMonitorRoute on GoRouteData {
-  static LiveMonitorRoute _fromState(GoRouterState state) =>
-      const LiveMonitorRoute();
-
-  @override
-  String get location => GoRouteData.$location('/live-monitor');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $telegramListByEventIdRoute => GoRouteData.$route(

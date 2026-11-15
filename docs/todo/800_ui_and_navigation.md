@@ -5,7 +5,7 @@
 ## 800: 画面点灯・Android ロック画面表示の実機確認
 
 - 表示設定の点灯維持 ON/OFF、画面遷移、自動消灯時間超過、background/foreground、連続切り替えを iOS/Android 実機で確認する。
-- 未公開の Live Monitor の名称・導線が公開設定に出ないことと、内部セッションの点灯要求との競合がないことを確認する。
+- Live Monitor 削除後の iOS/Android 実機で、点灯維持の設定がアプリ復帰時にも適用されることと、EEW の全画面・最小化表示および戻る操作を確認する（実機未検証）。
 - Android でロック画面表示と点灯維持の全組み合わせ、ロック/解除、通知タップ、プロセス終了後の起動、Activity 再生成を確認する。
 - ロック画面表示 OFF では起動直後にもアプリ内容が表示されないこと、端末再起動後の初回 unlock 前に保存領域へのアクセスでクラッシュしないことを確認する。
 - 文字拡大・Light/Dark・画面下端の操作、再起動後の設定保持を確認する。実機検証は未実施。
@@ -124,17 +124,16 @@
 
 ## 400: iOS swipe back と PopScope
 
-- 対象: `app/lib/feature/earthquake_history/ui/earthquake_history_page.dart`、`intensity_history/ui/intensity_history_page.dart`、`live_monitor/ui/page/live_monitor_page.dart`（後2つは同feature root）。
-- `canPop: false` ではiOS gesture自体が開始しない。並び替え/地域focus解除を画面内UIへ移してpop可能にするか決める。LiveMonitor終了確認は維持する必要性を判断する。
-- 完了条件: iOS edge swipeとAndroid system backの意図した動作を各状態で確認し、解除/終了確認のテストを維持する。
+- 対象: `app/lib/feature/earthquake_history/ui/earthquake_history_page.dart`、`intensity_history/ui/intensity_history_page.dart`（後者は同feature root）。
+- `canPop: false` ではiOS gesture自体が開始しない。並び替え/地域focus解除を画面内UIへ移してpop可能にするか決める。
+- 完了条件: iOS edge swipeとAndroid system backの意図した動作を各状態で確認し、解除操作のテストを維持する。
 
-## 400 / 200: scroll と共有見出し
+## 400: scroll と共有見出し
 
 - 400: `theme_settings_page.dart` のスクロール内容に `SafeArea` を追加済み。Android の3ボタン・ジェスチャーナビゲーションと iOS 実機で、末尾の「JSONをインポート」をシステムUIに重ねず表示・操作できることを確認する。横画面・文字拡大時のスクロールも未検証。
 - 400: 地震詳細・EEW履歴・津波詳細のシート内スクロールを Home と同じ `BottomBouncingScrollPhysics` に設定済み。iOS / Android 実機で上端からのシート縮小、下端のバウンド、EEW表の横スクロールを確認する。実機検証は未実施。
 - 400: `app/lib/page/home_page.dart` の `_SheetBody` を遅延list/sliverへ移す場合は、sheet drag・`BottomBouncingScrollPhysics` の追従/bounceを確認する。
 - 400: `app/lib/feature/home/ui/component/sheet/sheet_header.dart` を利用featureに依存しない `app/lib/core/component/` へ移し、earthquake history / kyoshin monitor の呼び出しとspacing/typographyを揃える。
-- 200: `LiveMonitorEarthquakeCard` の全行先行生成をindexからのpresenter/遅延構築へ変更する。完了条件: 通常/大文字/縦横分割でcard高さ・内部scrollを維持し、画面外行を先行生成しない。
 
 ## 300: IntensityHistoryState の命名
 

@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_map_instance_owner.dart';
 import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:maplibre/maplibre.dart';
@@ -429,57 +427,6 @@ void main() {
               ).captured.single
               as Geographic;
       expect(center.lon, 180);
-      verifyNoMoreInteractions(controller);
-    });
-
-    test('LiveMonitor instance切替後は旧controllerを再参照しない', () async {
-      final controller = MockMapController();
-      final animation = Completer<void>();
-      when(
-        controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
-        ),
-      ).thenAnswer((_) => animation.future);
-      final owner = LiveMonitorMapInstanceOwner<MapController>();
-      final identity = owner.switchInstance();
-      expect(
-        owner.acceptController(identity: identity, controller: controller),
-        isTrue,
-      );
-      final operation = owner.beginCameraOperation(
-        identity: identity,
-        controller: controller,
-      );
-      if (operation == null) {
-        throw StateError('current controllerのcamera operationが作成されませんでした');
-      }
-
-      final resultFuture = const MapAutomaticFocusController().fit(
-        controller: controller,
-        bounds: bounds,
-        viewportSize: const Size(375, 667),
-        isCurrent: () => owner.acceptCameraCompletion(operation),
-      );
-      verify(
-        controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: mapAutomaticFocusMaxZoom,
-          bearing: 0,
-          pitch: 0,
-        ),
-      ).called(1);
-
-      owner.switchInstance();
-      animation.complete();
-
-      expect(await resultFuture, isFalse);
       verifyNoMoreInteractions(controller);
     });
   });
