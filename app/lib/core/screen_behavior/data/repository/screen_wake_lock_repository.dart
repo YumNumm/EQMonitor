@@ -1,14 +1,14 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-part 'live_monitor_wake_lock_platform.g.dart';
+part 'screen_wake_lock_repository.g.dart';
 
-abstract interface class LiveMonitorWakeLockPlatform {
+abstract interface class ScreenWakeLockRepository {
   Future<void> setEnabled({required bool enabled});
 }
 
-final class WakelockPlusLiveMonitorWakeLockPlatform
-    implements LiveMonitorWakeLockPlatform {
+final class WakelockPlusScreenWakeLockRepository
+    implements ScreenWakeLockRepository {
   @override
   Future<void> setEnabled({required bool enabled}) async {
     if (enabled) {
@@ -20,5 +20,5 @@ final class WakelockPlusLiveMonitorWakeLockPlatform
 }
 
 @Riverpod(keepAlive: true)
-LiveMonitorWakeLockPlatform liveMonitorWakeLockPlatform(Ref ref) =>
-    WakelockPlusLiveMonitorWakeLockPlatform();
+ScreenWakeLockRepository screenWakeLockRepository(Ref ref) =>
+    WakelockPlusScreenWakeLockRepository();

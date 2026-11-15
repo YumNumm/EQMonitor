@@ -35,7 +35,6 @@ import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_set
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/page/kyoshin_monitor_about_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/page/kyoshin_monitor_data_type_page.dart';
-import 'package:eqmonitor/feature/live_monitor/ui/page/live_monitor_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
@@ -281,15 +280,6 @@ class const EarthquakeActivityRoute({
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeActivityPage(initialQuery: $extra);
-}
-
-@TypedGoRoute<LiveMonitorRoute>(path: '/live-monitor')
-class const LiveMonitorRoute()
-    extends GoRouteData
-    with $LiveMonitorRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const LiveMonitorPage();
 }
 
 @TypedGoRoute<TelegramListByEventIdRoute>(path: '/telegram-list/:eventId')

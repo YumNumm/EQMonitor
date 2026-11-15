@@ -25,7 +25,6 @@
 - 左右は一覧320dp/詳細360dp以上、上下は幅600dp・一覧高280dp・詳細高360dp以上を条件とする。
   両側に収まらなければ広い片側を使い、その幅で表示を決める。
 - 幅0の折り目も対象なのでRect.overlapsだけで交差判定しない。
-  Live Monitorとは計測部品を共有し、独自の分割方向まで同一化しない。
 - HistoryPaneは一覧/詳細に別PrimaryScrollControllerを与える。loading ListViewも対象。
   MediaQueryサイズ/余白は各ペイン、keyboard縮小は外側Scaffoldが担当する。
 - 地図上詳細シートはBasicModalSheet(expandToPane:true)で、横長ペインをさらに半幅にしない。
@@ -83,10 +82,8 @@ mise exec -- flutter test test/core/component/selector \
 ## 画面点灯と Android のロック画面表示
 
 - 表示設定の「画面の点灯を維持」は初期値 OFF。アプリが前面表示中の場合に適用する。
-  未公開の Live Monitor の設定・名称・導線は公開設定に出さず、既存の内部設定を保持する。
-- `ScreenWakeLockOwner` が公開設定と内部セッションの要求を OR で合成し、
-  `wakelock_plus` の呼び出しを直列化する。既存の owner provider を両 controller が共有する。
-  各 controller は lifecycle を監視し、background で要求を解除する。
+- `ScreenWakeLockController` が公開設定と lifecycle から点灯要求を決め、background で解除する。
+  `ScreenWakeLockOwner` が `ScreenWakeLockRepository` 経由で `wakelock_plus` の呼び出しを直列化する。
 - generation で古い未実行状態を捨てる。owner 寿命終了時には実行中処理後の強制 disable を queue する。
   plugin 例外はログに記録し、地震情報 UI の error へ置き換えない。
 - Android の「ロック画面上に表示」は初期値 ON。`showWhenLocked` と `turnScreenOn` を連動させる。
@@ -110,7 +107,7 @@ mise exec -- flutter test test/core/component/selector \
 mise exec -- flutter test test/core/router/material_page_mixin_test.dart \
   test/feature/earthquake_history/ui/earthquake_history_details_navigation_test.dart \
   test/feature/earthquake_history/ui/earthquake_history_details_nearby_card_test.dart \
-  test/feature/live_monitor/data/live_monitor_wake_lock_controller_test.dart --dart-define=CI=true
+  test/core/screen_behavior/screen_wake_lock_controller_test.dart --dart-define=CI=true
 mise exec -- dart analyze lib/core/component/layout lib/feature/eew_history/ui
 # packages/eqmonitor_api/から
 mise exec -- dart test test/city_max_intensity_response_test.dart

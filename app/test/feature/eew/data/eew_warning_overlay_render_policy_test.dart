@@ -6,55 +6,34 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const policy = EewWarningOverlayRenderPolicy();
 
-  test('LiveMonitor active中だけoverlay描画を抑止する', () {
+  test('前面表示中はfullscreen overlayを描画する', () {
     expect(
       policy.shouldRender(
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.fullscreen,
         hasDisplayModel: true,
-        liveMonitorActive: true,
-      ),
-      isFalse,
-    );
-    expect(
-      policy.shouldRender(
-        lifecycle: AppLifecycleState.resumed,
-        mode: EewWarningOverlayMode.fullscreen,
-        hasDisplayModel: true,
-        liveMonitorActive: false,
       ),
       isTrue,
     );
   });
 
-  test('LiveMonitor activeで最小化されたoverlayも描画しない', () {
+  test('前面表示中は最小化されたoverlayも描画する', () {
     expect(
       policy.shouldRender(
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.minimized,
         hasDisplayModel: true,
-        liveMonitorActive: true,
       ),
-      isFalse,
+      isTrue,
     );
   });
 
-  test('LiveMonitor active中はfullscreen EEWの戻る操作を奪わない', () {
+  test('fullscreen EEWの戻る操作を処理する', () {
     expect(
       policy.shouldInterceptBack(
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.fullscreen,
         hasDisplayModel: true,
-        liveMonitorActive: true,
-      ),
-      isFalse,
-    );
-    expect(
-      policy.shouldInterceptBack(
-        lifecycle: AppLifecycleState.resumed,
-        mode: EewWarningOverlayMode.fullscreen,
-        hasDisplayModel: true,
-        liveMonitorActive: false,
       ),
       isTrue,
     );
@@ -66,7 +45,6 @@ void main() {
         lifecycle: AppLifecycleState.paused,
         mode: EewWarningOverlayMode.fullscreen,
         hasDisplayModel: true,
-        liveMonitorActive: false,
       ),
       isFalse,
     );
@@ -75,7 +53,6 @@ void main() {
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.hidden,
         hasDisplayModel: true,
-        liveMonitorActive: false,
       ),
       isFalse,
     );
@@ -84,7 +61,6 @@ void main() {
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.minimized,
         hasDisplayModel: false,
-        liveMonitorActive: false,
       ),
       isFalse,
     );

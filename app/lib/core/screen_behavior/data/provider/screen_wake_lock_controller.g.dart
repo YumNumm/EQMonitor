@@ -36,7 +36,7 @@ final class ScreenWakeLockControllerProvider
 }
 
 String _$screenWakeLockControllerHash() =>
-    r'6527cc2c59e13eb1edb2e6580561c20a9d7a4345';
+    r'ab89a356370b4da9a60c4e9fa213dfcd437c70bf';
 
 abstract class _$ScreenWakeLockController extends $AsyncNotifier<void> {
   FutureOr<void> build();
