@@ -19,7 +19,7 @@
 
 - 同じ `belowLayerId` に追加すると後から追加した layer が上になる。順序に依存する layer 群は一括で下→上に構築し、`replaceMapStyleLayers` へ渡す。
 - 挿入アンカーは style 自体が持つ `BaseLayer` だけを使う。別の Widget が追加する layer を `belowLayerId` に指定しない。style 読み込み時の `InheritedModel` 通知は `HashMap` の走査順で届き、兄弟 Widget の effect は子の並び順に実行されないため、アンカー未追加のまま `addLayer` が例外になり、再試行されず layer が欠ける。`aboveLayerId` の web 制約にも注意する。
-- 複数の Widget が同じ位置（最前面や同じアンカーの直下）へ追加すると、重なり順が初期化順・再追加のタイミングで変わる。Widget ごとに `BaseLayer` の常設アンカーを分ける。アンカーは透明な `background` layer で、下から `regionFillAnchor`（不透明な区域 fill。S 波 fill はこの上、`areaForecastLocalEewLine` の下）→ 境界線 → `regionOverlayAnchor`（Home / Live Monitor の警報区域 fill）→ `foregroundOverlayAnchor`（強震モニタ観測点）→ `markerBackgroundAnchor`（震源誤差範囲・警報区域や津波予報区の線）→ `waveLineAnchor`（P/S 波の線）→ `markerLowerAnchor` → `markerUpperAnchor`（震源マーク・観測点）。
+- 複数の Widget が同じ位置（最前面や同じアンカーの直下）へ追加すると、重なり順が初期化順・再追加のタイミングで変わる。Widget ごとに `BaseLayer` の常設アンカーを分ける。アンカーは透明な `background` layer で、下から `regionFillAnchor`（不透明な区域 fill。S 波 fill はこの上、`areaForecastLocalEewLine` の下）→ 境界線 → `regionOverlayAnchor`（Home の警報区域 fill）→ `foregroundOverlayAnchor`（強震モニタ観測点）→ `markerBackgroundAnchor`（震源誤差範囲・警報区域や津波予報区の線）→ `waveLineAnchor`（P/S 波の線）→ `markerLowerAnchor` → `markerUpperAnchor`（震源マーク・観測点）。
 - アンカーを増やすときは `BaseLayer` と `MapStyleUtil.buildStyleJson` の両方へ同じ順で追加する。順序は `test/feature/map/data/provider/map_style_util_test.dart` で固定している。
 - 震度色を持つ半透明の細分区域・市区町村 fill を重ねない。切替 zoom では下側の opacity を 0 にする。
 - 英数字を描く `text-field` には `text-font` へ `Noto Sans CJK JP Regular` か `Noto Sans CJK JP Bold` を明示する。glyph の配信元 `glyphs.geolonia.com` は、MapLibre 既定の fontstack（`Open Sans Regular,Arial Unicode MS Regular`）へ 403 を返す。

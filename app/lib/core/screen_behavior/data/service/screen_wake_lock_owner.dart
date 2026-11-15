@@ -4,8 +4,6 @@ class ScreenWakeLockOwner {
   new({required this.setEnabled});
 
   final Future<void> Function({required bool enabled}) setEnabled;
-  bool applicationDesired = false;
-  bool sessionDesired = false;
   bool? appliedEnabled;
   int desiredGeneration = 0;
   Future<void> transitionQueue = Future.value();
@@ -13,21 +11,10 @@ class ScreenWakeLockOwner {
 
   Future<void> get disposed => disposeTransition ?? transitionQueue;
 
-  Future<void> setDesired({required bool enabled}) {
-    sessionDesired = enabled;
-    return enqueueDesired();
-  }
-
-  Future<void> setApplicationDesired({
+  Future<void> setDesired({
     required bool enabled,
     bool force = false,
   }) {
-    applicationDesired = enabled;
-    return enqueueDesired(force: force);
-  }
-
-  Future<void> enqueueDesired({bool force = false}) {
-    final enabled = applicationDesired || sessionDesired;
     if (disposeTransition != null) {
       return disposed;
     }
@@ -70,7 +57,7 @@ class ScreenWakeLockOwner {
       appliedEnabled = enabled;
     } on Exception catch (error, stackTrace) {
       talker.error(
-        '[LiveMonitor] failed to update wake lock',
+        '[ScreenWakeLock] failed to update wake lock',
         error,
         stackTrace,
       );
