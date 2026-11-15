@@ -141,7 +141,7 @@ jobs:
           cp mise.local.toml.example mise.local.toml
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
           GITHUB_TOKEN: ${{ github.token }}
@@ -170,7 +170,7 @@ jobs:
           scripts/ci/generate_release_note.sh
 
       - name: Upload iOS release notes
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: EQMonitor-release-notes-ios
           path: release-notes-ios.txt
@@ -208,7 +208,7 @@ jobs:
           cp mise.local.toml.example mise.local.toml
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -245,7 +245,7 @@ jobs:
         run: scripts/ci/generate_release_note.sh
 
       - name: Upload Android release notes
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: EQMonitor-release-notes-android
           path: release-notes-android.txt
@@ -279,7 +279,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -439,7 +439,7 @@ jobs:
 
       # https://github.com/actions/upload-artifact
       - name: Upload ipa as artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: EQMonitor-ios.ipa
           path: app/EQMonitor.ipa
@@ -447,7 +447,7 @@ jobs:
 
       # https://github.com/actions/upload-artifact
       - name: Upload ad-hoc ipa as artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: EQMonitor-ios-adhoc.ipa
           path: app/adhoc/EQMonitor.ipa
@@ -456,7 +456,7 @@ jobs:
       # クラッシュログのシンボリケート用に dSYM を保存する
       # https://github.com/actions/upload-artifact
       - name: Upload dSYMs as artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: EQMonitor-ios-dSYMs
           path: app/build/ios/Runner.xcarchive/dSYMs
@@ -515,7 +515,7 @@ jobs:
 
       # https://github.com/actions/download-artifact
       - name: Download ipa
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: EQMonitor-ios.ipa
           path: build
@@ -541,7 +541,7 @@ jobs:
           PY
 
       - name: Download iOS release notes
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: EQMonitor-release-notes-ios
           path: notes
@@ -558,7 +558,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
           GITHUB_TOKEN: ${{ github.token }}
@@ -675,7 +675,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -691,13 +691,13 @@ jobs:
           done
 
       - name: Download artifact ipa
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: EQMonitor-ios-adhoc.ipa
           path: build
 
       - name: Download iOS release notes
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: EQMonitor-release-notes-ios
           path: notes
@@ -755,7 +755,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -869,7 +869,7 @@ jobs:
           ls -lh app/build/app/outputs/bundle/release/
 
       - name: Upload aab as artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: EQMonitor-android.aab
           path: app/build/app/outputs/bundle/release/app-release.aab
@@ -881,7 +881,7 @@ jobs:
       # (gradle の build dir は root の app/build へリダイレクトされている)
       # https://github.com/actions/upload-artifact
       - name: Upload debug symbols as artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: EQMonitor-android-debug-symbols
           path: app/build/app/outputs/mapping/release/mapping.txt
@@ -916,7 +916,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -932,13 +932,13 @@ jobs:
           done
 
       - name: Download artifact aab
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: EQMonitor-android.aab
           path: build
 
       - name: Download Android release notes
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: EQMonitor-release-notes-android
           path: notes
@@ -1006,7 +1006,7 @@ jobs:
 
       # https://github.com/actions/download-artifact
       - name: Download AAB
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: EQMonitor-android.aab
           path: download
@@ -1014,7 +1014,7 @@ jobs:
           github-token: ${{ github.token }}
 
       - name: Download Android release notes
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: EQMonitor-release-notes-android
           path: notes
@@ -1039,7 +1039,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
