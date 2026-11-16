@@ -256,13 +256,13 @@ final class ShakeDetectionEngine {
         return;
       }
       oldest.addStation(station, time, lifetime);
-      _updateConfirmation(oldest);
+      _updateConfirmation(oldest, isBootstrap: isBootstrap);
       return;
     }
 
     if (candidates.isNotEmpty) {
       final event = candidates.first..addStation(station, time, lifetime);
-      _updateConfirmation(event);
+      _updateConfirmation(event, isBootstrap: isBootstrap);
       return;
     }
 
@@ -274,7 +274,7 @@ final class ShakeDetectionEngine {
       isBootstrap: isBootstrap,
     );
     _events.add(event);
-    _updateConfirmation(event);
+    _updateConfirmation(event, isBootstrap: isBootstrap);
   }
 
   void _mergeNearbyEvents(DateTime time) {
@@ -303,13 +303,17 @@ final class ShakeDetectionEngine {
     }
   }
 
-  void _updateConfirmation(ShakeEventState event) {
+  void _updateConfirmation(ShakeEventState event, {required bool isBootstrap}) {
     if (event.isConfirmed) {
       return;
     }
+    // 平常値との差は数十秒から数分の緩やかな雑音の変動も拾うため、
+    // 平常値が窓に残る間は弱い揺れを観測点数だけでは確定しない。
     event.isConfirmed = switch (event.level) {
-      .weaker => event.stationCount > parameters.weakerConfirmPointCount,
-      .weak => event.stationCount > parameters.weakConfirmPointCount,
+      .weaker =>
+        !isBootstrap && event.stationCount > parameters.weakerConfirmPointCount,
+      .weak =>
+        !isBootstrap && event.stationCount > parameters.weakConfirmPointCount,
       .medium || .strong || .stronger => true,
     };
   }

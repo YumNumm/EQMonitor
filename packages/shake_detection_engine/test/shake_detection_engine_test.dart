@@ -73,6 +73,27 @@ void main() {
       expect(engine.process(time: at(0), intensities: uniform(-0.4)), isEmpty);
     });
 
+    test('平常値が窓に残る間は弱い揺れを確定せず、窓から外れた後に確定すること', () {
+      final engine = ShakeDetectionEngine(stations: grid)
+        ..seedBaseline(ShakeBaseline(values: uniform(-2), isReliable: true));
+
+      var events = engine.process(time: at(0), intensities: uniform(-0.5));
+      expect(events.single.level, ShakeEventLevel.weak);
+      expect(events.single.isConfirmed, isFalse);
+
+      for (var second = 1; second <= 9; second++) {
+        events = engine.process(
+          time: at(second),
+          intensities: uniform(-0.5),
+        );
+      }
+      expect(events.single.isConfirmed, isFalse);
+
+      events = engine.process(time: at(10), intensities: uniform(0));
+      expect(events.single.level, ShakeEventLevel.weak);
+      expect(events.single.isConfirmed, isTrue);
+    });
+
     test('平常値が窓から外れた後に作られたイベントは通常の検知として扱うこと', () {
       final engine = ShakeDetectionEngine(stations: grid)
         ..seedBaseline(ShakeBaseline(values: uniform(-0.5), isReliable: true));
