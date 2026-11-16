@@ -37,7 +37,7 @@ final class ShakeDetectionNoticeAgreedProvider
 }
 
 String _$shakeDetectionNoticeAgreedHash() =>
-    r'0d7b2b212aa2de2589c8035c82f561a46366c076';
+    r'9bd88f9f5530110084468e5a767c3e80bd87b9a8';
 
 abstract class _$ShakeDetectionNoticeAgreed extends $AsyncNotifier<bool> {
   FutureOr<bool> build();

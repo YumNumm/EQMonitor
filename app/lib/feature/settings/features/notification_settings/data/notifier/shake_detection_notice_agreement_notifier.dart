@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/shake_detection_notice_agreement_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,26 +9,20 @@ class ShakeDetectionNoticeAgreed extends _$ShakeDetectionNoticeAgreed {
   // 注意事項を改訂して再同意を求めるときに上げる。
   static const currentVersion = 1;
 
-  static final agreeMutation = Mutation<void>();
-
   @override
   Future<bool> build() async {
-    final dataSource = await ref.watch(
-      sharedPreferencesDataSourceProvider.future,
+    final repository = await ref.watch(
+      shakeDetectionNoticeAgreementRepositoryProvider.future,
     );
-    final agreedVersion =
-        await dataSource.getInt(key: .shakeDetectionNoticeAgreedVersion) ?? 0;
-    return agreedVersion >= currentVersion;
+    return await repository.loadAgreedVersion() >= currentVersion;
   }
 
+  static final agreeMutation = Mutation<void>();
   Future<void> agree() async {
-    final dataSource = await ref.read(
-      sharedPreferencesDataSourceProvider.future,
+    final repository = await ref.read(
+      shakeDetectionNoticeAgreementRepositoryProvider.future,
     );
-    await dataSource.setInt(
-      key: .shakeDetectionNoticeAgreedVersion,
-      value: currentVersion,
-    );
+    await repository.saveAgreedVersion(currentVersion);
     state = const AsyncData(true);
   }
 }
