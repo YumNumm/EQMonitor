@@ -21,7 +21,12 @@ final class const ShakeEventSnapshot({
 
 final class const ShakeEventPointSnapshot({
   required final int stationIndex,
+
+  /// 最新フレームの震度。
   required final double? intensity,
+
+  /// イベントに加わってから観測した最大の震度。
+  required final double? peakIntensity,
   required final double intensityDiff,
 });
 

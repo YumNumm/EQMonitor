@@ -134,6 +134,62 @@ void main() {
       expect(events, isEmpty);
     });
 
+    test('上昇が止まった観測点もイベントの終了までは外さないこと', () {
+      final engine = ShakeDetectionEngine(stations: grid)
+        ..process(time: at(0), intensities: uniform(-0.5));
+      // 西側の 2 列だけが先に揺れ、その後に全体へ広がる。
+      final west = uniform(-0.5);
+      for (var row = 0; row < 5; row++) {
+        west[row * 5] = 1.5;
+        west[row * 5 + 1] = 1.5;
+      }
+      final first = engine.process(time: at(1), intensities: west);
+      final firstCount = first.single.points.length;
+      expect(firstCount, lessThan(grid.length));
+
+      // 西側が収まった後に東側が揺れても、西側の観測点は残る。
+      var events = first;
+      for (var second = 2; second <= 20; second++) {
+        events = engine.process(time: at(second), intensities: west);
+      }
+      final east = uniform(1.5);
+      for (var row = 0; row < 5; row++) {
+        east[row * 5] = -0.5;
+        east[row * 5 + 1] = -0.5;
+      }
+      events = engine.process(time: at(21), intensities: east);
+
+      expect(events, hasLength(1));
+      expect(events.single.id, first.single.id);
+      expect(events.single.points, hasLength(grid.length));
+      final calmed = events.single.points.firstWhere(
+        (point) => point.stationIndex == 0,
+      );
+      expect(calmed.intensity, -0.5);
+      expect(calmed.peakIntensity, 1.5);
+    });
+
+    test('観測点数はイベントの終了まで減らないこと', () {
+      final engine = ShakeDetectionEngine(stations: grid)
+        ..process(time: at(0), intensities: uniform(-0.5));
+      var previousCount = 0;
+      // 最後に上昇を検知した t=4 から 40 秒後の t=44 までイベントが続く。
+      for (var second = 1; second <= 44; second++) {
+        final events = engine.process(
+          time: at(second),
+          intensities: uniform(second < 5 ? 1.5 : -0.5),
+        );
+        final count = events.single.points.length;
+        expect(count, greaterThanOrEqualTo(previousCount));
+        previousCount = count;
+      }
+      expect(previousCount, grid.length);
+      expect(
+        engine.process(time: at(45), intensities: uniform(-0.5)),
+        isEmpty,
+      );
+    });
+
     test('弱い揺れは観測点数が確定条件を超えるまで未確定とすること', () {
       final engine = ShakeDetectionEngine(stations: grid)
         ..process(time: at(0), intensities: uniform(-2));
@@ -239,6 +295,7 @@ void main() {
             ShakeEventPointSnapshot(
               stationIndex: 999,
               intensity: 1,
+              peakIntensity: 1,
               intensityDiff: 1,
             ),
           ],
