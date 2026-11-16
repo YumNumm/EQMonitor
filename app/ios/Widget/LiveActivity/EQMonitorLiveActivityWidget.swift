@@ -12,12 +12,46 @@ import WidgetKit
 @available(iOS 16.1, *)
 struct EewLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: EewLiveActivityAttributes.self) { context in
-            EewLockScreenView(state: context.state)
+        let configuration = ActivityConfiguration(for: EewLiveActivityAttributes.self) { context in
+            EewActivityContentView(state: context.state)
                 .activityBackgroundTint(.black)
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             eewDynamicIsland(state: context.state)
+        }
+        // Apple Watch の Smart Stack と CarPlay 向けの .small は iOS 18 以降
+        if #available(iOS 18.0, *) {
+            return configuration.supplementalActivityFamilies([.small])
+        } else {
+            return configuration
+        }
+    }
+}
+
+@available(iOS 16.1, *)
+private struct EewActivityContentView: View {
+    let state: EewContentState
+
+    var body: some View {
+        if #available(iOS 18.0, *) {
+            EewActivityFamilyContentView(state: state)
+        } else {
+            EewLockScreenView(state: state)
+        }
+    }
+}
+
+@available(iOS 18.0, *)
+private struct EewActivityFamilyContentView: View {
+    @Environment(\.activityFamily) private var activityFamily
+    let state: EewContentState
+
+    var body: some View {
+        switch activityFamily {
+        case .small:
+            EewSmallActivityView(state: state)
+        default:
+            EewLockScreenView(state: state)
         }
     }
 }
