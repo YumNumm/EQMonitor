@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_region_group.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_region_summary.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_region_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -20,13 +20,10 @@ class ShakeDetectionCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final regions =
-        ref.watch(shakeDetectionEventRegionsProvider(event)).value ??
-        const <ShakeDetectionRegionGroup>[];
+    final summary = ref.watch(shakeDetectionEventRegionsProvider(event)).value;
 
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
     return Padding(
@@ -44,25 +41,8 @@ class ShakeDetectionCard extends ConsumerWidget {
           crossAxisAlignment: .stretch,
           children: [
             _ShakeDetectionCardHeader(event: event),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: spacing.sm,
-                vertical: spacing.xs,
-              ),
-              child: Row(
-                crossAxisAlignment: .start,
-                spacing: spacing.sm,
-                children: [
-                  _ShakeDetectionLevelSection(level: event.level),
-                  Expanded(
-                    child: _ShakeDetectionRegionSection(
-                      event: event,
-                      regions: regions,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            if (summary != null && summary.entries.isNotEmpty)
+              _ShakeDetectionRegionSection(summary: summary),
           ],
         ),
       ),
@@ -86,9 +66,10 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(color: event.level.cardColor),
       child: Padding(
+        // 角丸の内側に文字が寄りすぎないよう、EEW カードより余白を広く取る。
         padding: EdgeInsets.symmetric(
-          horizontal: spacing.sm,
-          vertical: spacing.sm,
+          horizontal: spacing.lg,
+          vertical: spacing.md,
         ),
         child: Row(
           spacing: spacing.sm,
@@ -141,64 +122,10 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
   }
 }
 
-class _ShakeDetectionLevelSection extends StatelessWidget {
-  const new({required this.level});
-
-  final ShakeDetectionLevel level;
-
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final typography = designSystem.typography;
-    final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-
-    return Column(
-      mainAxisSize: .min,
-      spacing: spacing.xs,
-      children: [
-        Text(
-          '揺れの強さ',
-          style: typography.labelMedium.copyWith(
-            color: colorTheme.onSurfaceVariant,
-          ),
-        ),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: level.cardColor,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: SizedBox.square(
-            dimension: 48,
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(spacing.xs),
-                child: FittedBox(
-                  fit: .scaleDown,
-                  child: Text(
-                    level.cardBadgeLabel,
-                    textAlign: .center,
-                    style: typography.titleMedium.copyWith(
-                      fontWeight: .w700,
-                      color: Colors.white,
-                      height: 1.1,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _ShakeDetectionRegionSection extends StatelessWidget {
-  const new({required this.event, required this.regions});
+  const new({required this.summary});
 
-  final ShakeDetectionEvent event;
-  final List<ShakeDetectionRegionGroup> regions;
+  final ShakeDetectionRegionSummary summary;
 
   @override
   Widget build(BuildContext context) {
@@ -206,36 +133,39 @@ class _ShakeDetectionRegionSection extends StatelessWidget {
     final typography = designSystem.typography;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
+    final nameStyle = typography.titleSmall.copyWith(fontWeight: .w700);
 
-    return Column(
-      crossAxisAlignment: .start,
-      spacing: spacing.xs,
-      children: [
-        Text(
-          '${event.pointCount}地点で検知',
-          style: typography.labelMedium.copyWith(
-            color: colorTheme.onSurfaceVariant,
-          ),
-        ),
-        for (final region in regions)
-          Text.rich(
-            TextSpan(
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.lg,
+        vertical: spacing.md,
+      ),
+      child: summary.isGrouped
+          ? Text(
+              summary.entries.map((entry) => entry.name).join('　'),
+              style: nameStyle,
+            )
+          : Column(
+              crossAxisAlignment: .start,
+              spacing: spacing.xs,
               children: [
-                TextSpan(
-                  text: region.prefectureName,
-                  style: typography.titleSmall.copyWith(fontWeight: .w700),
-                ),
-                if (!region.isWholePrefecture && region.regionNames.isNotEmpty)
-                  TextSpan(
-                    text: '  ${region.regionNames.join(' ')}',
-                    style: typography.bodySmall.copyWith(
-                      color: colorTheme.onSurfaceVariant,
+                for (final entry in summary.entries)
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(text: entry.name, style: nameStyle),
+                        if (entry.detail case final detail?)
+                          TextSpan(
+                            text: '  $detail',
+                            style: typography.bodySmall.copyWith(
+                              color: colorTheme.onSurfaceVariant,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
               ],
             ),
-          ),
-      ],
     );
   }
 }
@@ -247,14 +177,6 @@ extension on ShakeDetectionLevel {
     .medium => 'やや強い揺れを検知',
     .weak => '弱い揺れを検知',
     .weaker => '微弱な揺れを検知',
-  };
-
-  String get cardBadgeLabel => switch (this) {
-    .stronger => '非常に\n強い',
-    .strong => '強い',
-    .medium => 'やや\n強い',
-    .weak => '弱い',
-    .weaker => '微弱',
   };
 
   Color get cardColor => switch (this) {
