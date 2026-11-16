@@ -34,6 +34,8 @@ struct HeaderContainer: View {
                         .foregroundColor(eewHeaderSecondaryTextColor)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
+                        // 縮小可能な Text は高さ不足時に縦方向へも縮むため、高さを固定する。
+                        .fixedSize(horizontal: false, vertical: true)
 
                     // headline: "XXXで地震" / 警報時 "XX YYで強い揺れ" / 取消時 "取り消されました"
                     if let headline = display.headerHeadline(from: headline) {
@@ -42,6 +44,7 @@ struct HeaderContainer: View {
                             .foregroundColor(eewHeaderPrimaryTextColor)
                             .lineLimit(1)
                             .minimumScaleFactor(0.5)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -126,20 +129,21 @@ struct EewLockScreenView: View {
                             EewEventTimeView(label: state.timeLabel, date: date)
                         }
                         EewSourceMetricsView(state: state)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                     if showsLocation {
                         EewLockScreenLocationView(state: state)
                             .layoutPriority(1)
+                    } else if state.display.showsDeepHypocenterIntensityNotice {
+                        // 行を足すと Lock Screen の上限160ptを超えるため、震源要素の右へ置く。
+                        Text(EewDisplay.deepHypocenterIntensityNotice.replacingOccurrences(of: "、", with: "、\n"))
+                            .font(AppFonts.flex(size: 11, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.75))
+                            .lineLimit(2)
+                            .fixedSize()
                     }
-                }
-
-                if state.display.showsDeepHypocenterIntensityNotice {
-                    Text(EewDisplay.deepHypocenterIntensityNotice)
-                        .font(AppFonts.flex(size: 11, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.75))
-                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
         }
