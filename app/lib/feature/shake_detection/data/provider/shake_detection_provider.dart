@@ -27,7 +27,7 @@ List<ShakeDetectionEvent> shakeDetection(Ref ref) {
   if (frame == null || stations == null) {
     return const [];
   }
-  return ref
+  final events = ref
       .watch(shakeDetectionEventAssemblerProvider)
       .assemble(
         snapshots: frame.events,
@@ -38,4 +38,6 @@ List<ShakeDetectionEvent> shakeDetection(Ref ref) {
             .create(ref.watch(eewProvider).value ?? const []),
         now: ref.read(appClockProvider.notifier).now(),
       );
+  // 毎フレーム再計算されるため、検知が無い間は同一の値を返して通知を抑える。
+  return events.isEmpty ? const [] : events;
 }
