@@ -80,6 +80,16 @@
 - 注意帯・現在地震度背景・低精度ラベルは`ContainerRelativeShape()`を使い、
   独自containerShapeでIsland全体の形状を上書きしない。
 
+## Apple Watch・CarPlay（`.small`）
+
+- iOS 18以降は`supplementalActivityFamilies([.small])`を付け、`activityFamily`が`.small`のとき
+  `EewSmallActivityView`を出す。未対応のままだとSmart StackにはCompactのleading/trailingが出る。
+- 最低OSが18未満のため、`if #available`の分岐で構成を返し分ける（不透明型の分岐はSE-0360で可）。
+  `WidgetBundle`のbuilderは`else`を扱えないので、Widgetを2つに分けて出し分ける方法は使えない。
+- 表示は現在地を主役にする。現在地の情報があれば予想震度と到達まで、無ければ全国の最大震度と
+  見出し・M/深さ。取消は記号と主文のみ。
+- `Widget/`へ追加したファイルはPreview側の`membershipExceptions`にも追加する。
+
 ## ローカルデバッグとPreview
 
 - ローカル開始は`net.yumnumm.eqmonitor/live_activity_debug` MethodChannelからActivityKitを呼ぶ。
