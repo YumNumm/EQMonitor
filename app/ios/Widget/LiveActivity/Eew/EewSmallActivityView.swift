@@ -8,16 +8,26 @@ import SwiftUI
 struct EewSmallActivityView: View {
     let state: EewContentState
 
+    /// これより狭いと 40mm / 41mm の Apple Watch。余白と震度を詰めて文字の幅を確保する。
+    private static let narrowWidth: CGFloat = 170
+
     var body: some View {
+        GeometryReader { geometry in
+            content(narrow: geometry.size.width < Self.narrowWidth)
+        }
+        .background(.black)
+    }
+
+    private func content(narrow: Bool) -> some View {
         let display = state.display
-        HStack(alignment: .center, spacing: 8) {
+        return HStack(alignment: .center, spacing: narrow ? 6 : 8) {
             if display.isCanceled {
-                EewCanceledSymbol(size: 26)
+                EewCanceledSymbol(size: narrow ? 22 : 26)
             } else if let intensity = display.localIntensity {
-                EewLocalIntensityView(intensity: intensity, size: 40)
+                EewLocalIntensityView(intensity: intensity, size: narrow ? 34 : 40)
                     .fixedSize()
             } else {
-                EewMaximumIntensityView(intensity: display.maxIntensity, size: 30)
+                EewMaximumIntensityView(intensity: display.maxIntensity, size: narrow ? 26 : 30)
                     .fixedSize()
             }
 
@@ -46,11 +56,10 @@ struct EewSmallActivityView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
+        .padding(.horizontal, narrow ? 8 : 10)
+        .padding(.vertical, narrow ? 4 : 6)
         .foregroundStyle(.white)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.black)
     }
 
     /// 現在地が警報対象のときの枠線の色
@@ -72,29 +81,11 @@ struct EewSmallActivityView: View {
     private func detail(_ display: EewDisplay) -> some View {
         if display.locationNotice != nil {
             if let remaining = ArrivalCountdown.remaining(until: display.countdownArrivalDate) {
-                let isLocalWarning = display.locationNotice == .warning
-                HStack(alignment: .firstTextBaseline, spacing: 3) {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text("到達まで")
                         .font(AppFonts.flex(size: 10, weight: .bold))
                         .foregroundStyle(.white.opacity(0.8))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                    // 到達までが10分を超えることはないため、分1桁ぶんの幅だけ確保する
-                    ArrivalCountdownText(
-                        remaining: remaining,
-                        size: 16,
-                        color: .white,
-                        alignment: .leading,
-                        placeholder: "0:00"
-                    )
-                    // 幅が足りないときはラベル側を縮め、数字は欠けさせない
-                    .fixedSize()
-                    .layoutPriority(1)
-                    .modifier(EewBlinkHighlight(
-                        isActive: isLocalWarning,
-                        anchor: display.countdownArrivalDate,
-                        horizontalPadding: 2
-                    ))
+                    ArrivalCountdownText(remaining: remaining, size: 16, color: .white, alignment: .leading)
                 }
             } else if let hypocenterName = state.hypocenterName, !hypocenterName.isEmpty {
                 Text(hypocenterName)
@@ -119,13 +110,12 @@ private struct EewBlinkHighlight: ViewModifier {
     let anchor: Date?
     /// 文字の幅ではなく、使える幅いっぱいを塗る
     var fillsWidth = false
-    var horizontalPadding: CGFloat = 4
 
     func body(content: Content) -> some View {
         if isActive {
             content
                 .foregroundStyle(.white)
-                .padding(.horizontal, horizontalPadding)
+                .padding(.horizontal, 4)
                 .padding(.vertical, 1)
                 .frame(maxWidth: fillsWidth ? .infinity : nil, alignment: .leading)
                 .background {
