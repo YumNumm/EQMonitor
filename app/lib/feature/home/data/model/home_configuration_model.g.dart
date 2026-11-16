@@ -10,18 +10,38 @@ part of 'home_configuration_model.dart';
 
 _HomeShakeDetectionSettings _$HomeShakeDetectionSettingsFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('_HomeShakeDetectionSettings', json, ($checkedConvert) {
-  final val = _HomeShakeDetectionSettings(
-    show: $checkedConvert('show', (v) => v as bool? ?? true),
-    animationMode: $checkedConvert(
-      'animation_mode',
-      (v) =>
-          $enumDecodeNullable(_$HomeShakeDetectionAnimationModeEnumMap, v) ??
-          HomeShakeDetectionAnimationMode.blink,
-    ),
-  );
-  return val;
-}, fieldKeyMap: const {'animationMode': 'animation_mode'});
+) => $checkedCreate(
+  '_HomeShakeDetectionSettings',
+  json,
+  ($checkedConvert) {
+    final val = _HomeShakeDetectionSettings(
+      show: $checkedConvert('show', (v) => v as bool? ?? true),
+      animationMode: $checkedConvert(
+        'animation_mode',
+        (v) =>
+            $enumDecodeNullable(_$HomeShakeDetectionAnimationModeEnumMap, v) ??
+            HomeShakeDetectionAnimationMode.blink,
+      ),
+      autoFocus: $checkedConvert('auto_focus', (v) => v as bool? ?? true),
+      minLevel: $checkedConvert(
+        'min_level',
+        (v) =>
+            $enumDecodeNullable(
+              _$ShakeDetectionLevelEnumMap,
+              v,
+              unknownValue: ShakeDetectionLevel.weaker,
+            ) ??
+            ShakeDetectionLevel.weaker,
+      ),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'animationMode': 'animation_mode',
+    'autoFocus': 'auto_focus',
+    'minLevel': 'min_level',
+  },
+);
 
 Map<String, dynamic> _$HomeShakeDetectionSettingsToJson(
   _HomeShakeDetectionSettings instance,
@@ -29,12 +49,22 @@ Map<String, dynamic> _$HomeShakeDetectionSettingsToJson(
   'show': instance.show,
   'animation_mode':
       _$HomeShakeDetectionAnimationModeEnumMap[instance.animationMode]!,
+  'auto_focus': instance.autoFocus,
+  'min_level': _$ShakeDetectionLevelEnumMap[instance.minLevel]!,
 };
 
 const _$HomeShakeDetectionAnimationModeEnumMap = {
   HomeShakeDetectionAnimationMode.blink: 'blink',
   HomeShakeDetectionAnimationMode.fade: 'fade',
   HomeShakeDetectionAnimationMode.solid: 'solid',
+};
+
+const _$ShakeDetectionLevelEnumMap = {
+  ShakeDetectionLevel.weaker: 'weaker',
+  ShakeDetectionLevel.weak: 'weak',
+  ShakeDetectionLevel.medium: 'medium',
+  ShakeDetectionLevel.strong: 'strong',
+  ShakeDetectionLevel.stronger: 'stronger',
 };
 
 _HomeEewSettings _$HomeEewSettingsFromJson(Map<String, dynamic> json) =>

@@ -15,7 +15,7 @@ _ShakeDetectionSettingsModel _$ShakeDetectionSettingsModelFromJson(
   json,
   ($checkedConvert) {
     final val = _ShakeDetectionSettingsModel(
-      isEnabled: $checkedConvert('is_enabled', (v) => v as bool? ?? true),
+      isEnabled: $checkedConvert('is_enabled', (v) => v as bool? ?? false),
       isBackfillEnabled: $checkedConvert(
         'is_backfill_enabled',
         (v) => v as bool? ?? true,

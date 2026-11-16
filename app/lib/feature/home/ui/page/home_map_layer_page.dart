@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -14,6 +13,9 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_set
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_request_provider.dart';
 import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,9 +28,9 @@ class HomeMapLayerPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isShakeDetectionEnabled = ref
-        .watch(buildConfigProvider)
-        .isShakeDetectionAvailable;
+    final isShakeDetectionEnabled = ref.watch(
+      isDeviceShakeDetectionEnabledProvider,
+    );
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
@@ -76,10 +78,12 @@ class HomeMapLayerPage extends ConsumerWidget {
                   if (isShakeDetectionEnabled) ...[
                     _SettingsSection(
                       title: '揺れ検知',
-                      description: '揺れ検知イベントの表示とアニメーションを調整します。',
+                      description: '揺れ検知イベントの表示、アニメーション、自動追従を調整します。',
                       children: const [
                         _ShakeDetectionShowTile(),
                         _ShakeDetectionAnimationModeTile(),
+                        _ShakeDetectionMinLevelTile(),
+                        _ShakeDetectionAutoFocusTile(),
                       ],
                     ),
                     SizedBox(height: spacing.lg),
@@ -1278,6 +1282,67 @@ class _ShakeDetectionAnimationModeTile extends ConsumerWidget {
               .get(homeConfigurationProvider.notifier)
               .updateShakeDetection(
                 cfg.shakeDetection.copyWith(animationMode: next.first),
+              ),
+        );
+      },
+    );
+  }
+}
+
+class _ShakeDetectionMinLevelTile extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null) {
+      return const SizedBox.shrink();
+    }
+
+    return _SettingDropdownField<ShakeDetectionLevel>(
+      title: '表示する揺れの強さ',
+      subtitle: 'この強さに満たない揺れ検知は、地図とカードに表示しません。',
+      value: cfg.shakeDetection.minLevel,
+      entries: [
+        for (final level in ShakeDetectionLevel.values)
+          DropdownMenuEntry(value: level, label: level.minLevelThresholdLabel),
+      ],
+      onChanged: (next) async {
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateShakeDetection(
+                cfg.shakeDetection.copyWith(minLevel: next),
+              ),
+        );
+      },
+    );
+  }
+}
+
+class _ShakeDetectionAutoFocusTile extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: '揺れ検知時に自動ズーム',
+      subtitle: cfg.shakeDetection.autoFocus
+          ? '検知した範囲を自動で注視します。'
+          : '現在のズームを維持します。',
+      value: cfg.shakeDetection.autoFocus,
+      onChanged: (next) async {
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateShakeDetection(
+                cfg.shakeDetection.copyWith(autoFocus: next),
               ),
         );
       },

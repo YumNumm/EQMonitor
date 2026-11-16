@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_correlation_eew_factory.dart';
@@ -8,7 +7,6 @@ import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_eve
 import 'package:eqmonitor/feature/shake_detection/data/notifier/device_shake_detection.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_eew_correlator_provider.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_provider.g.dart';
@@ -17,12 +15,7 @@ part 'shake_detection_provider.g.dart';
 /// `correlatedEewEventId` が入る。
 @Riverpod(keepAlive: true)
 List<ShakeDetectionEvent> shakeDetection(Ref ref) {
-  if (!ref.watch(buildConfigProvider).isShakeDetectionAvailable ||
-      !ref.watch(
-        shakeDetectionCurrentSettingsProvider.select(
-          (settings) => settings.isEnabled,
-        ),
-      )) {
+  if (!ref.watch(isDeviceShakeDetectionEnabledProvider)) {
     return const [];
   }
   // リプレイ再生中は、現在発生している揺れを再生中の時刻基準に混在させない。

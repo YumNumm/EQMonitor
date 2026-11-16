@@ -17,6 +17,8 @@ T _$identity<T>(T value) => value;
 mixin _$ShakeDetectionSettingsModel {
 
 /// 端末内で揺れ検知を行うかどうか
+///
+/// 試験提供中の機能のため、利用者が有効にするまで動かさない。
  bool get isEnabled;/// 検知の履歴が途切れたとき、直近のフレームを裏で取得して履歴を作り直すかどうか
  bool get isBackfillEnabled;/// `ShakeDetectionTunable.name` をキーとする、初期値から変更したパラメータ
  Map<String, double> get parameterOverrides;
@@ -215,10 +217,12 @@ return $default(_that.isEnabled,_that.isBackfillEnabled,_that.parameterOverrides
 @JsonSerializable()
 
 class _ShakeDetectionSettingsModel implements ShakeDetectionSettingsModel {
-  const _ShakeDetectionSettingsModel({this.isEnabled = true, this.isBackfillEnabled = true,  Map<String, double> parameterOverrides = const <String, double>{}}): _parameterOverrides = parameterOverrides;
+  const _ShakeDetectionSettingsModel({this.isEnabled = false, this.isBackfillEnabled = true,  Map<String, double> parameterOverrides = const <String, double>{}}): _parameterOverrides = parameterOverrides;
   factory _ShakeDetectionSettingsModel.fromJson(Map<String, dynamic> json) => _$ShakeDetectionSettingsModelFromJson(json);
 
 /// 端末内で揺れ検知を行うかどうか
+///
+/// 試験提供中の機能のため、利用者が有効にするまで動かさない。
 @override@JsonKey() final  bool isEnabled;
 /// 検知の履歴が途切れたとき、直近のフレームを裏で取得して履歴を作り直すかどうか
 @override@JsonKey() final  bool isBackfillEnabled;

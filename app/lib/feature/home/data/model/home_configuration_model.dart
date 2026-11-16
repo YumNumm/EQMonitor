@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/util/converter/lat_lng_boundary_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lat_lng/lat_lng.dart';
 
@@ -100,6 +101,14 @@ abstract class HomeShakeDetectionSettings with _$HomeShakeDetectionSettings {
     @Default(true) bool show,
     @Default(HomeShakeDetectionAnimationMode.blink)
     HomeShakeDetectionAnimationMode animationMode,
+
+    /// 揺れを検知したときに、地図を検知範囲へ自動で移動するか。
+    @Default(true) bool autoFocus,
+
+    /// 地図・カードに表示する最小の揺れ検知レベル。
+    @Default(ShakeDetectionLevel.weaker)
+    @JsonKey(unknownEnumValue: ShakeDetectionLevel.weaker)
+    ShakeDetectionLevel minLevel,
   }) = _HomeShakeDetectionSettings;
 
   factory fromJson(Map<String, dynamic> json) =>

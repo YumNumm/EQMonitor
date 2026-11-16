@@ -162,7 +162,7 @@ ProviderContainer _container({
   final container = ProviderContainer(
     overrides: [
       eewAliveTelegramProvider.overrideWith(() => eews),
-      shakeDetectionVisibleProvider.overrideWith(
+      shakeDetectionFocusTargetsProvider.overrideWith(
         (ref) => ref.watch(_testShakesProvider),
       ),
       homeConfigurationProvider.overrideWith(_StubHomeConfiguration.new),
@@ -237,7 +237,7 @@ void main() {
       coordinator.realtimeTransitionResult = true;
       container.read(_testShakesProvider.notifier).replace([_sampleShake()]);
       await container.pump();
-      expect(container.read(shakeDetectionVisibleProvider), hasLength(1));
+      expect(container.read(shakeDetectionFocusTargetsProvider), hasLength(1));
       expect(coordinator.realtimeTransitionCallCount, 2);
       expect(coordinator.receivedEews, hasLength(1));
       expect(coordinator.receivedShakes, hasLength(1));
@@ -403,7 +403,7 @@ void main() {
         viewportSize: const Size(375, 667),
       );
       container.read(_testShakesProvider.notifier).replace([_sampleShake()]);
-      container.read(shakeDetectionVisibleProvider);
+      container.read(shakeDetectionFocusTargetsProvider);
       await container.pump();
       notifier.handleUserMapGesture();
 

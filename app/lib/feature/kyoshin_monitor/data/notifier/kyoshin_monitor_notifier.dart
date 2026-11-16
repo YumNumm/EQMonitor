@@ -7,7 +7,6 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/clock/time_mode.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_image_delay_status.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_delay_calibration_notifier.dart';
@@ -135,7 +134,6 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       final shakeSettings = ref.read(shakeDetectionCurrentSettingsProvider);
       final shakeTuning = ref.read(shakeDetectionTuningProvider);
       final detectsShake =
-          ref.read(buildConfigProvider).isShakeDetectionAvailable &&
           shakeSettings.isEnabled &&
           realtimeDataType == RealtimeDataType.shindo &&
           realtimeLayer == RealtimeLayer.surface;

@@ -7,7 +7,9 @@ part 'shake_detection_settings_model.g.dart';
 abstract class ShakeDetectionSettingsModel with _$ShakeDetectionSettingsModel {
   const factory({
     /// 端末内で揺れ検知を行うかどうか
-    @Default(true) bool isEnabled,
+    ///
+    /// 試験提供中の機能のため、利用者が有効にするまで動かさない。
+    @Default(false) bool isEnabled,
 
     /// 検知の履歴が途切れたとき、直近のフレームを裏で取得して履歴を作り直すかどうか
     @Default(true) bool isBackfillEnabled,

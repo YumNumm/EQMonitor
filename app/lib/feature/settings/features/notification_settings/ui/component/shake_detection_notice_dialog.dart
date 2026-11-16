@@ -55,7 +55,15 @@ const _notices = <({String title, String body})>[
 ];
 
 class ShakeDetectionNoticeDialog extends HookWidget {
-  const new({super.key});
+  const new({
+    this.description =
+        '揺れ検知は、Proプラン向けに試験提供している機能です。'
+        '有効にする前に、以下の内容をご確認ください。',
+    super.key,
+  });
+
+  /// 注意事項の前に表示する、有効にする機能の説明。
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +83,7 @@ class ShakeDetectionNoticeDialog extends HookWidget {
         mainAxisSize: .min,
         crossAxisAlignment: .start,
         children: [
-          Text(
-            '揺れ検知は、Proプラン向けに試験提供している機能です。'
-            '有効にする前に、以下の内容をご確認ください。',
-            style: bodyStyle,
-          ),
+          Text(description, style: bodyStyle),
           for (final (index, notice) in _notices.indexed) ...[
             SizedBox(height: spacing.lg),
             Text(

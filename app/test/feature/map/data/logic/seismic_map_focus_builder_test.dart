@@ -131,9 +131,9 @@ void main() {
       shakes: const [],
     );
 
-    // 最小半径 50km は緯度およそ 0.449 度に相当する。
-    expect(bounds.latitudeNorth - 35, greaterThan(0.4));
-    expect(35 - bounds.latitudeSouth, greaterThan(0.4));
+    // 最小半径 150km は緯度およそ 1.347 度に相当する。
+    expect(bounds.latitudeNorth - 35, greaterThan(1.3));
+    expect(35 - bounds.latitudeSouth, greaterThan(1.3));
     // 経度方向は cos(緯度) で割るぶん緯度方向より広くなる。
     expect(
       bounds.longitudeEast - bounds.longitudeWest,
