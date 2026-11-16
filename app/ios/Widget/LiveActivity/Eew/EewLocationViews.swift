@@ -8,7 +8,7 @@ enum EewAlertStyle {
     /// 点滅する塗りの色。白文字が読める濃さにする
     static let fillColor = Color(red: 0.72, green: 0.0, blue: 0.0)
     /// 面全体の地色。震度バッジや塗りと同化しないよう黒へ寄せる
-    static let surfaceColor = Color(red: 0.30, green: 0.0, blue: 0.0)
+    static let surfaceColor = Color(red: 0.20, green: 0.0, blue: 0.0)
 
     /// Lock Screen・スモール表示の地色。Dynamic Island は常に黒で変えられない。
     static func surfaceColor(for display: EewDisplay) -> Color {
@@ -106,20 +106,9 @@ struct EewLockScreenLocationView: View {
         HStack(alignment: .bottom, spacing: 6) {
             VStack(alignment: .leading, spacing: 4) {
                 VStack(alignment: .leading, spacing: 2) {
-                    if let notice = state.display.locationNotice, notice == .warning {
-                        Text(notice.title)
-                            .font(AppFonts.flex(size: 11, weight: .heavy))
-                            .lineLimit(1)
-                            .fixedSize()
-                            .modifier(EewAlertBlinkHighlight(
-                                isActive: true,
-                                anchor: state.display.countdownArrivalDate
-                            ))
-                    } else {
-                        Text("現在地")
-                            .font(AppFonts.flex(size: 10, weight: .bold))
-                            .foregroundStyle(.white.opacity(0.8))
-                    }
+                    Text(state.display.locationNotice == .warning ? "現在地に警報" : "現在地")
+                        .font(AppFonts.flex(size: 10, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.8))
                     if let regionName = state.location?.displayRegionName, !regionName.isEmpty {
                         Text(regionName)
                             .font(AppFonts.flex(size: 10, weight: .heavy))

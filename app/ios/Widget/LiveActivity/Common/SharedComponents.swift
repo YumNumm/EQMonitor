@@ -150,11 +150,13 @@ struct BlinkBlock: View {
                 // 文字は左詰めで描かれる。「M:SS」の4文字目（秒の1桁目）を枠へ合わせる。
                 Color.clear.overlay(alignment: .leading) {
                     Text(Self.end(anchor: anchor), style: .timer)
-                        .font(AppFonts.blink(size: width))
+                        // 1文字を枠より1割広くし、枠を文字の中央へ置く。同じ幅だと字送りの丸めで
+                        // 隣の桁の塗りが端に細く見える
+                        .font(AppFonts.blink(size: width * 1.1))
                         .lineLimit(1)
                         // fixedSize を付けるとタイマー文字が描かれなくなるため、幅を明示する
-                        .frame(width: width * 4.5, alignment: .leading)
-                        .offset(x: -width * 3)
+                        .frame(width: width * 5, alignment: .leading)
+                        .offset(x: -width * 3.35)
                 }
                 .clipped()
             }

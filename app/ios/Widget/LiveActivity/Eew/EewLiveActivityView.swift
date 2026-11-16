@@ -50,8 +50,11 @@ struct HeaderContainer: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 if !display.isCanceled {
+                    // 1桁の震度はMAXを上に積むぶん背が高い。ヘッダーの高さを変えないよう枠を固定し、
+                    // はみ出す数ptは上下の余白に逃がす（Lock Screenの上限160ptを守るため）
                     EewMaximumIntensityView(intensity: display.maxIntensity, size: 32)
                         .fixedSize()
+                        .frame(height: 40)
                 }
             }
             .padding(.horizontal, 12)
@@ -109,12 +112,19 @@ struct EewEventTimeView: View {
     }
 }
 
+enum EewLockScreenMetrics {
+    static let sourceSize: CGFloat = 77.23 / 3
+    static let largeSourceSize: CGFloat = 32
+}
+
 @available(iOS 16.1, *)
 struct EewLockScreenView: View {
     let state: EewContentState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        // 現在地欄は68ptあり、間隔8ptでは上限160ptを2pt超える
+        let showsLocation = state.display.usesLocalIntensity || state.display.locationNotice == .warning
+        VStack(alignment: .leading, spacing: showsLocation ? 6 : 8) {
             HeaderContainer(
                 display: state.display,
                 headline: state.display.headline(from: state.headline) ?? state.hypocenterName,
@@ -122,13 +132,29 @@ struct EewLockScreenView: View {
             )
 
             if !state.display.isCanceled {
-                let showsLocation = state.display.usesLocalIntensity || state.display.locationNotice == .warning
                 HStack(alignment: .bottom, spacing: 8) {
-                    VStack(alignment: .leading, spacing: showsLocation ? 8 : 4) {
+                    let isLocalWarning = state.display.locationNotice == .warning
+                    // 警戒文を挟むと3行になるため、間隔を詰めて現在地欄の高さ（68pt）に合わせる
+                    VStack(alignment: .leading, spacing: isLocalWarning ? 2 : 4) {
                         if let date = state.timeDate {
                             EewEventTimeView(label: state.timeLabel, date: date)
                         }
-                        EewSourceMetricsView(state: state)
+                        if let notice = state.display.locationNotice, isLocalWarning {
+                            Text(notice.title)
+                                .font(AppFonts.flex(size: 12, weight: .heavy))
+                                .lineLimit(1)
+                                .fixedSize()
+                                .modifier(EewAlertBlinkHighlight(
+                                    isActive: true,
+                                    anchor: state.display.countdownArrivalDate
+                                ))
+                        }
+                        // 空きがあるときだけ大きくする。警戒文や深発注意文と並ぶときは上限160pt・横幅に収まらない
+                        EewSourceMetricsView(
+                            state: state,
+                            size: isLocalWarning || state.display.showsDeepHypocenterIntensityNotice
+                                ? EewLockScreenMetrics.sourceSize : EewLockScreenMetrics.largeSourceSize
+                        )
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
