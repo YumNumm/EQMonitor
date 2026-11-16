@@ -16,7 +16,7 @@ class const MapAutomaticFocusController() {
     required Size viewportSize,
     required bool Function() isCurrent,
     EdgeInsets padding = EdgeInsets.zero,
-    Duration nativeDuration = const Duration(seconds: 2),
+    Duration nativeDuration = const Duration(milliseconds: 500),
     double bearing = 0,
     double pitch = 0,
   }) async {

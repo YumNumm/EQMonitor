@@ -260,6 +260,7 @@ void main() {
           zoom: mapAutomaticFocusMaxZoom,
           bearing: 0,
           pitch: 0,
+          nativeDuration: const Duration(milliseconds: 500),
         ),
       ).called(1);
       verifyNoMoreInteractions(controller);
@@ -423,6 +424,7 @@ void main() {
                   zoom: anyNamed('zoom'),
                   bearing: 0,
                   pitch: 0,
+                  nativeDuration: const Duration(milliseconds: 500),
                 ),
               ).captured.single
               as Geographic;

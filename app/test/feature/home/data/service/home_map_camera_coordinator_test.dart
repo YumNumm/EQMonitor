@@ -96,6 +96,7 @@ void main() {
                   zoom: anyNamed('zoom'),
                   bearing: 0,
                   pitch: 0,
+                  nativeDuration: const Duration(milliseconds: 500),
                 ),
               ).captured.single
               as Geographic;
@@ -182,6 +183,7 @@ void main() {
           zoom: anyNamed('zoom'),
           bearing: 0,
           pitch: 0,
+          nativeDuration: const Duration(milliseconds: 500),
         ),
       ).called(1);
       verifyNoMoreInteractions(controller);
@@ -232,6 +234,7 @@ void main() {
           zoom: anyNamed('zoom'),
           bearing: 0,
           pitch: 0,
+          nativeDuration: const Duration(milliseconds: 500),
         ),
       ).called(1);
       verifyNoMoreInteractions(controller);
@@ -270,6 +273,7 @@ void main() {
                   zoom: captureAnyNamed('zoom'),
                   bearing: 0,
                   pitch: 0,
+                  nativeDuration: const Duration(milliseconds: 500),
                 ),
               ).captured.single
               as double;
@@ -289,6 +293,7 @@ void main() {
                   zoom: captureAnyNamed('zoom'),
                   bearing: 0,
                   pitch: 0,
+                  nativeDuration: const Duration(milliseconds: 500),
                 ),
               ).captured.single
               as double;
@@ -494,6 +499,7 @@ void main() {
           zoom: anyNamed('zoom'),
           bearing: 0,
           pitch: 0,
+          nativeDuration: const Duration(milliseconds: 500),
         ),
       ).called(2);
       verifyNoMoreInteractions(oldController);
