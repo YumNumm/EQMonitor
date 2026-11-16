@@ -51,6 +51,7 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 - Apple Watch（Smart Stack）とCarPlayの`.small`表示は実機・Simulatorとも未確認。オフスクリーン描画で崩れが無いことだけ確認済み。Watchの実寸、常時表示（`isLuminanceReduced`）時の見え方を確認する。
 - `.small`の背景色（警報=橙、現在地警報=赤）がSmart Stack・CarPlayのカードにどう反映されるかは未確認。Viewの塗りと`activityBackgroundTint`の両方を指定しているため、余白との境目が出ないか実機で見る。
 - スタンバイは2倍描画での代用確認のみ。夜間モードの赤着色でヘッダー内の文字（帯色の上の70%白）が読めるか、実機で確認する。
+- Lock Screenの`activityBackgroundTint(.black)`を表示種別ごとのView側へ移した。Lock Screenの余白とスタンバイの全面が黒のままか実機で確認する。
 - 幅が狭いDynamic Island（`isDynamicIslandLimitedInWidth`）はオフスクリーン描画のみ。実機の横向き・複数Activityで切り取りが無いか確認する。
 - Lock Screenの実表示はSimulatorで未確認（ロックする手段がない）。実機で確認する。
 - 到達カウントダウンの数字が実機で毎秒アニメーションするかを確認する。SimulatorのDynamic Islandでは動かない。

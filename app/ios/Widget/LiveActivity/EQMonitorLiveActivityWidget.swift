@@ -122,6 +122,8 @@ struct EewCompactLeadingView: View {
         } else if let intensity = state.display.localIntensity {
             // 角丸の四角は対角が長いため、狭い幅では円に収まる大きさへ下げる
             EewLocalIntensityView(intensity: intensity, size: limited ? 21 : 26)
+                // Islandの丸い端でバッジの左の角が欠けるため、内側へ寄せる
+                .padding(.leading, limited ? 0 : 4)
         } else {
             // 太字のMAXは字送り幅ぎりぎりまで描画され、領域の左端で欠けるため余白を取る。
             EewMaximumIntensityView(intensity: state.display.maxIntensity, size: limited ? 18 : 20)
