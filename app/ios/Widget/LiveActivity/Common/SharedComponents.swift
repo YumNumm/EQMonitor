@@ -44,6 +44,20 @@ extension View {
     }
 }
 
+// MARK: - 文字サイズの固定
+
+@available(iOS 16.1, *)
+extension View {
+    /// Live Activity では Dynamic Type に追従させず、標準の大きさに固定する。
+    ///
+    /// Lock Screen は高さ160ptが上限、Dynamic Island は領域が決まっており、文字が大きくなると
+    /// 収まらず切り取られる。`Font.custom(_:size:)` は既定で Dynamic Type に追従するため、
+    /// 各表示の根元でこれを付ける。
+    func liveActivityFixedTypeSize() -> some View {
+        dynamicTypeSize(.large)
+    }
+}
+
 // MARK: - 主要動到達カウントダウン
 
 @available(iOS 16.1, *)
@@ -52,12 +66,14 @@ struct ArrivalCountdownText: View {
     let size: CGFloat
     var color: Color = .primary
     var alignment: TextAlignment = .trailing
+    /// 幅の確保に使う文字列。表示しうる最長の桁数に合わせる。
+    var placeholder = "00:00"
 
     var body: some View {
         // Workaround: timerInterval は横いっぱいに広がろうとするため、
         // 同じフォントの placeholder で幅を確保して overlay で重ねる
         // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
-        Text("00:00")
+        Text(placeholder)
             .font(font)
             .hidden()
             .overlay(alignment: alignment == .leading ? .leading : .trailing) {
@@ -120,5 +136,57 @@ struct StripePattern: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - 1秒おきの点滅
+
+/// 偶数秒だけ枠いっぱいを塗る。
+///
+/// Live Activity はタイマーやアニメーションを自前で回せないため、システムが毎秒描き直す
+/// タイマー文字を使う。`EQBlink.ttf` は偶数の数字を塗りつぶし、奇数の数字を空にした専用フォントで、
+/// 秒の1桁目だけを枠に合わせて切り抜くと 1 秒おきの点滅になる。
+@available(iOS 16.1, *)
+struct BlinkBlock: View {
+    /// 到達カウントダウンと秒の切り替わりをそろえるための基準時刻
+    var anchor: Date?
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.isLuminanceReduced) private var isLuminanceReduced
+
+    var body: some View {
+        if reduceMotion || isLuminanceReduced {
+            // 点滅を止める設定・常時表示では塗りっぱなしにする
+            Rectangle()
+        } else {
+            GeometryReader { geo in
+                let width = max(geo.size.width, 1)
+                // 文字は左詰めで描かれる。「M:SS」の4文字目（秒の1桁目）を枠へ合わせる。
+                Color.clear.overlay(alignment: .leading) {
+                    Text(Self.end(anchor: anchor), style: .timer)
+                        // 1文字を枠より1割広くし、枠を文字の中央へ置く。同じ幅だと字送りの丸めで
+                        // 隣の桁の塗りが端に細く見える
+                        .font(AppFonts.blink(size: width * 1.1))
+                        .lineLimit(1)
+                        // fixedSize を付けるとタイマー文字が描かれなくなるため、幅を明示する
+                        .frame(width: width * 5, alignment: .leading)
+                        .offset(x: -width * 3.35)
+                }
+                .clipped()
+            }
+            .accessibilityHidden(true)
+        }
+    }
+
+    /// 残りが常に「M:SS」の4文字になる終了時刻。基準時刻から偶数秒ずらし、秒の偶奇をそろえる。
+    static func end(anchor: Date?, now: Date = Date()) -> Date {
+        var end = anchor ?? now
+        while end.timeIntervalSince(now) < 300 {
+            end.addTimeInterval(120)
+        }
+        while end.timeIntervalSince(now) > 590 {
+            end.addTimeInterval(-120)
+        }
+        return end
     }
 }

@@ -68,6 +68,7 @@ enum AppFonts {
         let resources = [
             "GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght]",
             "GoogleSansCode[MONO,wght]",
+            "EQBlink",
         ]
         for name in resources {
             if let url = Bundle.main.url(forResource: name, withExtension: "ttf") {
@@ -84,6 +85,12 @@ enum AppFonts {
     static func flex(size: CGFloat, weight: Font.Weight = .regular) -> Font {
         registerIfNeeded()
         return .custom("Google Sans Flex", size: size).weight(weight)
+    }
+
+    /// 点滅用。偶数の数字が塗りつぶし、奇数の数字が空（`BlinkBlock` 専用）
+    static func blink(size: CGFloat) -> Font {
+        registerIfNeeded()
+        return .custom("EQ Blink", size: size)
     }
 
     /// 数値・時刻など等幅用（アプリの GoogleSansCode 相当）

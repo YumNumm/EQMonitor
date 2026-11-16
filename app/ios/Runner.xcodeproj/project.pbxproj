@@ -346,6 +346,7 @@
 				LiveActivity/Eew/EewLiveActivityAttributes.swift,
 				LiveActivity/Eew/EewLiveActivityView.swift,
 				LiveActivity/Eew/EewLocationViews.swift,
+				LiveActivity/Common/EQBlink.ttf,
 				LiveActivity/Eew/EewSmallActivityView.swift,
 				LiveActivity/Eew/EewSourceMetricsView.swift,
 				LiveActivity/EQMonitorLiveActivityWidget.swift,
