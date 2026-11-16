@@ -144,7 +144,6 @@ EewTelegramItem _sampleEew({String eventId = '20250101120000'}) =>
 
 ShakeDetectionEvent _sampleShake() => ShakeDetectionEvent(
   eventId: 'shake',
-  serialNo: 1,
   createdAt: _now,
   updatedAt: _now,
   expiresAt: _now.add(const Duration(minutes: 1)),
@@ -154,7 +153,6 @@ ShakeDetectionEvent _sampleShake() => ShakeDetectionEvent(
   maxLat: 36,
   minLng: 139,
   maxLng: 140,
-  changeReasons: const ['new_event'],
 );
 
 ProviderContainer _container({

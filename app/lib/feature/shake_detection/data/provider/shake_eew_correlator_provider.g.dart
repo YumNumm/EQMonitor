@@ -1,0 +1,54 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
+
+part of 'shake_eew_correlator_provider.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(shakeEewCorrelator)
+final shakeEewCorrelatorProvider = ShakeEewCorrelatorProvider._();
+
+final class ShakeEewCorrelatorProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<ShakeEewCorrelator>,
+          ShakeEewCorrelator,
+          FutureOr<ShakeEewCorrelator>
+        >
+    with
+        $FutureModifier<ShakeEewCorrelator>,
+        $FutureProvider<ShakeEewCorrelator> {
+  ShakeEewCorrelatorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'shakeEewCorrelatorProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$shakeEewCorrelatorHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<ShakeEewCorrelator> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<ShakeEewCorrelator> create(Ref ref) {
+    return shakeEewCorrelator(ref);
+  }
+}
+
+String _$shakeEewCorrelatorHash() =>
+    r'996ce7028d35e06bdf39e44749741ac008da8b9a';

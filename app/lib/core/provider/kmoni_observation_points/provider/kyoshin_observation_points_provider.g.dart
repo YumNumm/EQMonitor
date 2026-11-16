@@ -186,7 +186,58 @@ final class KyoshinNamedObservationPointsProvider
 }
 
 String _$kyoshinNamedObservationPointsHash() =>
-    r'47c7b2d53baa37f1d3e3f7a1057f88124f993258';
+    r'4df65e32573522af48226053fbeadd8095080166';
+
+/// 画像上の座標を持つ観測点。解析用 Isolate に渡す観測点と同じ並びで、
+/// 揺れ検知の観測点インデックスはこの並びを指す。
+
+@ProviderFor(kyoshinImageObservationPoints)
+final kyoshinImageObservationPointsProvider =
+    KyoshinImageObservationPointsProvider._();
+
+/// 画像上の座標を持つ観測点。解析用 Isolate に渡す観測点と同じ並びで、
+/// 揺れ検知の観測点インデックスはこの並びを指す。
+
+final class KyoshinImageObservationPointsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<KyoshinObservationPoint>>,
+          List<KyoshinObservationPoint>,
+          FutureOr<List<KyoshinObservationPoint>>
+        >
+    with
+        $FutureModifier<List<KyoshinObservationPoint>>,
+        $FutureProvider<List<KyoshinObservationPoint>> {
+  /// 画像上の座標を持つ観測点。解析用 Isolate に渡す観測点と同じ並びで、
+  /// 揺れ検知の観測点インデックスはこの並びを指す。
+  KyoshinImageObservationPointsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kyoshinImageObservationPointsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$kyoshinImageObservationPointsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<KyoshinObservationPoint>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<KyoshinObservationPoint>> create(Ref ref) {
+    return kyoshinImageObservationPoints(ref);
+  }
+}
+
+String _$kyoshinImageObservationPointsHash() =>
+    r'fc50f4a397f26a2f98e80eba382e54517d634cd7';
 
 @ProviderFor(kyoshinMonitorInternalObservationPoints)
 final kyoshinMonitorInternalObservationPointsProvider =

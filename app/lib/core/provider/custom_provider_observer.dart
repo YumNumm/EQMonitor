@@ -53,6 +53,8 @@ final class CustomProviderObserver extends ProviderObserver {
     'kyoshinMonitorTimerStreamProvider' ||
     'kyoshinMonitorTimerProvider' ||
     'kyoshinMonitorProvider' ||
+    'deviceShakeDetectionProvider' ||
+    'shakeDetectionProvider' ||
     'shakeDetectionVisibleProvider' ||
     'kyoshinMonitorObservationGeoJsonProvider' ||
     'eewProvider' ||

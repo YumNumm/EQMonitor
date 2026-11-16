@@ -71,4 +71,5 @@ enum SharedPreferencesKey(final String key) {
   eewHistoryNoticeShown('eew_history_notice_shown'),
   eewWarningOverlayEnabled('eew_warning_overlay_enabled'),
   shakeDetectionNoticeAgreedVersion('shake_detection_notice_agreed_version'),
+  shakeDetectionSettings('shake_detection_settings'),
 }

@@ -8,7 +8,6 @@ final _createdAt = DateTime.utc(2026, 7, 19, 12);
 ShakeDetectionEvent event({String? correlatedEewEventId}) =>
     ShakeDetectionEvent(
       eventId: 'e1',
-      serialNo: 1,
       createdAt: _createdAt,
       updatedAt: _createdAt,
       expiresAt: _createdAt.add(const Duration(minutes: 1)),
@@ -18,7 +17,6 @@ ShakeDetectionEvent event({String? correlatedEewEventId}) =>
       maxLat: 36,
       minLng: 138,
       maxLng: 140,
-      changeReasons: const ['new_event'],
       correlatedEewEventId: correlatedEewEventId,
     );
 

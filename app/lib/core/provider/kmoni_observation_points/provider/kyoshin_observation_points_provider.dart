@@ -45,9 +45,11 @@ Future<KyoshinObservationPointsParameter> kyoshinObservationPoints(
 Future<List<NamedObservationPoint>> kyoshinNamedObservationPoints(
   Ref ref,
 ) async {
-  final parameter = await ref.watch(kyoshinObservationPointsProvider.future);
+  final imagePoints = await ref.watch(
+    kyoshinImageObservationPointsProvider.future,
+  );
   final points = <NamedObservationPoint>[];
-  for (final point in parameter.points) {
+  for (final point in imagePoints) {
     final mapPoint = point.point;
     if (mapPoint == null) {
       continue;
@@ -64,6 +66,19 @@ Future<List<NamedObservationPoint>> kyoshinNamedObservationPoints(
     );
   }
   return points;
+}
+
+/// 画像上の座標を持つ観測点。解析用 Isolate に渡す観測点と同じ並びで、
+/// 揺れ検知の観測点インデックスはこの並びを指す。
+@Riverpod(keepAlive: true)
+Future<List<KyoshinObservationPoint>> kyoshinImageObservationPoints(
+  Ref ref,
+) async {
+  final parameter = await ref.watch(kyoshinObservationPointsProvider.future);
+  return [
+    for (final point in parameter.points)
+      if (point.point != null) point,
+  ];
 }
 
 @Riverpod(keepAlive: true)

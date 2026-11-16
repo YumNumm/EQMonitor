@@ -27,7 +27,6 @@ class DebugShakeDetectionCardPage extends HookConsumerWidget {
 
     ShakeDetectionEvent buildEvent() => ShakeDetectionEvent(
       eventId: 'debug-shake-1',
-      serialNo: 1,
       createdAt: createdAt.value,
       updatedAt: createdAt.value,
       expiresAt: createdAt.value.add(const Duration(minutes: 1)),
@@ -37,7 +36,6 @@ class DebugShakeDetectionCardPage extends HookConsumerWidget {
       maxLat: maxLat.value,
       minLng: minLng.value,
       maxLng: maxLng.value,
-      changeReasons: const ['new_event'],
     );
 
     return Scaffold(
@@ -182,7 +180,6 @@ final List<ShakeDetectionEvent> _kSampleEvents = ShakeDetectionLevel.values.map(
     final createdAt = DateTime(2024, 1, 1, 12);
     return ShakeDetectionEvent(
       eventId: 'sample-${level.name}',
-      serialNo: 1,
       createdAt: createdAt,
       updatedAt: createdAt,
       expiresAt: createdAt.add(const Duration(minutes: 1)),
@@ -192,7 +189,6 @@ final List<ShakeDetectionEvent> _kSampleEvents = ShakeDetectionLevel.values.map(
       maxLat: 40.5,
       minLng: 140.5,
       maxLng: 141.8,
-      changeReasons: const ['new_event'],
     );
   },
 ).toList();
