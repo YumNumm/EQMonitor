@@ -35,8 +35,17 @@ struct SourceMetricsView: View {
     var body: some View {
         let labelFont = AppFonts.flex(size: max(8, size * 0.44), weight: .medium)
         let valueFont = AppFonts.code(size: size, weight: .bold)
-        let magnitudeText = magnitude.map {
-            Text("\(Text("M").font(labelFont))\(Text($0).font(valueFont).tracking(size * -0.22))")
+        // 等幅フォントの小数点は1文字分の幅を取るため、小数点の前後だけを詰める。
+        // 数値全体へ tracking を掛けると、縮小時に数字同士が重なり小数点が隠れる。
+        let pointKerning = size * -0.14
+        let magnitudeText = magnitude.map { value -> Text in
+            let parts = value.split(separator: ".", maxSplits: 1).map(String.init)
+            guard parts.count == 2 else {
+                return Text("\(Text("M").font(labelFont))\(Text(value).font(valueFont))")
+            }
+            return Text(
+                "\(Text("M").font(labelFont))\(Text(parts[0]).font(valueFont).kerning(pointKerning))\(Text(".").font(valueFont).kerning(pointKerning))\(Text(parts[1]).font(valueFont))"
+            )
         }
         let depthText = depth.map {
             if $0 == 0 {
