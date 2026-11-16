@@ -17,36 +17,46 @@ struct EewLiveActivityWidget: Widget {
                 .activityBackgroundTint(.black)
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
-            DynamicIsland {
-                // カメラ脇と下部で高さの割り当てが異なるため本文はbottomに置く。
-                DynamicIslandExpandedRegion(.leading) {
-                    EewExpandedLeadingView(state: context.state)
-                        .dynamicIsland(verticalPlacement: .belowIfTooWide)
-                }
-                DynamicIslandExpandedRegion(.trailing) {
-                    EewExpandedTrailingView(state: context.state)
-                        .dynamicIsland(verticalPlacement: .belowIfTooWide)
-                }
-                DynamicIslandExpandedRegion(.bottom) {
-                    ViewThatFits(in: .vertical) {
-                        EewExpandedBottomView(state: context.state)
-                            .fixedSize(horizontal: false, vertical: true)
-                        EewExpandedBottomView(state: context.state, compact: true)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.bottom, 8)
-                }
-            } compactLeading: {
-                EewCompactLeadingView(state: context.state)
-            } compactTrailing: {
-                EewCompactTrailingView(state: context.state)
-            } minimal: {
-                EewMinimalView(state: context.state)
-            }
-            .keylineTint(eewKeylineTint(for: context.state))
+            eewDynamicIsland(state: context.state)
         }
     }
+}
+
+@available(iOS 16.1, *)
+private func eewDynamicIsland(state: EewContentState) -> DynamicIsland {
+    DynamicIsland {
+        // カメラ脇と下部で高さの割り当てが異なるため本文はbottomに置く。
+        DynamicIslandExpandedRegion(.leading) {
+            EewExpandedLeadingView(state: state)
+                .dynamicIsland(verticalPlacement: .belowIfTooWide)
+        }
+        DynamicIslandExpandedRegion(.trailing) {
+            EewExpandedTrailingView(state: state)
+                .dynamicIsland(verticalPlacement: .belowIfTooWide)
+        }
+        DynamicIslandExpandedRegion(.bottom) {
+            ViewThatFits(in: .vertical) {
+                EewExpandedBottomView(state: state)
+                    .fixedSize(horizontal: false, vertical: true)
+                EewExpandedBottomView(state: state, compact: true)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.horizontal, EewExpandedMetrics.horizontalInset)
+            .padding(.bottom, 8)
+        }
+    } compactLeading: {
+        EewCompactLeadingView(state: state)
+    } compactTrailing: {
+        EewCompactTrailingView(state: state)
+    } minimal: {
+        EewMinimalView(state: state)
+    }
+    .keylineTint(eewKeylineTint(for: state))
+}
+
+/// Expanded の leading / trailing / bottom で左右の端を揃えるための余白。
+enum EewExpandedMetrics {
+    static let horizontalInset: CGFloat = 8
 }
 
 @available(iOS 16.1, *)
@@ -127,7 +137,7 @@ struct EewExpandedLeadingView: View {
 
     var body: some View {
         EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 38, inlineMaximumLabel: true)
-            .padding(.horizontal, 4)
+            .padding(.horizontal, EewExpandedMetrics.horizontalInset)
             .opacity(state.display.isCanceled ? 0 : 1)
             .accessibilityHidden(state.display.isCanceled)
     }
@@ -144,11 +154,12 @@ struct EewExpandedTrailingView: View {
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(.white.opacity(0.75))
                     .fixedSize()
-                    .padding(4)
+                    .padding(.horizontal, EewExpandedMetrics.horizontalInset)
             }
         } else {
             EewSourceMetricsView(state: state, vertical: true, size: 21)
                 .foregroundStyle(.white)
+                .padding(.horizontal, EewExpandedMetrics.horizontalInset)
         }
     }
 }
@@ -173,9 +184,10 @@ struct EewExpandedBottomView: View {
             }
 
             if state.display.showsEventTime, let date = state.timeDate {
+                // 日時は Lock Screen と同じ等幅フォントにする
                 Text("\(state.timeLabel)  \(JSTDateFormat.monthDay(date)) \(JSTDateFormat.timeWithSeconds(date))")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.75))
+                    .font(AppFonts.code(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.8))
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
             }

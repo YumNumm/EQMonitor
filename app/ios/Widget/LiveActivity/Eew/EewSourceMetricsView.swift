@@ -56,7 +56,8 @@ struct SourceMetricsView: View {
         }
         Group {
             if vertical {
-                VStack(spacing: 0) {
+                // 縦積みは右端を揃える（中央揃えだと M と深さの行がずれて見える）
+                VStack(alignment: .trailing, spacing: 0) {
                     magnitudeText
                     depthText
                 }
