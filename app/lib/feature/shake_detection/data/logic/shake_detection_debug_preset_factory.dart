@@ -1,6 +1,5 @@
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
 enum ShakeDetectionDebugPresetId { tokyoMultiLevelGrid }
 
@@ -33,7 +32,7 @@ class const ShakeDetectionDebugPresetFactory() {
   ShakeDetectionEvent _tokyoMultiLevelGrid({required DateTime now}) {
     // 各点は異なる 0.25° セルに置き、intensity 閾値でレベルが分かれるようにする
     // ≤-1 Weaker, >-1 Weak, >0.5 Medium, >2.5 Strong, >4.5 Stronger
-    final pointSpecs = <({double lat, double lng, num intensity})>[
+    final pointSpecs = <({double lat, double lng, double intensity})>[
       (lat: 35.55, lng: 139.55, intensity: -2), // Weaker @ 35.50/139.50
       (lat: 35.55, lng: 139.80, intensity: 0), // Weak @ 35.50/139.75
       (lat: 35.80, lng: 139.55, intensity: 1), // Medium @ 35.75/139.50
@@ -43,21 +42,20 @@ class const ShakeDetectionDebugPresetFactory() {
 
     final points = [
       for (final (i, spec) in pointSpecs.indexed)
-        api.Points(
+        ShakeDetectionPoint(
           code: 'DEBUG-TKY-$i',
           name: 'Debug Tokyo $i',
-          region: '東京都',
-          type: 'K',
-          location: api.Location(latitude: spec.lat, longitude: spec.lng),
+          latitude: spec.lat,
+          longitude: spec.lng,
           intensity: spec.intensity,
+          intensityDiff: 0,
           prefectureCode: '13',
           regionCode: '350',
-          cityCode: null,
         ),
     ];
 
-    final lats = [for (final p in points) p.location.latitude.toDouble()];
-    final lngs = [for (final p in points) p.location.longitude.toDouble()];
+    final lats = [for (final p in points) p.latitude];
+    final lngs = [for (final p in points) p.longitude];
     final minLat = lats.reduce((a, b) => a < b ? a : b);
     final maxLat = lats.reduce((a, b) => a > b ? a : b);
     final minLng = lngs.reduce((a, b) => a < b ? a : b);
@@ -66,7 +64,6 @@ class const ShakeDetectionDebugPresetFactory() {
     return ShakeDetectionEvent(
       eventId:
           'debug-shake-tokyoMultiLevelGrid-${now.toUtc().millisecondsSinceEpoch}',
-      serialNo: 1,
       createdAt: now.toUtc(),
       updatedAt: now.toUtc(),
       expiresAt: now.toUtc().add(const Duration(days: 365 * 100)),
@@ -76,7 +73,6 @@ class const ShakeDetectionDebugPresetFactory() {
       maxLat: maxLat,
       minLng: minLng,
       maxLng: maxLng,
-      changeReasons: const ['new_event'],
       points: points,
     );
   }

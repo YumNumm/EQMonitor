@@ -1,13 +1,13 @@
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_grid_cell_builder.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final builder = ShakeDetectionGridCellBuilder();
 
   group('levelFromIntensity', () {
-    test('バックエンドと同じ閾値でレベルへ変換する', () {
+    test('検知エンジンと同じ閾値でレベルへ変換する', () {
       expect(builder.levelFromIntensity(-2), ShakeDetectionLevel.weaker);
       expect(builder.levelFromIntensity(-1), ShakeDetectionLevel.weaker);
       expect(builder.levelFromIntensity(0), ShakeDetectionLevel.weak);
@@ -102,15 +102,17 @@ void main() {
   });
 }
 
-api.Points _point({required double lat, required double lng, num? intensity}) =>
-    api.Points(
-      code: 'code',
-      name: 'name',
-      region: 'region',
-      type: 'type',
-      location: api.Location(latitude: lat, longitude: lng),
-      intensity: intensity,
-      cityCode: null,
-      prefectureCode: null,
-      regionCode: null,
-    );
+ShakeDetectionPoint _point({
+  required double lat,
+  required double lng,
+  double? intensity,
+}) => ShakeDetectionPoint(
+  code: 'code',
+  name: 'name',
+  latitude: lat,
+  longitude: lng,
+  intensity: intensity,
+  intensityDiff: 0,
+  prefectureCode: null,
+  regionCode: null,
+);

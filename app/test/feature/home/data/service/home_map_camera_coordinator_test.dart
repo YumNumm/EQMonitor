@@ -44,7 +44,6 @@ ShakeDetectionEvent _sampleShake({
   double maxLng = 132,
 }) => ShakeDetectionEvent(
   eventId: 'shake',
-  serialNo: 1,
   createdAt: _now,
   updatedAt: _now,
   expiresAt: _now.add(const Duration(minutes: 1)),
@@ -54,7 +53,6 @@ ShakeDetectionEvent _sampleShake({
   maxLat: maxLat,
   minLng: minLng,
   maxLng: maxLng,
-  changeReasons: const ['new_event'],
 );
 
 void stubCameraAnimations({
