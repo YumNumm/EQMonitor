@@ -118,7 +118,14 @@
 - 検知は地上の震度画像でのみ行う。強震モニタが無効、表示種別が震度以外、地下の場合は検知しない。
   リプレイ再生中は端末内の検知結果を公開しない。
 - 端末内検知の有効・無効、履歴の作り直し、検知・結合のパラメータは `ShakeDetectionSettings` に保存し、
-  デバッグ画面の「揺れ検知エンジン」で変更する。ビルドで揺れ検知が無効な場合は、この設定に関わらず動かない。
+  デバッグ画面の「揺れ検知エンジン」で変更する。既定は無効で、production を含むすべてのビルドで有効にできる。
+  表示側の判定は `isDeviceShakeDetectionEnabledProvider` を使い、ビルド種別（`isShakeDetectionAvailable`）を見ない。
+  `isShakeDetectionAvailable` はサーバーが送る揺れ検知通知の設定画面と通知チャンネルだけを制御する。
+- 有効にするときは、揺れ検知通知と同じ注意事項（`ShakeDetectionNoticeDialog`）への同意を求める。
+  同意は通知と共通で、どちらかで同意済みなら再度は求めない。
+- 表示する最小レベルと自動ズームは `HomeShakeDetectionSettings`（マップレイヤー設定）に持つ。
+  最小レベル未満のイベントは `shakeDetectionVisibleProvider` で除外し、地図・カード・自動ズームのすべてに反映する。
+  自動ズームの対象は `shakeDetectionFocusTargetsProvider` で、EEW の自動ズーム設定とは独立している。
   パラメータの初期値はパッケージ側の値を正とし、アプリには初期値との差分だけを保存する。
   設定を変えると検知結果を破棄し、次のフレームで平常値の取得からやり直す。
 - 上昇量は直近 10 フレームの最新値と最古の有効値の差で、履歴が無い 1 フレーム目は必ず 0 になる。
@@ -136,7 +143,7 @@
   取消されていないものを対象にする。backend は最終報で結合を外すが、アプリは最終報の後も EEW を表示している間は
   結合を維持し、EEW の表示が終わった後も揺れが続いていれば揺れ検知として表示する。
 - 表示の期限はエンジンの `expiresAt`（観測点ごとの期限の最大値）を使う。固定 TTL を入れない。
-- `IS_SHAKE_DETECTION_ENABLED` は既定 true。無効時は検知を要求せず、debug overlay 経由の表示や一般向け設定 route も無効にする。
+- `IS_SHAKE_DETECTION_ENABLED` は既定 true。無効時は揺れ検知通知の一般向け設定 route と、デバッグの「揺れ検知 Card」「揺れ検知を挿入」を無効にする。
   デバッグ用通知設定 route はデバッグメニューへのアクセス権で開ける。配布別の指定は [配布と CI](delivery_ci.md) を参照する。
 - provider test は `BuildConfigFixture` で `buildConfigProvider` を override し、dart-define 未指定の flavor 例外を避ける。
 
