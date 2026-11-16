@@ -67,6 +67,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/notification/de
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_engine_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_insert_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_shared_preferences_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/telemetry/debug_telemetry_page.dart';
@@ -128,6 +129,7 @@ GoRouter goRouter(Ref ref) => GoRouter(
           const ShakeDetectionSettingsRoute().location,
           const DebugShakeDetectionCardRoute().location,
           const DebugShakeDetectionInsertRoute().location,
+          const DebugShakeDetectionEngineRoute().location,
         ].any(state.matchedLocation.startsWith)) {
       return const HomeRoute().location;
     }
@@ -389,6 +391,9 @@ class const TalkerRoute()
         ),
         TypedGoRoute<DebugShakeDetectionInsertRoute>(
           path: 'shake-detection-insert',
+        ),
+        TypedGoRoute<DebugShakeDetectionEngineRoute>(
+          path: 'shake-detection-engine',
         ),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
@@ -681,6 +686,15 @@ class const DebugShakeDetectionInsertRoute()
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugShakeDetectionInsertPage();
+  }
+}
+
+class const DebugShakeDetectionEngineRoute()
+    extends GoRouteData
+    with $DebugShakeDetectionEngineRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugShakeDetectionEnginePage();
   }
 }
 

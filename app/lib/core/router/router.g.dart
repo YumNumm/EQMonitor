@@ -692,6 +692,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugShakeDetectionInsertRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'shake-detection-engine',
+          hasOverriddenOnExit: false,
+          factory: $DebugShakeDetectionEngineRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'jma-map',
           hasOverriddenOnExit: false,
           factory: $DebugJmaMapRoute._fromState,
@@ -1432,6 +1437,28 @@ mixin $DebugShakeDetectionInsertRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/shake-detection-insert');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugShakeDetectionEngineRoute on GoRouteData {
+  static DebugShakeDetectionEngineRoute _fromState(GoRouterState state) =>
+      const DebugShakeDetectionEngineRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/shake-detection-engine');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -2283,4 +2310,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'16aaf7f08066086a83654d647486bd1152781187';
+String _$goRouterHash() => r'9c0833eb0b91c21e175210c13582deecde0ab385';
