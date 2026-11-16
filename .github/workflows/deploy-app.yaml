@@ -851,16 +851,30 @@ jobs:
             echo "::error::unexpected build-name '${BUILD_NAME}' derived from app/pubspec.yaml"
             exit 1
           fi
-          flutter build appbundle \
-            --release \
-            --no-pub \
-            --build-name="$BUILD_NAME" \
-            --build-number="${BUILD_NUMBER}" \
-            --dart-define-from-file=../environment/.env.prod \
-            --dart-define IS_PRODUCTION="true" \
-            --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
-            --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
+          # Flutter 内蔵の Gradle リトライは 100ms 待機のみ。Maven Central の 429 には不足する。
+          build_args=(
+            --release
+            --no-pub
+            --build-name="$BUILD_NAME"
+            --build-number="${BUILD_NUMBER}"
+            --dart-define-from-file=../environment/.env.prod
+            --dart-define IS_PRODUCTION="true"
+            --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION"
+            --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP"
             --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE"
+          )
+          for attempt in 1 2 3; do
+            if flutter build appbundle "${build_args[@]}"; then
+              echo "Built app bundle on attempt ${attempt}"
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo "::error::flutter build appbundle failed after 3 attempts"
+              exit 1
+            fi
+            echo "::warning::flutter build appbundle attempt ${attempt} failed; retrying..."
+            sleep $((attempt * 30))
+          done
 
       - name: Copy AAB to expected location
         run: |
