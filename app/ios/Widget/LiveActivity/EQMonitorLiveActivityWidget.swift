@@ -69,7 +69,9 @@ struct EewCompactLeadingView: View {
         } else if let intensity = state.display.localIntensity {
             EewLocalIntensityView(intensity: intensity, size: 26)
         } else {
+            // 太字のMAXは字送り幅ぎりぎりまで描画され、領域の左端で欠けるため余白を取る。
             EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 20)
+                .padding(.horizontal, 4)
         }
     }
 }
@@ -113,6 +115,7 @@ struct EewMinimalView: View {
                 EewLocalIntensityView(intensity: intensity, size: 24)
             } else {
                 EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 19)
+                    .padding(.horizontal, 2)
             }
         }
     }

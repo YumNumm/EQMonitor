@@ -46,7 +46,8 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 
 - Live Activity の共通 `SourceMetricsView` で、深さ0が「ごく浅い」、700が「700km以上」と表示される変更はApple SDK・実機で未検証。EEWのLock Screen・Dynamic Island ExpandedをSimulatorと実機で確認する。
 - `WidgetModelsTests` で判断ロジックを継続検証し、取消報・未入電バッジ・Dynamic Island 展開時の切れを Preview/実機で確認する。必要な SwiftUI snapshot fixture と macOS CI の採否を決める。
-- Mの数値部分の字間をフォントサイズの-22%に戻した表示を、Lock ScreenとDynamic Island Expandedの実機で確認する。
+- Mの小数点前後だけを詰めた表示（-14%）、ヘッダー文字の高さ固定、Compact/Minimalの`MAX`左右余白を、Lock ScreenとDynamic Islandの実機で確認する。Compactの`MAX`はSimulatorのDynamic Islandで確認済み。
+- 到達カウントダウンの数字が実機で毎秒アニメーションするかを確認する。SimulatorのDynamic Islandでは動かない。
 - Android Widget は未実装。採用する場合は `app/android/` に AppWidgetProvider/Glance を実装し、Pro未加入・未設定時の全国 fallback を iOS の `WidgetRegionResolver` と揃えてテストする。
 - extension 版番号は [ビルド・配布](950_build_and_release.md) の300を参照。
 
