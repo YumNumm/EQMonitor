@@ -5,7 +5,9 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/clock/time_mode.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_image_delay_status.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_delay_calibration_notifier.dart';
@@ -15,8 +17,10 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_request_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/repository/kyoshin_monitor_repository.dart';
+import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_baseline_planner.dart';
+import 'package:eqmonitor/feature/shake_detection/data/notifier/device_shake_detection.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
+import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart' hide Result;
 import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -124,6 +128,42 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       );
       fetchSw.stop();
 
+      // 揺れ検知は地上の震度画像でのみ行う。
+      final detectsShake =
+          ref.read(buildConfigProvider).isShakeDetectionAvailable &&
+          realtimeDataType == RealtimeDataType.shindo &&
+          realtimeLayer == RealtimeLayer.surface;
+      final shakeDetection = ref.read(deviceShakeDetectionProvider.notifier);
+      final baselineTimes = detectsShake
+          ? ref
+                .read(shakeDetectionBaselinePlannerProvider)
+                .plan(
+                  previous: ref.read(deviceShakeDetectionProvider)?.observedAt,
+                  target: targetTime,
+                )
+          : null;
+      // 検知の履歴が途切れている場合は、過去フレームを平常値として渡す。
+      // 取得できなかったフレームは使わず、すべて失敗した場合は固定値で代用される。
+      final baselineGifs = baselineTimes == null
+          ? null
+          : [
+              for (final result in await Future.wait([
+                for (final time in baselineTimes)
+                  Result.capture<List<int>, Exception>(
+                    () => ref
+                        .read(kyoshinMonitorRepositoryProvider)
+                        .fetchRealtimeImage(
+                          source: monitorSource,
+                          type: realtimeDataType,
+                          layer: realtimeLayer,
+                          dateTime: time,
+                        ),
+                  ),
+              ]))
+                if (result case Success(:final value))
+                  Uint8List.fromList(value),
+            ];
+
       final workerSw = Stopwatch()..start();
       final workerResult = await Timeline.timeSync(
         'kmoni.workerAnalyze',
@@ -133,6 +173,12 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
                 .analyze(
                   Uint8List.fromList(image),
                   isShindo: realtimeDataType == RealtimeDataType.shindo,
+                  shakeDetection: detectsShake
+                      ? ShakeDetectionRequest(
+                          observedAt: targetTime,
+                          baselineGifs: baselineGifs,
+                        )
+                      : null,
                 )
                 .timeout(_workerTimeout);
           } on Object catch (error) {
@@ -141,12 +187,21 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
             if (error is TimeoutException ||
                 error is KyoshinMonitorWorkerExitedException) {
               ref.invalidate(kyoshinMonitorAnalyzerIsolateProvider);
+              // 起動し直した worker は検知の履歴を持たない。
+              shakeDetection.clear();
             }
             rethrow;
           }
         },
       );
       workerSw.stop();
+
+      final shakeEvents = workerResult.shakeEvents;
+      if (shakeEvents == null) {
+        shakeDetection.clear();
+      } else {
+        shakeDetection.apply(observedAt: targetTime, events: shakeEvents);
+      }
 
       return KyoshinMonitorState(
         // 表示時刻は取得完了時の端末時計ではなく、画像の観測時刻とする。
