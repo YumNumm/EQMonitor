@@ -64,6 +64,54 @@ final class ShakeDetectionCurrentSettingsProvider
 String _$shakeDetectionCurrentSettingsHash() =>
     r'a11d9a113539e36f8b5bb88e161cae47d7f738a4';
 
+/// 端末内の揺れ検知が有効かどうか。ビルド種別には依存しない。
+
+@ProviderFor(isDeviceShakeDetectionEnabled)
+final isDeviceShakeDetectionEnabledProvider =
+    IsDeviceShakeDetectionEnabledProvider._();
+
+/// 端末内の揺れ検知が有効かどうか。ビルド種別には依存しない。
+
+final class IsDeviceShakeDetectionEnabledProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// 端末内の揺れ検知が有効かどうか。ビルド種別には依存しない。
+  IsDeviceShakeDetectionEnabledProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isDeviceShakeDetectionEnabledProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isDeviceShakeDetectionEnabledHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return isDeviceShakeDetectionEnabled(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$isDeviceShakeDetectionEnabledHash() =>
+    r'c2e147961c2918c89a43a6f917767df98645f047';
+
 @ProviderFor(shakeDetectionTuning)
 final shakeDetectionTuningProvider = ShakeDetectionTuningProvider._();
 

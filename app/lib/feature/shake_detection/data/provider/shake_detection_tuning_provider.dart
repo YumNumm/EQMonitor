@@ -13,6 +13,14 @@ ShakeDetectionSettingsModel shakeDetectionCurrentSettings(Ref ref) =>
     ref.watch(shakeDetectionSettingsProvider).value ??
     const ShakeDetectionSettingsModel();
 
+/// 端末内の揺れ検知が有効かどうか。ビルド種別には依存しない。
+@Riverpod(keepAlive: true)
+bool isDeviceShakeDetectionEnabled(Ref ref) => ref.watch(
+  shakeDetectionCurrentSettingsProvider.select(
+    (settings) => settings.isEnabled,
+  ),
+);
+
 @Riverpod(keepAlive: true)
 ShakeDetectionTuning shakeDetectionTuning(Ref ref) => ref
     .watch(shakeDetectionTuningResolverProvider)
