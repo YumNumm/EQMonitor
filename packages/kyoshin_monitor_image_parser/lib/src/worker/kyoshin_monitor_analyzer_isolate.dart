@@ -10,12 +10,28 @@ import 'package:kyoshin_monitor_image_parser/src/exception/kyoshin_monitor_image
 import 'package:kyoshin_monitor_image_parser/src/exception/kyoshin_monitor_worker_exception.dart';
 import 'package:kyoshin_monitor_image_parser/src/model/kyoshin_monitor_observation_point.dart';
 import 'package:kyoshin_monitor_image_parser/src/parser/kyoshin_monitor_image_parser.dart';
+import 'package:kyoshin_monitor_image_parser/src/worker/shake_detection_worker.dart';
+import 'package:shake_detection_engine/shake_detection_engine.dart';
 
 final class const AnalyzeResult({
   required final String geoJson,
   required final int featureCount,
   final int? parseMicros,
   final int? geoJsonBuildMicros,
+
+  /// 揺れ検知を要求した場合の検知結果。`points` の `stationIndex` は
+  /// spawn に渡した観測点の並びに対応する。
+  final List<ShakeEventSnapshot>? shakeEvents,
+});
+
+/// 解析した震度画像での揺れ検知の要求。
+final class const ShakeDetectionRequest({
+  required final DateTime observedAt,
+
+  /// 平常値の算出に使う過去フレーム。`null` でない場合は履歴を破棄して
+  /// 検知をやり直す。空の場合は [fallbackBaseline] を平常値とする。
+  final List<Uint8List>? baselineGifs,
+  final double fallbackBaseline = 1,
 });
 
 final class KyoshinMonitorAnalyzerIsolate._({
@@ -123,7 +139,12 @@ final class KyoshinMonitorAnalyzerIsolate._({
   /// GIF バイト列を解析し GeoJSON 文字列を返す。
   ///
   /// 震度以外の画像では [isShindo] を false にして、震度への換算を行わない。
-  Future<AnalyzeResult> analyze(Uint8List gifBytes, {bool isShindo = true}) {
+  /// [shakeDetection] は地上の震度画像に対してのみ指定する。
+  Future<AnalyzeResult> analyze(
+    Uint8List gifBytes, {
+    bool isShindo = true,
+    ShakeDetectionRequest? shakeDetection,
+  }) {
     if (_exited.isCompleted) {
       return Future.error(const KyoshinMonitorWorkerExitedException());
     }
@@ -131,7 +152,12 @@ final class KyoshinMonitorAnalyzerIsolate._({
     final completer = Completer<AnalyzeResult>();
     _pending[id] = completer;
     _workerSendPort.send(
-      _AnalyzeMessage(id: id, gifBytes: gifBytes, isShindo: isShindo),
+      _AnalyzeMessage(
+        id: id,
+        gifBytes: gifBytes,
+        isShindo: isShindo,
+        shakeDetection: shakeDetection,
+      ),
     );
     return completer.future;
   }
@@ -154,6 +180,7 @@ final class const _AnalyzeMessage({
   required final int id,
   required final Uint8List gifBytes,
   required final bool isShindo,
+  required final ShakeDetectionRequest? shakeDetection,
 });
 
 final class const _ShutdownMessage();
@@ -173,6 +200,7 @@ void _workerEntryPoint(SendPort mainSendPort) {
   var namedPoints = <NamedObservationPoint>[];
   var parsePoints = <KyoshinMonitorObservationPoint>[];
   final parser = KyoshinMonitorImageParser();
+  ShakeDetectionWorker? shakeDetection;
   var chain = Future<void>.value();
 
   receivePort.listen((message) {
@@ -183,6 +211,7 @@ void _workerEntryPoint(SendPort mainSendPort) {
             (e) => KyoshinMonitorObservationPoint(code: e.code, x: e.x, y: e.y),
           )
           .toList();
+      shakeDetection = null;
       mainSendPort.send(const _InitAck());
       return;
     }
@@ -191,12 +220,21 @@ void _workerEntryPoint(SendPort mainSendPort) {
       return;
     }
     if (message is _AnalyzeMessage) {
+      // 観測点間の距離計算に時間がかかるため、最初に要求された時点で用意する。
+      final detector = message.shakeDetection == null
+          ? null
+          : shakeDetection ??= ShakeDetectionWorker(
+              parser: parser,
+              points: namedPoints,
+              parsePoints: parsePoints,
+            );
       chain = chain.then(
         (_) => _runAnalyze(
           mainSendPort,
           parser,
           namedPoints,
           parsePoints,
+          detector,
           message,
         ),
       );
@@ -209,6 +247,7 @@ Future<void> _runAnalyze(
   KyoshinMonitorImageParser parser,
   List<NamedObservationPoint> namedPoints,
   List<KyoshinMonitorObservationPoint> parsePoints,
+  ShakeDetectionWorker? shakeDetection,
   _AnalyzeMessage message,
 ) async {
   try {
@@ -230,6 +269,11 @@ Future<void> _runAnalyze(
     sw2.stop();
     final geoMicros = sw2.elapsedMicroseconds;
 
+    final request = message.shakeDetection;
+    final shakeEvents = shakeDetection == null || request == null
+        ? null
+        : await shakeDetection.detect(results: results, request: request);
+
     mainSendPort.send(
       _AnalyzeResponseMessage(
         id: message.id,
@@ -238,6 +282,7 @@ Future<void> _runAnalyze(
           featureCount: built.$2,
           parseMicros: parseMicros,
           geoJsonBuildMicros: geoMicros,
+          shakeEvents: shakeEvents,
         ),
       ),
     );
