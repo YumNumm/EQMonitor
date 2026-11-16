@@ -43,6 +43,26 @@ struct EewSmallActivityView: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
         .foregroundStyle(.white)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Self.backgroundColor(for: display))
+    }
+
+    /// 背景色に混ぜる基調色の割合。残りは黒。
+    /// 震度バッジ（5強の橙・6弱の赤など）と同化しないよう、黒へ寄せて暗くする。
+    static let backgroundTintStrength: Double = 0.45
+
+    /// 警報は橙、現在地が警報対象なら赤、予報と取消は黒。
+    /// Lock Screen のヘッダー（警報=赤、予報=橙）とは意味づけが異なる。
+    static func backgroundColor(for display: EewDisplay) -> Color {
+        let strength = backgroundTintStrength
+        guard !display.isCanceled else { return .black }
+        if display.locationNotice == .warning {
+            return Color(red: 0.75 * strength, green: 0.0, blue: 0.0)
+        }
+        if display.isWarning {
+            return Color(red: 0.90 * strength, green: 0.38 * strength, blue: 0.0)
+        }
+        return .black
     }
 
     private func title(_ display: EewDisplay) -> String {

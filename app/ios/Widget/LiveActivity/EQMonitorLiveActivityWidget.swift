@@ -14,7 +14,6 @@ struct EewLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
         let configuration = ActivityConfiguration(for: EewLiveActivityAttributes.self) { context in
             EewActivityContentView(state: context.state)
-                .activityBackgroundTint(.black)
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             eewDynamicIsland(state: context.state)
@@ -37,6 +36,7 @@ private struct EewActivityContentView: View {
             EewActivityFamilyContentView(state: state)
         } else {
             EewLockScreenView(state: state)
+                .activityBackgroundTint(.black)
         }
     }
 }
@@ -49,9 +49,12 @@ private struct EewActivityFamilyContentView: View {
     var body: some View {
         switch activityFamily {
         case .small:
+            // Viewの塗りとシステム側の地色を同じ色にそろえ、余白との境目を出さない
             EewSmallActivityView(state: state)
+                .activityBackgroundTint(EewSmallActivityView.backgroundColor(for: state.display))
         default:
             EewLockScreenView(state: state)
+                .activityBackgroundTint(.black)
         }
     }
 }
@@ -79,9 +82,13 @@ private func eewDynamicIsland(state: EewContentState) -> DynamicIsland {
             .padding(.bottom, 8)
         }
     } compactLeading: {
-        EewCompactLeadingView(state: state)
+        DynamicIslandWidthReader { isLimited in
+            EewCompactLeadingView(state: state, limited: isLimited)
+        }
     } compactTrailing: {
-        EewCompactTrailingView(state: state)
+        DynamicIslandWidthReader { isLimited in
+            EewCompactTrailingView(state: state, limited: isLimited)
+        }
     } minimal: {
         EewMinimalView(state: state)
     }
@@ -106,16 +113,19 @@ private func eewKeylineTint(for state: EewContentState) -> Color {
 @available(iOS 16.1, *)
 struct EewCompactLeadingView: View {
     let state: EewContentState
+    /// 幅が狭いDynamic Island。直径28ptの円に収める。
+    var limited = false
 
     var body: some View {
         if state.display.isCanceled {
             EewCanceledSymbol(size: 20)
         } else if let intensity = state.display.localIntensity {
-            EewLocalIntensityView(intensity: intensity, size: 26)
+            // 角丸の四角は対角が長いため、狭い幅では円に収まる大きさへ下げる
+            EewLocalIntensityView(intensity: intensity, size: limited ? 21 : 26)
         } else {
             // 太字のMAXは字送り幅ぎりぎりまで描画され、領域の左端で欠けるため余白を取る。
-            EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 20)
-                .padding(.horizontal, 4)
+            EewMaximumIntensityView(intensity: state.display.maxIntensity, size: limited ? 18 : 20)
+                .padding(.horizontal, limited ? 2 : 4)
         }
     }
 }
@@ -123,23 +133,58 @@ struct EewCompactLeadingView: View {
 @available(iOS 16.1, *)
 struct EewCompactTrailingView: View {
     let state: EewContentState
+    /// 幅が狭いDynamic Island。直径28ptの円に収める。
+    var limited = false
 
     var body: some View {
         HStack(spacing: 2) {
-            if state.isLocalTest {
+            // 狭い幅では「試」を置く余地がない。テスト表示はExpandedとLock Screenに残る。
+            if state.isLocalTest, !limited {
                 Text("試").font(.system(size: 8, weight: .bold))
                     .accessibilityLabel("テスト")
             }
             if let remaining = ArrivalCountdown.remaining(until: state.display.countdownArrivalDate) {
-                ArrivalCountdownText(remaining: remaining, size: 14, color: .white)
+                // 到達までが10分を超えることはないため、狭い幅では分1桁ぶんの幅だけ確保する
+                ArrivalCountdownText(
+                    remaining: remaining,
+                    size: limited ? 11 : 14,
+                    color: .white,
+                    placeholder: limited ? "0:00" : "00:00"
+                )
             } else {
                 EewStatusPill(
                     isWarning: state.display.isWarning,
                     isCanceled: state.display.isCanceled,
-                    compact: true
+                    compact: true,
+                    limited: limited
                 )
             }
         }
+    }
+}
+
+/// 幅が狭いDynamic Island（横向き、複数のLive Activityが並ぶ端末など）かどうかを渡す。
+/// `isDynamicIslandLimitedInWidth` はiOS 27以降のため、それ未満では常に `false`。
+@available(iOS 16.1, *)
+struct DynamicIslandWidthReader<Content: View>: View {
+    @ViewBuilder let content: (_ isLimited: Bool) -> Content
+
+    var body: some View {
+        if #available(iOS 27.0, *) {
+            DynamicIslandLimitedWidthReader(content: content)
+        } else {
+            content(false)
+        }
+    }
+}
+
+@available(iOS 27.0, *)
+private struct DynamicIslandLimitedWidthReader<Content: View>: View {
+    @Environment(\.isDynamicIslandLimitedInWidth) private var isLimited
+    let content: (Bool) -> Content
+
+    var body: some View {
+        content(isLimited)
     }
 }
 
@@ -318,12 +363,14 @@ struct EewStatusPill: View {
     let isWarning: Bool
     let isCanceled: Bool
     var compact: Bool = false
+    /// 幅が狭いDynamic Island向けに左右の余白を詰める
+    var limited: Bool = false
 
     var body: some View {
         Text(label)
             .font(AppFonts.flex(size: compact ? 10 : 11, weight: .bold))
             .foregroundStyle(.white)
-            .padding(.horizontal, compact ? 6 : 8)
+            .padding(.horizontal, limited ? 3 : (compact ? 6 : 8))
             .padding(.vertical, compact ? 2 : 3)
             .background(Capsule().fill(backgroundColor))
     }

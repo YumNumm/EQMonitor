@@ -52,12 +52,14 @@ struct ArrivalCountdownText: View {
     let size: CGFloat
     var color: Color = .primary
     var alignment: TextAlignment = .trailing
+    /// 幅の確保に使う文字列。表示しうる最長の桁数に合わせる。
+    var placeholder = "00:00"
 
     var body: some View {
         // Workaround: timerInterval は横いっぱいに広がろうとするため、
         // 同じフォントの placeholder で幅を確保して overlay で重ねる
         // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
-        Text("00:00")
+        Text(placeholder)
             .font(font)
             .hidden()
             .overlay(alignment: alignment == .leading ? .leading : .trailing) {
