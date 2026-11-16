@@ -109,7 +109,8 @@ class HomeMapCameraCoordinator {
     if (controller == null || viewportSize == null || !isCurrent()) {
       return null;
     }
-    if (!configuration.eew.autoZoom && !ignoreAutoZoom) {
+    // 揺れ検知だけの場合は、対象を渡す側が揺れ検知の自動フォーカス設定で絞っている。
+    if (eews.isNotEmpty && !configuration.eew.autoZoom && !ignoreAutoZoom) {
       return null;
     }
 

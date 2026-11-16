@@ -16,7 +16,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$HomeShakeDetectionSettings {
 
- bool get show; HomeShakeDetectionAnimationMode get animationMode;
+ bool get show; HomeShakeDetectionAnimationMode get animationMode;/// 揺れを検知したときに、地図を検知範囲へ自動で移動するか。
+ bool get autoFocus;/// 地図・カードに表示する最小の揺れ検知レベル。
+@JsonKey(unknownEnumValue: ShakeDetectionLevel.weaker) ShakeDetectionLevel get minLevel;
 /// Create a copy of HomeShakeDetectionSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +31,16 @@ $HomeShakeDetectionSettingsCopyWith<HomeShakeDetectionSettings> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeShakeDetectionSettings&&(identical(other.show, show) || other.show == show)&&(identical(other.animationMode, animationMode) || other.animationMode == animationMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeShakeDetectionSettings&&(identical(other.show, show) || other.show == show)&&(identical(other.animationMode, animationMode) || other.animationMode == animationMode)&&(identical(other.autoFocus, autoFocus) || other.autoFocus == autoFocus)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,show,animationMode);
+int get hashCode => Object.hash(runtimeType,show,animationMode,autoFocus,minLevel);
 
 @override
 String toString() {
-  return 'HomeShakeDetectionSettings(show: $show, animationMode: $animationMode)';
+  return 'HomeShakeDetectionSettings(show: $show, animationMode: $animationMode, autoFocus: $autoFocus, minLevel: $minLevel)';
 }
 
 
@@ -49,7 +51,7 @@ abstract mixin class $HomeShakeDetectionSettingsCopyWith<$Res>  {
   factory $HomeShakeDetectionSettingsCopyWith(HomeShakeDetectionSettings value, $Res Function(HomeShakeDetectionSettings) _then) = _$HomeShakeDetectionSettingsCopyWithImpl;
 @useResult
 $Res call({
- bool show, HomeShakeDetectionAnimationMode animationMode
+ bool show, HomeShakeDetectionAnimationMode animationMode, bool autoFocus,@JsonKey(unknownEnumValue: ShakeDetectionLevel.weaker) ShakeDetectionLevel minLevel
 });
 
 
@@ -66,11 +68,13 @@ class _$HomeShakeDetectionSettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeShakeDetectionSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? show = null,Object? animationMode = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? show = null,Object? animationMode = null,Object? autoFocus = null,Object? minLevel = null,}) {
   return _then(HomeShakeDetectionSettings(
 show: null == show ? _self.show : show // ignore: cast_nullable_to_non_nullable
 as bool,animationMode: null == animationMode ? _self.animationMode : animationMode // ignore: cast_nullable_to_non_nullable
-as HomeShakeDetectionAnimationMode,
+as HomeShakeDetectionAnimationMode,autoFocus: null == autoFocus ? _self.autoFocus : autoFocus // ignore: cast_nullable_to_non_nullable
+as bool,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionLevel,
   ));
 }
 
@@ -155,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool show,  HomeShakeDetectionAnimationMode animationMode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool show,  HomeShakeDetectionAnimationMode animationMode,  bool autoFocus, @JsonKey(unknownEnumValue: ShakeDetectionLevel.weaker)  ShakeDetectionLevel minLevel)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeShakeDetectionSettings() when $default != null:
-return $default(_that.show,_that.animationMode);case _:
+return $default(_that.show,_that.animationMode,_that.autoFocus,_that.minLevel);case _:
   return orElse();
 
 }
@@ -176,10 +180,10 @@ return $default(_that.show,_that.animationMode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool show,  HomeShakeDetectionAnimationMode animationMode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool show,  HomeShakeDetectionAnimationMode animationMode,  bool autoFocus, @JsonKey(unknownEnumValue: ShakeDetectionLevel.weaker)  ShakeDetectionLevel minLevel)  $default,) {final _that = this;
 switch (_that) {
 case _HomeShakeDetectionSettings():
-return $default(_that.show,_that.animationMode);case _:
+return $default(_that.show,_that.animationMode,_that.autoFocus,_that.minLevel);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +200,10 @@ return $default(_that.show,_that.animationMode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool show,  HomeShakeDetectionAnimationMode animationMode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool show,  HomeShakeDetectionAnimationMode animationMode,  bool autoFocus, @JsonKey(unknownEnumValue: ShakeDetectionLevel.weaker)  ShakeDetectionLevel minLevel)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeShakeDetectionSettings() when $default != null:
-return $default(_that.show,_that.animationMode);case _:
+return $default(_that.show,_that.animationMode,_that.autoFocus,_that.minLevel);case _:
   return null;
 
 }
@@ -211,11 +215,15 @@ return $default(_that.show,_that.animationMode);case _:
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _HomeShakeDetectionSettings implements HomeShakeDetectionSettings {
-  const _HomeShakeDetectionSettings({this.show = true, this.animationMode = HomeShakeDetectionAnimationMode.blink});
+  const _HomeShakeDetectionSettings({this.show = true, this.animationMode = HomeShakeDetectionAnimationMode.blink, this.autoFocus = true, @JsonKey(unknownEnumValue: ShakeDetectionLevel.weaker) this.minLevel = ShakeDetectionLevel.weaker});
   factory _HomeShakeDetectionSettings.fromJson(Map<String, dynamic> json) => _$HomeShakeDetectionSettingsFromJson(json);
 
 @override@JsonKey() final  bool show;
 @override@JsonKey() final  HomeShakeDetectionAnimationMode animationMode;
+/// 揺れを検知したときに、地図を検知範囲へ自動で移動するか。
+@override@JsonKey() final  bool autoFocus;
+/// 地図・カードに表示する最小の揺れ検知レベル。
+@override@JsonKey(unknownEnumValue: ShakeDetectionLevel.weaker) final  ShakeDetectionLevel minLevel;
 
 /// Create a copy of HomeShakeDetectionSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -230,16 +238,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeShakeDetectionSettings&&(identical(other.show, show) || other.show == show)&&(identical(other.animationMode, animationMode) || other.animationMode == animationMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeShakeDetectionSettings&&(identical(other.show, show) || other.show == show)&&(identical(other.animationMode, animationMode) || other.animationMode == animationMode)&&(identical(other.autoFocus, autoFocus) || other.autoFocus == autoFocus)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,show,animationMode);
+int get hashCode => Object.hash(runtimeType,show,animationMode,autoFocus,minLevel);
 
 @override
 String toString() {
-  return 'HomeShakeDetectionSettings(show: $show, animationMode: $animationMode)';
+  return 'HomeShakeDetectionSettings(show: $show, animationMode: $animationMode, autoFocus: $autoFocus, minLevel: $minLevel)';
 }
 
 
@@ -250,7 +258,7 @@ abstract mixin class _$HomeShakeDetectionSettingsCopyWith<$Res> implements $Home
   factory _$HomeShakeDetectionSettingsCopyWith(_HomeShakeDetectionSettings value, $Res Function(_HomeShakeDetectionSettings) _then) = __$HomeShakeDetectionSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- bool show, HomeShakeDetectionAnimationMode animationMode
+ bool show, HomeShakeDetectionAnimationMode animationMode, bool autoFocus,@JsonKey(unknownEnumValue: ShakeDetectionLevel.weaker) ShakeDetectionLevel minLevel
 });
 
 
@@ -267,11 +275,13 @@ class __$HomeShakeDetectionSettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeShakeDetectionSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? show = null,Object? animationMode = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? show = null,Object? animationMode = null,Object? autoFocus = null,Object? minLevel = null,}) {
   return _then(_HomeShakeDetectionSettings(
 show: null == show ? _self.show : show // ignore: cast_nullable_to_non_nullable
 as bool,animationMode: null == animationMode ? _self.animationMode : animationMode // ignore: cast_nullable_to_non_nullable
-as HomeShakeDetectionAnimationMode,
+as HomeShakeDetectionAnimationMode,autoFocus: null == autoFocus ? _self.autoFocus : autoFocus // ignore: cast_nullable_to_non_nullable
+as bool,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionLevel,
   ));
 }
 

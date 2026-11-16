@@ -21,13 +21,13 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     ref.listen(eewAliveTelegramProvider, (_, _) async {
       await handleRealtimeTransition(
         eews: ref.read(eewAliveTelegramProvider) ?? [],
-        shakes: ref.read(shakeDetectionVisibleProvider),
+        shakes: ref.read(shakeDetectionFocusTargetsProvider),
       );
     });
-    ref.listen(shakeDetectionVisibleProvider, (_, _) async {
+    ref.listen(shakeDetectionFocusTargetsProvider, (_, _) async {
       await handleRealtimeTransition(
         eews: ref.read(eewAliveTelegramProvider) ?? [],
-        shakes: ref.read(shakeDetectionVisibleProvider),
+        shakes: ref.read(shakeDetectionFocusTargetsProvider),
       );
     });
 
@@ -81,7 +81,7 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     required Size viewportSize,
   }) async {
     final eews = ref.read(eewAliveTelegramProvider) ?? [];
-    final shakes = ref.read(shakeDetectionVisibleProvider);
+    final shakes = ref.read(shakeDetectionFocusTargetsProvider);
     final decision = ref
         .read(homeMapEewFocusTransitionProvider)
         .sync(
