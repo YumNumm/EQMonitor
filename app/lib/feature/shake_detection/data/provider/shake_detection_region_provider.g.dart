@@ -10,72 +10,61 @@ part of 'shake_detection_region_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// 揺れ検知イベントのバウンディングボックス内に含まれる観測点の
-/// 都道府県ごとの地域名リストを返す。
-///
-/// キー: 都道府県名（例: "岩手県"）
-/// 値: EEW予報区名のリスト（例: ["岩手県沿岸北部", "岩手県内陸北部"]）
+/// 揺れ検知イベントの最大レベルで揺れた都道府県と地域。
 
-@ProviderFor(shakeDetectionRegions)
-final shakeDetectionRegionsProvider = ShakeDetectionRegionsFamily._();
+@ProviderFor(shakeDetectionEventRegions)
+final shakeDetectionEventRegionsProvider = ShakeDetectionEventRegionsFamily._();
 
-/// 揺れ検知イベントのバウンディングボックス内に含まれる観測点の
-/// 都道府県ごとの地域名リストを返す。
-///
-/// キー: 都道府県名（例: "岩手県"）
-/// 値: EEW予報区名のリスト（例: ["岩手県沿岸北部", "岩手県内陸北部"]）
+/// 揺れ検知イベントの最大レベルで揺れた都道府県と地域。
 
-final class ShakeDetectionRegionsProvider
+final class ShakeDetectionEventRegionsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<Map<String, List<String>>>,
-          Map<String, List<String>>,
-          FutureOr<Map<String, List<String>>>
+          AsyncValue<List<ShakeDetectionRegionGroup>>,
+          List<ShakeDetectionRegionGroup>,
+          FutureOr<List<ShakeDetectionRegionGroup>>
         >
     with
-        $FutureModifier<Map<String, List<String>>>,
-        $FutureProvider<Map<String, List<String>>> {
-  /// 揺れ検知イベントのバウンディングボックス内に含まれる観測点の
-  /// 都道府県ごとの地域名リストを返す。
-  ///
-  /// キー: 都道府県名（例: "岩手県"）
-  /// 値: EEW予報区名のリスト（例: ["岩手県沿岸北部", "岩手県内陸北部"]）
-  ShakeDetectionRegionsProvider._({
-    required ShakeDetectionRegionsFamily super.from,
+        $FutureModifier<List<ShakeDetectionRegionGroup>>,
+        $FutureProvider<List<ShakeDetectionRegionGroup>> {
+  /// 揺れ検知イベントの最大レベルで揺れた都道府県と地域。
+  ShakeDetectionEventRegionsProvider._({
+    required ShakeDetectionEventRegionsFamily super.from,
     required ShakeDetectionEvent super.argument,
   }) : super(
          retry: null,
-         name: r'shakeDetectionRegionsProvider',
+         name: r'shakeDetectionEventRegionsProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$shakeDetectionRegionsHash();
+  String debugGetCreateSourceHash() => _$shakeDetectionEventRegionsHash();
 
   @override
   String toString() {
-    return r'shakeDetectionRegionsProvider'
+    return r'shakeDetectionEventRegionsProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  $FutureProviderElement<Map<String, List<String>>> $createElement(
+  $FutureProviderElement<List<ShakeDetectionRegionGroup>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<Map<String, List<String>>> create(Ref ref) {
+  FutureOr<List<ShakeDetectionRegionGroup>> create(Ref ref) {
     final argument = this.argument as ShakeDetectionEvent;
-    return shakeDetectionRegions(ref, argument);
+    return shakeDetectionEventRegions(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ShakeDetectionRegionsProvider && other.argument == argument;
+    return other is ShakeDetectionEventRegionsProvider &&
+        other.argument == argument;
   }
 
   @override
@@ -84,39 +73,31 @@ final class ShakeDetectionRegionsProvider
   }
 }
 
-String _$shakeDetectionRegionsHash() =>
-    r'49a3b277715796cec950e6ac67cdc28f5f2dc802';
+String _$shakeDetectionEventRegionsHash() =>
+    r'13e9092bb34717393f6366a67e6e04649db6df4a';
 
-/// 揺れ検知イベントのバウンディングボックス内に含まれる観測点の
-/// 都道府県ごとの地域名リストを返す。
-///
-/// キー: 都道府県名（例: "岩手県"）
-/// 値: EEW予報区名のリスト（例: ["岩手県沿岸北部", "岩手県内陸北部"]）
+/// 揺れ検知イベントの最大レベルで揺れた都道府県と地域。
 
-final class ShakeDetectionRegionsFamily extends $Family
+final class ShakeDetectionEventRegionsFamily extends $Family
     with
         $FunctionalFamilyOverride<
-          FutureOr<Map<String, List<String>>>,
+          FutureOr<List<ShakeDetectionRegionGroup>>,
           ShakeDetectionEvent
         > {
-  ShakeDetectionRegionsFamily._()
+  ShakeDetectionEventRegionsFamily._()
     : super(
         retry: null,
-        name: r'shakeDetectionRegionsProvider',
+        name: r'shakeDetectionEventRegionsProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  /// 揺れ検知イベントのバウンディングボックス内に含まれる観測点の
-  /// 都道府県ごとの地域名リストを返す。
-  ///
-  /// キー: 都道府県名（例: "岩手県"）
-  /// 値: EEW予報区名のリスト（例: ["岩手県沿岸北部", "岩手県内陸北部"]）
+  /// 揺れ検知イベントの最大レベルで揺れた都道府県と地域。
 
-  ShakeDetectionRegionsProvider call(ShakeDetectionEvent event) =>
-      ShakeDetectionRegionsProvider._(argument: event, from: this);
+  ShakeDetectionEventRegionsProvider call(ShakeDetectionEvent event) =>
+      ShakeDetectionEventRegionsProvider._(argument: event, from: this);
 
   @override
-  String toString() => r'shakeDetectionRegionsProvider';
+  String toString() => r'shakeDetectionEventRegionsProvider';
 }
