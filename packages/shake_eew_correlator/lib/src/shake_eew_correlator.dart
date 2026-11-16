@@ -10,21 +10,16 @@ final class const ShakeEewCorrelator({
   final SiMidorikawaIntensityEstimator estimator =
       const SiMidorikawaIntensityEstimator(),
 }) {
-  bool isActive(CorrelationEew eew, DateTime now) {
-    if (eew.isLastInfo || eew.isCancel) {
-      return false;
-    }
-    return now.difference(eew.reportTime) < config.eewActiveTimeout;
-  }
-
-  /// 有効な EEW のうち、揺れ検知イベントと最もよく一致する 1 件を返す。
+  /// 取消されていない EEW のうち、揺れ検知イベントと最もよく一致する 1 件を返す。
+  ///
+  /// どの EEW を対象にするか（発表からの経過時間や最終報の扱い）は
+  /// 呼び出し側が [eews] を選別して決める。
   CorrelationCandidate? correlate({
     required Iterable<CorrelationEew> eews,
     required ShakeObservation shake,
-    required DateTime now,
   }) => selectBest([
     for (final eew in eews)
-      if (isActive(eew, now)) check(eew: eew, shake: shake),
+      if (!eew.isCancel) check(eew: eew, shake: shake),
   ]);
 
   CorrelationCandidate check({

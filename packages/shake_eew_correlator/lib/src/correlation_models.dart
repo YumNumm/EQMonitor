@@ -7,7 +7,6 @@ final class const CorrelationEew({
   required final double longitude,
   required final double depth,
   required final double magnitude,
-  required final bool isLastInfo,
   required final bool isCancel,
 });
 
@@ -32,7 +31,6 @@ final class const CorrelationConfig({
   final double intensityTolerance = 1.5,
   final double minMatchRatio = 0.3,
   final Duration sWaveExtra = const Duration(seconds: 30),
-  final Duration eewActiveTimeout = const Duration(seconds: 300),
 });
 
 final class const CorrelationCandidate({

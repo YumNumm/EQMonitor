@@ -31,7 +31,6 @@ void main() {
 
   CorrelationEew eew({
     String eventId = '20240101120000',
-    bool isLastInfo = false,
     bool isCancel = false,
     DateTime? reportTime,
   }) => CorrelationEew(
@@ -43,7 +42,6 @@ void main() {
     longitude: 135,
     depth: 10,
     magnitude: 6,
-    isLastInfo: isLastInfo,
     isCancel: isCancel,
   );
 
@@ -153,7 +151,6 @@ void main() {
             longitude: 130.8,
             depth: 10,
             magnitude: 3.1,
-            isLastInfo: false,
             isCancel: false,
           ),
         ],
@@ -170,7 +167,6 @@ void main() {
             ),
           ],
         ),
-        now: DateTime.utc(2026, 7, 28, 10, 33, 10),
       );
 
       expect(result?.eewEventId, '20260728193304');
@@ -179,19 +175,16 @@ void main() {
       expect(result?.score, 1);
     });
 
-    test('最終報・取消・発表から 300 秒以上の EEW は対象外とすること', () {
-      final now = DateTime.utc(2024, 1, 1, 12, 1);
+    test('取消された EEW は対象外とすること', () {
+      final observation = shake(createdAt: DateTime.utc(2024, 1, 1, 12, 0, 10));
 
-      expect(correlator.isActive(eew(), now), isTrue);
-      expect(correlator.isActive(eew(isLastInfo: true), now), isFalse);
-      expect(correlator.isActive(eew(isCancel: true), now), isFalse);
       expect(
-        correlator.isActive(eew(), DateTime.utc(2024, 1, 1, 12, 5, 4)),
-        isTrue,
+        correlator.correlate(eews: [eew()], shake: observation)?.eewEventId,
+        '20240101120000',
       );
       expect(
-        correlator.isActive(eew(), DateTime.utc(2024, 1, 1, 12, 5, 5)),
-        isFalse,
+        correlator.correlate(eews: [eew(isCancel: true)], shake: observation),
+        isNull,
       );
     });
 
@@ -261,16 +254,6 @@ void main() {
 
       expect(result.isCorrelated, isFalse);
       expect(result.eligiblePointCount, 0);
-    });
-
-    test('有効な EEW が無い場合は null を返すこと', () {
-      final result = correlator.correlate(
-        eews: [eew(isLastInfo: true)],
-        shake: shake(createdAt: DateTime.utc(2024, 1, 1, 12, 0, 10)),
-        now: DateTime.utc(2024, 1, 1, 12, 1),
-      );
-
-      expect(result, isNull);
     });
   });
 
