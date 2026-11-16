@@ -115,6 +115,20 @@ abstract class HomeShakeDetectionSettings with _$HomeShakeDetectionSettings {
       _$HomeShakeDetectionSettingsFromJson(json);
 }
 
+/// 地図に重ねて表示するデバッグ情報の種類ごとの有効・無効
+@freezed
+abstract class HomeDebugOverlaySettings with _$HomeDebugOverlaySettings {
+  @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+  const factory({
+    @Default(false) bool shakeDetection,
+    @Default(false) bool kyoshinMonitor,
+    @Default(false) bool eew,
+  }) = _HomeDebugOverlaySettings;
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$HomeDebugOverlaySettingsFromJson(json);
+}
+
 @freezed
 abstract class HomeEewSettings with _$HomeEewSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
@@ -202,6 +216,7 @@ abstract class HomeConfigurationModel with _$HomeConfigurationModel {
     @Default(HomeShakeDetectionSettings())
     HomeShakeDetectionSettings shakeDetection,
     @Default(HomeMapGridSettings()) HomeMapGridSettings mapGrid,
+    @Default(HomeDebugOverlaySettings()) HomeDebugOverlaySettings debugOverlay,
   }) = _HomeConfigurationModel;
 
   factory fromJson(Map<String, dynamic> json) =>

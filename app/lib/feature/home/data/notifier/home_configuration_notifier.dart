@@ -106,6 +106,13 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
     await save(current.copyWith(common: common));
   }
 
+  Future<void> updateDebugOverlay(
+    HomeDebugOverlaySettings debugOverlay,
+  ) async {
+    final current = await future;
+    await save(current.copyWith(debugOverlay: debugOverlay));
+  }
+
   Future<void> updateShakeDetection(
     HomeShakeDetectionSettings shakeDetection,
   ) async {

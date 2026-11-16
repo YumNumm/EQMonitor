@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/map_camera_state_provider.dart';
+import 'package:eqmonitor/feature/home/ui/component/debug/home_debug_hud.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_controller_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart';
@@ -279,11 +280,21 @@ class _MapHeader extends ConsumerWidget {
         mainAxisAlignment: .spaceBetween,
         crossAxisAlignment: .start,
         children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            child: useKmoni ? kyoshinMonitorColumn : const SizedBox.shrink(),
+          Flexible(
+            child: Column(
+              mainAxisSize: .min,
+              crossAxisAlignment: .start,
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: useKmoni
+                      ? kyoshinMonitorColumn
+                      : const SizedBox.shrink(),
+                ),
+                const HomeDebugHud(),
+              ],
+            ),
           ),
-          const Column(),
           controllerCard,
         ],
       ),
