@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/permission/data/notifier/notification_permissi
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:eqmonitor/feature/region_selection/data/provider/region_catalog_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_notice_agreement_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_availability_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_regions_provider.dart';
@@ -53,12 +54,18 @@ class _Dismissed extends NotificationPermissionBannerDismissed {
   Future<bool> build() async => false;
 }
 
+class _Agreed extends ShakeDetectionNoticeAgreed {
+  @override
+  Future<bool> build() async => true;
+}
+
 Widget app(_Settings settings) => ProviderScope(
   overrides: [
     isShakeDetectionNotificationAvailableProvider.overrideWith(
       (ref) async => true,
     ),
     shakeDetectionSettingsProvider.overrideWith(() => settings),
+    shakeDetectionNoticeAgreedProvider.overrideWith(_Agreed.new),
     backgroundLocationPermissionProvider.overrideWith(
       (ref) async => LocationPermission.always,
     ),

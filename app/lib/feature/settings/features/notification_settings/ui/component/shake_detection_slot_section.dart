@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/shake_detection_settings_action.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/shake_detection_enable_flow.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/shake_detection_slot_entry_resolver.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_notification_access.dart';
@@ -102,6 +103,7 @@ class _ShakeDetectionCondition extends ConsumerWidget {
 
     const resolver = ShakeDetectionSlotEntryResolver();
     const action = ShakeDetectionSettingsAction();
+    const enableFlow = ShakeDetectionEnableFlow();
     final entry = resolver.find(entries: state.entries, slot: slot);
     final enabled = entry?.enabled ?? false;
     final minLevel =
@@ -126,11 +128,19 @@ class _ShakeDetectionCondition extends ConsumerWidget {
             value: enabled,
             onChanged: busy || !isSelectable
                 ? null
-                : (next) =>
-                      action.setSlotEnabled(ref, slot: slot, enabled: next),
+                : (next) => enableFlow.setSlotEnabled(
+                    ref: ref,
+                    context: context,
+                    slot: slot,
+                    enabled: next,
+                  ),
           ),
-          onTap: () =>
-              action.setSlotEnabled(ref, slot: slot, enabled: !enabled),
+          onTap: () => enableFlow.setSlotEnabled(
+            ref: ref,
+            context: context,
+            slot: slot,
+            enabled: !enabled,
+          ),
         ),
         const Divider(height: 1),
         ListTile(
