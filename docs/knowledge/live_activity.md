@@ -89,6 +89,28 @@
 - 表示は現在地を主役にする。現在地の情報があれば予想震度と到達まで、無ければ全国の最大震度と
   見出し・M/深さ。取消は記号と主文のみ。
 - `Widget/`へ追加したファイルはPreview側の`membershipExceptions`にも追加する。
+- 背景は警報で橙、現在地が警報対象なら赤、予報と取消は黒（`EewSmallActivityView.backgroundColor`）。
+  Lock Screenヘッダー（警報=赤、予報=橙）とは意味づけが異なる。震度バッジの色と同化しないよう
+  基調色を45%にして黒へ寄せる。Viewの塗りと`activityBackgroundTint`を同じ色にそろえる。
+- 寸法はWatchが152x69.5〜198x81.5pt、CarPlayが170x78・240x78・240x100pt。最小幅では
+  見出しが2行になるため、要素を足すときは152pt幅で確認する。
+
+## 表示される場所の一覧
+
+| 場所 | 使われる表示 | 確認方法 |
+|---|---|---|
+| Lock Screen（iPhone/iPad）・Islandのない端末のバナー | `EewLockScreenView` | オフスクリーン描画（幅371/425/500pt） |
+| スタンバイ | 最初はMinimal、タップでLock Screen表示を2倍に拡大 | 2倍描画で代用。実機未確認 |
+| 常時表示（輝度低下）・スタンバイの夜間モード | Lock Screen表示をシステムが減光・赤着色 | 実機でのみ確認可 |
+| Dynamic Island / Macのメニューバー | Compact・Minimal・Expanded | Simulatorの実Island |
+| 幅が狭いDynamic Island（iOS 27〜） | Compactを直径28ptの円に収める | オフスクリーン描画。実機未確認 |
+| Apple Watch Smart Stack・CarPlay | `.small`（`EewSmallActivityView`） | オフスクリーン描画。実機未確認 |
+
+- スタンバイは独自の背景色を画面全体へ広げる。黒を指定しているので端まで黒になる。
+  専用レイアウトが必要なら`isActivityFullscreen`で分岐する（現状は分岐なし）。
+- 幅が狭いDynamic Islandは`isDynamicIslandLimitedInWidth`（iOS 27〜）で判定する。横向き、
+  複数のLive Activityが並ぶ端末で起きる。`DynamicIslandWidthReader`で受け、震度バッジを21pt、
+  カウントダウンを11pt・分1桁幅、状態ピルの余白を3ptへ詰める。「試」は出さない。
 
 ## ローカルデバッグとPreview
 

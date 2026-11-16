@@ -49,6 +49,9 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 - Mの小数点前後だけを詰めた表示（-14%）、ヘッダー文字の高さ固定、Compact/Minimalの`MAX`左右余白を、Lock ScreenとDynamic Islandの実機で確認する。Compactの`MAX`はSimulatorのDynamic Islandで確認済み。
 - Expandedは下段が高さを使い切ると、上段の最大震度（38pt）とM/深さ（21pt）が`minimumScaleFactor`で約0.7倍に縮む。現在地欄のある状態と無い状態で上段の大きさが変わるため、基準サイズを下げて揃えるか、現状の可変を許容するかを決める。
 - Apple Watch（Smart Stack）とCarPlayの`.small`表示は実機・Simulatorとも未確認。オフスクリーン描画で崩れが無いことだけ確認済み。Watchの実寸、常時表示（`isLuminanceReduced`）時の見え方を確認する。
+- `.small`の背景色（警報=橙、現在地警報=赤）がSmart Stack・CarPlayのカードにどう反映されるかは未確認。Viewの塗りと`activityBackgroundTint`の両方を指定しているため、余白との境目が出ないか実機で見る。
+- スタンバイは2倍描画での代用確認のみ。夜間モードの赤着色でヘッダー内の文字（帯色の上の70%白）が読めるか、実機で確認する。
+- 幅が狭いDynamic Island（`isDynamicIslandLimitedInWidth`）はオフスクリーン描画のみ。実機の横向き・複数Activityで切り取りが無いか確認する。
 - Lock Screenの実表示はSimulatorで未確認（ロックする手段がない）。実機で確認する。
 - 到達カウントダウンの数字が実機で毎秒アニメーションするかを確認する。SimulatorのDynamic Islandでは動かない。
 - Android Widget は未実装。採用する場合は `app/android/` に AppWidgetProvider/Glance を実装し、Pro未加入・未設定時の全国 fallback を iOS の `WidgetRegionResolver` と揃えてテストする。
