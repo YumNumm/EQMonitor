@@ -106,19 +106,29 @@
 - 非同期テストはイベント送出→`container.pump()`→`container.read(provider.future)`で
   完了を待つ。不一致イベントでは取得回数が増えないことも確認する。
 
-## 揺れ検知snapshot
+## 揺れ検知（端末内検知）
 
-- REST `/v2/shake-detection/active`とWebSocketはactive全件の完全snapshot。
-  採用した一覧で置換し、空配列は全削除。初回revision 0は採用し、以後は厳密な増加だけ採用する。
-- ready後にREST同期するが、取得中もWebSocketを受理し、両方を同じrevision reducerへ渡す。
-  REST完了順で上書きせず、WebSocket受理だけではREST同期世代を失効させない。
-- repeated ready、disconnect、time-shift、disposeでは同期世代を更新し、遅延結果を無効化する。
-- expiryはサーバーの`expiresAt`、EEW相関は`correlatedEew.eventId`を使う。
-  固定TTL・アプリ独自相関・未知levelを弱い値へ置換する処理を入れない。
-- time-shift自動復帰のbaselineは採用済みcanonical snapshot。通常復帰では保持する。
-  disconnectでは破棄し、reconnectのconnected時に保持中snapshotから明示的に再確立する。
-- 既知IDの更新・削除・同一接続での再出現は新規イベントとして自動復帰させない。
-- `IS_SHAKE_DETECTION_ENABLED` は既定 true。無効時は canonical snapshot で REST/WS 購読と適用を止め、debug overlay 経由の表示や一般向け設定 route も無効にする。デバッグ用通知設定 route はデバッグメニューへのアクセス権で開ける。配布別の指定は [配布と CI](delivery_ci.md) を参照する。
+- 揺れ検知はサーバーから配信しない。強震モニタの画像から端末内で計算し、サーバーは通知だけを送る。
+  REST `/v2/shake-detection/active` と WebSocket の `shake_detection` は購読しない。
+- 検知は `packages/shake_detection_engine`、EEW との結合は `packages/shake_eew_correlator` が担う。
+  前者は公開版 KyoshinEewViewer for ingen の `ShakeDetectionEngine`、後者は backend の `packages/event-correlator` の移植で、
+  閾値や判定順を変える場合は移植元との差を README に残す。
+- エンジンは解析用 Isolate の中で状態を持つ。観測点インデックスは `kyoshinImageObservationPointsProvider` の並びを指し、
+  Isolate に渡す観測点と必ず同じ並びにする。
+- 検知は地上の震度画像でのみ行う。強震モニタが無効、表示種別が震度以外、地下の場合は検知しない。
+  リプレイ再生中は端末内の検知結果を公開しない。
+- 上昇量は直近 10 フレームの最新値と最古の有効値の差で、履歴が無い 1 フレーム目は必ず 0 になる。
+  起動直後・復帰直後・5 秒以上の時刻の飛び・worker の再起動では、30・90・180 秒前の画像の中央値を平常値として
+  最古の標本に投入し、1 フレーム目から検知する。過去フレームをすべて取得できない場合は固定値 1.0 で代用する。
+- 平常値との差は数十秒から数分の緩やかな雑音の変動も拾う。平常値が窓に残る 9 フレームの間は Medium 以上だけを確定する。
+  平常値を最小値にすると雑音で下に偏り誤検知が増えるため、中央値を使う。
+- 平常値との差で検知したイベントは検知時刻が揺れ始めより後になる。EEW との結合では時間条件の上限
+  （S 波到達 + 30 秒）を適用せず、P 波到達以降であることだけを確認する。
+- EEW との結合は発生時刻・震源・マグニチュードが揃った EEW だけを対象にする。最終報・取消・発表から 300 秒以上の EEW は
+  backend と同じく対象外で、`eewAliveTelegramProvider` の生存判定は使わない。
+- 表示の期限はエンジンの `expiresAt`（観測点ごとの期限の最大値）を使う。固定 TTL を入れない。
+- `IS_SHAKE_DETECTION_ENABLED` は既定 true。無効時は検知を要求せず、debug overlay 経由の表示や一般向け設定 route も無効にする。
+  デバッグ用通知設定 route はデバッグメニューへのアクセス権で開ける。配布別の指定は [配布と CI](delivery_ci.md) を参照する。
 - provider test は `BuildConfigFixture` で `buildConfigProvider` を override し、dart-define 未指定の flavor 例外を避ける。
 
 ## 確認箇所と検証

@@ -16,11 +16,26 @@
 ## 160: 揺れ検知の公開テスト再有効化
 
 - 実機未検証: 揺れ検知が無効な配布ビルドで、Admin ロールかつデバッグモード有効の端末から通知地域・最小レベルを保存できること。再起動時の条件維持、Android の前面・背面通知、権限取得失敗からの再試行、非 Admin・デバッグ無効時の変更抑止も確認する。
-- 端末内検知と検知アルゴリズムの閾値調整は後続対応とする。通知条件の管理端末向け開放には含めない。
 - 対象: `.github/workflows/deploy-app.yaml`、`app/lib/core/model/environment.dart`、`app/lib/feature/shake_detection/`。
 - iOS external / Android external の `IS_SHAKE_DETECTION_ENABLED=false` を解除し、ホームgrid/card、timeshift自動復帰、`/settings/notification/shake` を確認する。
 - このflagはclient表示/購読だけを止める。無効ビルドで既登録のserver pushも止める必要があるなら、server抑止または登録設定削除の仕様を決めて配信テストを追加する。
-- 完了条件: 配布trackごとの表示/REST/WebSocket/pushの挙動が仕様と一致する。削除済みの揺れ検知履歴が必要なら、RESTを持つ履歴として別途設計する。
+- 完了条件: 配布trackごとの表示/pushの挙動が仕様と一致する。削除済みの揺れ検知履歴が必要なら、RESTを持つ履歴として別途設計する。
+
+## 155: 端末内の揺れ検知
+
+対象: `packages/shake_detection_engine`、`packages/shake_eew_correlator`、`app/lib/feature/shake_detection/`。
+
+- 実機未検証: 起動直後・background 復帰直後に揺れている状態で 1 フレーム目から表示されること、平常時の起動で誤検知が出ないこと。
+  kmoni の実画像では、平常時 60 回のコールドスタートで確定イベント 0 件、M3.4 の地震の途中 4 時点で 1 フレーム目から検知できた。
+- 未検証: 取得元が lmoni のときに 30・90・180 秒前の画像を取得できること。取得できない場合は固定値の平常値になり、
+  計測震度 1.2 未満の揺れは 1 フレーム目では検知できない。
+- 未検証: EEW との結合を実際の EEW 発表中に確認する。最終報を受信すると backend と同じく結合が外れ、揺れ検知が再表示される。
+  表示上の妥当性を確認し、必要なら最終報後も結合を維持する。
+- 表示種別が震度以外・地下のときは検知しない。検知用に地上の震度画像を別途取得するかを決める。
+- レベル境界は公開版の値（4.5 / 2.5 / 0.5 / -1）。サーバーが送る通知のレベルと食い違う場合の扱いを決める。
+- リプレイ再生では検知しない。再生画像を同じエンジンへ流すかを決める。
+- backend の配信経路（`shake_detection` の WebSocket 配信、`/v2/shake-detection/active`）とアプリ側に残る
+  `RealtimeShakeSnapshotEvent` の撤去は別途行う。
 
 ## 150: WebSocket固定heartbeatの実機確認
 
