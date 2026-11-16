@@ -14,6 +14,7 @@ struct EewLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
         let configuration = ActivityConfiguration(for: EewLiveActivityAttributes.self) { context in
             EewActivityContentView(state: context.state)
+                .liveActivityFixedTypeSize()
                 .activityBackgroundTint(EewAlertStyle.surfaceColor(for: context.state.display))
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
@@ -62,10 +63,12 @@ private func eewDynamicIsland(state: EewContentState) -> DynamicIsland {
         // カメラ脇と下部で高さの割り当てが異なるため本文はbottomに置く。
         DynamicIslandExpandedRegion(.leading) {
             EewExpandedLeadingView(state: state)
+                .liveActivityFixedTypeSize()
                 .dynamicIsland(verticalPlacement: .belowIfTooWide)
         }
         DynamicIslandExpandedRegion(.trailing) {
             EewExpandedTrailingView(state: state)
+                .liveActivityFixedTypeSize()
                 .dynamicIsland(verticalPlacement: .belowIfTooWide)
         }
         DynamicIslandExpandedRegion(.bottom) {
@@ -77,17 +80,21 @@ private func eewDynamicIsland(state: EewContentState) -> DynamicIsland {
             }
             .padding(.horizontal, EewExpandedMetrics.horizontalInset)
             .padding(.bottom, 8)
+            .liveActivityFixedTypeSize()
         }
     } compactLeading: {
         DynamicIslandWidthReader { isLimited in
             EewCompactLeadingView(state: state, limited: isLimited)
         }
+        .liveActivityFixedTypeSize()
     } compactTrailing: {
         DynamicIslandWidthReader { isLimited in
             EewCompactTrailingView(state: state, limited: isLimited)
         }
+        .liveActivityFixedTypeSize()
     } minimal: {
         EewMinimalView(state: state)
+            .liveActivityFixedTypeSize()
     }
     .keylineTint(eewKeylineTint(for: state))
 }
@@ -401,6 +408,7 @@ struct EewCanceledSymbol: View {
     var body: some View {
         Image(systemName: "slash.circle.fill")
             .font(.system(size: size, weight: .semibold))
-            .foregroundStyle(Color.eqTextSecondary)
+            // 地色は外観に依らず黒。外観で変わる色だとライトモードで暗く沈む
+            .foregroundStyle(Color(rgb: 0xC4CCD7))
     }
 }

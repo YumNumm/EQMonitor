@@ -49,6 +49,7 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 - Mの小数点前後だけを詰めた表示（-14%）、ヘッダー文字の高さ固定、Compact/Minimalの`MAX`左右余白を、Lock ScreenとDynamic Islandの実機で確認する。Compactの`MAX`はSimulatorのDynamic Islandで確認済み。
 - Expandedは下段が高さを使い切ると、上段の最大震度（38pt）とM/深さ（21pt）が`minimumScaleFactor`で約0.7倍に縮む。現在地欄のある状態と無い状態で上段の大きさが変わるため、基準サイズを下げて揃えるか、現状の可変を許容するかを決める。
 - Apple Watch（Smart Stack）とCarPlayの`.small`表示は実機・Simulatorとも未確認。オフスクリーン描画で崩れが無いことだけ確認済み。Watchの実寸、常時表示（`isLuminanceReduced`）時の見え方を確認する。
+- Dynamic Typeを標準に固定したため、文字を大きくしている利用者にもLive Activityは標準の大きさで出る。Lock Screenの上限160ptの中で段階的に大きくできるか（要素を減らす専用レイアウトなど）は未検討。
 - 現在地が警報対象のときLock Screenの地色を暗い赤にした。Lock Screenの余白・スタンバイの全面・常時表示で地色がどう出るかは実機未確認。
 - `.small`の点滅（`BlinkBlock`）はSimulatorの実Dynamic Islandで動作確認しただけで、Apple Watch・CarPlayでは未確認。Watch側で専用フォントが使えない場合、枠いっぱいに数字が描かれるおそれがあるため、リリース前に実機で必ず確認する。本番のWidgetターゲットは未ビルドのため、`EQBlink.ttf`が拡張に入っているかも確認する。
 - スタンバイは2倍描画での代用確認のみ。夜間モードの赤着色でヘッダー内の文字（帯色の上の70%白）が読めるか、実機で確認する。

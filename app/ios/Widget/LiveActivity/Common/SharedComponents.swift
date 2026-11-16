@@ -44,6 +44,20 @@ extension View {
     }
 }
 
+// MARK: - 文字サイズの固定
+
+@available(iOS 16.1, *)
+extension View {
+    /// Live Activity では Dynamic Type に追従させず、標準の大きさに固定する。
+    ///
+    /// Lock Screen は高さ160ptが上限、Dynamic Island は領域が決まっており、文字が大きくなると
+    /// 収まらず切り取られる。`Font.custom(_:size:)` は既定で Dynamic Type に追従するため、
+    /// 各表示の根元でこれを付ける。
+    func liveActivityFixedTypeSize() -> some View {
+        dynamicTypeSize(.large)
+    }
+}
+
 // MARK: - 主要動到達カウントダウン
 
 @available(iOS 16.1, *)

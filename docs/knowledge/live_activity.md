@@ -124,6 +124,16 @@
   Lock Screenは発生時刻の下、Expandedは下部の帯、スモール表示は主文。
 - 到達カウントダウンは点滅させない。
 
+## 外観と文字サイズ
+
+- 各表示の根元に`liveActivityFixedTypeSize()`を付け、Dynamic Typeに追従させない。
+  `Font.custom(_:size:)`は既定で追従し、最大設定ではLock Screenが843ptになり中身が切り取られる
+  （xxxLargeでも189pt）。上限160ptに余裕がないため、標準の大きさに固定する。
+- 地色は外観に依らず黒か暗い赤。文字や記号に外観で変わる色（`eqTextSecondary`など）を使うと
+  ライトモードで暗く沈む。Live Activity内は固定色にする。
+- Lock Screenは`activityBackgroundTint`に不透明色を渡しているため、壁紙の明るさの影響を受けない想定
+  （実機のロック画面では未確認）。
+
 ## Lock Screenの高さ（上限160pt）
 
 - 内訳は上下余白24pt＋ヘッダー62pt＋間隔＋本文。現在地欄は68ptあり、間隔6ptでちょうど160pt。
