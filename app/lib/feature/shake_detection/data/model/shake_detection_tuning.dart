@@ -34,6 +34,9 @@ enum ShakeDetectionTunable {
 
   final String label;
   final bool isInteger;
+
+  String format(double value) =>
+      isInteger ? value.round().toString() : value.toString();
 }
 
 /// 設定から解決した揺れ検知のパラメータ一式

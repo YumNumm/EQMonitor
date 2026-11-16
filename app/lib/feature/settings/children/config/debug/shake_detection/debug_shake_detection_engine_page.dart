@@ -63,11 +63,10 @@ class DebugShakeDetectionEnginePage extends ConsumerWidget {
             ListTile(
               title: Text(tunable.label),
               subtitle: Text(
-                '初期値: ${_format(tunable, resolver.defaultValue(tunable))}',
+                '初期値: ${tunable.format(resolver.defaultValue(tunable))}',
               ),
               trailing: Text(
-                _format(
-                  tunable,
+                tunable.format(
                   resolver.value(tunable, settings.parameterOverrides),
                 ),
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -82,8 +81,7 @@ class DebugShakeDetectionEnginePage extends ConsumerWidget {
                   context: context,
                   builder: (context) => _ValueDialog(
                     tunable: tunable,
-                    initialText: _format(
-                      tunable,
+                    initialText: tunable.format(
                       resolver.value(tunable, settings.parameterOverrides),
                     ),
                     defaultValue: defaultValue,
@@ -115,9 +113,6 @@ class DebugShakeDetectionEnginePage extends ConsumerWidget {
       ),
     );
   }
-
-  String _format(ShakeDetectionTunable tunable, double value) =>
-      tunable.isInteger ? value.round().toString() : value.toString();
 }
 
 class _ValueDialog extends HookWidget {
