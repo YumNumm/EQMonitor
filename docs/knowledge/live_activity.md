@@ -61,6 +61,9 @@
 - 濃色ヘッダーは白、補助文字は白70%。現在の黒背景EEW本文も白を明示し、
   Light AppearanceのLock Screenには黒背景を明示する。旧「本文は常に.primary」を流用しない。
 - ヘッダーのしましまは`StripePattern`、取消の灰色を維持する。
+- Expandedのleading/trailing/bottomは左右の余白を`EewExpandedMetrics.horizontalInset`で揃える。
+  領域ごとに別の値を使うと、最大震度・M/深さと下段の文字の端がずれる。M/深さの縦積みは右揃え。
+- Expandedの発生/検知日時はLock Screenと同じGoogle Sans Codeにする。
 - Expandedはleading/trailing/bottomを分け、OS標準外周余白を維持する。
   単一leading＋`belowIfTooWide`やカメラ高さ固定・負paddingで補正しない。
 - `ViewThatFits(in: .vertical)`の候補測定にのみ`fixedSize`を使い、高さ不足時は
@@ -92,6 +95,10 @@
   Figma基準はLock Screen `1628:1745`、Expanded `1628:1694`。
 - `Shared/`追加はXcode Sources所属、`Widget/`追加はPreview側membershipを確認する。
   Previewターゲット構成は [軽量 Preview](apple_previews.md) を参照。
+
+- Simulatorで実際のExpandedを撮るには、Activityをバックグラウンドから`AlertConfiguration`付きで
+  更新する。Dynamic Islandが数秒展開するので`simctl io screenshot`で撮れる（CompactはHomeへ戻れば写る）。
+  Lock Screenは`simctl`からロックする手段がなく、この方法では撮れない。
 
 ## 検証範囲
 
