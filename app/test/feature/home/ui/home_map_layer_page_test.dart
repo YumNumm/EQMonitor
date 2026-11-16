@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
-import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -24,11 +24,18 @@ class _TestApp extends StatelessWidget {
 
 Future<void> _pumpPage(
   WidgetTester tester, {
-  required BuildConfig buildConfig,
+  required bool isShakeDetectionEnabled,
 }) async {
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [buildConfigProvider.overrideWithValue(buildConfig)],
+      overrides: [
+        buildConfigProvider.overrideWithValue(
+          const BuildConfigFixture().build(),
+        ),
+        isDeviceShakeDetectionEnabledProvider.overrideWithValue(
+          isShakeDetectionEnabled,
+        ),
+      ],
       child: const _TestApp(home: HomeMapLayerPage()),
     ),
   );
@@ -36,7 +43,7 @@ Future<void> _pumpPage(
 
 void main() {
   testWidgets('セクションの装飾アイコンだけを表示しない', (tester) async {
-    await _pumpPage(tester, buildConfig: const BuildConfigFixture().build());
+    await _pumpPage(tester, isShakeDetectionEnabled: true);
 
     expect(find.byIcon(Icons.emergency_rounded), findsNothing);
     expect(find.byIcon(Icons.vibration_rounded), findsNothing);
@@ -47,24 +54,14 @@ void main() {
     expect(find.byIcon(Icons.arrow_back_rounded), findsOneWidget);
   });
 
-  testWidgets('isShakeDetectionEnabled が true のときは揺れ検知セクションを表示する', (
-    tester,
-  ) async {
-    await _pumpPage(
-      tester,
-      buildConfig: const BuildConfigFixture().build(
-        isShakeDetectionEnabled: true,
-      ),
-    );
+  testWidgets('端末内の揺れ検知が有効なときは揺れ検知セクションを表示する', (tester) async {
+    await _pumpPage(tester, isShakeDetectionEnabled: true);
 
     expect(find.text('揺れ検知'), findsOneWidget);
   });
 
-  testWidgets('production のときは揺れ検知セクションを表示しない', (tester) async {
-    await _pumpPage(
-      tester,
-      buildConfig: const BuildConfigFixture().build(isProduction: true),
-    );
+  testWidgets('端末内の揺れ検知が無効なときは揺れ検知セクションを表示しない', (tester) async {
+    await _pumpPage(tester, isShakeDetectionEnabled: false);
 
     expect(find.text('揺れ検知'), findsNothing);
     expect(find.byIcon(Icons.keyboard_arrow_down_rounded), findsNWidgets(4));
