@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/shake_detection/data/model/device_shake_detection_frame.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
+import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shake_detection_engine/shake_detection_engine.dart';
 
@@ -18,8 +19,18 @@ class DeviceShakeDetection extends _$DeviceShakeDetection {
   void apply({
     required DateTime observedAt,
     required List<ShakeEventSnapshot> events,
+    required ShakeDetectionStatus? status,
   }) {
-    state = DeviceShakeDetectionFrame(observedAt: observedAt, events: events);
+    final previous = state;
+    state = DeviceShakeDetectionFrame(
+      observedAt: observedAt,
+      events: events,
+      status: status,
+      isHistoryRebuilt:
+          previous != null &&
+          previous.isHistoryRebuilt &&
+          previous.status?.coldStartAt == status?.coldStartAt,
+    );
   }
 
   /// 履歴を作り直した結果で、最新フレームのイベントだけを置き換える。
@@ -31,6 +42,8 @@ class DeviceShakeDetection extends _$DeviceShakeDetection {
     state = DeviceShakeDetectionFrame(
       observedAt: current.observedAt,
       events: events,
+      status: current.status,
+      isHistoryRebuilt: true,
     );
   }
 
