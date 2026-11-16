@@ -2,6 +2,7 @@ import 'package:eqmonitor/feature/parameter/data/model/kyoshin/kyoshin_observati
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_grid_cell_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_region_summary.dart';
+import 'package:extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_region_resolver.g.dart';
@@ -137,10 +138,11 @@ class ShakeDetectionRegionResolver {
     final names = [
       for (final regionCode in detectedRegionCodes.toList()..sort())
         if (regionNames[regionCode] case final regionName?)
-          regionName.startsWith(prefectureName) &&
-                  regionName.length > prefectureName.length
-              ? regionName.substring(prefectureName.length)
-              : regionName,
+          (regionName.startsWith(prefectureName) &&
+                      regionName.length > prefectureName.length
+                  ? regionName.substring(prefectureName.length)
+                  : regionName)
+              .toHalfWidth,
     ];
     if (names.isEmpty) {
       return null;
