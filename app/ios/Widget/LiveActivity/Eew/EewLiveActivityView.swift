@@ -149,7 +149,7 @@ struct EewLockScreenView: View {
         }
         .padding(12)
         .foregroundStyle(.white)
-        .background(.black)
+        .background(EewAlertStyle.surfaceColor(for: state.display))
     }
 }
 

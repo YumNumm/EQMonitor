@@ -14,7 +14,7 @@ struct EewLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
         let configuration = ActivityConfiguration(for: EewLiveActivityAttributes.self) { context in
             EewActivityContentView(state: context.state)
-                .activityBackgroundTint(.black)
+                .activityBackgroundTint(EewAlertStyle.surfaceColor(for: context.state.display))
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             eewDynamicIsland(state: context.state)
@@ -287,7 +287,11 @@ private struct EewExpandedLocationView: View {
     var body: some View {
         HStack(alignment: .bottom, spacing: 8) {
             if let notice = state.display.locationNotice {
-                EewLocationNoticeView(notice: notice, intensity: state.display.localIntensity)
+                EewLocationNoticeView(
+                    notice: notice,
+                    intensity: state.display.localIntensity,
+                    blinkAnchor: state.display.countdownArrivalDate
+                )
             } else {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("現在地")

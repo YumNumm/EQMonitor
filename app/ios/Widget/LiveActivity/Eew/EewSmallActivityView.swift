@@ -15,7 +15,7 @@ struct EewSmallActivityView: View {
         GeometryReader { geometry in
             content(narrow: geometry.size.width < Self.narrowWidth)
         }
-        .background(.black)
+        .background(EewAlertStyle.surfaceColor(for: state.display))
     }
 
     private func content(narrow: Bool) -> some View {
@@ -41,10 +41,10 @@ struct EewSmallActivityView: View {
                 // 取消の主文は長いため、小さめにして2行へ収める
                 Text(title(display))
                     .font(AppFonts.flex(size: display.isCanceled ? 12 : 14, weight: .heavy))
-                    // 枠で囲む警戒文は折り返さず、縮めて1行に収める
+                    // 塗りを敷く警戒文は折り返さず、縮めて1行に収める
                     .lineLimit(display.locationNotice == .warning ? 1 : 2)
                     .minimumScaleFactor(0.7)
-                    .modifier(EewBlinkHighlight(
+                    .modifier(EewAlertBlinkHighlight(
                         isActive: display.locationNotice == .warning,
                         anchor: display.countdownArrivalDate,
                         fillsWidth: true
@@ -61,11 +61,6 @@ struct EewSmallActivityView: View {
         .foregroundStyle(.white)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-
-    /// 現在地が警報対象のときの枠線の色
-    static let alertColor = Color(red: 1.0, green: 0.1, blue: 0.1)
-    /// 点滅する塗りの色。白文字が読める濃さにする
-    static let alertFillColor = Color(red: 0.72, green: 0.0, blue: 0.0)
 
     private func title(_ display: EewDisplay) -> String {
         if display.isCanceled {
@@ -96,37 +91,6 @@ struct EewSmallActivityView: View {
             }
         } else {
             EewSourceMetricsView(state: state, size: 15)
-        }
-    }
-}
-
-/// 文字の背景を1秒おきに点滅させる。濃い赤の塗りと、赤い枠線だけの黒地を交互に出す。
-/// 文字は常に白。角は丸めない。
-///
-/// 現在地が警報対象のときだけ使う。対象外でも色を付けると、現在地に警報が出たと誤解される。
-@available(iOS 16.1, *)
-private struct EewBlinkHighlight: ViewModifier {
-    let isActive: Bool
-    let anchor: Date?
-    /// 文字の幅ではなく、使える幅いっぱいを塗る
-    var fillsWidth = false
-
-    func body(content: Content) -> some View {
-        if isActive {
-            content
-                .foregroundStyle(.white)
-                .padding(.horizontal, 4)
-                .padding(.vertical, 1)
-                .frame(maxWidth: fillsWidth ? .infinity : nil, alignment: .leading)
-                .background {
-                    BlinkBlock(anchor: anchor)
-                        .foregroundStyle(EewSmallActivityView.alertFillColor)
-                }
-                .overlay {
-                    Rectangle().strokeBorder(EewSmallActivityView.alertColor, lineWidth: 1)
-                }
-        } else {
-            content
         }
     }
 }
