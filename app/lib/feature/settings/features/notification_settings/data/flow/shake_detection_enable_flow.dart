@@ -9,9 +9,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 class const ShakeDetectionEnableFlow() {
+  /// 注意事項に未同意の場合は確認ダイアログを表示し、同意したかどうかを返す。
+  ///
+  /// 通知と端末内の表示は同じ注意事項を使うため、同意は共通で 1 回だけ求める。
   Future<bool> ensureAgreed({
     required WidgetRef ref,
     required BuildContext context,
+    String? description,
   }) async {
     if (await ref.read(shakeDetectionNoticeAgreedProvider.future)) {
       return true;
@@ -22,7 +26,9 @@ class const ShakeDetectionEnableFlow() {
     final agreed = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const ShakeDetectionNoticeDialog(),
+      builder: (context) => description == null
+          ? const ShakeDetectionNoticeDialog()
+          : ShakeDetectionNoticeDialog(description: description),
     );
     if (agreed != true || !context.mounted) {
       return false;

@@ -339,17 +339,16 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   const DebugShakeDetectionSettingsRoute().push(context),
             ),
-            if (buildCfg.isShakeDetectionAvailable)
-              ListTile(
-                title: const Text('揺れ検知エンジン'),
-                subtitle: Text(
-                  '端末内検知の有効化・履歴の作り直し・検知パラメータの変更',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                leading: const Icon(Icons.tune_rounded),
-                onTap: () async =>
-                    const DebugShakeDetectionEngineRoute().push(context),
+            ListTile(
+              title: const Text('揺れ検知エンジン'),
+              subtitle: Text(
+                '端末内検知の有効化・履歴の作り直し・検知パラメータの変更',
+                style: Theme.of(context).textTheme.bodySmall,
               ),
+              leading: const Icon(Icons.tune_rounded),
+              onTap: () async =>
+                  const DebugShakeDetectionEngineRoute().push(context),
+            ),
             if (buildCfg.isShakeDetectionAvailable)
               ListTile(
                 title: const Text('揺れ検知を挿入'),

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/shake_detection_enable_flow.dart';
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_tuning_resolver.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_settings_model.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_tuning.dart';
@@ -39,10 +40,24 @@ class DebugShakeDetectionEnginePage extends ConsumerWidget {
           ),
           SwitchListTile(
             title: const Text('端末内で揺れを検知する'),
-            subtitle: const Text('強震モニタの画像から検知し、ホームの地図とカードに表示'),
+            subtitle: const Text(
+              '強震モニタの画像から検知し、ホームの地図とカードに表示。'
+              '表示する強さと自動ズームは「マップレイヤー」で変更',
+            ),
             value: settings.isEnabled,
-            onChanged: (value) async =>
-                save(settings.copyWith(isEnabled: value)),
+            onChanged: (value) async {
+              if (value &&
+                  !await const ShakeDetectionEnableFlow().ensureAgreed(
+                    ref: ref,
+                    context: context,
+                    description:
+                        '端末内の揺れ検知は、試験提供している機能です。'
+                        '有効にする前に、以下の内容をご確認ください。',
+                  )) {
+                return;
+              }
+              await save(settings.copyWith(isEnabled: value));
+            },
           ),
           SwitchListTile(
             title: const Text('直近のフレームで履歴を作り直す'),
