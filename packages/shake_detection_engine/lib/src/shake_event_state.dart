@@ -17,6 +17,7 @@ final class ShakeEventState {
        maxLongitude = firstStation.location.longitude {
     firstStation
       ..event = this
+      ..peakIntensity = firstStation.latestIntensity
       ..eventedAt = createdAt
       ..initialEventedAt = createdAt
       ..extendExpiry(createdAt.add(lifetime));
@@ -70,6 +71,7 @@ final class ShakeEventState {
 
     station
       ..initialEventedAt = time
+      ..peakIntensity = station.latestIntensity
       ..event = this;
     _expandBounds(
       minLatitude: station.location.latitude,
@@ -109,22 +111,8 @@ final class ShakeEventState {
     }
   }
 
-  void removeStation(ShakeStationState station, DateTime time) {
-    if (!_stations.remove(station)) {
-      return;
-    }
-    updatedAt = time;
-    station
-      ..event = null
-      ..eventedExpireAt = null
-      ..initialEventedAt = null;
-  }
-
-  bool isNearby(ShakeEventState other, double distance) => _stations.any(
-    (a) => other._stations.any((b) => a.distanceTo(b) <= distance),
-  );
-
-  ShakeEventSnapshot toSnapshot() {
+  /// すべての観測点の検知期限。これを過ぎるとイベントは終了する。
+  DateTime get expiresAt {
     var expiresAt = createdAt;
     for (final station in _stations) {
       final expireAt = station.eventedExpireAt;
@@ -132,6 +120,26 @@ final class ShakeEventState {
         expiresAt = expireAt;
       }
     }
+    return expiresAt;
+  }
+
+  /// イベントの終了時に、属していた観測点をすべて解放する。
+  void releaseStations() {
+    for (final station in _stations) {
+      station
+        ..event = null
+        ..peakIntensity = null
+        ..eventedExpireAt = null
+        ..initialEventedAt = null;
+    }
+    _stations.clear();
+  }
+
+  bool isNearby(ShakeEventState other, double distance) => _stations.any(
+    (a) => other._stations.any((b) => a.distanceTo(b) <= distance),
+  );
+
+  ShakeEventSnapshot toSnapshot() {
     return ShakeEventSnapshot(
       id: id,
       createdAt: createdAt,
@@ -149,6 +157,7 @@ final class ShakeEventState {
           ShakeEventPointSnapshot(
             stationIndex: station.index,
             intensity: station.latestIntensity,
+            peakIntensity: station.peakIntensity,
             intensityDiff: station.intensityDiff,
           ),
       ],

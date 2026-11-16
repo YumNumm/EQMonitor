@@ -71,6 +71,7 @@ final class ShakeDetectionEngine {
       station
         ..resetHistory()
         ..event = null
+        ..peakIntensity = null
         ..eventedAt = null
         ..eventedExpireAt = null
         ..initialEventedAt = null
@@ -123,6 +124,7 @@ final class ShakeDetectionEngine {
     for (final station in _stations) {
       _evaluate(station, time, isBootstrap: isBootstrap);
     }
+    _endExpiredEvents(time);
     _mergeNearbyEvents(time);
 
     if (isBootstrap) {
@@ -185,17 +187,8 @@ final class ShakeDetectionEngine {
       return;
     }
 
+    // 上昇が止まった観測点もイベントの終了までは外さない。
     if (station.intensityDiff < parameters.minDetectionDiff) {
-      final event = station.event;
-      final eventedAt = station.eventedAt;
-      if (event != null &&
-          ((eventedAt != null && eventedAt.isAfter(time)) ||
-              station.isExpiredAt(time))) {
-        event.removeStation(station, time);
-        if (event.stationCount <= 0) {
-          _events.remove(event);
-        }
-      }
       return;
     }
     if (latest == null) {
@@ -307,6 +300,17 @@ final class ShakeDetectionEngine {
     );
     _events.add(event);
     _updateConfirmation(event, isBootstrap: isBootstrap);
+  }
+
+  /// すべての観測点の検知期限が過ぎたイベントを終了する。
+  void _endExpiredEvents(DateTime time) {
+    _events.removeWhere((event) {
+      if (!event.expiresAt.isBefore(time)) {
+        return false;
+      }
+      event.releaseStations();
+      return true;
+    });
   }
 
   void _mergeNearbyEvents(DateTime time) {

@@ -40,7 +40,7 @@ final class HomeConfigurationNotifierProvider
 }
 
 String _$homeConfigurationNotifierHash() =>
-    r'7183e8d68d9278925b120356ee99a35d318e464e';
+    r'8353592bdc44cceb7bb6b16e09b9f4d733fd071e';
 
 abstract class _$HomeConfigurationNotifier
     extends $AsyncNotifier<HomeConfigurationModel> {

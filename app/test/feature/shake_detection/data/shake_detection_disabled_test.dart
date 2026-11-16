@@ -40,7 +40,7 @@ void main() {
 
       container
           .read(deviceShakeDetectionProvider.notifier)
-          .apply(observedAt: _now, events: const []);
+          .apply(observedAt: _now, events: const [], status: null);
 
       expect(container.read(shakeDetectionProvider), isEmpty);
     });

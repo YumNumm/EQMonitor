@@ -206,7 +206,11 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       if (shakeEvents == null) {
         shakeDetection.clear();
       } else {
-        shakeDetection.apply(observedAt: targetTime, events: shakeEvents);
+        shakeDetection.apply(
+          observedAt: targetTime,
+          events: shakeEvents,
+          status: workerResult.shakeStatus,
+        );
       }
       // 1 フレーム目は平常値との差で検知し、その裏で直近のフレームを取得して
       // 連続して動いていた場合に近い履歴へ作り直す。

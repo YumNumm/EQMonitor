@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_bounds_selector_page.dart';
@@ -31,6 +32,7 @@ class HomeMapLayerPage extends ConsumerWidget {
     final isShakeDetectionEnabled = ref.watch(
       isDeviceShakeDetectionEnabledProvider,
     );
+    final isDebugMenuAvailable = ref.watch(isDebugMenuAvailableProvider);
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
@@ -123,6 +125,18 @@ class HomeMapLayerPage extends ConsumerWidget {
                       _MapCustomBoundsButton(),
                     ],
                   ),
+                  if (isDebugMenuAvailable) ...[
+                    SizedBox(height: spacing.lg),
+                    const _SettingsSection(
+                      title: 'デバッグ',
+                      description: '地図に重ねて表示する、機能ごとのデバッグ情報を切り替えます。',
+                      children: [
+                        _DebugOverlayShakeDetectionTile(),
+                        _DebugOverlayKyoshinMonitorTile(),
+                        _DebugOverlayEewTile(),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -1344,6 +1358,85 @@ class _ShakeDetectionAutoFocusTile extends ConsumerWidget {
               .updateShakeDetection(
                 cfg.shakeDetection.copyWith(autoFocus: next),
               ),
+        );
+      },
+    );
+  }
+}
+
+class _DebugOverlayShakeDetectionTile extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: '揺れ検知',
+      subtitle: '検知の状態、イベントの時刻、EEW との結合判定を表示します。',
+      value: cfg.debugOverlay.shakeDetection,
+      onChanged: (next) async {
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateDebugOverlay(
+                cfg.debugOverlay.copyWith(shakeDetection: next),
+              ),
+        );
+      },
+    );
+  }
+}
+
+class _DebugOverlayKyoshinMonitorTile extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: '強震モニタ',
+      subtitle: '画像の時刻と遅れ、種別、観測点数、取得時間を表示します。',
+      value: cfg.debugOverlay.kyoshinMonitor,
+      onChanged: (next) async {
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateDebugOverlay(
+                cfg.debugOverlay.copyWith(kyoshinMonitor: next),
+              ),
+        );
+      },
+    );
+  }
+}
+
+class _DebugOverlayEewTile extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: '緊急地震速報',
+      subtitle: '表示中の EEW の報番号、規模、発表・発生時刻を表示します。',
+      value: cfg.debugOverlay.eew,
+      onChanged: (next) async {
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateDebugOverlay(cfg.debugOverlay.copyWith(eew: next)),
         );
       },
     );

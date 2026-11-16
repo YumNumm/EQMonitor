@@ -22,6 +22,18 @@ final class const AnalyzeResult({
   /// 揺れ検知を要求した場合の検知結果。`points` の `stationIndex` は
   /// spawn に渡した観測点の並びに対応する。
   final List<ShakeEventSnapshot>? shakeEvents,
+
+  /// 揺れ検知を要求した場合の、検知の進め方に関する状態。
+  final ShakeDetectionStatus? shakeStatus,
+});
+
+/// 現在の検知の履歴がどのように始まったかを表す。
+final class const ShakeDetectionStatus({
+  /// 履歴を破棄して検知をやり直した、直近のフレームの時刻。
+  required final DateTime coldStartAt,
+
+  /// 平常値の算出に使えた過去フレームの数。0 の場合は固定値で代用している。
+  required final int baselineFrameCount,
 });
 
 /// 解析した震度画像での揺れ検知の要求。
@@ -373,6 +385,7 @@ Future<void> _runAnalyze(
           parseMicros: parseMicros,
           geoJsonBuildMicros: geoMicros,
           shakeEvents: shakeEvents,
+          shakeStatus: shakeEvents == null ? null : shakeDetection?.status,
         ),
       ),
     );

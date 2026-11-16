@@ -28,6 +28,8 @@ abstract class ShakeDetectionPoint with _$ShakeDetectionPoint {
     required String name,
     required double latitude,
     required double longitude,
+
+    /// イベントに加わってから観測した最大の震度。
     required double? intensity,
     required double intensityDiff,
     required String? prefectureCode,

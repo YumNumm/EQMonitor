@@ -67,6 +67,39 @@ const _$ShakeDetectionLevelEnumMap = {
   ShakeDetectionLevel.stronger: 'stronger',
 };
 
+_HomeDebugOverlaySettings _$HomeDebugOverlaySettingsFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_HomeDebugOverlaySettings',
+  json,
+  ($checkedConvert) {
+    final val = _HomeDebugOverlaySettings(
+      shakeDetection: $checkedConvert(
+        'shake_detection',
+        (v) => v as bool? ?? false,
+      ),
+      kyoshinMonitor: $checkedConvert(
+        'kyoshin_monitor',
+        (v) => v as bool? ?? false,
+      ),
+      eew: $checkedConvert('eew', (v) => v as bool? ?? false),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'shakeDetection': 'shake_detection',
+    'kyoshinMonitor': 'kyoshin_monitor',
+  },
+);
+
+Map<String, dynamic> _$HomeDebugOverlaySettingsToJson(
+  _HomeDebugOverlaySettings instance,
+) => <String, dynamic>{
+  'shake_detection': instance.shakeDetection,
+  'kyoshin_monitor': instance.kyoshinMonitor,
+  'eew': instance.eew,
+};
+
 _HomeEewSettings _$HomeEewSettingsFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
       '_HomeEewSettings',
@@ -336,6 +369,12 @@ _HomeConfigurationModel _$HomeConfigurationModelFromJson(
             ? const HomeMapGridSettings()
             : HomeMapGridSettings.fromJson(v as Map<String, dynamic>),
       ),
+      debugOverlay: $checkedConvert(
+        'debug_overlay',
+        (v) => v == null
+            ? const HomeDebugOverlaySettings()
+            : HomeDebugOverlaySettings.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
@@ -343,6 +382,7 @@ _HomeConfigurationModel _$HomeConfigurationModelFromJson(
     'kyoshinMonitor': 'kyoshin_monitor',
     'shakeDetection': 'shake_detection',
     'mapGrid': 'map_grid',
+    'debugOverlay': 'debug_overlay',
   },
 );
 
@@ -355,4 +395,5 @@ Map<String, dynamic> _$HomeConfigurationModelToJson(
   'common': instance.common.toJson(),
   'shake_detection': instance.shakeDetection.toJson(),
   'map_grid': instance.mapGrid.toJson(),
+  'debug_overlay': instance.debugOverlay.toJson(),
 };

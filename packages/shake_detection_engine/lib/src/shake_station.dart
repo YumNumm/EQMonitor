@@ -32,6 +32,9 @@ final class ShakeStationState({
   var nearStations = const <NearStation>[];
 
   ShakeEventState? event;
+
+  /// イベントに属している間に観測した最大の震度。
+  double? peakIntensity;
   DateTime? eventedAt;
   DateTime? eventedExpireAt;
   DateTime? initialEventedAt;
@@ -64,6 +67,10 @@ final class ShakeStationState({
     intensityAverage = total / historyCount;
     if (intensity != null) {
       hasValidHistory = true;
+      final peak = peakIntensity;
+      if (event != null && (peak == null || peak < intensity)) {
+        peakIntensity = intensity;
+      }
     }
   }
 
@@ -72,11 +79,6 @@ final class ShakeStationState({
     _position = 0;
     intensityDiff = 0;
     intensityAverage = 0;
-  }
-
-  bool isExpiredAt(DateTime time) {
-    final expireAt = eventedExpireAt;
-    return expireAt == null || expireAt.isBefore(time);
   }
 
   void extendExpiry(DateTime expireAt) {

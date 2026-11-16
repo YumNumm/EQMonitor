@@ -30,6 +30,7 @@ final class ShakeDetectionWorker {
   ShakeDetectionEngine? _engine;
   DateTime? _coldStartAt;
   ShakeBaseline? _coldStartBaseline;
+  var _baselineFrameCount = 0;
   List<({DateTime time, List<double?> intensities})>? _framesSinceColdStart;
 
   Future<List<ShakeEventSnapshot>> detect({
@@ -65,6 +66,7 @@ final class ShakeDetectionWorker {
         ..seedBaseline(baseline);
       _coldStartAt = request.observedAt;
       _coldStartBaseline = baseline;
+      _baselineFrameCount = frames.length;
       _framesSinceColdStart = [];
     }
 
@@ -78,6 +80,17 @@ final class ShakeDetectionWorker {
       }
     }
     return engine.process(time: request.observedAt, intensities: intensities);
+  }
+
+  ShakeDetectionStatus? get status {
+    final coldStartAt = _coldStartAt;
+    if (coldStartAt == null) {
+      return null;
+    }
+    return ShakeDetectionStatus(
+      coldStartAt: coldStartAt,
+      baselineFrameCount: _baselineFrameCount,
+    );
   }
 
   /// コールドスタート直前のフレームから履歴を作り直す。

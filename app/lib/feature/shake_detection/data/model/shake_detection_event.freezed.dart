@@ -311,7 +311,8 @@ as List<ShakeDetectionPoint>,
 /// @nodoc
 mixin _$ShakeDetectionPoint {
 
- String get code; String get name; double get latitude; double get longitude; double? get intensity; double get intensityDiff; String? get prefectureCode; String? get regionCode;
+ String get code; String get name; double get latitude; double get longitude;/// イベントに加わってから観測した最大の震度。
+ double? get intensity; double get intensityDiff; String? get prefectureCode; String? get regionCode;
 /// Create a copy of ShakeDetectionPoint
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -517,6 +518,7 @@ class _ShakeDetectionPoint implements ShakeDetectionPoint {
 @override final  String name;
 @override final  double latitude;
 @override final  double longitude;
+/// イベントに加わってから観測した最大の震度。
 @override final  double? intensity;
 @override final  double intensityDiff;
 @override final  String? prefectureCode;

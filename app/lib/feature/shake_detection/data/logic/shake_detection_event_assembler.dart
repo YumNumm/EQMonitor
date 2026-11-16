@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/parameter/data/model/kyoshin/kyoshin_observation_points_parameter.dart';
+import 'package:eqmonitor/feature/shake_detection/data/logic/shake_observation_factory.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,7 +12,10 @@ part 'shake_detection_event_assembler.g.dart';
 ShakeDetectionEventAssembler shakeDetectionEventAssembler(Ref ref) =>
     const ShakeDetectionEventAssembler();
 
-class const ShakeDetectionEventAssembler() {
+class const ShakeDetectionEventAssembler({
+  final ShakeObservationFactory observationFactory =
+      const ShakeObservationFactory(),
+}) {
   /// 確定した検知イベントに観測点の情報と EEW との結合結果を付ける。
   ///
   /// [stations] は検知エンジンに渡した観測点と同じ並びであること。
@@ -44,21 +48,9 @@ class const ShakeDetectionEventAssembler() {
           correlatedEewEventId: correlator
               ?.correlate(
                 eews: eews,
-                shake: ShakeObservation(
-                  eventId: snapshot.id,
-                  createdAt: snapshot.createdAt,
-                  isBootstrap: snapshot.isBootstrap,
-                  points: [
-                    for (final point in snapshot.points)
-                      if (stations.elementAtOrNull(point.stationIndex)
-                          case final station?)
-                        ShakeObservationPoint(
-                          latitude: station.location.lat,
-                          longitude: station.location.lon,
-                          intensity: point.intensity,
-                          arv: station.arv400,
-                        ),
-                  ],
+                shake: observationFactory.create(
+                  snapshot: snapshot,
+                  stations: stations,
                 ),
               )
               ?.eewEventId,
@@ -71,7 +63,7 @@ class const ShakeDetectionEventAssembler() {
                   name: station.name,
                   latitude: station.location.lat,
                   longitude: station.location.lon,
-                  intensity: point.intensity,
+                  intensity: point.peakIntensity ?? point.intensity,
                   intensityDiff: point.intensityDiff,
                   prefectureCode: station.prefectureCode,
                   regionCode: station.regionCode,

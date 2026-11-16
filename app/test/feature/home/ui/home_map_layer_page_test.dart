@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,6 +26,7 @@ class _TestApp extends StatelessWidget {
 Future<void> _pumpPage(
   WidgetTester tester, {
   required bool isShakeDetectionEnabled,
+  bool isDebugMenuAvailable = false,
 }) async {
   await tester.pumpWidget(
     ProviderScope(
@@ -35,6 +37,7 @@ Future<void> _pumpPage(
         isDeviceShakeDetectionEnabledProvider.overrideWithValue(
           isShakeDetectionEnabled,
         ),
+        isDebugMenuAvailableProvider.overrideWithValue(isDebugMenuAvailable),
       ],
       child: const _TestApp(home: HomeMapLayerPage()),
     ),
@@ -65,5 +68,22 @@ void main() {
 
     expect(find.text('揺れ検知'), findsNothing);
     expect(find.byIcon(Icons.keyboard_arrow_down_rounded), findsNWidgets(4));
+  });
+
+  testWidgets('デバッグメニューを利用できるときはデバッグセクションを表示する', (tester) async {
+    await _pumpPage(
+      tester,
+      isShakeDetectionEnabled: false,
+      isDebugMenuAvailable: true,
+    );
+
+    expect(find.text('デバッグ'), findsOneWidget);
+    expect(find.byIcon(Icons.keyboard_arrow_down_rounded), findsNWidgets(5));
+  });
+
+  testWidgets('デバッグメニューを利用できないときはデバッグセクションを表示しない', (tester) async {
+    await _pumpPage(tester, isShakeDetectionEnabled: false);
+
+    expect(find.text('デバッグ'), findsNothing);
   });
 }
