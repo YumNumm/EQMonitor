@@ -8,16 +8,26 @@ import SwiftUI
 struct EewSmallActivityView: View {
     let state: EewContentState
 
+    /// これより狭いと 40mm / 41mm の Apple Watch。余白と震度を詰めて文字の幅を確保する。
+    private static let narrowWidth: CGFloat = 170
+
     var body: some View {
+        GeometryReader { geometry in
+            content(narrow: geometry.size.width < Self.narrowWidth)
+        }
+        .background(EewAlertStyle.surfaceColor(for: state.display))
+    }
+
+    private func content(narrow: Bool) -> some View {
         let display = state.display
-        HStack(alignment: .center, spacing: 8) {
+        return HStack(alignment: .center, spacing: narrow ? 6 : 8) {
             if display.isCanceled {
-                EewCanceledSymbol(size: 26)
+                EewCanceledSymbol(size: narrow ? 22 : 26)
             } else if let intensity = display.localIntensity {
-                EewLocalIntensityView(intensity: intensity, size: 40)
+                EewLocalIntensityView(intensity: intensity, size: narrow ? 34 : 40)
                     .fixedSize()
             } else {
-                EewMaximumIntensityView(intensity: display.maxIntensity, size: 30)
+                EewMaximumIntensityView(intensity: display.maxIntensity, size: narrow ? 26 : 30)
                     .fixedSize()
             }
 
@@ -31,8 +41,14 @@ struct EewSmallActivityView: View {
                 // 取消の主文は長いため、小さめにして2行へ収める
                 Text(title(display))
                     .font(AppFonts.flex(size: display.isCanceled ? 12 : 14, weight: .heavy))
-                    .lineLimit(2)
+                    // 塗りを敷く警戒文は折り返さず、縮めて1行に収める
+                    .lineLimit(display.locationNotice == .warning ? 1 : 2)
                     .minimumScaleFactor(0.7)
+                    .modifier(EewAlertBlinkHighlight(
+                        isActive: display.locationNotice == .warning,
+                        anchor: display.countdownArrivalDate,
+                        fillsWidth: true
+                    ))
 
                 if !display.isCanceled {
                     detail(display)
@@ -40,9 +56,10 @@ struct EewSmallActivityView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
+        .padding(.horizontal, narrow ? 8 : 10)
+        .padding(.vertical, narrow ? 4 : 6)
         .foregroundStyle(.white)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func title(_ display: EewDisplay) -> String {
