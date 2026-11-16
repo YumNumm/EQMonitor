@@ -14,6 +14,7 @@ struct EewLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
         let configuration = ActivityConfiguration(for: EewLiveActivityAttributes.self) { context in
             EewActivityContentView(state: context.state)
+                .activityBackgroundTint(.black)
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             eewDynamicIsland(state: context.state)
@@ -36,7 +37,6 @@ private struct EewActivityContentView: View {
             EewActivityFamilyContentView(state: state)
         } else {
             EewLockScreenView(state: state)
-                .activityBackgroundTint(.black)
         }
     }
 }
@@ -49,12 +49,9 @@ private struct EewActivityFamilyContentView: View {
     var body: some View {
         switch activityFamily {
         case .small:
-            // Viewの塗りとシステム側の地色を同じ色にそろえ、余白との境目を出さない
             EewSmallActivityView(state: state)
-                .activityBackgroundTint(EewSmallActivityView.backgroundColor(for: state.display))
         default:
             EewLockScreenView(state: state)
-                .activityBackgroundTint(.black)
         }
     }
 }

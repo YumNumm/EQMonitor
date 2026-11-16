@@ -124,3 +124,53 @@ struct StripePattern: View {
         }
     }
 }
+
+// MARK: - 1秒おきの点滅
+
+/// 偶数秒だけ枠いっぱいを塗る。
+///
+/// Live Activity はタイマーやアニメーションを自前で回せないため、システムが毎秒描き直す
+/// タイマー文字を使う。`EQBlink.ttf` は偶数の数字を塗りつぶし、奇数の数字を空にした専用フォントで、
+/// 秒の1桁目だけを枠に合わせて切り抜くと 1 秒おきの点滅になる。
+@available(iOS 16.1, *)
+struct BlinkBlock: View {
+    /// 到達カウントダウンと秒の切り替わりをそろえるための基準時刻
+    var anchor: Date?
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.isLuminanceReduced) private var isLuminanceReduced
+
+    var body: some View {
+        if reduceMotion || isLuminanceReduced {
+            // 点滅を止める設定・常時表示では塗りっぱなしにする
+            Rectangle()
+        } else {
+            GeometryReader { geo in
+                let width = max(geo.size.width, 1)
+                // 文字は左詰めで描かれる。「M:SS」の4文字目（秒の1桁目）を枠へ合わせる。
+                Color.clear.overlay(alignment: .leading) {
+                    Text(Self.end(anchor: anchor), style: .timer)
+                        .font(AppFonts.blink(size: width))
+                        .lineLimit(1)
+                        // fixedSize を付けるとタイマー文字が描かれなくなるため、幅を明示する
+                        .frame(width: width * 4.5, alignment: .leading)
+                        .offset(x: -width * 3)
+                }
+                .clipped()
+            }
+            .accessibilityHidden(true)
+        }
+    }
+
+    /// 残りが常に「M:SS」の4文字になる終了時刻。基準時刻から偶数秒ずらし、秒の偶奇をそろえる。
+    static func end(anchor: Date?, now: Date = Date()) -> Date {
+        var end = anchor ?? now
+        while end.timeIntervalSince(now) < 300 {
+            end.addTimeInterval(120)
+        }
+        while end.timeIntervalSince(now) > 590 {
+            end.addTimeInterval(-120)
+        }
+        return end
+    }
+}

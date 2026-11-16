@@ -33,6 +33,11 @@ struct EewSmallActivityView: View {
                     .font(AppFonts.flex(size: display.isCanceled ? 12 : 14, weight: .heavy))
                     .lineLimit(2)
                     .minimumScaleFactor(0.7)
+                    .modifier(EewBlinkHighlight(
+                        isActive: display.locationNotice == .warning,
+                        anchor: display.countdownArrivalDate,
+                        trailingBleed: 10
+                    ))
 
                 if !display.isCanceled {
                     detail(display)
@@ -44,26 +49,11 @@ struct EewSmallActivityView: View {
         .padding(.vertical, 6)
         .foregroundStyle(.white)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Self.backgroundColor(for: display))
+        .background(.black)
     }
 
-    /// 背景色に混ぜる基調色の割合。残りは黒。
-    /// 震度バッジ（5強の橙・6弱の赤など）と同化しないよう、黒へ寄せて暗くする。
-    static let backgroundTintStrength: Double = 0.45
-
-    /// 警報は橙、現在地が警報対象なら赤、予報と取消は黒。
-    /// Lock Screen のヘッダー（警報=赤、予報=橙）とは意味づけが異なる。
-    static func backgroundColor(for display: EewDisplay) -> Color {
-        let strength = backgroundTintStrength
-        guard !display.isCanceled else { return .black }
-        if display.locationNotice == .warning {
-            return Color(red: 0.75 * strength, green: 0.0, blue: 0.0)
-        }
-        if display.isWarning {
-            return Color(red: 0.90 * strength, green: 0.38 * strength, blue: 0.0)
-        }
-        return .black
-    }
+    /// 現在地が警報対象のときの強調色。黒地との差の合成で、塗りと文字の色を入れ替える。
+    static let alertColor = Color(red: 1.0, green: 0.1, blue: 0.1)
 
     private func title(_ display: EewDisplay) -> String {
         if display.isCanceled {
@@ -79,11 +69,29 @@ struct EewSmallActivityView: View {
     private func detail(_ display: EewDisplay) -> some View {
         if display.locationNotice != nil {
             if let remaining = ArrivalCountdown.remaining(until: display.countdownArrivalDate) {
-                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                let isLocalWarning = display.locationNotice == .warning
+                HStack(alignment: .firstTextBaseline, spacing: 3) {
                     Text("到達まで")
                         .font(AppFonts.flex(size: 10, weight: .bold))
                         .foregroundStyle(.white.opacity(0.8))
-                    ArrivalCountdownText(remaining: remaining, size: 16, color: .white, alignment: .leading)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                    // 到達までが10分を超えることはないため、分1桁ぶんの幅だけ確保する
+                    ArrivalCountdownText(
+                        remaining: remaining,
+                        size: 16,
+                        color: isLocalWarning ? Self.alertColor : .white,
+                        alignment: .leading,
+                        placeholder: "0:00"
+                    )
+                    // 幅が足りないときはラベル側を縮め、数字は欠けさせない
+                    .fixedSize()
+                    .layoutPriority(1)
+                    .modifier(EewBlinkHighlight(
+                        isActive: isLocalWarning,
+                        anchor: display.countdownArrivalDate,
+                        horizontalPadding: 2
+                    ))
                 }
             } else if let hypocenterName = state.hypocenterName, !hypocenterName.isEmpty {
                 Text(hypocenterName)
@@ -94,6 +102,37 @@ struct EewSmallActivityView: View {
             }
         } else {
             EewSourceMetricsView(state: state, size: 15)
+        }
+    }
+}
+
+/// 文字の背景を1秒おきに点滅させ、塗りと文字の色を入れ替える。角は丸めない。
+///
+/// 現在地が警報対象のときだけ使う。対象外でも色を付けると、現在地に警報が出たと誤解される。
+@available(iOS 16.1, *)
+private struct EewBlinkHighlight: ViewModifier {
+    let isActive: Bool
+    let anchor: Date?
+    /// カードの右端まで帯を伸ばす量。0なら文字の幅だけ塗る。
+    var trailingBleed: CGFloat = 0
+    var horizontalPadding: CGFloat = 4
+
+    func body(content: Content) -> some View {
+        if isActive {
+            content
+                // 差の合成: 赤い塗りの上では黒文字、黒地の上では赤文字になる
+                .foregroundStyle(EewSmallActivityView.alertColor)
+                .blendMode(.difference)
+                .padding(.horizontal, horizontalPadding)
+                .padding(.vertical, 1)
+                .frame(maxWidth: trailingBleed > 0 ? .infinity : nil, alignment: .leading)
+                .background {
+                    BlinkBlock(anchor: anchor)
+                        .foregroundStyle(EewSmallActivityView.alertColor)
+                }
+                .padding(.trailing, -trailingBleed)
+        } else {
+            content
         }
     }
 }

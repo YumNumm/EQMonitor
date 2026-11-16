@@ -165,7 +165,7 @@ enum EewLocationNotice: Equatable {
 
     var title: String {
         switch self {
-        case .warning: return "現在地で強い揺れ"
+        case .warning: return "強い揺れに警戒!"
         case .forecast: return "現在地で揺れ"
         case .weak: return "現在地で弱い揺れ"
         }
