@@ -23,6 +23,48 @@ final class const ShakeDetectionParameters({
   final int weakerConfirmPointCount = 4,
   final int weakConfirmPointCount = 3,
 }) {
+  List<num> get _values => [
+    maxSearchDistance,
+    peakWeightDistance,
+    isolatedThreshold,
+    isolatedDetectionDiff,
+    scoreThresholdRatio,
+    scoreIntensityOffset,
+    minDetectionDiff,
+    noChangePenaltyFactor,
+    maxNearPoints,
+    strongerMergeDistance,
+    strongMergeDistance,
+    mediumMergeDistance,
+    weakMergeDistance,
+    weakerMergeDistance,
+    strongerSeconds,
+    strongSeconds,
+    mediumSeconds,
+    weakSeconds,
+    weakerSeconds,
+    weakerConfirmPointCount,
+    weakConfirmPointCount,
+  ];
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! ShakeDetectionParameters) {
+      return false;
+    }
+    final values = _values;
+    final otherValues = other._values;
+    for (var index = 0; index < values.length; index++) {
+      if (values[index] != otherValues[index]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll(_values);
+
   Duration lifetime(ShakeEventLevel level) => Duration(
     seconds: switch (level) {
       .stronger => strongerSeconds,

@@ -56,6 +56,10 @@ final class ShakeDetectionEngine {
 
   int get stationCount => _stations.length;
 
+  List<ShakeEventSnapshot> get events => [
+    for (final event in _events) event.toSnapshot(),
+  ];
+
   bool requiresColdStart(DateTime time) {
     final last = _lastProcessedAt;
     return last == null ||
@@ -125,7 +129,35 @@ final class ShakeDetectionEngine {
       _bootstrapFramesRemaining -= 1;
     }
     _lastProcessedAt = time;
-    return [for (final event in _events) event.toSnapshot()];
+    return events;
+  }
+
+  /// 履歴を作り直した後のイベントに、作り直す前のイベントの ID を引き継ぐ。
+  ///
+  /// 観測点が最も多く重なるイベント同士を同一とみなす。表示側が同じ揺れを
+  /// 新しいイベントとして扱わないようにするためのもの。
+  void adoptEventIds(List<ShakeEventSnapshot> previous) {
+    final remaining = [..._events];
+    final ordered = [...previous]
+      ..sort((a, b) => b.points.length.compareTo(a.points.length));
+    for (final snapshot in ordered) {
+      final stationIndexes = {
+        for (final point in snapshot.points) point.stationIndex,
+      };
+      ShakeEventState? best;
+      var bestShared = 0;
+      for (final event in remaining) {
+        final shared = event.countSharedStations(stationIndexes);
+        if (shared > bestShared) {
+          best = event;
+          bestShared = shared;
+        }
+      }
+      if (best != null) {
+        best.id = snapshot.id;
+        remaining.remove(best);
+      }
+    }
   }
 
   void _evaluate(

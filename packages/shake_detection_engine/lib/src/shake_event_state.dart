@@ -23,7 +23,7 @@ final class ShakeEventState {
     _stations.add(firstStation);
   }
 
-  final String id;
+  String id;
   final DateTime createdAt;
   final bool isBootstrap;
   DateTime updatedAt;
@@ -38,6 +38,9 @@ final class ShakeEventState {
   final List<ShakeMergedEvent> _mergedEvents = [];
 
   int get stationCount => _stations.length;
+
+  int countSharedStations(Set<int> stationIndexes) =>
+      _stations.where((e) => stationIndexes.contains(e.index)).length;
 
   void addStation(
     ShakeStationState station,

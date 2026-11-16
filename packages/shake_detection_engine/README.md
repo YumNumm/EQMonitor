@@ -14,6 +14,8 @@ final events = engine.process(time: observedAt, intensities: intensities);
 
 - `intensities` は `stations` と同じ順序で渡す。欠測は `null`。
 - `seedBaseline` は履歴が空の状態（生成直後・`reset` 直後）で呼ぶ。平常値との差で 1 フレーム目から検知できる。
+- 直前のフレームを後から入手できた場合は、`reset` → `seedBaseline` → 古い順に `process` で履歴を作り直し、
+  `adoptEventIds` に作り直す前の `events` を渡して ID を引き継ぐ。
 - 5 秒以上の時刻の飛びがあった場合は `reset` してから `seedBaseline` し直す。
 
 ## 移植元との差分

@@ -197,6 +197,76 @@ void main() {
     });
   });
 
+  group('履歴の作り直し', () {
+    test('作り直す前のイベントと観測点が重なるイベントに ID を引き継ぐこと', () {
+      final engine = ShakeDetectionEngine(stations: grid)
+        ..seedBaseline(ShakeBaseline(values: uniform(-0.5), isReliable: true));
+      final before = engine.process(time: at(0), intensities: uniform(2));
+
+      engine
+        ..reset()
+        ..seedBaseline(ShakeBaseline(values: uniform(-0.5), isReliable: true))
+        ..process(time: at(-2), intensities: uniform(1))
+        ..process(time: at(-1), intensities: uniform(1.5));
+      final rebuilt = engine.process(time: at(0), intensities: uniform(2));
+      expect(rebuilt.single.id, isNot(before.single.id));
+
+      engine.adoptEventIds(before);
+
+      expect(engine.events.single.id, before.single.id);
+      expect(engine.events.single.createdAt, at(-2));
+    });
+
+    test('重なる観測点が無いイベントの ID は変えないこと', () {
+      final engine = ShakeDetectionEngine(stations: grid)
+        ..process(time: at(0), intensities: uniform(-0.5));
+      final current = engine.process(time: at(1), intensities: uniform(1.5));
+
+      engine.adoptEventIds([
+        ShakeEventSnapshot(
+          id: 'other',
+          createdAt: at(0),
+          updatedAt: at(0),
+          expiresAt: at(40),
+          level: ShakeEventLevel.medium,
+          isConfirmed: true,
+          isBootstrap: false,
+          minLatitude: 0,
+          maxLatitude: 0,
+          minLongitude: 0,
+          maxLongitude: 0,
+          points: const [
+            ShakeEventPointSnapshot(
+              stationIndex: 999,
+              intensity: 1,
+              intensityDiff: 1,
+            ),
+          ],
+          mergedEvents: const [],
+        ),
+      ]);
+
+      expect(engine.events.single.id, current.single.id);
+    });
+  });
+
+  group('ShakeDetectionParameters', () {
+    test('すべての値が等しい場合だけ等価であること', () {
+      expect(
+        const ShakeDetectionParameters(),
+        const ShakeDetectionParameters(maxSearchDistance: 60),
+      );
+      expect(
+        const ShakeDetectionParameters(),
+        isNot(const ShakeDetectionParameters(minDetectionDiff: 0.3)),
+      );
+      expect(
+        const ShakeDetectionParameters(),
+        isNot(const ShakeDetectionParameters(weakSeconds: 31)),
+      );
+    });
+  });
+
   group('離島の単独検知', () {
     const island = [ShakeStationLocation(latitude: 27, longitude: 142)];
 
