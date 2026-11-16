@@ -42,7 +42,6 @@ ShakeDetectionEvent _shake({
   String? correlatedEewEventId,
 }) => ShakeDetectionEvent(
   eventId: 'shake',
-  serialNo: 1,
   createdAt: _now,
   updatedAt: _now,
   expiresAt: _now.add(const Duration(minutes: 1)),
@@ -52,7 +51,6 @@ ShakeDetectionEvent _shake({
   maxLat: maxLat,
   minLng: minLng,
   maxLng: maxLng,
-  changeReasons: const ['new_event'],
   correlatedEewEventId: correlatedEewEventId,
 );
 

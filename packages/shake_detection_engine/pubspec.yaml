@@ -1,0 +1,15 @@
+name: shake_detection_engine
+description: 強震モニタの観測点震度から揺れを検知するエンジン。
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.14.0-29.0.dev
+
+resolution: workspace
+
+dev_dependencies:
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  test: ^1.29.0

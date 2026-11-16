@@ -148,6 +148,10 @@ dependencies:
   riverpod_annotation: ^4.0.3
   screenshot: 3.0.0
   sensors_plus: ^7.0.0
+  shake_detection_engine:
+    path: ../packages/shake_detection_engine
+  shake_eew_correlator:
+    path: ../packages/shake_eew_correlator
   share_plus: ^13.1.0
   shared_preferences: ^2.3.3
   shared_preferences_foundation: ^2.5.6

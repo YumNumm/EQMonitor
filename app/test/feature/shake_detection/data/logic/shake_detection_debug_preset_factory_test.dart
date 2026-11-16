@@ -16,6 +16,5 @@ void main() {
       everyElement('13'),
     );
     expect(event.points.map((point) => point.regionCode), everyElement('350'));
-    expect(event.points.map((point) => point.cityCode), everyElement(isNull));
   });
 }

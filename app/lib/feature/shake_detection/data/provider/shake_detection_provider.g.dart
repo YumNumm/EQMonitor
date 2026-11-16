@@ -10,72 +10,25 @@ part of 'shake_detection_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// 端末内で検知した揺れのうち確定したもの。表示中の EEW と結合できたイベントには
+/// `correlatedEewEventId` が入る。
 
-@ProviderFor(ShakeDetectionAcceptedSnapshot)
-final shakeDetectionAcceptedSnapshotProvider =
-    ShakeDetectionAcceptedSnapshotProvider._();
-
-final class ShakeDetectionAcceptedSnapshotProvider
-    extends
-        $NotifierProvider<
-          ShakeDetectionAcceptedSnapshot,
-          ShakeDetectionSnapshot?
-        > {
-  ShakeDetectionAcceptedSnapshotProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'shakeDetectionAcceptedSnapshotProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$shakeDetectionAcceptedSnapshotHash();
-
-  @$internal
-  @override
-  ShakeDetectionAcceptedSnapshot create() => ShakeDetectionAcceptedSnapshot();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ShakeDetectionSnapshot? value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ShakeDetectionSnapshot?>(value),
-    );
-  }
-}
-
-String _$shakeDetectionAcceptedSnapshotHash() =>
-    r'51f4020f3860984dcb62b8b574b0f23171555da0';
-
-abstract class _$ShakeDetectionAcceptedSnapshot
-    extends $Notifier<ShakeDetectionSnapshot?> {
-  ShakeDetectionSnapshot? build();
-  @$mustCallSuper
-  @override
-  WhenComplete runBuild() {
-    final ref =
-        this.ref as $Ref<ShakeDetectionSnapshot?, ShakeDetectionSnapshot?>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<ShakeDetectionSnapshot?, ShakeDetectionSnapshot?>,
-              ShakeDetectionSnapshot?,
-              Object?,
-              Object?
-            >;
-    return element.handleCreate(ref, build);
-  }
-}
-
-@ProviderFor(ShakeDetection)
+@ProviderFor(shakeDetection)
 final shakeDetectionProvider = ShakeDetectionProvider._();
 
+/// 端末内で検知した揺れのうち確定したもの。表示中の EEW と結合できたイベントには
+/// `correlatedEewEventId` が入る。
+
 final class ShakeDetectionProvider
-    extends $NotifierProvider<ShakeDetection, List<ShakeDetectionEvent>> {
+    extends
+        $FunctionalProvider<
+          List<ShakeDetectionEvent>,
+          List<ShakeDetectionEvent>,
+          List<ShakeDetectionEvent>
+        >
+    with $Provider<List<ShakeDetectionEvent>> {
+  /// 端末内で検知した揺れのうち確定したもの。表示中の EEW と結合できたイベントには
+  /// `correlatedEewEventId` が入る。
   ShakeDetectionProvider._()
     : super(
         from: null,
@@ -92,7 +45,14 @@ final class ShakeDetectionProvider
 
   @$internal
   @override
-  ShakeDetection create() => ShakeDetection();
+  $ProviderElement<List<ShakeDetectionEvent>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  List<ShakeDetectionEvent> create(Ref ref) {
+    return shakeDetection(ref);
+  }
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(List<ShakeDetectionEvent> value) {
@@ -103,23 +63,4 @@ final class ShakeDetectionProvider
   }
 }
 
-String _$shakeDetectionHash() => r'767b3cda3de475432fc0e104d9cd8c4466c9e25c';
-
-abstract class _$ShakeDetection extends $Notifier<List<ShakeDetectionEvent>> {
-  List<ShakeDetectionEvent> build();
-  @$mustCallSuper
-  @override
-  WhenComplete runBuild() {
-    final ref =
-        this.ref as $Ref<List<ShakeDetectionEvent>, List<ShakeDetectionEvent>>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<List<ShakeDetectionEvent>, List<ShakeDetectionEvent>>,
-              List<ShakeDetectionEvent>,
-              Object?,
-              Object?
-            >;
-    return element.handleCreate(ref, build);
-  }
-}
+String _$shakeDetectionHash() => r'df1b0ff338d3c20f3145bc0d227681e6569ef375';
