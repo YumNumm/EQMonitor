@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/region_selection/data/model/region_selection_r
 import 'package:eqmonitor/feature/region_selection/ui/page/region_selection_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/current_location_permission_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/shake_detection_settings_action.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/shake_detection_enable_flow.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_availability_provider.dart';
@@ -39,6 +40,7 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
         settings.isLoading ||
         mutation is MutationPending;
     const action = ShakeDetectionSettingsAction();
+    const enableFlow = ShakeDetectionEnableFlow();
     ref.listen(ShakeDetectionSettingsNotifier.saveMutation, (_, next) {
       if (next is MutationError) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -116,10 +118,15 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
                             '地域 ${entry.regionCode}',
                     },
                     busy: busy,
-                    onEnabled: (value) => action.save(ref, [
-                      for (final e in state.entries)
-                        e.id == entry.id ? e.copyWith(enabled: value) : e,
-                    ]),
+                    onEnabled: (value) => enableFlow.save(
+                      ref: ref,
+                      context: context,
+                      previous: state.entries,
+                      next: [
+                        for (final e in state.entries)
+                          e.id == entry.id ? e.copyWith(enabled: value) : e,
+                      ],
+                    ),
                     onLevel: (value) => action.save(ref, [
                       for (final e in state.entries)
                         e.id == entry.id ? e.copyWith(minLevel: value) : e,
@@ -143,16 +150,21 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
                           busy ||
                               state.entries.any((e) => e.targetType == target)
                           ? null
-                          : () => action.save(ref, [
-                              ...state.entries,
-                              ShakeDetectionEntry(
-                                id: '',
-                                targetType: target,
-                                regionCode: null,
-                                enabled: true,
-                                minLevel: ShakeDetectionLevel.medium,
-                              ),
-                            ]),
+                          : () => enableFlow.save(
+                              ref: ref,
+                              context: context,
+                              previous: state.entries,
+                              next: [
+                                ...state.entries,
+                                ShakeDetectionEntry(
+                                  id: '',
+                                  targetType: target,
+                                  regionCode: null,
+                                  enabled: true,
+                                  minLevel: ShakeDetectionLevel.medium,
+                                ),
+                              ],
+                            ),
                       child: Text(
                         target == ShakeDetectionTargetType.currentLocation
                             ? '現在地を追加'
@@ -191,16 +203,21 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
                                 );
                             final selected = result?.firstOrNull;
                             if (selected == null || !context.mounted) return;
-                            await action.save(ref, [
-                              ...state.entries,
-                              ShakeDetectionEntry(
-                                id: '',
-                                targetType: ShakeDetectionTargetType.region,
-                                regionCode: selected.code,
-                                enabled: true,
-                                minLevel: ShakeDetectionLevel.medium,
-                              ),
-                            ]);
+                            await enableFlow.save(
+                              ref: ref,
+                              context: context,
+                              previous: state.entries,
+                              next: [
+                                ...state.entries,
+                                ShakeDetectionEntry(
+                                  id: '',
+                                  targetType: ShakeDetectionTargetType.region,
+                                  regionCode: selected.code,
+                                  enabled: true,
+                                  minLevel: ShakeDetectionLevel.medium,
+                                ),
+                              ],
+                            );
                           },
                     child: const Text('都道府県から細分化地域を追加'),
                   ),
