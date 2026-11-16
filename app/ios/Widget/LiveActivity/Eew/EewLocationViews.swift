@@ -58,7 +58,7 @@ struct EewLockScreenLocationView: View {
             VStack(alignment: .leading, spacing: 4) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(state.display.locationNotice == .warning ? "現在地に警報" : "現在地")
-                        .font(AppFonts.flex(size: 9, weight: .bold))
+                        .font(AppFonts.flex(size: 10, weight: .bold))
                         .foregroundStyle(.white.opacity(0.8))
                     if let regionName = state.location?.displayRegionName, !regionName.isEmpty {
                         Text(regionName)

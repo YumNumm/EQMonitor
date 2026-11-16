@@ -35,7 +35,8 @@
 - Expanded取消は不可視・アクセシビリティ対象外の最大震度枠で配置を維持し、左上記号を出さない。
 - PLUM・レベル法・1点検知はM/深さを隠し、検知方法を明示する。
 - 深発注意文は非取消・非低精度・最大震度未発表・`depth > 150`の全条件。
-  Lock Screenに出し、狭いDynamic Islandには載せない。
+  Lock Screenでは震源要素の右へ2行で置く。行を足すと上限160ptを超え、他の文字が縮む。
+  現在地欄を出す場合は現在地欄を優先し、狭いDynamic Islandには載せない。
 - Expandedで現在地震度を出さない場合は、非取消で解析できる発生/検知時刻を見出し下へ出す。
   元の`timeLabel`とJST表示を使い、受信時刻などを補わない。
 - 全国最大LPGMを現在地の`forecastLpgmIntensity`で代用しない。
@@ -51,21 +52,43 @@
 - Live Activityのbodyは秒読みだけで再評価されない。到達後も`主要動到達まで 00:00`を維持し、
   到達時の文言切替に`staleDate`を使わない。EEWのstaleは開始/更新から30分後の別契約。
 - タイマーと幅確保用のhidden placeholderは同じフォントを使用する。
+- タイマー文字のアニメーションはAppleの案内どおり`contentTransition(.numericText(countsDown:))`で要求している。
+  ただしiOS 27 SimulatorのDynamic Island（Compact）を録画すると、毎秒の切り替わりは1フレームで、
+  数字は動かない。`Text(_:style: .timer)`、システムフォント、`transaction`や`animation(_:value:)`の
+  追加でも同じ。実機での挙動は未確認。同じ条件で`ProgressView(timerInterval:)`は連続して動く。
 - EEWのLock Screenの発生・検知日時は、幅に応じて1行、ラベルと日時の2行、ラベル・日付・時刻の3行に切り替える。時刻の途中で分割・省略しない。
 - 現在地の地域名は表示時に全角数字のみ半角化する。EEWのLock Screenでは現在地欄の幅を優先し、地域名は最大2行で表示する。
 - 濃色ヘッダーは白、補助文字は白70%。現在の黒背景EEW本文も白を明示し、
   Light AppearanceのLock Screenには黒背景を明示する。旧「本文は常に.primary」を流用しない。
 - ヘッダーのしましまは`StripePattern`、取消の灰色を維持する。
+- Expandedのleading/trailing/bottomは左右の余白を`EewExpandedMetrics.horizontalInset`で揃える。
+  領域ごとに別の値を使うと、最大震度・M/深さと下段の文字の端がずれる。M/深さの縦積みは右揃え。
+- Expandedの発生/検知日時はLock Screenと同じGoogle Sans Codeにする。
 - Expandedはleading/trailing/bottomを分け、OS標準外周余白を維持する。
   単一leading＋`belowIfTooWide`やカメラ高さ固定・負paddingで補正しない。
 - `ViewThatFits(in: .vertical)`の候補測定にのみ`fixedSize`を使い、高さ不足時は
   震度44pt・見出し1行へ切替える（通常56pt・2行）。下部左右・下に8ptを確保する。
+- `lineLimit(1)`＋`minimumScaleFactor`のTextは高さ方向にも縮む。Lock Screenの内容が160ptを
+  超えるとヘッダーやM/深さが最小倍率まで縮小されるため、`fixedSize(horizontal: false, vertical: true)`で
+  高さを固定する。
+- Mの数値は小数点の前後だけを詰める（`size * -0.14`）。数値全体へのtrackingは縮小時に数字が重なる。
+- Compact/Minimalの`MAX`は左右に余白を取る。太字が字送り幅いっぱいに描画され左端で欠ける。
 - 警報名・取消報数・低精度ラベルなど混在文はシステムフォント。数値はGoogle Sans Code。
   M/深さの縦積みspacingは0、Expanded最大震度38pt・震源数値21ptを基準とする。
 - MAXは数字の右上へ置き左右4ptを確保する。単数字だけ縦積みにして行高を変えない。
   カメラ脇の混在文の外側にも4ptを確保し、切り取りをCanvasで確認する。
 - 注意帯・現在地震度背景・低精度ラベルは`ContainerRelativeShape()`を使い、
   独自containerShapeでIsland全体の形状を上書きしない。
+
+## Apple Watch・CarPlay（`.small`）
+
+- iOS 18以降は`supplementalActivityFamilies([.small])`を付け、`activityFamily`が`.small`のとき
+  `EewSmallActivityView`を出す。未対応のままだとSmart StackにはCompactのleading/trailingが出る。
+- 最低OSが18未満のため、`if #available`の分岐で構成を返し分ける（不透明型の分岐はSE-0360で可）。
+  `WidgetBundle`のbuilderは`else`を扱えないので、Widgetを2つに分けて出し分ける方法は使えない。
+- 表示は現在地を主役にする。現在地の情報があれば予想震度と到達まで、無ければ全国の最大震度と
+  見出し・M/深さ。取消は記号と主文のみ。
+- `Widget/`へ追加したファイルはPreview側の`membershipExceptions`にも追加する。
 
 ## ローカルデバッグとPreview
 
@@ -82,6 +105,10 @@
   Figma基準はLock Screen `1628:1745`、Expanded `1628:1694`。
 - `Shared/`追加はXcode Sources所属、`Widget/`追加はPreview側membershipを確認する。
   Previewターゲット構成は [軽量 Preview](apple_previews.md) を参照。
+
+- Simulatorで実際のExpandedを撮るには、Activityをバックグラウンドから`AlertConfiguration`付きで
+  更新する。Dynamic Islandが数秒展開するので`simctl io screenshot`で撮れる（CompactはHomeへ戻れば写る）。
+  Lock Screenは`simctl`からロックする手段がなく、この方法では撮れない。
 
 ## 検証範囲
 
