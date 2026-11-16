@@ -51,4 +51,4 @@ final class ShakeEewCorrelatorProvider
 }
 
 String _$shakeEewCorrelatorHash() =>
-    r'be3c9be470b15f3f22627751d55dc56f297f22bf';
+    r'996ce7028d35e06bdf39e44749741ac008da8b9a';

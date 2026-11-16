@@ -48,7 +48,7 @@ final class DeviceShakeDetectionProvider
 }
 
 String _$deviceShakeDetectionHash() =>
-    r'5b35e8a3f836c5339017790914fe76791855e3ee';
+    r'fc725891632dd505b8aa04c23732957c0a86d55b';
 
 /// 強震モニタの画像から端末内で検知した揺れの、最新フレームの結果。
 

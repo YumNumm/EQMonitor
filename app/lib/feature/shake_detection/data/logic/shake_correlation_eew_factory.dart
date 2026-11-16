@@ -35,7 +35,6 @@ class const ShakeCorrelationEewFactory() {
           longitude: longitude,
           depth: depth.toDouble(),
           magnitude: magnitude,
-          isLastInfo: eew.isLastInfo,
           isCancel: eew.isCanceled,
         ),
   ];

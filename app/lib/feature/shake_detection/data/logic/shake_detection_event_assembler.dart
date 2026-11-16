@@ -21,7 +21,6 @@ class const ShakeDetectionEventAssembler() {
     required List<KyoshinObservationPoint> stations,
     required ShakeEewCorrelator? correlator,
     required List<CorrelationEew> eews,
-    required DateTime now,
   }) => [
     for (final snapshot in snapshots)
       if (snapshot.isConfirmed)
@@ -61,7 +60,6 @@ class const ShakeDetectionEventAssembler() {
                         ),
                   ],
                 ),
-                now: now,
               )
               ?.eewEventId,
           points: [

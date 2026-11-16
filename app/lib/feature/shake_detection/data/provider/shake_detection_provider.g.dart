@@ -10,13 +10,13 @@ part of 'shake_detection_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// 端末内で検知した揺れのうち確定したもの。EEW と結合できたイベントには
+/// 端末内で検知した揺れのうち確定したもの。表示中の EEW と結合できたイベントには
 /// `correlatedEewEventId` が入る。
 
 @ProviderFor(shakeDetection)
 final shakeDetectionProvider = ShakeDetectionProvider._();
 
-/// 端末内で検知した揺れのうち確定したもの。EEW と結合できたイベントには
+/// 端末内で検知した揺れのうち確定したもの。表示中の EEW と結合できたイベントには
 /// `correlatedEewEventId` が入る。
 
 final class ShakeDetectionProvider
@@ -27,7 +27,7 @@ final class ShakeDetectionProvider
           List<ShakeDetectionEvent>
         >
     with $Provider<List<ShakeDetectionEvent>> {
-  /// 端末内で検知した揺れのうち確定したもの。EEW と結合できたイベントには
+  /// 端末内で検知した揺れのうち確定したもの。表示中の EEW と結合できたイベントには
   /// `correlatedEewEventId` が入る。
   ShakeDetectionProvider._()
     : super(
@@ -63,4 +63,4 @@ final class ShakeDetectionProvider
   }
 }
 
-String _$shakeDetectionHash() => r'3d47c310f8369eb6c06035be65ee0cfb02386236';
+String _$shakeDetectionHash() => r'df1b0ff338d3c20f3145bc0d227681e6569ef375';

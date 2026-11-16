@@ -17,8 +17,11 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_request_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/repository/kyoshin_monitor_repository.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_backfill_runner.dart';
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_baseline_planner.dart';
 import 'package:eqmonitor/feature/shake_detection/data/notifier/device_shake_detection.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart' hide Result;
 import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
@@ -129,8 +132,11 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       fetchSw.stop();
 
       // 揺れ検知は地上の震度画像でのみ行う。
+      final shakeSettings = ref.read(shakeDetectionCurrentSettingsProvider);
+      final shakeTuning = ref.read(shakeDetectionTuningProvider);
       final detectsShake =
           ref.read(buildConfigProvider).isShakeDetectionAvailable &&
+          shakeSettings.isEnabled &&
           realtimeDataType == RealtimeDataType.shindo &&
           realtimeLayer == RealtimeLayer.surface;
       final shakeDetection = ref.read(deviceShakeDetectionProvider.notifier);
@@ -177,6 +183,8 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
                       ? ShakeDetectionRequest(
                           observedAt: targetTime,
                           baselineGifs: baselineGifs,
+                          fallbackBaseline: shakeTuning.fallbackBaseline,
+                          parameters: shakeTuning.parameters,
                         )
                       : null,
                 )
@@ -201,6 +209,35 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         shakeDetection.clear();
       } else {
         shakeDetection.apply(observedAt: targetTime, events: shakeEvents);
+      }
+      // 1 フレーム目は平常値との差で検知し、その裏で直近のフレームを取得して
+      // 連続して動いていた場合に近い履歴へ作り直す。
+      if (shakeEvents != null &&
+          baselineTimes != null &&
+          shakeSettings.isBackfillEnabled) {
+        unawaited(
+          ref
+              .read(shakeDetectionBackfillRunnerProvider)
+              .run(
+                analyzer: analyzer,
+                source: monitorSource,
+                layer: realtimeLayer,
+                coldStartAt: targetTime,
+                seconds: shakeTuning.backfillSeconds,
+              )
+              .then(
+                (events) {
+                  if (events != null) {
+                    shakeDetection.replaceEvents(events);
+                  }
+                },
+                onError: (Object error, StackTrace stackTrace) => talker.error(
+                  'Failed to backfill shake detection history',
+                  error,
+                  stackTrace,
+                ),
+              ),
+        );
       }
 
       return KyoshinMonitorState(
