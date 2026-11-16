@@ -32,6 +32,19 @@ final class const ShakeDetectionRequest({
   /// 検知をやり直す。空の場合は [fallbackBaseline] を平常値とする。
   final List<Uint8List>? baselineGifs,
   final double fallbackBaseline = 1,
+  final ShakeDetectionParameters parameters = const ShakeDetectionParameters(),
+});
+
+final class const ShakeBackfillFrame({
+  required final DateTime observedAt,
+  required final Uint8List gif,
+});
+
+/// コールドスタート直前のフレームで検知の履歴を作り直す要求。
+final class const ShakeBackfillRequest({
+  /// 対象のコールドスタートで [ShakeDetectionRequest.observedAt] に渡した時刻。
+  required final DateTime coldStartAt,
+  required final List<ShakeBackfillFrame> frames,
 });
 
 final class KyoshinMonitorAnalyzerIsolate._({
@@ -40,6 +53,8 @@ final class KyoshinMonitorAnalyzerIsolate._({
   required final SendPort _workerSendPort,
   required final StreamSubscription<Object?> _subscription,
   required final Map<int, Completer<AnalyzeResult>> _pending,
+  required final Map<int, Completer<List<ShakeEventSnapshot>?>>
+  _pendingBackfills,
   required final Completer<void> _exited,
 }) {
   var _nextId = 0;
@@ -52,6 +67,7 @@ final class KyoshinMonitorAnalyzerIsolate._({
     final workerPortCompleter = Completer<SendPort>();
     final initAck = Completer<void>();
     final pending = <int, Completer<AnalyzeResult>>{};
+    final pendingBackfills = <int, Completer<List<ShakeEventSnapshot>?>>{};
     final exited = Completer<void>();
 
     late final StreamSubscription<Object?> subscription;
@@ -74,6 +90,11 @@ final class KyoshinMonitorAnalyzerIsolate._({
         for (final c in waiting) {
           c.completeError(error);
         }
+        final waitingBackfills = pendingBackfills.values.toList();
+        pendingBackfills.clear();
+        for (final c in waitingBackfills) {
+          c.completeError(error);
+        }
         return;
       }
       if (message is SendPort) {
@@ -85,6 +106,24 @@ final class KyoshinMonitorAnalyzerIsolate._({
       if (message is _InitAck) {
         if (!initAck.isCompleted) {
           initAck.complete();
+        }
+        return;
+      }
+      if (message is _BackfillResponseMessage) {
+        final c = pendingBackfills.remove(message.id);
+        if (c == null) {
+          return;
+        }
+        final errorMessage = message.errorMessage;
+        if (errorMessage == null) {
+          c.complete(message.events);
+        } else {
+          c.completeError(
+            KyoshinMonitorWorkerException(
+              errorMessage,
+              StackTrace.fromString(message.errorStack ?? ''),
+            ),
+          );
         }
         return;
       }
@@ -132,6 +171,7 @@ final class KyoshinMonitorAnalyzerIsolate._({
       workerSendPort: workerSendPort,
       subscription: subscription,
       pending: pending,
+      pendingBackfills: pendingBackfills,
       exited: exited,
     );
   }
@@ -162,6 +202,23 @@ final class KyoshinMonitorAnalyzerIsolate._({
     return completer.future;
   }
 
+  /// コールドスタート直前のフレームで揺れ検知の履歴を作り直す。
+  ///
+  /// 対象のコールドスタートが既に無効な場合や、使えるフレームが無い場合は
+  /// `null` を返す。
+  Future<List<ShakeEventSnapshot>?> backfillShakeDetection(
+    ShakeBackfillRequest request,
+  ) {
+    if (_exited.isCompleted) {
+      return Future.error(const KyoshinMonitorWorkerExitedException());
+    }
+    final id = _nextId++;
+    final completer = Completer<List<ShakeEventSnapshot>?>();
+    _pendingBackfills[id] = completer;
+    _workerSendPort.send(_BackfillMessage(id: id, request: request));
+    return completer.future;
+  }
+
   Future<void> dispose() async {
     _workerSendPort.send(const _ShutdownMessage());
     await _subscription.cancel();
@@ -184,6 +241,18 @@ final class const _AnalyzeMessage({
 });
 
 final class const _ShutdownMessage();
+
+final class const _BackfillMessage({
+  required final int id,
+  required final ShakeBackfillRequest request,
+});
+
+final class const _BackfillResponseMessage({
+  required final int id,
+  final List<ShakeEventSnapshot>? events,
+  final String? errorMessage,
+  final String? errorStack,
+});
 
 final class const _AnalyzeResponseMessage({
   required final int id,
@@ -219,8 +288,29 @@ void _workerEntryPoint(SendPort mainSendPort) {
       receivePort.close();
       return;
     }
+    if (message is _BackfillMessage) {
+      final detector = shakeDetection;
+      chain = chain.then((_) async {
+        try {
+          mainSendPort.send(
+            _BackfillResponseMessage(
+              id: message.id,
+              events: await detector?.backfill(message.request),
+            ),
+          );
+        } on Object catch (e, st) {
+          mainSendPort.send(
+            _BackfillResponseMessage(
+              id: message.id,
+              errorMessage: e.toString(),
+              errorStack: st.toString(),
+            ),
+          );
+        }
+      });
+      return;
+    }
     if (message is _AnalyzeMessage) {
-      // 観測点間の距離計算に時間がかかるため、最初に要求された時点で用意する。
       final detector = message.shakeDetection == null
           ? null
           : shakeDetection ??= ShakeDetectionWorker(
