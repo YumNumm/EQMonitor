@@ -1,5 +1,5 @@
 import 'package:eqmonitor/feature/devices/data/model/device_role.dart';
-import 'package:eqmonitor/feature/devices/data/provider/device_role_provider.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_role_notifier.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_eew_estimation_debug_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

@@ -34,6 +34,7 @@ enum SharedPreferencesKey(final String key) {
   apnsNotificationTokenLastSent('apns_notification_token_last_sent'),
   apnsPushToStartTokenLastSent('apns_push_to_start_token_last_sent'),
   deviceMigratedFromLegacy('device_migrated_from_legacy'),
+  deviceRole('device_role'),
   autoReturnToRealtime('auto_return_to_realtime'),
   earthquakeHistoryMapLayerParameter('earthquake_history_map_layer_parameter'),
   homeMapLabelParameter('home_map_label_parameter'),

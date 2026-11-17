@@ -51,4 +51,4 @@ final class DeviceAuthRepositoryProvider
 }
 
 String _$deviceAuthRepositoryHash() =>
-    r'289875b8acf54cb9320e294f8eb65404cd95bd3f';
+    r'60f5026604d406a443452619484587fd1cfba6a9';

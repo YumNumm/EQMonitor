@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_role_cache_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/push_token_sync_state_repository.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,11 +17,13 @@ Future<DeviceAuthRepository> deviceAuthRepository(Ref ref) async {
   final locationSyncState = ref.watch(
     deviceLocationSyncStateRepositoryProvider,
   );
+  final roleCache = ref.watch(deviceRoleCacheRepositoryProvider);
   return DeviceAuthRepository(
     await ref.watch(securePreferencesDataSourceProvider.future),
     onCredentialsWillChange: () async {
       await locationSyncState.clearLastSent();
       await pushTokenSyncState.clearAll();
+      await roleCache.clear();
     },
     onCredentialsChanged: () => ref.invalidate(deviceIdProvider),
   );

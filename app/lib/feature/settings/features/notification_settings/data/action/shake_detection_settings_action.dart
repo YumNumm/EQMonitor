@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/devices/data/notifier/device_role_notifier.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/location/data/notifier/current_device_location_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/current_location_permission_action.dart';
@@ -6,11 +7,30 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_availability_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class const ShakeDetectionSettingsAction() {
+  /// ロールは自動では取得し直さないため、読み込みの再試行ではここで取得する。
+  Future<void> reload(WidgetRef ref) async {
+    try {
+      await DeviceRoleNotifier.refreshMutation.run(
+        ref,
+        (tsx) => tsx.get(deviceRoleProvider.notifier).refresh(),
+      );
+    } on Object {
+      // 取得できなくても、設定の読み込みはやり直す。
+    }
+    if (!ref.context.mounted) {
+      return;
+    }
+    ref
+      ..invalidate(isShakeDetectionNotificationAvailableProvider)
+      ..invalidate(shakeDetectionSettingsProvider);
+  }
+
   Future<void> save(WidgetRef ref, List<ShakeDetectionEntry> entries) async {
     try {
       await ShakeDetectionSettingsNotifier.saveMutation.run(ref, (tsx) async {

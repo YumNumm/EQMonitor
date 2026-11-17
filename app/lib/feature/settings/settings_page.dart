@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_manifest_p
 import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
 import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/data/action/settings_app_icon_action.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
@@ -48,11 +49,16 @@ class const SettingsPage({super.key}) extends ConsumerWidget {
                     child: SizedBox(
                       width: 80,
                       height: 80,
-                      child: Material(
-                        borderRadius: BorderRadius.circular(16),
-                        clipBehavior: .antiAlias,
-                        elevation: 4,
-                        child: Assets.images.icon.image(fit: .contain),
+                      child: GestureDetector(
+                        onDoubleTap: () => ref
+                            .read(settingsAppIconActionProvider)
+                            .refreshDeviceRole(ref),
+                        child: Material(
+                          borderRadius: BorderRadius.circular(16),
+                          clipBehavior: .antiAlias,
+                          elevation: 4,
+                          child: Assets.images.icon.image(fit: .contain),
+                        ),
                       ),
                     ),
                   ),
