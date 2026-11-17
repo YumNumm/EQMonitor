@@ -77,12 +77,15 @@ checkout の `submodules: true` も `recursive` も private backend を取得す
 
 ```sh
 # root から package 全体を解析する
-mise exec -- dart analyze app --fatal-infos --format machine
+mise exec -- dart analyze app --fatal-infos --format machine --plugins
 mise exec -- dart run melos run analyze
 # 自作ルールを変更した場合は tools/eqmonitor_lints_plugin 内で実行
 mise exec -- dart test
 ```
 
+- Dart 3.15.0-154.0.dev の `dart analyze` は、信頼済みでない analyzer plugin を実行しない。
+  `CI` 環境変数がある場合だけ既定で実行するため、ローカルでは `--plugins` を付ける。
+  付けないと「not trusted」の通知だけが出て、自作ルールと Hooks の診断なしで成功する。
 - ファイル・サブディレクトリ指定では自作 plugin の診断が抜けることがある。
   package 全体の結果を保存してから必要箇所を絞り込み、終了コードも確認する。
 - `plugins:` は workspace ルートの `analysis_options.yaml` に宣言する。
@@ -119,8 +122,16 @@ mise exec -- dart test
   変更ファイルだけ `mise exec -- dart format <paths>` で整形し、SDK 差による周辺差分も確認する。
 - Primary Constructor の `final` はフィールド宣言になる。通常引数には付けず、
   private な名前付き引数を作らない。型・パターン・コメントを保ち、正規表現で一括移行しない。
-  自動提案の条件は `PrimaryConstructorConvertibility` が正本（親クラスなし、唯一の const 無名
+  自作ルールの自動提案の条件は `PrimaryConstructorConvertibility` が正本（親クラスなし、唯一の const 無名
   コンストラクタ、初期化子・本体なし、引数は初期化子や late のない final field の `this.x`）。
+- 親クラスを持つ class・非 const・enum の明示的なコンストラクタは、標準 lint の
+  `use_primary_constructors` を一時的に有効にして `dart fix --apply --code=use_primary_constructors` で移行する。
+  この lint はコンストラクタを書いていない class・enum にも `()` を要求するため、常時は有効にしない。
+  続けて `initialize_in_field_declaration`、`use_declaring_parameters` の順に適用する。
+  逆順では `: _x = x` が private な名前付き引数 `{required final T _x}` へ畳まれる。
+  doc comment 付きのコンストラクタは本体のない `this;` が残り、フィールドに付けた `// ignore:` は
+  引数へ移動しないため、適用後に差分を確認する。Pigeon の入力ファイルは移行しない。
+  `eqmonitor_lints/recommended.yaml` を使う package は、最後に `omit_obvious_property_types` も適用する。
   構文移行では解析に加え、app 内の `mise exec -- flutter build bundle --debug --no-pub`
   で CFE も通し、関連テストを実行する。
 
