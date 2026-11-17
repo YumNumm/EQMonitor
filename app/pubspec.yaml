@@ -192,7 +192,7 @@ dependencies:
   google_sign_in: ^7.2.0
   sign_in_with_apple: ^8.1.0
   passkeys: ^2.22.3
-  m3e_core: ^1.1.4
+  m3e_core: ^1.1.5
   pmtiles_v3:
     path: ../packages/pmtiles_v3
   native_dio_adapter: ^1.8.0

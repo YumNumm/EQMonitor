@@ -1522,10 +1522,10 @@ packages:
     dependency: transitive
     description:
       name: m3e_core
-      sha256: e011e754920a63e842a969f46190d6a8a51cb73080aa5121ff88ff1f58845498
+      sha256: eec4018c4b2ce1a8f70f8d3596c50fda30484270a0970eebb1b1c1fd0765a33c
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.4"
+    version: "1.1.5"
   maplibre:
     dependency: "direct overridden"
     description:

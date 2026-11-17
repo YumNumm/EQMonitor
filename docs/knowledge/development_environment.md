@@ -31,7 +31,8 @@ mise exec -- flutter --version --machine
 
 ## M3E の SDK 制約と main の固定
 
-- `m3e_core 1.1.4` は Flutter `>=3.47.0` を要求する。
+- `m3e_core 1.1.5` は Flutter `>=3.47.0` を要求する。
+  `material_ui 1.8.0` 以降は `RoundedPolygon` を公開するため、`m3e_core 1.1.4` 以前とは同時に使えない。
   `3.47.0-1.0.pre-*` は正式版より小さいため、この制約を満たさない。
   pub cache の制約書き換えや一時的な path override を共有設定に使わない。
 - Flutter main を利用する場合も、ブランチ名ではなく取得したコミットを
