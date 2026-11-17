@@ -45,6 +45,8 @@ class const DebugLiveActivityContentBuilder() {
           forecastIntensity: JmaIntensity.fiveLower,
           forecastLpgmIntensity: JmaLpgmIntensity.two,
           arrivalTime: now.add(const Duration(seconds: 30)),
+          // 現在地が警報対象。警戒文と赤い地色はこのフラグで出る
+          isWarning: true,
         ),
       ),
       DebugEewPreset.finalReport => _eew(
@@ -227,6 +229,7 @@ class const DebugLiveActivityContentBuilder() {
     JmaIntensity? forecastIntensity,
     JmaLpgmIntensity? forecastLpgmIntensity,
     DateTime? arrivalTime,
+    bool isWarning = false,
   }) {
     return <String, dynamic>{
       'regionName': regionName,
@@ -237,6 +240,7 @@ class const DebugLiveActivityContentBuilder() {
           ? null
           : _lpgmWireValue(forecastLpgmIntensity),
       'arrivalTime': arrivalTime == null ? null : _iso8601Jst(arrivalTime),
+      'isWarning': isWarning,
     };
   }
 

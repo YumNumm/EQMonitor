@@ -10,6 +10,64 @@ part of 'test_live_activity_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// テスト表示を自動で終了する時刻。アプリを再起動すると失われる。
+
+@ProviderFor(TestLiveActivityDeadline)
+final testLiveActivityDeadlineProvider = TestLiveActivityDeadlineProvider._();
+
+/// テスト表示を自動で終了する時刻。アプリを再起動すると失われる。
+final class TestLiveActivityDeadlineProvider
+    extends $NotifierProvider<TestLiveActivityDeadline, DateTime?> {
+  /// テスト表示を自動で終了する時刻。アプリを再起動すると失われる。
+  TestLiveActivityDeadlineProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'testLiveActivityDeadlineProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$testLiveActivityDeadlineHash();
+
+  @$internal
+  @override
+  TestLiveActivityDeadline create() => TestLiveActivityDeadline();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DateTime? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DateTime?>(value),
+    );
+  }
+}
+
+String _$testLiveActivityDeadlineHash() =>
+    r'a30e88a9dd38d277352c2aa296893b16714ce46d';
+
+/// テスト表示を自動で終了する時刻。アプリを再起動すると失われる。
+
+abstract class _$TestLiveActivityDeadline extends $Notifier<DateTime?> {
+  DateTime? build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<DateTime?, DateTime?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<DateTime?, DateTime?>,
+              DateTime?,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
 
 @ProviderFor(TestLiveActivityNotifier)
 final testLiveActivityProvider = TestLiveActivityNotifierProvider._();
@@ -26,7 +84,7 @@ final class TestLiveActivityNotifierProvider
         argument: null,
         retry: null,
         name: r'testLiveActivityProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -40,7 +98,7 @@ final class TestLiveActivityNotifierProvider
 }
 
 String _$testLiveActivityNotifierHash() =>
-    r'dbd2375f66b2275a93bd0e28fc2e723f0d4d0b71';
+    r'25fa8c1790713e5dcb2238977853f802bfa11516';
 
 abstract class _$TestLiveActivityNotifier
     extends $AsyncNotifier<TestLiveActivityStatus> {

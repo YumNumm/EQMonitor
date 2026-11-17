@@ -104,21 +104,36 @@ struct EewLockScreenLocationView: View {
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 6) {
-            VStack(alignment: .leading, spacing: 4) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(state.display.locationNotice == .warning ? "現在地に警報" : "現在地")
+            if state.display.localIntensity != nil,
+               let remaining = ArrivalCountdown.remaining(until: state.display.countdownArrivalDate) {
+                // 予想震度と到達予想がそろうときは地名を省き、カウントダウンを大きく見せる
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("現在地\n揺れ到達まで")
                         .font(AppFonts.flex(size: 10, weight: .bold))
                         .foregroundStyle(.white.opacity(0.8))
-                    if let regionName = state.location?.displayRegionName, !regionName.isEmpty {
-                        Text(regionName)
-                            .font(AppFonts.flex(size: 10, weight: .heavy))
-                            .lineLimit(2)
-                            .minimumScaleFactor(0.8)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
+                        .fixedSize()
+                    ArrivalCountdownText(
+                        remaining: remaining, size: EewLockScreenMetrics.countdownSize,
+                        color: .white, alignment: .leading
+                    )
                 }
-                if let arrivalDate = state.display.countdownArrivalDate {
-                    EewArrivalView(arrivalDate: arrivalDate, size: 18)
+            } else {
+                VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(state.display.locationNotice == .warning ? "現在地に警報" : "現在地")
+                            .font(AppFonts.flex(size: 10, weight: .bold))
+                            .foregroundStyle(.white.opacity(0.8))
+                        if let regionName = state.location?.displayRegionName, !regionName.isEmpty {
+                            Text(regionName)
+                                .font(AppFonts.flex(size: 10, weight: .heavy))
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.8)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    if let arrivalDate = state.display.countdownArrivalDate {
+                        EewArrivalView(arrivalDate: arrivalDate, size: 18)
+                    }
                 }
             }
             if let intensity = state.display.localIntensity {
