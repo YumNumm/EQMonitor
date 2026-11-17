@@ -263,6 +263,10 @@ Future<void> pumpNotificationSettings(
   Future<api.StartResponse>? Function()? loadStart,
   List<NotificationSlot> slots = const [_slot],
 }) async {
+  // Android のページ遷移は画面全体をスナップショットするため、
+  // 物理サイズをテスト用レンダラーの描画上限内に収める。
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetDevicePixelRatio);
   await tester.binding.setSurfaceSize(const Size(800, 6000));
   addTearDown(() => tester.binding.setSurfaceSize(null));
   await tester.pumpWidget(
