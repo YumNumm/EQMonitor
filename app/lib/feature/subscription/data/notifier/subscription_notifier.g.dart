@@ -36,7 +36,7 @@ final class SubscriptionNotifierProvider
 }
 
 String _$subscriptionNotifierHash() =>
-    r'e0d323b76d1c5739e4d42be4e95d8df43cf28227';
+    r'2ea86907717247b81f693923eb3f3bd3d318c9fa';
 
 abstract class _$SubscriptionNotifier
     extends $AsyncNotifier<SubscriptionStatus> {

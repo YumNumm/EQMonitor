@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/subscription/data/model/purchase_outcome.dart'
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
+import 'package:eqmonitor/feature/subscription/data/notifier/subscription_pending_retry.dart';
 import 'package:eqmonitor/feature/subscription/data/repository/subscription_repository.dart';
 import 'package:eqmonitor/feature/subscription/data/repository/subscription_server_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -363,6 +364,62 @@ void main() {
     expect(container.read(subscriptionProvider).value, active);
     await tester.pump(const Duration(seconds: 60));
     expect(server.syncs, 3);
+  });
+
+  testWidgets('reports the automatic retry until the webhook arrives', (
+    tester,
+  ) async {
+    await container.read(subscriptionProvider.future);
+    server.synced = const Failure(
+      SubscriptionApiException(reason: SubscriptionApiFailure.pending),
+    );
+    expect(container.read(subscriptionPendingRetryProvider), isNull);
+    await container
+        .read(subscriptionProvider.notifier)
+        .purchaseMonthly(package: monthlyPackage);
+    expect(container.read(subscriptionPendingRetryProvider), isNotNull);
+    server.synced = const Success(active);
+    await tester.pump(const Duration(seconds: 3));
+    expect(container.read(subscriptionProvider).value, active);
+    expect(container.read(subscriptionPendingRetryProvider), isNull);
+  });
+
+  testWidgets('reports the end of the automatic retry once it is exhausted', (
+    tester,
+  ) async {
+    await container.read(subscriptionProvider.future);
+    server.synced = const Failure(
+      SubscriptionApiException(reason: SubscriptionApiFailure.pending),
+    );
+    await container
+        .read(subscriptionProvider.notifier)
+        .purchaseMonthly(package: monthlyPackage);
+    // 2・4・8・16・32 秒の間隔に、それぞれ 1 秒未満の揺らぎが加わる。
+    await tester.pump(const Duration(seconds: 70));
+    expect(server.syncs, 6);
+    expect(
+      container.read(subscriptionProvider).value?.syncPhase,
+      SubscriptionSyncPhase.pending,
+    );
+    expect(container.read(subscriptionPendingRetryProvider), isNull);
+  });
+
+  testWidgets('manual synchronization ends the automatic retry', (
+    tester,
+  ) async {
+    await container.read(subscriptionProvider.future);
+    server.synced = const Failure(
+      SubscriptionApiException(reason: SubscriptionApiFailure.pending),
+    );
+    await container
+        .read(subscriptionProvider.notifier)
+        .purchaseMonthly(package: monthlyPackage);
+    expect(container.read(subscriptionPendingRetryProvider), isNotNull);
+    await container.read(subscriptionProvider.notifier).synchronize();
+    expect(container.read(subscriptionPendingRetryProvider), isNull);
+    final syncs = server.syncs;
+    await tester.pump(const Duration(seconds: 70));
+    expect(server.syncs, syncs);
   });
 
   testWidgets('expiry schedules a server refresh without a UI action', (

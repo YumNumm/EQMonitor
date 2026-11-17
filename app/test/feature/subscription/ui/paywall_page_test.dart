@@ -4,9 +4,11 @@ import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_exten
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_availability_provider.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
+import 'package:eqmonitor/feature/subscription/data/notifier/subscription_pending_retry.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/monthly_subscription_package_provider.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/paywall_page.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -160,6 +162,126 @@ void main() {
     );
   });
 
+  testWidgets('lists shake detection notification where it is available', (
+    tester,
+  ) async {
+    await pumpPaywall(tester, loadPackage: () async => _package);
+    expect(find.text('通知地域を追加'), findsOneWidget);
+    expect(find.text('揺れ検知の通知'), findsOneWidget);
+    expect(find.text('緊急地震速報の履歴'), findsOneWidget);
+    expect(find.text('この震源の近傍で発生した地震'), findsOneWidget);
+  });
+
+  testWidgets('omits shake detection notification where it is unavailable', (
+    tester,
+  ) async {
+    await pumpPaywall(
+      tester,
+      loadPackage: () async => _package,
+      isShakeDetectionNotificationAvailable: false,
+    );
+    expect(find.text('通知地域を追加'), findsOneWidget);
+    expect(find.text('揺れ検知の通知'), findsNothing);
+  });
+
+  testWidgets(
+    'keeps the price and purchase control on screen without scrolling',
+    (
+      tester,
+    ) async {
+      const size = Size(360, 640);
+      await pumpPaywall(tester, loadPackage: () async => _package, size: size);
+      final purchase = find.widgetWithText(M3EButton, 'Pro にアップグレード');
+      expect(purchase.hitTestable(), findsOneWidget);
+      expect(tester.getRect(purchase).bottom, lessThanOrEqualTo(size.height));
+      expect(find.text(r'$4.99 / 月').hitTestable(), findsOneWidget);
+      // 一覧の末尾は画面外にあり、スクロールしても購入ボタンは動かない。
+      expect(find.text('購入を復元する').hitTestable(), findsNothing);
+      final before = tester.getRect(purchase);
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, -400));
+      await tester.pump();
+      expect(tester.getRect(purchase), before);
+    },
+  );
+
+  testWidgets(
+    'opens the detailed explanation of shake detection notification',
+    (
+      tester,
+    ) async {
+      await pumpPaywall(tester, loadPackage: () async => _package);
+      expect(find.text('揺れ検知の通知について'), findsNothing);
+      await tester.tap(find.text('詳しく'));
+      await tester.pumpAndSettle();
+      expect(find.text('揺れ検知の通知について'), findsOneWidget);
+      expect(find.text('緊急地震速報ではありません'), findsOneWidget);
+    },
+  );
+
+  testWidgets('hides the sync action while the purchase is being confirmed', (
+    tester,
+  ) async {
+    await pumpPaywall(
+      tester,
+      loadPackage: () async => _package,
+      subscription: Future.value(
+        const SubscriptionStatus.inactive(
+          syncPhase: SubscriptionSyncPhase.synchronizing,
+        ),
+      ),
+    );
+    expect(find.text('購入情報を確認しています'), findsOneWidget);
+    expect(find.text('購入情報を同期'), findsNothing);
+  });
+
+  testWidgets('hides the sync action while reflection is retried', (
+    tester,
+  ) async {
+    await pumpPaywall(
+      tester,
+      loadPackage: () async => _package,
+      subscription: Future.value(
+        const SubscriptionStatus.inactive(
+          syncPhase: SubscriptionSyncPhase.pending,
+        ),
+      ),
+      isPendingRetryRunning: true,
+    );
+    expect(find.text('購入情報を反映しています。しばらくお待ちください...'), findsOneWidget);
+    expect(find.text('購入情報を同期'), findsNothing);
+  });
+
+  testWidgets('offers the sync action once the automatic retry has ended', (
+    tester,
+  ) async {
+    await pumpPaywall(
+      tester,
+      loadPackage: () async => _package,
+      subscription: Future.value(
+        const SubscriptionStatus.inactive(
+          syncPhase: SubscriptionSyncPhase.pending,
+        ),
+      ),
+    );
+    expect(find.text('購入情報の反映に時間がかかっています。'), findsOneWidget);
+    expect(find.text('購入情報を同期'), findsOneWidget);
+  });
+
+  testWidgets('offers the sync action after the confirmation failed', (
+    tester,
+  ) async {
+    await pumpPaywall(
+      tester,
+      loadPackage: () async => _package,
+      subscription: Future.value(
+        const SubscriptionStatus.inactive(
+          syncPhase: SubscriptionSyncPhase.failed,
+        ),
+      ),
+    );
+    expect(find.text('購入情報を同期'), findsOneWidget);
+  });
+
   testWidgets('large text keeps the price and purchase control usable', (
     tester,
   ) async {
@@ -175,8 +297,11 @@ Future<void> pumpPaywall(
   Future<SubscriptionStatus>? subscription,
   double textScale = 1,
   PaywallFlow? flow,
+  Size size = const Size(430, 2600),
+  bool isShakeDetectionNotificationAvailable = true,
+  bool isPendingRetryRunning = false,
 }) async {
-  await tester.binding.setSurfaceSize(const Size(430, 2600));
+  await tester.binding.setSurfaceSize(size);
   addTearDown(() => tester.binding.setSurfaceSize(null));
   await tester.pumpWidget(
     ProviderScope(
@@ -191,6 +316,12 @@ Future<void> pumpPaywall(
         ),
         deviceProvisioningProvider.overrideWith(_ProvisionedNotifier.new),
         pushTokenSyncProvider.overrideWith(_IdlePushTokenNotifier.new),
+        isShakeDetectionNotificationAvailableProvider.overrideWith(
+          (ref) async => isShakeDetectionNotificationAvailable,
+        ),
+        subscriptionPendingRetryProvider.overrideWith(
+          () => _PendingRetry(isRunning: isPendingRetryRunning),
+        ),
       ],
       child: MaterialApp(
         theme: ThemeData.light().copyWith(
@@ -207,8 +338,6 @@ Future<void> pumpPaywall(
   );
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 500));
-  await tester.scrollUntilVisible(find.text('Pro にアップグレード'), 300);
-  await tester.pump();
 }
 
 class _SubscriptionNotifier extends SubscriptionNotifier {
@@ -218,6 +347,15 @@ class _SubscriptionNotifier extends SubscriptionNotifier {
 
   @override
   Future<SubscriptionStatus> build() => initial;
+}
+
+class _PendingRetry extends SubscriptionPendingRetry {
+  new({required this.isRunning});
+
+  final bool isRunning;
+
+  @override
+  int? build() => isRunning ? 1 : null;
 }
 
 class _ProvisionedNotifier extends DeviceProvisioningNotifier {
