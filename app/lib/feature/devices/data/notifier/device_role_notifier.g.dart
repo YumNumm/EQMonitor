@@ -54,7 +54,7 @@ final class DeviceRoleNotifierProvider
 }
 
 String _$deviceRoleNotifierHash() =>
-    r'46cc0c6edec6cdd0a3c57e3b874395a28720d358';
+    r'e8469b97c5de789b918496a61576e2294fb394ce';
 
 /// このデバイスのロール。
 ///

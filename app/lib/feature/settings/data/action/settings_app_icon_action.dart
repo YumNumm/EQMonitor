@@ -13,16 +13,19 @@ SettingsAppIconAction settingsAppIconAction(Ref ref) =>
 class const SettingsAppIconAction() {
   /// デバイスのロールを取得し直す。
   ///
-  /// 結果は画面に表示せず、取得が終わったことだけを触覚で知らせる。
+  /// 結果は画面に表示せず、取得できたことだけを触覚で知らせる。
+  /// 取得できなかった場合は何も返さない。
   Future<void> refreshDeviceRole(WidgetRef ref) async {
     try {
-      await DeviceRoleNotifier.refreshMutation.run(
+      final isRefreshed = await DeviceRoleNotifier.refreshMutation.run(
         ref,
         (tsx) => tsx.get(deviceRoleProvider.notifier).refresh(),
       );
+      if (isRefreshed) {
+        await HapticFeedback.mediumImpact();
+      }
     } on Object catch (error, stackTrace) {
       talker.warning('[DeviceRole] refresh failed', error, stackTrace);
     }
-    await HapticFeedback.mediumImpact();
   }
 }

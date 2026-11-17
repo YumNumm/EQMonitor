@@ -119,8 +119,11 @@ void main() {
       final harness = await _Harness.create(serverRole: 'ADMIN');
       await harness.container.read(deviceRoleProvider.future);
 
-      await harness.container.read(deviceRoleProvider.notifier).refresh();
+      final isRefreshed = await harness.container
+          .read(deviceRoleProvider.notifier)
+          .refresh();
 
+      expect(isRefreshed, isTrue);
       expect(
         harness.container.read(deviceRoleProvider).value,
         DeviceRole.admin,
@@ -136,8 +139,11 @@ void main() {
       );
       await harness.container.read(deviceRoleProvider.future);
 
-      await harness.container.read(deviceRoleProvider.notifier).refresh();
+      final isRefreshed = await harness.container
+          .read(deviceRoleProvider.notifier)
+          .refresh();
 
+      expect(isRefreshed, isFalse);
       expect(harness.container.read(deviceRoleProvider).value, DeviceRole.user);
       expect(harness.storedRole, 'USER');
       expect(harness.adapter.paths, ['/v2/device/me']);

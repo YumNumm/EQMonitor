@@ -53,19 +53,24 @@ class DeviceRoleNotifier extends _$DeviceRoleNotifier {
     }
   }
 
-  static final refreshMutation = Mutation<void>();
+  static final refreshMutation = Mutation<bool>();
 
-  /// 保存値に関係なくロールを取得し直す。失敗時は現在の状態を維持する。
-  Future<void> refresh() async {
+  /// 保存値に関係なくロールを取得し直し、取得できたかどうかを返す。
+  /// 失敗時は現在の状態を維持する。
+  Future<bool> refresh() async {
     final provisioning = await ref.read(deviceProvisioningProvider.future);
     if (provisioning != DeviceProvisioningStatus.notRequired) {
-      return;
+      return false;
     }
     final role = await fetch(
       repository: await ref.read(deviceRepositoryProvider.future),
     );
-    if (role != null && ref.mounted) {
+    if (role == null) {
+      return false;
+    }
+    if (ref.mounted) {
       state = AsyncData(role);
     }
+    return true;
   }
 }

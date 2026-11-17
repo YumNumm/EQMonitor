@@ -22,7 +22,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 void main() {
   talker_lib.talker = Talker(settings: TalkerSettings(useConsoleLogs: false));
 
-  testWidgets('アプリアイコンのダブルタップでロールを取得し直し、完了を触覚で知らせる', (
+  testWidgets('アプリアイコンのダブルタップでロールを取得し直し、取得できたことを触覚で知らせる', (
     tester,
   ) async {
     final role = _RecordingDeviceRole();
@@ -56,7 +56,7 @@ void main() {
     expect(haptics, ['HapticFeedbackType.mediumImpact']);
   });
 
-  testWidgets('取得に失敗しても画面には何も出さず、完了を触覚で知らせる', (tester) async {
+  testWidgets('取得中に例外が起きた場合は、画面にも触覚にも何も返さない', (tester) async {
     final role = _RecordingDeviceRole(error: StateError('offline'));
     final haptics = _recordHaptics(tester);
     await _pumpSettings(tester, role: role);
@@ -64,7 +64,20 @@ void main() {
     await _doubleTapAppIcon(tester);
 
     expect(role.refreshCount, 1);
-    expect(haptics, ['HapticFeedbackType.mediumImpact']);
+    expect(haptics, isEmpty);
+    expect(find.byType(SnackBar), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('ロールを取得できなかった場合は、画面にも触覚にも何も返さない', (tester) async {
+    final role = _RecordingDeviceRole(isRefreshed: false);
+    final haptics = _recordHaptics(tester);
+    await _pumpSettings(tester, role: role);
+
+    await _doubleTapAppIcon(tester);
+
+    expect(role.refreshCount, 1);
+    expect(haptics, isEmpty);
     expect(find.byType(SnackBar), findsNothing);
     expect(tester.takeException(), isNull);
   });
@@ -143,23 +156,25 @@ Future<void> _pumpSettings(
 }
 
 class _RecordingDeviceRole extends DeviceRoleNotifier {
-  new({this.error, this.pending});
+  new({this.error, this.pending, this.isRefreshed = true});
 
   final Object? error;
   final Completer<void>? pending;
+  final bool isRefreshed;
   var refreshCount = 0;
 
   @override
   Future<DeviceRole?> build() async => null;
 
   @override
-  Future<void> refresh() async {
+  Future<bool> refresh() async {
     refreshCount += 1;
     await pending?.future;
     final error = this.error;
     if (error != null) {
       throw error;
     }
+    return isRefreshed;
   }
 }
 
