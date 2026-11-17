@@ -31,10 +31,18 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
   @override
   Future<SubscriptionStatus> build() async {
     final generation = ++_generation;
+    final interruptedRetry = _pendingRetry;
     cancelPendingRetry();
     ref.onDispose(() {
       _generation++;
       _expiryTimer?.cancel();
+    });
+    scheduleMicrotask(() {
+      if (ref.mounted) {
+        ref
+            .read(subscriptionPendingRetryProvider.notifier)
+            .finish(token: interruptedRetry);
+      }
     });
     final repository = await ref.watch(subscriptionRepositoryProvider.future);
     if (!ref.mounted) return const SubscriptionStatus.inactive();
