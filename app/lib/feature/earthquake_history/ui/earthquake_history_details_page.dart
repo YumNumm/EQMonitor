@@ -250,7 +250,7 @@ class const _LoadedContent({
                                   TextSpan(
                                     text:
                                         'データソース: ${earthquake.dataSources.map((e) => switch (e) {
-                                          EarthquakeDataSource.jmaDisasterInformationXml => '気象庁災害情報XML',
+                                          EarthquakeDataSource.jmaDisasterInformationXml => '気象庁防災情報XML',
                                           EarthquakeDataSource.jmaIntensityDatabase => '気象庁震度データベース',
                                         }).join(', ')}',
                                   ),
