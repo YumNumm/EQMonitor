@@ -4,7 +4,7 @@ homepage: https://github.com/knopp/msgpack_dart
 publish_to: none
 
 environment:
-    sdk: ^3.14.0-29.0.dev
+    sdk: ^3.15.0-154.0.dev
 
 resolution: workspace
 dev_dependencies:

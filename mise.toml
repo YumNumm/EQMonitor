@@ -30,7 +30,7 @@ zizmor = "latest"
 ghalint = "latest"
 "github:jdx/jactionlint" = "2.1.0"
 gitleaks = "latest"
-flutter = "19946f91c8d9de18a4674460d015229cc0b2534f"
+flutter = "22e676c57e1e6d04c2289a47368ea4093bbc3c18"
 "github:rorkai/App-Store-Connect-CLI" = { version = "latest", rename_exe = "asc" }
 
 [settings]

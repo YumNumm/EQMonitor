@@ -80,9 +80,9 @@ url = "https://github.com/firebase/firebase-tools/releases/download/v15.33.0/fir
 url_api = "https://api.github.com/repos/firebase/firebase-tools/releases/assets/620696163"
 
 [[tools.flutter]]
-version = "19946f91c8d9de18a4674460d015229cc0b2534f"
+version = "22e676c57e1e6d04c2289a47368ea4093bbc3c18"
 backend = "asdf:https://github.com/YumNumm/mise-flutter.git"
-specifiers = ["19946f91c8d9de18a4674460d015229cc0b2534f"]
+specifiers = ["22e676c57e1e6d04c2289a47368ea4093bbc3c18"]
 
 [[tools.gcloud]]
 version = "588.0.0"
