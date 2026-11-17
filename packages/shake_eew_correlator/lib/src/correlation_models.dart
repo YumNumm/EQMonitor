@@ -13,23 +13,29 @@ final class const CorrelationEew({
 final class const ShakeObservationPoint({
   required final double latitude,
   required final double longitude,
+
+  /// この観測点で揺れを検知した時刻。
+  required final DateTime detectedAt,
   required final double? intensity,
   required final double? arv,
 });
 
 final class const ShakeObservation({
   required final String eventId,
-  required final DateTime createdAt,
 
-  /// 平常値との差で検知したイベント。[createdAt] が揺れ始めより後になるため、
+  /// 平常値との差で検知したイベント。検知時刻が揺れ始めより後になるため、
   /// 時間条件の上限を適用しない。
   required final bool isBootstrap,
   required final List<ShakeObservationPoint> points,
 });
 
 final class const CorrelationConfig({
+  /// 観測震度が予測震度を上回ってよい幅。
   final double intensityTolerance = 1.5,
   final double minMatchRatio = 0.3,
+
+  /// 震源と発生時刻の誤差を見込み、P 波到達よりこの時間だけ早い検知まで認める。
+  final Duration pWaveMargin = const Duration(seconds: 5),
   final Duration sWaveExtra = const Duration(seconds: 30),
 });
 

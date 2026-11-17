@@ -22,6 +22,9 @@ final class const ShakeEventSnapshot({
 final class const ShakeEventPointSnapshot({
   required final int stationIndex,
 
+  /// この観測点がイベントに加わった時刻。
+  required final DateTime detectedAt,
+
   /// 最新フレームの震度。
   required final double? intensity,
 

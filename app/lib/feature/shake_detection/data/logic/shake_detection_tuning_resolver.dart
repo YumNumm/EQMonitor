@@ -40,6 +40,8 @@ class const ShakeDetectionTuningResolver() {
     .backfillSeconds => _request.backfillSeconds.toDouble(),
     .correlationIntensityTolerance => _correlation.intensityTolerance,
     .correlationMinMatchRatio => _correlation.minMatchRatio,
+    .correlationPWaveMarginSeconds =>
+      _correlation.pWaveMargin.inSeconds.toDouble(),
     .correlationSWaveExtraSeconds =>
       _correlation.sWaveExtra.inSeconds.toDouble(),
   };
@@ -80,6 +82,7 @@ class const ShakeDetectionTuningResolver() {
       correlation: CorrelationConfig(
         intensityTolerance: read(.correlationIntensityTolerance),
         minMatchRatio: read(.correlationMinMatchRatio),
+        pWaveMargin: Duration(seconds: readInt(.correlationPWaveMarginSeconds)),
         sWaveExtra: Duration(seconds: readInt(.correlationSWaveExtraSeconds)),
       ),
     );

@@ -20,7 +20,6 @@ class const ShakeObservationFactory() {
     required List<KyoshinObservationPoint> stations,
   }) => ShakeObservation(
     eventId: snapshot.id,
-    createdAt: snapshot.createdAt,
     isBootstrap: snapshot.isBootstrap,
     points: [
       for (final point in snapshot.points)
@@ -28,6 +27,7 @@ class const ShakeObservationFactory() {
           ShakeObservationPoint(
             latitude: station.location.lat,
             longitude: station.location.lon,
+            detectedAt: point.detectedAt,
             intensity: point.peakIntensity ?? point.intensity,
             arv: station.arv400,
           ),
