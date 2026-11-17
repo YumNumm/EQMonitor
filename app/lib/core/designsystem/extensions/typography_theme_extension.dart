@@ -12,28 +12,26 @@ const String codeFontFamily = FontFamily.googleSansCode;
 const japaneseFontFamilyFallback = <String>[FontFamily.notoSansJP];
 
 @tailorMixinComponent
-class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
+class const TypographyThemeExtension({
+  required final TextStyle displayLarge,
+  required final TextStyle displayMedium,
+  required final TextStyle headlineLarge,
+  required final TextStyle headlineMedium,
+  required final TextStyle headlineSmall,
+  required final TextStyle titleLarge,
+  required final TextStyle titleMedium,
+  required final TextStyle titleSmall,
+  required final TextStyle bodyLarge,
+  required final TextStyle bodyMedium,
+  required final TextStyle bodySmall,
+  required final TextStyle labelLarge,
+  required final TextStyle labelMedium,
+  required final TextStyle labelSmall,
+  required final TextStyle monoLarge,
+  required final TextStyle monoMedium,
+  required final TextStyle monoSmall,
+}) extends ThemeExtension<TypographyThemeExtension>
     with _$TypographyThemeExtensionTailorMixin {
-  const new({
-    required this.displayLarge,
-    required this.displayMedium,
-    required this.headlineLarge,
-    required this.headlineMedium,
-    required this.headlineSmall,
-    required this.titleLarge,
-    required this.titleMedium,
-    required this.titleSmall,
-    required this.bodyLarge,
-    required this.bodyMedium,
-    required this.bodySmall,
-    required this.labelLarge,
-    required this.labelMedium,
-    required this.labelSmall,
-    required this.monoLarge,
-    required this.monoMedium,
-    required this.monoSmall,
-  });
-
   factory fromColorTheme(ThemeColorSet colorTheme) =>
       TypographyThemeExtension._base(colorTheme);
 
@@ -179,22 +177,4 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
       ),
     );
   }
-
-  final TextStyle displayLarge;
-  final TextStyle displayMedium;
-  final TextStyle headlineLarge;
-  final TextStyle headlineMedium;
-  final TextStyle headlineSmall;
-  final TextStyle titleLarge;
-  final TextStyle titleMedium;
-  final TextStyle titleSmall;
-  final TextStyle bodyLarge;
-  final TextStyle bodyMedium;
-  final TextStyle bodySmall;
-  final TextStyle labelLarge;
-  final TextStyle labelMedium;
-  final TextStyle labelSmall;
-  final TextStyle monoLarge;
-  final TextStyle monoMedium;
-  final TextStyle monoSmall;
 }

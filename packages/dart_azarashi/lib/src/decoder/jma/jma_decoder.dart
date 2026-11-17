@@ -22,9 +22,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 /// JMA (Japan Meteorological Agency) Decoder.
 ///
 /// Decodes JMA disaster prevention information messages.
-class JmaDecoder {
-  const new _();
-
+class const JmaDecoder._() {
   /// Decodes a JMA DCR message.
   static QzssDcReport decode({
     required String sentence,

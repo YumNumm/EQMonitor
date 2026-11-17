@@ -243,18 +243,18 @@ void main() {
   });
 }
 
-final class _ReadFailureHttpCacheStore extends HttpCacheStore {
-  new({required CacheDatabase db})
-    : super(db: db, schemaVersion: 1, appBuild: 'test');
+final class _ReadFailureHttpCacheStore({required CacheDatabase db})
+    extends HttpCacheStore {
+  this : super(db: db, schemaVersion: 1, appBuild: 'test');
 
   @override
   Future<HttpCacheEntry?> read(String key) async =>
       throw StateError('read unavailable');
 }
 
-final class _WriteFailureHttpCacheStore extends HttpCacheStore {
-  new({required CacheDatabase db})
-    : super(db: db, schemaVersion: 1, appBuild: 'test');
+final class _WriteFailureHttpCacheStore({required CacheDatabase db})
+    extends HttpCacheStore {
+  this : super(db: db, schemaVersion: 1, appBuild: 'test');
 
   @override
   Future<void> write(HttpCacheEntry entry) async =>

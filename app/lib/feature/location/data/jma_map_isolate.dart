@@ -128,24 +128,18 @@ class JmaMapWorkerCalculator {
 // ---------------------------------------------------------------------------
 
 /// 常駐 Worker Isolate への JMA マップ検索ハンドル。
-final class JmaMapIsolate {
-  new _({
-    required Isolate isolate,
-    required ReceivePort mainReceive,
-    required SendPort workerSendPort,
-    required StreamSubscription<Object?> subscription,
-    required Map<int, Completer<MapDataItem?>> pending,
-  }) : _isolate = isolate,
-       _mainReceive = mainReceive,
-       _workerSendPort = workerSendPort,
-       _subscription = subscription,
-       _pending = pending;
-
-  final Isolate _isolate;
-  final ReceivePort _mainReceive;
-  final SendPort _workerSendPort;
-  final StreamSubscription<Object?> _subscription;
-  final Map<int, Completer<MapDataItem?>> _pending;
+final class JmaMapIsolate._({
+  required Isolate isolate,
+  required ReceivePort mainReceive,
+  required SendPort workerSendPort,
+  required StreamSubscription<Object?> subscription,
+  required Map<int, Completer<MapDataItem?>> pending,
+}) {
+  final Isolate _isolate = isolate;
+  final ReceivePort _mainReceive = mainReceive;
+  final SendPort _workerSendPort = workerSendPort;
+  final StreamSubscription<Object?> _subscription = subscription;
+  final Map<int, Completer<MapDataItem?>> _pending = pending;
 
   var _nextId = 0;
 

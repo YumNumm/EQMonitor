@@ -16,10 +16,9 @@ void seismicityDecoderWorkerEntry(SendPort initialReplyTo) {
   SeismicityDecoderWorkerSession(replyTo: initialReplyTo).start();
 }
 
-final class SeismicityDecoderWorkerSession {
-  new({required this.replyTo}) : decodedTileCount = 0, finished = false;
+final class SeismicityDecoderWorkerSession({required final SendPort replyTo}) {
+  this : decodedTileCount = 0, finished = false;
 
-  final SendPort replyTo;
   final inbox = ReceivePort();
   final decoder = const SeismicityMvtTileDecoder();
   SeismicityPmTilesArchiveDescriptor? acceptedDescriptor;

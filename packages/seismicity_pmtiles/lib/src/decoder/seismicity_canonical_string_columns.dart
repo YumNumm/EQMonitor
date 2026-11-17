@@ -21,19 +21,11 @@ typedef SeismicityCanonicalStringColumnData = ({
 
 typedef SeismicityStringColumnAllocator = T Function<T>(T Function() create);
 
-final class SeismicityCanonicalStringColumns {
-  new({
-    required int capacity,
-    SeismicityStringColumnAllocator? allocate,
-  }) : _allocate = allocate ?? allocateSeismicityStringColumn,
-       _determinationFlags = SeismicityUtf8Dictionary(
-         maxBytes: 0xffffffff,
-         maxEntries: capacity,
-       ),
-       _earthquakeEventIds = SeismicityUtf8Dictionary(
-         maxBytes: 0xffffffff,
-         maxEntries: capacity,
-       ) {
+final class SeismicityCanonicalStringColumns({
+  required int capacity,
+  SeismicityStringColumnAllocator? allocate,
+}) {
+  this {
     final bitmapLength = requiredByteLength(valueCount: capacity);
     final storage = translateSeismicityStringColumnAllocation(
       allocate: () => _allocate(
@@ -51,9 +43,16 @@ final class SeismicityCanonicalStringColumns {
     _earthquakeEventIdValidity = storage.eventValidity;
   }
 
-  final SeismicityStringColumnAllocator _allocate;
-  final SeismicityUtf8Dictionary _determinationFlags;
-  final SeismicityUtf8Dictionary _earthquakeEventIds;
+  final SeismicityStringColumnAllocator _allocate =
+      allocate ?? allocateSeismicityStringColumn;
+  final _determinationFlags = SeismicityUtf8Dictionary(
+    maxBytes: 0xffffffff,
+    maxEntries: capacity,
+  );
+  final _earthquakeEventIds = SeismicityUtf8Dictionary(
+    maxBytes: 0xffffffff,
+    maxEntries: capacity,
+  );
   late final Uint32List _determinationFlagIndexes;
   late final Uint8List _determinationFlagValidity;
   late final Uint32List _earthquakeEventIdIndexes;

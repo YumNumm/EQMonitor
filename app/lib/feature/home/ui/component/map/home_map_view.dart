@@ -33,9 +33,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
-class HomeMapView extends ConsumerWidget {
-  const new({super.key});
-
+class const HomeMapView({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
@@ -74,11 +72,8 @@ class HomeMapView extends ConsumerWidget {
   }
 }
 
-class _MapContent extends ConsumerWidget {
-  const new({required this.styleString});
-
-  final String styleString;
-
+class const _MapContent({required final String styleString})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeAsync = ref.watch(homeConfigurationProvider);
@@ -160,18 +155,12 @@ class _MapContent extends ConsumerWidget {
 /// [ValueKey] による remount（設定トグル・スタイル変更等）が発生すると
 /// この Widget 自体が unmount→remount されるため、破棄時に
 /// [HomeMapCameraState] が保持する [MapController] を確実にクリアできる。
-class _MapLibreMapHost extends HookConsumerWidget {
-  const new({
-    required this.mapOptions,
-    required this.showLocation,
-    required this.children,
-    super.key,
-  });
-
-  final MapOptions mapOptions;
-  final bool showLocation;
-  final List<Widget> children;
-
+class const _MapLibreMapHost({
+  required final MapOptions mapOptions,
+  required final bool showLocation,
+  required final List<Widget> children,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controllerRef = useRef<MapController?>(null);
@@ -224,9 +213,7 @@ class _MapLibreMapHost extends HookConsumerWidget {
   }
 }
 
-class _MapHeader extends ConsumerWidget {
-  const new();
-
+class const _MapHeader() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final useKmoni =

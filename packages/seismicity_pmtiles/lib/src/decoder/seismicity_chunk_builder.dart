@@ -8,20 +8,16 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk_validator.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-final class SeismicityChunkBuilder {
-  new({
-    required int capacity,
-    this._beforeCanonicalAdd,
-    this._beforeIntensityAdd,
-  }) : _fixed = SeismicityChunkFixedColumns(capacity: capacity),
-       _canonical = SeismicityCanonicalPropertyChunk(capacity: capacity),
-       _intensities = SeismicityChunkIntensityDictionary(capacity: capacity);
-
-  final void Function()? _beforeCanonicalAdd;
-  final void Function()? _beforeIntensityAdd;
-  final SeismicityChunkFixedColumns _fixed;
-  final SeismicityCanonicalPropertyChunk _canonical;
-  final SeismicityChunkIntensityDictionary _intensities;
+final class SeismicityChunkBuilder({
+  required int capacity,
+  final void Function()? _beforeCanonicalAdd,
+  final void Function()? _beforeIntensityAdd,
+}) {
+  final _fixed = SeismicityChunkFixedColumns(
+    capacity: capacity,
+  );
+  final _canonical = SeismicityCanonicalPropertyChunk(capacity: capacity);
+  final _intensities = SeismicityChunkIntensityDictionary(capacity: capacity);
   var _poisoned = false;
 
   int get length {

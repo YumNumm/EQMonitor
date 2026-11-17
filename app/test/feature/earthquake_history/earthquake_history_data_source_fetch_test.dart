@@ -254,16 +254,14 @@ EarthquakePartialNormal _makeEarthquake(String eventId) =>
       estimatedIntensityTileUrl: null,
     );
 
-final class _SpyEarthquakeHistoryRepository
+final class _SpyEarthquakeHistoryRepository({final bool throwOnFetch = false})
     extends EarthquakeHistoryRepository {
-  new({this.throwOnFetch = false})
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,
         shindoDbStations: _shindoDbStations,
       );
-
-  final bool throwOnFetch;
 
   final fetchEarthquakeListCalls = <Map<String, Object?>>[];
   final searchByRegionCalls = <Map<String, Object?>>[];

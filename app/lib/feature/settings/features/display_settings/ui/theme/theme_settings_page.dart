@@ -14,9 +14,7 @@ import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/th
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ThemeSettingsPage extends StatelessWidget {
-  const new({super.key});
-
+class const ThemeSettingsPage({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,11 +38,8 @@ class ThemeSettingsPage extends StatelessWidget {
   }
 }
 
-class _ModeSection extends ConsumerWidget {
-  const new({required this.mode});
-
-  final ThemeBrightnessMode mode;
-
+class const _ModeSection({required final ThemeBrightnessMode mode})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themes = ref.watch(appThemeProvider).requireValue;
@@ -106,11 +101,8 @@ class _ModeSection extends ConsumerWidget {
   }
 }
 
-class _ThemePreview extends StatelessWidget {
-  const new({required this.colorSet});
-
-  final ThemeColorSet colorSet;
-
+class const _ThemePreview({required final ThemeColorSet colorSet})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -154,12 +146,8 @@ class _ThemePreview extends StatelessWidget {
   }
 }
 
-class _Swatch extends StatelessWidget {
-  const new({required this.color, required this.label});
-
-  final Color color;
-  final String label;
-
+class const _Swatch({required final Color color, required final String label})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -29,7 +29,7 @@ abstract class SiteList with _$SiteList {
 }
 
 @freezed
-abstract class Site with _$Site {
+abstract class const Site._() with _$Site {
   const factory({
     /// 不明(内部ID?)
     int? muni,
@@ -49,7 +49,6 @@ abstract class Site with _$Site {
     /// 経度
     double? lng,
   }) = _Site;
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) => _$SiteFromJson(json);
 

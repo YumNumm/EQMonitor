@@ -5,18 +5,12 @@ import 'package:material_ui/material_ui.dart';
 
 enum AppWebViewLoadStatus { loading, loaded, error }
 
-class AppWebViewBody extends StatelessWidget {
-  const new({
-    required this.webView,
-    required this.status,
-    required this.onRetry,
-    super.key,
-  });
-
-  final Widget webView;
-  final AppWebViewLoadStatus status;
-  final Future<void> Function() onRetry;
-
+class const AppWebViewBody({
+  required final Widget webView,
+  required final AppWebViewLoadStatus status,
+  required final Future<void> Function() onRetry,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

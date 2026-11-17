@@ -283,8 +283,8 @@ void main() {
   );
 }
 
-final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  new() : super(_MemorySecurePreferencesDataSource());
+final class _MemoryDeviceAuthRepository() extends DeviceAuthRepository {
+  this : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 
@@ -302,11 +302,8 @@ final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
   }
 }
 
-final class _MemorySecurePreferencesDataSource
+final class _MemorySecurePreferencesDataSource({final List<String>? events})
     implements PreferencesDataSource<SecureStorageKey> {
-  new({this.events});
-
-  final List<String>? events;
   final values = <SecureStorageKey, String>{};
 
   @override
@@ -376,16 +373,11 @@ final class _MemorySecurePreferencesDataSource
   }
 }
 
-final class _DeviceRegisterAdapter implements HttpClientAdapter {
-  new({
-    this.failFirstMeRequest = false,
-    this.rejectStaleAuthorization = false,
-    this.staleAuthorizationStatusCode = 401,
-  });
-
-  final bool failFirstMeRequest;
-  final bool rejectStaleAuthorization;
-  final int staleAuthorizationStatusCode;
+final class _DeviceRegisterAdapter({
+  final bool failFirstMeRequest = false,
+  final bool rejectStaleAuthorization = false,
+  final int staleAuthorizationStatusCode = 401,
+}) implements HttpClientAdapter {
   final paths = <String>[];
   final authorizationHeaders = <String?>[];
   var _meRequests = 0;

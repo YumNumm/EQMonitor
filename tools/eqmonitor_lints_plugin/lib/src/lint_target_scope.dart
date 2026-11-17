@@ -4,9 +4,7 @@
 /// 自作ルールの適用対象外とする（標準 lint は従来どおり適用される）。
 ///
 /// build_runner 等が生成したコードも、人手で直せないため対象外とする。
-class LintTargetScope {
-  const new _();
-
+class const LintTargetScope._() {
   static const _excludedDirectories = {
     'test',
     'integration_test',

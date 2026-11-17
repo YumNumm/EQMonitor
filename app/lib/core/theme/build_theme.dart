@@ -7,9 +7,7 @@ import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// [ThemeColorSet] から Material 3 の [ThemeData] を組み立てるファクトリ。
-class AppThemeDataBuilder {
-  const new _();
-
+class const AppThemeDataBuilder._() {
   static ThemeData build({
     required ThemeColorSet colorSet,
     required Brightness brightness,

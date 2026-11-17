@@ -1,7 +1,10 @@
 /// JMA Northwest Pacific Tsunami Height.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-27.
-enum JmaNorthwestPacificTsunamiHeight {
+enum JmaNorthwestPacificTsunamiHeight(
+  final int code,
+  final String descriptionEn,
+) {
   from03mTo1m(1, '0.3m~1m'),
   from1mTo3m(2, '1m~3m'),
   from3mTo5m(3, '3m~5m'),
@@ -10,11 +13,6 @@ enum JmaNorthwestPacificTsunamiHeight {
   huge(509, 'Huge'),
   high(510, 'High'),
   unknown(511, 'Unknown');
-
-  new(this.code, this.descriptionEn);
-
-  final int code;
-  final String descriptionEn;
 
   /// Returns the tsunami height for the given code.
   ///

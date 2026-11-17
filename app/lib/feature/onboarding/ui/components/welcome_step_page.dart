@@ -1,10 +1,8 @@
 part of '../page/onboarding_page.dart';
 
-class _WelcomeStepPage extends HookConsumerWidget {
-  const new({required this.navigation});
-
-  final _OnboardingStepNavigation navigation;
-
+class const _WelcomeStepPage({
+  required final _OnboardingStepNavigation navigation,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
@@ -185,12 +183,10 @@ class const DeviceProvisioningErrorMessage() {
 }
 
 /// デバイス登録に失敗したことを画面上に残し、再試行の導線を提供するカード。
-class _DeviceProvisioningFailureCard extends StatelessWidget {
-  const new({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
+class const _DeviceProvisioningFailureCard({
+  required final String message,
+  required final VoidCallback onRetry,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

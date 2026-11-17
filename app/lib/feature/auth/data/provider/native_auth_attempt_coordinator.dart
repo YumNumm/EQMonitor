@@ -31,12 +31,10 @@ final class NativeAuthAttemptCoordinator {
   }
 }
 
-final class NativeAuthAttempt {
-  new _({
-    required NativeAuthAttemptCoordinator coordinator,
-  }) : _coordinator = coordinator;
-
-  final NativeAuthAttemptCoordinator _coordinator;
+final class NativeAuthAttempt._({
+  required NativeAuthAttemptCoordinator coordinator,
+}) {
+  final NativeAuthAttemptCoordinator _coordinator = coordinator;
   var _released = false;
 
   bool get isCurrent => !_released && _coordinator._isCurrent(attempt: this);

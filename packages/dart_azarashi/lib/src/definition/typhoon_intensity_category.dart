@@ -1,17 +1,12 @@
 /// JMA Typhoon Intensity Category.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-52.
-enum JmaTyphoonIntensityCategory {
+enum JmaTyphoonIntensityCategory(final int code, final String nameJa) {
   none(0, 'なし'),
   strong(1, '強い'),
   veryStrong(2, '非常に強い'),
   violent(3, '猛烈な'),
   other(15, 'その他の強さ階級分類');
-
-  new(this.code, this.nameJa);
-
-  final int code;
-  final String nameJa;
 
   /// Returns the typhoon intensity category for the given code.
   ///

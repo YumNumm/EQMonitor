@@ -29,12 +29,11 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class SlotDetailPage extends HookConsumerWidget {
-  const new({required this.slotId, required this.isPro, super.key});
-
-  final String slotId;
-  final bool isPro;
-
+class const SlotDetailPage({
+  required final String slotId,
+  required final bool isPro,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final slot = ref.watch(
@@ -225,29 +224,17 @@ class SlotDetailPage extends HookConsumerWidget {
   }
 }
 
-class _NotificationConditionCard extends StatelessWidget {
-  const new({
-    required this.slotType,
-    required this.kind,
-    required this.enabled,
-    required this.minIntensity,
-    required this.isPro,
-    required this.overrides,
-    required this.onEnabledChanged,
-    required this.onMinIntensityChanged,
-    required this.onOverrideTap,
-  });
-
-  final NotificationSlotType slotType;
-  final NotificationKind kind;
-  final bool enabled;
-  final JmaIntensity? minIntensity;
-  final bool isPro;
-  final List<NotificationOverride> overrides;
-  final ValueChanged<bool> onEnabledChanged;
-  final ValueChanged<JmaIntensity> onMinIntensityChanged;
-  final VoidCallback onOverrideTap;
-
+class const _NotificationConditionCard({
+  required final NotificationSlotType slotType,
+  required final NotificationKind kind,
+  required final bool enabled,
+  required final JmaIntensity? minIntensity,
+  required final bool isPro,
+  required final List<NotificationOverride> overrides,
+  required final ValueChanged<bool> onEnabledChanged,
+  required final ValueChanged<JmaIntensity> onMinIntensityChanged,
+  required final VoidCallback onOverrideTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -316,21 +303,13 @@ class _NotificationConditionCard extends StatelessWidget {
   }
 }
 
-class _WarningSettingsCard extends StatelessWidget {
-  const new({
-    required this.slotType,
-    required this.enabled,
-    required this.interruptionLevel,
-    required this.onChanged,
-    required this.onInterruptionLevelChanged,
-  });
-
-  final NotificationSlotType slotType;
-  final bool enabled;
-  final InterruptionLevel interruptionLevel;
-  final ValueChanged<bool> onChanged;
-  final ValueChanged<InterruptionLevel> onInterruptionLevelChanged;
-
+class const _WarningSettingsCard({
+  required final NotificationSlotType slotType,
+  required final bool enabled,
+  required final InterruptionLevel interruptionLevel,
+  required final ValueChanged<bool> onChanged,
+  required final ValueChanged<InterruptionLevel> onInterruptionLevelChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -420,11 +399,8 @@ class _WarningSettingsCard extends StatelessWidget {
   }
 }
 
-class _DeleteRegionTile extends StatelessWidget {
-  const new({required this.onTap});
-
-  final Future<void> Function() onTap;
-
+class const _DeleteRegionTile({required final Future<void> Function() onTap})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;

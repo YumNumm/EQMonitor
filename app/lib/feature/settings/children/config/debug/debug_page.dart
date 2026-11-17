@@ -36,9 +36,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DebugPage extends ConsumerWidget {
-  const new({super.key});
-
+class const DebugPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -48,9 +46,7 @@ class DebugPage extends ConsumerWidget {
   }
 }
 
-class _DebugWidget extends ConsumerWidget {
-  const new();
-
+class const _DebugWidget() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider).value ?? false;
@@ -477,9 +473,7 @@ class _DebugWidget extends ConsumerWidget {
   }
 }
 
-class _AppCheckSection extends ConsumerWidget {
-  const new();
-
+class const _AppCheckSection() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tokenAsync = ref.watch(appCheckTokenProvider);
@@ -562,9 +556,7 @@ class _AppCheckSection extends ConsumerWidget {
   }
 }
 
-class _ParameterDebugSection extends HookConsumerWidget {
-  const new();
-
+class const _ParameterDebugSection() extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isRefreshing = useState(false);
@@ -649,9 +641,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
   }
 }
 
-class _HomeEewEstimationTile extends ConsumerWidget {
-  const new();
-
+class const _HomeEewEstimationTile() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider).value ?? false;
@@ -692,9 +682,7 @@ class _HomeEewEstimationTile extends ConsumerWidget {
   }
 }
 
-class _BackgroundLocationDebugSection extends ConsumerWidget {
-  const new();
-
+class const _BackgroundLocationDebugSection() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(backgroundLocationDebugSettingsProvider).value;
@@ -740,9 +728,7 @@ class _BackgroundLocationDebugSection extends ConsumerWidget {
   }
 }
 
-class _StartApiDebugSection extends ConsumerWidget {
-  const new();
-
+class const _StartApiDebugSection() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startAsync = ref.watch(startProvider);
@@ -788,17 +774,11 @@ class _StartApiDebugSection extends ConsumerWidget {
   }
 }
 
-class _StartApiDebugContent extends ConsumerWidget {
-  const new({
-    required this.data,
-    required this.hasError,
-    required this.error,
-  });
-
-  final api.StartResponse data;
-  final bool hasError;
-  final Object? error;
-
+class const _StartApiDebugContent({
+  required final api.StartResponse data,
+  required final bool hasError,
+  required final Object? error,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(

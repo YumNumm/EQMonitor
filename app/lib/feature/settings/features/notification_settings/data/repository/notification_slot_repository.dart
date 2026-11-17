@@ -52,16 +52,13 @@ class const NotificationSlotMinIntensityResolver() {
   }
 }
 
-class NotificationSlotRepository {
-  new({
-    required api.ApiClient api,
-    NotificationSoundOperationCoordinator? soundCoordinator,
-  }) : _api = api,
-       _soundCoordinator =
-           soundCoordinator ?? NotificationSoundOperationCoordinator();
-
-  final api.ApiClient _api;
-  final NotificationSoundOperationCoordinator _soundCoordinator;
+class NotificationSlotRepository({
+  required api.ApiClient api,
+  NotificationSoundOperationCoordinator? soundCoordinator,
+}) {
+  final api.ApiClient _api = api;
+  final NotificationSoundOperationCoordinator _soundCoordinator =
+      soundCoordinator ?? NotificationSoundOperationCoordinator();
 
   static const _minIntensityResolver = NotificationSlotMinIntensityResolver();
 

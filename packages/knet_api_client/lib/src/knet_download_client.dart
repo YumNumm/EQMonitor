@@ -9,18 +9,18 @@ import 'package:knet_api_client/src/knet_directory_parser.dart';
 /// Basic 認証を使用して NIED のデータサーバーからデータを取得する。
 /// 認証情報（ユーザーID/パスワード）はユーザーが入力し、
 /// SecureStorage に保管する（アプリ側の責務）。
-class KnetDownloadClient {
+class KnetDownloadClient({
+  required String userId,
+  required String password,
+  String? baseUrl,
+  Dio? dio,
+}) {
   /// クライアントを作成する
   ///
   /// [userId] BOSAI ユーザーID
   /// [password] BOSAI パスワード
   /// [baseUrl] ベース URL（デフォルト: 防災科研の公式サーバー）
-  new({
-    required String userId,
-    required String password,
-    String? baseUrl,
-    Dio? dio,
-  }) : _dio = dio ?? Dio() {
+  this {
     final encoded = base64Encode(utf8.encode('$userId:$password'));
     _dio.options.baseUrl =
         baseUrl ?? 'https://www.kyoshin.bosai.go.jp/kyoshin/download';
@@ -30,7 +30,7 @@ class KnetDownloadClient {
     _dio.options.receiveTimeout = const Duration(seconds: 60);
   }
 
-  final Dio _dio;
+  final Dio _dio = dio ?? Dio();
 
   /// Basic 認証ヘッダー値（`"Basic <base64>"`）
   ///

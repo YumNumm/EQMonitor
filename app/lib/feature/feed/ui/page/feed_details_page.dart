@@ -12,11 +12,8 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class FeedDetailsPage extends ConsumerWidget {
-  const new({required this.telegramHash, super.key});
-
-  final String telegramHash;
-
+class const FeedDetailsPage({required final String telegramHash, super.key})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final feed = ref.watch(feedBySourceProvider(telegramHash));
@@ -47,11 +44,8 @@ class FeedDetailsPage extends ConsumerWidget {
   }
 }
 
-class FeedDetailsBody extends StatelessWidget {
-  const new({required this.item, super.key});
-
-  final FeedDetail item;
-
+class const FeedDetailsBody({required final FeedDetail item, super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

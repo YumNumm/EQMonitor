@@ -13,28 +13,24 @@ BaseMapPmtilesRepository baseMapPmtilesRepository(Ref ref) =>
       assetPackRepository: ref.watch(assetPackRepositoryProvider),
     );
 
-class BaseMapPmtilesRepository {
-  new({
-    required AssetPackRepository assetPackRepository,
-    bool Function()? isWeb,
-    bool Function()? isSupportedPlatform,
-  }) : _assetPackRepository = assetPackRepository,
-       _isWeb = isWeb ?? (() => kIsWeb),
-       _isSupportedPlatform =
-           isSupportedPlatform ??
-           (() => Platform.isIOS || Platform.isAndroid || Platform.isMacOS);
-
-  final AssetPackRepository _assetPackRepository;
+class BaseMapPmtilesRepository({
+  required AssetPackRepository assetPackRepository,
+  bool Function()? isWeb,
+  bool Function()? isSupportedPlatform,
+}) {
+  final AssetPackRepository _assetPackRepository = assetPackRepository;
 
   /// DI seam for [kIsWeb] so the Web error path can be exercised from a
   /// plain VM unit test (Flutter's `kIsWeb` is a compile-time constant
   /// that's always `false` under `flutter test`).
-  final bool Function() _isWeb;
+  final bool Function() _isWeb = isWeb ?? (() => kIsWeb);
 
   /// DI seam for the iOS/Android/macOS platform check, so tests don't
   /// depend on the host OS running `flutter test` (e.g. CI runs on
   /// Ubuntu, where `Platform.isIOS/isAndroid/isMacOS` are all `false`).
-  final bool Function() _isSupportedPlatform;
+  final bool Function() _isSupportedPlatform =
+      isSupportedPlatform ??
+      (() => Platform.isIOS || Platform.isAndroid || Platform.isMacOS);
 
   /// Returns a MapLibre vector source URI for the base map PMTiles.
   ///

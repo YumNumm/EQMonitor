@@ -7,11 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final class _MutableAppLifecycle extends AppLifecycle {
-  new(this.initial);
-
-  final AppLifecycleState initial;
-
+final class _MutableAppLifecycle(final AppLifecycleState initial)
+    extends AppLifecycle {
   @override
   AppLifecycleState build() => initial;
 

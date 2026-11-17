@@ -1,6 +1,11 @@
 import 'dart:math' as math;
 
-class HsvColor {
+class const HsvColor._fromAHSV(
+  final double alpha,
+  final double hue,
+  final double saturation,
+  final double value,
+) {
   /// 任意のRGB値からHSV値を生成する
   /// [r] 赤の値(0-255)
   /// [g] 緑の値(0-255)
@@ -34,7 +39,7 @@ class HsvColor {
     return HsvColor._fromAHSV(alpha, hue, saturation, value);
   }
 
-  const new _fromAHSV(this.alpha, this.hue, this.saturation, this.value)
+  this
     : assert(alpha >= 0.0, 'alpha must be between 0.0 and 1.0'),
       assert(alpha <= 1.0, 'alpha must be between 0.0 and 1.0'),
       assert(hue >= 0.0, 'hue must be between 0.0 and 360.0'),
@@ -43,9 +48,4 @@ class HsvColor {
       assert(saturation <= 1.0, 'saturation must be between 0.0 and 1.0'),
       assert(value >= 0.0, 'value must be between 0.0 and 1.0'),
       assert(value <= 1.0, 'value must be between 0.0 and 1.0');
-
-  final double alpha;
-  final double hue;
-  final double saturation;
-  final double value;
 }

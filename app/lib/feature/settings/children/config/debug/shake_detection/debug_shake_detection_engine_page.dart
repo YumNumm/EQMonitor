@@ -10,9 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class DebugShakeDetectionEnginePage extends ConsumerWidget {
-  const new({super.key});
-
+class const DebugShakeDetectionEnginePage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(shakeDetectionCurrentSettingsProvider);
@@ -130,17 +128,11 @@ class DebugShakeDetectionEnginePage extends ConsumerWidget {
   }
 }
 
-class _ValueDialog extends HookWidget {
-  const new({
-    required this.tunable,
-    required this.initialText,
-    required this.defaultValue,
-  });
-
-  final ShakeDetectionTunable tunable;
-  final String initialText;
-  final double defaultValue;
-
+class const _ValueDialog({
+  required final ShakeDetectionTunable tunable,
+  required final String initialText,
+  required final double defaultValue,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController(text: initialText);

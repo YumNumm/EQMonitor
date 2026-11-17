@@ -23,11 +23,10 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// 現在地に対応する震度を表示する。
-class CurrentLocationIntensityCard extends HookConsumerWidget {
-  const new({required this.item, super.key});
-
-  final Earthquake item;
-
+class const CurrentLocationIntensityCard({
+  required final Earthquake item,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (item.intensity == null) {
@@ -159,24 +158,16 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
   }
 }
 
-class _CurrentLocationIntensityContent extends StatelessWidget {
-  const new({
-    required this.intensity,
-    required this.lpgmIntensity,
-    required this.title,
-    required this.stations,
-    required this.coarseLocationAccuracyStatus,
-  });
-
-  final JmaIntensity intensity;
-  final JmaLpgmIntensity? lpgmIntensity;
-  final String title;
-  final List<StationIntensityNode> stations;
+class const _CurrentLocationIntensityContent({
+  required final JmaIntensity intensity,
+  required final JmaLpgmIntensity? lpgmIntensity,
+  required final String title,
+  required final List<StationIntensityNode> stations,
 
   /// 測位が粗く市区町村まで絞れていない場合の権限精度。
   /// 市区町村まで絞れている場合は null。
-  final LocationAccuracyStatus? coarseLocationAccuracyStatus;
-
+  required final LocationAccuracyStatus? coarseLocationAccuracyStatus,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -223,11 +214,9 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
 ///
 /// iOS で「正確な位置情報」がオフの場合のみ、一時的な許可を要求する導線を出す。
 /// Android には一時許可の仕組みが無いため、注記のみとする。
-class _CoarseLocationNotice extends ConsumerWidget {
-  const new({required this.accuracyStatus});
-
-  final LocationAccuracyStatus accuracyStatus;
-
+class const _CoarseLocationNotice({
+  required final LocationAccuracyStatus accuracyStatus,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);

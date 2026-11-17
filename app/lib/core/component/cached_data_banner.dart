@@ -9,12 +9,11 @@ import 'package:riverpod/riverpod.dart';
 /// - いずれかが再検証失敗で stale 維持中 (`hasValue && hasError`) → 失敗表示
 /// - いずれかがキャッシュ由来の値を表示中 (`isFromCache`) → 更新中表示
 /// - それ以外 (fresh / 初回ロード) → 高さゼロ
-class CachedDataBanner extends StatelessWidget {
-  const new({required this.values, super.key});
-
+class const CachedDataBanner({
   /// 画面が表示している SWR 対象 provider の状態。値の中身は参照しない。
-  final List<AsyncValue<Object?>> values;
-
+  required final List<AsyncValue<Object?>> values,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.designSystem.colorTheme;
@@ -64,11 +63,10 @@ class CachedDataBanner extends StatelessWidget {
 /// DataSource の `isRevalidating` (`ValueListenable<bool>`) を購読し、
 /// true の間だけ `CachedDataBanner` の更新中表示と同等のバナーを出す。
 /// 一覧ページのリスト上部に `SliverToBoxAdapter` で挿入する用途を想定。
-class RevalidatingBanner extends StatelessWidget {
-  const new({required this.isRevalidating, super.key});
-
-  final ValueListenable<bool> isRevalidating;
-
+class const RevalidatingBanner({
+  required final ValueListenable<bool> isRevalidating,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
@@ -100,20 +98,13 @@ class RevalidatingBanner extends StatelessWidget {
   }
 }
 
-class _BannerContent extends StatelessWidget {
-  const new({
-    required this.leading,
-    required this.message,
-    required this.backgroundColor,
-    required this.foregroundColor,
-    super.key,
-  });
-
-  final Widget leading;
-  final String message;
-  final Color backgroundColor;
-  final Color foregroundColor;
-
+class const _BannerContent({
+  required final Widget leading,
+  required final String message,
+  required final Color backgroundColor,
+  required final Color foregroundColor,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(

@@ -1,26 +1,21 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 
-class BorderedContainer extends StatelessWidget {
-  const new({
-    required this.child,
-    this.accentColor,
-    this.padding = const EdgeInsets.all(12),
-    this.margin = const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-    this.elevation = 0,
-    this.borderRadius = const BorderRadius.all(Radius.circular(16)),
-    this.onPressed,
-    super.key,
-  });
-
-  final Widget child;
-  final Color? accentColor;
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry margin;
-  final double elevation;
-  final BorderRadiusGeometry borderRadius;
-  final void Function()? onPressed;
-
+class const BorderedContainer({
+  required final Widget child,
+  final Color? accentColor,
+  final EdgeInsetsGeometry padding = const EdgeInsets.all(12),
+  final EdgeInsetsGeometry margin = const EdgeInsets.symmetric(
+    vertical: 4,
+    horizontal: 8,
+  ),
+  final double elevation = 0,
+  final BorderRadiusGeometry borderRadius = const BorderRadius.all(
+    Radius.circular(16),
+  ),
+  final void Function()? onPressed,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

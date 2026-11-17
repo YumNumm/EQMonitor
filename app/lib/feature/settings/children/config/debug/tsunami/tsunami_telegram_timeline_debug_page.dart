@@ -19,11 +19,10 @@ import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 ///
 /// [tsunamiId] に対応する [TsunamiTimeline] を取得し、
 /// 各地域・観測点・沖合観測局の追跡項目を 2 次元スクロールテーブルで表示する。
-class TsunamiTelegramTimelineDebugPage extends HookConsumerWidget {
-  const new({required this.tsunamiId, super.key});
-
-  final String tsunamiId;
-
+class const TsunamiTelegramTimelineDebugPage({
+  required final String tsunamiId,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncValue = ref.watch(tsunamiTelegramTimelineProvider(tsunamiId));
@@ -56,11 +55,8 @@ class TsunamiTelegramTimelineDebugPage extends HookConsumerWidget {
   }
 }
 
-class _TimelineBody extends StatelessWidget {
-  const new({required this.timeline});
-
-  final TsunamiTimeline timeline;
-
+class const _TimelineBody({required final TsunamiTimeline timeline})
+    extends StatelessWidget {
   // 列幅・行高さ定義。
   static const double _labelColumnWidth = 132;
   static const double _cellColumnWidth = 140;

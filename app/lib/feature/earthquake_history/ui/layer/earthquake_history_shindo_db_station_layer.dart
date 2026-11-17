@@ -17,23 +17,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
-  const new({
-    required this.tree,
-    required this.parameter,
-    this.stationDisplayMode = StationDisplayMode.auto,
-    this.belowLayerId,
-    super.key,
-  });
-
-  final ShindoDbIntensityTree tree;
-  final EarthquakeHistoryMapLayerParameter parameter;
-  final StationDisplayMode stationDisplayMode;
-
+class const EarthquakeHistoryShindoDbStationLayer({
+  required final ShindoDbIntensityTree tree,
+  required final EarthquakeHistoryMapLayerParameter parameter,
+  final StationDisplayMode stationDisplayMode = StationDisplayMode.auto,
+  final String? belowLayerId,
+  super.key,
+}) extends HookConsumerWidget {
   static const sourceId = 'eq-history-shindo-db-station';
   static const iconLayerId = 'eq-history-shindo-db-station-icon';
-
-  final String? belowLayerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -167,9 +159,7 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
   }
 }
 
-class EarthquakeHistoryShindoDbStationLayerBuilder {
-  const new _();
-
+class const EarthquakeHistoryShindoDbStationLayerBuilder._() {
   static SymbolStyleLayer build({
     required EarthquakeHistoryMapLayerParameter parameter,
     required StationDisplayMode stationDisplayMode,

@@ -1,7 +1,11 @@
 /// JMA Information Serial Code for Nankai Trough Earthquake.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-19.
-enum JmaInformationSerialCode {
+enum JmaInformationSerialCode(
+  final int code,
+  final String name,
+  final String description,
+) {
   investigatingA(
     1,
     '調査中A',
@@ -27,12 +31,6 @@ enum JmaInformationSerialCode {
   megaEarthquakeCaution(5, '巨大地震注意', '巨大地震注意'),
   investigationEnded(6, '調査終了', '調査終了'),
   otherInformation(15, 'その他の情報', 'その他の情報');
-
-  new(this.code, this.name, this.description);
-
-  final int code;
-  final String name;
-  final String description;
 
   /// Returns the information serial code for the given code.
   ///

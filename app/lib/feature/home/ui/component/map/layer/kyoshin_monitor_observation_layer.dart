@@ -16,9 +16,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-class KyoshinMonitorObservationLayer extends ConsumerWidget {
-  const new({super.key});
-
+class const KyoshinMonitorObservationLayer({super.key}) extends ConsumerWidget {
   static const _sourceId = 'kyoshin-monitor-observations';
   static const _layerId = 'kyoshin-monitor-circles';
 
@@ -34,9 +32,7 @@ class KyoshinMonitorObservationLayer extends ConsumerWidget {
   }
 }
 
-class _KyoshinMonitorObservationLayerBody extends HookConsumerWidget {
-  const new();
-
+class const _KyoshinMonitorObservationLayerBody() extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;

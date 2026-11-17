@@ -11,11 +11,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// 警報発表区域の塗りつぶし（府県予報区 `eqmonitor_map`）
-class EewWarningRegionsLayer extends HookConsumerWidget {
-  const new({required this.eews, super.key});
-
-  final List<EewTelegramItem> eews;
-
+class const EewWarningRegionsLayer({
+  required final List<EewTelegramItem> eews,
+  super.key,
+}) extends HookConsumerWidget {
   static const _layerId = 'eew-warning-regions-fill';
   static const _areaFilterBuilder = EewAreaFilterBuilder();
 

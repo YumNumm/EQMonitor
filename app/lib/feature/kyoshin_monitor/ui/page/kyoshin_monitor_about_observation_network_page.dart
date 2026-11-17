@@ -2,9 +2,8 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
-  const new({super.key});
-
+class const KyoshinMonitorAboutObservationNetworkPage({super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -156,21 +155,13 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
   }
 }
 
-class _ObservationNetworkSection extends StatelessWidget {
-  const new({
-    required this.title,
-    required this.description,
-    this.url,
-    this.titleColor,
-    this.descriptionColor,
-  });
-
-  final String title;
-  final List<String> description;
-  final String? url;
-  final Color? titleColor;
-  final Color? descriptionColor;
-
+class const _ObservationNetworkSection({
+  required final String title,
+  required final List<String> description,
+  final String? url,
+  final Color? titleColor,
+  final Color? descriptionColor,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -218,12 +209,8 @@ class _ObservationNetworkSection extends StatelessWidget {
   }
 }
 
-class _LinkItem extends StatelessWidget {
-  const new({required this.title, required this.url});
-
-  final String title;
-  final String url;
-
+class const _LinkItem({required final String title, required final String url})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

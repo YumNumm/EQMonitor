@@ -20,11 +20,11 @@ typedef SeismicityCanonicalFixedColumnData = ({
 
 typedef SeismicityFixedColumnAllocator = T Function<T>(T Function() create);
 
-final class SeismicityCanonicalFixedColumns {
-  new({
-    required int capacity,
-    SeismicityFixedColumnAllocator? allocate,
-  }) : _allocate = allocate ?? allocateSeismicityCanonicalFixedColumnData {
+final class SeismicityCanonicalFixedColumns({
+  required int capacity,
+  SeismicityFixedColumnAllocator? allocate,
+}) {
+  this {
     if (capacity < 0 || capacity > 0x3fffffff) {
       throw const SeismicityPmTilesException.invalidDescriptor(
         reason: 'Invalid canonical fixed-column capacity.',
@@ -47,7 +47,8 @@ final class SeismicityCanonicalFixedColumns {
     );
   }
 
-  final SeismicityFixedColumnAllocator _allocate;
+  final SeismicityFixedColumnAllocator _allocate =
+      allocate ?? allocateSeismicityCanonicalFixedColumnData;
   late final SeismicityCanonicalFixedColumnData _storage;
   var _length = 0;
 

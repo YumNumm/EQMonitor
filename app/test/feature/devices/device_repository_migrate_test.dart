@@ -116,26 +116,19 @@ void main() {
   });
 }
 
-final class _MigrateAdapter implements HttpClientAdapter {
-  new({
-    this.migrateStatus = 200,
-    this.getMeStatus = 200,
-    this.firstGetMeStatus,
-    this.malformedMigrateBody = false,
-  });
-
+final class _MigrateAdapter({
   /// POST /v2/device/me/migrate が返すステータス。
-  final int migrateStatus;
+  final int migrateStatus = 200,
 
   /// GET /v2/device/me が常に返すステータス。
-  final int getMeStatus;
+  final int getMeStatus = 200,
 
   /// 最初の GET /v2/device/me のみ返すステータス（未登録→登録フロー用）。
-  final int? firstGetMeStatus;
+  final int? firstGetMeStatus,
 
   /// true のとき migrate が 200 で `migrated` キー欠落の不正ボディを返す。
-  final bool malformedMigrateBody;
-
+  final bool malformedMigrateBody = false,
+}) implements HttpClientAdapter {
   final paths = <String>[];
   Map<String, Object?>? migrateRequestBody;
   var _getMeCalls = 0;
@@ -220,8 +213,8 @@ final class _MigrateAdapter implements HttpClientAdapter {
   void close({bool force = false}) {}
 }
 
-final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  new() : super(_MemorySecurePreferencesDataSource());
+final class _MemoryDeviceAuthRepository() extends DeviceAuthRepository {
+  this : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 

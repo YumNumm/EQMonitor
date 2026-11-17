@@ -522,20 +522,20 @@ Future<Result<AuthSession, AuthFailure>> cancelledSessionAction() async =>
 
 final restoredExpiry = DateTime.utc(2035, 1, 1);
 
-final class DebugAuthNotifierFixture {
-  new({
-    AuthSession initialSession = const AuthSession.signedOut(),
-    Future<Result<AuthEnvironment, AuthFailure>> Function()? environmentAction,
-    Future<Result<void, AuthFailure>> Function()? googleAction,
-    Future<Result<void, AuthFailure>> Function()? appleAction,
-    Future<Result<AuthSession, AuthFailure>> Function()? passkeySignInAction,
-    Future<Result<void, AuthFailure>> Function()? passkeyRegisterAction,
-    Future<Result<Map<String, dynamic>, AuthFailure>> Function()? userMeAction,
-    Future<DateTime?> Function()? expiryAction,
-    Future<Result<AuthSession, AuthFailure>> Function()? refreshAction,
-    Future<Result<AuthSession, AuthFailure>> Function()? signOutAction,
-    Future<Result<AuthSession, AuthFailure>> Function()? restoreAction,
-  }) {
+final class DebugAuthNotifierFixture({
+  AuthSession initialSession = const AuthSession.signedOut(),
+  Future<Result<AuthEnvironment, AuthFailure>> Function()? environmentAction,
+  Future<Result<void, AuthFailure>> Function()? googleAction,
+  Future<Result<void, AuthFailure>> Function()? appleAction,
+  Future<Result<AuthSession, AuthFailure>> Function()? passkeySignInAction,
+  Future<Result<void, AuthFailure>> Function()? passkeyRegisterAction,
+  Future<Result<Map<String, dynamic>, AuthFailure>> Function()? userMeAction,
+  Future<DateTime?> Function()? expiryAction,
+  Future<Result<AuthSession, AuthFailure>> Function()? refreshAction,
+  Future<Result<AuthSession, AuthFailure>> Function()? signOutAction,
+  Future<Result<AuthSession, AuthFailure>> Function()? restoreAction,
+}) {
+  this {
     sessionNotifier = ControlledAuthSessionNotifier(
       initialSession: initialSession,
       refreshAction: refreshAction,
@@ -617,19 +617,12 @@ final class DebugAuthNotifierFixture {
   }
 }
 
-final class ControlledAuthSessionNotifier extends AuthSessionNotifier {
-  new({
-    required this.initialSession,
-    this.refreshAction,
-    this.signOutAction,
-    this.restoreAction,
-  });
-
-  final AuthSession initialSession;
-  final Future<Result<AuthSession, AuthFailure>> Function()? refreshAction;
-  final Future<Result<AuthSession, AuthFailure>> Function()? signOutAction;
-  final Future<Result<AuthSession, AuthFailure>> Function()? restoreAction;
-
+final class ControlledAuthSessionNotifier({
+  required final AuthSession initialSession,
+  final Future<Result<AuthSession, AuthFailure>> Function()? refreshAction,
+  final Future<Result<AuthSession, AuthFailure>> Function()? signOutAction,
+  final Future<Result<AuthSession, AuthFailure>> Function()? restoreAction,
+}) extends AuthSessionNotifier {
   @override
   Future<AuthSession> build() async => initialSession;
 
@@ -682,15 +675,10 @@ final class ControlledAuthSessionNotifier extends AuthSessionNotifier {
   }
 }
 
-final class ControlledNativeSocialAuthGateway
-    implements NativeSocialAuthGateway {
-  new({
-    required this.googleAction,
-    required this.appleAction,
-  });
-
-  final Future<Result<void, AuthFailure>> Function() googleAction;
-  final Future<Result<void, AuthFailure>> Function() appleAction;
+final class ControlledNativeSocialAuthGateway({
+  required final Future<Result<void, AuthFailure>> Function() googleAction,
+  required final Future<Result<void, AuthFailure>> Function() appleAction,
+}) implements NativeSocialAuthGateway {
   var googleCalls = 0;
   var appleCalls = 0;
   final googleStarted = Completer<void>();
@@ -711,15 +699,11 @@ final class ControlledNativeSocialAuthGateway
   }
 }
 
-final class ControlledPasskeyAuthGateway implements PasskeyAuthGateway {
-  new({
-    required this.signInAction,
-    required this.registerAction,
-  });
-
-  final Future<Result<AuthSession, AuthFailure>> Function() signInAction;
-  final Future<Result<void, AuthFailure>> Function() registerAction;
-
+final class ControlledPasskeyAuthGateway({
+  required final Future<Result<AuthSession, AuthFailure>> Function()
+  signInAction,
+  required final Future<Result<void, AuthFailure>> Function() registerAction,
+}) implements PasskeyAuthGateway {
   @override
   Future<Result<AuthSession, AuthFailure>> signIn() => signInAction();
 
@@ -727,11 +711,10 @@ final class ControlledPasskeyAuthGateway implements PasskeyAuthGateway {
   Future<Result<void, AuthFailure>> register() => registerAction();
 }
 
-final class ControlledUserApiGateway implements UserApiGateway {
-  new({required this.action});
-
-  final Future<Result<Map<String, dynamic>, AuthFailure>> Function() action;
-
+final class ControlledUserApiGateway({
+  required final Future<Result<Map<String, dynamic>, AuthFailure>> Function()
+  action,
+}) implements UserApiGateway {
   @override
   Future<Result<Map<String, dynamic>, AuthFailure>> getJson({
     required String path,

@@ -10,7 +10,9 @@ part 'eew.g.dart';
 
 /// Web版APIでの緊急地震速報の情報
 @freezed
-abstract class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
+abstract class const Eew._()
+    with _$Eew
+    implements KyoshinMonitorWebApiResponse {
   const factory({
     /// リザルト
     Result? result,
@@ -76,7 +78,6 @@ abstract class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
     /// 警報 or 予報
     @JsonKey(name: 'alertflg') String? alertFlag,
   }) = _Eew;
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) => _$EewFromJson(json);
 

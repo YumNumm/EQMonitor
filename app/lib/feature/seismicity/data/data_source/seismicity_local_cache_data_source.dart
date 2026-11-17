@@ -10,12 +10,11 @@ import 'package:path_provider/path_provider.dart';
 /// span ごとに `<ApplicationSupportDirectory>/seismicity/dataset_<span>.json`
 /// へ JSON を書き込む。[directoryProvider] はテストで一時ディレクトリを
 /// 注入するためのフック(未指定時は [getApplicationSupportDirectory])。
-class SeismicityLocalCacheDataSource {
-  new({
-    Future<Directory> Function()? directoryProvider,
-  }) : _directoryProvider = directoryProvider ?? getApplicationSupportDirectory;
-
-  final Future<Directory> Function() _directoryProvider;
+class SeismicityLocalCacheDataSource({
+  Future<Directory> Function()? directoryProvider,
+}) {
+  final Future<Directory> Function() _directoryProvider =
+      directoryProvider ?? getApplicationSupportDirectory;
 
   Future<File> _fileFor(SeismicitySpan span) async {
     final baseDir = await _directoryProvider();

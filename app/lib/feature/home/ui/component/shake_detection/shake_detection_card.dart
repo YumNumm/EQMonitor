@@ -8,16 +8,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// 揺れ検知イベントのカード。EEW カードと同じ構成で、警戒帯は入れない。
-class ShakeDetectionCard extends ConsumerWidget {
-  const new({
-    required this.event,
-    this.outerPadding = const EdgeInsets.symmetric(horizontal: 4),
-    super.key,
-  });
-
-  final ShakeDetectionEvent event;
-  final EdgeInsetsGeometry outerPadding;
-
+class const ShakeDetectionCard({
+  required final ShakeDetectionEvent event,
+  final EdgeInsetsGeometry outerPadding = const EdgeInsets.symmetric(
+    horizontal: 4,
+  ),
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final summary = ref.watch(shakeDetectionEventRegionsProvider(event)).value;
@@ -50,11 +47,9 @@ class ShakeDetectionCard extends ConsumerWidget {
   }
 }
 
-class _ShakeDetectionCardHeader extends StatelessWidget {
-  const new({required this.event});
-
-  final ShakeDetectionEvent event;
-
+class const _ShakeDetectionCardHeader({
+  required final ShakeDetectionEvent event,
+}) extends StatelessWidget {
   static const _secondaryTextColor = Color.fromRGBO(255, 255, 255, 0.7);
 
   @override
@@ -122,11 +117,9 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
   }
 }
 
-class _ShakeDetectionRegionSection extends StatelessWidget {
-  const new({required this.summary});
-
-  final ShakeDetectionRegionSummary summary;
-
+class const _ShakeDetectionRegionSection({
+  required final ShakeDetectionRegionSummary summary,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

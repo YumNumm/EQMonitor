@@ -1,7 +1,7 @@
 /// JMA Weather Related Disaster Sub Category.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-41.
-enum JmaWeatherRelatedDisasterSubCategory {
+enum JmaWeatherRelatedDisasterSubCategory(final int code, final String nameJa) {
   snowstormEmergencyWarning(1, '暴風雪特別警報'),
   heavyRainEmergencyWarning(2, '大雨特別警報'),
   stormEmergencyWarning(3, '暴風特別警報'),
@@ -13,11 +13,6 @@ enum JmaWeatherRelatedDisasterSubCategory {
   tornadoWarningInfo(22, '竜巻注意情報'),
   sedimentDisasterWarningInfo(23, '土砂災害警戒情報'),
   other(31, 'その他の警報等情報要素');
-
-  new(this.code, this.nameJa);
-
-  final int code;
-  final String nameJa;
 
   /// Returns the weather related disaster sub category for the given code.
   ///

@@ -16,9 +16,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// デバッグ用。アプリ内から ActivityKit を用いて EEW の
 /// Live Activity をローカル開始・更新・終了し、表示を検証する。
-class DebugLiveActivityPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const DebugLiveActivityPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const kind = DebugLiveActivityKind.eew;
@@ -161,11 +159,9 @@ class DebugLiveActivityPage extends HookConsumerWidget {
   }
 }
 
-class _PresetChips extends StatelessWidget {
-  const new({required this.onEewPreset});
-
-  final ValueChanged<DebugEewPreset> onEewPreset;
-
+class const _PresetChips({
+  required final ValueChanged<DebugEewPreset> onEewPreset,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -182,11 +178,9 @@ class _PresetChips extends StatelessWidget {
   }
 }
 
-class _RealDataSection extends ConsumerWidget {
-  const new({required this.onEewSelected});
-
-  final ValueChanged<EewTelegramItem> onEewSelected;
-
+class const _RealDataSection({
+  required final ValueChanged<EewTelegramItem> onEewSelected,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eews =
@@ -212,11 +206,8 @@ class _RealDataSection extends ConsumerWidget {
   }
 }
 
-class _SessionCard extends StatelessWidget {
-  const new({required this.session});
-
-  final DebugLiveActivitySession session;
-
+class const _SessionCard({required final DebugLiveActivitySession session})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -238,9 +229,7 @@ class _SessionCard extends StatelessWidget {
   }
 }
 
-class _SupportabilityTile extends ConsumerWidget {
-  const new();
-
+class const _SupportabilityTile() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(liveActivityLocalControllerProvider);

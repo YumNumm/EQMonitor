@@ -72,16 +72,12 @@ Future<EewListDataSource> eewListDataSource(
   return dataSource;
 }
 
-class EewListDataSource
-    extends GroupedDataSource<String?, String, EewTelegramItem> {
-  new({
-    required EewListRepository repository,
-    required EewListParameter parameter,
-  }) : _repository = repository,
-       _parameter = parameter;
-
-  final EewListRepository _repository;
-  final EewListParameter _parameter;
+class EewListDataSource({
+  required EewListRepository repository,
+  required EewListParameter parameter,
+}) extends GroupedDataSource<String?, String, EewTelegramItem> {
+  final EewListRepository _repository = repository;
+  final EewListParameter _parameter = parameter;
 
   @override
   String groupBy(EewTelegramItem value) {

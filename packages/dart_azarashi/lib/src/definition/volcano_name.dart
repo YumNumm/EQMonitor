@@ -1,9 +1,7 @@
 /// JMA Volcano Name.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-32.
-class JmaVolcanoName {
-  const new _();
-
+class const JmaVolcanoName._() {
   /// Map of volcano codes to names.
   static const volcanoes = <int, String>{
     101: '知床硫黄山',

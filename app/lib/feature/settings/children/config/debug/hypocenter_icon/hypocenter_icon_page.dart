@@ -14,9 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
-class HypocenterIconPage extends ConsumerWidget {
-  const new({super.key});
-
+class const HypocenterIconPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -41,11 +39,8 @@ class HypocenterIconPage extends ConsumerWidget {
   }
 }
 
-class _SectionHeader extends StatelessWidget {
-  const new({required this.title});
-
-  final String title;
-
+class const _SectionHeader({required final String title})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -55,11 +50,8 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-class _SubSectionHeader extends StatelessWidget {
-  const new({required this.title});
-
-  final String title;
-
+class const _SubSectionHeader({required final String title})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -72,9 +64,7 @@ class _SubSectionHeader extends StatelessWidget {
   }
 }
 
-class _HypocenterIconsSection extends StatelessWidget {
-  const new();
-
+class const _HypocenterIconsSection() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final normalController = ScreenshotController();
@@ -194,9 +184,7 @@ class _HypocenterIconsSection extends StatelessWidget {
   }
 }
 
-class _JmaIntensityShowcase extends StatelessWidget {
-  const new();
-
+class const _JmaIntensityShowcase() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -225,9 +213,7 @@ class _JmaIntensityShowcase extends StatelessWidget {
   }
 }
 
-class _JmaLpgmIntensityShowcase extends StatelessWidget {
-  const new();
-
+class const _JmaLpgmIntensityShowcase() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -256,12 +242,10 @@ class _JmaLpgmIntensityShowcase extends StatelessWidget {
   }
 }
 
-class _IconLabel extends StatelessWidget {
-  const new({required this.label, required this.child});
-
-  final String label;
-  final Widget child;
-
+class const _IconLabel({
+  required final String label,
+  required final Widget child,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

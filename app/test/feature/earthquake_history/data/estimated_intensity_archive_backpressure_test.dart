@@ -133,17 +133,11 @@ void main() {
   });
 }
 
-final class PausedEstimatedIntensityArchivePartWriter
-    implements EstimatedIntensityArchivePartWriter {
-  new({
-    required this.delegate,
-    required this.firstWriteStarted,
-    required this.releaseFirstWrite,
-  });
-
-  final EstimatedIntensityArchivePartWriter delegate;
-  final Completer<void> firstWriteStarted;
-  final Completer<void> releaseFirstWrite;
+final class PausedEstimatedIntensityArchivePartWriter({
+  required final EstimatedIntensityArchivePartWriter delegate,
+  required final Completer<void> firstWriteStarted,
+  required final Completer<void> releaseFirstWrite,
+}) implements EstimatedIntensityArchivePartWriter {
   var writeCount = 0;
   var concurrentWrites = 0;
   var maxConcurrentWrites = 0;

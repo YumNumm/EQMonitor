@@ -16,9 +16,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class DebugDeviceAdminPage extends ConsumerWidget {
-  const new({super.key});
-
+class const DebugDeviceAdminPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceIdAsync = ref.watch(deviceIdProvider);
@@ -35,11 +33,8 @@ class DebugDeviceAdminPage extends ConsumerWidget {
   }
 }
 
-class _DebugDeviceAdminBody extends HookConsumerWidget {
-  const new({required this.deviceId});
-
-  final String deviceId;
-
+class const _DebugDeviceAdminBody({required final String deviceId})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final refreshTick = useState(0);
@@ -118,19 +113,12 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
   }
 }
 
-class _Body extends HookConsumerWidget {
-  const new({
-    required this.deviceId,
-    required this.device,
-    required this.settings,
-    required this.onReload,
-  });
-
-  final String deviceId;
-  final RegisteredDevice? device;
-  final GeneralNotificationSettings? settings;
-  final Future<void> Function() onReload;
-
+class const _Body({
+  required final String deviceId,
+  required final RegisteredDevice? device,
+  required final GeneralNotificationSettings? settings,
+  required final Future<void> Function() onReload,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBusy = useState(false);
@@ -430,12 +418,8 @@ class _Body extends HookConsumerWidget {
   }
 }
 
-class _InfoRow extends StatelessWidget {
-  const new({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
+class const _InfoRow({required final String label, required final String value})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -464,11 +448,8 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-class _ErrorBody extends StatelessWidget {
-  const new({required this.message});
-
-  final String message;
-
+class const _ErrorBody({required final String message})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(

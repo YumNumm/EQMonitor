@@ -1,9 +1,7 @@
 /// JMA Weather Forecast Region (Prefecture Forecast Area).
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-43.
-class JmaWeatherForecastRegion {
-  const new _();
-
+class const JmaWeatherForecastRegion._() {
   /// Map of weather forecast region codes to names.
   static const regions = <int, String>{
     11000: '宗谷地方',

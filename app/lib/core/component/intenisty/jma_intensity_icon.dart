@@ -6,24 +6,15 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:material_ui/material_ui.dart';
 
-class JmaIntensityIcon extends StatelessWidget {
-  const new({
-    required this.intensity,
-    required this.type,
-    this.customText,
-    super.key,
-    this.size = 50,
-    this.showSuffix = true,
-    this.colorEntry,
-  });
-
-  final JmaIntensity intensity;
-  final IntensityIconType type;
-  final double size;
-  final String? customText;
-  final bool showSuffix;
-  final IntensityColorEntry? colorEntry;
-
+class const JmaIntensityIcon({
+  required final JmaIntensity intensity,
+  required final IntensityIconType type,
+  final String? customText,
+  super.key,
+  final double size = 50,
+  final bool showSuffix = true,
+  final IntensityColorEntry? colorEntry,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorEntry =

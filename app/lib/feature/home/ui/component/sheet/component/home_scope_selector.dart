@@ -22,22 +22,15 @@ extension HomeEarthquakeHistoryScopeDisplay on HomeEarthquakeHistoryScope {
 ///
 /// タップでメニューを開き、全国 / 現在地 / 指定地域を選択する。
 /// [onEditRegion] を渡した場合は、指定地域の選び直しもメニューから行える。
-class HomeScopeSelector extends StatelessWidget {
-  const new({
-    required this.scope,
-    required this.onScopeChanged,
-    this.onEditRegion,
-    this.locationName,
-    super.key,
-  });
-
-  final HomeEarthquakeHistoryScope scope;
-  final ValueChanged<HomeEarthquakeHistoryScope> onScopeChanged;
-  final VoidCallback? onEditRegion;
+class const HomeScopeSelector({
+  required final HomeEarthquakeHistoryScope scope,
+  required final ValueChanged<HomeEarthquakeHistoryScope> onScopeChanged,
+  final VoidCallback? onEditRegion,
 
   /// 解決済みの地域名。チップにはこれを優先して表示する。
-  final String? locationName;
-
+  final String? locationName,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownMenuChip<HomeEarthquakeHistoryScope>(

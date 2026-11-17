@@ -10,9 +10,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 /// Volcano Decoder.
 ///
 /// Decodes JMA Volcano information messages.
-class VolcanoDecoder {
-  const new _();
-
+class const VolcanoDecoder._() {
   /// Decodes a Volcano message.
   static QzssDcReport decode(JmaCommonParams params) {
     final message = params.message;

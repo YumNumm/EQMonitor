@@ -7,8 +7,8 @@ import 'package:analyzer/error/error.dart';
 import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 import 'package:eqmonitor_lints_plugin/src/manual_provider_detection.dart';
 
-class RequireRiverpodGenerator extends AnalysisRule {
-  new() : super(name: _code.name, description: _code.problemMessage);
+class RequireRiverpodGenerator() extends AnalysisRule {
+  this : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'require_riverpod_generator',
@@ -37,11 +37,7 @@ class RequireRiverpodGenerator extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  new(this.rule);
-
-  final AnalysisRule rule;
-
+class _Visitor(final AnalysisRule rule) extends SimpleAstVisitor<void> {
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
     final initializer = node.initializer;

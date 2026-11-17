@@ -11,11 +11,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class _FakeCityMaxIntensity extends CityMaxIntensityNotifier {
-  new(this._build);
-
-  final Future<CityMaxIntensity> Function() _build;
-
+class _FakeCityMaxIntensity(final Future<CityMaxIntensity> Function() _build)
+    extends CityMaxIntensityNotifier {
   @override
   Future<CityMaxIntensity> build() => _build();
 }

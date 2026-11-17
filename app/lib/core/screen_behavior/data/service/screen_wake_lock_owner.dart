@@ -1,9 +1,8 @@
 import 'package:eqmonitor/core/provider/log/talker.dart';
 
-class ScreenWakeLockOwner {
-  new({required this.setEnabled});
-
-  final Future<void> Function({required bool enabled}) setEnabled;
+class ScreenWakeLockOwner({
+  required final Future<void> Function({required bool enabled}) setEnabled,
+}) {
   bool? appliedEnabled;
   int desiredGeneration = 0;
   Future<void> transitionQueue = Future.value();

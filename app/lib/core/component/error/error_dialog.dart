@@ -26,17 +26,11 @@ class const ErrorDialogAction() {
   }
 }
 
-class _ErrorDialogBody extends ConsumerWidget {
-  const new({
-    required this.error,
-    required this.title,
-    required this.stackTrace,
-  });
-
-  final Object error;
-  final String? title;
-  final StackTrace? stackTrace;
-
+class const _ErrorDialogBody({
+  required final Object error,
+  required final String? title,
+  required final StackTrace? stackTrace,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final message = ref.read(errorMessageBuilderProvider).build(error: error);

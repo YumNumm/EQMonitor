@@ -31,11 +31,8 @@ class _TestShakes extends Notifier<List<ShakeDetectionEvent>> {
   }
 }
 
-class _MutableEewAliveTelegram extends EewAliveTelegram {
-  new(this.initial);
-
-  final List<EewTelegramItem> initial;
-
+class _MutableEewAliveTelegram(final List<EewTelegramItem> initial)
+    extends EewAliveTelegram {
   @override
   List<EewTelegramItem> build() => initial;
 

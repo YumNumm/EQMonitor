@@ -9,22 +9,15 @@ abstract class ExtEncoder {
   Uint8List encodeObject(dynamic object);
 }
 
-class Float {
-  new(this.value);
-
-  final double value;
-
+class Float(final double value) {
   @override
   String toString() => value.toString();
 }
 
-class Serializer {
-  new({DataWriter? dataWriter, ExtEncoder? extEncoder})
-    : _writer = dataWriter ?? DataWriter(),
-      _extEncoder = extEncoder;
+class Serializer({DataWriter? dataWriter, ExtEncoder? extEncoder}) {
   static const _codec = Utf8Codec();
-  final DataWriter _writer;
-  final ExtEncoder? _extEncoder;
+  final DataWriter _writer = dataWriter ?? DataWriter();
+  final ExtEncoder? _extEncoder = extEncoder;
 
   void encode(dynamic d) {
     if (d == null) return _writer.writeUint8(0xc0);

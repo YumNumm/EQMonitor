@@ -29,16 +29,11 @@ import 'package:material_ui/material_ui.dart';
 ///
 /// - [initialCityCode] と [initialPrefectureCode] の両方が指定されたとき、
 ///   起動直後に当該市区町村の詳細モーダルを自動表示する。カメラは動かさない。
-class IntensityHistoryPage extends ConsumerWidget {
-  const new({
-    this.initialPrefectureCode,
-    this.initialCityCode,
-    super.key,
-  });
-
-  final String? initialPrefectureCode;
-  final String? initialCityCode;
-
+class const IntensityHistoryPage({
+  final String? initialPrefectureCode,
+  final String? initialCityCode,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final action = ref.watch(intensityHistoryPageActionProvider);
@@ -74,17 +69,11 @@ class IntensityHistoryPage extends ConsumerWidget {
   }
 }
 
-class _MapContent extends HookConsumerWidget {
-  const new({
-    required this.styleString,
-    required this.initialPrefectureCode,
-    required this.initialCityCode,
-  });
-
-  final String styleString;
-  final String? initialPrefectureCode;
-  final String? initialCityCode;
-
+class const _MapContent({
+  required final String styleString,
+  required final String? initialPrefectureCode,
+  required final String? initialCityCode,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final action = ref.watch(intensityHistoryMapActionProvider);

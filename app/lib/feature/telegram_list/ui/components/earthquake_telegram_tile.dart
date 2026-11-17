@@ -17,31 +17,23 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 ///
 /// VXSE51〜53, VXSE61, VXSE62 の電文タイプに応じて
 /// 震源サマリや震度地域リストの表示を切り替える。
-class EarthquakeTelegramTile extends ConsumerWidget {
-  const new({
-    required this.telegram,
-    required this.body,
-    required this.sequenceNumber,
-    this.previousBody,
-    this.comments,
-    super.key,
-  });
-
+class const EarthquakeTelegramTile({
   /// 電文メタ情報
-  final TelegramItem telegram;
-
-  /// 電文コメント
-  final TelegramCommentsModel? comments;
+  required final TelegramItem telegram,
 
   /// 地震情報本文（EARTHQUAKE 型）
-  final EarthquakeTelegramBodyModel body;
+  required final EarthquakeTelegramBodyModel body,
 
   /// 報番号（1-based、1 = 初報）
-  final int sequenceNumber;
+  required final int sequenceNumber,
 
   /// 前報の本文（差分表示用、初報の場合は null）
-  final EarthquakeTelegramBodyModel? previousBody;
+  final EarthquakeTelegramBodyModel? previousBody,
 
+  /// 電文コメント
+  final TelegramCommentsModel? comments,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -159,23 +151,14 @@ class EarthquakeTelegramTile extends ConsumerWidget {
   }
 }
 
-class _EarthquakeTelegramTileContent extends StatelessWidget {
-  const new({
-    required this.telegramType,
-    required this.body,
-    required this.previousBody,
-    required this.regionDiff,
-    required this.hypocenterDiff,
-    required this.prefectureMap,
-  });
-
-  final TelegramType telegramType;
-  final EarthquakeTelegramBodyModel body;
-  final EarthquakeTelegramBodyModel? previousBody;
-  final List<IntensityRegionDiffEntry>? regionDiff;
-  final HypocenterDiff? hypocenterDiff;
-  final Map<String, String>? prefectureMap;
-
+class const _EarthquakeTelegramTileContent({
+  required final TelegramType telegramType,
+  required final EarthquakeTelegramBodyModel body,
+  required final EarthquakeTelegramBodyModel? previousBody,
+  required final List<IntensityRegionDiffEntry>? regionDiff,
+  required final HypocenterDiff? hypocenterDiff,
+  required final Map<String, String>? prefectureMap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final quake = body.quake;

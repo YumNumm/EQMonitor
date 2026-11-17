@@ -44,9 +44,7 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class NotificationSettingsPage extends StatelessWidget {
-  const new({super.key});
-
+class const NotificationSettingsPage({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,9 +54,7 @@ class NotificationSettingsPage extends StatelessWidget {
   }
 }
 
-class _Body extends HookConsumerWidget {
-  const new();
-
+class const _Body() extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isApplyingPreset = useState(false);
@@ -178,15 +174,10 @@ class _Body extends HookConsumerWidget {
   }
 }
 
-class _MasterNotificationControl extends StatelessWidget {
-  const new({
-    required this.value,
-    required this.onChanged,
-  });
-
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
+class const _MasterNotificationControl({
+  required final bool value,
+  required final ValueChanged<bool> onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -235,9 +226,7 @@ class _MasterNotificationControl extends StatelessWidget {
   }
 }
 
-class _CustomNotificationSettingsPage extends ConsumerWidget {
-  const new();
-
+class const _CustomNotificationSettingsPage() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final constraints = ref.watch(notificationPlanConstraintsProvider);
@@ -318,9 +307,7 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
   }
 }
 
-class _CustomSettingsDescription extends StatelessWidget {
-  const new();
-
+class const _CustomSettingsDescription() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -338,9 +325,7 @@ class _CustomSettingsDescription extends StatelessWidget {
   }
 }
 
-class _ShakeDetectionReconfigurationNotice extends ConsumerWidget {
-  const new();
-
+class const _ShakeDetectionReconfigurationNotice() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditable =
@@ -365,20 +350,13 @@ class _ShakeDetectionReconfigurationNotice extends ConsumerWidget {
   }
 }
 
-class _CustomSettingsSection extends StatelessWidget {
-  const new({
-    required this.isPro,
-    required this.isShakeDetectionLocked,
-    required this.estimatedIntensityEnabled,
-    required this.onEstimatedIntensityChanged,
-  });
-
-  final bool isPro;
-  final bool isShakeDetectionLocked;
-  final bool estimatedIntensityEnabled;
-  final Future<void> Function({required bool value})
-  onEstimatedIntensityChanged;
-
+class const _CustomSettingsSection({
+  required final bool isPro,
+  required final bool isShakeDetectionLocked,
+  required final bool estimatedIntensityEnabled,
+  required final Future<void> Function({required bool value})
+  onEstimatedIntensityChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -466,19 +444,12 @@ class _CustomSettingsSection extends StatelessWidget {
   }
 }
 
-class _InlineSwitchTile extends StatelessWidget {
-  const new({
-    required this.title,
-    required this.subtitle,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final String title;
-  final String subtitle;
-  final bool value;
-  final Future<void> Function({required bool value}) onChanged;
-
+class const _InlineSwitchTile({
+  required final String title,
+  required final String subtitle,
+  required final bool value,
+  required final Future<void> Function({required bool value}) onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -493,10 +464,8 @@ class _InlineSwitchTile extends StatelessWidget {
   }
 }
 
-class _SlotListSection extends ConsumerWidget {
-  const new({required this.maxRegions});
-  final int maxRegions;
-
+class const _SlotListSection({required final int maxRegions})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
@@ -714,23 +683,14 @@ class _SlotListSection extends ConsumerWidget {
   }
 }
 
-class _SlotListTile extends StatelessWidget {
-  const new({
-    required this.slot,
-    required this.isActive,
-    required this.warningEnabled,
-    required this.warningTarget,
-    required this.shakeDetectionText,
-    required this.onTap,
-  });
-
-  final NotificationSlot slot;
-  final bool isActive;
-  final bool warningEnabled;
-  final EewWarningTarget? warningTarget;
-  final String? shakeDetectionText;
-  final VoidCallback? onTap;
-
+class const _SlotListTile({
+  required final NotificationSlot slot,
+  required final bool isActive,
+  required final bool warningEnabled,
+  required final EewWarningTarget? warningTarget,
+  required final String? shakeDetectionText,
+  required final VoidCallback? onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, title) = switch (slot.slotType) {
@@ -783,9 +743,7 @@ class _SlotListTile extends StatelessWidget {
   }
 }
 
-class _GeneralNotificationSettingsSection extends ConsumerWidget {
-  const new();
-
+class const _GeneralNotificationSettingsSection() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsAsync = ref.watch(generalNotificationSettingsProvider);
@@ -927,9 +885,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
   }
 }
 
-class _NotificationHistoryTile extends StatelessWidget {
-  const new();
-
+class const _NotificationHistoryTile() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(

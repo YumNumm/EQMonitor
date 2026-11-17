@@ -26,10 +26,7 @@ extension TsunamiTelegramsResponseApiExt on api.TsunamiTelegramsResponse {
 ///
 /// `Map`（`LinkedHashMap`）はキーの挿入順を保持するため、
 /// 別途「出現順のリスト」を持つ必要がない。
-class _RegionAccumulator {
-  new({required this.name});
-
-  String name;
+class _RegionAccumulator({required var String name}) {
   final Tracked<TsunamiWarningKind> kind = [];
   final Tracked<TsunamiWarningKind> lastKind = [];
   final Tracked<TsunamiForecastFirstHeight?> forecastFirstHeight = [];
@@ -40,28 +37,18 @@ class _RegionAccumulator {
 }
 
 /// region 内の station.code ごとの追跡状態を保持するアキュムレータ。
-class _StationAccumulator {
-  new({required this.name});
-
-  String name;
+class _StationAccumulator({required var String name}) {
   final Tracked<TsunamiStationForecast?> forecast = [];
   final Tracked<TsunamiStationObservation?> observation = [];
 }
 
 /// offshore.code ごとの追跡状態を保持するアキュムレータ。
-class _OffshoreAccumulator {
-  new({required this.name});
-
-  String name;
+class _OffshoreAccumulator({required var String name}) {
   final Tracked<TsunamiObservationFirstHeight> firstHeight = [];
   final Tracked<TsunamiObservationMaxHeight?> maxHeight = [];
 }
 
-class _TrackedTimelineBuilder {
-  new(this._response);
-
-  final api.TsunamiTelegramsResponse _response;
-
+class _TrackedTimelineBuilder(final api.TsunamiTelegramsResponse _response) {
   TrackedTsunamiTimeline build() {
     final sorted = [..._response.telegrams]
       ..sort((a, b) {

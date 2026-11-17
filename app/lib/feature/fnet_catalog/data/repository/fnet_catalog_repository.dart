@@ -8,10 +8,8 @@ part 'fnet_catalog_repository.g.dart';
 FnetCatalogRepository fnetCatalogRepository(Ref ref) =>
     FnetCatalogRepository(client: ref.watch(niedApiClientProvider));
 
-class FnetCatalogRepository {
-  new({required NiedApiClient client}) : _client = client;
-
-  final NiedApiClient _client;
+class FnetCatalogRepository({required NiedApiClient client}) {
+  final NiedApiClient _client = client;
 
   /// 指定された年月のカタログデータを取得
   Future<List<FnetEvent>> fetchCatalog({

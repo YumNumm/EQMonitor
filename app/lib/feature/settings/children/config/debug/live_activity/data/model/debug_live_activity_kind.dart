@@ -2,14 +2,12 @@
 ///
 /// ネイティブ (`net.yumnumm.eqmonitor/live_activity_debug` MethodChannel) へ渡す
 /// `kind` 文字列は Widget Extension 側の `attributes-type` と対応する。
-enum DebugLiveActivityKind {
-  eew('eew', 'EEW（緊急地震速報）');
-
-  new(this.wireName, this.label);
-
+enum DebugLiveActivityKind(
   /// MethodChannel / ContentState `type` フィールドで使用する識別子。
-  final String wireName;
+  final String wireName,
 
   /// UI 表示用ラベル。
-  final String label;
+  final String label,
+) {
+  eew('eew', 'EEW（緊急地震速報）'),
 }

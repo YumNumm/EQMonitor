@@ -32,9 +32,7 @@ class const IntensityFieldDef({
 ///
 /// `IntensityColors`(11件)/`EstimatedIntensityColors`(6件)の
 /// 全エントリを網羅する。エディタUI(Task 5/6)は[all]を描画するだけで完結する。
-class IntensityFieldDefs {
-  const new _();
-
+class const IntensityFieldDefs._() {
   static final List<IntensityFieldDef> all = [
     IntensityFieldDef(
       label: '震度不明',

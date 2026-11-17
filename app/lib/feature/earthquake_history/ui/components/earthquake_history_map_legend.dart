@@ -17,18 +17,12 @@ import 'package:material_ui/material_ui.dart';
 
 const _legendIconSize = 24.0;
 
-class EarthquakeHistoryMapLegend extends StatelessWidget {
-  const new({
-    required this.intensity,
-    this.displayMode = IntensityDisplayMode.jma,
-    this.shindoDbTree,
-    super.key,
-  });
-
-  final EarthquakeIntensity? intensity;
-  final IntensityDisplayMode displayMode;
-  final ShindoDbIntensityTree? shindoDbTree;
-
+class const EarthquakeHistoryMapLegend({
+  required final EarthquakeIntensity? intensity,
+  final IntensityDisplayMode displayMode = IntensityDisplayMode.jma,
+  final ShindoDbIntensityTree? shindoDbTree,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tree = shindoDbTree;
@@ -43,11 +37,10 @@ class EarthquakeHistoryMapLegend extends StatelessWidget {
   }
 }
 
-class _JmaLegend extends StatelessWidget {
-  const new({this.intensity, this.estimated = false});
-  final EarthquakeIntensity? intensity;
-  final bool estimated;
-
+class const _JmaLegend({
+  final EarthquakeIntensity? intensity,
+  final bool estimated = false,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final levels = estimated
@@ -93,10 +86,8 @@ class _JmaLegend extends StatelessWidget {
   }
 }
 
-class _LpgmLegend extends StatelessWidget {
-  const new({required this.intensity});
-  final EarthquakeIntensity? intensity;
-
+class const _LpgmLegend({required final EarthquakeIntensity? intensity})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final levels = switch (intensity) {
@@ -125,10 +116,8 @@ class _LpgmLegend extends StatelessWidget {
   }
 }
 
-class _ShindoDbLegend extends StatelessWidget {
-  const new({required this.tree});
-  final ShindoDbIntensityTree tree;
-
+class const _ShindoDbLegend({required final ShindoDbIntensityTree tree})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final classes = tree.tree.keys.toList()
@@ -174,12 +163,11 @@ class _ShindoDbLegend extends StatelessWidget {
   }
 }
 
-class _AnimatedLegend extends HookWidget {
-  const new({required this.label, required this.entries});
-
-  final String label;
-  final List<({String label, BorderRadius borderRadius, Widget icon})> entries;
-
+class const _AnimatedLegend({
+  required final String label,
+  required final List<({String label, BorderRadius borderRadius, Widget icon})>
+  entries,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final expanded = useState(true);

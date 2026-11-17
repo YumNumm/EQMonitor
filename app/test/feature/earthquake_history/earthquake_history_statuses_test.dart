@@ -55,9 +55,9 @@ final class _EmptyRealtimeEvents extends RealtimeEvents {
   Stream<RealtimeEvent> build() => const Stream.empty();
 }
 
-final class _FakeEarthquakeHistoryRepository
+final class _FakeEarthquakeHistoryRepository()
     extends EarthquakeHistoryRepository {
-  new()
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _parameter,

@@ -19,17 +19,13 @@ final class SeismicityDecoderRunnerCleanupMemo {
 }
 
 /// Non-export runner: archive traversal into an injected worker factory.
-final class SeismicityPmTilesDecoderRunner {
-  new({
-    required this.factory,
-    this.schemaValidator = const SeismicitySchemaV1Validator(),
-    this.publicationValidator = const SeismicityDatasetPublicationValidator(),
-  });
-
-  final SeismicityDecoderWorkerFactory factory;
-  final SeismicitySchemaV1Validator schemaValidator;
-  final SeismicityDatasetPublicationValidator publicationValidator;
-
+final class SeismicityPmTilesDecoderRunner({
+  required final SeismicityDecoderWorkerFactory factory,
+  final SeismicitySchemaV1Validator schemaValidator =
+      const SeismicitySchemaV1Validator(),
+  final SeismicityDatasetPublicationValidator publicationValidator =
+      const SeismicityDatasetPublicationValidator(),
+}) {
   SeismicityPmTilesDecodeOperation start({
     required SeismicityPmTilesArchive archive,
     required int chunkCapacity,

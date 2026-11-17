@@ -91,28 +91,16 @@ final class DartSeismicityDecoderIsolateLauncher
   }
 }
 
-final class _DartSeismicityDecoderWorkerEndpoint
-    implements SeismicityDecoderWorkerEndpoint {
-  new({
-    required this._isolate,
-    required this._workerPort,
-    required this._responsePort,
-    required this._responsesController,
-    required this.errors,
-    required this.exits,
-    required this.exited,
-  });
-
-  final Isolate _isolate;
-  final Future<SendPort?> _workerPort;
-  final ReceivePort _responsePort;
-  final StreamController<SeismicityDecoderWorkerResponse> _responsesController;
-  @override
-  final Stream<SeismicityDecoderWorkerError> errors;
-  @override
-  final Stream<SeismicityDecoderWorkerExit> exits;
-  @override
-  final Future<void> exited;
+final class _DartSeismicityDecoderWorkerEndpoint({
+  required final Isolate _isolate,
+  required final Future<SendPort?> _workerPort,
+  required final ReceivePort _responsePort,
+  required final StreamController<SeismicityDecoderWorkerResponse>
+  _responsesController,
+  @override required final Stream<SeismicityDecoderWorkerError> errors,
+  @override required final Stream<SeismicityDecoderWorkerExit> exits,
+  @override required final Future<void> exited,
+}) implements SeismicityDecoderWorkerEndpoint {
   var _receivePortClosed = false;
   var _killed = false;
 

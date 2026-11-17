@@ -11,11 +11,10 @@ import 'package:material_ui/material_ui.dart';
 /// Y軸(深さ)は下向きが正のため `reversed: true` 相当の表示にするために
 /// 深さを負の値としてプロットし、`maxY` を 0 に固定する。`minY` は
 /// fl_chart のオートスケールに委ねる(明示的には設定しない)。
-class SeismicityDepthSectionChart extends HookWidget {
-  const new({required this.events, super.key});
-
-  final List<SeismicityEvent> events;
-
+class const SeismicityDepthSectionChart({
+  required final List<SeismicityEvent> events,
+  super.key,
+}) extends HookWidget {
   static const SeismicityDepthProjection _projection =
       SeismicityDepthProjection();
 

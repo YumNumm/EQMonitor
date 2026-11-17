@@ -19,25 +19,15 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
-class RegionSelectionMap extends HookConsumerWidget {
-  const new({
-    required this.kind,
-    required this.catalog,
-    required this.selected,
-    required this.onSelected,
-    this.parent,
-    this.bottomInset = 0,
-    super.key,
-  });
-
-  final RegionKind kind;
-  final List<RegionOption> catalog;
-  final List<RegionOption> selected;
-  final RegionOption? parent;
-  final ValueChanged<RegionOption> onSelected;
-
-  final double bottomInset;
-
+class const RegionSelectionMap({
+  required final RegionKind kind,
+  required final List<RegionOption> catalog,
+  required final List<RegionOption> selected,
+  required final ValueChanged<RegionOption> onSelected,
+  final RegionOption? parent,
+  final double bottomInset = 0,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final configuration = ref.watch(mapConfigurationProvider);

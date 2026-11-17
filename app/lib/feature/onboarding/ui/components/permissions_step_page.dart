@@ -1,10 +1,8 @@
 part of '../page/onboarding_page.dart';
 
-class _PermissionsStepPage extends HookConsumerWidget {
-  const new({required this.navigation});
-
-  final _OnboardingStepNavigation navigation;
-
+class const _PermissionsStepPage({
+  required final _OnboardingStepNavigation navigation,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
@@ -182,17 +180,11 @@ class _PermissionsStepPage extends HookConsumerWidget {
   }
 }
 
-class _PermissionSection extends StatelessWidget {
-  const new({
-    required this.title,
-    required this.children,
-    this.description,
-  });
-
-  final String title;
-  final Widget? description;
-  final List<Widget> children;
-
+class const _PermissionSection({
+  required final String title,
+  required final List<Widget> children,
+  final Widget? description,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -217,31 +209,18 @@ class _PermissionSection extends StatelessWidget {
   }
 }
 
-class _PermissionActionCard extends StatelessWidget {
-  const new({
-    required this.title,
-    required this.description,
-    required this.isGranted,
-    required this.isSkipped,
-    required this.isEnabled,
-    required this.onSkip,
-    required this.onAllow,
-    this.disabledReason,
-    this.linkLabel,
-    this.onLinkTap,
-  });
-
-  final String title;
-  final String description;
-  final bool isGranted;
-  final bool isSkipped;
-  final bool isEnabled;
-  final VoidCallback onSkip;
-  final Future<void> Function() onAllow;
-  final String? disabledReason;
-  final String? linkLabel;
-  final VoidCallback? onLinkTap;
-
+class const _PermissionActionCard({
+  required final String title,
+  required final String description,
+  required final bool isGranted,
+  required final bool isSkipped,
+  required final bool isEnabled,
+  required final VoidCallback onSkip,
+  required final Future<void> Function() onAllow,
+  final String? disabledReason,
+  final String? linkLabel,
+  final VoidCallback? onLinkTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -304,17 +283,11 @@ class _PermissionActionCard extends StatelessWidget {
   }
 }
 
-class _PermissionDescriptionText extends StatelessWidget {
-  const new({
-    required this.description,
-    required this.linkLabel,
-    required this.onLinkTap,
-  });
-
-  final String description;
-  final String? linkLabel;
-  final VoidCallback? onLinkTap;
-
+class const _PermissionDescriptionText({
+  required final String description,
+  required final String? linkLabel,
+  required final VoidCallback? onLinkTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -349,12 +322,10 @@ class _PermissionDescriptionText extends StatelessWidget {
   }
 }
 
-class _InlineTextLink extends StatelessWidget {
-  const new({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
+class const _InlineTextLink({
+  required final String label,
+  required final VoidCallback onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

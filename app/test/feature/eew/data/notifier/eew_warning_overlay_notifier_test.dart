@@ -19,34 +19,27 @@ final mutableRealDisplayProvider =
       MutableRealDisplay.new,
     );
 
-final class MutableRealDisplay
+final class MutableRealDisplay([final EewWarningOverlayDisplayModel? initial])
     extends Notifier<EewWarningOverlayDisplayModel?> {
-  new([this.initial]);
-
-  final EewWarningOverlayDisplayModel? initial;
-
   @override
   EewWarningOverlayDisplayModel? build() => initial;
 
   void publish(EewWarningOverlayDisplayModel? model) => state = model;
 }
 
-final class MutableAppLifecycle extends AppLifecycle {
-  new({this.initial = AppLifecycleState.resumed});
-
-  final AppLifecycleState initial;
-
+final class MutableAppLifecycle({
+  final AppLifecycleState initial = AppLifecycleState.resumed,
+}) extends AppLifecycle {
   @override
   AppLifecycleState build() => initial;
 
   void publish(AppLifecycleState value) => state = value;
 }
 
-final class FakeScheduledTask implements EewWarningOverlayScheduledTask {
-  new({required this.delay, required this.callback});
-
-  final Duration delay;
-  final Future<void> Function() callback;
+final class FakeScheduledTask({
+  required final Duration delay,
+  required final Future<void> Function() callback,
+}) implements EewWarningOverlayScheduledTask {
   bool isCancelled = false;
   bool hasRun = false;
 
@@ -81,16 +74,11 @@ final class FakeScheduler implements EewWarningOverlayScheduler {
   }
 }
 
-final class FakeVibrationGateway implements EewWarningOverlayVibrationGateway {
-  new({
-    this.startBarriers = const [],
-    this.cancelBarriers = const [],
-    this.hasVibratorResult = true,
-  });
-
-  final List<Completer<void>?> startBarriers;
-  final List<Completer<void>?> cancelBarriers;
-  final bool hasVibratorResult;
+final class FakeVibrationGateway({
+  final List<Completer<void>?> startBarriers = const [],
+  final List<Completer<void>?> cancelBarriers = const [],
+  final bool hasVibratorResult = true,
+}) implements EewWarningOverlayVibrationGateway {
   int startCalls = 0;
   int cancelCalls = 0;
   int hasVibratorCalls = 0;
@@ -131,21 +119,13 @@ final class FakeVibrationGateway implements EewWarningOverlayVibrationGateway {
   }
 }
 
-final class TestContext {
-  new({
-    required this.container,
-    required this.real,
-    required this.lifecycle,
-    required this.scheduler,
-    required this.vibration,
-  });
-
-  final ProviderContainer container;
-  final MutableRealDisplay real;
-  final MutableAppLifecycle lifecycle;
-  final FakeScheduler scheduler;
-  final FakeVibrationGateway vibration;
-
+final class TestContext({
+  required final ProviderContainer container,
+  required final MutableRealDisplay real,
+  required final MutableAppLifecycle lifecycle,
+  required final FakeScheduler scheduler,
+  required final FakeVibrationGateway vibration,
+}) {
   EewWarningOverlayState get state =>
       container.read(eewWarningOverlayNotifierProvider);
 

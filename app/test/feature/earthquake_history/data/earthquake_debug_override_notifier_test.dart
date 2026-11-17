@@ -299,25 +299,23 @@ Future<void> _waitFor(bool Function() condition) async {
   expect(condition(), isTrue);
 }
 
-final class _StubRealtimeEvents extends RealtimeEvents {
-  new(this.stream);
-
-  final Stream<RealtimeEvent> stream;
-
+final class _StubRealtimeEvents(final Stream<RealtimeEvent> stream)
+    extends RealtimeEvents {
   @override
   Stream<RealtimeEvent> build() => stream;
 }
 
-final class _SpyRepository extends EarthquakeHistoryRepository {
-  new({required this.initial, required this.cacheClient})
+final class _SpyRepository({
+  required var Earthquake initial,
+  required final api.ApiClient cacheClient,
+}) extends EarthquakeHistoryRepository {
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,
         shindoDbStations: _shindoDbStations,
       );
 
-  Earthquake initial;
-  final api.ApiClient cacheClient;
   int detailFetchCount = 0;
   Earthquake? cacheResult;
   Completer<Earthquake>? freshResult;

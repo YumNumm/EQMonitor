@@ -48,9 +48,7 @@ class const _OnboardingStepNavigation({
   required final _OnboardingNavigationRegistrar register,
 });
 
-class OnboardingPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const OnboardingPage({super.key}) extends HookConsumerWidget {
   static const List<_OnboardingStep> _steps = _OnboardingStep.values;
 
   @override

@@ -24,12 +24,11 @@ import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class EewDetailsByEventIdPage extends StatelessWidget {
-  const new({required this.eventId, this.onClose, super.key});
-
-  final String eventId;
-  final VoidCallback? onClose;
-
+class const EewDetailsByEventIdPage({
+  required final String eventId,
+  final VoidCallback? onClose,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ProFeatureGate(
     title: '緊急地震速報の履歴',
@@ -43,12 +42,10 @@ class EewDetailsByEventIdPage extends StatelessWidget {
   );
 }
 
-class _EewDetailsByEventIdContent extends HookConsumerWidget {
-  const new({required this.eventId, this.onClose});
-
-  final String eventId;
-  final VoidCallback? onClose;
-
+class const _EewDetailsByEventIdContent({
+  required final String eventId,
+  final VoidCallback? onClose,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eewsAsyncValue = ref.watch(eewsByEventIdProvider(eventId));
@@ -190,17 +187,11 @@ class _EewDetailsByEventIdContent extends HookConsumerWidget {
   }
 }
 
-class _SimulationView extends HookConsumerWidget {
-  const new({
-    required this.selectedEew,
-    required this.displayMode,
-    required this.initialCenter,
-  });
-
-  final EewTelegramItem? selectedEew;
-  final EewDisplayMode displayMode;
-  final Geographic initialCenter;
-
+class const _SimulationView({
+  required final EewTelegramItem? selectedEew,
+  required final EewDisplayMode displayMode,
+  required final Geographic initialCenter,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final simulation = ref.watch(eewSimulationProvider);
@@ -255,9 +246,7 @@ class _SimulationView extends HookConsumerWidget {
   }
 }
 
-class _EewDetailsByEventIdSkeleton extends StatelessWidget {
-  const new();
-
+class const _EewDetailsByEventIdSkeleton() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Skeletonizer(
@@ -276,12 +265,10 @@ class _EewDetailsByEventIdSkeleton extends StatelessWidget {
   }
 }
 
-class _DisplayModeSelector extends StatelessWidget {
-  const new({required this.displayMode, required this.onChanged});
-
-  final EewDisplayMode displayMode;
-  final void Function(EewDisplayMode) onChanged;
-
+class const _DisplayModeSelector({
+  required final EewDisplayMode displayMode,
+  required final void Function(EewDisplayMode) onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return M3EToggleButtonGroup(
@@ -309,27 +296,16 @@ class _DisplayModeSelector extends StatelessWidget {
   }
 }
 
-class _ResponsiveLayout extends HookConsumerWidget {
-  const new({
-    required this.eews,
-    required this.selectedIndex,
-    required this.onSelect,
-    required this.selectedEew,
-    required this.displayMode,
-    required this.initialCenter,
-    required this.initZoom,
-    this.useSheet = false,
-  });
-
-  final List<EewTelegramItem> eews;
-  final int? selectedIndex;
-  final void Function(int) onSelect;
-  final EewTelegramItem? selectedEew;
-  final EewDisplayMode displayMode;
-  final Geographic initialCenter;
-  final double initZoom;
-  final bool useSheet;
-
+class const _ResponsiveLayout({
+  required final List<EewTelegramItem> eews,
+  required final int? selectedIndex,
+  required final void Function(int) onSelect,
+  required final EewTelegramItem? selectedEew,
+  required final EewDisplayMode displayMode,
+  required final Geographic initialCenter,
+  required final double initZoom,
+  final bool useSheet = false,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEstimatedAllowed =
@@ -403,11 +379,8 @@ class _ResponsiveLayout extends HookConsumerWidget {
   }
 }
 
-class _SimulationStartBanner extends StatelessWidget {
-  const new({required this.onStart});
-
-  final VoidCallback onStart;
-
+class const _SimulationStartBanner({required final VoidCallback onStart})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

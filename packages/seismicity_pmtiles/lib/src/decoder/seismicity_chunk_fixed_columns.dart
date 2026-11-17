@@ -22,11 +22,11 @@ typedef SeismicityChunkFixedColumnAllocator = T Function<T>(
   T Function() create,
 );
 
-final class SeismicityChunkFixedColumns {
-  new({
-    required int capacity,
-    SeismicityChunkFixedColumnAllocator? allocate,
-  }) : _allocate = allocate ?? allocateSeismicityChunkFixedColumnData {
+final class SeismicityChunkFixedColumns({
+  required int capacity,
+  SeismicityChunkFixedColumnAllocator? allocate,
+}) {
+  this {
     if (capacity <= 0 || capacity > 0x3fffffff) {
       throw const SeismicityPmTilesException.invalidDescriptor(
         reason: 'Invalid public fixed-column capacity.',
@@ -49,7 +49,8 @@ final class SeismicityChunkFixedColumns {
     );
   }
 
-  final SeismicityChunkFixedColumnAllocator _allocate;
+  final SeismicityChunkFixedColumnAllocator _allocate =
+      allocate ?? allocateSeismicityChunkFixedColumnData;
   late final SeismicityChunkFixedColumnData _storage;
   var _length = 0;
   int get length => _length;

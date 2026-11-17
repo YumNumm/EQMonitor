@@ -13,11 +13,10 @@ import 'package:latlong2/latlong.dart' as latlong2;
 import 'package:maplibre/maplibre.dart';
 
 /// 電文発表時刻基準での静的PS波到達円レイヤー
-class EewStaticPsWaveLayer extends HookConsumerWidget {
-  const new({required this.eew, super.key});
-
-  final EewTelegramItem? eew;
-
+class const EewStaticPsWaveLayer({
+  required final EewTelegramItem? eew,
+  super.key,
+}) extends HookConsumerWidget {
   static const _pWaveSourceId = 'eew-static-p-wave';
   static const _sWaveSourceId = 'eew-static-s-wave';
   static const _pWaveLayerId = 'eew-static-p-wave-line';

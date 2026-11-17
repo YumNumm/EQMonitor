@@ -9,9 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class KnetWaveformPage extends ConsumerWidget {
-  const new({super.key});
-
+class const KnetWaveformPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final credentials = ref.watch(knetCredentialsProvider);
@@ -36,11 +34,8 @@ class KnetWaveformPage extends ConsumerWidget {
   }
 }
 
-class _UnconfiguredView extends StatelessWidget {
-  const new({required this.onSetup});
-
-  final VoidCallback onSetup;
-
+class const _UnconfiguredView({required final VoidCallback onSetup})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -81,11 +76,8 @@ class _UnconfiguredView extends StatelessWidget {
   }
 }
 
-class _ConfiguredView extends StatelessWidget {
-  const new({required this.userId});
-
-  final String userId;
-
+class const _ConfiguredView({required final String userId})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -192,9 +184,7 @@ class _ConfiguredView extends StatelessWidget {
 // Year picker dialog
 // ---------------------------------------------------------------------------
 
-class _YearPickerDialog extends ConsumerWidget {
-  const new();
-
+class const _YearPickerDialog() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final yearsAsync = ref.watch(knetYearsProvider);
@@ -238,11 +228,8 @@ class _YearPickerDialog extends ConsumerWidget {
 // Month picker dialog
 // ---------------------------------------------------------------------------
 
-class _MonthPickerDialog extends ConsumerWidget {
-  const new({required this.year});
-
-  final int year;
-
+class const _MonthPickerDialog({required final int year})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final monthsAsync = ref.watch(knetMonthsProvider(year));
@@ -286,12 +273,10 @@ class _MonthPickerDialog extends ConsumerWidget {
 // Record picker dialog (searchable)
 // ---------------------------------------------------------------------------
 
-class _RecordPickerDialog extends HookConsumerWidget {
-  const new({required this.year, required this.month});
-
-  final int year;
-  final int month;
-
+class const _RecordPickerDialog({
+  required final int year,
+  required final int month,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final query = useState('');

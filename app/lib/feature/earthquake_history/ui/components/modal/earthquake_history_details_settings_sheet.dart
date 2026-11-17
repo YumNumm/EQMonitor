@@ -5,11 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class EarthquakeHistoryDetailsSettingsSheet extends ConsumerWidget {
-  const new({required this.showingDb, super.key});
-
-  final bool showingDb;
-
+class const EarthquakeHistoryDetailsSettingsSheet({
+  required final bool showingDb,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(earthquakeHistoryConfigProvider);

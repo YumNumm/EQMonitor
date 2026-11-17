@@ -23,15 +23,12 @@ notificationCustomSnapshotRepository(
   );
 }
 
-class NotificationCustomSnapshotRepository {
-  new(
-    this._dataSource, {
-    NotificationSoundOperationCoordinator? soundCoordinator,
-  }) : _soundCoordinator =
-           soundCoordinator ?? NotificationSoundOperationCoordinator();
-
-  final SharedPreferencesDataSource _dataSource;
-  final NotificationSoundOperationCoordinator _soundCoordinator;
+class NotificationCustomSnapshotRepository(
+  final SharedPreferencesDataSource _dataSource, {
+  NotificationSoundOperationCoordinator? soundCoordinator,
+}) {
+  final NotificationSoundOperationCoordinator _soundCoordinator =
+      soundCoordinator ?? NotificationSoundOperationCoordinator();
 
   Future<void> save(NotificationCustomSnapshot snapshot) =>
       _soundCoordinator.run(

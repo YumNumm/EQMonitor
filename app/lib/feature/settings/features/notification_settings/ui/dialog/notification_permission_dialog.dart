@@ -133,12 +133,10 @@ class const NotificationPermissionDialogAction() {
   );
 }
 
-class _NotificationPermissionDialog extends StatelessWidget {
-  const new({required this.missing, required this.primaryActionLabel});
-
-  final List<NotificationPermissionKind> missing;
-  final String primaryActionLabel;
-
+class const _NotificationPermissionDialog({
+  required final List<NotificationPermissionKind> missing,
+  required final String primaryActionLabel,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

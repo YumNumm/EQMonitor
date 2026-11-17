@@ -69,12 +69,10 @@ DeviceRepository _repository({String? role, int statusCode = 200}) {
   );
 }
 
-final class _DeviceMeAdapter implements HttpClientAdapter {
-  new({required this.role, required this.statusCode});
-
-  final String? role;
-  final int statusCode;
-
+final class _DeviceMeAdapter({
+  required final String? role,
+  required final int statusCode,
+}) implements HttpClientAdapter {
   @override
   Future<ResponseBody> fetch(
     RequestOptions options,

@@ -45,10 +45,8 @@ class const HinetSeismicityPartialFetchException({
 HinetSeismicityRepository hinetSeismicityRepository(Ref ref) =>
     HinetSeismicityRepository(client: ref.watch(niedApiClientProvider));
 
-class HinetSeismicityRepository {
-  const new({required NiedApiClient client}) : _client = client;
-
-  final NiedApiClient _client;
+class const HinetSeismicityRepository({required NiedApiClient client}) {
+  final NiedApiClient _client = client;
 
   Future<HinetSeismicityFetchResult> fetch({
     required HinetCredentials credentials,

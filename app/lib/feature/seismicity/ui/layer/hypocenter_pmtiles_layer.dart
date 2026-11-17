@@ -8,16 +8,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:maplibre/maplibre.dart';
 
-class HypocenterPmTilesLayer extends HookWidget {
-  const new({
-    required this.archives,
-    required this.colorMode,
-    super.key,
-  });
-
-  final List<HypocenterArchive> archives;
-  final SeismicityColorMode colorMode;
-
+class const HypocenterPmTilesLayer({
+  required final List<HypocenterArchive> archives,
+  required final SeismicityColorMode colorMode,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final styleController = MapController.maybeOf(context)?.style;

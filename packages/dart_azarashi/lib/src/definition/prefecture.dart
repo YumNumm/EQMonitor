@@ -1,7 +1,7 @@
 /// JMA Prefecture definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-17.
-enum JmaPrefecture {
+enum JmaPrefecture(final int code, final String name) {
   hokkaido(1, '北海道'),
   aomori(2, '青森県'),
   iwate(3, '岩手県'),
@@ -49,11 +49,6 @@ enum JmaPrefecture {
   miyazaki(45, '宮崎県'),
   kagoshima(46, '鹿児島県'),
   okinawa(47, '沖縄県');
-
-  new(this.code, this.name);
-
-  final int code;
-  final String name;
 
   static JmaPrefecture fromCode(int code) =>
       values.firstWhere((e) => e.code == code);

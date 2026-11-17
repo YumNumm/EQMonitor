@@ -11,8 +11,8 @@ void main(List<String> args) async {
   await runner.run(args);
 }
 
-class DownloadCommand extends Command<void> {
-  new() {
+class DownloadCommand() extends Command<void> {
+  this {
     argParser
       ..addOption(
         'type',

@@ -7,11 +7,9 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_dataset.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-final class ControlledSeismicityDecoderWorkerHandle
-    implements SeismicityDecoderWorkerHandle {
-  new({this.captureTileBytes = false});
-
-  final bool captureTileBytes;
+final class ControlledSeismicityDecoderWorkerHandle({
+  final bool captureTileBytes = false,
+}) implements SeismicityDecoderWorkerHandle {
   final _pendingDecodes = <Completer<SeismicityPmTilesDecodeProgress>>[];
   final _finish = Completer<SeismicityPmTilesDataset>();
   final _cancel = Completer<void>();

@@ -67,31 +67,21 @@ final class const DebugAuthUserSummaryParser() {
   }
 }
 
-final class DebugAuthState {
-  const new({
-    this.operation,
-    this.provider,
-    this.failureKind,
-    this.successKind,
-    this.jwtExpiresAt,
-    this.userSummary,
-  });
-
-  // ignore: unnecessary_type_name_in_constructor
-  const DebugAuthState.idle() : this();
+final class const DebugAuthState({
+  final DebugAuthOperation? operation,
+  final DebugAuthProviderKind? provider,
+  final AuthFailureKind? failureKind,
+  final DebugAuthSuccessKind? successKind,
+  final DateTime? jwtExpiresAt,
+  final DebugAuthUserSummary? userSummary,
+}) {
+  const new idle() : this();
 
   // ignore: unnecessary_type_name_in_constructor
   const DebugAuthState.restoring()
     : this(
         operation: DebugAuthOperation.restoring,
       );
-
-  final DebugAuthOperation? operation;
-  final DebugAuthProviderKind? provider;
-  final AuthFailureKind? failureKind;
-  final DebugAuthSuccessKind? successKind;
-  final DateTime? jwtExpiresAt;
-  final DebugAuthUserSummary? userSummary;
 
   bool get isBusy => operation != null;
 

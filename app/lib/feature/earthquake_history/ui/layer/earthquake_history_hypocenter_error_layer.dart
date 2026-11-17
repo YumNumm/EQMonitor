@@ -17,19 +17,13 @@ import 'package:maplibre/maplibre.dart';
 /// 地震履歴詳細の震源誤差矩形レイヤー
 ///
 /// 震源座標の精度から誤差範囲を計算し、白い点線の矩形で表示する。
-class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
-  const new({
-    required this.earthquake,
-    this.parameter = const EarthquakeHistoryMapLayerParameter(),
-    this.belowLayerId,
-    super.key,
-  });
-
-  final Earthquake earthquake;
-  final EarthquakeHistoryMapLayerParameter parameter;
-
-  final String? belowLayerId;
-
+class const EarthquakeHistoryHypocenterErrorLayer({
+  required final Earthquake earthquake,
+  final EarthquakeHistoryMapLayerParameter parameter =
+      const EarthquakeHistoryMapLayerParameter(),
+  final String? belowLayerId,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;

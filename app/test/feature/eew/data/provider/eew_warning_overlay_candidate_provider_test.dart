@@ -17,20 +17,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 
-class _StubEewAliveTelegram extends EewAliveTelegram {
-  new(this.value);
-
-  final List<EewTelegramItem>? value;
-
+class _StubEewAliveTelegram(final List<EewTelegramItem>? value)
+    extends EewAliveTelegram {
   @override
   List<EewTelegramItem>? build() => value;
 }
 
-class _StubEewWarningOverlayEnabled extends EewWarningOverlayEnabled {
-  new(this.value);
-
-  final Future<bool> value;
-
+class _StubEewWarningOverlayEnabled(final Future<bool> value)
+    extends EewWarningOverlayEnabled {
   @override
   Future<bool> build() => value;
 }

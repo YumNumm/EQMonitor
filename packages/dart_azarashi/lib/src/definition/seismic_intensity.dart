@@ -1,7 +1,7 @@
 /// JMA Seismic Intensity Lower Limit definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-8.
-enum JmaSeismicIntensityLowerLimit {
+enum JmaSeismicIntensityLowerLimit(final int code, final String name) {
   intensity0(1, '震度0'),
   intensity1(2, '震度1'),
   intensity2(3, '震度2'),
@@ -15,11 +15,6 @@ enum JmaSeismicIntensityLowerLimit {
   none(14, 'なし'),
   unknown(15, '不明');
 
-  new(this.code, this.name);
-
-  final int code;
-  final String name;
-
   static JmaSeismicIntensityLowerLimit fromCode(int code) =>
       values.firstWhere((e) => e.code == code);
 }
@@ -27,7 +22,7 @@ enum JmaSeismicIntensityLowerLimit {
 /// JMA Seismic Intensity Upper Limit definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-9.
-enum JmaSeismicIntensityUpperLimit {
+enum JmaSeismicIntensityUpperLimit(final int code, final String name) {
   intensity0(1, '震度0'),
   intensity1(2, '震度1'),
   intensity2(3, '震度2'),
@@ -42,11 +37,6 @@ enum JmaSeismicIntensityUpperLimit {
   none(14, 'なし'),
   unknown(15, '不明');
 
-  new(this.code, this.name);
-
-  final int code;
-  final String name;
-
   static JmaSeismicIntensityUpperLimit fromCode(int code) =>
       values.firstWhere((e) => e.code == code);
 }
@@ -54,7 +44,7 @@ enum JmaSeismicIntensityUpperLimit {
 /// JMA Long Period Ground Motion Lower Limit definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-10.
-enum JmaLongPeriodGroundMotionLowerLimit {
+enum JmaLongPeriodGroundMotionLowerLimit(final int code, final String? name) {
   none(0, null),
   class0(1, '長周期地震動階級1未満'),
   class1(2, '長周期地震動階級1'),
@@ -63,11 +53,6 @@ enum JmaLongPeriodGroundMotionLowerLimit {
   class4(5, '長周期地震動階級4'),
   unknown(7, '不明');
 
-  new(this.code, this.name);
-
-  final int code;
-  final String? name;
-
   static JmaLongPeriodGroundMotionLowerLimit fromCode(int code) =>
       values.firstWhere((e) => e.code == code);
 }
@@ -75,7 +60,7 @@ enum JmaLongPeriodGroundMotionLowerLimit {
 /// JMA Long Period Ground Motion Upper Limit definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-11.
-enum JmaLongPeriodGroundMotionUpperLimit {
+enum JmaLongPeriodGroundMotionUpperLimit(final int code, final String? name) {
   none(0, null),
   class0(1, '長周期地震動階級1未満'),
   class1(2, '長周期地震動階級1'),
@@ -85,11 +70,6 @@ enum JmaLongPeriodGroundMotionUpperLimit {
   orAbove(6, '〜程度以上'),
   unknown(7, '不明');
 
-  new(this.code, this.name);
-
-  final int code;
-  final String? name;
-
   static JmaLongPeriodGroundMotionUpperLimit fromCode(int code) =>
       values.firstWhere((e) => e.code == code);
 }
@@ -97,7 +77,7 @@ enum JmaLongPeriodGroundMotionUpperLimit {
 /// JMA Seismic Intensity (for Seismic Intensity Report) definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-16.
-enum JmaSeismicIntensity {
+enum JmaSeismicIntensity(final int code, final String name) {
   below4(1, '4未満'),
   intensity4(2, '4'),
   intensity5Lower(3, '5弱'),
@@ -105,11 +85,6 @@ enum JmaSeismicIntensity {
   intensity6Lower(5, '6弱'),
   intensity6Upper(6, '6強'),
   intensity7(7, '7');
-
-  new(this.code, this.name);
-
-  final int code;
-  final String name;
 
   static JmaSeismicIntensity fromCode(int code) =>
       values.firstWhere((e) => e.code == code);

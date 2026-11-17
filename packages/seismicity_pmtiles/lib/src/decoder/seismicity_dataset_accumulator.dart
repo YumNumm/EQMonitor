@@ -12,15 +12,13 @@ typedef SeismicityChunkFactory = SeismicityChunkBuilder Function({
   required int capacity,
 });
 
-final class SeismicityDatasetAccumulator {
-  new({
-    required int expectedUniqueCount,
-    required int chunkCapacity,
-    this._createChunk = SeismicityChunkBuilder.new,
-    this._beforeIndexInsert,
-  }) : _expectedUniqueCount = expectedUniqueCount,
-       _chunkCapacity = chunkCapacity,
-       _index = SeismicityUuidIndex(expectedUniqueCount: expectedUniqueCount) {
+final class SeismicityDatasetAccumulator({
+  required int expectedUniqueCount,
+  required int chunkCapacity,
+  final SeismicityChunkFactory _createChunk = SeismicityChunkBuilder.new,
+  final void Function()? _beforeIndexInsert,
+}) {
+  this {
     if (chunkCapacity <= 0 || chunkCapacity > 0x3fffffff) {
       throw const SeismicityPmTilesException.invalidDescriptor(
         reason: 'Invalid dataset chunk capacity.',
@@ -28,11 +26,11 @@ final class SeismicityDatasetAccumulator {
     }
   }
 
-  final int _expectedUniqueCount;
-  final int _chunkCapacity;
-  final SeismicityChunkFactory _createChunk;
-  final void Function()? _beforeIndexInsert;
-  final SeismicityUuidIndex _index;
+  final _expectedUniqueCount = expectedUniqueCount;
+  final _chunkCapacity = chunkCapacity;
+  final _index = SeismicityUuidIndex(
+    expectedUniqueCount: expectedUniqueCount,
+  );
   final _chunks = <SeismicityChunkBuilder>[];
   var _rawCount = 0;
   var _uniqueCount = 0;

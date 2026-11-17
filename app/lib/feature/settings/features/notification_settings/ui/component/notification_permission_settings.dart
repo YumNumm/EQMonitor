@@ -8,11 +8,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class NotificationPermissionWarningCard extends ConsumerWidget {
-  const new({required this.requiresCriticalAlert, super.key});
-
-  final bool requiresCriticalAlert;
-
+class const NotificationPermissionWarningCard({
+  required final bool requiresCriticalAlert,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final permissionAsync = ref.watch(osNotificationPermissionProvider);
@@ -78,9 +77,7 @@ class NotificationPermissionWarningCard extends ConsumerWidget {
   }
 }
 
-class NotificationPermissionSettings extends ConsumerWidget {
-  const new({super.key});
-
+class const NotificationPermissionSettings({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final permission = ref.watch(osNotificationPermissionProvider);
@@ -140,17 +137,11 @@ class NotificationPermissionSettings extends ConsumerWidget {
   }
 }
 
-class _PermissionTile extends ConsumerWidget {
-  const new({
-    required this.kind,
-    required this.permission,
-    required this.enabled,
-  });
-
-  final NotificationPermissionKind kind;
-  final OsNotificationPermission permission;
-  final bool enabled;
-
+class const _PermissionTile({
+  required final NotificationPermissionKind kind,
+  required final OsNotificationPermission permission,
+  required final bool enabled,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final granted = kind.isGranted(permission);

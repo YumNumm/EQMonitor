@@ -28,21 +28,17 @@ final class const SeismicityWorkerNoOpTerminalProbe()
   }) {}
 }
 
-final class IsolateSeismicityDecoderWorkerFactory
-    implements SeismicityDecoderWorkerFactory {
-  new({
-    SeismicityDecoderIsolateLauncher? launcher,
-    SeismicityWorkerTerminalProbe? probe,
-    this.workerMain = seismicityDecoderWorkerEntry,
-    this.finisher = const SeismicityDecoderWorkerFinisher(),
-  }) : launcher = launcher ?? DartSeismicityDecoderIsolateLauncher(),
-       probe = probe ?? const SeismicityWorkerNoOpTerminalProbe();
-
-  final SeismicityDecoderIsolateLauncher launcher;
-  final SeismicityWorkerTerminalProbe probe;
-  final SeismicityDecoderWorkerMain workerMain;
-  final SeismicityDecoderWorkerFinisher finisher;
-
+final class IsolateSeismicityDecoderWorkerFactory({
+  SeismicityDecoderIsolateLauncher? launcher,
+  SeismicityWorkerTerminalProbe? probe,
+  final SeismicityDecoderWorkerMain workerMain = seismicityDecoderWorkerEntry,
+  final SeismicityDecoderWorkerFinisher finisher =
+      const SeismicityDecoderWorkerFinisher(),
+}) implements SeismicityDecoderWorkerFactory {
+  final SeismicityDecoderIsolateLauncher launcher =
+      launcher ?? DartSeismicityDecoderIsolateLauncher();
+  final SeismicityWorkerTerminalProbe probe =
+      probe ?? const SeismicityWorkerNoOpTerminalProbe();
   @override
   Future<SeismicityDecoderWorkerHandle> spawn({
     required SeismicityPmTilesArchiveDescriptor acceptedDescriptor,
@@ -60,25 +56,19 @@ final class IsolateSeismicityDecoderWorkerFactory
   }
 }
 
-final class IsolateSeismicityDecoderWorkerHandle
-    implements SeismicityDecoderWorkerHandle {
-  new({
-    required this.endpoint,
-    required this.acceptedDescriptor,
-    required SeismicityWorkerTerminalProbe probe,
-    required this.finisher,
-  }) : router = SeismicityDecoderWorkerRouter(),
-       coordinator =
-           SeismicityWorkerTerminalCoordinator<SeismicityPmTilesDataset>(
-             probe: probe,
-           );
+final class IsolateSeismicityDecoderWorkerHandle({
+  required final SeismicityDecoderWorkerEndpoint endpoint,
+  required final SeismicityPmTilesArchiveDescriptor acceptedDescriptor,
+  required SeismicityWorkerTerminalProbe probe,
+  required final SeismicityDecoderWorkerFinisher finisher,
+}) implements SeismicityDecoderWorkerHandle {
+  this : router = SeismicityDecoderWorkerRouter();
 
-  final SeismicityDecoderWorkerEndpoint endpoint;
-  final SeismicityPmTilesArchiveDescriptor acceptedDescriptor;
-  final SeismicityDecoderWorkerFinisher finisher;
   final SeismicityDecoderWorkerRouter router;
-  final SeismicityWorkerTerminalCoordinator<SeismicityPmTilesDataset>
-  coordinator;
+  final coordinator =
+      SeismicityWorkerTerminalCoordinator<SeismicityPmTilesDataset>(
+        probe: probe,
+      );
   final _ready = Completer<void>();
   final _finish = Completer<SeismicityPmTilesDataset>();
   final _retired = Completer<void>();

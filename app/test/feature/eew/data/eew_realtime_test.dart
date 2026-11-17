@@ -13,11 +13,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final class _StubRealtimeEvents extends RealtimeEvents {
-  new(this.stream);
-
-  final Stream<RealtimeEvent> stream;
-
+final class _StubRealtimeEvents(final Stream<RealtimeEvent> stream)
+    extends RealtimeEvents {
   @override
   Stream<RealtimeEvent> build() => stream;
 }

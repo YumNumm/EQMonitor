@@ -1,9 +1,7 @@
 import 'dart:math';
 
 /// 震央誤差矩形（VXSE61 の座標精度に応じた矩形）を計算するユーティリティ。
-class HypocenterErrorRangeUtil {
-  const new _();
-
+class const HypocenterErrorRangeUtil._() {
   /// 座標値の信頼できる小数桁数から半精度（誤差の半幅）を計算する。
   ///
   /// 例: decimalPlaces=0 → 0.5

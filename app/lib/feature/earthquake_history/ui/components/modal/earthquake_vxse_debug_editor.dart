@@ -28,11 +28,10 @@ import 'package:material_ui/material_ui.dart';
 
 const _semanticKey = EarthquakeVxseDebugEditorSemanticKey();
 
-class EarthquakeVxseDebugEditor extends HookConsumerWidget {
-  const new({required this.current, super.key});
-
-  final Earthquake current;
-
+class const EarthquakeVxseDebugEditor({
+  required final Earthquake current,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final provider = earthquakeVxseDebugEditorControllerProvider(
@@ -103,12 +102,10 @@ class EarthquakeVxseDebugEditor extends HookConsumerWidget {
   }
 }
 
-class _SharedReportFields extends StatelessWidget {
-  const new({required this.state, required this.notifier});
-
-  final EarthquakeVxseDebugEditorState state;
-  final EarthquakeVxseDebugEditorController notifier;
-
+class const _SharedReportFields({
+  required final EarthquakeVxseDebugEditorState state,
+  required final EarthquakeVxseDebugEditorController notifier,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card.outlined(
     key: const Key('shared-report-fields'),
@@ -199,12 +196,10 @@ class _SharedReportFields extends StatelessWidget {
   );
 }
 
-class _HypocenterFields extends StatelessWidget {
-  const new({required this.draft, required this.notifier});
-
-  final EarthquakeVxseDebugDraft draft;
-  final EarthquakeVxseDebugEditorController notifier;
-
+class const _HypocenterFields({
+  required final EarthquakeVxseDebugDraft draft,
+  required final EarthquakeVxseDebugEditorController notifier,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final arrivalTime = switch (draft) {
@@ -553,12 +548,10 @@ enum _MagnitudeEditorType { value, unknown, overM8 }
 
 enum _DepthEditorType { shallow, value, over700km, unknown }
 
-class _SeismicIntensityFields extends StatelessWidget {
-  const new({required this.draft, required this.notifier});
-
-  final EarthquakeVxseDebugDraft draft;
-  final EarthquakeVxseDebugEditorController notifier;
-
+class const _SeismicIntensityFields({
+  required final EarthquakeVxseDebugDraft draft,
+  required final EarthquakeVxseDebugEditorController notifier,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxIntensity = switch (draft) {
@@ -713,17 +706,11 @@ class _SeismicIntensityFields extends StatelessWidget {
   }
 }
 
-class _Vxse51PrefectureFields extends StatelessWidget {
-  const new({
-    required this.prefectures,
-    required this.maxIntensity,
-    required this.notifier,
-  });
-
-  final Map<JmaIntensity, List<IntensityPrefecture>> prefectures;
-  final JmaIntensity maxIntensity;
-  final EarthquakeVxseDebugEditorController notifier;
-
+class const _Vxse51PrefectureFields({
+  required final Map<JmaIntensity, List<IntensityPrefecture>> prefectures,
+  required final JmaIntensity maxIntensity,
+  required final EarthquakeVxseDebugEditorController notifier,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: .stretch,
@@ -817,21 +804,13 @@ class _Vxse51PrefectureFields extends StatelessWidget {
   );
 }
 
-class _OrdinaryTreeFields extends StatelessWidget {
-  const new({
-    required this.tree,
-    required this.maxIntensity,
-    required this.ownsCities,
-    required this.ownsStationDetails,
-    required this.notifier,
-  });
-
-  final Map<JmaIntensity, List<PrefectureIntensityNode>> tree;
-  final JmaIntensity maxIntensity;
-  final bool ownsCities;
-  final bool ownsStationDetails;
-  final EarthquakeVxseDebugEditorController notifier;
-
+class const _OrdinaryTreeFields({
+  required final Map<JmaIntensity, List<PrefectureIntensityNode>> tree,
+  required final JmaIntensity maxIntensity,
+  required final bool ownsCities,
+  required final bool ownsStationDetails,
+  required final EarthquakeVxseDebugEditorController notifier,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: .stretch,
@@ -1198,12 +1177,10 @@ class _OrdinaryTreeFields extends StatelessWidget {
   );
 }
 
-class _LpgmFields extends StatelessWidget {
-  const new({required this.draft, required this.notifier});
-
-  final EarthquakeVxse62DebugDraft draft;
-  final EarthquakeVxseDebugEditorController notifier;
-
+class const _LpgmFields({
+  required final EarthquakeVxse62DebugDraft draft,
+  required final EarthquakeVxseDebugEditorController notifier,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card.outlined(
     key: const Key('lpgm-fields'),
@@ -1587,17 +1564,11 @@ class _LpgmFields extends StatelessWidget {
   );
 }
 
-class _CommentsFields extends StatelessWidget {
-  const new({
-    required this.selectedType,
-    required this.draft,
-    required this.notifier,
-  });
-
-  final EarthquakeTelegramType selectedType;
-  final EarthquakeVxseDebugDraft draft;
-  final EarthquakeVxseDebugEditorController notifier;
-
+class const _CommentsFields({
+  required final EarthquakeTelegramType selectedType,
+  required final EarthquakeVxseDebugDraft draft,
+  required final EarthquakeVxseDebugEditorController notifier,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card.outlined(
     key: const Key('comments-fields'),
@@ -1660,12 +1631,10 @@ class _CommentsFields extends StatelessWidget {
   );
 }
 
-class _JsonEditor extends HookWidget {
-  const new({required this.state, required this.notifier});
-
-  final EarthquakeVxseDebugEditorState state;
-  final EarthquakeVxseDebugEditorController notifier;
-
+class const _JsonEditor({
+  required final EarthquakeVxseDebugEditorState state,
+  required final EarthquakeVxseDebugEditorController notifier,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController(text: state.jsonText);
@@ -1707,23 +1676,14 @@ class _JsonEditor extends HookWidget {
   }
 }
 
-class _OrdinaryRegionRow extends StatelessWidget {
-  const new({
-    required this.notifier,
-    required this.fieldPrefix,
-    required this.level,
-    required this.region,
-    required this.onChanged,
-    required this.onRemove,
-  });
-
-  final EarthquakeVxseDebugEditorController notifier;
-  final String fieldPrefix;
-  final JmaIntensity level;
-  final IntensityRegion region;
-  final ValueChanged<IntensityRegion> onChanged;
-  final VoidCallback onRemove;
-
+class const _OrdinaryRegionRow({
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final String fieldPrefix,
+  required final JmaIntensity level,
+  required final IntensityRegion region,
+  required final ValueChanged<IntensityRegion> onChanged,
+  required final VoidCallback onRemove,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => KeyedSubtree(
     key: ValueKey('ordinary-region-row.$fieldPrefix'),
@@ -1833,23 +1793,14 @@ class _OrdinaryRegionRow extends StatelessWidget {
   );
 }
 
-class _OrdinaryPrefectureRow extends StatelessWidget {
-  const new({
-    required this.notifier,
-    required this.fieldPrefix,
-    required this.level,
-    required this.prefecture,
-    required this.onChanged,
-    required this.onRemove,
-  });
-
-  final EarthquakeVxseDebugEditorController notifier;
-  final String fieldPrefix;
-  final JmaIntensity level;
-  final IntensityPrefecture prefecture;
-  final ValueChanged<IntensityPrefecture> onChanged;
-  final VoidCallback onRemove;
-
+class const _OrdinaryPrefectureRow({
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final String fieldPrefix,
+  required final JmaIntensity level,
+  required final IntensityPrefecture prefecture,
+  required final ValueChanged<IntensityPrefecture> onChanged,
+  required final VoidCallback onRemove,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => KeyedSubtree(
     key: ValueKey('ordinary-prefecture-row.$fieldPrefix'),
@@ -1959,21 +1910,13 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
   );
 }
 
-class _OrdinaryCityRow extends StatelessWidget {
-  const new({
-    required this.notifier,
-    required this.fieldPrefix,
-    required this.city,
-    required this.onChanged,
-    required this.onRemove,
-  });
-
-  final EarthquakeVxseDebugEditorController notifier;
-  final String fieldPrefix;
-  final CityIntensityNode city;
-  final ValueChanged<CityIntensityNode> onChanged;
-  final VoidCallback onRemove;
-
+class const _OrdinaryCityRow({
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final String fieldPrefix,
+  required final CityIntensityNode city,
+  required final ValueChanged<CityIntensityNode> onChanged,
+  required final VoidCallback onRemove,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => KeyedSubtree(
     key: ValueKey('ordinary-city-row.$fieldPrefix'),
@@ -2071,23 +2014,14 @@ class _OrdinaryCityRow extends StatelessWidget {
   );
 }
 
-class _StationParentCityLocator extends StatelessWidget {
-  const new({
-    required this.notifier,
-    required this.fieldPrefix,
-    required this.currentCode,
-    required this.currentName,
-    required this.onCodeChanged,
-    required this.onNameChanged,
-  });
-
-  final EarthquakeVxseDebugEditorController notifier;
-  final String fieldPrefix;
-  final String currentCode;
-  final String currentName;
-  final ValueChanged<String> onCodeChanged;
-  final ValueChanged<String> onNameChanged;
-
+class const _StationParentCityLocator({
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final String fieldPrefix,
+  required final String currentCode,
+  required final String currentName,
+  required final ValueChanged<String> onCodeChanged,
+  required final ValueChanged<String> onNameChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => KeyedSubtree(
     key: ValueKey('station-parent-city-locator.$fieldPrefix'),
@@ -2141,23 +2075,14 @@ class _StationParentCityLocator extends StatelessWidget {
   );
 }
 
-class _OrdinaryStationRow extends StatelessWidget {
-  const new({
-    required this.notifier,
-    required this.fieldPrefix,
-    required this.ownsStationDetails,
-    required this.station,
-    required this.onChanged,
-    required this.onRemove,
-  });
-
-  final EarthquakeVxseDebugEditorController notifier;
-  final String fieldPrefix;
-  final bool ownsStationDetails;
-  final StationIntensityNode station;
-  final ValueChanged<StationIntensityNode> onChanged;
-  final VoidCallback onRemove;
-
+class const _OrdinaryStationRow({
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final String fieldPrefix,
+  required final bool ownsStationDetails,
+  required final StationIntensityNode station,
+  required final ValueChanged<StationIntensityNode> onChanged,
+  required final VoidCallback onRemove,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final intensity =
@@ -2276,23 +2201,14 @@ class _OrdinaryStationRow extends StatelessWidget {
   }
 }
 
-class _LpgmRegionRow extends StatelessWidget {
-  const new({
-    required this.notifier,
-    required this.fieldPrefix,
-    required this.level,
-    required this.region,
-    required this.onChanged,
-    required this.onRemove,
-  });
-
-  final EarthquakeVxseDebugEditorController notifier;
-  final String fieldPrefix;
-  final JmaLpgmIntensity level;
-  final LpgmIntensityRegion region;
-  final ValueChanged<LpgmIntensityRegion> onChanged;
-  final VoidCallback onRemove;
-
+class const _LpgmRegionRow({
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final String fieldPrefix,
+  required final JmaLpgmIntensity level,
+  required final LpgmIntensityRegion region,
+  required final ValueChanged<LpgmIntensityRegion> onChanged,
+  required final VoidCallback onRemove,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => KeyedSubtree(
     key: ValueKey('lpgm-region-row.$fieldPrefix'),
@@ -2402,23 +2318,14 @@ class _LpgmRegionRow extends StatelessWidget {
   );
 }
 
-class _LpgmPrefectureRow extends StatelessWidget {
-  const new({
-    required this.notifier,
-    required this.fieldPrefix,
-    required this.level,
-    required this.prefecture,
-    required this.onChanged,
-    required this.onRemove,
-  });
-
-  final EarthquakeVxseDebugEditorController notifier;
-  final String fieldPrefix;
-  final JmaLpgmIntensity level;
-  final PrefectureLpgmIntensityNode prefecture;
-  final ValueChanged<PrefectureLpgmIntensityNode> onChanged;
-  final VoidCallback onRemove;
-
+class const _LpgmPrefectureRow({
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final String fieldPrefix,
+  required final JmaLpgmIntensity level,
+  required final PrefectureLpgmIntensityNode prefecture,
+  required final ValueChanged<PrefectureLpgmIntensityNode> onChanged,
+  required final VoidCallback onRemove,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => KeyedSubtree(
     key: ValueKey('lpgm-prefecture-row.$fieldPrefix'),
@@ -2529,21 +2436,13 @@ class _LpgmPrefectureRow extends StatelessWidget {
   );
 }
 
-class _LpgmStationRow extends StatelessWidget {
-  const new({
-    required this.notifier,
-    required this.fieldPrefix,
-    required this.station,
-    required this.onChanged,
-    required this.onRemove,
-  });
-
-  final EarthquakeVxseDebugEditorController notifier;
-  final String fieldPrefix;
-  final StationLpgmIntensityNode station;
-  final ValueChanged<StationLpgmIntensityNode> onChanged;
-  final VoidCallback onRemove;
-
+class const _LpgmStationRow({
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final String fieldPrefix,
+  required final StationLpgmIntensityNode station,
+  required final ValueChanged<StationLpgmIntensityNode> onChanged,
+  required final VoidCallback onRemove,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final intensity =
@@ -2664,20 +2563,13 @@ class _LpgmStationRow extends StatelessWidget {
   }
 }
 
-class _StationDetailsFields extends StatelessWidget {
-  const new({
-    required this.fieldPrefix,
-    required this.intensity,
-    required this.notifier,
-    required this.onChanged,
-    super.key,
-  });
-
-  final String fieldPrefix;
-  final IntensityStation intensity;
-  final EarthquakeVxseDebugEditorController notifier;
-  final ValueChanged<IntensityStation> onChanged;
-
+class const _StationDetailsFields({
+  required final String fieldPrefix,
+  required final IntensityStation intensity,
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final ValueChanged<IntensityStation> onChanged,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
     width: 320,
@@ -2885,21 +2777,13 @@ class _StationDetailsFields extends StatelessWidget {
   );
 }
 
-class _CommentRow extends StatelessWidget {
-  const new({
-    required this.fieldPrefix,
-    required this.comment,
-    required this.notifier,
-    required this.onChanged,
-    required this.onRemove,
-  });
-
-  final String fieldPrefix;
-  final EarthquakeTelegramComment comment;
-  final EarthquakeVxseDebugEditorController notifier;
-  final ValueChanged<EarthquakeTelegramComment> onChanged;
-  final VoidCallback onRemove;
-
+class const _CommentRow({
+  required final String fieldPrefix,
+  required final EarthquakeTelegramComment comment,
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final ValueChanged<EarthquakeTelegramComment> onChanged,
+  required final VoidCallback onRemove,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => KeyedSubtree(
     key: ValueKey('comment-row.$fieldPrefix'),
@@ -2967,29 +2851,17 @@ class _CommentRow extends StatelessWidget {
   );
 }
 
-class _ControlledTextFormField extends HookWidget {
-  const new({
-    required this.fieldId,
-    required this.value,
-    required this.label,
-    required this.notifier,
-    required this.onValidChanged,
-    this.validation,
-    this.keyboardType,
-    this.maxLines = 1,
-    this.fieldKey,
-  });
-
-  final String fieldId;
-  final String value;
-  final String label;
-  final EarthquakeVxseDebugEditorController notifier;
-  final ValueChanged<String> onValidChanged;
-  final String? Function(String value)? validation;
-  final TextInputType? keyboardType;
-  final int? maxLines;
-  final Key? fieldKey;
-
+class const _ControlledTextFormField({
+  required final String fieldId,
+  required final String value,
+  required final String label,
+  required final EarthquakeVxseDebugEditorController notifier,
+  required final ValueChanged<String> onValidChanged,
+  final String? Function(String value)? validation,
+  final TextInputType? keyboardType,
+  final int? maxLines = 1,
+  final Key? fieldKey,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final displayed = notifier.typedInputText(
@@ -3028,20 +2900,13 @@ class _ControlledTextFormField extends HookWidget {
   }
 }
 
-class _ControlledDropdown<T> extends StatelessWidget {
-  const new({
-    required this.value,
-    required this.label,
-    required this.items,
-    required this.onChanged,
-    super.key,
-  });
-
-  final T value;
-  final String label;
-  final List<M3EDropdownItem<T>> items;
-  final ValueChanged<T?> onChanged;
-
+class const _ControlledDropdown<T>({
+  required final T value,
+  required final String label,
+  required final List<M3EDropdownItem<T>> items,
+  required final ValueChanged<T?> onChanged,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => InputDecorator(
     decoration: InputDecoration(labelText: label),

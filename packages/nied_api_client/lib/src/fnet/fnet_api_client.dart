@@ -3,15 +3,12 @@ import 'package:nied_api_client/src/fnet/parser/fnet_catalog_parser.dart';
 import 'package:nied_api_client/src/hinet/fnet/model/fnet_event.dart';
 
 /// F-net APIクライアント
-class FnetApiClient {
-  new({
-    required FnetCatalogApi api,
-    required FnetCatalogParser parser,
-  }) : _api = api,
-       _parser = parser;
-
-  final FnetCatalogApi _api;
-  final FnetCatalogParser _parser;
+class FnetApiClient({
+  required FnetCatalogApi api,
+  required FnetCatalogParser parser,
+}) {
+  final FnetCatalogApi _api = api;
+  final FnetCatalogParser _parser = parser;
 
   /// 指定された年月のカタログデータを取得してパースする
   ///

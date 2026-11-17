@@ -6,11 +6,10 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 
-class TsunamiWarningHistoryButton extends HookWidget {
-  const new({required this.tsunami, super.key});
-
-  final TsunamiState tsunami;
-
+class const TsunamiWarningHistoryButton({
+  required final TsunamiState tsunami,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final overlayController = useMemoized(OverlayPortalController.new);
@@ -43,17 +42,11 @@ class TsunamiWarningHistoryButton extends HookWidget {
   }
 }
 
-class _HistoryOverlay extends StatelessWidget {
-  const new({
-    required this.link,
-    required this.tsunami,
-    required this.onDismiss,
-  });
-
-  final LayerLink link;
-  final TsunamiState tsunami;
-  final VoidCallback onDismiss;
-
+class const _HistoryOverlay({
+  required final LayerLink link,
+  required final TsunamiState tsunami,
+  required final VoidCallback onDismiss,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -158,11 +151,8 @@ class const _WarningTimelineEntry({
   required final bool isLast,
 });
 
-class _TimelineEntry extends StatelessWidget {
-  const new({required this.entry});
-
-  final _WarningTimelineEntry entry;
-
+class const _TimelineEntry({required final _WarningTimelineEntry entry})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

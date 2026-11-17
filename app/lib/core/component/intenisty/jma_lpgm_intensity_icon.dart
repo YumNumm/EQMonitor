@@ -5,20 +5,13 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:material_ui/material_ui.dart';
 
-class JmaLpgmIntensityIcon extends StatelessWidget {
-  const new({
-    required this.intensity,
-    required this.type,
-    this.customText,
-    super.key,
-    this.size = 50,
-  });
-
-  final JmaLpgmIntensity intensity;
-  final IntensityIconType type;
-  final double size;
-  final String? customText;
-
+class const JmaLpgmIntensityIcon({
+  required final JmaLpgmIntensity intensity,
+  required final IntensityIconType type,
+  final String? customText,
+  super.key,
+  final double size = 50,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final customText = this.customText;

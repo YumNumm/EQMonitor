@@ -40,9 +40,7 @@ class const ResponseSpectrumResult({
 /// 1自由度系の応答スペクトルを Nigam-Jennings 法で計算する
 ///
 /// 参考: Nigam & Jennings (1969), BSSA vol. 59
-class KnetResponseSpectrum {
-  const new _();
-
+class const KnetResponseSpectrum._() {
   /// 応答スペクトルを計算する
   ///
   /// [accelGal] バイアス除去済み加速度 (gal)

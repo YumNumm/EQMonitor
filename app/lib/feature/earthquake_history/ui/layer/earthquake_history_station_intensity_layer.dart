@@ -23,25 +23,15 @@ import 'package:maplibre/maplibre.dart';
 /// stationDisplayMode に応じて観測点サイズを変更する。
 /// showingLpgmIntensity が true の場合は長周期地震動階級で色分けする。
 /// showStationLabel が true の場合は観測点名ラベルを表示する。
-class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
-  const new({
-    required this.earthquake,
-    required this.parameter,
-    this.stationDisplayMode = StationDisplayMode.auto,
-    this.showStationLabel = false,
-    this.showingLpgmIntensity = false,
-    this.belowLayerId,
-    super.key,
-  });
-
-  final Earthquake earthquake;
-  final EarthquakeHistoryMapLayerParameter parameter;
-  final StationDisplayMode stationDisplayMode;
-  final bool showStationLabel;
-  final bool showingLpgmIntensity;
-
-  final String? belowLayerId;
-
+class const EarthquakeHistoryStationIntensityLayer({
+  required final Earthquake earthquake,
+  required final EarthquakeHistoryMapLayerParameter parameter,
+  final StationDisplayMode stationDisplayMode = StationDisplayMode.auto,
+  final bool showStationLabel = false,
+  final bool showingLpgmIntensity = false,
+  final String? belowLayerId,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensity = earthquake.intensity;

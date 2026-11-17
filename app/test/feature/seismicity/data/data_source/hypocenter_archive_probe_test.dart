@@ -44,14 +44,10 @@ void main() {
   });
 }
 
-final class _ProbeAdapter implements HttpClientAdapter {
-  new({
-    required this.statusCode,
-    this.contentRange = 'bytes 0-127/1024',
-  });
-
-  final int statusCode;
-  final String contentRange;
+final class _ProbeAdapter({
+  required final int statusCode,
+  final String contentRange = 'bytes 0-127/1024',
+}) implements HttpClientAdapter {
   String? range;
 
   @override

@@ -1,17 +1,12 @@
 /// JMA Ash Fall Warning Code.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-39.
-enum JmaAshFallWarningCode {
+enum JmaAshFallWarningCode(final int code, final String nameJa) {
   lightAshFall(1, '少量の降灰'),
   moderateAshFall(2, 'やや多量の降灰'),
   heavyAshFall(3, '多量の降灰'),
   smallLapilliFall(4, '小さな噴石の落下'),
   other(7, 'その他の防災気象情報要素2');
-
-  new(this.code, this.nameJa);
-
-  final int code;
-  final String nameJa;
 
   /// Returns the ash fall warning code for the given code.
   ///

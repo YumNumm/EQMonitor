@@ -1,9 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 
 /// Riverpod Generator (`@riverpod`) を使わず手書きされた Provider 宣言を判定する。
-class ManualProviderDetection {
-  const new _();
-
+class const ManualProviderDetection._() {
   /// 手書きで宣言されうる Riverpod の Provider 型名。
   ///
   /// `Provider.autoDispose(...)` / `Provider.family(...)` のような

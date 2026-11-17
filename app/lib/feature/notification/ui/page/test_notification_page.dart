@@ -8,9 +8,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class TestNotificationPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const TestNotificationPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pendingKind = useState<TestNotificationKind?>(null);

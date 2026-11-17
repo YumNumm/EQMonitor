@@ -6,16 +6,11 @@ import 'package:eqmonitor/feature/tsunami/data/model/value/magnitude_type.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 
-class TsunamiEarthquakeCard extends StatelessWidget {
-  const new({
-    required this.earthquake,
-    required this.eventIds,
-    super.key,
-  });
-
-  final TsunamiStateEarthquake earthquake;
-  final List<String> eventIds;
-
+class const TsunamiEarthquakeCard({
+  required final TsunamiStateEarthquake earthquake,
+  required final List<String> eventIds,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

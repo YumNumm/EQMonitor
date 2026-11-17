@@ -1,7 +1,7 @@
 /// JMA Notification on Disaster Prevention definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-6.
-enum JmaNotificationOnDisasterPrevention {
+enum JmaNotificationOnDisasterPrevention(final int code, final String message) {
   none(0, 'なし'),
   seaLevelChangeMay(101, '今後若干の海面変動があるかもしれません。'),
   seaLevelChangeNoDamage(102, '今後若干の海面変動があるかもしれませんが、被害の心配はありません。'),
@@ -90,11 +90,6 @@ enum JmaNotificationOnDisasterPrevention {
   eewNoStrongShaking(245, 'この地震で緊急地震速報を発表しましたが、強い揺れは観測されませんでした。'),
   epicenterCorrection(256, '震源要素を訂正します。'),
   otherDisasterPrevention(500, 'その他の防災上の留意事項');
-
-  new(this.code, this.message);
-
-  final int code;
-  final String message;
 
   static JmaNotificationOnDisasterPrevention fromCode(int code) =>
       values.firstWhere((e) => e.code == code);

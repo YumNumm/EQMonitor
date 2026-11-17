@@ -2,19 +2,12 @@ import 'dart:typed_data';
 
 import 'package:maplibre/maplibre.dart';
 
-class FakeStyleController implements StyleController {
-  new({
-    this.failingLayerIds = const {},
-    this.failingSourceIds = const {},
-    this.failingImageIds = const {},
-    this.throwOnDuplicateLayerIds = false,
-  });
-
-  final Set<String> failingLayerIds;
-  final Set<String> failingSourceIds;
-  final Set<String> failingImageIds;
-  final bool throwOnDuplicateLayerIds;
-
+class FakeStyleController({
+  final Set<String> failingLayerIds = const {},
+  final Set<String> failingSourceIds = const {},
+  final Set<String> failingImageIds = const {},
+  final bool throwOnDuplicateLayerIds = false,
+}) implements StyleController {
   final addedSources = <Source>[];
   final addedLayers = <StyleLayer>[];
   final activeLayerIds = <String>{};

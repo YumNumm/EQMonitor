@@ -7,7 +7,7 @@ part 'intensity_color_entry.freezed.dart';
 part 'intensity_color_entry.g.dart';
 
 @freezed
-abstract class IntensityColorEntry with _$IntensityColorEntry {
+abstract class const IntensityColorEntry._() with _$IntensityColorEntry {
   const factory({
     @ColorJsonConverter() required Color background,
     required IntensityTextColor foreground,
@@ -15,8 +15,6 @@ abstract class IntensityColorEntry with _$IntensityColorEntry {
 
   factory fromJson(Map<String, dynamic> json) =>
       _$IntensityColorEntryFromJson(json);
-
-  const new _();
 
   Color get resolvedForeground => switch (foreground) {
     IntensityTextColorAuto() =>

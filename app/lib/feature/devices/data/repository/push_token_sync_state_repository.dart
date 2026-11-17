@@ -16,11 +16,10 @@ Future<PushTokenSyncStateRepository> pushTokenSyncStateRepository(
   dataSource: await ref.watch(sharedPreferencesDataSourceProvider.future),
 );
 
-class PushTokenSyncStateRepository {
-  new({required SharedPreferencesDataSource dataSource})
-    : _dataSource = dataSource;
-
-  final SharedPreferencesDataSource _dataSource;
+class PushTokenSyncStateRepository({
+  required SharedPreferencesDataSource dataSource,
+}) {
+  final SharedPreferencesDataSource _dataSource = dataSource;
   var _credentialGeneration = 0;
   int get credentialGeneration => _credentialGeneration;
 

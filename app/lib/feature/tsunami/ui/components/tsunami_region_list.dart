@@ -11,11 +11,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 
-class TsunamiRegionList extends StatelessWidget {
-  const new({required this.tsunami, super.key});
-
-  final TsunamiState tsunami;
-
+class const TsunamiRegionList({required final TsunamiState tsunami, super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final grouped = _groupByWarningKind(tsunami.regions);
@@ -58,11 +55,8 @@ class TsunamiRegionList extends StatelessWidget {
   }
 }
 
-class _WarningGroupHeader extends StatelessWidget {
-  const new({required this.kind});
-
-  final TsunamiWarningKind kind;
-
+class const _WarningGroupHeader({required final TsunamiWarningKind kind})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final headerColor = TsunamiWarningColor.headerColor(kind);
@@ -88,11 +82,8 @@ class _WarningGroupHeader extends StatelessWidget {
   }
 }
 
-class _ForecastRegionCard extends StatelessWidget {
-  const new({required this.region});
-
-  final TsunamiRegion region;
-
+class const _ForecastRegionCard({required final TsunamiRegion region})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -139,11 +130,8 @@ class _ForecastRegionCard extends StatelessWidget {
   }
 }
 
-class _ForecastDetails extends StatelessWidget {
-  const new({required this.region});
-
-  final TsunamiRegion region;
-
+class const _ForecastDetails({required final TsunamiRegion region})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -206,11 +194,9 @@ class _ForecastDetails extends StatelessWidget {
   }
 }
 
-class _ObservationExpansion extends HookWidget {
-  const new({required this.stations});
-
-  final List<TsunamiRegionStation> stations;
-
+class const _ObservationExpansion({
+  required final List<TsunamiRegionStation> stations,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

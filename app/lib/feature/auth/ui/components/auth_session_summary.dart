@@ -3,20 +3,13 @@ import 'package:eqmonitor/feature/auth/data/model/debug_auth_state.dart';
 import 'package:eqmonitor/feature/auth/ui/model/debug_auth_presentation.dart';
 import 'package:material_ui/material_ui.dart';
 
-class AuthSessionSummary extends StatelessWidget {
-  const new({
-    required this.state,
-    required this.sessionStatus,
-    required this.sessionFailed,
-    required this.debugAuthReadiness,
-    super.key,
-  });
-
-  final DebugAuthState state;
-  final AuthSessionStatus? sessionStatus;
-  final bool sessionFailed;
-  final DebugAuthNotifierReadiness debugAuthReadiness;
-
+class const AuthSessionSummary({
+  required final DebugAuthState state,
+  required final AuthSessionStatus? sessionStatus,
+  required final bool sessionFailed,
+  required final DebugAuthNotifierReadiness debugAuthReadiness,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final statusLabel = DebugAuthPresentation.sessionStatusLabel(

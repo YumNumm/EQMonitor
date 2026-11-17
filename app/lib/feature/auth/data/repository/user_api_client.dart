@@ -37,18 +37,14 @@ abstract interface class UserApiGateway {
   });
 }
 
-final class UserApiClient implements UserApiGateway {
-  const new({
-    required Dio dio,
-    required UserJwtProvider jwtProvider,
-    required AuthSessionInvalidator invalidateSession,
-  }) : _dio = dio,
-       _jwtProvider = jwtProvider,
-       _invalidateSession = invalidateSession;
-
-  final Dio _dio;
-  final UserJwtProvider _jwtProvider;
-  final AuthSessionInvalidator _invalidateSession;
+final class const UserApiClient({
+  required Dio dio,
+  required UserJwtProvider jwtProvider,
+  required AuthSessionInvalidator invalidateSession,
+}) implements UserApiGateway {
+  final Dio _dio = dio;
+  final UserJwtProvider _jwtProvider = jwtProvider;
+  final AuthSessionInvalidator _invalidateSession = invalidateSession;
 
   @override
   Future<Result<Map<String, dynamic>, AuthFailure>> getJson({

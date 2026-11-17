@@ -1,14 +1,9 @@
 /// JMA Weather Warning State.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-42.
-enum JmaWeatherWarningState {
+enum JmaWeatherWarningState(final int code, final String nameJa) {
   issued(1, '発表'),
   cancelled(2, '解除');
-
-  new(this.code, this.nameJa);
-
-  final int code;
-  final String nameJa;
 
   /// Returns the weather warning state for the given code.
   ///

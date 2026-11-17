@@ -9,22 +9,20 @@ import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_content_range_v
 import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_http_identity_validator.dart';
 import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_http_range_request.dart';
 
-final class SeismicityPmTilesNetworkRandomAccessReader
-    implements PmTilesRandomAccessReader {
-  new({
-    required this.source,
-    required this.dio,
-    required this.sizeBytes,
-    required this.cancelToken,
-    required int maxCacheBytes,
-    this._requestBuilder = const SeismicityPmTilesHttpRangeRequestBuilder(),
-    this._identityValidator = const SeismicityPmTilesHttpIdentityValidator(),
-    this._contentRangeValidator =
-        const SeismicityPmTilesContentRangeValidator(),
-  }) : _callerCancellationWasPreexisting = cancelToken.isCancelled,
-       _cache = SeismicityPmTilesNetworkRangeLruCache(
-         maxBytes: maxCacheBytes,
-       ) {
+final class SeismicityPmTilesNetworkRandomAccessReader({
+  required final SeismicityPmTilesNetworkSource source,
+  required final Dio dio,
+  @override required final int sizeBytes,
+  required final CancelToken cancelToken,
+  required int maxCacheBytes,
+  final SeismicityPmTilesHttpRangeRequestBuilder _requestBuilder =
+      const SeismicityPmTilesHttpRangeRequestBuilder(),
+  final SeismicityPmTilesHttpIdentityValidator _identityValidator =
+      const SeismicityPmTilesHttpIdentityValidator(),
+  final SeismicityPmTilesContentRangeValidator _contentRangeValidator =
+      const SeismicityPmTilesContentRangeValidator(),
+}) implements PmTilesRandomAccessReader {
+  this {
     if (_callerCancellationWasPreexisting) {
       _callerCancellationBarrier.complete();
     } else {
@@ -44,19 +42,13 @@ final class SeismicityPmTilesNetworkRandomAccessReader
     }
   }
 
-  final SeismicityPmTilesNetworkSource source;
-  final Dio dio;
-  @override
-  final int sizeBytes;
-  final CancelToken cancelToken;
-  final SeismicityPmTilesHttpRangeRequestBuilder _requestBuilder;
-  final SeismicityPmTilesHttpIdentityValidator _identityValidator;
-  final SeismicityPmTilesContentRangeValidator _contentRangeValidator;
-  final SeismicityPmTilesNetworkRangeLruCache _cache;
+  final _cache = SeismicityPmTilesNetworkRangeLruCache(
+    maxBytes: maxCacheBytes,
+  );
   final _activeReads = SeismicityPmTilesNetworkActiveReadTracker();
   final _activeRequestTokens = <CancelToken>{};
   final _callerCancellationBarrier = Completer<void>();
-  final bool _callerCancellationWasPreexisting;
+  final bool _callerCancellationWasPreexisting = cancelToken.isCancelled;
 
   String? _strongEtag;
   SeismicityPmTilesArchiveChangedException? _terminalArchiveFailure;
@@ -304,10 +296,9 @@ final class SeismicityPmTilesNetworkActiveReadTracker {
   List<Future<Uint8List>> snapshot() => _reads.toList();
 }
 
-final class SeismicityPmTilesNetworkRangeLruCache {
-  new({required this.maxBytes});
-
-  final int maxBytes;
+final class SeismicityPmTilesNetworkRangeLruCache({
+  required final int maxBytes,
+}) {
   final _entries =
       <
         ({Uri archiveUri, String strongEtag, int offset, int length}),

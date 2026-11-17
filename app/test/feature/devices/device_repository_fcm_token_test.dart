@@ -47,10 +47,8 @@ void main() {
   });
 }
 
-final class _FcmTokenAdapter implements HttpClientAdapter {
-  new({this.statusCode = 204});
-
-  final int statusCode;
+final class _FcmTokenAdapter({final int statusCode = 204})
+    implements HttpClientAdapter {
   final requests = <RequestOptions>[];
 
   @override

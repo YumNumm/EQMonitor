@@ -1,9 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 
-class IntensityHistoryNavigationBackButton extends StatelessWidget {
-  const new({super.key});
-
+class const IntensityHistoryNavigationBackButton({super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!Navigator.canPop(context)) {

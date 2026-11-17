@@ -6,16 +6,13 @@ import 'package:flutter_test/flutter_test.dart';
 export 'estimated_intensity_archive_http_response_test_support.dart';
 import 'estimated_intensity_archive_http_response_test_support.dart';
 
-final class RecordingEstimatedIntensityHttpRequest extends Fake
-    implements HttpClientRequest {
-  new({
-    required RecordingEstimatedIntensityHttpResponse response,
-    Future<HttpClientResponse>? closeResponse,
-    this.onAbort,
-  }) : closeResponse = closeResponse ?? Future.value(response);
-
-  final Future<HttpClientResponse> closeResponse;
-  final void Function()? onAbort;
+final class RecordingEstimatedIntensityHttpRequest({
+  required RecordingEstimatedIntensityHttpResponse response,
+  Future<HttpClientResponse>? closeResponse,
+  final void Function()? onAbort,
+}) extends Fake implements HttpClientRequest {
+  final Future<HttpClientResponse> closeResponse =
+      closeResponse ?? Future.value(response);
   final requestHeaders = RecordingEstimatedIntensityHttpHeaders();
   bool? recordedFollowRedirects;
   int? recordedMaxRedirects;
@@ -43,16 +40,13 @@ final class RecordingEstimatedIntensityHttpRequest extends Fake
   }
 }
 
-final class RecordingEstimatedIntensityHttpClient extends Fake
-    implements HttpClient {
-  new({
-    required RecordingEstimatedIntensityHttpRequest request,
-    Future<HttpClientRequest>? openResponse,
-    this.onClose,
-  }) : openResponse = openResponse ?? Future.value(request);
-
-  final Future<HttpClientRequest> openResponse;
-  final void Function()? onClose;
+final class RecordingEstimatedIntensityHttpClient({
+  required RecordingEstimatedIntensityHttpRequest request,
+  Future<HttpClientRequest>? openResponse,
+  final void Function()? onClose,
+}) extends Fake implements HttpClient {
+  final Future<HttpClientRequest> openResponse =
+      openResponse ?? Future.value(request);
   final Completer<void> opened = Completer<void>();
   bool? recordedAutoUncompress;
   Duration? recordedConnectionTimeout;

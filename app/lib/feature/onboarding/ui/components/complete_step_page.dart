@@ -1,10 +1,8 @@
 part of '../page/onboarding_page.dart';
 
-class _CompleteStepPage extends HookConsumerWidget {
-  const new({required this.navigation});
-
-  final _OnboardingStepNavigation navigation;
-
+class const _CompleteStepPage({
+  required final _OnboardingStepNavigation navigation,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;

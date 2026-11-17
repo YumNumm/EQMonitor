@@ -9,9 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class ChangelogPage extends ConsumerWidget {
-  const new({super.key});
-
+class const ChangelogPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(changelogEntriesProvider);
@@ -49,11 +47,8 @@ class ChangelogPage extends ConsumerWidget {
   }
 }
 
-class _ChangelogList extends StatelessWidget {
-  const new({required this.entries});
-
-  final List<ChangelogEntryModel> entries;
-
+class const _ChangelogList({required final List<ChangelogEntryModel> entries})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (entries.isEmpty) {
@@ -68,11 +63,10 @@ class _ChangelogList extends StatelessWidget {
   }
 }
 
-class ChangelogEntryCard extends StatelessWidget {
-  const new({required this.entry, super.key});
-
-  final ChangelogEntryModel entry;
-
+class const ChangelogEntryCard({
+  required final ChangelogEntryModel entry,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -109,11 +103,8 @@ class ChangelogEntryCard extends StatelessWidget {
   }
 }
 
-class _SectionWidget extends StatelessWidget {
-  const new({required this.section});
-
-  final ChangelogSectionModel section;
-
+class const _SectionWidget({required final ChangelogSectionModel section})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final markdownContent =
@@ -129,11 +120,8 @@ class _SectionWidget extends StatelessWidget {
 /// `flutter_markdown` は Flutter 本体の `ThemeData` を要求するため、
 /// material_ui へ移行したアプリのテーマを直接渡せない。
 /// テキストスタイルのみを明示的に受け渡して配色崩れを防ぐ。
-class _ThemedMarkdownBody extends StatelessWidget {
-  const new({required this.data});
-
-  final String data;
-
+class const _ThemedMarkdownBody({required final String data})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;

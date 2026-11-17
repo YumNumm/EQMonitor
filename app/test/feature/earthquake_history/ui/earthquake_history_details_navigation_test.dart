@@ -73,11 +73,8 @@ void main() {
   });
 }
 
-final class _PendingDetails extends EarthquakeHistoryDetailsNotifier {
-  new(this.result);
-
-  final Future<Earthquake> result;
-
+final class _PendingDetails(final Future<Earthquake> result)
+    extends EarthquakeHistoryDetailsNotifier {
   @override
   Future<Earthquake> build(String eventId) => result;
 }

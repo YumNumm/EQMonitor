@@ -31,11 +31,8 @@ ShakeDetectionEvent event(
   correlatedEewEventId: correlatedEewEventId,
 );
 
-class _StubHomeConfiguration extends HomeConfigurationNotifier {
-  new(this.settings);
-
-  final HomeShakeDetectionSettings settings;
-
+class _StubHomeConfiguration(final HomeShakeDetectionSettings settings)
+    extends HomeConfigurationNotifier {
   @override
   Future<HomeConfigurationModel> build() async =>
       HomeConfigurationModel(shakeDetection: settings);

@@ -4,17 +4,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class ShakeDetectionNoticeDialog extends HookWidget {
-  const new({
-    this.description =
-        '揺れ検知は、Proプラン向けに試験提供している機能です。'
-        '有効にする前に、以下の内容をご確認ください。',
-    super.key,
-  });
-
+class const ShakeDetectionNoticeDialog({
   /// 注意事項の前に表示する、有効にする機能の説明。
-  final String description;
-
+  final String description =
+      '揺れ検知は、Proプラン向けに試験提供している機能です。'
+      '有効にする前に、以下の内容をご確認ください。',
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isAgreed = useState(false);

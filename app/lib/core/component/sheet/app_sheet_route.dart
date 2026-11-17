@@ -2,8 +2,9 @@ import 'package:material_ui/material_ui.dart';
 import 'package:sheet/route.dart';
 import 'package:sheet/sheet.dart';
 
-class AppSheetRoute<T> extends SheetRoute<T> {
-  new({required super.builder, super.initialExtent = 0.6})
+class AppSheetRoute<T>({required super.builder, super.initialExtent = 0.6})
+    extends SheetRoute<T> {
+  this
     : super(
         fit: SheetFit.loose,
         stops: [initialExtent, 1],

@@ -13,9 +13,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class IntensityIconDebugPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const IntensityIconDebugPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = useState<double>(50);
@@ -48,11 +46,8 @@ class IntensityIconDebugPage extends HookConsumerWidget {
   }
 }
 
-class _SizeSlider extends StatelessWidget {
-  const new({required this.size});
-
-  final ValueNotifier<double> size;
-
+class const _SizeSlider({required final ValueNotifier<double> size})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -82,19 +77,12 @@ class _SizeSlider extends StatelessWidget {
   }
 }
 
-class _Section extends StatelessWidget {
-  const new({
-    required this.title,
-    required this.providerName,
-    required this.onInvalidate,
-    required this.child,
-  });
-
-  final String title;
-  final String providerName;
-  final VoidCallback onInvalidate;
-  final Widget child;
-
+class const _Section({
+  required final String title,
+  required final String providerName,
+  required final VoidCallback onInvalidate,
+  required final Widget child,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -135,11 +123,8 @@ class _Section extends StatelessWidget {
   }
 }
 
-class _JmaIntensityGrid extends ConsumerWidget {
-  const new({required this.size});
-
-  final double size;
-
+class const _JmaIntensityGrid({required final double size})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncData = ref.watch(intensityIconProvider);
@@ -202,11 +187,8 @@ class _JmaIntensityGrid extends ConsumerWidget {
   }
 }
 
-class _JmaLpgmIntensityGrid extends ConsumerWidget {
-  const new({required this.size});
-
-  final double size;
-
+class const _JmaLpgmIntensityGrid({required final double size})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncData = ref.watch(intensityIconProvider);
@@ -269,12 +251,10 @@ class _JmaLpgmIntensityGrid extends ConsumerWidget {
   }
 }
 
-class _RenderedImage extends StatelessWidget {
-  const new({required this.bytes, required this.size});
-
-  final Uint8List? bytes;
-  final double size;
-
+class const _RenderedImage({
+  required final Uint8List? bytes,
+  required final double size,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final b = bytes;
@@ -289,11 +269,7 @@ class _RenderedImage extends StatelessWidget {
   }
 }
 
-class _HeaderCell extends StatelessWidget {
-  const new(this.text);
-
-  final String text;
-
+class const _HeaderCell(final String text) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -306,11 +282,7 @@ class _HeaderCell extends StatelessWidget {
   }
 }
 
-class _IconCell extends StatelessWidget {
-  const new({required this.child});
-
-  final Widget child;
-
+class const _IconCell({required final Widget child}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(

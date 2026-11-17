@@ -112,11 +112,9 @@ void main() {
   });
 }
 
-class _TestNotificationApp extends StatelessWidget {
-  const new({required this.repository});
-
-  final PushNotificationRepository repository;
-
+class const _TestNotificationApp({
+  required final PushNotificationRepository repository,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(

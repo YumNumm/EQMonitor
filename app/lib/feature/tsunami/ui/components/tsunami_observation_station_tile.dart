@@ -7,11 +7,10 @@ import 'package:eqmonitor/feature/tsunami/data/model/value/wave_initial.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 
-class TsunamiObservationStationTile extends StatelessWidget {
-  const new({required this.station, super.key});
-
-  final TsunamiRegionStation station;
-
+class const TsunamiObservationStationTile({
+  required final TsunamiRegionStation station,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

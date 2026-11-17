@@ -81,11 +81,8 @@ void main() {
   });
 }
 
-final class _StubDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  new(this.earthquake);
-
-  final Earthquake earthquake;
-
+final class _StubDetailsNotifier(final Earthquake earthquake)
+    extends EarthquakeHistoryDetailsNotifier {
   @override
   Future<Earthquake> build(String eventId) async => earthquake;
 }

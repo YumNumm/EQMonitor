@@ -9,18 +9,12 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:extensions/extensions.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EewHistoryListTile extends StatelessWidget {
-  const new({
-    required this.item,
-    this.onTap,
-    this.visualDensity,
-    super.key,
-  });
-
-  final EewTelegramItem item;
-  final VoidCallback? onTap;
-  final VisualDensity? visualDensity;
-
+class const EewHistoryListTile({
+  required final EewTelegramItem item,
+  final VoidCallback? onTap,
+  final VisualDensity? visualDensity,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

@@ -24,11 +24,7 @@ const _workflowInstanceId = 'notification-preset-apply-v1';
 NotificationPresetApplier notificationPresetApplier(Ref ref) =>
     NotificationPresetApplier(ref);
 
-class NotificationPresetApplier {
-  new(this._ref);
-
-  final Ref _ref;
-
+class NotificationPresetApplier(final Ref _ref) {
   /// プリセットを適用する。
   ///
   /// カスタムから離脱する場合は現在の設定をスナップショットへ退避し、カスタムを

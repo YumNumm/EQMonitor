@@ -58,43 +58,29 @@ final class FakeScreenWakeLockRepository implements ScreenWakeLockRepository {
   }
 }
 
-final class MutableScreenBehaviorSettings
+final class MutableScreenBehaviorSettings(final ScreenBehaviorSettings initial)
     extends ScreenBehaviorSettingsNotifier {
-  new(this.initial);
-
-  final ScreenBehaviorSettings initial;
-
   @override
   Future<ScreenBehaviorSettings> build() async => initial;
 
   void publish(ScreenBehaviorSettings value) => state = AsyncData(value);
 }
 
-final class MutableAppLifecycle extends AppLifecycle {
-  new(this.initial);
-
-  final AppLifecycleState initial;
-
+final class MutableAppLifecycle(final AppLifecycleState initial)
+    extends AppLifecycle {
   @override
   AppLifecycleState build() => initial;
 
   void publish(AppLifecycleState value) => state = value;
 }
 
-final class WakeLockFixture {
-  new({
-    required this.container,
-    required this.platform,
-    required this.settings,
-    required this.lifecycle,
-    required this.owner,
-  });
-
-  final ProviderContainer container;
-  final FakeScreenWakeLockRepository platform;
-  final MutableScreenBehaviorSettings settings;
-  final MutableAppLifecycle lifecycle;
-  final ScreenWakeLockOwner owner;
+final class WakeLockFixture({
+  required final ProviderContainer container,
+  required final FakeScreenWakeLockRepository platform,
+  required final MutableScreenBehaviorSettings settings,
+  required final MutableAppLifecycle lifecycle,
+  required final ScreenWakeLockOwner owner,
+}) {
   Future<void> settle() async {
     await Future<void>.delayed(Duration.zero);
     await container.read(screenWakeLockControllerProvider.future);

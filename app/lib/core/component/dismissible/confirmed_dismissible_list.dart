@@ -6,26 +6,16 @@ import 'package:material_ui/material_ui.dart';
 ///
 /// [onDismiss] reports persistence success. Successful items remain hidden until
 /// the authoritative [items] update removes them; false restores the original row.
-class ConfirmedDismissibleList<T> extends HookWidget {
-  const new({
-    required this.items,
-    required this.itemId,
-    required this.itemBuilder,
-    required this.onDismiss,
-    this.onTap,
-    this.style = const M3EDismissibleCardStyle(),
-    this.padding,
-    super.key,
-  });
-
-  final List<T> items;
-  final String Function(T item) itemId;
-  final Widget Function(BuildContext context, T item) itemBuilder;
-  final Future<bool> Function(T item) onDismiss;
-  final ValueChanged<T>? onTap;
-  final M3EDismissibleCardStyle style;
-  final EdgeInsetsGeometry? padding;
-
+class const ConfirmedDismissibleList<T>({
+  required final List<T> items,
+  required final String Function(T item) itemId,
+  required final Widget Function(BuildContext context, T item) itemBuilder,
+  required final Future<bool> Function(T item) onDismiss,
+  final ValueChanged<T>? onTap,
+  final M3EDismissibleCardStyle style = const M3EDismissibleCardStyle(),
+  final EdgeInsetsGeometry? padding,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final pendingIds = useState(<String>{});

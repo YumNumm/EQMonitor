@@ -46,11 +46,9 @@ final class const RetryExhausted({
 ///
 /// delayOverride はテスト用に時間進行を置き換えるための注入口
 /// （デフォルト: Future.delayed）。
-class RetryController {
-  new({Future<void> Function(Duration)? delayOverride})
-    : _delay = delayOverride ?? Future<void>.delayed;
-
-  final Future<void> Function(Duration) _delay;
+class RetryController({Future<void> Function(Duration)? delayOverride}) {
+  final Future<void> Function(Duration) _delay =
+      delayOverride ?? Future<void>.delayed;
 
   final _random = Random();
 

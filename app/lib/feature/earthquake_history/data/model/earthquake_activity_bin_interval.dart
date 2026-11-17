@@ -1,16 +1,11 @@
-enum EarthquakeActivityBinInterval {
+enum EarthquakeActivityBinInterval({
+  required final Duration duration,
+  required final String label,
+}) {
   oneHour(duration: Duration(hours: 1), label: '1時間'),
   sixHours(duration: Duration(hours: 6), label: '6時間'),
   oneDay(duration: Duration(days: 1), label: '1日'),
   oneWeek(duration: Duration(days: 7), label: '1週間');
-
-  new({
-    required this.duration,
-    required this.label,
-  });
-
-  final Duration duration;
-  final String label;
 
   static EarthquakeActivityBinInterval forDuration(Duration duration) {
     if (duration <= const Duration(hours: 24)) {

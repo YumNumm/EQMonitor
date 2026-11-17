@@ -30,25 +30,23 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final class _StubRealtimeEvents extends RealtimeEvents {
-  new(this.stream);
-
-  final Stream<RealtimeEvent> stream;
-
+final class _StubRealtimeEvents(final Stream<RealtimeEvent> stream)
+    extends RealtimeEvents {
   @override
   Stream<RealtimeEvent> build() => stream;
 }
 
-final class _SpyRepository extends EarthquakeHistoryRepository {
-  new({required this.initial, required this.cacheClient})
+final class _SpyRepository({
+  required final Earthquake initial,
+  required final api.ApiClient cacheClient,
+}) extends EarthquakeHistoryRepository {
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,
         shindoDbStations: _shindoDbStations,
       );
 
-  final Earthquake initial;
-  final api.ApiClient cacheClient;
   int detailFetchCount = 0;
 
   @override
@@ -64,20 +62,18 @@ final class _SpyRepository extends EarthquakeHistoryRepository {
   }
 }
 
-final class _CompletingRepository extends EarthquakeHistoryRepository {
-  new({
-    required this.cacheClient,
-    required this.cacheResult,
-    required this.networkResults,
-  }) : super(
-         earthquake: api.ApiClient(Dio()).earthquake,
-         earthquakeParameter: _earthquakeParameter,
-         shindoDbStations: _shindoDbStations,
-       );
+final class _CompletingRepository({
+  required final api.ApiClient cacheClient,
+  required final Future<Earthquake> Function() cacheResult,
+  required final List<Completer<Earthquake>> networkResults,
+}) extends EarthquakeHistoryRepository {
+  this
+    : super(
+        earthquake: api.ApiClient(Dio()).earthquake,
+        earthquakeParameter: _earthquakeParameter,
+        shindoDbStations: _shindoDbStations,
+      );
 
-  final api.ApiClient cacheClient;
-  final Future<Earthquake> Function() cacheResult;
-  final List<Completer<Earthquake>> networkResults;
   int networkFetchCount = 0;
 
   @override

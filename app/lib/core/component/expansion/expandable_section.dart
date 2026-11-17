@@ -3,34 +3,23 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// An expandable section with an accessible header and an unconstrained body.
-class ExpandableSection extends HookWidget {
-  const new({
-    required this.title,
-    required this.children,
-    this.subtitle,
-    this.leading,
-    this.trailing,
-    this.initiallyExpanded = false,
-    this.onExpansionChanged,
-    this.tilePadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    this.childrenPadding = EdgeInsets.zero,
-    this.index = 0,
-    this.totalCount = 1,
-    super.key,
-  });
-
-  final Widget title;
-  final List<Widget> children;
-  final Widget? subtitle;
-  final Widget? leading;
-  final Widget? trailing;
-  final bool initiallyExpanded;
-  final ValueChanged<bool>? onExpansionChanged;
-  final EdgeInsetsGeometry tilePadding;
-  final EdgeInsetsGeometry childrenPadding;
-  final int index;
-  final int totalCount;
-
+class const ExpandableSection({
+  required final Widget title,
+  required final List<Widget> children,
+  final Widget? subtitle,
+  final Widget? leading,
+  final Widget? trailing,
+  final bool initiallyExpanded = false,
+  final ValueChanged<bool>? onExpansionChanged,
+  final EdgeInsetsGeometry tilePadding = const EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 12,
+  ),
+  final EdgeInsetsGeometry childrenPadding = EdgeInsets.zero,
+  final int index = 0,
+  final int totalCount = 1,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final expanded = useState(initiallyExpanded);

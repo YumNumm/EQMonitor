@@ -42,19 +42,12 @@ class const EarthquakeHistoryMapPopupAction() {
   }
 }
 
-class _AreaPopupBody extends StatelessWidget {
-  const new({
-    required this.areaName,
-    required this.maxIntensity,
-    required this.intensityContent,
-    this.intensityHistoryRoute,
-  });
-
-  final String areaName;
-  final JmaIntensity? maxIntensity;
-  final Widget? intensityContent;
-  final IntensityHistoryRoute? intensityHistoryRoute;
-
+class const _AreaPopupBody({
+  required final String areaName,
+  required final JmaIntensity? maxIntensity,
+  required final Widget? intensityContent,
+  final IntensityHistoryRoute? intensityHistoryRoute,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

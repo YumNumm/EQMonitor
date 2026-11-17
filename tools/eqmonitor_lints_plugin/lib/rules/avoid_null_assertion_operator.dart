@@ -7,8 +7,8 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
-class AvoidNullAssertionOperator extends AnalysisRule {
-  new() : super(name: _code.name, description: _code.problemMessage);
+class AvoidNullAssertionOperator() extends AnalysisRule {
+  this : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_null_assertion_operator',
@@ -36,11 +36,7 @@ class AvoidNullAssertionOperator extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  new(this.rule);
-
-  final AnalysisRule rule;
-
+class _Visitor(final AnalysisRule rule) extends SimpleAstVisitor<void> {
   @override
   void visitPostfixExpression(PostfixExpression node) {
     if (node.operator.type == TokenType.BANG) {

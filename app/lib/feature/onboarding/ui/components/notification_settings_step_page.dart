@@ -1,10 +1,8 @@
 part of '../page/onboarding_page.dart';
 
-class _NotificationSettingsStepPage extends HookConsumerWidget {
-  const new({required this.navigation});
-
-  final _OnboardingStepNavigation navigation;
-
+class const _NotificationSettingsStepPage({
+  required final _OnboardingStepNavigation navigation,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMigrated =
@@ -16,11 +14,9 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
   }
 }
 
-class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
-  const new({required this.navigation});
-
-  final _OnboardingStepNavigation navigation;
-
+class const _MigratedNotificationSettingsStepPage({
+  required final _OnboardingStepNavigation navigation,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
@@ -90,11 +86,9 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
   }
 }
 
-class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
-  const new({required this.navigation});
-
-  final _OnboardingStepNavigation navigation;
-
+class const _NewUserNotificationSettingsStepPage({
+  required final _OnboardingStepNavigation navigation,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
@@ -196,9 +190,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
   }
 }
 
-class _OnboardingCustomSettingsWrapper extends StatelessWidget {
-  const new();
-
+class const _OnboardingCustomSettingsWrapper() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const NotificationSettingsPage();

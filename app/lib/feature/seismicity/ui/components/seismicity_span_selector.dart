@@ -2,16 +2,11 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_span.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class SeismicitySpanSelector extends StatelessWidget {
-  const new({
-    required this.value,
-    required this.onChanged,
-    super.key,
-  });
-
-  final SeismicitySpan value;
-  final ValueChanged<SeismicitySpan> onChanged;
-
+class const SeismicitySpanSelector({
+  required final SeismicitySpan value,
+  required final ValueChanged<SeismicitySpan> onChanged,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return M3EToggleButtonGroup(

@@ -7,12 +7,10 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_bounds.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:eqmonitor/feature/seismicity/data/repository/hypocenter_analysis_repository.dart';
 
-class HypocenterAnalysisLoader {
-  const new({
-    required HypocenterArchiveEventRepository repository,
-  }) : _repository = repository;
-
-  final HypocenterArchiveEventRepository _repository;
+class const HypocenterAnalysisLoader({
+  required HypocenterArchiveEventRepository repository,
+}) {
+  final HypocenterArchiveEventRepository _repository = repository;
 
   Future<Result<List<SeismicityEvent>, HypocenterApiException>> load({
     required List<HypocenterArchive> archives,

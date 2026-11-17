@@ -2,16 +2,13 @@
 ///
 /// [clockMicros] を注入するとテストで決定的に検証できる。省略時は内部の
 /// [Stopwatch] を時刻源に使う。
-class StartupProfiler {
-  new({int Function()? clockMicros})
-    : _clockMicros = clockMicros ?? _defaultClock();
-
+class StartupProfiler({int Function()? clockMicros}) {
   static int Function() _defaultClock() {
     final stopwatch = Stopwatch()..start();
     return () => stopwatch.elapsedMicroseconds;
   }
 
-  final int Function() _clockMicros;
+  final int Function() _clockMicros = clockMicros ?? _defaultClock();
   final Map<String, int> _timings = {};
 
   void mark(String phase) => _timings[phase] = _clockMicros();

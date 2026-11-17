@@ -9,11 +9,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class _FakeMapConfigurationNotifier extends MapConfigurationNotifier {
-  new(this._build);
-
-  final Future<MapConfiguration> Function() _build;
-
+class _FakeMapConfigurationNotifier(
+  final Future<MapConfiguration> Function() _build,
+) extends MapConfigurationNotifier {
   @override
   Future<MapConfiguration> build() => _build();
 }
@@ -87,11 +85,7 @@ void main() {
   });
 }
 
-class _TestApp extends StatelessWidget {
-  const new({required this.page});
-
-  final Widget page;
-
+class const _TestApp({required final Widget page}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

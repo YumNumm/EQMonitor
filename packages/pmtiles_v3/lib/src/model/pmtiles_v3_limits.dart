@@ -54,9 +54,7 @@ abstract class PmTilesV3Limits with _$PmTilesV3Limits {
   }) = _PmTilesV3Limits;
 }
 
-final class PmTilesV3LimitsValidator {
-  const new();
-
+final class const PmTilesV3LimitsValidator() {
   void validate(PmTilesV3Limits limits) {
     if (limits.maxDirectoryDepth <= 0) {
       throw ArgumentError.value(

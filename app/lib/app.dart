@@ -16,9 +16,7 @@ import 'package:flutter_localizations/flutter_localizations.dart'
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class App extends HookConsumerWidget {
-  const new({super.key});
-
+class const App({super.key}) extends HookConsumerWidget {
   static final navigatorKey = GlobalKey<NavigatorState>();
 
   @override

@@ -3,20 +3,13 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart'
 import 'package:material_ui/material_ui.dart';
 
 /// 近傍地震・市区町村詳細などで共通の地震一覧ソートチップ。
-class EarthquakeSortChips extends StatelessWidget {
-  const new({
-    required this.sortBy,
-    required this.sortOrder,
-    required this.onChanged,
-    this.showRegionalIntensity = false,
-    super.key,
-  });
-
-  final EarthquakeSortBy sortBy;
-  final SortOrder sortOrder;
-  final ValueChanged<EarthquakeSortBy> onChanged;
-  final bool showRegionalIntensity;
-
+class const EarthquakeSortChips({
+  required final EarthquakeSortBy sortBy,
+  required final SortOrder sortOrder,
+  required final ValueChanged<EarthquakeSortBy> onChanged,
+  final bool showRegionalIntensity = false,
+  super.key,
+}) extends StatelessWidget {
   static const options = [
     (EarthquakeSortBy.eventId, '発生時刻'),
     (EarthquakeSortBy.magnitude, 'M'),

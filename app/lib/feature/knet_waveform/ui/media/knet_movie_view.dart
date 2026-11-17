@@ -14,11 +14,8 @@ import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_movie_seekbar.dart
 import 'package:video_player/video_player.dart';
 
 /// K-NET all/movie MP4 をストリーミング再生するビュー
-class KnetMovieView extends HookConsumerWidget {
-  const new({required this.eventTime, super.key});
-
-  final DateTime eventTime;
-
+class const KnetMovieView({required final DateTime eventTime, super.key})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final clientAsync = ref.watch(knetDownloadClientProvider);
@@ -40,12 +37,10 @@ class KnetMovieView extends HookConsumerWidget {
   }
 }
 
-class _MovieContent extends HookWidget {
-  const new({required this.eventTime, required this.client});
-
-  final DateTime eventTime;
-  final KnetDownloadClient client;
-
+class const _MovieContent({
+  required final DateTime eventTime,
+  required final KnetDownloadClient client,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selectedType = useState(KnetMovieType.values.first);
@@ -117,12 +112,10 @@ class _MovieContent extends HookWidget {
   }
 }
 
-class _MovieTypeSelector extends StatelessWidget {
-  const new({required this.selected, required this.onChanged});
-
-  final KnetMovieType selected;
-  final ValueChanged<KnetMovieType> onChanged;
-
+class const _MovieTypeSelector({
+  required final KnetMovieType selected,
+  required final ValueChanged<KnetMovieType> onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -151,19 +144,12 @@ class _MovieTypeSelector extends StatelessWidget {
   }
 }
 
-class _VideoArea extends HookWidget {
-  const new({
-    required this.controller,
-    required this.isInitialized,
-    required this.onRetry,
-    this.errorMessage,
-  });
-
-  final VideoPlayerController? controller;
-  final bool isInitialized;
-  final String? errorMessage;
-  final VoidCallback onRetry;
-
+class const _VideoArea({
+  required final VideoPlayerController? controller,
+  required final bool isInitialized,
+  required final VoidCallback onRetry,
+  final String? errorMessage,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     if (errorMessage case final errorMessage?) {
@@ -210,21 +196,13 @@ class _VideoArea extends HookWidget {
   }
 }
 
-class _VideoControls extends StatelessWidget {
-  const new({
-    required this.controller,
-    required this.isPlaying,
-    required this.duration,
-    required this.position,
-    required this.onRetry,
-  });
-
-  final VideoPlayerController controller;
-  final bool isPlaying;
-  final Duration duration;
-  final Duration position;
-  final VoidCallback onRetry;
-
+class const _VideoControls({
+  required final VideoPlayerController controller,
+  required final bool isPlaying,
+  required final Duration duration,
+  required final Duration position,
+  required final VoidCallback onRetry,
+}) extends StatelessWidget {
   String _fmt(Duration d) {
     final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
     final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
@@ -288,12 +266,10 @@ class _VideoControls extends StatelessWidget {
   }
 }
 
-class _ErrorView extends StatelessWidget {
-  const new({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
+class const _ErrorView({
+  required final String message,
+  required final VoidCallback onRetry,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(

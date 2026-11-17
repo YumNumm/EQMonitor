@@ -9,12 +9,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class NotificationSoundSelector extends HookConsumerWidget {
-  const new({required this.apiValue, required this.onChanged, super.key});
-
-  final String apiValue;
-  final Future<void> Function(String) onChanged;
-
+class const NotificationSoundSelector({
+  required final String apiValue,
+  required final Future<void> Function(String) onChanged,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final options = ref.watch(notificationSoundOptionsProvider);

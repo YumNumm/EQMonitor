@@ -5,18 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class LpgmIntensityFilterChip extends StatelessWidget {
-  const new({
-    this.min,
-    this.max,
-    this.onChanged,
-    super.key,
-  });
-
-  final JmaLpgmIntensity? min;
-  final JmaLpgmIntensity? max;
-  final void Function(JmaLpgmIntensity?, JmaLpgmIntensity?)? onChanged;
-
+class const LpgmIntensityFilterChip({
+  final JmaLpgmIntensity? min,
+  final JmaLpgmIntensity? max,
+  final void Function(JmaLpgmIntensity?, JmaLpgmIntensity?)? onChanged,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDefault = min == null && max == null;
@@ -68,12 +62,10 @@ class LpgmIntensityFilterChip extends StatelessWidget {
   }
 }
 
-class _LpgmIntensityFilterModal extends HookWidget {
-  const new({this.currentMin, this.currentMax});
-
-  final JmaLpgmIntensity? currentMin;
-  final JmaLpgmIntensity? currentMax;
-
+class const _LpgmIntensityFilterModal({
+  final JmaLpgmIntensity? currentMin,
+  final JmaLpgmIntensity? currentMax,
+}) extends HookWidget {
   static const List<JmaLpgmIntensity> _values = [
     JmaLpgmIntensity.zero,
     JmaLpgmIntensity.one,

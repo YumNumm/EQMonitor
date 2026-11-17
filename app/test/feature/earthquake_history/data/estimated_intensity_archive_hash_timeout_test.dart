@@ -143,12 +143,9 @@ final class const PausedEstimatedIntensityArchiveFileLengthReader({
   }
 }
 
-final class PausedEstimatedIntensityArchiveFileVerifier
-    implements EstimatedIntensityArchiveFileVerifier {
-  new({required this.hashStarted});
-
-  final Completer<void> hashStarted;
-
+final class PausedEstimatedIntensityArchiveFileVerifier({
+  required final Completer<void> hashStarted,
+}) implements EstimatedIntensityArchiveFileVerifier {
   @override
   Future<EstimatedIntensityArchiveDownloadResult> verify({
     required EstimatedIntensityArchiveDescriptor descriptor,

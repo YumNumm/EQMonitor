@@ -291,10 +291,8 @@ Future<ProviderContainer> _pumpPage(
   return container;
 }
 
-class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
-  new(this._initial);
-
-  final NotificationSlot _initial;
+class _FakeNotificationSlotsNotifier(final NotificationSlot _initial)
+    extends NotificationSlotsNotifier {
   List<NotificationOverride>? lastEarthquakeOverrides;
   Completer<void>? saveGate;
   bool failSave = false;
@@ -331,11 +329,7 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
   }
 }
 
-class _TestApp extends StatelessWidget {
-  const new({required this.home});
-
-  final Widget home;
-
+class const _TestApp({required final Widget home}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(

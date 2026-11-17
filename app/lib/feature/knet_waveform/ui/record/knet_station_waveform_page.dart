@@ -17,11 +17,10 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// 観測点波形・スペクトル解析ページ
-class KnetStationWaveformPage extends HookConsumerWidget {
-  const new({required this.result, super.key});
-
-  final KnetStationResult result;
-
+class const KnetStationWaveformPage({
+  required final KnetStationResult result,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final analysisAsync = ref.watch(knetStationAnalysisProvider(result));
@@ -147,17 +146,11 @@ class KnetStationWaveformPage extends HookConsumerWidget {
 
 // ── ヘッダ（震度・PGA/PGV/PGD/SI） ──────────────────────────────────────
 
-class _MetricsHeader extends StatelessWidget {
-  const new({
-    required this.result,
-    required this.intensity,
-    required this.analysis,
-  });
-
-  final KnetStationResult result;
-  final JmaIntensity intensity;
-  final KnetStationAnalysis? analysis;
-
+class const _MetricsHeader({
+  required final KnetStationResult result,
+  required final JmaIntensity intensity,
+  required final KnetStationAnalysis? analysis,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final info = result.stationInfo;
@@ -233,12 +226,10 @@ class _MetricsHeader extends StatelessWidget {
       values.isEmpty ? 0.0 : values.reduce(max);
 }
 
-class _MetricChip extends StatelessWidget {
-  const new({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
+class const _MetricChip({
+  required final String label,
+  required final String value,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RichText(
@@ -258,12 +249,10 @@ class _MetricChip extends StatelessWidget {
 
 // ── 加速度波形チャート（バイアス除去済み） ────────────────────────────────
 
-class _WaveformChart extends StatelessWidget {
-  const new({required this.record, required this.channelIndex});
-
-  final KnetCsvRecord record;
-  final int channelIndex;
-
+class const _WaveformChart({
+  required final KnetCsvRecord record,
+  required final int channelIndex,
+}) extends StatelessWidget {
   static double _computeBias(
     List<KnetCsvDataPoint> pts,
     KnetCsvRecord record,
@@ -307,17 +296,11 @@ class _WaveformChart extends StatelessWidget {
 
 // ── 汎用 時系列チャート ───────────────────────────────────────────────────
 
-class _TimeSeriesChart extends StatelessWidget {
-  const new({
-    required this.data,
-    required this.unit,
-    required this.dt,
-  });
-
-  final List<double> data;
-  final String unit;
-  final double dt;
-
+class const _TimeSeriesChart({
+  required final List<double> data,
+  required final String unit,
+  required final double dt,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data.isEmpty) {
@@ -436,11 +419,9 @@ class _TimeSeriesChart extends StatelessWidget {
 
 // ── 応答スペクトルビュー ─────────────────────────────────────────────────
 
-class _SpectrumView extends StatelessWidget {
-  const new({required this.analysis});
-
-  final AsyncValue<KnetStationAnalysis> analysis;
-
+class const _SpectrumView({
+  required final AsyncValue<KnetStationAnalysis> analysis,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return analysis.when(
@@ -451,11 +432,8 @@ class _SpectrumView extends StatelessWidget {
   }
 }
 
-class _SpectrumChart extends HookWidget {
-  const new({required this.spectrum});
-
-  final ResponseSpectrumResult spectrum;
-
+class const _SpectrumChart({required final ResponseSpectrumResult spectrum})
+    extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selected = useState(0); // 0=Sa 1=Sv 2=Sd
@@ -583,11 +561,9 @@ class _SpectrumChart extends HookWidget {
 
 // ── フーリエスペクトルビュー ──────────────────────────────────────────────
 
-class _FourierView extends StatelessWidget {
-  const new({required this.analysis});
-
-  final AsyncValue<KnetStationAnalysis> analysis;
-
+class const _FourierView({
+  required final AsyncValue<KnetStationAnalysis> analysis,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return analysis.when(
@@ -598,11 +574,8 @@ class _FourierView extends StatelessWidget {
   }
 }
 
-class _FourierChart extends StatelessWidget {
-  const new({required this.spectrum});
-
-  final FourierSpectrumResult spectrum;
-
+class const _FourierChart({required final FourierSpectrumResult spectrum})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;

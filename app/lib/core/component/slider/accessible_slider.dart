@@ -2,30 +2,18 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Native expressive slider with screen-reader adjustment actions.
-class AccessibleSlider extends StatelessWidget {
-  const new({
-    required this.value,
-    required this.onChanged,
-    this.min = 0,
-    this.max = 1,
-    this.divisions,
-    this.label,
-    this.semanticFormatterCallback,
-    this.onChangeStart,
-    this.onChangeEnd,
-    super.key,
-  });
-
-  final double value;
-  final ValueChanged<double>? onChanged;
-  final double min;
-  final double max;
-  final int? divisions;
-  final String? label;
-  final String Function(double)? semanticFormatterCallback;
-  final ValueChanged<double>? onChangeStart;
-  final ValueChanged<double>? onChangeEnd;
-
+class const AccessibleSlider({
+  required final double value,
+  required final ValueChanged<double>? onChanged,
+  final double min = 0,
+  final double max = 1,
+  final int? divisions,
+  final String? label,
+  final String Function(double)? semanticFormatterCallback,
+  final ValueChanged<double>? onChangeStart,
+  final ValueChanged<double>? onChangeEnd,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = onChanged != null && max > min;

@@ -16,8 +16,8 @@ const monthlyPackage = rc.Package(
   rc.PresentedOfferingContext('current', null, null),
 );
 
-class TestRevenueCatSession extends RevenueCatSession {
-  const new()
+class const TestRevenueCatSession() extends RevenueCatSession {
+  this
     : super(
         deviceId: 'device',
         token: 'token',

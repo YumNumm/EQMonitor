@@ -53,9 +53,5 @@ void main() {
   );
 }
 
-class _AnimatedSheetController extends SheetController {
-  new(this.animation);
-
-  @override
-  final Animation<double> animation;
-}
+class _AnimatedSheetController(@override final Animation<double> animation)
+    extends SheetController;

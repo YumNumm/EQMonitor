@@ -3,20 +3,13 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sheet/sheet.dart';
 
-class BasicModalSheet extends HookWidget {
-  const new({
-    required this.child,
-    super.key,
-    this.hasAppBar = true,
-    this.expandToPane = false,
-    this.initialPositionOverlay,
-  });
-
-  final Widget child;
-  final bool hasAppBar;
-  final bool expandToPane;
-  final Widget? initialPositionOverlay;
-
+class const BasicModalSheet({
+  required final Widget child,
+  super.key,
+  final bool hasAppBar = true,
+  final bool expandToPane = false,
+  final Widget? initialPositionOverlay,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

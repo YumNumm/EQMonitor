@@ -5,10 +5,10 @@ import 'package:kyoshin_monitor_api/src/model/web_api/data_time.dart';
 import 'package:kyoshin_monitor_api/src/model/web_api/maintenance_message.dart';
 import 'package:kyoshin_monitor_api/src/util/jst.dart';
 
-class KyoshinMonitorWebApiDataSource {
-  new({required KyoshinMonitorWebApiClient client}) : _client = client;
-
-  final KyoshinMonitorWebApiClient _client;
+class KyoshinMonitorWebApiDataSource({
+  required KyoshinMonitorWebApiClient client,
+}) {
+  final KyoshinMonitorWebApiClient _client = client;
 
   /// データ時間
   Future<DataTime> getLatestDataTime() => _client.getLatestDataTime();
@@ -81,7 +81,16 @@ class KyoshinMonitorWebApiDataSource {
 
 /// リアルタイム画像の種類
 @JsonEnum(valueField: 'urlString')
-enum RealtimeDataType {
+enum RealtimeDataType(
+  /// 表示名
+  final String displayName,
+
+  /// URLに使用する文字列
+  final String urlString, {
+
+  /// LPGM系列の場合はtrue
+  required final bool isLpgm,
+}) {
   /// 震度
   shindo('震度', 'jma', isLpgm: false),
 
@@ -142,46 +151,24 @@ enum RealtimeDataType {
 
   /// 階級データ(周期7秒台)
   /// Lpgm系列でのみ利用可
-  abrsp7s('階級データ(周期7秒台)', 'abrsp7s', isLpgm: true);
-
-  new(
-    this.displayName,
-    this.urlString, {
-    required this.isLpgm,
-  });
-
-  /// 表示名
-  final String displayName;
-
-  /// URLに使用する文字列
-  final String urlString;
-
-  /// LPGM系列の場合はtrue
-  final bool isLpgm;
+  abrsp7s('階級データ(周期7秒台)', 'abrsp7s', isLpgm: true),
 }
 
-enum RealtimeLayer {
+enum RealtimeLayer(
+  /// 表示名
+  final String displayName,
+
+  /// URLに使用する文字列
+  final String urlString,
+) {
   /// 地上
   surface('地上', 's'),
 
   /// 地下
-  underground('地下', 'b');
-
-  new(this.displayName, this.urlString);
-
-  /// 表示名
-  final String displayName;
-
-  /// URLに使用する文字列
-  final String urlString;
+  underground('地下', 'b'),
 }
 
-enum BaseMapTheme {
+enum BaseMapTheme(final String displayName, final String urlString) {
   white('白', 'w'),
-  gray('グレー', 'b');
-
-  new(this.displayName, this.urlString);
-
-  final String displayName;
-  final String urlString;
+  gray('グレー', 'b'),
 }

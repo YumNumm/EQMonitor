@@ -2,17 +2,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 // https://stackoverflow.com/a/77039320
-class BlendMask extends SingleChildRenderObjectWidget {
-  const new({
-    required this.blendMode,
-    this.opacity = 1.0,
-    super.key,
-    super.child,
-  });
-
-  final BlendMode blendMode;
-  final double opacity;
-
+class const BlendMask({
+  required final BlendMode blendMode,
+  final double opacity = 1.0,
+  super.key,
+  super.child,
+}) extends SingleChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderBlendMask(blendMode, opacity);
@@ -26,12 +21,8 @@ class BlendMask extends SingleChildRenderObjectWidget {
   }
 }
 
-class RenderBlendMask extends RenderProxyBox {
-  new(this.blendMode, this.opacity);
-
-  BlendMode blendMode;
-  double opacity;
-
+class RenderBlendMask(var BlendMode blendMode, var double opacity)
+    extends RenderProxyBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     context.canvas.saveLayer(

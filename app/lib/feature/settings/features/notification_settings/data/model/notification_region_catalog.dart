@@ -6,18 +6,13 @@ final class const NotificationCityOption({
   required final String? kana,
 });
 
-final class NotificationRegionOption {
-  new({
-    required this.code,
-    required this.name,
-    required this.kana,
-    required List<NotificationCityOption> cities,
-  }) : cities = UnmodifiableListView(cities);
-
-  final String code;
-  final String name;
-  final String? kana;
-  final List<NotificationCityOption> cities;
+final class NotificationRegionOption({
+  required final String code,
+  required final String name,
+  required final String? kana,
+  required List<NotificationCityOption> cities,
+}) {
+  final List<NotificationCityOption> cities = UnmodifiableListView(cities);
 
   NotificationCityOption? cityByCode(String code) {
     for (final city in cities) {
@@ -29,15 +24,14 @@ final class NotificationRegionOption {
   }
 }
 
-final class NotificationRegionCatalog {
-  new({
-    required List<NotificationRegionOption> regions,
-    required List<String> unmappedCityCodes,
-  }) : regions = UnmodifiableListView(regions),
-       unmappedCityCodes = UnmodifiableListView(unmappedCityCodes);
-
-  final List<NotificationRegionOption> regions;
-  final List<String> unmappedCityCodes;
+final class NotificationRegionCatalog({
+  required List<NotificationRegionOption> regions,
+  required List<String> unmappedCityCodes,
+}) {
+  final List<NotificationRegionOption> regions = UnmodifiableListView(regions);
+  final List<String> unmappedCityCodes = UnmodifiableListView(
+    unmappedCityCodes,
+  );
 
   NotificationRegionOption? regionByCode(String code) {
     for (final region in regions) {

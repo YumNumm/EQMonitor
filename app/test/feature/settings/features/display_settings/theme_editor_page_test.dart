@@ -14,10 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _TestApp extends StatelessWidget {
-  const new({required this.home});
-  final Widget home;
-
+class const _TestApp({required final Widget home}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(

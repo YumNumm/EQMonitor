@@ -13,9 +13,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
 import 'package:maplibre/maplibre.dart';
 
-class EewSimulationPsWaveLayer extends HookConsumerWidget {
-  const new({super.key});
-
+class const EewSimulationPsWaveLayer({super.key}) extends HookConsumerWidget {
   static const _pWaveSourceId = 'eew-sim-p-wave';
   static const _sWaveSourceId = 'eew-sim-s-wave';
   static const _pWaveLayerId = 'eew-sim-p-wave-line';

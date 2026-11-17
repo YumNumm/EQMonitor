@@ -192,10 +192,8 @@ Uint8List _manifestBytes({required String packVersion}) => _bytes(
 );
 
 /// `AssetManifest.bin` を含む、Flutter の asset bundle の最小実装。
-class _FakeAssetBundle extends CachingAssetBundle {
-  new(this._assets);
-
-  final Map<String, Uint8List> _assets;
+class _FakeAssetBundle(final Map<String, Uint8List> _assets)
+    extends CachingAssetBundle {
   final List<String> loadedKeys = [];
   final List<String> evictedKeys = [];
 

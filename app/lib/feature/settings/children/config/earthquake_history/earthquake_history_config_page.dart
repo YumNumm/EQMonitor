@@ -8,9 +8,7 @@ import 'package:eqmonitor/feature/settings/component/settings_section_header.dar
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EarthquakeHistoryConfigPage extends StatelessWidget {
-  const new({super.key});
-
+class const EarthquakeHistoryConfigPage({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +26,7 @@ class EarthquakeHistoryConfigPage extends StatelessWidget {
   }
 }
 
-class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
-  const new();
-
+class const _HomeDesignatedRegionConfigTile() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeAsync = ref.watch(homeConfigurationProvider);
@@ -102,9 +98,7 @@ class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
   }
 }
 
-class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
-  const new();
-
+class const _EarthquakeHistoryListConfigWidget() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(

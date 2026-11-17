@@ -43,20 +43,12 @@ final class const EstimatedIntensityArchiveDownloadRejected(
 }
 
 /// Exact sizeとSHA-256検証を完了した、未publishの一時archive。
-final class VerifiedEstimatedIntensityArchiveDownload {
-  // ignore: unnecessary_type_name_in_constructor
-  const VerifiedEstimatedIntensityArchiveDownload._({
-    required this.eventId,
-    required this.sha256,
-    required this.file,
-    required this.sizeBytes,
-  });
-
-  final String eventId;
-  final String sha256;
-  final File file;
-  final int sizeBytes;
-
+final class const VerifiedEstimatedIntensityArchiveDownload._({
+  required final String eventId,
+  required final String sha256,
+  required final File file,
+  required final int sizeBytes,
+}) {
   @override
   String toString() =>
       'VerifiedEstimatedIntensityArchiveDownload('

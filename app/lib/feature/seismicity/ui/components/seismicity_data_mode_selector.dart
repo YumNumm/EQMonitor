@@ -2,16 +2,11 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_data_mode.dar
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class SeismicityDataModeSelector extends StatelessWidget {
-  const new({
-    required this.value,
-    required this.onChanged,
-    super.key,
-  });
-
-  final SeismicityDataMode value;
-  final ValueChanged<SeismicityDataMode> onChanged;
-
+class const SeismicityDataModeSelector({
+  required final SeismicityDataMode value,
+  required final ValueChanged<SeismicityDataMode> onChanged,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => M3EToggleButtonGroup(
     type: M3EButtonGroupType.connected,

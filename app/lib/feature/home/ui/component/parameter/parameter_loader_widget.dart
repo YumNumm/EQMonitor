@@ -6,9 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class ParameterLoaderWidget extends HookConsumerWidget {
-  const new({super.key});
-
+class const ParameterLoaderWidget({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(jmaParameterProvider);

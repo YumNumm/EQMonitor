@@ -21,11 +21,9 @@ enum EarthquakeVxseOwnedField {
   comments,
 }
 
-class EarthquakeVxseFieldOwnership {
-  const new _(this.fields);
-
-  final Set<EarthquakeVxseOwnedField> fields;
-
+class const EarthquakeVxseFieldOwnership._(
+  final Set<EarthquakeVxseOwnedField> fields,
+) {
   bool owns(EarthquakeVxseOwnedField field) => fields.contains(field);
 
   static EarthquakeVxseFieldOwnership forType(EarthquakeTelegramType type) =>

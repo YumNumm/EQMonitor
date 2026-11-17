@@ -138,22 +138,12 @@ const mapLibreMaxZoomClampFixture = MapLibreFitBoundsFixture(
   maxZoom: 12,
 );
 
-final class MapLibreFitBoundsFixture {
-  const new({
-    required this.name,
-    required this.bounds,
-    required this.viewportLogicalSize,
-    required this.padding,
-    required this.expectedCamera,
-    this.minZoom = 0,
-    this.maxZoom = 20,
-  });
-
-  final String name;
-  final MapCameraBounds bounds;
-  final Size viewportLogicalSize;
-  final EdgeInsets padding;
-  final MapCamera expectedCamera;
-  final double minZoom;
-  final double maxZoom;
-}
+final class const MapLibreFitBoundsFixture({
+  required final String name,
+  required final MapCameraBounds bounds,
+  required final Size viewportLogicalSize,
+  required final EdgeInsets padding,
+  required final MapCamera expectedCamera,
+  final double minZoom = 0,
+  final double maxZoom = 20,
+});

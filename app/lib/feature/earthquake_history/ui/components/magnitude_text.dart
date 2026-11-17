@@ -17,20 +17,14 @@ enum MagnitudeTextVariant {
 /// マグニチュードを表示する Widget。
 ///
 /// [variant] により表示の粒度を切り替える。
-class MagnitudeText extends StatelessWidget {
-  const new({
-    required this.magnitude,
-    this.variant = MagnitudeTextVariant.compact,
-    this.color,
-    super.key,
-  });
-
-  final EarthquakeMagnitude? magnitude;
-  final MagnitudeTextVariant variant;
+class const MagnitudeText({
+  required final EarthquakeMagnitude? magnitude,
+  final MagnitudeTextVariant variant = MagnitudeTextVariant.compact,
 
   /// 文字色の上書き。[MagnitudeTextVariant.compact] でのみ有効。
-  final Color? color;
-
+  final Color? color,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (variant) {

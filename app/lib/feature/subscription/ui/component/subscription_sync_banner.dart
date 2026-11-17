@@ -12,12 +12,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class SubscriptionSyncBanner extends ConsumerWidget {
-  const new({this.padding});
-
+class const SubscriptionSyncBanner({
   /// バナーの外側の余白。指定しない場合は四方に標準の余白を取る。
-  final EdgeInsetsGeometry? padding;
-
+  final EdgeInsetsGeometry? padding,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final subscription = ref.watch(subscriptionProvider);

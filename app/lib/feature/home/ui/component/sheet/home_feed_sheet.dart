@@ -15,9 +15,7 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class HomeFeedSheet extends ConsumerWidget {
-  const new({super.key});
-
+class const HomeFeedSheet({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final spacing = context.designSystem.spacing;
@@ -83,9 +81,7 @@ class HomeFeedSheet extends ConsumerWidget {
   }
 }
 
-class _HomeFeedEmpty extends StatelessWidget {
-  const new();
-
+class const _HomeFeedEmpty() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -117,11 +113,8 @@ class _HomeFeedEmpty extends StatelessWidget {
   }
 }
 
-class _HomeFeedListTile extends StatelessWidget {
-  const new({required this.item});
-
-  final FeedItem item;
-
+class const _HomeFeedListTile({required final FeedItem item})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final spacing = context.designSystem.spacing;
@@ -140,9 +133,7 @@ class _HomeFeedListTile extends StatelessWidget {
   }
 }
 
-class _HomeFeedSkeleton extends StatelessWidget {
-  const new();
-
+class const _HomeFeedSkeleton() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final spacing = context.designSystem.spacing;
@@ -174,11 +165,8 @@ class _HomeFeedSkeleton extends StatelessWidget {
 
 /// 未読の緊急度の高いお知らせを知らせるバナー。
 /// タップで詳細へ遷移して既読化、×ボタンで既読化のみ行う。
-class _UnreadFeedBanner extends ConsumerWidget {
-  const new({required this.item});
-
-  final FeedItem item;
-
+class const _UnreadFeedBanner({required final FeedItem item})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;

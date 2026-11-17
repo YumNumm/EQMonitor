@@ -2,16 +2,11 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_color_mode.da
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class SeismicityColorModeSelector extends StatelessWidget {
-  const new({
-    required this.value,
-    required this.onChanged,
-    super.key,
-  });
-
-  final SeismicityColorMode value;
-  final ValueChanged<SeismicityColorMode> onChanged;
-
+class const SeismicityColorModeSelector({
+  required final SeismicityColorMode value,
+  required final ValueChanged<SeismicityColorMode> onChanged,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return M3EToggleButtonGroup(

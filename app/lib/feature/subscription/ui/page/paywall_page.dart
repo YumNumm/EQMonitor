@@ -17,9 +17,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 /// EQMonitor Pro へアップグレードするための Paywall 画面。
-class PaywallPage extends ConsumerWidget {
-  const new({super.key});
-
+class const PaywallPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final flow = ref.watch(paywallFlowProvider);
@@ -122,9 +120,7 @@ class PaywallPage extends ConsumerWidget {
   }
 }
 
-class _BenefitsSection extends ConsumerWidget {
-  const new();
-
+class const _BenefitsSection() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
@@ -175,12 +171,9 @@ class _BenefitsSection extends ConsumerWidget {
   }
 }
 
-class _BenefitRow extends StatelessWidget {
-  const new({required this.benefit});
-
+class const _BenefitRow({required final ProBenefit benefit})
+    extends StatelessWidget {
   static const iconExtent = 40.0;
-
-  final ProBenefit benefit;
 
   @override
   Widget build(BuildContext context) {
@@ -245,11 +238,8 @@ class _BenefitRow extends StatelessWidget {
   }
 }
 
-class _DetailLink extends StatelessWidget {
-  const new({required this.onTap});
-
-  final VoidCallback onTap;
-
+class const _DetailLink({required final VoidCallback onTap})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -277,19 +267,12 @@ class _DetailLink extends StatelessWidget {
 }
 
 /// 価格と購入ボタン。機能の一覧が増えても見失わないよう、画面の下部に固定する。
-class _PurchaseBar extends StatelessWidget {
-  const new({
-    required this.packageState,
-    required this.isPurchasing,
-    required this.onRetry,
-    required this.onPurchase,
-  });
-
-  final AsyncValue<rc.Package?> packageState;
-  final bool isPurchasing;
-  final VoidCallback? onRetry;
-  final VoidCallback? onPurchase;
-
+class const _PurchaseBar({
+  required final AsyncValue<rc.Package?> packageState,
+  required final bool isPurchasing,
+  required final VoidCallback? onRetry,
+  required final VoidCallback? onPurchase,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -349,12 +332,10 @@ class _PurchaseBar extends StatelessWidget {
   }
 }
 
-class _PlanPrice extends StatelessWidget {
-  const new({required this.packageState, required this.onRetry});
-
-  final AsyncValue<rc.Package?> packageState;
-  final VoidCallback? onRetry;
-
+class const _PlanPrice({
+  required final AsyncValue<rc.Package?> packageState,
+  required final VoidCallback? onRetry,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -402,17 +383,11 @@ class _PlanPrice extends StatelessWidget {
   }
 }
 
-class _LegalLinksRow extends StatelessWidget {
-  const new({
-    required this.onTerms,
-    required this.onPrivacy,
-    required this.onTokushoho,
-  });
-
-  final Future<void> Function() onTerms;
-  final Future<void> Function() onPrivacy;
-  final Future<void> Function() onTokushoho;
-
+class const _LegalLinksRow({
+  required final Future<void> Function() onTerms,
+  required final Future<void> Function() onPrivacy,
+  required final Future<void> Function() onTokushoho,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -441,9 +416,7 @@ class _LegalLinksRow extends StatelessWidget {
   }
 }
 
-class _AutoRenewNotice extends StatelessWidget {
-  const new();
-
+class const _AutoRenewNotice() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

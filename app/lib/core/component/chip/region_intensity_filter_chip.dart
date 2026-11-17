@@ -9,24 +9,15 @@ import 'package:material_ui/material_ui.dart';
 
 export 'package:eqmonitor/feature/earthquake_history/data/model/region_intensity_result.dart';
 
-class RegionIntensityFilterChip extends StatelessWidget {
-  const new({
-    this.regionSearchType,
-    this.regionCode,
-    this.regionName,
-    this.regionIntensityGte,
-    this.regionIntensityLte,
-    this.onChanged,
-    super.key,
-  });
-
-  final RegionSearchType? regionSearchType;
-  final String? regionCode;
-  final String? regionName;
-  final JmaIntensity? regionIntensityGte;
-  final JmaIntensity? regionIntensityLte;
-  final ValueChanged<RegionIntensityResult?>? onChanged;
-
+class const RegionIntensityFilterChip({
+  final RegionSearchType? regionSearchType,
+  final String? regionCode,
+  final String? regionName,
+  final JmaIntensity? regionIntensityGte,
+  final JmaIntensity? regionIntensityLte,
+  final ValueChanged<RegionIntensityResult?>? onChanged,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const converter = EarthquakeRegionSelection();

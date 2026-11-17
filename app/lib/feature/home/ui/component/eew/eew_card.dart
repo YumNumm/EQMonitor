@@ -17,23 +17,16 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
 
-class EewCard extends ConsumerWidget {
-  const new({
-    required this.eew,
-    required this.index,
-    this.nowOverride,
-    this.estimatedRegions,
-    super.key,
-  });
-
-  final EewTelegramItem eew;
-  final String? index;
-  final DateTime? nowOverride;
+class const EewCard({
+  required final EewTelegramItem eew,
+  required final String? index,
+  final DateTime? nowOverride,
 
   /// 距離減衰式による推計震度。JMAが現在地の予想震度を発表していない場合の
   /// フォールバックとして利用する。
-  final List<EewEstimatedRegion>? estimatedRegions;
-
+  final List<EewEstimatedRegion>? estimatedRegions,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = ref.watch(timeTickerProvider());
@@ -148,27 +141,16 @@ class EewCard extends ConsumerWidget {
   }
 }
 
-class _EewMainCard extends StatelessWidget {
-  const new({
-    required this.eew,
-    required this.isWarning,
-    required this.happenedTime,
-    required this.localForecastIntensity,
-    required this.regionDisplayName,
-    required this.showArrived,
-    required this.showDeepHypocenterIntensityNotice,
-    this.secondsUntilArrival,
-  });
-
-  final EewTelegramItem eew;
-  final bool isWarning;
-  final DateTime? happenedTime;
-  final JmaIntensity? localForecastIntensity;
-  final String? regionDisplayName;
-  final bool showArrived;
-  final bool showDeepHypocenterIntensityNotice;
-  final int? secondsUntilArrival;
-
+class const _EewMainCard({
+  required final EewTelegramItem eew,
+  required final bool isWarning,
+  required final DateTime? happenedTime,
+  required final JmaIntensity? localForecastIntensity,
+  required final String? regionDisplayName,
+  required final bool showArrived,
+  required final bool showDeepHypocenterIntensityNotice,
+  final int? secondsUntilArrival,
+}) extends StatelessWidget {
   static const _warningHeaderColor = Color.fromRGBO(179, 26, 26, 1);
   static const _forecastHeaderColor = Color.fromRGBO(255, 167, 4, 1);
   static const _canceledHeaderColor = Color.fromRGBO(102, 102, 102, 1);
@@ -275,21 +257,13 @@ class _EewMainCard extends StatelessWidget {
   }
 }
 
-class _EewCardHeader extends StatelessWidget {
-  const new({
-    required this.eew,
-    required this.isWarning,
-    required this.headerBackgroundColor,
-    required this.showArrived,
-    this.secondsUntilArrival,
-  });
-
-  final EewTelegramItem eew;
-  final bool isWarning;
-  final Color headerBackgroundColor;
-  final bool showArrived;
-  final int? secondsUntilArrival;
-
+class const _EewCardHeader({
+  required final EewTelegramItem eew,
+  required final bool isWarning,
+  required final Color headerBackgroundColor,
+  required final bool showArrived,
+  final int? secondsUntilArrival,
+}) extends StatelessWidget {
   static const _secondaryTextColor = Color.fromRGBO(255, 255, 255, 0.7);
 
   @override
@@ -402,15 +376,10 @@ class _EewCardHeader extends StatelessWidget {
   }
 }
 
-class _EewMaxIntensitySection extends StatelessWidget {
-  const new({
-    required this.maxIntensity,
-    required this.depth,
-  });
-
-  final JmaIntensity maxIntensity;
-  final int depth;
-
+class const _EewMaxIntensitySection({
+  required final JmaIntensity maxIntensity,
+  required final int depth,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -434,12 +403,10 @@ class _EewMaxIntensitySection extends StatelessWidget {
   }
 }
 
-class _EewHypocenterSection extends StatelessWidget {
-  const new({required this.eew, required this.happenedTime});
-
-  final EewTelegramItem eew;
-  final DateTime happenedTime;
-
+class const _EewHypocenterSection({
+  required final EewTelegramItem eew,
+  required final DateTime happenedTime,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -510,15 +477,10 @@ class _EewHypocenterSection extends StatelessWidget {
   }
 }
 
-class _EewLocalForecastSection extends StatelessWidget {
-  const new({
-    required this.intensity,
-    required this.regionDisplayName,
-  });
-
-  final JmaIntensity? intensity;
-  final String regionDisplayName;
-
+class const _EewLocalForecastSection({
+  required final JmaIntensity? intensity,
+  required final String regionDisplayName,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -556,11 +518,8 @@ class _EewLocalForecastSection extends StatelessWidget {
   }
 }
 
-class _EewLpgmSection extends StatelessWidget {
-  const new({required this.intensity});
-
-  final JmaLpgmIntensity intensity;
-
+class const _EewLpgmSection({required final JmaLpgmIntensity intensity})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -583,11 +542,8 @@ class _EewLpgmSection extends StatelessWidget {
   }
 }
 
-class _BackgroundIndexText extends StatelessWidget {
-  const new({required this.index});
-
-  final String index;
-
+class const _BackgroundIndexText({required final String index})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
@@ -608,11 +564,8 @@ class _BackgroundIndexText extends StatelessWidget {
   }
 }
 
-class _SecondaryLabel extends StatelessWidget {
-  const new({required this.text});
-
-  final String text;
-
+class const _SecondaryLabel({required final String text})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -626,11 +579,8 @@ class _SecondaryLabel extends StatelessWidget {
   }
 }
 
-class _MagnitudeRow extends StatelessWidget {
-  const new({required this.magnitude});
-
-  final double magnitude;
-
+class const _MagnitudeRow({required final double magnitude})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -660,11 +610,7 @@ class _MagnitudeRow extends StatelessWidget {
   }
 }
 
-class _DepthRow extends StatelessWidget {
-  const new({required this.depth});
-
-  final int depth;
-
+class const _DepthRow({required final int depth}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

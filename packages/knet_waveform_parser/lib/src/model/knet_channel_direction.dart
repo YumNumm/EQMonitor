@@ -1,5 +1,5 @@
 /// K-NET/KiK-net チャンネル方向
-enum KnetChannelDirection {
+enum KnetChannelDirection(final String label) {
   /// 南北方向
   ns('N-S'),
 
@@ -17,9 +17,6 @@ enum KnetChannelDirection {
 
   /// KiK-net 地下 上下方向
   ud2('U-D2');
-
-  new(this.label);
-  final String label;
 
   static KnetChannelDirection fromString(String value) {
     final normalized = value.trim().toUpperCase();

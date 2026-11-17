@@ -10,14 +10,14 @@ import 'package:meta/meta.dart';
 /// https://plidb.inpit.go.jp/pldb/html/HTML.L/2016/001/L2016001200.html
 ///
 /// 参考実装: https://github.com/ingen084/seismometer
-class KnetIntensityCalculator {
-  new({double samplingFrequencyHz = 100.0}) : _fs = samplingFrequencyHz {
+class KnetIntensityCalculator({double samplingFrequencyHz = 100.0}) {
+  this {
     _initCoefficients();
   }
 
   static const _gainG = 1.262;
 
-  final double _fs;
+  final double _fs = samplingFrequencyHz;
 
   // [stage 0..6][coef 0..2]  (stage0=HPF, stage1-6=補正フィルタ)
   late final List<List<double>> _coefA;

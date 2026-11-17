@@ -12,12 +12,9 @@ Future<SecurePreferencesDataSource> securePreferencesDataSource(Ref ref) async {
   return SecurePreferencesDataSource(secureStorage: storage);
 }
 
-class SecurePreferencesDataSource
+class SecurePreferencesDataSource({required FlutterSecureStorage secureStorage})
     implements PreferencesDataSource<SecureStorageKey> {
-  new({required FlutterSecureStorage secureStorage})
-    : _secureStorage = secureStorage;
-
-  final FlutterSecureStorage _secureStorage;
+  final FlutterSecureStorage _secureStorage = secureStorage;
 
   @override
   Future<void> setString({

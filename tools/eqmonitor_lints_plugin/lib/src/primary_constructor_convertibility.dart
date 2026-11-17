@@ -6,9 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 /// 判定は保守的で、変換が非自明な形（親クラスあり・初期化子あり・本体あり等）は
 /// 対象外とする。Widget は必ず Widget 系の基底クラスを `extends` するため、
 /// 親クラス判定によってまとめて除外される。
-class PrimaryConstructorConvertibility {
-  const new _();
-
+class const PrimaryConstructorConvertibility._() {
   static bool isConvertible({required ConstructorDeclaration node}) {
     // `const new(...)` のみを対象とする。
     if (node.constKeyword == null ||

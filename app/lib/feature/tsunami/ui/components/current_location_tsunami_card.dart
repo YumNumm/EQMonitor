@@ -13,11 +13,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 
-class CurrentLocationTsunamiCard extends ConsumerWidget {
-  const new({required this.tsunami, super.key});
-
-  final TsunamiState tsunami;
-
+class const CurrentLocationTsunamiCard({
+  required final TsunamiState tsunami,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final positionAsync = ref.watch(locationStreamProvider);

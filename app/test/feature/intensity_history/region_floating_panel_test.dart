@@ -30,11 +30,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const _aggregatedAt = '2026-08-19T12:00:00Z';
 
-class _FakeCityMaxIntensity extends CityMaxIntensityNotifier {
-  new({this.aggregatedAt});
-
-  final DateTime? aggregatedAt;
-
+class _FakeCityMaxIntensity({final DateTime? aggregatedAt})
+    extends CityMaxIntensityNotifier {
   @override
   Future<CityMaxIntensity> build() async => CityMaxIntensity(
     aggregatedAt: aggregatedAt,

@@ -9,12 +9,11 @@ import 'package:material_ui/material_ui.dart';
 ///
 /// デバッグ設定が有効な場合のみ、JMAが現在地の予想震度を発表していないときの
 /// フォールバックとして、距離減衰式による推計震度とS波到達予想時刻を表示する。
-class HomeEewCard extends HookConsumerWidget {
-  const new({required this.eew, required this.index, super.key});
-
-  final EewTelegramItem eew;
-  final String? index;
-
+class const HomeEewCard({
+  required final EewTelegramItem eew,
+  required final String? index,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEstimationVisible =

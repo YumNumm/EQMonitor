@@ -12,11 +12,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class TsunamiTimelineOverlay extends ConsumerWidget {
-  const new({required this.tsunamiId, super.key});
-
-  final String tsunamiId;
-
+class const TsunamiTimelineOverlay({required final String tsunamiId, super.key})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final telegramsAsync = ref.watch(tsunamiTelegramsProvider(tsunamiId));
@@ -101,20 +98,13 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
   }
 }
 
-class _ExpandedOverlay extends StatelessWidget {
-  const new({
-    required this.tsunamiId,
-    required this.telegrams,
-    required this.selection,
-    required this.ref,
-    super.key,
-  });
-
-  final String tsunamiId;
-  final List<TsunamiTelegramWithState> telegrams;
-  final TsunamiPlaybackSelectionState selection;
-  final WidgetRef ref;
-
+class const _ExpandedOverlay({
+  required final String tsunamiId,
+  required final List<TsunamiTelegramWithState> telegrams,
+  required final TsunamiPlaybackSelectionState selection,
+  required final WidgetRef ref,
+  super.key,
+}) extends StatelessWidget {
   int get _effectiveIndex => selection.selectedIndex ?? telegrams.length - 1;
 
   @override
@@ -247,18 +237,12 @@ class _ExpandedOverlay extends StatelessWidget {
   }
 }
 
-class _CollapsedOverlay extends StatelessWidget {
-  const new({
-    required this.telegrams,
-    required this.selection,
-    required this.ref,
-    super.key,
-  });
-
-  final List<TsunamiTelegramWithState> telegrams;
-  final TsunamiPlaybackSelectionState selection;
-  final WidgetRef ref;
-
+class const _CollapsedOverlay({
+  required final List<TsunamiTelegramWithState> telegrams,
+  required final TsunamiPlaybackSelectionState selection,
+  required final WidgetRef ref,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -310,19 +294,12 @@ class _CollapsedOverlay extends StatelessWidget {
   }
 }
 
-class _TimeProportionalSlider extends StatelessWidget {
-  const new({
-    required this.telegrams,
-    required this.effectiveIndex,
-    required this.isLatest,
-    required this.onChanged,
-  });
-
-  final List<TsunamiTelegramWithState> telegrams;
-  final int effectiveIndex;
-  final bool isLatest;
-  final ValueChanged<int> onChanged;
-
+class const _TimeProportionalSlider({
+  required final List<TsunamiTelegramWithState> telegrams,
+  required final int effectiveIndex,
+  required final bool isLatest,
+  required final ValueChanged<int> onChanged,
+}) extends StatelessWidget {
   double _indexToValue(int index) {
     if (telegrams.length <= 1) {
       return 0;
@@ -399,11 +376,9 @@ class _TimeProportionalSlider extends StatelessWidget {
   }
 }
 
-class _TimeMarkers extends StatelessWidget {
-  const new({required this.telegrams});
-
-  final List<TsunamiTelegramWithState> telegrams;
-
+class const _TimeMarkers({
+  required final List<TsunamiTelegramWithState> telegrams,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

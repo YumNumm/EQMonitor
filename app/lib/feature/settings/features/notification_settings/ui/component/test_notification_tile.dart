@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:material_ui/material_ui.dart';
 
-class TestNotificationTile extends StatelessWidget {
-  const new({super.key});
-
+class const TestNotificationTile({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
     title: const Text('テスト通知を送信'),

@@ -14,11 +14,11 @@ final class const PushTokenBackoff() {
   }
 }
 
-final class InterruptibleBackoff {
-  new({Future<void> Function(Duration)? delayOverride})
-    : _delay = delayOverride ?? Future<void>.delayed;
-
-  final Future<void> Function(Duration) _delay;
+final class InterruptibleBackoff({
+  Future<void> Function(Duration)? delayOverride,
+}) {
+  final Future<void> Function(Duration) _delay =
+      delayOverride ?? Future<void>.delayed;
   Completer<void>? _wakeSignal;
   var _disposed = false;
 

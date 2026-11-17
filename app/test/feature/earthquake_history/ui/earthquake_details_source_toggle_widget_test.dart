@@ -19,11 +19,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// ページ全体（MapLibre含む）を pump せずに、
 /// _LoadedContent のソース切り替えロジックを直接検証するハーネス。
-class _SourceToggleHarness extends HookConsumerWidget {
-  const new({required this.earthquake});
-
-  final Earthquake earthquake;
-
+class const _SourceToggleHarness({required final Earthquake earthquake})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final catalog = earthquake.catalog;

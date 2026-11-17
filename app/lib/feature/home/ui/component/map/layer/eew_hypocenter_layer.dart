@@ -12,16 +12,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-class EewHypocenterLayer extends HookConsumerWidget {
-  const new({
-    required this.eews,
-    this.enableBlink = false,
-    super.key,
-  });
-
-  final List<EewTelegramItem> eews;
-  final bool enableBlink;
-
+class const EewHypocenterLayer({
+  required final List<EewTelegramItem> eews,
+  final bool enableBlink = false,
+  super.key,
+}) extends HookConsumerWidget {
   static const ({String lowPrecise, String normal}) sourceId = (
     normal: 'eew-hypocenter-normal',
     lowPrecise: 'eew-hypocenter-low-precise',

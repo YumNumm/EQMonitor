@@ -4,9 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class NavigationDebugPage extends StatelessWidget {
-  const new({super.key});
-
+class const NavigationDebugPage({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
@@ -27,9 +25,7 @@ class NavigationDebugPage extends StatelessWidget {
   }
 }
 
-class _RouteDropdownMenu extends HookWidget {
-  const new();
-
+class const _RouteDropdownMenu() extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final router = GoRouter.of(context);

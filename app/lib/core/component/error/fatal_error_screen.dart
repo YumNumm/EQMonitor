@@ -4,11 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class FatalErrorScreen extends StatelessWidget {
-  const new({required this.error, super.key});
-
-  final Object? error;
-
+class const FatalErrorScreen({required final Object? error, super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -62,9 +59,7 @@ class FatalErrorScreen extends StatelessWidget {
 /// `ErrorWidget.builder` は static method（インスタンス状態を
 /// キャプチャしないもの）へのトップレベル参照のみ受け付けるため、
 /// static method として定義する。
-class FatalErrorWidgetBuilder {
-  const new _();
-
+class const FatalErrorWidgetBuilder._() {
   /// MaterialApp 祖先が無い状況でも安全に描画する。
   static Widget build(FlutterErrorDetails details) {
     return Directionality(

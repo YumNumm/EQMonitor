@@ -162,11 +162,7 @@ GoRouter goRouter(Ref ref) => GoRouter(
   errorBuilder: (context, state) => FatalErrorScreen(error: state.error),
 );
 
-class GoRouterRedirectException implements Exception {
-  new(this.message);
-
-  final String message;
-}
+class GoRouterRedirectException(final String message) implements Exception;
 
 @TypedGoRoute<SplashRoute>(path: '/splash')
 class const SplashRoute()
@@ -501,10 +497,9 @@ class const NotificationSettingsRoute()
       const NotificationSettingsPage();
 }
 
-class HomeWidgetSettingsRoute extends GoRouteData
+class const HomeWidgetSettingsRoute()
+    extends GoRouteData
     with $HomeWidgetSettingsRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const HomeWidgetSettingsPage();
@@ -1019,10 +1014,7 @@ class const SubscriptionSettingsRoute()
       const SubscriptionSettingsPage();
 }
 
-class _NavigatorObserver extends NavigatorObserver {
-  new(this.talker);
-
-  final Talker talker;
+class _NavigatorObserver(final Talker talker) extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route is PageRoute) {

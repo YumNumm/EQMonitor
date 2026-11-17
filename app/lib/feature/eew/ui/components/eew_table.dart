@@ -5,20 +5,13 @@ import 'package:eqmonitor/core/util/jma_depth_formatter.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EewTable extends StatelessWidget {
-  const new({
-    required this.eews,
-    this.selectedIndex,
-    this.onSelect,
-    this.verticalScrollPhysics,
-    super.key,
-  });
-
-  final List<EewTelegramItem> eews;
-  final int? selectedIndex;
-  final void Function(int index)? onSelect;
-  final ScrollPhysics? verticalScrollPhysics;
-
+class const EewTable({
+  required final List<EewTelegramItem> eews,
+  final int? selectedIndex,
+  final void Function(int index)? onSelect,
+  final ScrollPhysics? verticalScrollPhysics,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -101,7 +94,11 @@ class EewTable extends StatelessWidget {
   }
 }
 
-enum _EewTableColumn {
+enum _EewTableColumn({
+  required final String name,
+  required final bool isNumeric,
+  final String? tooltip,
+}) {
   serialNo(name: 'No.', isNumeric: true),
   type(name: '種別', isNumeric: false),
   reportTime(name: '発表時刻', isNumeric: true),
@@ -117,17 +114,7 @@ enum _EewTableColumn {
   magnitude(name: 'M', isNumeric: true),
   maxIntensity(name: '予想最大震度', isNumeric: true),
   maxLongPeriodIntensity(name: '予想最大長周期\n地震動階級', isNumeric: true),
-  accuracy(name: '精度', isNumeric: false);
-
-  new({
-    required this.name,
-    required this.isNumeric,
-    this.tooltip,
-  });
-
-  final String name;
-  final bool isNumeric;
-  final String? tooltip;
+  accuracy(name: '精度', isNumeric: false),
 }
 
 extension _EewTableColumnEx on _EewTableColumn {

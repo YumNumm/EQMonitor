@@ -5,20 +5,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Mounts protected content only after the backend confirms Pro access.
-class ProFeatureGate extends ConsumerWidget {
-  const new({
-    required this.title,
-    required this.child,
-    this.onClose,
-    this.isPage = false,
-    super.key,
-  });
-
-  final String title;
-  final Widget child;
-  final VoidCallback? onClose;
-  final bool isPage;
-
+class const ProFeatureGate({
+  required final String title,
+  required final Widget child,
+  final VoidCallback? onClose,
+  final bool isPage = false,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (ref.watch(isProProvider)) return child;

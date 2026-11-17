@@ -9,9 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// ホームシートに表示する「アップデートしました」バナー。
 /// アプリのバージョンが更新され、まだ確認していない場合のみ表示する。
 /// タップで変更履歴(Changelog)画面に遷移する。
-class WhatsNewBanner extends ConsumerWidget {
-  const new({super.key});
-
+class const WhatsNewBanner({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentVersion = ref.watch(packageInfoProvider).version;

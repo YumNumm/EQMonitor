@@ -4,12 +4,11 @@ import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 /// K-NET all/fig PNG・all/movie MP4 を表示するページ
-class KnetMediaPage extends StatelessWidget {
-  const new({required this.eventTime, super.key});
-
+class const KnetMediaPage({
   /// 地震発生時刻（JST）
-  final DateTime eventTime;
-
+  required final DateTime eventTime,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = DateFormat('yyyy-MM-dd HH:mm:ss');

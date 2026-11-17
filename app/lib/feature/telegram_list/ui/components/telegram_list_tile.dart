@@ -4,12 +4,11 @@ import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:material_ui/material_ui.dart';
 
-class TelegramListTile extends StatelessWidget {
-  const new({required this.telegram, this.onTap, super.key});
-
-  final TelegramItem telegram;
-  final VoidCallback? onTap;
-
+class const TelegramListTile({
+  required final TelegramItem telegram,
+  final VoidCallback? onTap,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -72,12 +71,8 @@ class TelegramListTile extends StatelessWidget {
   }
 }
 
-class _InfoRow extends StatelessWidget {
-  const new({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
+class const _InfoRow({required final String label, required final String value})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

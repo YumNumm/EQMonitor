@@ -2,9 +2,8 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class EstimatedIntensityNoticeContent extends StatelessWidget {
-  const new({super.key});
-
+class const EstimatedIntensityNoticeContent({super.key})
+    extends StatelessWidget {
   static const _jmaUrl =
       'https://www.jma.go.jp/jma/kishou/know/jishin/suikei/kaisetsu.html';
 
@@ -59,12 +58,8 @@ class EstimatedIntensityNoticeContent extends StatelessWidget {
   }
 }
 
-class _BulletText extends StatelessWidget {
-  const new(this.text, {this.style});
-
-  final String text;
-  final TextStyle? style;
-
+class const _BulletText(final String text, {final TextStyle? style})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(

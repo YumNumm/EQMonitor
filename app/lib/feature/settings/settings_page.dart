@@ -21,9 +21,7 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class SettingsPage extends ConsumerWidget {
-  const new({super.key});
-
+class const SettingsPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPro = ref.watch(isProProvider);
@@ -258,9 +256,7 @@ class SettingsPage extends ConsumerWidget {
   }
 }
 
-class _AppVersionInformation extends HookConsumerWidget {
-  const new();
-
+class const _AppVersionInformation() extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final packageInfo = ref.watch(packageInfoProvider);

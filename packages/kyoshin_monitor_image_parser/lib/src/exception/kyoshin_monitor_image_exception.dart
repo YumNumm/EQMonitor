@@ -2,13 +2,14 @@ sealed class const KyoshinImageParseException(
   final KyoshinImageParseExceptionType type,
 ) implements Exception;
 
-class KyoshinImageParseInvalidGifException extends KyoshinImageParseException {
-  const new() : super(KyoshinImageParseExceptionType.invalidGif);
+class const KyoshinImageParseInvalidGifException()
+    extends KyoshinImageParseException {
+  this : super(KyoshinImageParseExceptionType.invalidGif);
 }
 
-class KyoshinImageParseInvalidImageSizeException
+class const KyoshinImageParseInvalidImageSizeException()
     extends KyoshinImageParseException {
-  const new() : super(KyoshinImageParseExceptionType.invalidImageSize);
+  this : super(KyoshinImageParseExceptionType.invalidImageSize);
 }
 
 enum KyoshinImageParseExceptionType { invalidGif, invalidImageSize }

@@ -1708,11 +1708,11 @@ final class _FakePasskeyAuthenticator implements PasskeyAuthenticatorInterface {
   ) async {}
 }
 
-final class _PasskeyHttpAdapter implements HttpClientAdapter {
-  new({required List<ResponseBody> responses})
-    : _responses = responses.map(Future<ResponseBody>.value).toList();
-
-  final List<Future<ResponseBody>> _responses;
+final class _PasskeyHttpAdapter({required List<ResponseBody> responses})
+    implements HttpClientAdapter {
+  final List<Future<ResponseBody>> _responses = responses
+      .map(Future<ResponseBody>.value)
+      .toList();
   final paths = <String>[];
   final methods = <String>[];
   final requests =

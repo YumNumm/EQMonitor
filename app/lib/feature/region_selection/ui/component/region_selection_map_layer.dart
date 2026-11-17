@@ -9,24 +9,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
-class RegionSelectionMapLayer extends HookWidget {
-  const new({
-    required this.selected,
-    required this.prefectureGeoJson,
-    required this.kind,
-    required this.hasEpicenter,
-    required this.onReady,
-    required this.onError,
-    super.key,
-  });
-
-  final List<RegionOption> selected;
-  final String prefectureGeoJson;
-  final RegionKind kind;
-  final bool hasEpicenter;
-  final VoidCallback onReady;
-  final VoidCallback onError;
-
+class const RegionSelectionMapLayer({
+  required final List<RegionOption> selected,
+  required final String prefectureGeoJson,
+  required final RegionKind kind,
+  required final bool hasEpicenter,
+  required final VoidCallback onReady,
+  required final VoidCallback onError,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final style = MapController.maybeOf(context)?.style;

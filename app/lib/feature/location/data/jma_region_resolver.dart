@@ -27,20 +27,17 @@ typedef EarthquakeRegionResolution = ({
 
 /// GPS座標から地震情報の細分区域、市区町村、津波予報区を解決するクラス。
 /// geobaseのpoint-in-polygonを使用。
-class JmaRegionResolver {
-  new({
-    required this.cityMapData,
-    required this.tsunamiMapData,
-    required EarthquakeParameter earthquakeParameter,
-  }) : _cityToRegion = CityToRegionLookupBuilder.build(earthquakeParameter);
-
-  final JmaMap_JmaMapData cityMapData;
-  final JmaMap_JmaMapData tsunamiMapData;
+class JmaRegionResolver({
+  required final JmaMap_JmaMapData cityMapData,
+  required final JmaMap_JmaMapData tsunamiMapData,
+  required EarthquakeParameter earthquakeParameter,
+}) {
   final _utility = JmaMapUtility();
 
   /// 市区町村コード → 親一次細分化地域 のルックアップ。
   /// `earthquake_param.regions[].cities[]` から構築される。
-  final Map<String, EarthquakeParentRegion> _cityToRegion;
+  final Map<String, EarthquakeParentRegion> _cityToRegion =
+      CityToRegionLookupBuilder.build(earthquakeParameter);
 
   /// [latitude], [longitude] に最も近い津波予報区コードを返す。
   String? resolveTsunamiForecastRegionCode(

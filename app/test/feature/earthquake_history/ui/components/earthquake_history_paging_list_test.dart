@@ -111,8 +111,8 @@ void main() {
 
 class _Repository extends TestEarthquakeHistoryRepository;
 
-class _HistorySource extends EarthquakeHistoryDataSource {
-  new()
+class _HistorySource() extends EarthquakeHistoryDataSource {
+  this
     : super(
         repository: _Repository(),
         parameter: const EarthquakeHistoryParameter.all(

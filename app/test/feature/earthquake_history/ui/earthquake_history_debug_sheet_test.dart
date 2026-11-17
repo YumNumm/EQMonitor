@@ -499,11 +499,8 @@ final _baseEarthquake = Earthquake(
   estimatedIntensityTileUrl: null,
 );
 
-final class _ReadyDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  new(this.base);
-
-  final Earthquake base;
-
+final class _ReadyDetailsNotifier(final Earthquake base)
+    extends EarthquakeHistoryDetailsNotifier {
   @override
   Future<Earthquake> build(String eventId) async => base;
 }
@@ -519,10 +516,8 @@ final class _ErrorDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
       Future.error(StateError('details failed'));
 }
 
-final class _MutableDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  new(this.base);
-
-  final Earthquake base;
+final class _MutableDetailsNotifier(final Earthquake base)
+    extends EarthquakeHistoryDetailsNotifier {
   Completer<Earthquake>? _refresh;
 
   @override
@@ -645,25 +640,23 @@ _ProductionFixture _productionFixture() {
   );
 }
 
-final class _StubRealtimeEvents extends RealtimeEvents {
-  new(this.stream);
-
-  final Stream<RealtimeEvent> stream;
-
+final class _StubRealtimeEvents(final Stream<RealtimeEvent> stream)
+    extends RealtimeEvents {
   @override
   Stream<RealtimeEvent> build() => stream;
 }
 
-final class _SpyRepository extends EarthquakeHistoryRepository {
-  new({required this.initial, required this.cacheClient})
+final class _SpyRepository({
+  required final Earthquake initial,
+  required final api.ApiClient cacheClient,
+}) extends EarthquakeHistoryRepository {
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,
         shindoDbStations: _shindoDbStations,
       );
 
-  final Earthquake initial;
-  final api.ApiClient cacheClient;
   var detailFetchCount = 0;
 
   @override

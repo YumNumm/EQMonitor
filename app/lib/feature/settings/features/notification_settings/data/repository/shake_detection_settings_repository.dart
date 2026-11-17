@@ -11,10 +11,7 @@ Future<ShakeDetectionSettingsRepository> shakeDetectionSettingsRepository(
 ) async =>
     ShakeDetectionSettingsRepository(await ref.watch(apiClientProvider.future));
 
-class ShakeDetectionSettingsRepository {
-  new(this.apiClient);
-
-  final api.ApiClient apiClient;
+class ShakeDetectionSettingsRepository(final api.ApiClient apiClient) {
   final Lock _lock = Lock(reentrant: true);
 
   Future<void> disableNotifications({required bool Function() isCurrent}) =>

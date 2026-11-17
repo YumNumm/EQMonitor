@@ -6,11 +6,8 @@ import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dar
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class _StubSubscriptionNotifier extends SubscriptionNotifier {
-  new(this._status);
-
-  final SubscriptionStatus _status;
-
+class _StubSubscriptionNotifier(final SubscriptionStatus _status)
+    extends SubscriptionNotifier {
   var refreshing = false;
 
   @override

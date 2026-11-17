@@ -14,16 +14,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class RegionSelectionPage extends ConsumerWidget {
-  const new({
-    required this.request,
-    this.onConfirmed,
-    super.key,
-  });
-
-  final RegionSelectionRequest request;
-  final ValueChanged<List<RegionOption>>? onConfirmed;
-
+class const RegionSelectionPage({
+  required final RegionSelectionRequest request,
+  final ValueChanged<List<RegionOption>>? onConfirmed,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final catalog = ref.watch(
@@ -63,17 +58,11 @@ class RegionSelectionPage extends ConsumerWidget {
   }
 }
 
-class _RegionSelectionContent extends HookWidget {
-  const new({
-    required this.request,
-    required this.catalog,
-    this.onConfirmed,
-  });
-
-  final RegionSelectionRequest request;
-  final List<RegionOption> catalog;
-  final ValueChanged<List<RegionOption>>? onConfirmed;
-
+class const _RegionSelectionContent({
+  required final RegionSelectionRequest request,
+  required final List<RegionOption> catalog,
+  final ValueChanged<List<RegionOption>>? onConfirmed,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController(text: request.initialQuery);

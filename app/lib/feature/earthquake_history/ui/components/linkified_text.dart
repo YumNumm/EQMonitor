@@ -3,20 +3,13 @@ import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// URL 部分をタップ可能なリンクとして表示するテキスト
-class LinkifiedText extends StatelessWidget {
-  const new({
-    required this.text,
-    this.style,
-    this.linkStyle,
-    this.textAlign,
-    super.key,
-  });
-
-  final String text;
-  final TextStyle? style;
-  final TextStyle? linkStyle;
-  final TextAlign? textAlign;
-
+class const LinkifiedText({
+  required final String text,
+  final TextStyle? style,
+  final TextStyle? linkStyle,
+  final TextAlign? textAlign,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

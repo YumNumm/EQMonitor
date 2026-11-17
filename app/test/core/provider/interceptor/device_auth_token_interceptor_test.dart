@@ -163,12 +163,11 @@ final class _CapturingRequestHandler extends RequestInterceptorHandler {
   }
 }
 
-final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  new({required String token})
-    : _token = token,
-      super(_MemorySecurePreferencesDataSource());
+final class _MemoryDeviceAuthRepository({required String token})
+    extends DeviceAuthRepository {
+  this : super(_MemorySecurePreferencesDataSource());
 
-  final String _token;
+  final String _token = token;
 
   @override
   Future<String?> readToken() async => _token;

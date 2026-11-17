@@ -546,19 +546,12 @@ _WiringHarness _createHarness({
   );
 }
 
-final class _WiringHarness {
-  new({
-    required this.container,
-    required this.tokens,
-    required this.acks,
-    required this.repository,
-  });
-
-  final ProviderContainer container;
-  final StreamController<NotificationToken> tokens;
-  final StreamController<int> acks;
-  final _RecordingDeviceRepository repository;
-
+final class _WiringHarness({
+  required final ProviderContainer container,
+  required final StreamController<NotificationToken> tokens,
+  required final StreamController<int> acks,
+  required final _RecordingDeviceRepository repository,
+}) {
   Future<void> start() => container.read(pushTokenSyncWiringProvider.future);
 
   Future<PushTokenSyncSnapshot> waitFor(
@@ -584,15 +577,15 @@ final class _WiringHarness {
   }
 }
 
-final class _RecordingDeviceRepository extends DeviceRepository {
-  new({this.failFcmRetryably = false})
+final class _RecordingDeviceRepository({final bool failFcmRetryably = false})
+    extends DeviceRepository {
+  this
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
         apnsEnvironment: api.ApnsEnvironment.development,
       );
 
-  final bool failFcmRetryably;
   final calls = <({PushTokenKind kind, String token})>[];
   final callEvents =
       StreamController<({PushTokenKind kind, String token})>.broadcast();
@@ -613,8 +606,8 @@ final class _RecordingDeviceRepository extends DeviceRepository {
   Future<void> close() => callEvents.close();
 }
 
-final class _PendingFailureDeviceRepository extends DeviceRepository {
-  new()
+final class _PendingFailureDeviceRepository() extends DeviceRepository {
+  this
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
@@ -646,8 +639,8 @@ final class _PendingFailureDeviceRepository extends DeviceRepository {
   }
 }
 
-final class _StartupDeviceRepository extends DeviceRepository {
-  new()
+final class _StartupDeviceRepository() extends DeviceRepository {
+  this
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
@@ -684,9 +677,9 @@ final class _StartupDeviceRepository extends DeviceRepository {
   Future<void> close() => callEvents.close();
 }
 
-final class _RecordingProvisioningRepository
+final class _RecordingProvisioningRepository({required SharedPreferences prefs})
     extends DeviceProvisioningRepository {
-  new({required SharedPreferences prefs})
+  this
     : super(
         dataSource: SharedPreferencesDataSource(sharedPreferences: prefs),
         persistence: SharedPreferencesWorkflowPersistence(
@@ -721,8 +714,8 @@ final class _FailingThenRecoverableProvisioningNotifier
   }
 }
 
-final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  new() : super(_MemorySecurePreferencesDataSource());
+final class _MemoryDeviceAuthRepository() extends DeviceAuthRepository {
+  this : super(_MemorySecurePreferencesDataSource());
 
   @override
   Future<void> saveToken({required String token}) async {}

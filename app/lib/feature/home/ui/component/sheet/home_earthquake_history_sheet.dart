@@ -19,9 +19,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class HomeEarthquakeHistorySheet extends HookConsumerWidget {
-  const new({super.key});
-
+class const HomeEarthquakeHistorySheet({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeAsync = ref.watch(homeConfigurationProvider);
@@ -177,9 +175,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
   }
 }
 
-class _HistoryLoadingIndicator extends StatelessWidget {
-  const new();
-
+class const _HistoryLoadingIndicator() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(

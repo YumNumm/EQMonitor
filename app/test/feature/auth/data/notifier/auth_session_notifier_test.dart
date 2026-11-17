@@ -413,8 +413,8 @@ ResponseBody _jsonResponse(
   },
 );
 
-final class _NotifierFixture {
-  new() {
+final class _NotifierFixture() {
+  this {
     final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
       ..httpClientAdapter = adapter;
     sessionRepository = BetterAuthSessionRepository(

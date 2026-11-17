@@ -88,10 +88,10 @@ void main() {
   );
 }
 
-final class _CountingArchive implements SeismicityPmTilesArchive {
-  new({required this.inner}) : closeCount = 0;
+final class _CountingArchive({required final SeismicityPmTilesArchive inner})
+    implements SeismicityPmTilesArchive {
+  this : closeCount = 0;
 
-  final SeismicityPmTilesArchive inner;
   Future<void>? _close;
   int closeCount;
 

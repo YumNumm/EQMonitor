@@ -70,14 +70,10 @@ final class NetworkRangeTestAdapter implements HttpClientAdapter {
   void close({bool force = false}) {}
 }
 
-final class PoisonFirstResponseCoordinator {
-  new({
-    required this.peerRange,
-    required this.poisonRange,
-  });
-
-  final String peerRange;
-  final String poisonRange;
+final class PoisonFirstResponseCoordinator({
+  required final String peerRange,
+  required final String poisonRange,
+}) {
   final _peerReady = Completer<void>();
   void Function()? _releasePeer;
 
@@ -149,16 +145,11 @@ final class const FailingNetworkRangeReply({required final int? statusCode})
   }
 }
 
-final class PendingRangeResponse implements NetworkRangeReply {
-  new({
-    required this.offset,
-    required this.total,
-    required this.etag,
-  });
-
-  final int offset;
-  final int total;
-  final String? etag;
+final class PendingRangeResponse({
+  required final int offset,
+  required final int total,
+  required final String? etag,
+}) implements NetworkRangeReply {
   final _bytes = Completer<List<int>>();
   final _requestStarted = Completer<void>();
   var _cancelled = false;

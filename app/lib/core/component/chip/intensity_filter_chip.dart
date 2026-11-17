@@ -5,21 +5,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class IntensityFilterChip extends StatelessWidget {
-  const new({
-    this.min,
-    this.max,
-    this.onChanged,
-    this.filterLabel = '最大観測震度',
-    super.key,
-  });
-
-  final void Function(JmaIntensity?, JmaIntensity?)? onChanged;
-
-  final JmaIntensity? min;
-  final JmaIntensity? max;
-  final String filterLabel;
-
+class const IntensityFilterChip({
+  final JmaIntensity? min,
+  final JmaIntensity? max,
+  final void Function(JmaIntensity?, JmaIntensity?)? onChanged,
+  final String filterLabel = '最大観測震度',
+  super.key,
+}) extends StatelessWidget {
   static const JmaIntensity initialMin = JmaIntensity.one;
   static const JmaIntensity initialMax = JmaIntensity.seven;
 
@@ -61,17 +53,11 @@ class IntensityFilterChip extends StatelessWidget {
   }
 }
 
-class _IntensityFilterModal extends HookWidget {
-  const new({
-    required this.filterLabel,
-    this.currentMin = initialMin,
-    this.currentMax = initialMax,
-  });
-
-  final JmaIntensity? currentMin;
-  final JmaIntensity? currentMax;
-  final String filterLabel;
-
+class const _IntensityFilterModal({
+  required final String filterLabel,
+  final JmaIntensity? currentMin = initialMin,
+  final JmaIntensity? currentMax = initialMax,
+}) extends HookWidget {
   static const JmaIntensity initialMin = IntensityFilterChip.initialMin;
   static const JmaIntensity initialMax = IntensityFilterChip.initialMax;
 

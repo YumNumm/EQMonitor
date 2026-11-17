@@ -4,12 +4,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:material_ui/material_ui.dart';
 
-class AppWebViewPage extends HookWidget {
-  const new({required this.title, required this.url, super.key});
-
-  final String title;
-  final String url;
-
+class const AppWebViewPage({
+  required final String title,
+  required final String url,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final navigation = useState(const AppWebViewNavigationState.initial());

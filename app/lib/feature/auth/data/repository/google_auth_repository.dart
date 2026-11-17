@@ -48,15 +48,12 @@ final class const GoogleSignInPluginAdapter() implements GoogleSignInPlugin {
       (await GoogleSignIn.instance.authenticate()).authentication.idToken;
 }
 
-final class GoogleAuthRepository implements GoogleAuthGateway {
-  new({
-    required GoogleSignInPlugin plugin,
-    required NativeAuthNonceGenerator nonceGenerator,
-  }) : _plugin = plugin,
-       _nonceGenerator = nonceGenerator;
-
-  final GoogleSignInPlugin _plugin;
-  final NativeAuthNonceGenerator _nonceGenerator;
+final class GoogleAuthRepository({
+  required GoogleSignInPlugin plugin,
+  required NativeAuthNonceGenerator nonceGenerator,
+}) implements GoogleAuthGateway {
+  final GoogleSignInPlugin _plugin = plugin;
+  final NativeAuthNonceGenerator _nonceGenerator = nonceGenerator;
   Future<void>? _initialization;
   NativeAuthNonce? _instanceNonce;
   String? _clientId;

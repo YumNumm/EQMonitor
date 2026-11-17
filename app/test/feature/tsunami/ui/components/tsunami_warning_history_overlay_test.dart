@@ -55,11 +55,7 @@ void main() {
   });
 }
 
-class _TestApp extends StatelessWidget {
-  const new({required this.home});
-
-  final Widget home;
-
+class const _TestApp({required final Widget home}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(

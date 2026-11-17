@@ -545,14 +545,10 @@ final class _RecordingAuthAdapter implements HttpClientAdapter {
   void close({bool force = false}) {}
 }
 
-final class _SocialSignInResponseAdapter implements HttpClientAdapter {
-  new({
-    required this.tokenHeaders,
-    this.responseGate,
-  });
-
-  final List<String>? tokenHeaders;
-  final Completer<void>? responseGate;
+final class _SocialSignInResponseAdapter({
+  required final List<String>? tokenHeaders,
+  final Completer<void>? responseGate,
+}) implements HttpClientAdapter {
   final cookieHeaders = <String?>[];
   final fetchStarted = Completer<void>();
 

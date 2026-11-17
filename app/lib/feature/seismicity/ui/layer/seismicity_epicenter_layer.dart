@@ -15,16 +15,11 @@ import 'package:maplibre/maplibre.dart';
 ///
 /// [colorMode] に応じて `circle-color` の式を切り替える。円サイズは常に
 /// マグニチュードへ連動する(`circle-radius`)。
-class SeismicityEpicenterLayer extends HookConsumerWidget {
-  const new({
-    required this.events,
-    required this.colorMode,
-    super.key,
-  });
-
-  final List<SeismicityEvent> events;
-  final SeismicityColorMode colorMode;
-
+class const SeismicityEpicenterLayer({
+  required final List<SeismicityEvent> events,
+  required final SeismicityColorMode colorMode,
+  super.key,
+}) extends HookConsumerWidget {
   static const sourceId = 'seismicity-epicenter';
   static const layerId = 'seismicity-epicenter-circle';
   static const _emptyGeoJson = '{"type":"FeatureCollection","features":[]}';

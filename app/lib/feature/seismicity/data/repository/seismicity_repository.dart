@@ -9,18 +9,17 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_span.dart';
 /// manifest → GeoJSON の取得を行い、失敗時はローカルキャッシュへ
 /// フォールバックする。矩形選択後の分析はすべてクライアント側で完結するため、
 /// このリポジトリが返す [SeismicityDataset.events] が唯一の分析用データソース。
-class SeismicityRepository {
-  new({
-    required Dio manifestDio,
-    required Dio geoJsonDio,
-    SeismicityLocalCacheDataSource? cache,
-  }) : _manifestDataSource = SeismicityManifestDataSource(manifestDio),
-       _geoJsonDataSource = SeismicityGeoJsonDataSource(geoJsonDio),
-       _cache = cache ?? SeismicityLocalCacheDataSource();
-
-  final SeismicityManifestDataSource _manifestDataSource;
-  final SeismicityGeoJsonDataSource _geoJsonDataSource;
-  final SeismicityLocalCacheDataSource _cache;
+class SeismicityRepository({
+  required Dio manifestDio,
+  required Dio geoJsonDio,
+  SeismicityLocalCacheDataSource? cache,
+}) {
+  final SeismicityManifestDataSource _manifestDataSource =
+      SeismicityManifestDataSource(manifestDio);
+  final SeismicityGeoJsonDataSource _geoJsonDataSource =
+      SeismicityGeoJsonDataSource(geoJsonDio);
+  final SeismicityLocalCacheDataSource _cache =
+      cache ?? SeismicityLocalCacheDataSource();
 
   Future<SeismicityDataset> fetch({required SeismicitySpan span}) async {
     try {

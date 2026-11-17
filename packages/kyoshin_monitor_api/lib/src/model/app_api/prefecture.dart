@@ -1,5 +1,11 @@
 /// 都道府県
-enum Prefecture {
+enum Prefecture({
+  /// 短縮名
+  required final String shortName,
+
+  /// 正式名称
+  required final String longName,
+}) {
   /// その他
   other(shortName: '他', longName: 'その他'),
 
@@ -146,14 +152,6 @@ enum Prefecture {
 
   /// 不明
   unknown(shortName: '不明', longName: '不明');
-
-  new({required this.shortName, required this.longName});
-
-  /// 短縮名
-  final String shortName;
-
-  /// 正式名称
-  final String longName;
 
   /// IDから都道府県を取得
   static Prefecture? fromId(int? id) {

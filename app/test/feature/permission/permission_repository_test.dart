@@ -3,14 +3,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 
-class _FakeMessaging extends Fake implements FirebaseMessaging {
-  new(
-    this._requestSettings, {
-    NotificationSettings? currentSettings,
-  }) : _currentSettings = currentSettings ?? _requestSettings;
-
-  final NotificationSettings _requestSettings;
-  final NotificationSettings _currentSettings;
+class _FakeMessaging(
+  final NotificationSettings _requestSettings, {
+  NotificationSettings? currentSettings,
+}) extends Fake implements FirebaseMessaging {
+  final NotificationSettings _currentSettings =
+      currentSettings ?? _requestSettings;
 
   @override
   Future<NotificationSettings> getNotificationSettings() async =>

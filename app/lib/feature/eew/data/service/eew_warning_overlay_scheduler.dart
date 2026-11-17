@@ -15,11 +15,9 @@ abstract interface class EewWarningOverlayScheduler {
   });
 }
 
-class TimerEewWarningOverlayScheduledTask
+class const TimerEewWarningOverlayScheduledTask({required Timer timer})
     implements EewWarningOverlayScheduledTask {
-  const new({required Timer timer}) : _timer = timer;
-
-  final Timer _timer;
+  final Timer _timer = timer;
 
   @override
   void cancel() => _timer.cancel();

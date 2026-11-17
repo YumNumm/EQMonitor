@@ -13,9 +13,7 @@ import 'package:lat_lng/lat_lng.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class DebugJmaMapPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const DebugJmaMapPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final jmaMap = ref.watch(jmaMapProvider);
@@ -323,11 +321,8 @@ class DebugJmaMapPage extends HookConsumerWidget {
   }
 }
 
-class _ResultInfo extends StatelessWidget {
-  const new({required this.item});
-
-  final MapDataItem item;
-
+class const _ResultInfo({required final MapDataItem item})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final property = item.property;
@@ -365,11 +360,9 @@ class _ResultInfo extends StatelessWidget {
   }
 }
 
-class _ObservationPointInfo extends StatelessWidget {
-  const new({required this.item});
-
-  final EarthquakeParameterStationItem item;
-
+class const _ObservationPointInfo({
+  required final EarthquakeParameterStationItem item,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -384,12 +377,8 @@ class _ObservationPointInfo extends StatelessWidget {
   }
 }
 
-class _InfoRow extends StatelessWidget {
-  const new({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
+class const _InfoRow({required final String label, required final String value})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(

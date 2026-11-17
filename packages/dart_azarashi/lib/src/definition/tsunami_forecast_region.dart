@@ -1,7 +1,7 @@
 /// JMA Tsunami Forecast Region definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-18.
-enum JmaTsunamiForecastRegion {
+enum JmaTsunamiForecastRegion(final int code, final String name) {
   hokkaidoPacificEast(100, '北海道太平洋沿岸東部'),
   hokkaidoPacificMiddle(101, '北海道太平洋沿岸中部'),
   hokkaidoPacificWest(102, '北海道太平洋沿岸西部'),
@@ -101,11 +101,6 @@ enum JmaTsunamiForecastRegion {
   miyakoYaeyama(802, '宮古島・八重山地方'),
   okinawa(891, '沖縄県地方'),
   other(1000, 'その他の津波予報区');
-
-  new(this.code, this.name);
-
-  final int code;
-  final String name;
 
   static JmaTsunamiForecastRegion fromCode(int code) =>
       values.firstWhere((e) => e.code == code);

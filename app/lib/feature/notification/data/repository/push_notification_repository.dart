@@ -13,11 +13,7 @@ part 'push_notification_repository.g.dart';
 Future<PushNotificationRepository> pushNotificationRepository(Ref ref) async =>
     PushNotificationRepository(await ref.watch(apiClientProvider.future));
 
-class PushNotificationRepository {
-  new(this._api);
-
-  final api.ApiClient _api;
-
+class PushNotificationRepository(final api.ApiClient _api) {
   Future<Result<GeneralNotificationSettings, Exception>>
   getNotificationSettings(String deviceId) => Result.capture(() async {
     final response = await _api.device.getV2DeviceMeSettingsNotification();

@@ -10,9 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class DisplaySettingsPage extends StatelessWidget {
-  const new({super.key});
-
+class const DisplaySettingsPage({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,9 +20,7 @@ class DisplaySettingsPage extends StatelessWidget {
   }
 }
 
-class _Body extends StatelessWidget {
-  const new();
-
+class const _Body() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -48,9 +44,7 @@ class _Body extends StatelessWidget {
   }
 }
 
-class _ThemeSelector extends ConsumerWidget {
-  const new();
-
+class const _ThemeSelector() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(themeModeProvider).requireValue;

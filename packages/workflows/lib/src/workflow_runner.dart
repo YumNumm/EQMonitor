@@ -8,10 +8,8 @@ import 'package:workflows/src/workflow_step.dart';
 /// Pass an `instanceId` that is stable across app restarts for the same
 /// logical workflow execution. If the app dies mid-run, calling [run] again
 /// with the same `instanceId` resumes from the last completed step.
-final class WorkflowRunner {
-  new({required WorkflowPersistence persistence}) : _persistence = persistence;
-
-  final WorkflowPersistence _persistence;
+final class WorkflowRunner({required WorkflowPersistence persistence}) {
+  final WorkflowPersistence _persistence = persistence;
 
   /// Executes [workflow] with a [WorkflowStep] bound to [instanceId].
   ///

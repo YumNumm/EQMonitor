@@ -10,18 +10,12 @@ import 'package:maplibre/maplibre.dart';
 /// 画面座標を [MapController.toLngLat] で地理座標へ変換して
 /// [onSelectionEnd] を呼ぶ。[enabled] が false の場合は
 /// [IgnorePointer] で下のマップ操作(パン/ズーム)を妨げない。
-class SeismicitySelectionOverlay extends HookWidget {
-  const new({
-    required this.enabled,
-    required this.mapController,
-    required this.onSelectionEnd,
-    super.key,
-  });
-
-  final bool enabled;
-  final MapController? mapController;
-  final void Function(SeismicityBounds bounds) onSelectionEnd;
-
+class const SeismicitySelectionOverlay({
+  required final bool enabled,
+  required final MapController? mapController,
+  required final void Function(SeismicityBounds bounds) onSelectionEnd,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selection = RectangleSelectionHook.use();

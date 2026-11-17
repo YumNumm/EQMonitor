@@ -8,12 +8,12 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_worker_terminal_probe.
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-final class ControlledSeismicityIsolateLauncher
+final class ControlledSeismicityIsolateLauncher()
     implements
         SeismicityDecoderIsolateLauncher,
         SeismicityDecoderWorkerEndpoint,
         SeismicityWorkerTerminalProbe {
-  new() : deferExitedUntilReleased = false;
+  this : deferExitedUntilReleased = false;
 
   final _responses =
       StreamController<SeismicityDecoderWorkerResponse>.broadcast();

@@ -17,16 +17,14 @@ EewWarningDisplayModelBuilder eewWarningDisplayModelBuilder(Ref ref) =>
       ),
     );
 
-class EewWarningDisplayModelBuilder {
-  new({
-    EewWarningArrivalClassifier? arrivalClassifier,
-    EewWarningRepresentativeSelector? representativeSelector,
-  }) : _arrivalClassifier = arrivalClassifier ?? EewWarningArrivalClassifier(),
-       _representativeSelector =
-           representativeSelector ?? EewWarningRepresentativeSelector();
-
-  final EewWarningArrivalClassifier _arrivalClassifier;
-  final EewWarningRepresentativeSelector _representativeSelector;
+class EewWarningDisplayModelBuilder({
+  EewWarningArrivalClassifier? arrivalClassifier,
+  EewWarningRepresentativeSelector? representativeSelector,
+}) {
+  final EewWarningArrivalClassifier _arrivalClassifier =
+      arrivalClassifier ?? EewWarningArrivalClassifier();
+  final EewWarningRepresentativeSelector _representativeSelector =
+      representativeSelector ?? EewWarningRepresentativeSelector();
 
   EewWarningOverlayDisplayModel? build({
     required List<EewWarningOverlayCandidate> candidates,

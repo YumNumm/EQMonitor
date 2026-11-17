@@ -27,12 +27,10 @@ extension TrackedTsunamiTimelineMapping on TrackedTsunamiTimeline {
   TsunamiTimeline toPublic() => _TsunamiTimelineMapper(this).map();
 }
 
-class _TsunamiTimelineMapper {
-  new(this._tracked)
-    : _metaById = {for (final m in _tracked.telegrams) m.telegramId: m};
-
-  final TrackedTsunamiTimeline _tracked;
-  final Map<String, TsunamiTelegramMeta> _metaById;
+class _TsunamiTimelineMapper(final TrackedTsunamiTimeline _tracked) {
+  final Map<String, TsunamiTelegramMeta> _metaById = {
+    for (final m in _tracked.telegrams) m.telegramId: m,
+  };
 
   TsunamiTimeline map() => TsunamiTimeline(
     telegrams: _tracked.telegrams,

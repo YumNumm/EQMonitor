@@ -18,11 +18,9 @@ EstimatedIntensityArchiveHttpResponse estimatedIntensityTestResponse({
   body: body ?? Stream.value('hello world'.codeUnits),
 );
 
-final class TestEstimatedIntensityArchiveHttpOperation
-    implements EstimatedIntensityArchiveHttpOperation {
-  new({required this.openResponse});
-
-  final Future<EstimatedIntensityArchiveHttpResponse> openResponse;
+final class TestEstimatedIntensityArchiveHttpOperation({
+  required final Future<EstimatedIntensityArchiveHttpResponse> openResponse,
+}) implements EstimatedIntensityArchiveHttpOperation {
   final Completer<void> opened = Completer<void>();
   Uri? openedUrl;
   Duration? connectTimeout;

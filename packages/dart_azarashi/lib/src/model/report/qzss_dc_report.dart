@@ -45,9 +45,7 @@ class const HypocenterCoordinates({
 ///
 /// This is a sealed class representing all types of DCR/DCX reports.
 @freezed
-sealed class QzssDcReport with _$QzssDcReport {
-  const new _();
-
+sealed class const QzssDcReport._() with _$QzssDcReport {
   /// Earthquake Early Warning Report.
   const factory earthquakeEarlyWarning({
     required String sentence,
