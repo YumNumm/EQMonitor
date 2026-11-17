@@ -26,6 +26,7 @@
 - 変更後の `invalidateSelf()`・明示的な `ref.invalidate`・端末の再登録後の再構築は、前回値を返さずサーバーの応答を待つ。保存値を返すのはプロセスごとに一度だけ。
 - 変更時は書き込みの応答から一覧が確定する操作（現在地・全国・地域の更新、全件置換、現在地の削除）で保存値を更新し、確定しない操作（地域の追加・削除、全国の削除）では保存値を消して再取得の結果を保存する。変更は `_revision` を進め、進行中の確認・取得の古い応答で状態や保存値を上書きしない。新しい変更メソッドを追加するときも同じ手順を踏む。
 - 保存値は資格情報の保存・削除時（`deviceAuthRepositoryProvider` の `onCredentialsWillChange`）に消す。端末 ID に紐づく保存値を増やす場合はここへ追加する。デバイスのロールの保存は [Push と認証](push_and_auth.md) を参照する。
+- 購読状態を端末へ書き出す処理（iOS の App Group へ書く `appGroupSettingsWriterProvider`）は `confirmedIsProProvider` を使う。`isProProvider` は読み込み中・エラー時に false を返すため、そのまま書くと Pro ユーザーの値が起動のたびに false → true と変わり、Widget のタイムライン再読み込みを 2 回要求する（コードの読解による。実機での計測は未実施）。未確定（null）の間は Pro 状態と任意地域を書き換えず、通信エラーでも前回の値を残す。URL・現在地など Pro に依存しない値は確定を待たずに書く。画面の出し分けは従来どおり `isProProvider` を使う。
 - 保存値の読み書き失敗は通常の取得へ縮退させ、例外を外へ出さない。binding を初期化したテストで `SharedPreferences` を mock しないと platform channel の応答が返らず、実物の `NotificationSlotsNotifier` の構築・変更が完了しない。`SharedPreferences.setMockInitialValues({})` を設定する。
 
 ## 外部 JSON の解析と値検証
