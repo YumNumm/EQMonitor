@@ -9,4 +9,4 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  yumemi_lints: ^4.4.0
+  yumemi_lints: ^4.5.1

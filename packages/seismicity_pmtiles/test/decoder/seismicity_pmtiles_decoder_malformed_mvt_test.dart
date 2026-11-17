@@ -197,7 +197,7 @@ final class _Task62Fixtures {
       SeismicityPmTilesFailure<PmTilesRandomAccessReader>(:final exception) =>
         throw exception,
     };
-    return SeismicityPmTilesArchive.open(
+    return await SeismicityPmTilesArchive.open(
       reader: reader,
       descriptor: descriptor,
     );

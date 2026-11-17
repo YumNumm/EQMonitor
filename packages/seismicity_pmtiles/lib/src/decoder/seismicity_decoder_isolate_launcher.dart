@@ -55,13 +55,13 @@ final class DartSeismicityDecoderIsolateLauncher
         _ => message.toString(),
       };
       if (!workerPort.isCompleted) {
-        workerPort.complete(null);
+        workerPort.complete();
       }
       errors.add(SeismicityDecoderWorkerError(message: errorMessage));
     });
     exitPort.listen((_) {
       if (!workerPort.isCompleted) {
-        workerPort.complete(null);
+        workerPort.complete();
       }
       exits.add(const SeismicityDecoderWorkerExit());
       if (!exited.isCompleted) {

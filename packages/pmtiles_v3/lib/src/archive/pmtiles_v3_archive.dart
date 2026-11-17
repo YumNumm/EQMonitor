@@ -408,7 +408,7 @@ final class PmTilesV3DirectoryTraversal {
       lowerTileId: entry.tileId,
       upperTileIdExclusive: childUpper,
     );
-    return resolveTile(
+    return await resolveTile(
       tileId: tileId,
       entries: leafEntries,
       lowerTileId: entry.tileId,

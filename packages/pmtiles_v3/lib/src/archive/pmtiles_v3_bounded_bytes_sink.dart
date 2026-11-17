@@ -4,7 +4,7 @@ import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
 /// gzip decoderが渡すchunkを、byte budgetを超える前に拒否する同期sink。
 final class PmTilesV3BoundedBytesSink implements Sink<List<int>> {
-  PmTilesV3BoundedBytesSink({
+  new({
     required this.maxBytes,
     required this.resource,
   }) {
