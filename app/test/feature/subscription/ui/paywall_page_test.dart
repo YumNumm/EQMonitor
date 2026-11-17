@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/p
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
+import 'package:eqmonitor/feature/subscription/data/notifier/subscription_pending_retry.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/monthly_subscription_package_provider.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/paywall_page.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -233,7 +234,24 @@ void main() {
     expect(find.text('購入情報を同期'), findsNothing);
   });
 
-  testWidgets('hides the sync action while the purchase awaits reflection', (
+  testWidgets('hides the sync action while reflection is retried', (
+    tester,
+  ) async {
+    await pumpPaywall(
+      tester,
+      loadPackage: () async => _package,
+      subscription: Future.value(
+        const SubscriptionStatus.inactive(
+          syncPhase: SubscriptionSyncPhase.pending,
+        ),
+      ),
+      isPendingRetryRunning: true,
+    );
+    expect(find.text('購入情報を反映しています。しばらくお待ちください...'), findsOneWidget);
+    expect(find.text('購入情報を同期'), findsNothing);
+  });
+
+  testWidgets('offers the sync action once the automatic retry has ended', (
     tester,
   ) async {
     await pumpPaywall(
@@ -245,10 +263,8 @@ void main() {
         ),
       ),
     );
-    expect(find.text('購入情報を反映しています。しばらくお待ちください...'), findsOneWidget);
-    expect(find.text('購入情報を同期'), findsNothing);
-    // 反映が進まない場合に再確認できる手段は残す。
-    expect(find.text('購入を復元する'), findsOneWidget);
+    expect(find.text('購入情報の反映に時間がかかっています。'), findsOneWidget);
+    expect(find.text('購入情報を同期'), findsOneWidget);
   });
 
   testWidgets('offers the sync action after the confirmation failed', (
@@ -283,6 +299,7 @@ Future<void> pumpPaywall(
   PaywallFlow? flow,
   Size size = const Size(430, 2600),
   bool isShakeDetectionNotificationAvailable = true,
+  bool isPendingRetryRunning = false,
 }) async {
   await tester.binding.setSurfaceSize(size);
   addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -301,6 +318,9 @@ Future<void> pumpPaywall(
         pushTokenSyncProvider.overrideWith(_IdlePushTokenNotifier.new),
         isShakeDetectionNotificationAvailableProvider.overrideWith(
           (ref) async => isShakeDetectionNotificationAvailable,
+        ),
+        subscriptionPendingRetryProvider.overrideWith(
+          () => _PendingRetry(isRunning: isPendingRetryRunning),
         ),
       ],
       child: MaterialApp(
@@ -327,6 +347,15 @@ class _SubscriptionNotifier extends SubscriptionNotifier {
 
   @override
   Future<SubscriptionStatus> build() => initial;
+}
+
+class _PendingRetry extends SubscriptionPendingRetry {
+  new({required this.isRunning});
+
+  final bool isRunning;
+
+  @override
+  int? build() => isRunning ? 1 : null;
 }
 
 class _ProvisionedNotifier extends DeviceProvisioningNotifier {

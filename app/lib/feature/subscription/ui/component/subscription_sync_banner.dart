@@ -6,6 +6,7 @@ import 'package:riverpod/experimental/mutation.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
+import 'package:eqmonitor/feature/subscription/data/notifier/subscription_pending_retry.dart';
 import 'package:eqmonitor/feature/subscription/data/repository/revenue_cat_session.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -35,14 +36,19 @@ class SubscriptionSyncBanner extends ConsumerWidget {
         (phase == null || phase == SubscriptionSyncPhase.idle)) {
       return const SizedBox.shrink();
     }
-    // 確認中と反映待ちは自動で進むため、操作のボタンを出さない。
-    // 反映待ちが長引いた場合は、前面への復帰時と「購入を復元する」で再確認される。
+    // 確認中と、反映待ちを自動で再試行している間は、操作のボタンを出さない。
+    // 自動の再試行が終わっても反映されない場合に、手動の同期を出す。
+    final isRetrying = ref.watch(
+      subscriptionPendingRetryProvider.select((token) => token != null),
+    );
     final isInProgress =
         phase == SubscriptionSyncPhase.synchronizing ||
-        phase == SubscriptionSyncPhase.pending;
+        (phase == SubscriptionSyncPhase.pending && isRetrying);
     final message = switch (phase) {
       SubscriptionSyncPhase.synchronizing => '購入情報を確認しています',
-      SubscriptionSyncPhase.pending => '購入情報を反映しています。しばらくお待ちください...',
+      SubscriptionSyncPhase.pending when isRetrying =>
+        '購入情報を反映しています。しばらくお待ちください...',
+      SubscriptionSyncPhase.pending => '購入情報の反映に時間がかかっています。',
       SubscriptionSyncPhase.authenticationRequired =>
         'デバイスの認証を確認できません。デバイス登録を確認して再試行してください。',
       _ => '購入情報を確認できませんでした。通信状況を確認して再試行してください。',
@@ -77,9 +83,13 @@ class SubscriptionSyncBanner extends ConsumerWidget {
                 )
               else
                 Icon(
-                  Icons.error_outline_rounded,
+                  phase == SubscriptionSyncPhase.pending
+                      ? Icons.hourglass_top_rounded
+                      : Icons.error_outline_rounded,
                   size: 20,
-                  color: colorTheme.error,
+                  color: phase == SubscriptionSyncPhase.pending
+                      ? colorTheme.primary
+                      : colorTheme.error,
                 ),
               SizedBox(width: spacing.md),
               Expanded(
