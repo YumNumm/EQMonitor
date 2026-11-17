@@ -52,6 +52,7 @@ enum SharedPreferencesKey(final String key) {
   ),
   notificationPreset('notification_preset'),
   notificationCustomSnapshot('notification_custom_snapshot'),
+  notificationSlotsCache('notification_slots_cache'),
   appThemeLight('app_theme_light'),
   appThemeDark('app_theme_dark'),
 

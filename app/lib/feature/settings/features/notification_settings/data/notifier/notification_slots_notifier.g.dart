@@ -40,7 +40,7 @@ final class NotificationSlotsNotifierProvider
 }
 
 String _$notificationSlotsNotifierHash() =>
-    r'76d5200dd9e27edde4028689755c4302d9de2577';
+    r'6e344a391a1e0523167c82dd545b0cf034708a70';
 
 abstract class _$NotificationSlotsNotifier
     extends $AsyncNotifier<List<NotificationSlot>> {

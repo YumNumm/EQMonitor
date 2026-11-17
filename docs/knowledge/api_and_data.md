@@ -19,6 +19,15 @@
 - 許可対象の追加時は [cache の設計](../superpowers/specs/2026-07-27-http-cache-opt-in-scope-design.md) と `app/test/core/provider/http_cache_scope_test.dart` を更新する。
 - provider test で cache-first、背景再検証、最新値への更新を確認し、対象外 GET が保存されない境界も維持する。
 
+## 端末固有 API の前回値はアプリ側で保存する
+
+- 端末・通知・購読情報は HTTP cache の対象外のまま。起動時に応答を待たせたくない値は、機能ごとの Repository が SharedPreferences へ保存する。`CachedNotifier` は HTTP cache 層に依存するため流用しない。
+- 通知スロット（`GET /v2/device/me/settings/slots`）は `NotificationSlotCacheRepository` が前回値を保存する。`NotificationSlotsNotifier` は起動後の最初の構築だけ前回値を返し、裏でサーバーへ確認して差分があれば状態・保存値・位置情報監視へ反映する。確認に失敗した場合は前回値のまま進め、エラー状態にしない。
+- 変更後の `invalidateSelf()`・明示的な `ref.invalidate`・端末の再登録後の再構築は、前回値を返さずサーバーの応答を待つ。保存値を返すのはプロセスごとに一度だけ。
+- 変更時は書き込みの応答から一覧が確定する操作（現在地・全国・地域の更新、全件置換、現在地の削除）で保存値を更新し、確定しない操作（地域の追加・削除、全国の削除）では保存値を消して再取得の結果を保存する。変更は `_revision` を進め、進行中の確認・取得の古い応答で状態や保存値を上書きしない。新しい変更メソッドを追加するときも同じ手順を踏む。
+- 保存値は資格情報の保存・削除時（`deviceAuthRepositoryProvider` の `onCredentialsWillChange`）に消す。端末 ID に紐づく保存値を増やす場合はここへ追加する。デバイスのロールの保存は [Push と認証](push_and_auth.md) を参照する。
+- 保存値の読み書き失敗は通常の取得へ縮退させ、例外を外へ出さない。binding を初期化したテストで `SharedPreferences` を mock しないと platform channel の応答が返らず、実物の `NotificationSlotsNotifier` の構築・変更が完了しない。`SharedPreferences.setMockInitialValues({})` を設定する。
+
 ## 外部 JSON の解析と値検証
 
 - 構造・型・必須 field は Freezed / json_serializable、SemVer・digest・固定 path・順序などの値制約は `*Validator` に分離する。Repository は Validator の `parse` を呼ぶ。
