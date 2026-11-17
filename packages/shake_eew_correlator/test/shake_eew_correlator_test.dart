@@ -45,23 +45,31 @@ void main() {
     isCancel: isCancel,
   );
 
+  ShakeObservationPoint point({
+    required DateTime detectedAt,
+    double latitude = 35.1,
+    double longitude = 135.1,
+    double? intensity = 5,
+  }) => ShakeObservationPoint(
+    latitude: latitude,
+    longitude: longitude,
+    detectedAt: detectedAt,
+    intensity: intensity,
+    arv: 1,
+  );
+
   ShakeObservation shake({
-    required DateTime createdAt,
+    required DateTime detectedAt,
     bool isBootstrap = false,
   }) => ShakeObservation(
     eventId: 'shake-001',
-    createdAt: createdAt,
     isBootstrap: isBootstrap,
-    points: const [
-      ShakeObservationPoint(
-        latitude: 35.1,
-        longitude: 135.1,
-        intensity: 5,
-        arv: 1,
-      ),
+    points: [
+      point(detectedAt: detectedAt),
       ShakeObservationPoint(
         latitude: 35.15,
         longitude: 135.15,
+        detectedAt: detectedAt,
         intensity: 4.5,
         arv: 1.2,
       ),
@@ -156,12 +164,12 @@ void main() {
         ],
         shake: ShakeObservation(
           eventId: '0e99eb5f-69db-412c-963a-0d440cb5b64e',
-          createdAt: DateTime.utc(2026, 7, 28, 10, 33, 6),
           isBootstrap: false,
-          points: const [
+          points: [
             ShakeObservationPoint(
               latitude: 32.6345,
               longitude: 130.7521,
+              detectedAt: DateTime.utc(2026, 7, 28, 10, 33, 6),
               intensity: 2.346,
               arv: 1.25,
             ),
@@ -176,7 +184,9 @@ void main() {
     });
 
     test('取消された EEW は対象外とすること', () {
-      final observation = shake(createdAt: DateTime.utc(2024, 1, 1, 12, 0, 10));
+      final observation = shake(
+        detectedAt: DateTime.utc(2024, 1, 1, 12, 0, 10),
+      );
 
       expect(
         correlator.correlate(eews: [eew()], shake: observation)?.eewEventId,
@@ -188,20 +198,39 @@ void main() {
       );
     });
 
-    test('P 波到達より前の検知は結合しないこと', () {
+    test('P 波到達より猶予を超えて前の検知は結合しないこと', () {
       final result = correlator.check(
         eew: eew(),
-        shake: shake(createdAt: DateTime.utc(2024, 1, 1, 12, 0, 1)),
+        shake: shake(detectedAt: DateTime.utc(2024, 1, 1, 11, 59, 50)),
       );
 
       expect(result.isCorrelated, isFalse);
       expect(result.eligiblePointCount, 0);
     });
 
+    test('P 波到達の直前の検知は猶予の範囲で結合すること', () {
+      // 震央から約 100km の観測点。P 波は発生から約 13 秒後に到達する。
+      ShakeObservation far(int second) => ShakeObservation(
+        eventId: 'shake-001',
+        isBootstrap: false,
+        points: [
+          point(
+            latitude: 35.9,
+            longitude: 135,
+            detectedAt: DateTime.utc(2024, 1, 1, 12, 0, second),
+            intensity: 2,
+          ),
+        ],
+      );
+
+      expect(correlator.check(eew: eew(), shake: far(9)).isCorrelated, isTrue);
+      expect(correlator.check(eew: eew(), shake: far(7)).isCorrelated, isFalse);
+    });
+
     test('S 波到達から 30 秒を超えた検知は結合しないこと', () {
       final result = correlator.check(
         eew: eew(),
-        shake: shake(createdAt: DateTime.utc(2024, 1, 1, 12, 10)),
+        shake: shake(detectedAt: DateTime.utc(2024, 1, 1, 12, 10)),
       );
 
       expect(result.isCorrelated, isFalse);
@@ -209,11 +238,117 @@ void main() {
       expect(result.totalPointCount, 2);
     });
 
+    test('時間条件を観測点ごとの検知時刻で判定すること', () {
+      // 揺れが広がるにつれて、遠い観測点は遅れてイベントに加わる。
+      final result = correlator.check(
+        eew: eew(),
+        shake: ShakeObservation(
+          eventId: 'shake-001',
+          isBootstrap: false,
+          points: [
+            point(detectedAt: DateTime.utc(2024, 1, 1, 12, 0, 3)),
+            point(
+              latitude: 35.9,
+              longitude: 135,
+              detectedAt: DateTime.utc(2024, 1, 1, 12, 0, 14),
+              intensity: 2,
+            ),
+            // 遠い観測点が震央付近と同じ時刻に検知した場合は、この地震の揺れではない。
+            point(
+              latitude: 35.9,
+              longitude: 135.1,
+              detectedAt: DateTime.utc(2024, 1, 1, 12, 0, 3),
+              intensity: 2,
+            ),
+          ],
+        ),
+      );
+
+      expect(result.eligiblePointCount, 2);
+      expect(result.matchedPointCount, 2);
+      expect(result.score, closeTo(2 / 3, 1e-9));
+      expect(result.isCorrelated, isTrue);
+    });
+
+    test('時間条件を満たす観測点がイベントの一部だけの場合は結合しないこと', () {
+      // 別の地震の波面が、広がったイベントの端の観測点にだけ重なった場合。
+      final result = correlator.check(
+        eew: eew(),
+        shake: ShakeObservation(
+          eventId: 'shake-001',
+          isBootstrap: false,
+          points: [
+            point(detectedAt: DateTime.utc(2024, 1, 1, 12, 0, 3)),
+            for (var index = 0; index < 3; index++)
+              point(
+                latitude: 35.9,
+                longitude: 135 + index * 0.1,
+                detectedAt: DateTime.utc(2024, 1, 1, 12, 0, 3),
+                intensity: 2,
+              ),
+          ],
+        ),
+      );
+
+      expect(result.eligiblePointCount, 1);
+      expect(result.matchedPointCount, 1);
+      expect(result.score, 0.25);
+      expect(result.isCorrelated, isFalse);
+    });
+
+    test('初期微動のように予測震度を大きく下回る観測も一致とみなすこと', () {
+      final result = correlator.check(
+        eew: eew(),
+        shake: ShakeObservation(
+          eventId: 'shake-001',
+          isBootstrap: false,
+          points: [
+            point(
+              detectedAt: DateTime.utc(2024, 1, 1, 12, 0, 3),
+              intensity: 0.5,
+            ),
+          ],
+        ),
+      );
+
+      expect(result.matchedPointCount, 1);
+      expect(result.isCorrelated, isTrue);
+    });
+
+    test('予測震度を許容差を超えて上回る観測は一致としないこと', () {
+      final predicted = const SiMidorikawaIntensityEstimator().estimate(
+        hypocenterLatitude: 35,
+        hypocenterLongitude: 135,
+        depth: 10,
+        magnitude: 6,
+        latitude: 35.1,
+        longitude: 135.1,
+        arv: 1,
+      );
+      CorrelationCandidate check(double intensity) => correlator.check(
+        eew: eew(),
+        shake: ShakeObservation(
+          eventId: 'shake-001',
+          isBootstrap: false,
+          points: [
+            point(
+              detectedAt: DateTime.utc(2024, 1, 1, 12, 0, 3),
+              intensity: intensity,
+            ),
+          ],
+        ),
+      );
+
+      expect(check(predicted + 1.4).isCorrelated, isTrue);
+      expect(check(predicted + 1.6).isCorrelated, isFalse);
+      expect(check(predicted + 1.6).eligiblePointCount, 1);
+    });
+
     test('平常値との差で検知したイベントは時間条件の上限を適用しないこと', () {
       final result = correlator.check(
         eew: eew(),
         shake: shake(
-          createdAt: DateTime.utc(2024, 1, 1, 12, 2),
+          detectedAt: DateTime.utc(2024, 1, 1, 12, 2),
           isBootstrap: true,
         ),
       );
@@ -226,7 +361,7 @@ void main() {
       final result = correlator.check(
         eew: eew(),
         shake: shake(
-          createdAt: DateTime.utc(2024, 1, 1, 12, 0, 1),
+          detectedAt: DateTime.utc(2024, 1, 1, 11, 59, 50),
           isBootstrap: true,
         ),
       );
@@ -239,14 +374,11 @@ void main() {
         eew: eew(),
         shake: ShakeObservation(
           eventId: 'shake-001',
-          createdAt: DateTime.utc(2024, 1, 1, 12, 0, 10),
           isBootstrap: false,
-          points: const [
-            ShakeObservationPoint(
-              latitude: 35.1,
-              longitude: 135.1,
+          points: [
+            point(
+              detectedAt: DateTime.utc(2024, 1, 1, 12, 0, 10),
               intensity: null,
-              arv: 1,
             ),
           ],
         ),

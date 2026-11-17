@@ -156,6 +156,7 @@ final class ShakeEventState {
         for (final station in _stations)
           ShakeEventPointSnapshot(
             stationIndex: station.index,
+            detectedAt: station.initialEventedAt ?? createdAt,
             intensity: station.latestIntensity,
             peakIntensity: station.peakIntensity,
             intensityDiff: station.intensityDiff,

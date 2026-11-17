@@ -61,7 +61,7 @@ class const HomeDebugHudFormatter() {
           '(残り ${seconds(snapshot.expiresAt.difference(now))})',
       for (final candidate in event.candidates)
         for (final line in candidateLines(candidate)) '  $line',
-      correlated == null ? '  → 結合なし（表示）' : '  → EEW $correlated と結合（非表示）',
+      correlated == null ? '  → 結合なし（表示）' : '  → EEW $correlated と結合（カード非表示）',
     ];
   }
 

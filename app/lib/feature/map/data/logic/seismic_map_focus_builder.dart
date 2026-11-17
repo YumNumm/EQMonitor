@@ -55,9 +55,6 @@ class const SeismicMapFocusBuilder() {
   static Iterable<SeismicMapGeoCoordinate> shakeTargetCoordinates(
     ShakeDetectionEvent shake,
   ) sync* {
-    if (shake.correlatedEewEventId != null) {
-      return;
-    }
     final minimum = seismicMapGeoCoordinate(
       latitude: shake.minLat,
       longitude: shake.minLng,

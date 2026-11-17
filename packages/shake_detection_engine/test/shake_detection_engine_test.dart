@@ -167,6 +167,11 @@ void main() {
       );
       expect(calmed.intensity, -0.5);
       expect(calmed.peakIntensity, 1.5);
+      expect(calmed.detectedAt, at(1));
+      final joinedLater = events.single.points.firstWhere(
+        (point) => point.stationIndex == 4,
+      );
+      expect(joinedLater.detectedAt, at(21));
     });
 
     test('観測点数はイベントの終了まで減らないこと', () {
@@ -291,9 +296,10 @@ void main() {
           maxLatitude: 0,
           minLongitude: 0,
           maxLongitude: 0,
-          points: const [
+          points: [
             ShakeEventPointSnapshot(
               stationIndex: 999,
+              detectedAt: at(0),
               intensity: 1,
               peakIntensity: 1,
               intensityDiff: 1,

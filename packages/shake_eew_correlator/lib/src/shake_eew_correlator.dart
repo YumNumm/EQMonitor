@@ -22,15 +22,23 @@ final class const ShakeEewCorrelator({
       if (!eew.isCancel) check(eew: eew, shake: shake),
   ]);
 
+  /// 観測点ごとに、検知時刻が P 波到達から S 波到達後の猶予までに収まり、
+  /// 観測震度が予測震度を許容差を超えて上回らないことを確かめる。
+  /// 震度を観測できた観測点のうち、両方を満たす割合が基準以上であれば成立とする。
+  ///
+  /// 観測点はイベントの終了まで増え続けるため、時間条件はイベントの発生時刻
+  /// ではなく観測点ごとの検知時刻で判定する。検知するのは初期微動であることが
+  /// 多く、主要動の予測震度を大きく下回るため、下回る側は制限しない。
   CorrelationCandidate check({
     required CorrelationEew eew,
     required ShakeObservation shake,
   }) {
-    final shakeMs = shake.createdAt.millisecondsSinceEpoch;
     final originMs = eew.originTime.millisecondsSinceEpoch;
+    final marginMs = config.pWaveMargin.inMilliseconds;
     final extraMs = config.sWaveExtra.inMilliseconds;
 
     var timeDiffTotal = 0.0;
+    var observedCount = 0;
     var eligibleCount = 0;
     var matchedCount = 0;
     var intensityDiffTotal = 0.0;
@@ -46,13 +54,18 @@ final class const ShakeEewCorrelator({
       );
       final pArrivalMs = originMs + (travelTime.pSeconds * 1000).truncate();
       final sArrivalMs = originMs + (travelTime.sSeconds * 1000).truncate();
-      timeDiffTotal += (shakeMs - sArrivalMs) / 1000;
+      final detectedMs = point.detectedAt.millisecondsSinceEpoch;
+      timeDiffTotal += (detectedMs - sArrivalMs) / 1000;
 
       final isWithinTimeWindow =
-          shakeMs >= pArrivalMs &&
-          (shake.isBootstrap || shakeMs <= sArrivalMs + extraMs);
+          detectedMs >= pArrivalMs - marginMs &&
+          (shake.isBootstrap || detectedMs <= sArrivalMs + extraMs);
       final observed = point.intensity;
-      if (!isWithinTimeWindow || observed == null) {
+      if (observed == null) {
+        continue;
+      }
+      observedCount += 1;
+      if (!isWithinTimeWindow) {
         continue;
       }
       eligibleCount += 1;
@@ -65,14 +78,16 @@ final class const ShakeEewCorrelator({
         longitude: point.longitude,
         arv: point.arv,
       );
-      final intensityDiff = (observed - predicted).abs();
-      intensityDiffTotal += intensityDiff;
-      if (intensityDiff <= config.intensityTolerance) {
+      final excess = observed - predicted;
+      intensityDiffTotal += excess.abs();
+      if (excess <= config.intensityTolerance) {
         matchedCount += 1;
       }
     }
 
-    final score = eligibleCount == 0 ? 0.0 : matchedCount / eligibleCount;
+    // 時間条件を満たす観測点だけを分母にすると、波面がイベントの一部に重なった
+    // だけの別の EEW も成立してしまう。
+    final score = observedCount == 0 ? 0.0 : matchedCount / observedCount;
     return CorrelationCandidate(
       eewEventId: eew.eventId,
       eewSerialNo: eew.serialNo,

@@ -11,12 +11,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_merge_provider.g.dart';
 
-/// 地図・カードに表示する揺れ検知イベント。
+/// 有効期限内で、設定した表示レベル以上の揺れ検知イベント。
 ///
-/// EEW と結合したイベント、期限切れのイベント、設定した表示レベル未満の
-/// イベントは含めない。
+/// EEW と結合したイベントも含む。
 @Riverpod(keepAlive: true)
-List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) {
+List<ShakeDetectionEvent> shakeDetectionActive(Ref ref) {
   if (!ref.watch(isDeviceShakeDetectionEnabledProvider)) {
     return const [];
   }
@@ -37,7 +36,6 @@ List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) {
       .watch(shakeDetectionProvider)
       .where(
         (event) =>
-            event.correlatedEewEventId == null &&
             event.expiresAt.toUtc().isAfter(now) &&
             event.level.index >= minLevel.index,
       );
@@ -47,7 +45,18 @@ List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) {
   return [...live, ...debug];
 }
 
+/// 地図・カードに表示する揺れ検知イベント。
+///
+/// EEW と結合したイベントは EEW の表示に任せるため含めない。
+@Riverpod(keepAlive: true)
+List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) => [
+  for (final event in ref.watch(shakeDetectionActiveProvider))
+    if (event.correlatedEewEventId == null) event,
+];
+
 /// 地図の自動フォーカスの対象にする揺れ検知イベント。
+///
+/// EEW と結合したイベントも含め、震源と揺れている範囲の両方が収まるようにする。
 @Riverpod(keepAlive: true)
 List<ShakeDetectionEvent> shakeDetectionFocusTargets(Ref ref) {
   final isAutoFocusEnabled = ref.watch(
@@ -61,5 +70,5 @@ List<ShakeDetectionEvent> shakeDetectionFocusTargets(Ref ref) {
   if (!isAutoFocusEnabled) {
     return const [];
   }
-  return ref.watch(shakeDetectionVisibleProvider);
+  return ref.watch(shakeDetectionActiveProvider);
 }

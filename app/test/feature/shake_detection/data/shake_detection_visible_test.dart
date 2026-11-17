@@ -154,6 +154,45 @@ void main() {
       });
     });
 
+    test('EEWと結合して表示しないイベントも対象にすること', () async {
+      await withClock(Clock.fixed(_now), () async {
+        final container = await containerWith([
+          event(
+            'correlated',
+            expiresAt: _now.add(const Duration(seconds: 1)),
+            correlatedEewEventId: 'eew-1',
+          ),
+        ]);
+        expect(container.read(shakeDetectionVisibleProvider), isEmpty);
+        expect(
+          container
+              .read(shakeDetectionFocusTargetsProvider)
+              .map((event) => event.eventId),
+          ['correlated'],
+        );
+      });
+    });
+
+    test('期限切れや表示レベル未満のイベントは結合していても対象にしないこと', () async {
+      await withClock(Clock.fixed(_now), () async {
+        final container = await containerWith(
+          [
+            event('expired', expiresAt: _now, correlatedEewEventId: 'eew-1'),
+            event(
+              'weak',
+              expiresAt: _now.add(const Duration(seconds: 1)),
+              level: ShakeDetectionLevel.weak,
+              correlatedEewEventId: 'eew-1',
+            ),
+          ],
+          settings: const HomeShakeDetectionSettings(
+            minLevel: ShakeDetectionLevel.medium,
+          ),
+        );
+        expect(container.read(shakeDetectionFocusTargetsProvider), isEmpty);
+      });
+    });
+
     test('自動ズームが無効な場合は対象を返さないこと', () async {
       await withClock(Clock.fixed(_now), () async {
         final container = await containerWith(
