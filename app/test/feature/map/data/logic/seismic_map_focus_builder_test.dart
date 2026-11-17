@@ -106,22 +106,25 @@ void main() {
     expect(bounds, _fallback);
   });
 
-  test('結合済み揺れ検知はfocus対象に含めない', () {
+  test('EEWと結合した揺れ検知の矩形も震源と合わせてboundsへ含める', () {
     final bounds = builder.forRealtime(
       fallbackBounds: _fallback,
-      eews: const [],
+      eews: [_eew(latitude: 40.6, longitude: 143.8)],
       shakes: [
         _shake(
-          minLat: 33,
-          maxLat: 34,
-          minLng: 130,
-          maxLng: 132,
+          minLat: 38,
+          maxLat: 43,
+          minLng: 140,
+          maxLng: 142,
           correlatedEewEventId: 'eew-1',
         ),
       ],
     );
 
-    expect(bounds, _fallback);
+    expect(bounds.latitudeSouth, lessThanOrEqualTo(38));
+    expect(bounds.latitudeNorth, greaterThanOrEqualTo(43));
+    expect(bounds.longitudeWest, lessThanOrEqualTo(140));
+    expect(bounds.longitudeEast, greaterThanOrEqualTo(143.8));
   });
 
   test('EEW単独でも中心から最小半径ぶんのboundsを確保する', () {
