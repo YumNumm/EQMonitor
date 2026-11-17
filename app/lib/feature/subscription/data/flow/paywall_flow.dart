@@ -55,7 +55,7 @@ class PaywallFlow {
       talker.handle(error, stackTrace, 'Subscription purchase failed');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('購入状況を確認できませんでした。再購入する前に購入情報を同期してください')),
+          const SnackBar(content: Text('購入状況を確認できませんでした。購入情報を同期してください')),
         );
       }
     }
@@ -156,7 +156,7 @@ class PaywallFlow {
       case PurchaseResultPending():
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('購入情報をサーバーへ反映しています。再購入せず、購入情報の同期を再試行してください'),
+            content: Text('購入が完了しました。しばらくお待ちください...'),
           ),
         );
         return;
@@ -168,7 +168,7 @@ class PaywallFlow {
         );
       case PurchaseResultFailed(:final reason):
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('購入に失敗しました: ${reason.message}')),
+          SnackBar(content: Text(reason.message)),
         );
     }
   }

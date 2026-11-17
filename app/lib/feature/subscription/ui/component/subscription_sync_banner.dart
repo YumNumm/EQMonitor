@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/subscription/data/repository/subscription_server_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -10,7 +12,10 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SubscriptionSyncBanner extends ConsumerWidget {
-  const new();
+  const new({this.padding});
+
+  /// バナーの外側の余白。指定しない場合は四方に標準の余白を取る。
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,43 +35,85 @@ class SubscriptionSyncBanner extends ConsumerWidget {
         (phase == null || phase == SubscriptionSyncPhase.idle)) {
       return const SizedBox.shrink();
     }
+    // 確認中と反映待ちは自動で進むため、操作のボタンを出さない。
+    // 反映待ちが長引いた場合は、前面への復帰時と「購入を復元する」で再確認される。
+    final isInProgress =
+        phase == SubscriptionSyncPhase.synchronizing ||
+        phase == SubscriptionSyncPhase.pending;
     final message = switch (phase) {
-      SubscriptionSyncPhase.synchronizing => '購入情報を同期しています',
-      SubscriptionSyncPhase.pending => '購入情報の反映を待っています。再購入は不要です。',
+      SubscriptionSyncPhase.synchronizing => '購入情報を確認しています',
+      SubscriptionSyncPhase.pending => '購入情報を反映しています。しばらくお待ちください...',
       SubscriptionSyncPhase.authenticationRequired =>
         'デバイスの認証を確認できません。デバイス登録を確認して再試行してください。',
       _ => '購入情報を確認できませんでした。通信状況を確認して再試行してください。',
     };
+    final designSystem = context.designSystem;
+    final colorTheme = designSystem.colorTheme;
+    final spacing = designSystem.spacing;
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          Text(message),
-          M3EButton(
-            style: .text,
-            onPressed:
-                recovering ||
-                    subscription.isLoading ||
-                    phase == SubscriptionSyncPhase.synchronizing
-                ? null
-                : () async {
-                    if (requiresAuth) {
-                      await ref
-                          .read(paywallFlowProvider)
-                          .recoverDevice(ref, context);
-                    } else if (subscription.hasError) {
-                      ref.invalidate(revenueCatSessionProvider);
-                      ref.invalidate(subscriptionProvider);
-                    } else {
-                      await ref
-                          .read(paywallFlowProvider)
-                          .synchronize(ref, context);
-                    }
-                  },
-            child: Text(requiresAuth ? 'デバイス登録を再試行' : '購入情報を同期'),
+      padding: padding ?? EdgeInsets.all(spacing.lg),
+      child: DecoratedBox(
+        decoration: ShapeDecoration(
+          color: colorTheme.surfaceContainerHigh,
+          shape: RoundedSuperellipseBorder(
+            borderRadius: BorderRadius.circular(designSystem.shape.card),
+            side: BorderSide(color: colorTheme.outlineVariant),
           ),
-        ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            spacing.lg,
+            spacing.lg,
+            spacing.lg,
+            isInProgress ? spacing.lg : spacing.sm,
+          ),
+          child: Row(
+            crossAxisAlignment: .start,
+            children: [
+              if (isInProgress)
+                const SizedBox.square(
+                  dimension: 20,
+                  child: AccessibleCircularProgressIndicator(strokeWidth: 2),
+                )
+              else
+                Icon(
+                  Icons.error_outline_rounded,
+                  size: 20,
+                  color: colorTheme.error,
+                ),
+              SizedBox(width: spacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text(message),
+                    if (!isInProgress)
+                      M3EButton(
+                        style: .text,
+                        onPressed: recovering || subscription.isLoading
+                            ? null
+                            : () async {
+                                if (requiresAuth) {
+                                  await ref
+                                      .read(paywallFlowProvider)
+                                      .recoverDevice(ref, context);
+                                } else if (subscription.hasError) {
+                                  ref.invalidate(revenueCatSessionProvider);
+                                  ref.invalidate(subscriptionProvider);
+                                } else {
+                                  await ref
+                                      .read(paywallFlowProvider)
+                                      .synchronize(ref, context);
+                                }
+                              },
+                        child: Text(requiresAuth ? 'デバイス登録を再試行' : '購入情報を同期'),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
