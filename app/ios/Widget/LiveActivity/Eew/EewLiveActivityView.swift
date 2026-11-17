@@ -114,7 +114,9 @@ struct EewEventTimeView: View {
 
 enum EewLockScreenMetrics {
     static let sourceSize: CGFloat = 77.23 / 3
-    static let largeSourceSize: CGFloat = 32
+    static let largeSourceSize: CGFloat = 28
+    /// 現在地欄のカウントダウン。地名を省いたぶん大きくする
+    static let countdownSize: CGFloat = 26
 }
 
 @available(iOS 16.1, *)

@@ -144,11 +144,6 @@ struct EewCompactTrailingView: View {
 
     var body: some View {
         HStack(spacing: 2) {
-            // 狭い幅では「試」を置く余地がない。テスト表示はExpandedとLock Screenに残る。
-            if state.isLocalTest, !limited {
-                Text("試").font(.system(size: 8, weight: .bold))
-                    .accessibilityLabel("テスト")
-            }
             if let remaining = ArrivalCountdown.remaining(until: state.display.countdownArrivalDate) {
                 // 到達までが10分を超えることはないため、狭い幅では分1桁ぶんの幅だけ確保する
                 ArrivalCountdownText(
@@ -200,10 +195,6 @@ struct EewMinimalView: View {
 
     var body: some View {
         HStack(spacing: 1) {
-            if state.isLocalTest {
-                Text("試").font(.system(size: 7, weight: .bold))
-                    .accessibilityLabel("テスト")
-            }
             if state.display.isCanceled {
                 EewCanceledSymbol(size: 18)
             } else if let intensity = state.display.localIntensity {

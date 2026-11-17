@@ -28,6 +28,8 @@ void main() {
       expect(location['regionName'], '東京都23区');
       expect(location['forecastIntensity'], '5-');
       expect(location['forecastLpgmIntensity'], '2');
+      // 現在地が警報対象（警戒文と赤い地色の条件）
+      expect(location['isWarning'], true);
     });
 
     test('canceled プリセットは震源情報を null にする', () {
