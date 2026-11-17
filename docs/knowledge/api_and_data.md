@@ -9,6 +9,7 @@
 - Android は [provider fallback](https://pub.dev/packages/native_dio_adapter#opt-in-cronet-provider-fallback-android) を有効にする。Cronet provider がすべて無効な場合だけ `IOHttpClientAdapter` に切り替え、通常の通信・TLS・タイムアウト・キャンセルエラーはそのまま返す。fallback 中は Dart の HTTP/1.1 通信になる。
 - ネイティブ HTTP cache は無効にし、URLSession の Cookie 自動保存・自動付与も無効にする。キャッシュと Cookie の管理は既存の Dio interceptor が担当する。provider 破棄時と一時的な通信の終了時は `dio.close(force: true)` を呼ぶ。headless も完了通知前に同じ方法で閉じる。
 - タイムアウト、キャンセル、接続の終了処理は Dio とプラグインに任せる。アプリ独自のリクエスト追跡、ストリームの読み続け、終了待ちやリトライは追加しない。ネイティブアダプターと Dart の標準アダプターではタイムアウト段階の区別が異なるため、設定値の一致だけで端末上の待ち時間やエラー分類の一致を判断しない。
+- 端末 ID ヘッダーと認証ヘッダーは、どちらも `DeviceAuthRepository.readToken()` で端末トークンを読む。全リクエストで secure storage（platform channel）を読まないよう、読み取れたトークンを Repository がメモリに保持する。保存・削除は必ず `saveToken` / `clearToken` を通す。secure storage を直接書き換える処理（デバッグ画面など）は `forgetCachedToken()` を呼ぶ。「保存なし」は保持しない。端末のロック中など一時的に読めない状態を、プロセスが終わるまで未登録として扱わないためである。headless Engine は別 isolate で secure storage を直接読むため、この保持の対象外。
 - `dart:io` を直接使う地図・推定震度アーカイブ取得、SDK の内部通信、Dart CLI の Dio はこのアプリ用 factory を通らない。端末での通信規格・認証・fallback・タイムアウト確認は [ビルド・配布の課題](../todo/950_build_and_release.md) に記録する。
 
 ## HTTP cache は明示的に選ぶ
