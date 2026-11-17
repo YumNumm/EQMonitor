@@ -20,12 +20,10 @@ class _StubHomeEewEstimationDebug({required final bool isEnabled})
 }
 
 /// `deviceRoleProvider` を固定するスタブ。
-class _StubDeviceRole extends DeviceRoleNotifier {
-  new({required this.role, this.roleReads});
-
-  final DeviceRole? role;
-  final List<DeviceRole?>? roleReads;
-
+class _StubDeviceRole({
+  required final DeviceRole? role,
+  final List<DeviceRole?>? roleReads,
+}) extends DeviceRoleNotifier {
   @override
   Future<DeviceRole?> build() async {
     roleReads?.add(role);

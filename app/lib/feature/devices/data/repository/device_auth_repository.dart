@@ -46,17 +46,11 @@ Future<DeviceAuthRepository> deviceAuthRepository(Ref ref) async {
 ///
 /// 「保存なし」は保持しない。端末のロック中など一時的に読めない状態を、
 /// プロセスが終わるまで未登録として扱い続けないためである。
-class DeviceAuthRepository {
-  new(
-    this._preferences, {
-    this.onCredentialsWillChange,
-    this.onCredentialsChanged,
-  });
-
-  final PreferencesDataSource<SecureStorageKey> _preferences;
-  final Future<void> Function()? onCredentialsWillChange;
-  final void Function()? onCredentialsChanged;
-
+class DeviceAuthRepository(
+  final PreferencesDataSource<SecureStorageKey> _preferences, {
+  final Future<void> Function()? onCredentialsWillChange,
+  final void Function()? onCredentialsChanged,
+}) {
   String? _token;
   Future<String?>? _pendingRead;
   var _generation = 0;

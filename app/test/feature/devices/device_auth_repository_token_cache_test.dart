@@ -186,11 +186,8 @@ final class _Handler extends RequestInterceptorHandler {
   void next(RequestOptions requestOptions) {}
 }
 
-final class _CountingSecureStorage
+final class _CountingSecureStorage({var String? token})
     implements PreferencesDataSource<SecureStorageKey> {
-  new({this.token});
-
-  String? token;
   Object? readError;
   Object? writeError;
   Completer<void>? pendingWrite;

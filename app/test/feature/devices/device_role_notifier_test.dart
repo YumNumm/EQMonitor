@@ -208,17 +208,11 @@ void main() {
   });
 }
 
-final class _Harness {
-  new _({
-    required this.container,
-    required this.adapter,
-    required this.preferences,
-  });
-
-  final ProviderContainer container;
-  final _DeviceMeAdapter adapter;
-  final SharedPreferences preferences;
-
+final class _Harness._({
+  required final ProviderContainer container,
+  required final _DeviceMeAdapter adapter,
+  required final SharedPreferences preferences,
+}) {
   String? get storedRole =>
       preferences.getString(SharedPreferencesKey.deviceRole.key);
 
@@ -284,11 +278,8 @@ const _productionBuildConfig = BuildConfig(
   isProduction: true,
 );
 
-class _FixedProvisioning extends DeviceProvisioningNotifier {
-  new(this.status);
-
-  final DeviceProvisioningStatus status;
-
+class _FixedProvisioning(final DeviceProvisioningStatus status)
+    extends DeviceProvisioningNotifier {
   @override
   Future<DeviceProvisioningStatus> build() async => status;
 }
@@ -298,11 +289,10 @@ class _DebugEnabled extends Debug {
   Future<bool> build() async => true;
 }
 
-final class _DeviceMeAdapter implements HttpClientAdapter {
-  new({required this.role, required this.statusCode});
-
-  final String? role;
-  final int statusCode;
+final class _DeviceMeAdapter({
+  required final String? role,
+  required final int statusCode,
+}) implements HttpClientAdapter {
   final paths = <String>[];
 
   @override

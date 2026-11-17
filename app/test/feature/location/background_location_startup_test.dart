@@ -315,21 +315,13 @@ const Map<String, Object?> _currentLocationSlotResponse = {
   'updated_at': '2026-06-30T00:00:00Z',
 };
 
-final class _Harness {
-  new _({
-    required this.container,
-    required this.adapter,
-    required this.preferences,
-    required this.monitoringEvents,
-    required this.location,
-  });
-
-  final ProviderContainer container;
-  final _Adapter adapter;
-  final SharedPreferences preferences;
-  final List<String> monitoringEvents;
-  final _RecordingCurrentDeviceLocation location;
-
+final class _Harness._({
+  required final ProviderContainer container,
+  required final _Adapter adapter,
+  required final SharedPreferences preferences,
+  required final List<String> monitoringEvents,
+  required final _RecordingCurrentDeviceLocation location,
+}) {
   bool get isDisableConfirmed =>
       preferences.getBool(
         SharedPreferencesKey.shakeDetectionNotificationsDisabledConfirmed.key,
@@ -448,16 +440,11 @@ class _DebugDisabled extends Debug {
   Future<bool> build() async => false;
 }
 
-final class _Adapter implements HttpClientAdapter {
-  new({
-    required this.slots,
-    required this.shake,
-    required this.shakeStatusCode,
-  });
-
-  final List<Map<String, Object?>> slots;
-  List<Map<String, Object?>> shake;
-  final int shakeStatusCode;
+final class _Adapter({
+  required final List<Map<String, Object?>> slots,
+  required var List<Map<String, Object?>> shake,
+  required final int shakeStatusCode,
+}) implements HttpClientAdapter {
   final shakeRequests = <String>[];
   List<bool>? lastPutEnabled;
 

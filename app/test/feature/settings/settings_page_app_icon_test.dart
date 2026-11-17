@@ -155,12 +155,11 @@ Future<void> _pumpSettings(
   await tester.pump();
 }
 
-class _RecordingDeviceRole extends DeviceRoleNotifier {
-  new({this.error, this.pending, this.isRefreshed = true});
-
-  final Object? error;
-  final Completer<void>? pending;
-  final bool isRefreshed;
+class _RecordingDeviceRole({
+  final Object? error,
+  final Completer<void>? pending,
+  final bool isRefreshed = true,
+}) extends DeviceRoleNotifier {
   var refreshCount = 0;
 
   @override

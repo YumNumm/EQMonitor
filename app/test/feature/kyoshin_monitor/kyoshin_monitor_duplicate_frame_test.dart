@@ -110,17 +110,11 @@ void main() {
   });
 }
 
-final class _Harness {
-  new _({
-    required this.container,
-    required this.repository,
-    required this.timers,
-  });
-
-  final ProviderContainer container;
-  final _Repository repository;
-  final List<StreamController<DateTime>> timers;
-
+final class _Harness._({
+  required final ProviderContainer container,
+  required final _Repository repository,
+  required final List<StreamController<DateTime>> timers,
+}) {
   AsyncValue<KyoshinMonitorState> get state =>
       container.read(kyoshinMonitorProvider);
 
@@ -230,10 +224,8 @@ class _Calibration extends KyoshinMonitorDelayCalibration {
       KyoshinMonitorDelayCalibrationStatus.idle;
 }
 
-final class _Repository implements KyoshinMonitorRepository {
-  new({required this.image});
-
-  final List<int> image;
+final class _Repository({required final List<int> image})
+    implements KyoshinMonitorRepository {
   final fetched = <DateTime>[];
   final notPublished = <DateTime>{};
 

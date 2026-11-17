@@ -310,21 +310,13 @@ const _region = NotificationSlot(
   earthquakeOverrides: null,
 );
 
-final class _Harness {
-  new _({
-    required this.container,
-    required this.repository,
-    required this.preferences,
-    required this.locationState,
-    required this.monitoringEvents,
-  });
-
-  final ProviderContainer container;
-  final _Repository repository;
-  final SharedPreferences preferences;
-  final InMemoryDeviceLocationSyncStateRepository locationState;
-  final List<String> monitoringEvents;
-
+final class _Harness._({
+  required final ProviderContainer container,
+  required final _Repository repository,
+  required final SharedPreferences preferences,
+  required final InMemoryDeviceLocationSyncStateRepository locationState,
+  required final List<String> monitoringEvents,
+}) {
   Future<List<NotificationSlot>> read() =>
       container.read(notificationSlotsProvider.future);
 
@@ -421,13 +413,13 @@ class _Provisioned extends DeviceProvisioningNotifier {
       DeviceProvisioningStatus.notRequired;
 }
 
-class _Repository extends NotificationSlotRepository {
-  new({required this.server, this.pendingServer, this.serverError})
-    : super(api: api.ApiClient(Dio()));
+class _Repository({
+  required var List<NotificationSlot> server,
+  var Completer<List<NotificationSlot>>? pendingServer,
+  var Object? serverError,
+}) extends NotificationSlotRepository {
+  this : super(api: api.ApiClient(Dio()));
 
-  List<NotificationSlot> server;
-  Completer<List<NotificationSlot>>? pendingServer;
-  Object? serverError;
   var getSlotsCount = 0;
 
   @override
