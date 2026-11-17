@@ -25,8 +25,7 @@ abstract class SiteList with _$SiteList {
     String? serialNo,
   }) = _SiteList;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$SiteListFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$SiteListFromJson(json);
 }
 
 @freezed

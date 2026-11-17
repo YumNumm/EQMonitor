@@ -51,8 +51,7 @@ abstract class KnetRecord with _$KnetRecord {
 
   const new _();
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$KnetRecordFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$KnetRecordFromJson(json);
 
   /// スケールファクタ（分子/分母）
   double get scaleFactor => scaleFactorNumerator / scaleFactorDenominator;

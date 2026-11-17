@@ -13,18 +13,17 @@ String patchHypocenterSearchCancelToken(String source) {
       'Hypocenter search expected_revision anchor is missing',
     );
   }
-  return source.replaceFirstMapped(
-    anchor,
-    (match) {
-      final indent = match.group(1) ?? '';
-      return "${indent}@Query('expected_revision') String? expectedRevision,\n"
-          '$indent@CancelRequest() CancelToken? cancelToken,\n'
-          "$indent@Header('If-None-Match') String? ifNoneMatch,";
-    },
-  );
+  return source.replaceFirstMapped(anchor, (match) {
+    final indent = match.group(1) ?? '';
+    return "${indent}@Query('expected_revision') String? expectedRevision,\n"
+        '$indent@CancelRequest() CancelToken? cancelToken,\n'
+        "$indent@Header('If-None-Match') String? ifNoneMatch,";
+  });
 }
 
 void patchHypocenterApiClientCancelToken({required Directory libDir}) {
   final file = File('${libDir.path}/clients/hypocenters_api_client.dart');
-  file.writeAsStringSync(patchHypocenterSearchCancelToken(file.readAsStringSync()));
+  file.writeAsStringSync(
+    patchHypocenterSearchCancelToken(file.readAsStringSync()),
+  );
 }

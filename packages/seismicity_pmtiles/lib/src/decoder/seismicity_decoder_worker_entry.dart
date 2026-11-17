@@ -17,9 +17,7 @@ void seismicityDecoderWorkerEntry(SendPort initialReplyTo) {
 }
 
 final class SeismicityDecoderWorkerSession {
-  new({required this.replyTo})
-    : decodedTileCount = 0,
-      finished = false;
+  new({required this.replyTo}) : decodedTileCount = 0, finished = false;
 
   final SendPort replyTo;
   final inbox = ReceivePort();

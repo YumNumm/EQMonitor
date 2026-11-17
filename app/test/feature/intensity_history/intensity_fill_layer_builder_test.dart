@@ -105,11 +105,14 @@ void main() {
     });
 
     test('選択枠の本線は地域選択UIと同じ線幅・色にする', () {
-      final outline = builder.buildSelectedCityLine(
-        selectedCityCode: '0110100',
-        lineColor: '#123456',
-        haloColor: '#FFFFFF',
-      ).last.layer;
+      final outline = builder
+          .buildSelectedCityLine(
+            selectedCityCode: '0110100',
+            lineColor: '#123456',
+            haloColor: '#FFFFFF',
+          )
+          .last
+          .layer;
       final regionOutline = const RegionMapLayers()
           .build(color: '#123456', hasEpicenter: false)
           .singleWhere((layer) => layer.id == 'region-selection-city-line');

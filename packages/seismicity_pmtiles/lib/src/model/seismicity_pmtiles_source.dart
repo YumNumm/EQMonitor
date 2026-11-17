@@ -8,8 +8,7 @@ sealed class SeismicityPmTilesSource with _$SeismicityPmTilesSource {
   const factory network({required Uri archiveUri}) =
       SeismicityPmTilesNetworkSource;
 
-  const factory file({required String path}) =
-      SeismicityPmTilesFileSource;
+  const factory file({required String path}) = SeismicityPmTilesFileSource;
 
   const factory asset({required String assetKey}) =
       SeismicityPmTilesAssetSource;

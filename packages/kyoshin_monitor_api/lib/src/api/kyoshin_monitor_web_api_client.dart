@@ -11,8 +11,7 @@ part 'kyoshin_monitor_web_api_client.g.dart';
 /// ベースURL: http://www.kmoni.bosai.go.jp , https://smi.lmoniexp.bosai.go.jp
 @RestApi(baseUrl: 'http://www.kmoni.bosai.go.jp')
 abstract class KyoshinMonitorWebApiClient {
-  factory(Dio dio, {String? baseUrl}) =
-      _KyoshinMonitorWebApiClient;
+  factory(Dio dio, {String? baseUrl}) = _KyoshinMonitorWebApiClient;
 
   /// データ時間
   @GET('/webservice/server/pros/latest.json')

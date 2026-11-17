@@ -129,7 +129,9 @@ void main() {
         key: keyWithQuery,
         statusCode: 200,
         eTag: null,
-        headers: {'content-type': ['application/json']},
+        headers: {
+          'content-type': ['application/json'],
+        },
         responseType: 'json',
         body: Uint8List.fromList(utf8.encode('{"lang":"ja"}')),
         updatedAtMs: 0,
@@ -191,7 +193,9 @@ void main() {
         key: key,
         statusCode: 304,
         eTag: null,
-        headers: {'content-type': ['application/json']},
+        headers: {
+          'content-type': ['application/json'],
+        },
         responseType: 'json',
         body: Uint8List.fromList(utf8.encode('{}')),
         updatedAtMs: 0,
@@ -214,7 +218,9 @@ void main() {
         key: key,
         statusCode: 200,
         eTag: null,
-        headers: {'content-type': ['text/plain']},
+        headers: {
+          'content-type': ['text/plain'],
+        },
         responseType: 'plain',
         body: Uint8List.fromList(utf8.encode('OK')),
         updatedAtMs: 0,
@@ -238,7 +244,9 @@ void main() {
         key: key,
         statusCode: 200,
         eTag: null,
-        headers: {'content-type': ['image/jpeg']},
+        headers: {
+          'content-type': ['image/jpeg'],
+        },
         responseType: 'bytes',
         body: body,
         updatedAtMs: 0,

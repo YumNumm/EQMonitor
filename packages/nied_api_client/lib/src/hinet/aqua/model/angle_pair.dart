@@ -10,6 +10,5 @@ abstract class AnglePair with _$AnglePair {
     required double second,
   }) = _AnglePair;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$AnglePairFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$AnglePairFromJson(json);
 }

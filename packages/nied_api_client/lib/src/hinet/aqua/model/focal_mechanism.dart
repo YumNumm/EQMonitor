@@ -27,6 +27,5 @@ abstract class FocalMechanism with _$FocalMechanism {
   }) = _FocalMechanism;
 
   /// JSONからデシリアライズ
-  factory fromJson(Map<String, dynamic> json) =>
-      _$FocalMechanismFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$FocalMechanismFromJson(json);
 }

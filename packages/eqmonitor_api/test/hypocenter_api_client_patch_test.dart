@@ -17,10 +17,7 @@ Future<void> getV2Hypocenters({
     final patched = patchHypocenterSearchCancelToken(source);
 
     expect(patched, contains('@CancelRequest() CancelToken? cancelToken,'));
-    expect(
-      '@CancelRequest()'.allMatches(patched),
-      hasLength(1),
-    );
+    expect('@CancelRequest()'.allMatches(patched), hasLength(1));
   });
 
   test('二重にCancelTokenを追加しない', () {
