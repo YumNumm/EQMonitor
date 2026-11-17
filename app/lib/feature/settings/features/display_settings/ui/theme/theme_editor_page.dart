@@ -7,6 +7,8 @@ import 'package:eqmonitor/core/theme/model/intensity_text_color.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_field_def.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/data/notifier/theme_editor_controller.dart';
+// flutter_colorpicker が Flutter Material の祖先を要求するため。
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart' as flutter_material;
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
