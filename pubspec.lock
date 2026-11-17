@@ -2287,11 +2287,9 @@ packages:
   sheet:
     dependency: transitive
     description:
-      path: sheet
-      ref: main
-      resolved-ref: f5be540e399a82ee94b0b4195a3d33095b5821db
-      url: "https://github.com/YumNumm/modal_bottom_sheet.git"
-    source: git
+      path: "third_party/sheet"
+      relative: true
+    source: path
     version: "1.0.0-pre"
   shelf:
     dependency: transitive

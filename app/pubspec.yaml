@@ -156,10 +156,7 @@ dependencies:
   shared_preferences: ^2.3.3
   shared_preferences_foundation: ^2.5.6
   sheet:
-    git:
-      url: https://github.com/YumNumm/modal_bottom_sheet.git
-      ref: main
-      path: sheet
+    path: ../third_party/sheet
   skeletonizer: ^3.0.0
   soft_edge_blur: ^0.1.3
   synchronized: ^3.3.0
