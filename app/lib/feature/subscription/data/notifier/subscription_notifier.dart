@@ -37,7 +37,6 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
       _generation++;
       _expiryTimer?.cancel();
     });
-    // 構築中は他の provider を変更できないため、打ち切った再試行の印は構築の同期部分を抜けてから消す。
     scheduleMicrotask(() {
       if (ref.mounted) {
         ref
