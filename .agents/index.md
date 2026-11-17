@@ -28,7 +28,7 @@
 ## Focused verification
 
 - 修正依頼では、回帰テストを含む自動テストの新規作成や TDD（テスト駆動開発）は不要。ユーザーが明示的に依頼した場合のみ行い、テスト先行や RED → GREEN の証跡を修正の前提にしない。詳細は `docs/knowledge/test_strategy.md` を参照する。
-- CI app analysis, from root: `mise exec -- dart analyze app --fatal-infos --format machine`. Workspace analysis: `mise exec -- dart run melos run analyze`.
+- CI app analysis, from root: `mise exec -- dart analyze app --fatal-infos --format machine --plugins`. Analyzer plugins run by default only when `CI` is set, so keep `--plugins` locally. Workspace analysis: `mise exec -- dart run melos run analyze`.
 - From `app/` or a Flutter package: `mise exec -- flutter test test/path_test.dart --dart-define=CI=true`. From a pure Dart package: `mise exec -- dart test test/path_test.dart`.
 - Workspace tests: use the CI-equivalent command below. `melos run test` has a known Flutter/Dart package-filter issue; see `docs/knowledge/testing.md` for separate execution.
   ```sh
