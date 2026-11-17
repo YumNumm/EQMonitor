@@ -3,9 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/data/network/native_dio_factory.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
-import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_manifest.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_signature.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/trusted_asset_pack_keys.dart';
@@ -266,11 +266,29 @@ class const AssetPackDistributionRepository({
   }
 }
 
+/// Asset Pack の配布元（R2）へ更新情報と署名を取りに行く Dio。
+///
+/// 自前 API 用の Dio は端末 ID・認証・App Check の interceptor と、
+/// アプリの版・端末種別のヘッダーを持つ。配布元は自前 API ではないため、
+/// それらを送らない専用の Dio を使う。
+@Riverpod(keepAlive: true)
+Dio assetPackDistributionDio(Ref ref) {
+  final dio = const NativeDioFactory().build(
+    options: BaseOptions(
+      connectTimeout: const Duration(seconds: 10),
+      sendTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 30),
+    ),
+  );
+  ref.onDispose(() => dio.close(force: true));
+  return dio;
+}
+
 @Riverpod(keepAlive: true)
 Future<AssetPackDistributionRepository> assetPackDistributionRepository(
   Ref ref,
 ) async {
-  final dio = await ref.watch(dioProvider.future);
+  final dio = ref.watch(assetPackDistributionDioProvider);
   final preferences = await ref.watch(
     sharedPreferencesDataSourceProvider.future,
   );

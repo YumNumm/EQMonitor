@@ -10,6 +10,7 @@
 - ネイティブ HTTP cache は無効にし、URLSession の Cookie 自動保存・自動付与も無効にする。キャッシュと Cookie の管理は既存の Dio interceptor が担当する。provider 破棄時と一時的な通信の終了時は `dio.close(force: true)` を呼ぶ。headless も完了通知前に同じ方法で閉じる。
 - タイムアウト、キャンセル、接続の終了処理は Dio とプラグインに任せる。アプリ独自のリクエスト追跡、ストリームの読み続け、終了待ちやリトライは追加しない。ネイティブアダプターと Dart の標準アダプターではタイムアウト段階の区別が異なるため、設定値の一致だけで端末上の待ち時間やエラー分類の一致を判断しない。
 - 端末 ID ヘッダーと認証ヘッダーは、どちらも `DeviceAuthRepository.readToken()` で端末トークンを読む。全リクエストで secure storage（platform channel）を読まないよう、読み取れたトークンを Repository がメモリに保持する。保存・削除は必ず `saveToken` / `clearToken` を通す。secure storage を直接書き換える処理（デバッグ画面など）は `forgetCachedToken()` を呼ぶ。「保存なし」は保持しない。端末のロック中など一時的に読めない状態を、プロセスが終わるまで未登録として扱わないためである。headless Engine は別 isolate で secure storage を直接読むため、この保持の対象外。
+- `dioProvider` / `apiClientProvider` は自前 backend 専用。interceptor が端末 ID を全リクエストへ付けるため、絶対 URL で他ホストへ使うと端末 ID が送られる。外部ホスト（強震モニタ、Hi-net、K-NET、地震活動 GeoJSON、震源アーカイブ、Asset Pack の配布元）は `NativeDioFactory` で専用の Dio を作る。2026-11-17 時点で、`dioProvider` を直接使うのは地震活動 manifest とテレメトリ送信で、どちらも自前 API のパス。
 - `dart:io` を直接使う地図・推定震度アーカイブ取得、SDK の内部通信、Dart CLI の Dio はこのアプリ用 factory を通らない。端末での通信規格・認証・fallback・タイムアウト確認は [ビルド・配布の課題](../todo/950_build_and_release.md) に記録する。
 
 ## HTTP cache は明示的に選ぶ

@@ -37,6 +37,11 @@ mise exec -- tool/asset_pack/stage_from_r2.sh --target all
   解決不能は `AssetPackNotReadyException` とし、固定値・偽地図へフォールバックしない。
 - `AssetPackDistributionRepository` はEd25519検証済みmanifestだけを保存し、
   受理済みrevision / latest versionの巻き戻しと `minimum_app_version` 不足を検出する。
+- 配布元（`assets.eqmonitor.app`）への取得には、端末 ID・認証・App Check・アプリの版/端末種別など
+  自前 API 用のヘッダーを付けない。`manifest.json` / `manifest.sig` は専用の `assetPackDistributionDioProvider`、
+  ZIP 本体は background_downloader でヘッダーなしの `DownloadTask` を使う。自前 API 用の `dioProvider` /
+  `apiClientProvider` は interceptor が全リクエストへ端末 ID を付けるため、自前 backend 以外のホストへ使わない。
+  `manifest.json` の ETag（`If-None-Match`）による再検証は Repository が保存値から付ける。
 - 署名は JSON 再serialize 後でなく受信 byte 列そのものを parse 前に検証する。manifest の形式は `asset_pack_distribution_manifest_validator.dart` が正本。正の revision、prerelease なしの版、重複なし降順・latest 一致、version に対応した固定 archive path、空でない日英 changelog を検証する。
 - 配布ZIPはimmutable。公開順序 `ZIP → manifest.sig → manifest.json` と公開後再検証はrunbookの契約。
   backendの現在の公開実行結果は今回未確認。
