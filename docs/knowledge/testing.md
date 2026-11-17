@@ -45,6 +45,9 @@ mise exec -- dart run melos exec --no-flutter --depends-on=test --dir-exists=tes
   `build/macos/SourcePackages` を作る。Linux の Native Assets コンパイル失敗は Clang を確認する。
 - `impellerc failure: Could not write file` で古い `build/unit_test_assets` が残っている場合は、
   対象 package 内で `mise exec -- flutter clean` 後に同じテストを再実行する。
+- `unable to create bitmap render target at specified size` は、物理サイズがテスト用レンダラーの上限を超えた場合に出る。
+  `material_ui 1.8.0` 以降の Android 向けページ遷移は画面全体をスナップショットするため、
+  大きな `setSurfaceSize` を使うテストは `tester.view.devicePixelRatio = 1` で物理サイズを抑える。
 - `Disk quota exceeded` は空き領域と quota を確認する。他作業の一時ファイルを削除せず、
   空きのある領域へそのコマンドだけ `TMPDIR` を切り替える。例は対象 package 内で:
 
