@@ -79,6 +79,141 @@ void main() {
   );
 
   test(
+    'a stored shake condition keeps monitoring before settings are loaded',
+    () async {
+      final storage = InMemoryDeviceLocationSyncStateRepository(
+        isShakeCurrentLocationEnabled: true,
+      );
+      final events = <String>[];
+      final repository = DeviceLocationConsumersRepository(
+        storage,
+        lifecycle: BackgroundLocationMonitoringLifecycle(
+          startMonitoring: () async => events.add('start'),
+          stopMonitoring: () async => events.add('stop'),
+        ),
+      );
+
+      await repository.updateSlots([]);
+
+      expect(
+        await storage.readAvailability(),
+        DeviceLocationSyncAvailability.enabled,
+      );
+      expect(events, ['start']);
+    },
+  );
+
+  test(
+    'a stored disabled shake condition lets slot removal stop monitoring',
+    () async {
+      final storage = InMemoryDeviceLocationSyncStateRepository(
+        isShakeCurrentLocationEnabled: false,
+      );
+      final events = <String>[];
+      final repository = DeviceLocationConsumersRepository(
+        storage,
+        lifecycle: BackgroundLocationMonitoringLifecycle(
+          startMonitoring: () async => events.add('start'),
+          stopMonitoring: () async => events.add('stop'),
+        ),
+      );
+
+      await repository.updateSlots([]);
+
+      expect(
+        await storage.readAvailability(),
+        DeviceLocationSyncAvailability.disabled,
+      );
+      expect(events, ['stop']);
+    },
+  );
+
+  test(
+    'restoring a stored shake condition syncs the location once per launch',
+    () async {
+      final storage = InMemoryDeviceLocationSyncStateRepository(
+        isShakeCurrentLocationEnabled: true,
+      );
+      final events = <String>[];
+      final repository = DeviceLocationConsumersRepository(
+        storage,
+        lifecycle: BackgroundLocationMonitoringLifecycle(
+          startMonitoring: () async => events.add('start'),
+          stopMonitoring: () async => events.add('stop'),
+        ),
+        syncLocation: () async => events.add('sync'),
+      );
+
+      await repository.restoreStoredShake();
+      expect(events, ['start', 'sync']);
+
+      await repository.restoreStoredShake();
+      await repository.updateShake((
+        entries: [current],
+        requiresReconfiguration: false,
+      ));
+      expect(events.where((event) => event == 'sync'), hasLength(1));
+    },
+  );
+
+  test(
+    'restoring does nothing without a stored shake condition',
+    () async {
+      final storage = InMemoryDeviceLocationSyncStateRepository(
+        availability: DeviceLocationSyncAvailability.uninitialized,
+      );
+      final events = <String>[];
+      final repository = DeviceLocationConsumersRepository(
+        storage,
+        lifecycle: BackgroundLocationMonitoringLifecycle(
+          startMonitoring: () async => events.add('start'),
+          stopMonitoring: () async => events.add('stop'),
+        ),
+        syncLocation: () async => events.add('sync'),
+      );
+
+      await repository.restoreStoredShake();
+      await repository.updateSlots([]);
+
+      expect(events, isEmpty);
+      expect(
+        await storage.readAvailability(),
+        DeviceLocationSyncAvailability.uninitialized,
+      );
+    },
+  );
+
+  test('shake conditions are stored for the next launch', () async {
+    final storage = InMemoryDeviceLocationSyncStateRepository();
+    final repository = DeviceLocationConsumersRepository(
+      storage,
+      lifecycle: BackgroundLocationMonitoringLifecycle(
+        startMonitoring: () async {},
+        stopMonitoring: () async {},
+      ),
+    );
+
+    await repository.updateShake((
+      entries: [current],
+      requiresReconfiguration: false,
+    ));
+    expect(storage.isShakeCurrentLocationEnabled, isTrue);
+
+    await repository.updateShake((
+      entries: [current.copyWith(enabled: false)],
+      requiresReconfiguration: false,
+    ));
+    expect(storage.isShakeCurrentLocationEnabled, isFalse);
+
+    await repository.updateShake((
+      entries: [current],
+      requiresReconfiguration: false,
+    ));
+    await repository.reset();
+    expect(storage.isShakeCurrentLocationEnabled, isFalse);
+  });
+
+  test(
     'nationwide and manual regions do not require location monitoring',
     () async {
       final storage = InMemoryDeviceLocationSyncStateRepository();

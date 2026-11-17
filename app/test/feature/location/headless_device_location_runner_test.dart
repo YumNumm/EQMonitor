@@ -373,6 +373,13 @@ class ThrowingDeviceLocationSyncStateRepository
   ) => throw UnimplementedError();
 
   @override
+  Future<bool?> readShakeCurrentLocationEnabled() => throw UnimplementedError();
+
+  @override
+  Future<void> writeShakeCurrentLocationEnabled({required bool isEnabled}) =>
+      throw UnimplementedError();
+
+  @override
   Future<void> writeLastSent({
     required DeviceLocationSyncScope scope,
     required DeviceLocationPayload payload,

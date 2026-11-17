@@ -608,9 +608,15 @@ void main() {
   test('起動時に両consumerがなければ残存するOS監視を停止する', () async {
     final monitoringEvents = <String>[];
     recordMonitoringCalls(monitoringEvents);
+    final stateRepository = _RecordingDeviceLocationSyncStateRepository(
+      events: <String>[],
+    );
+    // 揺れ検知の現在地条件は、端末に保存した値で「なし」と確定している。
+    await stateRepository.writeShakeCurrentLocationEnabled(isEnabled: false);
     final container = _createLocationSyncContainer(
       adapter: _FakeDeviceLocationApiAdapter(),
       resolver: _FakeJmaRegionResolver(earthquakeResolution: null),
+      stateRepository: stateRepository,
       slots: const [],
     );
     addTeardownToContainer(container);

@@ -14,16 +14,21 @@ Future<ShakeDetectionSettingsRepository> shakeDetectionSettingsRepository(
 class ShakeDetectionSettingsRepository(final api.ApiClient apiClient) {
   final Lock _lock = Lock(reentrant: true);
 
-  Future<void> disableNotifications({required bool Function() isCurrent}) =>
+  /// サーバー側の通知条件をすべて無効にする。
+  ///
+  /// 無効であることを確認できた場合だけ true を返す。途中で [isCurrent] が
+  /// false になり確認を打ち切った場合は false。
+  Future<bool> disableNotifications({required bool Function() isCurrent}) =>
       _lock.synchronized(() async {
-        if (!isCurrent()) return;
+        if (!isCurrent()) return false;
         final current = await load();
-        if (!isCurrent()) return;
+        if (!isCurrent()) return false;
         if (current.entries.any((entry) => entry.enabled)) {
           await save([
             for (final entry in current.entries) entry.copyWith(enabled: false),
           ]);
         }
+        return true;
       });
 
   Future<ShakeDetectionState> load() => _lock.synchronized(() async {

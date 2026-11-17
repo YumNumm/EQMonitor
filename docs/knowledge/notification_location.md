@@ -79,6 +79,10 @@
 - 手動地域はAsset Packの地震情報の都道府県→細分化地域から選ぶ。観測点マスターをAPIから取得しない。地域コードは3桁のAreaForecastLocalEで、EEW地域コードとは別。
 - 現在地は共通Device Location APIへ送信する。揺れ検知条件のPUTや、市区町村コードから観測点IDへの変換は行わない。地域未取得の間は現在地通知を行わない。
 - `DeviceLocationConsumersRepository` が独立に読み込まれた通常通知と揺れ検知を合成し、OS監視とheadless用の可否を更新する。更新は直列化し、読み込み順によって揺れ検知の現在地が無効にならないようにする。
+- 揺れ検知の通知条件（`GET /v2/device/me/settings/shake-detection`）は起動時に取得しない。`shakeDetectionSettingsProvider` は設定値が必要な画面が watch したときに構築する。起動時の `BackgroundLocationSyncCoordinator.ensureMonitoring` は、通知スロットの前回値と、端末に保存した揺れ検知の「現在地」条件（`SharedPreferencesKey.backgroundLocationShakeCurrentLocationEnabled`）で監視を宣言し直す。保存値は `updateShake` / `reset` のたびに更新する。保存値が有効な端末では、設定を読み込んだときと同じく起動時に現在地を一度同期する（`restoreStoredShake`）。位置が変わっていなければ Device Location API へは送信しない。
+- この起動で揺れ検知の設定を読み込むまでは、`DeviceLocationConsumersRepository` も同じ保存値を使う。保存値が「なし」なら現在地スロットの削除で監視を止め、「あり」なら監視を維持する。保存値がない端末（この保存を導入する前の版から更新した直後）は不明として扱い、起動時は headless と共有する `backgroundLocationCurrentSlotEnabled` が有効なら監視を再宣言し、設定を一度読み込むまで監視を止めない。
+- 揺れ検知通知を利用できない端末（本番ビルドで Admin かつデバッグモードでない端末）では、保存値に関係なく現在地条件を「なし」と確定する。サーバー側の通知条件の無効化（`disableNotifications`）は、無効であることを確認できた時点で `SharedPreferencesKey.shakeDetectionNotificationsDisabledConfirmed` に保存し、以後の起動では問い合わせない。確認できるまでは起動のたびに試みる。確認済みは、通知条件の保存、有効な条件の読み込み、資格情報の保存・削除で取り消す。サーバー側の条件を有効にし得る経路を追加したら、同じく取り消す。
+- 利用可否が判定できない場合（ロール未取得でデバッグモードが有効など）は、無効化を行わず保存値で監視を判定する。
 - 揺れ検知の現在地を有効にしたときと、権限が「常に許可」になったときに監視を再開し、初回位置を共通同期処理へ送る。OS設定から復帰した場合も権限を再確認する。位置取得・同期の失敗は条件保存の失敗と区別し、画面に再試行と最後に同期した地域を表示する。
 - 旧地域条件はバックエンドで無効保存し、`requires_reconfiguration` がある間は再設定を案内する。保存失敗時は既存の設定表示を維持する。
 - 通知タイトルは条件を満たす設定地域の最高レベル、本文はイベント全体の最大レベルと都道府県。設定地域が同じ最高レベルなら複数列挙する。全国と現在地・地域の併存にも対応する。
@@ -106,7 +110,7 @@ Android の通知 channel は [channel 運用](android_notification_channels.md)
 - deviceLocationはsent/unchanged/disabled/HTTP 400のterminal処理で完了する。
   uninitialized、認証、network、timeout、地域解決、その他4xx/5xxはretryで保持する。
 - headlessはdeviceLocationだけを完了し、appEffectsは通常起動でApp Group・Widget反映後に完了する。
-- 現在地のconsumer状態はenabled/disabled/uninitialized。通常通知の現在地slotと、有効な揺れ検知現在地条件のORを永続化する。両方の読み込みが完了するまでは無効化しない。headlessは同じ永続状態を使用する。
+- 現在地のconsumer状態はenabled/disabled/uninitialized。通常通知の現在地slotと、有効な揺れ検知現在地条件のORを永続化する。両方が判明するまでは無効化しない。揺れ検知側は、この起動での読み込み結果がなければ端末の保存値を使う。headlessは同じ永続状態を使用する。
 - 重複排除recordはAPI endpointと送信済み地域payload。token保存/削除直前に消し、endpoint変更は別scope。
   token/hash/raw座標を記録せず、headless device IDは通常Engineと同じJWT subから復元する。
   token未保存/不正時にUDIDから代替IDを作らず、認証失敗をretryへ残す。

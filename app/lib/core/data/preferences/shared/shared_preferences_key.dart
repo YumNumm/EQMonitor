@@ -66,6 +66,9 @@ enum SharedPreferencesKey(final String key) {
   backgroundLocationCurrentSlotEnabled(
     'background_location_current_slot_enabled',
   ),
+  backgroundLocationShakeCurrentLocationEnabled(
+    'background_location_shake_current_location_enabled',
+  ),
   backgroundLocationHeadlessDiagnostic(
     'background_location_headless_diagnostic',
   ),
@@ -74,4 +77,7 @@ enum SharedPreferencesKey(final String key) {
   eewWarningOverlayEnabled('eew_warning_overlay_enabled'),
   shakeDetectionNoticeAgreedVersion('shake_detection_notice_agreed_version'),
   shakeDetectionSettings('shake_detection_settings'),
+  shakeDetectionNotificationsDisabledConfirmed(
+    'shake_detection_notifications_disabled_confirmed',
+  ),
 }

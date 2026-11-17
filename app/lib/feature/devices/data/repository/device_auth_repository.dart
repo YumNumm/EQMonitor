@@ -6,6 +6,7 @@ import 'package:eqmonitor/feature/devices/data/repository/device_role_cache_repo
 import 'package:eqmonitor/feature/devices/data/repository/push_token_sync_state_repository.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_cache_repository.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/shake_detection_disable_confirmation_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'device_auth_repository.g.dart';
@@ -20,6 +21,9 @@ Future<DeviceAuthRepository> deviceAuthRepository(Ref ref) async {
   );
   final roleCache = ref.watch(deviceRoleCacheRepositoryProvider);
   final slotCache = ref.watch(notificationSlotCacheRepositoryProvider);
+  final shakeDisableConfirmation = ref.watch(
+    shakeDetectionDisableConfirmationRepositoryProvider,
+  );
   return DeviceAuthRepository(
     await ref.watch(securePreferencesDataSourceProvider.future),
     onCredentialsWillChange: () async {
@@ -27,6 +31,7 @@ Future<DeviceAuthRepository> deviceAuthRepository(Ref ref) async {
       await pushTokenSyncState.clearAll();
       await roleCache.clear();
       await slotCache.clear();
+      await shakeDisableConfirmation.clear();
     },
     onCredentialsChanged: () => ref.invalidate(deviceIdProvider),
   );
