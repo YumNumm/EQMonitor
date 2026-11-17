@@ -422,6 +422,30 @@ void main() {
     expect(server.syncs, syncs);
   });
 
+  testWidgets('rebuilding ends the report of the interrupted automatic retry', (
+    tester,
+  ) async {
+    await container.read(subscriptionProvider.future);
+    server.synced = const Failure(
+      SubscriptionApiException(reason: SubscriptionApiFailure.pending),
+    );
+    await container
+        .read(subscriptionProvider.notifier)
+        .purchaseMonthly(package: monthlyPackage);
+    expect(container.read(subscriptionPendingRetryProvider), isNotNull);
+    repository.store = active;
+    container.invalidate(subscriptionProvider);
+    expect(
+      (await container.read(subscriptionProvider.future)).syncPhase,
+      SubscriptionSyncPhase.pending,
+    );
+    expect(container.read(subscriptionPendingRetryProvider), isNull);
+    final syncs = server.syncs;
+    await tester.pump(const Duration(seconds: 70));
+    expect(server.syncs, syncs);
+    expect(container.read(subscriptionPendingRetryProvider), isNull);
+  });
+
   testWidgets('expiry schedules a server refresh without a UI action', (
     tester,
   ) async {
