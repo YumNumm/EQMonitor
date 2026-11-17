@@ -84,6 +84,15 @@
 - Dio と `NativeAdapter` の標準処理で、応答停止・本文受信停止・キャンセル時の完了と、認証・オンボーディングの待機表示が解除されることを実機で確認する。
 - 未検証: Android / iOS の配布用ビルドと実機通信。
 
+## 800: 起動時の通信削減の端末確認
+
+- 起動時の通信を減らす変更（デバイスのロール・通知スロット・揺れ検知設定・端末トークン・強震モニタ・Asset Pack）は、Dart の自動テストと解析だけを確認した。実測ではなくコードの読解に基づく変更で、端末での通信本数は未計測。制約は [API とデータ](../knowledge/api_and_data.md)、[通知と位置情報](../knowledge/notification_location.md)、[Push と認証](../knowledge/push_and_auth.md) を参照する。
+- 未検証: 2 回目以降の起動で `GET /v2/device/me`・`GET /v2/device/me/settings/shake-detection` が出ないこと、`GET /v2/device/me/settings/slots` が起動を待たせず裏で 1 回だけ出ること、Asset Pack の要求に `x-eqmonitor-device-id` が付かないこと。
+- 未検証: 現在地の通知スロット・揺れ検知の現在地条件がある端末で、端末の再起動後・OS 終了後にも位置情報の監視と headless 位置同期が続くこと。現在地スロットの削除で監視が止まること。
+- 未検証: Admin 端末で設定画面のアプリアイコンをダブルタップするとデバッグメニューが表示され、Admin を外した端末は次回の起動で非表示になること。完了時の触覚の強さ・体感。
+- 未検証: iOS の Pro ユーザーで、起動時に Widget の Pro 表示・任意地域が一時的に消えず、タイムライン再読み込みの回数が減ること。機内モードの起動でも前回の表示が残ること。
+- 未検証: 端末のロック中に起動した場合（位置情報による再起動など）に、ロック解除後の通信へ端末 ID・認証ヘッダーが付くこと。
+
 ## 800: API再生成後の配布ビルドと既存テスト
 
 - Backend mainの正規OpenAPIからDart APIを再生成後、Android arm64 releaseのDart kernel生成は確認済み。Android SDK・Apple SDKがない環境のため、GradleによるAABとiOS archiveはCIで再確認する。
