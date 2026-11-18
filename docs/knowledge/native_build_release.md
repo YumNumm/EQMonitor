@@ -114,6 +114,9 @@ xcrun actool AppIcon-dev.icon \
   Gradle 実行中の NDK 自動取得は ZipException で失敗することがあるため、
   `.github/workflows/deploy-app.yaml` の Build Android 前に `sdkmanager --install "ndk;28.2.13676358"` を
   リトライ付きで実行する（2026-10-28 時点）。
+- Maven Central が HTTP 429 を返すと、`flutter build appbundle` の Gradle 依存解決
+  （例: `kotlin-gradle-plugins-bom`）が失敗することがある。Flutter 内蔵の短いリトライだけでは
+  不足しうるため、同ジョブの `flutter build appbundle` も最大 3 回・30 秒間隔で再実行する（2026-11-18）。
 - `cronet_http` の Play Services 経由では `cronet-api` / `cronet-shared` の
   namespace が重複するため、AGP 9 の厳格な検査で Manifest 統合が失敗する。
   [upstream issue #1932](https://github.com/dart-lang/http/issues/1932) が解消するまで

@@ -832,6 +832,8 @@ jobs:
         run: |
           cp gradle.ci.properties gradle.properties
 
+      # Maven Central が 429 を返すと Kotlin Gradle プラグインの解決に失敗しやすい。
+      # Flutter 内蔵の Gradle リトライは待ち時間が短いため、ジョブ側でも再実行する。
       - name: Build Android (AAB)
         working-directory: app
         env:
@@ -839,6 +841,7 @@ jobs:
           # beta タグ配信時はタグ名(例: v3.1.0-beta.1)をそのまま表示。それ以外は ref_name-sha。
           COMMIT_INFORMATION: ${{ github.ref_type == 'tag' && github.ref_name || format('{0}-{1}', github.ref_name, github.sha) }}
         run: |
+          set -euo pipefail
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
           # iOS と同じく x.y.z を versionName に渡す。`3.0.0-beta.11` のままだと
@@ -851,16 +854,25 @@ jobs:
             echo "::error::unexpected build-name '${BUILD_NAME}' derived from app/pubspec.yaml"
             exit 1
           fi
-          flutter build appbundle \
-            --release \
-            --no-pub \
-            --build-name="$BUILD_NAME" \
-            --build-number="${BUILD_NUMBER}" \
-            --dart-define-from-file=../environment/.env.prod \
-            --dart-define IS_PRODUCTION="true" \
-            --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
-            --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
-            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE"
+          for attempt in 1 2 3; do
+            if flutter build appbundle \
+              --release \
+              --no-pub \
+              --build-name="$BUILD_NAME" \
+              --build-number="${BUILD_NUMBER}" \
+              --dart-define-from-file=../environment/.env.prod \
+              --dart-define IS_PRODUCTION="true" \
+              --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
+              --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
+              --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE"; then
+              echo "Built AAB on attempt ${attempt}"
+              exit 0
+            fi
+            echo "::warning::flutter build appbundle attempt ${attempt} failed; retrying..."
+            sleep 30
+          done
+          echo "::error::flutter build appbundle failed after 3 attempts"
+          exit 1
 
       - name: Copy AAB to expected location
         run: |
