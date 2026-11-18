@@ -245,12 +245,12 @@ class const _MapHeader() extends ConsumerWidget {
     );
 
     final isDebug = ref.watch(debugProvider).value ?? false;
-    final isEewFocusActive = ref.watch(
-      homeMapCameraStateProvider.select((state) => state.isEewFocusActive),
+    final isRealtimeFocusActive = ref.watch(
+      homeMapCameraStateProvider.select((state) => state.isRealtimeFocusActive),
     );
 
     final controllerCard = HomeMapControllerCard(
-      isLocationButtonEnabled: !isEewFocusActive,
+      isLocationButtonEnabled: !isRealtimeFocusActive,
       onLayerButtonTap: () async =>
           const HomeMapLayerRoute().push<void>(context),
       onLocationButtonTap: () =>
