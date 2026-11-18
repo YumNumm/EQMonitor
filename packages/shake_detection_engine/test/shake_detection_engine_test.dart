@@ -333,7 +333,7 @@ void main() {
   group('離島の単独検知', () {
     const island = [ShakeStationLocation(latitude: 27, longitude: 142)];
 
-    test('単独で 1.4 以上上昇し、やや強い揺れ以上であれば確定すること', () {
+    test('単独で 1.4 以上上昇し、Medium 以上であれば確定すること', () {
       final engine = ShakeDetectionEngine(stations: island)
         ..process(time: at(0), intensities: [-0.5]);
 

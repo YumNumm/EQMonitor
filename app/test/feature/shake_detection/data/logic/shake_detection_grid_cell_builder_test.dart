@@ -13,8 +13,8 @@ void main() {
       expect(builder.levelFromIntensity(0.5), ShakeDetectionLevel.weak);
       expect(builder.levelFromIntensity(2.49), ShakeDetectionLevel.weak);
       expect(builder.levelFromIntensity(2.5), ShakeDetectionLevel.medium);
-      expect(builder.levelFromIntensity(4.49), ShakeDetectionLevel.medium);
-      expect(builder.levelFromIntensity(4.5), ShakeDetectionLevel.strong);
+      expect(builder.levelFromIntensity(3.49), ShakeDetectionLevel.medium);
+      expect(builder.levelFromIntensity(3.5), ShakeDetectionLevel.strong);
       expect(builder.levelFromIntensity(5.49), ShakeDetectionLevel.strong);
       expect(builder.levelFromIntensity(5.5), ShakeDetectionLevel.stronger);
     });

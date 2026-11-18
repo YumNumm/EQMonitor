@@ -7,8 +7,9 @@ enum ShakeEventLevel {
 
   /// 震度階級の境界に合わせる。
   ///
-  /// 微弱: 震度1未満、弱い: 震度1〜2、やや強い: 震度3〜4、
-  /// 強い: 震度5弱〜5強、非常に強い: 震度6弱以上。
+  /// 配信側の検知サービスと同じ境界にする。
+  /// weaker: 震度0以下、weak: 震度1〜2、medium: 震度3、
+  /// strong: 震度4〜5強、stronger: 震度6弱以上。
   factory fromIntensity(double? intensity) {
     if (intensity == null) {
       return weaker;
@@ -16,7 +17,7 @@ enum ShakeEventLevel {
     if (intensity >= 5.5) {
       return stronger;
     }
-    if (intensity >= 4.5) {
+    if (intensity >= 3.5) {
       return strong;
     }
     if (intensity >= 2.5) {

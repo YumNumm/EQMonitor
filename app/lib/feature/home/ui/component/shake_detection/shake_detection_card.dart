@@ -167,7 +167,7 @@ extension on ShakeDetectionLevel {
   String get cardTitle => switch (this) {
     .stronger => '非常に強い揺れを検知',
     .strong => '強い揺れを検知',
-    .medium => 'やや強い揺れを検知',
+    .medium => '揺れを検知',
     .weak => '弱い揺れを検知',
     .weaker => '微弱な揺れを検知',
   };

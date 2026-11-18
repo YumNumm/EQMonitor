@@ -20,7 +20,7 @@ extension ShakeDetectionLevelThresholdLabel on ShakeDetectionLevel {
   String get minLevelThresholdLabel => switch (this) {
     .weaker => '微弱な揺れ以上',
     .weak => '弱い揺れ以上',
-    .medium => 'やや強い揺れ以上',
+    .medium => '揺れ以上',
     .strong => '強い揺れ以上',
     .stronger => '非常に強い揺れ',
   };
@@ -33,7 +33,7 @@ extension ShakeDetectionLevelThresholdLabel on ShakeDetectionLevel {
     .weaker => null,
     .weak => '震度1程度〜',
     .medium => '震度3程度〜',
-    .strong => '震度5弱程度〜',
+    .strong => '震度4程度〜',
     .stronger => '震度6弱程度〜',
   };
 

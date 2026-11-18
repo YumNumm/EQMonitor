@@ -31,7 +31,7 @@ class const ShakeDetectionDebugPresetFactory() {
 
   ShakeDetectionEvent _tokyoMultiLevelGrid({required DateTime now}) {
     // 各点は異なる 0.25° セルに置き、intensity 閾値でレベルが分かれるようにする
-    // <0.5 Weaker, ≥0.5 Weak, ≥2.5 Medium, ≥4.5 Strong, ≥5.5 Stronger
+    // <0.5 Weaker, ≥0.5 Weak, ≥2.5 Medium, ≥3.5 Strong, ≥5.5 Stronger
     final pointSpecs = <({double lat, double lng, double intensity})>[
       (lat: 35.55, lng: 139.55, intensity: 0), // Weaker @ 35.50/139.50
       (lat: 35.55, lng: 139.80, intensity: 1), // Weak @ 35.50/139.75
