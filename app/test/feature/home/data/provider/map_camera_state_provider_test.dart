@@ -286,7 +286,7 @@ void main() {
         viewportSize: const Size(375, 667),
       );
       expect(
-        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        container.read(homeMapCameraStateProvider).isRealtimeFocusActive,
         isTrue,
       );
 
@@ -294,7 +294,7 @@ void main() {
 
       expect(coordinator.cancelAutomaticFocusCallCount, 1);
       expect(
-        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        container.read(homeMapCameraStateProvider).isRealtimeFocusActive,
         isFalse,
       );
     });
@@ -315,7 +315,7 @@ void main() {
       );
       await Future<void>.delayed(Duration.zero);
       expect(
-        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        container.read(homeMapCameraStateProvider).isRealtimeFocusActive,
         isTrue,
       );
 
@@ -325,7 +325,7 @@ void main() {
 
       expect(coordinator.cancelAutomaticFocusCallCount, 1);
       expect(
-        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        container.read(homeMapCameraStateProvider).isRealtimeFocusActive,
         isFalse,
       );
     });
@@ -347,7 +347,7 @@ void main() {
       await container.pump();
       expect(coordinator.realtimeTransitionCallCount, 0);
       expect(
-        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        container.read(homeMapCameraStateProvider).isRealtimeFocusActive,
         isFalse,
       );
 
@@ -355,7 +355,7 @@ void main() {
       await container.pump();
       expect(coordinator.realtimeTransitionCallCount, 1);
       expect(
-        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        container.read(homeMapCameraStateProvider).isRealtimeFocusActive,
         isTrue,
       );
     });
@@ -381,7 +381,7 @@ void main() {
 
       expect(coordinator.receivedApplyInitialFocus, isFalse);
       expect(
-        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        container.read(homeMapCameraStateProvider).isRealtimeFocusActive,
         isFalse,
       );
     });
@@ -410,7 +410,7 @@ void main() {
       expect(coordinator.receivedIgnoreAutoZoom, isTrue);
       expect(coordinator.receivedShakes, isEmpty);
       expect(
-        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        container.read(homeMapCameraStateProvider).isRealtimeFocusActive,
         isTrue,
       );
     });

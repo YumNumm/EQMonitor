@@ -1,19 +1,21 @@
-import 'package:eqmonitor/feature/home/data/logic/home_map_eew_focus_transition.dart';
+import 'package:eqmonitor/feature/home/data/logic/home_map_realtime_focus_transition.dart';
 import 'package:test/test.dart';
 
 void main() {
-  const transition = HomeMapEewFocusTransition();
+  const transition = HomeMapRealtimeFocusTransition();
 
   test('ユーザー解除後は同じEEWの更新でフォーカスを再開しない', () {
     final initial = transition.sync(
-      previous: HomeMapEewFocusSession.initial,
-      eventIds: const {'event-a'},
+      previous: HomeMapRealtimeFocusSession.initial,
+      eewEventIds: const {'event-a'},
+      shakeEventIds: const {},
     );
     final dismissed = transition.dismiss(previous: initial.session);
 
     final updated = transition.sync(
       previous: dismissed,
-      eventIds: const {'event-a'},
+      eewEventIds: const {'event-a'},
+      shakeEventIds: const {},
     );
 
     expect(updated.shouldFocus, isFalse);
@@ -22,15 +24,17 @@ void main() {
 
   test('ユーザー解除後でも新しいEEWが追加されたらフォーカスを再開する', () {
     final dismissed = transition.dismiss(
-      previous: const HomeMapEewFocusSession(
-        eventIds: {'event-a'},
+      previous: const HomeMapRealtimeFocusSession(
+        eewEventIds: {'event-a'},
+        shakeEventIds: {},
         isFocused: true,
       ),
     );
 
     final updated = transition.sync(
       previous: dismissed,
-      eventIds: const {'event-a', 'event-b'},
+      eewEventIds: const {'event-a', 'event-b'},
+      shakeEventIds: const {},
     );
 
     expect(updated.shouldFocus, isTrue);
@@ -39,8 +43,9 @@ void main() {
 
   test('ホーム操作は生存中のEEWへフォーカスを再開する', () {
     final dismissed = transition.dismiss(
-      previous: const HomeMapEewFocusSession(
-        eventIds: {'event-a'},
+      previous: const HomeMapRealtimeFocusSession(
+        eewEventIds: {'event-a'},
+        shakeEventIds: {},
         isFocused: true,
       ),
     );
