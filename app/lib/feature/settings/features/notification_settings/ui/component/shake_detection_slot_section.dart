@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
-import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
@@ -9,12 +8,11 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/f
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/shake_detection_slot_entry_resolver.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_notification_access.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_access_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/shake_detection_notification_min_level_dropdown.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -142,23 +140,13 @@ class const _ShakeDetectionCondition({required final NotificationSlot slot})
         ListTile(
           enabled: enabled && !busy,
           title: const Text('最小レベル'),
-          trailing: SizedBox(
-            width: 200,
-            child: ControlledDropdown<ShakeDetectionLevel>(
+          subtitle: Padding(
+            padding: EdgeInsets.only(top: designSystem.spacing.sm),
+            child: ShakeDetectionNotificationMinLevelDropdown(
+              minLevel: minLevel,
               enabled: enabled && !busy,
-              items: [
-                for (final level in ShakeDetectionLevel.values)
-                  M3EDropdownItem(
-                    value: level,
-                    label: level.minLevelThresholdLabel,
-                    selected: level == minLevel,
-                  ),
-              ],
-              onSelectionChanged: (selectedItems) async {
-                final next = selectedItems.firstOrNull?.value;
-                if (next == null || next == minLevel) return;
-                await action.updateSlot(ref, slot: slot, minLevel: next);
-              },
+              onChanged: (next) =>
+                  action.updateSlot(ref, slot: slot, minLevel: next),
             ),
           ),
         ),
