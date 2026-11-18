@@ -59,8 +59,15 @@
   詳細は [EEW・リアルタイム](eew_realtime.md) を参照する。
 - GitHub Actions の iOS / Android ビルドは、配布先によらず `IS_PRODUCTION=true` を渡す。
   ローカルでは未指定時 false、`--dart-define=IS_PRODUCTION=true` で切り替える。
-- `BuildConfig.isDeveloperUiEnabled` は `!isProduction`。
-  production の一般ユーザー向け debug 導線は抑止され、Admin の既存導線は維持する。
+- `BuildConfig.isDeveloperUiEnabled` は `!isProduction`。設定画面のキャッシュ項目の表示にだけ使う。
+- デバッグ画面は配布先によらず、デバッグモードが有効な端末で開ける。有効化は設定画面のビルド番号を
+  10 回タップし、全画面の警告ダイアログ（`DebugModeWarningDialog`）に同意して行う。同意は保存せず、有効にするたびに求める。
+  無効化はデバッグ画面最上部のトグルで行う。debug ビルドでは未設定時に有効として扱う。
+- 権限は `DebugAccessLevelResolver` が決める。デバッグモードが無効なら `none`、有効で Admin ロールなら `full`、
+  それ以外は `restricted`。`restricted` では Admin 限定の項目を表示せず、`DebugMenuRouteGuard` が該当ルートへの遷移も拒否する。
+  Admin 限定は Chuck、オンボーディングとそのリセット、ログ、サーバ選択、認証、App Groups UserDefaults、SharedPreferences、
+  SecureStorage、HTTP キャッシュとその無効化、WebSocket、ナビゲーション、デバイス・通知、通知 Webhook、デバイス管理、
+  Start API、Firebase App Check。項目を追加するときは、画面の表示条件とガードの一覧の両方を更新する。
 - production では Telemetry の記録・端末内保存・API 送信を無効にする。
   DB のパス解決・接続、起動と resume の記録、起動時計測の保存を開始せず、
   通知タップ・push token 同期失敗の記録は保存先も API client も持たない実装を使う。

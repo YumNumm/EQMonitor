@@ -30,9 +30,6 @@ class GoRouterCurrentLocationResolver {
 }
 
 /// 端末シェイクまたは Shift+D でデバッグページを開くラッパー。
-///
-/// 有効かどうかの判定は [isDebugMenuAvailableProvider] に委譲する
-/// (kDebugMode / BETA ビルド / デバッグモード ON / ADMIN ロール)。
 class const DebugLauncher({required final Widget child, super.key})
     extends HookConsumerWidget {
   @override

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/auth/ui/page/debug_auth_page.dart';
+import 'package:eqmonitor/feature/debug/data/model/debug_access_level.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -21,18 +22,31 @@ void main() {
   test('Debugメニュー利用不可時はNative認証デバッグルートをHomeへ戻す', () {
     expect(
       DebugMenuRouteGuard.redirect(
-        isAvailable: false,
+        accessLevel: DebugAccessLevel.none,
         matchedLocation: '/settings/debug/auth',
+        isOnboardingCompleted: true,
       ),
       '/',
     );
   });
 
-  test('Debugメニュー利用可能時はNative認証デバッグルートを許可する', () {
+  test('制限付きの利用時はNative認証デバッグルートをDebugメニューへ戻す', () {
     expect(
       DebugMenuRouteGuard.redirect(
-        isAvailable: true,
+        accessLevel: DebugAccessLevel.restricted,
         matchedLocation: '/settings/debug/auth',
+        isOnboardingCompleted: true,
+      ),
+      '/settings/debug',
+    );
+  });
+
+  test('Admin の利用時はNative認証デバッグルートを許可する', () {
+    expect(
+      DebugMenuRouteGuard.redirect(
+        accessLevel: DebugAccessLevel.full,
+        matchedLocation: '/settings/debug/auth',
+        isOnboardingCompleted: true,
       ),
       isNull,
     );

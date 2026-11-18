@@ -1,18 +1,9 @@
-import 'package:eqmonitor/core/provider/environment/environment.dart';
-import 'package:eqmonitor/feature/debug/data/logic/debug_menu_availability_resolver.dart';
-import 'package:eqmonitor/feature/devices/data/notifier/device_role_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
-import 'package:flutter/foundation.dart';
+import 'package:eqmonitor/feature/debug/data/model/debug_access_level.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_access_level_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_menu_availability_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-bool isDebugMenuAvailable(Ref ref) => ref
-    .watch(debugMenuAvailabilityResolverProvider)
-    .resolve(
-      isDebugBuild: kDebugMode,
-      role: ref.watch(deviceRoleProvider).value,
-      buildConfig: ref.watch(buildConfigProvider),
-      isDebugEnabled: ref.watch(debugProvider).value ?? false,
-    );
+bool isDebugMenuAvailable(Ref ref) =>
+    ref.watch(debugAccessLevelProvider) != DebugAccessLevel.none;

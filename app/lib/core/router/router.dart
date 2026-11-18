@@ -10,7 +10,8 @@ import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/feature/auth/ui/page/debug_auth_page.dart';
 import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
-import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
+import 'package:eqmonitor/feature/debug/data/model/debug_access_level.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_access_level_provider.dart';
 import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_query.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -101,10 +102,12 @@ GoRouter goRouter(Ref ref) => GoRouter(
         )) {
       return const HomeRoute().location;
     }
-    final isDebugMenuAvailable = ref.read(isDebugMenuAvailableProvider);
+    final isOnboardingCompleted =
+        ref.read(onboardingCompletedProvider).value ?? false;
     final debugRouteRedirect = DebugMenuRouteGuard.redirect(
-      isAvailable: isDebugMenuAvailable,
+      accessLevel: ref.read(debugAccessLevelProvider),
       matchedLocation: state.matchedLocation,
+      isOnboardingCompleted: isOnboardingCompleted,
     );
     if (debugRouteRedirect != null) {
       return debugRouteRedirect;
@@ -118,8 +121,6 @@ GoRouter goRouter(Ref ref) => GoRouter(
       return const HomeRoute().location;
     }
 
-    final isOnboardingCompleted =
-        ref.read(onboardingCompletedProvider).value ?? false;
     if (!isOnboardingCompleted) {
       final allowedDuringOnboarding =
           [
@@ -492,14 +493,40 @@ class const DebugRoute()
 
 final class const DebugMenuRouteGuard() {
   static String? redirect({
-    required bool isAvailable,
+    required DebugAccessLevel accessLevel,
     required String matchedLocation,
+    required bool isOnboardingCompleted,
   }) {
-    if (!isAvailable &&
+    if (accessLevel == DebugAccessLevel.none &&
         matchedLocation.startsWith(const DebugRoute().location)) {
       return const HomeRoute().location;
     }
-    return null;
+    if (accessLevel == DebugAccessLevel.full) {
+      return null;
+    }
+    final isAdminOnly =
+        [
+          const TalkerRoute().location,
+          const HttpApiEndpointSelectorRoute().location,
+          const DebugAuthRoute().location,
+          const DebugAppGroupRoute().location,
+          const DebugSharedPreferencesRoute().location,
+          const DebugSecureStorageRoute().location,
+          const DebugHttpCacheRoute().location,
+          const DebugWebSocketRoute().location,
+          const DebugNavigationRoute().location,
+          const DebugDeviceSettingsRoute().location,
+          const DebugNotificationWebhookRoute().location,
+          const DebugDeviceAdminRoute().location,
+        ].any(matchedLocation.startsWith) ||
+        (isOnboardingCompleted &&
+            matchedLocation.startsWith(const OnboardingRoute().location));
+    if (!isAdminOnly) {
+      return null;
+    }
+    return accessLevel == DebugAccessLevel.none
+        ? const HomeRoute().location
+        : const DebugRoute().location;
   }
 }
 
