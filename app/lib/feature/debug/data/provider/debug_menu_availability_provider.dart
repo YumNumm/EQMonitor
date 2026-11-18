@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/debug/data/logic/debug_menu_availability_resolver.dart';
-import 'package:eqmonitor/feature/devices/data/provider/device_role_provider.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_role_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

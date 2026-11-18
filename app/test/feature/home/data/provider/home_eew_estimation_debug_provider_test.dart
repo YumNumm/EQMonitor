@@ -1,5 +1,5 @@
 import 'package:eqmonitor/feature/devices/data/model/device_role.dart';
-import 'package:eqmonitor/feature/devices/data/provider/device_role_provider.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_role_notifier.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_eew_estimation_debug_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/home_eew_estimation_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
@@ -19,6 +19,18 @@ class _StubHomeEewEstimationDebug({required final bool isEnabled})
   Future<bool> build() async => isEnabled;
 }
 
+/// `deviceRoleProvider` を固定するスタブ。
+class _StubDeviceRole({
+  required final DeviceRole? role,
+  final List<DeviceRole?>? roleReads,
+}) extends DeviceRoleNotifier {
+  @override
+  Future<DeviceRole?> build() async {
+    roleReads?.add(role);
+    return role;
+  }
+}
+
 ProviderContainer _container({
   required bool isDebugEnabled,
   required DeviceRole? role,
@@ -28,10 +40,9 @@ ProviderContainer _container({
   final container = ProviderContainer(
     overrides: [
       debugProvider.overrideWith(() => _StubDebug(isEnabled: isDebugEnabled)),
-      deviceRoleProvider.overrideWith((ref) async {
-        roleReads?.add(role);
-        return role;
-      }),
+      deviceRoleProvider.overrideWith(
+        () => _StubDeviceRole(role: role, roleReads: roleReads),
+      ),
       homeEewEstimationDebugProvider.overrideWith(
         () => _StubHomeEewEstimationDebug(isEnabled: isSettingEnabled),
       ),

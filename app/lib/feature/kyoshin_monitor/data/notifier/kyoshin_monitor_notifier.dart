@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/clock/time_mode.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_frame_policy.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_image_delay_status.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_delay_calibration_notifier.dart';
@@ -100,6 +101,12 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         .isDelayed(now: now, targetTime: targetTime, delay: delay);
 
     if (state.isLoading) {
+      return;
+    }
+    // 同じフレームを取り直すと、通信が増えるうえ揺れ検知へ同じ画像を二度渡す。
+    if (ref
+        .read(kyoshinMonitorFramePolicyProvider)
+        .isAlreadyFetched(current: state.value, targetTime: targetTime)) {
       return;
     }
     final stopwatch = Stopwatch()..start();

@@ -71,4 +71,67 @@ void main() {
       expect(container.read(isProProvider), isFalse);
     });
   });
+
+  group('confirmedIsProProvider', () {
+    test('読み込み中は未確定 (null) を返し、確定後に値を返す', () async {
+      final container = _container(
+        status: const SubscriptionStatus.active(productId: 'pro'),
+      );
+      addTearDown(container.dispose);
+
+      expect(container.read(confirmedIsProProvider), isNull);
+
+      await container.read(subscriptionProvider.future);
+      expect(container.read(confirmedIsProProvider), isTrue);
+    });
+
+    test('Pro でないと確定したら false を返す', () async {
+      final container = _container(
+        status: const SubscriptionStatus.inactive(),
+      );
+      addTearDown(container.dispose);
+
+      await container.read(subscriptionProvider.future);
+      expect(container.read(confirmedIsProProvider), isFalse);
+    });
+
+    test('確定後の再読み込み中は、前回の値を false にせず未確定とする', () async {
+      final container = _container(
+        status: const SubscriptionStatus.active(productId: 'pro'),
+      );
+      addTearDown(container.dispose);
+      await container.read(subscriptionProvider.future);
+      expect(container.read(confirmedIsProProvider), isTrue);
+
+      (container.read(
+        subscriptionProvider.notifier,
+      ) as _StubSubscriptionNotifier).refreshing = true;
+      container.invalidate(subscriptionProvider);
+
+      expect(container.read(confirmedIsProProvider), isNull);
+      expect(container.read(isProProvider), isFalse);
+    });
+
+    test('取得に失敗したら未確定とする', () async {
+      final container = ProviderContainer(
+        retry: (_, _) => null,
+        overrides: [
+          subscriptionProvider.overrideWith(_FailingSubscriptionNotifier.new),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await expectLater(
+        container.read(subscriptionProvider.future),
+        throwsStateError,
+      );
+      expect(container.read(confirmedIsProProvider), isNull);
+      expect(container.read(isProProvider), isFalse);
+    });
+  });
+}
+
+class _FailingSubscriptionNotifier extends SubscriptionNotifier {
+  @override
+  Future<SubscriptionStatus> build() async => throw StateError('offline');
 }

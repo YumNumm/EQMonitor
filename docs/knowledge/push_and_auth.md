@@ -100,7 +100,18 @@ input-push-channel: {apnsChannelId}
 ## デバイス Admin とユーザー権限
 
 - `DeviceRepository.getDeviceRole()` はデバイスJWTで `GET /v2/device/me` の `role` を取得する。
-  未登録・通信失敗・未知値はUI側で非Adminとして扱い、取得不能をAdminへ補完しない。
+  未登録・未取得・通信失敗・未知値はUI側で非Adminとして扱い、取得不能をAdminへ補完しない。
+- ロールは毎起動では取得しない。`DeviceRoleNotifier`（`deviceRoleProvider`）が最後に取得できた値を
+  `SharedPreferencesKey.deviceRole` に保存し、起動時は保存値を返す。保存値が `ADMIN` のときだけ、
+  取り消しを反映するため起動時に取得し直す。保存値が `USER`・保存値なしの端末は自動では取得しない。
+- 再取得は設定画面のアプリアイコンのダブルタップ（`SettingsAppIconAction`）で行う。結果は画面に出さず、
+  取得できたときだけ触覚で知らせる（失敗時は何も返さない）。Adminに追加した端末・更新直後の既存Admin端末は、
+  この操作を行うまで非Admin（ロール不明）のままになる。
+- 保存値が `ADMIN` で取得に失敗した起動では、その起動中はロール不明（null）とし、保存値は残して次回に確認する。
+  保存値は資格情報の保存・削除時に消し、端末IDが変わればNotifierを作り直す。
+- ロール不明（null）と `USER` は区別する。`isShakeDetectionNotificationAvailableProvider` は null で例外にし、
+  揺れ検知通知のサーバー側無効化を行わない。`USER` と確定している場合だけ利用不可として扱う。
+  `ref.invalidate(deviceRoleProvider)` は保存値を読み直すだけで取得しないため、再試行には `refresh()` を使う。
 - デバイスの `ADMIN` / `USER` は開発者UIのゲート。Better Authの `user.role` による
   backend管理者認可とは別で、デバイスroleを管理APIの認可根拠にしない。
 - 利用可能性と保存済み設定を分け、権限を失ったら設定がONでも表示しない。

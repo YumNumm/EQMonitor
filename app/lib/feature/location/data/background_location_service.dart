@@ -8,9 +8,12 @@ import 'package:eqmonitor/core/provider/widget_timeline_reloader.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
+import 'package:eqmonitor/feature/location/data/repository/device_location_consumers_repository.dart';
+import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_availability_provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,35 +46,70 @@ Stream<void> backgroundLocationService(Ref ref) async* {
 ///
 /// [Ref] はコンストラクタではなく各メソッドの引数として受け取る。
 class const BackgroundLocationSyncCoordinator() {
+  /// 位置情報の監視を、端末に保存済みの状態から宣言し直す。
+  ///
+  /// 通知スロットは前回値、揺れ検知の「現在地」条件は端末の保存値で判定し、
+  /// 起動時に揺れ検知の設定をサーバーから取得しない。
   Future<void> ensureMonitoring(Ref ref) async {
     try {
-      final List<NotificationSlot>? slots = await (() async {
-        try {
-          return await ref.read(notificationSlotsProvider.future);
-        } on Object catch (e, st) {
-          talker.error('[BackgroundLocation] read slots failed', e, st);
-          return null;
-        }
-      })();
-      final shakeDetectionState = await (() async {
-        try {
-          return await ref.read(shakeDetectionSettingsProvider.future);
-        } on Object catch (e, st) {
-          talker.error(
-            '[BackgroundLocation] read shake detection settings failed',
-            e,
-            st,
-          );
-          return null;
-        }
-      })();
+      final (slots, isShakeCurrentLocationEnabled) = await (
+        readSlots(ref),
+        readShakeCurrentLocationEnabled(ref),
+      ).wait;
       await const BackgroundLocationMonitoringLifecycle().reconcile(
         slots: slots,
-        shakeDetectionState: shakeDetectionState,
+        isShakeCurrentLocationEnabled: isShakeCurrentLocationEnabled,
       );
     } on Object catch (e, st) {
       talker.error('[BackgroundLocation] ensureMonitoring failed', e, st);
     }
+  }
+
+  Future<List<NotificationSlot>?> readSlots(Ref ref) async {
+    try {
+      return await ref.read(notificationSlotsProvider.future);
+    } on Object catch (e, st) {
+      talker.error('[BackgroundLocation] read slots failed', e, st);
+      return null;
+    }
+  }
+
+  /// 揺れ検知の「現在地」条件が有効かを、サーバーへ問い合わせずに返す。
+  ///
+  /// 判定できない場合は null を返し、呼び出し側は監視を止めない。
+  Future<bool?> readShakeCurrentLocationEnabled(Ref ref) async {
+    try {
+      final isAvailable = await ref.read(
+        isShakeDetectionNotificationAvailableProvider.future,
+      );
+      if (!isAvailable) {
+        // 利用できない端末では、保存値に関係なく無効として確定させる。
+        // サーバー側の無効化が未確認なら、この構築の中で一度だけ行う。
+        await ref.read(shakeDetectionSettingsProvider.future);
+        return false;
+      }
+    } on Object catch (e, st) {
+      // 利用可否が分からない（ロール未取得など）場合は、保存値で判定する。
+      talker.info(
+        '[BackgroundLocation] shake detection availability is unknown',
+        e,
+        st,
+      );
+    }
+    final consumers = ref.read(deviceLocationConsumersRepositoryProvider);
+    await consumers.restoreStoredShake();
+    final isEnabled = await consumers.readShakeCurrentLocationEnabled();
+    if (isEnabled != null) {
+      return isEnabled;
+    }
+    // 保存値がない端末（更新直後など）は、headless と共有している
+    // 「現在地の送信が有効」の保存値で代用する。有効なら監視を維持し、
+    // 無効はスロット・揺れ検知の両方がないと確認できたときだけ保存される。
+    return switch (await consumers.storage.readAvailability()) {
+      DeviceLocationSyncAvailability.enabled => true,
+      DeviceLocationSyncAvailability.disabled => false,
+      DeviceLocationSyncAvailability.uninitialized => null,
+    };
   }
 
   Future<void> applyPendingLocation(Ref ref) async {

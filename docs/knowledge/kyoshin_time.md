@@ -17,6 +17,12 @@
   公開の境目を二分探索して補正量へ反映し、5分ごとにやり直す。実機での収束時間・404頻度は未検証。
 - 遅延を短くするのは較正だけ。表示用の取得成功で詰めると境目を割って毎回フレームを落とす。
   表示用の取得は404のときに補正量を増やすだけにする。
+- 公開遅延の見積もりが変わるたびに `kyoshinMonitorTimerStreamProvider` が再構築され、境界を待たずに1枚発行する。
+  見積もりの変化が1秒未満だと直前と同じ対象時刻になり、起動直後の連続測定・404後の補正・較正のたびに
+  同じ画像を取り直し得る（コードの読解による。実機での発生回数は未計測）。`KyoshinMonitorNotifier` は
+  取得・解析に成功した直前のフレーム（`lastImageFetchTargetTime`）と同じ対象時刻を取得しない。
+  判定は `KyoshinMonitorFramePolicy`。失敗した取得はこの値を更新しないため、404後の同じ時刻の取り直しは妨げない。
+  発行側（タイマー）で重複を落とすと、404後の即時の取り直しまで止まるため行わない。
 - 公開遅延の下限は200msで永続化しない。保存済みの旧値に縛られると較正で詰められない。
 - サンプル保持はKyoshinMonitorTimeSyncSamplesNotifier、公開遅延はkyoshinMonitorImageDelayProvider。
   layer/source/delayProfileはKyoshinMonitorImageRequestが持つ。曖昧なeffectiveXxxを増やさない。

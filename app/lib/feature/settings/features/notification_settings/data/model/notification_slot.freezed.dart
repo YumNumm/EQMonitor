@@ -12,6 +12,7 @@ part of 'notification_slot.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$NotificationSlot {
 
@@ -22,6 +23,8 @@ mixin _$NotificationSlot {
 @pragma('vm:prefer-inline')
 $NotificationSlotCopyWith<NotificationSlot> get copyWith => _$NotificationSlotCopyWithImpl<NotificationSlot>(this as NotificationSlot, _$identity);
 
+  /// Serializes this NotificationSlot to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -29,7 +32,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationSlot&&(identical(other.id, id) || other.id == id)&&(identical(other.slotType, slotType) || other.slotType == slotType)&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.cityName, cityName) || other.cityName == cityName)&&(identical(other.displayOrder, displayOrder) || other.displayOrder == displayOrder)&&(identical(other.eewEnabled, eewEnabled) || other.eewEnabled == eewEnabled)&&(identical(other.eewMinIntensity, eewMinIntensity) || other.eewMinIntensity == eewMinIntensity)&&const DeepCollectionEquality().equals(other.eewOverrides, eewOverrides)&&(identical(other.earthquakeEnabled, earthquakeEnabled) || other.earthquakeEnabled == earthquakeEnabled)&&(identical(other.earthquakeMinIntensity, earthquakeMinIntensity) || other.earthquakeMinIntensity == earthquakeMinIntensity)&&const DeepCollectionEquality().equals(other.earthquakeOverrides, earthquakeOverrides));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,id,slotType,regionId,regionName,cityCode,cityName,displayOrder,eewEnabled,eewMinIntensity,const DeepCollectionEquality().hash(eewOverrides),earthquakeEnabled,earthquakeMinIntensity,const DeepCollectionEquality().hash(earthquakeOverrides));
 
@@ -216,11 +219,11 @@ return $default(_that.id,_that.slotType,_that.regionId,_that.regionName,_that.ci
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _NotificationSlot implements NotificationSlot {
   const _NotificationSlot({required this.id, required this.slotType, required this.regionId, required this.regionName, required this.cityCode, required this.cityName, required this.displayOrder, required this.eewEnabled, required this.eewMinIntensity, required  List<NotificationOverride>? eewOverrides, required this.earthquakeEnabled, required this.earthquakeMinIntensity, required  List<NotificationOverride>? earthquakeOverrides}): _eewOverrides = eewOverrides,_earthquakeOverrides = earthquakeOverrides;
-  
+  factory _NotificationSlot.fromJson(Map<String, dynamic> json) => _$NotificationSlotFromJson(json);
 
 @override final  String id;
 @override final  NotificationSlotType slotType;
@@ -258,14 +261,17 @@ class _NotificationSlot implements NotificationSlot {
 @pragma('vm:prefer-inline')
 _$NotificationSlotCopyWith<_NotificationSlot> get copyWith => __$NotificationSlotCopyWithImpl<_NotificationSlot>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$NotificationSlotToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationSlot&&(identical(other.id, id) || other.id == id)&&(identical(other.slotType, slotType) || other.slotType == slotType)&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.cityName, cityName) || other.cityName == cityName)&&(identical(other.displayOrder, displayOrder) || other.displayOrder == displayOrder)&&(identical(other.eewEnabled, eewEnabled) || other.eewEnabled == eewEnabled)&&(identical(other.eewMinIntensity, eewMinIntensity) || other.eewMinIntensity == eewMinIntensity)&&const DeepCollectionEquality().equals(other._eewOverrides, _eewOverrides)&&(identical(other.earthquakeEnabled, earthquakeEnabled) || other.earthquakeEnabled == earthquakeEnabled)&&(identical(other.earthquakeMinIntensity, earthquakeMinIntensity) || other.earthquakeMinIntensity == earthquakeMinIntensity)&&const DeepCollectionEquality().equals(other._earthquakeOverrides, _earthquakeOverrides));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,id,slotType,regionId,regionName,cityCode,cityName,displayOrder,eewEnabled,eewMinIntensity,const DeepCollectionEquality().hash(_eewOverrides),earthquakeEnabled,earthquakeMinIntensity,const DeepCollectionEquality().hash(_earthquakeOverrides));
 

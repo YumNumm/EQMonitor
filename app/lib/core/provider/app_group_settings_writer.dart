@@ -30,11 +30,14 @@ abstract final class AppGroupKeys {
 
 /// アプリ本体の設定を iOS App Group UserDefaults へ同期する。
 ///
-/// [telegramUrlProvider] / [isProProvider] / [widgetRegionProvider] を
+/// [telegramUrlProvider] / [confirmedIsProProvider] / [widgetRegionProvider] を
 /// watch するため、URL 変更・Pro 状態変化・任意地域の選択/解除が Widget に即時
 /// 反映される。現在地の地域コードは位置権限が許可済みのときのみベストエフォートで
 /// 書き込む（新規の権限要求はしない）。位置変化への追従は
 /// `backgroundLocationService` 側で別途行う。
+///
+/// 購読状態が確定するまで（読み込み中・エラー時）は、Pro 状態とそれに依存する
+/// 任意地域を書き換えず、前回の値を残す。Pro に依存しない URL・現在地は先に書く。
 ///
 /// 書き込み内容が実際に変化したときだけ Widget のタイムライン再読み込みを要求する。
 @Riverpod(keepAlive: true)
@@ -46,7 +49,7 @@ Future<void> appGroupSettingsWriter(Ref ref) async {
 
   final prefs = await ref.watch(appGroupPreferencesProvider.future);
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
-  final isPro = ref.watch(isProProvider);
+  final isPro = ref.watch(confirmedIsProProvider);
   final widgetRegion = await ref.watch(widgetRegionProvider.future);
   final locationResult = await ref
       .read(widgetCurrentLocationLoaderProvider)
@@ -71,10 +74,11 @@ Future<void> appGroupSettingsWriter(Ref ref) async {
 
 /// App Group UserDefaults への書き込みロジック本体。
 class const AppGroupSettingsWriter._() {
+  /// [isPro] が null（購読状態が未確定）の間は、Pro 状態と任意地域を書き換えない。
   static Future<bool> write({
     required SharedPreferencesAsync prefs,
     required String telegramRestApiUrl,
-    required bool isPro,
+    required bool? isPro,
     required WidgetRegionSelection? widgetRegion,
     required WidgetLocationLoadResult locationResult,
     required Future<EarthquakeRegionResolution?> Function(
@@ -90,11 +94,13 @@ class const AppGroupSettingsWriter._() {
       telegramRestApiUrl,
     );
     changed |= await _setBool(prefs, AppGroupKeys.debugMode, value: kDebugMode);
-    changed |= await _setBool(prefs, AppGroupKeys.isPro, value: isPro);
+    if (isPro != null) {
+      changed |= await _setBool(prefs, AppGroupKeys.isPro, value: isPro);
 
-    // 任意地域は Pro 専用。非 Pro のときは設定を保持したまま Widget からは隠す。
-    final effectiveRegion = isPro ? widgetRegion : null;
-    changed |= await _writeWidgetRegion(prefs, effectiveRegion);
+      // 任意地域は Pro 専用。非 Pro のときは設定を保持したまま Widget からは隠す。
+      final effectiveRegion = isPro ? widgetRegion : null;
+      changed |= await _writeWidgetRegion(prefs, effectiveRegion);
+    }
 
     changed |= await _writeCurrentLocation(
       prefs,

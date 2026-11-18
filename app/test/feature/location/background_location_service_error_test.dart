@@ -1,8 +1,6 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -46,9 +44,7 @@ void main() {
 
     final shouldMonitor = policy.shouldMonitor(
       slots: [models.currentLocationSlot()],
-      shakeDetectionState: models.shakeDetectionState(
-        hasCurrentLocation: false,
-      ),
+      isShakeCurrentLocationEnabled: false,
     );
 
     expect(shouldMonitor, isTrue);
@@ -58,13 +54,10 @@ void main() {
     'BackgroundLocationMonitoringPolicy monitors shake current location',
     () {
       const policy = BackgroundLocationMonitoringPolicy();
-      const models = _TestModels();
 
       final shouldMonitor = policy.shouldMonitor(
         slots: [],
-        shakeDetectionState: models.shakeDetectionState(
-          hasCurrentLocation: true,
-        ),
+        isShakeCurrentLocationEnabled: true,
       );
 
       expect(shouldMonitor, isTrue);
@@ -77,9 +70,7 @@ void main() {
 
     final shouldMonitor = policy.shouldMonitor(
       slots: [models.regionSlot()],
-      shakeDetectionState: models.shakeDetectionState(
-        hasCurrentLocation: false,
-      ),
+      isShakeCurrentLocationEnabled: false,
     );
 
     expect(shouldMonitor, isFalse);
@@ -91,9 +82,7 @@ void main() {
 
     final shouldStop = policy.shouldStop(
       slots: [models.regionSlot()],
-      shakeDetectionState: models.shakeDetectionState(
-        hasCurrentLocation: false,
-      ),
+      isShakeCurrentLocationEnabled: false,
     );
 
     expect(shouldStop, isTrue);
@@ -105,7 +94,7 @@ void main() {
 
     final shouldStop = policy.shouldStop(
       slots: [models.regionSlot()],
-      shakeDetectionState: null,
+      isShakeCurrentLocationEnabled: null,
     );
 
     expect(shouldStop, isFalse);
@@ -115,13 +104,10 @@ void main() {
     'BackgroundLocationMonitoringPolicy keeps monitoring when slots unknown',
     () {
       const policy = BackgroundLocationMonitoringPolicy();
-      const models = _TestModels();
 
       final shouldStop = policy.shouldStop(
         slots: null,
-        shakeDetectionState: models.shakeDetectionState(
-          hasCurrentLocation: false,
-        ),
+        isShakeCurrentLocationEnabled: false,
       );
 
       expect(shouldStop, isFalse);
@@ -136,9 +122,7 @@ void main() {
 
       final shouldStop = policy.shouldStop(
         slots: [models.currentLocationSlot()],
-        shakeDetectionState: models.shakeDetectionState(
-          hasCurrentLocation: false,
-        ),
+        isShakeCurrentLocationEnabled: false,
       );
 
       expect(shouldStop, isFalse);
@@ -155,7 +139,7 @@ void main() {
 
     await lifecycle.reconcile(
       slots: [models.currentLocationSlot()],
-      shakeDetectionState: null,
+      isShakeCurrentLocationEnabled: null,
     );
 
     expect(events, ['start']);
@@ -171,9 +155,7 @@ void main() {
 
     await lifecycle.reconcile(
       slots: [models.regionSlot()],
-      shakeDetectionState: models.shakeDetectionState(
-        hasCurrentLocation: false,
-      ),
+      isShakeCurrentLocationEnabled: false,
     );
 
     expect(events, ['stop']);
@@ -188,7 +170,7 @@ void main() {
 
     await lifecycle.reconcile(
       slots: const [],
-      shakeDetectionState: null,
+      isShakeCurrentLocationEnabled: null,
     );
 
     expect(events, isEmpty);
@@ -227,19 +209,4 @@ final class const _TestModels() {
     earthquakeMinIntensity: JmaIntensity.four,
     earthquakeOverrides: null,
   );
-
-  ShakeDetectionState shakeDetectionState({required bool hasCurrentLocation}) =>
-      (
-        entries: [
-          if (hasCurrentLocation)
-            const ShakeDetectionEntry(
-              id: 'current',
-              regionCode: null,
-              enabled: true,
-              minLevel: ShakeDetectionLevel.medium,
-              targetType: ShakeDetectionTargetType.currentLocation,
-            ),
-        ],
-        requiresReconfiguration: false,
-      );
 }

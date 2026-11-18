@@ -34,6 +34,7 @@ enum SharedPreferencesKey(final String key) {
   apnsNotificationTokenLastSent('apns_notification_token_last_sent'),
   apnsPushToStartTokenLastSent('apns_push_to_start_token_last_sent'),
   deviceMigratedFromLegacy('device_migrated_from_legacy'),
+  deviceRole('device_role'),
   autoReturnToRealtime('auto_return_to_realtime'),
   earthquakeHistoryMapLayerParameter('earthquake_history_map_layer_parameter'),
   homeMapLabelParameter('home_map_label_parameter'),
@@ -51,6 +52,7 @@ enum SharedPreferencesKey(final String key) {
   ),
   notificationPreset('notification_preset'),
   notificationCustomSnapshot('notification_custom_snapshot'),
+  notificationSlotsCache('notification_slots_cache'),
   appThemeLight('app_theme_light'),
   appThemeDark('app_theme_dark'),
 
@@ -64,6 +66,9 @@ enum SharedPreferencesKey(final String key) {
   backgroundLocationCurrentSlotEnabled(
     'background_location_current_slot_enabled',
   ),
+  backgroundLocationShakeCurrentLocationEnabled(
+    'background_location_shake_current_location_enabled',
+  ),
   backgroundLocationHeadlessDiagnostic(
     'background_location_headless_diagnostic',
   ),
@@ -72,4 +77,7 @@ enum SharedPreferencesKey(final String key) {
   eewWarningOverlayEnabled('eew_warning_overlay_enabled'),
   shakeDetectionNoticeAgreedVersion('shake_detection_notice_agreed_version'),
   shakeDetectionSettings('shake_detection_settings'),
+  shakeDetectionNotificationsDisabledConfirmed(
+    'shake_detection_notifications_disabled_confirmed',
+  ),
 }

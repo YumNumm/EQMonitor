@@ -10,17 +10,32 @@ part of 'shake_detection_settings_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// 揺れ検知の通知条件。
+///
+/// 起動時には構築しない。設定値が必要になった画面が watch したときに
+/// サーバーから取得する。位置情報監視の起動時の判定は、端末に保存した
+/// 最後の値（`DeviceLocationConsumersRepository`）で行う。
 
 @ProviderFor(ShakeDetectionSettingsNotifier)
 final shakeDetectionSettingsProvider =
     ShakeDetectionSettingsNotifierProvider._();
 
+/// 揺れ検知の通知条件。
+///
+/// 起動時には構築しない。設定値が必要になった画面が watch したときに
+/// サーバーから取得する。位置情報監視の起動時の判定は、端末に保存した
+/// 最後の値（`DeviceLocationConsumersRepository`）で行う。
 final class ShakeDetectionSettingsNotifierProvider
     extends
         $AsyncNotifierProvider<
           ShakeDetectionSettingsNotifier,
           ShakeDetectionState
         > {
+  /// 揺れ検知の通知条件。
+  ///
+  /// 起動時には構築しない。設定値が必要になった画面が watch したときに
+  /// サーバーから取得する。位置情報監視の起動時の判定は、端末に保存した
+  /// 最後の値（`DeviceLocationConsumersRepository`）で行う。
   ShakeDetectionSettingsNotifierProvider._()
     : super(
         from: null,
@@ -41,7 +56,13 @@ final class ShakeDetectionSettingsNotifierProvider
 }
 
 String _$shakeDetectionSettingsNotifierHash() =>
-    r'08912281cd2f1cf44d96356e39f87729e8aabb47';
+    r'80c368680ddbf71a297c3e6aec82170dd0d9d07c';
+
+/// 揺れ検知の通知条件。
+///
+/// 起動時には構築しない。設定値が必要になった画面が watch したときに
+/// サーバーから取得する。位置情報監視の起動時の判定は、端末に保存した
+/// 最後の値（`DeviceLocationConsumersRepository`）で行う。
 
 abstract class _$ShakeDetectionSettingsNotifier
     extends $AsyncNotifier<ShakeDetectionState> {

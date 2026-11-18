@@ -45,6 +45,8 @@ void main() {
     expect(capturedTask?.baseDirectory, BaseDirectory.temporary);
     expect(capturedTask?.updates, Updates.statusAndProgress);
     expect(capturedTask?.retries, 2);
+    // 配布元は自前 API ではないため、端末 ID などのヘッダーを付けない。
+    expect(capturedTask?.headers, isEmpty);
     expect(progress, [0.5]);
   });
 

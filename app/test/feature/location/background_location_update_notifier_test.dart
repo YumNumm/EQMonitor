@@ -489,6 +489,8 @@ void main() {
   });
 
   group('NotificationSlotsNotifier device location sync state', () {
+    setUp(() => SharedPreferences.setMockInitialValues({}));
+
     test('GET成功後に現在地スロット有無を保存する', () async {
       final adapter = _FakeNotificationSlotsApiAdapter(
         slots: [_currentLocationSlotResponse],
@@ -510,7 +512,13 @@ void main() {
         _FakeNotificationSlotsApiAdapter(slots: const []),
       );
       addTeardownToContainer(withoutCurrentLocation);
+      // 2 回目の起動は前回値を先に返すため、裏の再取得の完了を待つ。
       await withoutCurrentLocation.read(notificationSlotsProvider.future);
+      await pumpEventQueue();
+      expect(
+        withoutCurrentLocation.read(notificationSlotsProvider).value,
+        isEmpty,
+      );
       expect(
         await state.readAvailability(),
         DeviceLocationSyncAvailability.disabled,
@@ -600,9 +608,15 @@ void main() {
   test('起動時に両consumerがなければ残存するOS監視を停止する', () async {
     final monitoringEvents = <String>[];
     recordMonitoringCalls(monitoringEvents);
+    final stateRepository = _RecordingDeviceLocationSyncStateRepository(
+      events: <String>[],
+    );
+    // 揺れ検知の現在地条件は、端末に保存した値で「なし」と確定している。
+    await stateRepository.writeShakeCurrentLocationEnabled(isEnabled: false);
     final container = _createLocationSyncContainer(
       adapter: _FakeDeviceLocationApiAdapter(),
       resolver: _FakeJmaRegionResolver(earthquakeResolution: null),
+      stateRepository: stateRepository,
       slots: const [],
     );
     addTeardownToContainer(container);

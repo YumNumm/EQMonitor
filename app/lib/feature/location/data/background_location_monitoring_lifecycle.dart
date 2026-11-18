@@ -1,7 +1,6 @@
 import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 
 typedef BackgroundLocationMonitoringAction = Future<void> Function();
 
@@ -23,27 +22,27 @@ final class const BackgroundLocationUpdateRetry({
   }
 }
 
+/// 位置情報の監視が必要かを、通知スロットと揺れ検知の「現在地」条件から決める。
+///
+/// どちらも未取得（null）の間は「不要」と断定せず、監視を止めない。
 final class const BackgroundLocationMonitoringPolicy() {
   bool shouldMonitor({
     required List<NotificationSlot> slots,
-    required ShakeDetectionState? shakeDetectionState,
+    required bool? isShakeCurrentLocationEnabled,
   }) =>
       slots.any((s) => s.slotType == NotificationSlotType.currentLocation) ||
-      shakeDetectionState?.entries.any(
-            (e) => e.isCurrentLocation && e.enabled,
-          ) ==
-          true;
+      isShakeCurrentLocationEnabled == true;
 
   bool shouldStop({
     required List<NotificationSlot>? slots,
-    required ShakeDetectionState? shakeDetectionState,
+    required bool? isShakeCurrentLocationEnabled,
   }) {
-    if (slots == null || shakeDetectionState == null) {
+    if (slots == null || isShakeCurrentLocationEnabled == null) {
       return false;
     }
     return !shouldMonitor(
       slots: slots,
-      shakeDetectionState: shakeDetectionState,
+      isShakeCurrentLocationEnabled: isShakeCurrentLocationEnabled,
     );
   }
 }
@@ -66,17 +65,17 @@ final class const BackgroundLocationMonitoringLifecycle({
 
   Future<void> reconcile({
     required List<NotificationSlot>? slots,
-    required ShakeDetectionState? shakeDetectionState,
+    required bool? isShakeCurrentLocationEnabled,
   }) async {
     final shouldMonitor = policy.shouldMonitor(
       slots: slots ?? const [],
-      shakeDetectionState: shakeDetectionState,
+      isShakeCurrentLocationEnabled: isShakeCurrentLocationEnabled,
     );
     final action = shouldMonitor
         ? startMonitoring
         : policy.shouldStop(
             slots: slots,
-            shakeDetectionState: shakeDetectionState,
+            isShakeCurrentLocationEnabled: isShakeCurrentLocationEnabled,
           )
         ? stopMonitoring
         : null;
