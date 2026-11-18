@@ -180,6 +180,8 @@
   旧文書の「揺れ検知もローカル開始可能」を現行の保証にしない。
 - JSONキーはSwift CodableのcamelCase、震度は`IntensityValue`のrawValueへ合わせる。
   RunnerとWidgetの重複Attributes定義は型名・フィールドを同期する。描画紐付けは実機確認する。
+  Runner側に無いキーはデコードで捨てられ、Widgetへ渡らない。`location.isWarning` が欠けると
+  現在地の警報表示（赤い地色と点滅）にならず、通常の予想震度表示になる。
 - `EQMonitorPreview`スキームで`EQMonitorPreviewWidgetBundle.swift`の`EEW デザイン確認`を開く。
   Lock Screen / Expanded / Compact / Minimalで同じ状態一覧を使う。
 - 警報対象/対象外、予報4/3、現在地なし、到達なし、警報だが震度なし、取消、深発、PLUM、

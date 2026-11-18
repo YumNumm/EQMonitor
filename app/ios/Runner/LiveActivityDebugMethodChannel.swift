@@ -335,6 +335,8 @@ final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
         let forecastIntensity: String?
         let forecastLpgmIntensity: String?
         let arrivalTime: String?
+        let isWarning: Bool?
+        let isPlum: Bool?
     }
 
 #endif
