@@ -1,5 +1,27 @@
 # Changelog (Beta)
 
+## [3.1.0-beta.2](https://github.com/YumNumm/EQMonitor/compare/v3.1.0-beta.1...v3.1.0-beta.2) (2026-11-18)
+
+
+### Features
+
+* デバッグ画面をビルド番号の10回タップと同意で有効にし、Admin以外は制限付きにする ([b673c1f](https://github.com/YumNumm/EQMonitor/commit/b673c1f794fcbe9f6994a56a4a8f5fe979703246))
+* 微弱な揺れの通知を非推奨と表示し、選んだときに確認する ([296f463](https://github.com/YumNumm/EQMonitor/commit/296f46355a6989dfdd8100554701780bf7108a9f))
+* 揺れ検知の最小レベルの選択肢に震度の目安を表示する ([549c94a](https://github.com/YumNumm/EQMonitor/commit/549c94a66f38f7e703bd21750139bc8cb1690b22))
+* 揺れ検知レベルの境界を震度階級に合わせる ([ee1fe5d](https://github.com/YumNumm/EQMonitor/commit/ee1fe5d7e186cdc8c290c75c7ad8a489e5358b24))
+* 揺れ検知レベルを配信側に合わせ、最小レベルに震度の目安と非推奨を表示する ([68f8094](https://github.com/YumNumm/EQMonitor/commit/68f80948ab4be242a2cb5b7e3f79acd0438cd0ea))
+
+
+### Bug Fixes
+
+* ホーム地図の震度スケールの左端と間隔を他のカードに揃える ([84999de](https://github.com/YumNumm/EQMonitor/commit/84999dee2dec3205d60516a428bf2e8c056a468f))
+* ホーム地図の震度スケールの左端と間隔を他のカードに揃える ([519a671](https://github.com/YumNumm/EQMonitor/commit/519a671b6b404067b0c354ac9644b069751a47ec))
+* 最小レベルの震度の目安を新しい境界に合わせる ([572c490](https://github.com/YumNumm/EQMonitor/commit/572c49003abab966e2d57fb6d011ecad8a3a3b39))
+* 揺れ検知カードの揺れた範囲がイベントの更新のたびに一瞬消える問題を直す ([d533718](https://github.com/YumNumm/EQMonitor/commit/d533718a0385f75b79ad47cf0fc0827c6cbaa90f))
+* 揺れ検知カードの揺れた範囲がイベントの更新のたびに一瞬消える問題を直す ([d50e9c9](https://github.com/YumNumm/EQMonitor/commit/d50e9c93bfd5c47de2bca0500d682f83127128ca))
+* 揺れ検知のみのフォーカスを EEW と同じくホームボタンと地図操作で制御する ([557182f](https://github.com/YumNumm/EQMonitor/commit/557182fe5d1983b1db4b2729bbc9b885007e4aba))
+* 揺れ検知レベルの境界と名称を配信側の検知サービスに合わせる ([fcc9b36](https://github.com/YumNumm/EQMonitor/commit/fcc9b36585489b15b6f4a393f66f7c991cb7e653))
+
 ## [3.1.0-beta.1](https://github.com/YumNumm/EQMonitor/compare/v3.0.2-beta.1...v3.1.0-beta.1) (2026-11-18)
 
 
