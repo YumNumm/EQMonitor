@@ -291,6 +291,7 @@ class const _SettingDropdownField<T>({
   required final Future<void> Function(T) onChanged,
   required final List<DropdownMenuEntry<T>> entries,
   final Widget? trailing,
+  final M3EDropdownStyle dropdownStyle = const M3EDropdownStyle(),
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -337,6 +338,7 @@ class const _SettingDropdownField<T>({
             width: double.infinity,
             child: ControlledDropdown<T>(
               singleSelect: true,
+              dropdownStyle: dropdownStyle,
               items:
                   (entries
                           .map(
@@ -1232,9 +1234,11 @@ class const _ShakeDetectionMinLevelTile() extends ConsumerWidget {
       title: '表示する揺れの強さ',
       subtitle: 'この強さに満たない揺れ検知は、地図とカードに表示しません。',
       value: cfg.shakeDetection.minLevel,
+      // 二行の項目が 5 件あり、既定の高さでは最後の項目が隠れる。
+      dropdownStyle: const M3EDropdownStyle(maxHeight: 420),
       entries: [
         for (final level in ShakeDetectionLevel.values)
-          DropdownMenuEntry(value: level, label: level.minLevelThresholdLabel),
+          DropdownMenuEntry(value: level, label: level.minLevelDropdownLabel),
       ],
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(

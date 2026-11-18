@@ -24,6 +24,30 @@ extension ShakeDetectionLevelThresholdLabel on ShakeDetectionLevel {
     .strong => '強い揺れ以上',
     .stronger => '非常に強い揺れ',
   };
+
+  /// レベルの下限にあたる震度の目安。
+  ///
+  /// 検知エンジンの `ShakeEventLevel.fromIntensity` の閾値に対応する。
+  /// 微弱な揺れは下限を持たないため目安を出さない。
+  String? get intensityGuideLabel => switch (this) {
+    .weaker => null,
+    .weak => '震度0程度〜',
+    .medium => '震度1程度〜',
+    .strong => '震度3程度〜',
+    .stronger => '震度5弱程度〜',
+  };
+
+  /// 一行では選択中の表示が省略されるため、目安は二行目に置く。
+  String get minLevelDropdownLabel => switch (intensityGuideLabel) {
+    final guide? => '$minLevelThresholdLabel\n$guide',
+    null => minLevelThresholdLabel,
+  };
+
+  bool get isDeprecatedForNotification => this == .weaker;
+
+  String get notificationMinLevelDropdownLabel => isDeprecatedForNotification
+      ? '$minLevelThresholdLabel\n非推奨'
+      : minLevelDropdownLabel;
 }
 
 extension ShakeDetectionEntryX on ShakeDetectionEntry {
