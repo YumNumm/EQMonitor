@@ -17,7 +17,7 @@ class const ShakeDetectionCard({
 }) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final summary = ref.watch(shakeDetectionEventRegionsProvider(event)).value;
+    final summary = ref.watch(shakeDetectionEventRegionsProvider(event));
 
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
