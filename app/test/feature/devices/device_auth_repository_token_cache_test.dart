@@ -129,7 +129,9 @@ void main() {
   });
 
   test('再登録後のリクエストは新しい端末 ID と認証ヘッダーを送る', () async {
-    final storage = _CountingSecureStorage(token: _jwt('device-1'));
+    final firstToken = _jwt('device-1');
+    final secondToken = _jwt('device-2');
+    final storage = _CountingSecureStorage(token: firstToken);
     final repository = DeviceAuthRepository(storage);
     final idInterceptor = DeviceIdInterceptor(readToken: repository.readToken);
     final authInterceptor = DeviceAuthTokenInterceptor(
@@ -148,7 +150,7 @@ void main() {
       expect(options.headers['x-eqmonitor-device-id'], 'device-1');
       expect(
         options.headers[HttpHeaders.authorizationHeader],
-        'Bearer ${_jwt('device-1')}',
+        'Bearer $firstToken',
       );
     }
     expect(storage.readCount, 1);
@@ -165,13 +167,13 @@ void main() {
     );
 
     final readsBeforeRegistration = storage.readCount;
-    await repository.saveToken(token: _jwt('device-2'));
+    await repository.saveToken(token: secondToken);
     for (var i = 0; i < 3; i++) {
       final reregistered = await send();
       expect(reregistered.headers['x-eqmonitor-device-id'], 'device-2');
       expect(
         reregistered.headers[HttpHeaders.authorizationHeader],
-        'Bearer ${_jwt('device-2')}',
+        'Bearer $secondToken',
       );
     }
     expect(storage.readCount, readsBeforeRegistration);
