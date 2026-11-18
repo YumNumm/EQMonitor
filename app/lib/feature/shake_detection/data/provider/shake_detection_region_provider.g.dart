@@ -10,19 +10,10 @@ part of 'shake_detection_region_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// 揺れ検知の範囲の要約に使う、観測点と地域名の対応。
-///
-/// 観測点の地域コードは地震情報の細分区域で、名前は震度観測点のパラメータから引く。
-/// イベントによらず同じ内容のため、一度だけ読み込んで保持する。
 
 @ProviderFor(shakeDetectionRegionCatalog)
 final shakeDetectionRegionCatalogProvider =
     ShakeDetectionRegionCatalogProvider._();
-
-/// 揺れ検知の範囲の要約に使う、観測点と地域名の対応。
-///
-/// 観測点の地域コードは地震情報の細分区域で、名前は震度観測点のパラメータから引く。
-/// イベントによらず同じ内容のため、一度だけ読み込んで保持する。
 
 final class ShakeDetectionRegionCatalogProvider
     extends
@@ -34,10 +25,6 @@ final class ShakeDetectionRegionCatalogProvider
     with
         $FutureModifier<ShakeDetectionRegionCatalog>,
         $FutureProvider<ShakeDetectionRegionCatalog> {
-  /// 揺れ検知の範囲の要約に使う、観測点と地域名の対応。
-  ///
-  /// 観測点の地域コードは地震情報の細分区域で、名前は震度観測点のパラメータから引く。
-  /// イベントによらず同じ内容のため、一度だけ読み込んで保持する。
   ShakeDetectionRegionCatalogProvider._()
     : super(
         from: null,
@@ -67,18 +54,16 @@ final class ShakeDetectionRegionCatalogProvider
 String _$shakeDetectionRegionCatalogHash() =>
     r'65c3b885e7ed53f4601ed684cb650ae3ae203e93';
 
-/// 揺れ検知イベントの最大レベルで揺れた範囲の要約。対応表が未読込の間は `null`。
+/// 揺れ検知イベントの最大レベルで揺れた範囲の要約。
 ///
-/// イベントは毎フレーム更新される。非同期にすると更新のたびに読み込み中を
-/// 挟み、カードの範囲の行が 1 フレーム消えるため、同期的に計算する。
+/// 観測点の地域コードは地震情報の細分区域で、名前は震度観測点のパラメータから引く。
 
 @ProviderFor(shakeDetectionEventRegions)
 final shakeDetectionEventRegionsProvider = ShakeDetectionEventRegionsFamily._();
 
-/// 揺れ検知イベントの最大レベルで揺れた範囲の要約。対応表が未読込の間は `null`。
+/// 揺れ検知イベントの最大レベルで揺れた範囲の要約。
 ///
-/// イベントは毎フレーム更新される。非同期にすると更新のたびに読み込み中を
-/// 挟み、カードの範囲の行が 1 フレーム消えるため、同期的に計算する。
+/// 観測点の地域コードは地震情報の細分区域で、名前は震度観測点のパラメータから引く。
 
 final class ShakeDetectionEventRegionsProvider
     extends
@@ -88,10 +73,9 @@ final class ShakeDetectionEventRegionsProvider
           ShakeDetectionRegionSummary?
         >
     with $Provider<ShakeDetectionRegionSummary?> {
-  /// 揺れ検知イベントの最大レベルで揺れた範囲の要約。対応表が未読込の間は `null`。
+  /// 揺れ検知イベントの最大レベルで揺れた範囲の要約。
   ///
-  /// イベントは毎フレーム更新される。非同期にすると更新のたびに読み込み中を
-  /// 挟み、カードの範囲の行が 1 フレーム消えるため、同期的に計算する。
+  /// 観測点の地域コードは地震情報の細分区域で、名前は震度観測点のパラメータから引く。
   ShakeDetectionEventRegionsProvider._({
     required ShakeDetectionEventRegionsFamily super.from,
     required ShakeDetectionEvent super.argument,
@@ -148,10 +132,9 @@ final class ShakeDetectionEventRegionsProvider
 String _$shakeDetectionEventRegionsHash() =>
     r'652efbd513707210e699dd01b2fae373ace975b0';
 
-/// 揺れ検知イベントの最大レベルで揺れた範囲の要約。対応表が未読込の間は `null`。
+/// 揺れ検知イベントの最大レベルで揺れた範囲の要約。
 ///
-/// イベントは毎フレーム更新される。非同期にすると更新のたびに読み込み中を
-/// 挟み、カードの範囲の行が 1 フレーム消えるため、同期的に計算する。
+/// 観測点の地域コードは地震情報の細分区域で、名前は震度観測点のパラメータから引く。
 
 final class ShakeDetectionEventRegionsFamily extends $Family
     with
@@ -168,10 +151,9 @@ final class ShakeDetectionEventRegionsFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// 揺れ検知イベントの最大レベルで揺れた範囲の要約。対応表が未読込の間は `null`。
+  /// 揺れ検知イベントの最大レベルで揺れた範囲の要約。
   ///
-  /// イベントは毎フレーム更新される。非同期にすると更新のたびに読み込み中を
-  /// 挟み、カードの範囲の行が 1 フレーム消えるため、同期的に計算する。
+  /// 観測点の地域コードは地震情報の細分区域で、名前は震度観測点のパラメータから引く。
 
   ShakeDetectionEventRegionsProvider call(ShakeDetectionEvent event) =>
       ShakeDetectionEventRegionsProvider._(argument: event, from: this);

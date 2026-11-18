@@ -8,10 +8,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_region_provider.g.dart';
 
-/// 揺れ検知の範囲の要約に使う、観測点と地域名の対応。
-///
-/// 観測点の地域コードは地震情報の細分区域で、名前は震度観測点のパラメータから引く。
-/// イベントによらず同じ内容のため、一度だけ読み込んで保持する。
 @Riverpod(keepAlive: true)
 Future<ShakeDetectionRegionCatalog> shakeDetectionRegionCatalog(Ref ref) async {
   final stations = await ref.watch(
@@ -31,10 +27,9 @@ Future<ShakeDetectionRegionCatalog> shakeDetectionRegionCatalog(Ref ref) async {
   );
 }
 
-/// 揺れ検知イベントの最大レベルで揺れた範囲の要約。対応表が未読込の間は `null`。
+/// 揺れ検知イベントの最大レベルで揺れた範囲の要約。
 ///
-/// イベントは毎フレーム更新される。非同期にすると更新のたびに読み込み中を
-/// 挟み、カードの範囲の行が 1 フレーム消えるため、同期的に計算する。
+/// 観測点の地域コードは地震情報の細分区域で、名前は震度観測点のパラメータから引く。
 @riverpod
 ShakeDetectionRegionSummary? shakeDetectionEventRegions(
   Ref ref,

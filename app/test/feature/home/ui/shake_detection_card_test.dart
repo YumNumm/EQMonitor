@@ -16,7 +16,6 @@ const _catalog = ShakeDetectionRegionCatalog(
   regionNames: {'350': '東京都23区'},
 );
 
-/// 検知が続いている間の 1 フレーム分のイベント。更新のたびに時刻と震度が変わる。
 ShakeDetectionEvent _event({required int second}) => ShakeDetectionEvent(
   eventId: 'event-1',
   createdAt: DateTime.utc(2026, 11, 18, 12),
@@ -79,7 +78,6 @@ void main() {
 
     for (var second = 1; second <= 5; second++) {
       event.value = _event(second: second);
-      // 更新を反映する最初のフレームだけを進める。
       await tester.pump();
 
       expect(_region, findsOneWidget, reason: '$second 回目の更新');
