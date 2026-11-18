@@ -35,10 +35,10 @@ class const ShakeDetectionGridCell({
 class ShakeDetectionGridCellBuilder {
   /// 検知エンジンの `ShakeEventLevel.fromIntensity` と同じ閾値
   ShakeDetectionLevel levelFromIntensity(num intensity) => switch (intensity) {
-    > 4.5 => .stronger,
-    > 2.5 => .strong,
-    > 0.5 => .medium,
-    > -1 => .weak,
+    >= 5.5 => .stronger,
+    >= 4.5 => .strong,
+    >= 2.5 => .medium,
+    >= 0.5 => .weak,
     _ => .weaker,
   };
 

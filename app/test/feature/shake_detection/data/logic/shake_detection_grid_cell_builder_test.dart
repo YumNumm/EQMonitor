@@ -9,14 +9,14 @@ void main() {
   group('levelFromIntensity', () {
     test('検知エンジンと同じ閾値でレベルへ変換する', () {
       expect(builder.levelFromIntensity(-2), ShakeDetectionLevel.weaker);
-      expect(builder.levelFromIntensity(-1), ShakeDetectionLevel.weaker);
-      expect(builder.levelFromIntensity(0), ShakeDetectionLevel.weak);
+      expect(builder.levelFromIntensity(0.49), ShakeDetectionLevel.weaker);
       expect(builder.levelFromIntensity(0.5), ShakeDetectionLevel.weak);
-      expect(builder.levelFromIntensity(0.51), ShakeDetectionLevel.medium);
+      expect(builder.levelFromIntensity(2.49), ShakeDetectionLevel.weak);
       expect(builder.levelFromIntensity(2.5), ShakeDetectionLevel.medium);
-      expect(builder.levelFromIntensity(2.51), ShakeDetectionLevel.strong);
+      expect(builder.levelFromIntensity(4.49), ShakeDetectionLevel.medium);
       expect(builder.levelFromIntensity(4.5), ShakeDetectionLevel.strong);
-      expect(builder.levelFromIntensity(4.51), ShakeDetectionLevel.stronger);
+      expect(builder.levelFromIntensity(5.49), ShakeDetectionLevel.strong);
+      expect(builder.levelFromIntensity(5.5), ShakeDetectionLevel.stronger);
     });
   });
 
@@ -28,8 +28,8 @@ void main() {
     test('0.25度グリッドに観測点を集約し最大レベルでセルを返す', () {
       final cells = builder.build(
         points: [
-          _point(lat: 35.1, lng: 139.1, intensity: 0),
-          _point(lat: 35.2, lng: 139.2, intensity: 3),
+          _point(lat: 35.1, lng: 139.1, intensity: 1),
+          _point(lat: 35.2, lng: 139.2, intensity: 5),
           _point(lat: 35.4, lng: 139.4, intensity: -2),
         ],
       );
@@ -58,7 +58,7 @@ void main() {
       final cells = builder.build(
         points: [
           _point(lat: 35.05, lng: 139.05, intensity: -2),
-          _point(lat: 35.1, lng: 139.1, intensity: 5),
+          _point(lat: 35.1, lng: 139.1, intensity: 6),
           _point(lat: 35.15, lng: 139.15, intensity: 1),
         ],
       );
@@ -72,9 +72,9 @@ void main() {
     test('セルはレベル昇順（高レベルが末尾）で返す', () {
       final cells = builder.build(
         points: [
-          _point(lat: 35.4, lng: 139.4, intensity: 5),
+          _point(lat: 35.4, lng: 139.4, intensity: 6),
           _point(lat: 35.1, lng: 139.1, intensity: -2),
-          _point(lat: 36.1, lng: 140.1, intensity: 1),
+          _point(lat: 36.1, lng: 140.1, intensity: 3),
         ],
       );
 
@@ -89,7 +89,7 @@ void main() {
     test('複数イベントをまとめてもレベル昇順になる', () {
       final cells = builder.buildFromPointGroups(
         pointGroups: [
-          [_point(lat: 35.1, lng: 139.1, intensity: 5)],
+          [_point(lat: 35.1, lng: 139.1, intensity: 6)],
           [_point(lat: 36.1, lng: 140.1, intensity: -2)],
         ],
       );
