@@ -237,9 +237,9 @@ class const _MapHeader() extends ConsumerWidget {
         ),
         const ConnectionStatusCard(),
         if (showScale)
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: KyoshinMonitorScaleCard(),
+          Padding(
+            padding: CardTheme.of(context).margin ?? const EdgeInsets.all(4),
+            child: const KyoshinMonitorScaleCard(),
           ),
       ],
     );
