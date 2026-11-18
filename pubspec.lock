@@ -241,14 +241,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-  charset:
-    dependency: transitive
-    description:
-      name: charset
-      sha256: "27802032a581e01ac565904ece8c8962564b1070690794f0072f6865958ce8b9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   checked_yaml:
     dependency: transitive
     description:
@@ -1020,14 +1012,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.2"
-  flutter_sticky_header:
-    dependency: transitive
-    description:
-      name: flutter_sticky_header
-      sha256: fb4fda6164ef3e5fc7ab73aba34aad253c17b7c6ecf738fa26f1a905b7d2d1e2
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.0"
   flutter_test:
     dependency: transitive
     description: flutter
@@ -1652,14 +1636,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.8.1"
-  mocktail:
-    dependency: transitive
-    description:
-      name: mocktail
-      sha256: "5e1bf53cc7baa8062a33b84424deb61513858ea05c601b8509e683815b5914aa"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
   motor:
     dependency: transitive
     description:
@@ -2616,14 +2592,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
-  two_dimensional_scrollables:
-    dependency: transitive
-    description:
-      name: two_dimensional_scrollables
-      sha256: d3c4771a7ffc67a16950056742565960d32e729df8a52aa09731e5bb68e106df
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.4"
   typed_data:
     dependency: transitive
     description:
@@ -2736,14 +2704,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.6.0"
-  value_layout_builder:
-    dependency: transitive
-    description:
-      name: value_layout_builder
-      sha256: ab4b7d98bac8cefeb9713154d43ee0477490183f5aa23bb4ffa5103d9bbf6275
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.0"
   vector_graphics_codec:
     dependency: transitive
     description:
@@ -2800,46 +2760,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.2"
-  video_player:
-    dependency: transitive
-    description:
-      name: video_player
-      sha256: "8c837b570dccb9ae6ff73d2e0b03c7e708bfefd3bd1194faa7f3e7f200dfc399"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.14.0"
-  video_player_android:
-    dependency: transitive
-    description:
-      name: video_player_android
-      sha256: d27054dea34d748a44f06d433a57005d2aac69944485b0abbaed3303dbcfa3f1
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.12.2"
-  video_player_avfoundation:
-    dependency: transitive
-    description:
-      name: video_player_avfoundation
-      sha256: "2fc56e537324a19eb649fca991aa308ac961b5406292876fa657b062de461fd8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.12.0"
-  video_player_platform_interface:
-    dependency: transitive
-    description:
-      name: video_player_platform_interface
-      sha256: "92c0fbabe20c788e71fd10d26cea998d0d253282e65d145aed0818731cf593ce"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.9.0"
-  video_player_web:
-    dependency: transitive
-    description:
-      name: video_player_web
-      sha256: "9f3c00be2ef9b76a95d94ac5119fb843dca6f2c69e6c9968f6f2b6c9e7afbdeb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.0"
   vm_service:
     dependency: transitive
     description:

@@ -77,15 +77,12 @@
 - double/float差、地図GPU負荷、raster、温度、消費電力まで比較し、速さと一致を満たすまで
   本番の唯一経路にしない。GPU失敗を固定観測値へフォールバックしない。
 
-## JST表示とK-NET
+## JST表示
 
 - 画面・診断の日時はDateTime.formatWithTz(DateTimeFormat)。ISO編集表示はtokyoDateTimeへ変換する。
   enum側でDateFormatをcacheするため、各画面でformatterを作らない。
 - 起動時はcore.initializeTimeZonesを先に完了する。Flutter testはapp/test/flutter_test_config.dartで初期化する。
 - API送信・永続化・識別子・検索条件の日付は表示処理ではないため既存契約を維持する。
-- K-NET/KiK-netのYYYYMMDDHHmmssディレクトリはAsia/Tokyoとして解析し、
-  KnetDirectoryParser.parseRecordsはTZDateTimeを返す。図・動画・ZIP URLにも同じ日時成分を使う。
-  UTC化して成分を変えると実ディレクトリと一致しなくなる。利用前にtimezone DBを初期化する。
 
 ## 検証
 
@@ -93,9 +90,6 @@
 # app/から
 mise exec -- flutter test test/feature/kyoshin_monitor test/core/util/date_time_format_test.dart --dart-define=CI=true
 mise exec -- dart analyze lib/feature/kyoshin_monitor/data
-# packages/knet_api_client/から
-mise exec -- dart test
-mise exec -- dart analyze
 ```
 
 LMoniのURL確認では実クライアントが生成したURLを利用し、全リアルタイム系列のGIF形式・352×400の画像寸法まで確認する。
