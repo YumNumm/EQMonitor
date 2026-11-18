@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
-import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/location/data/notifier/current_device_location_notifier.dart';
 import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
@@ -13,6 +12,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_availability_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_regions_provider.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/shake_detection_notification_min_level_dropdown.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -284,21 +284,10 @@ class const _ShakeEntryCard({
           onChanged: busy ? null : onEnabled,
         ),
         ListTile(
-          title: ControlledDropdown<ShakeDetectionLevel>(
+          title: ShakeDetectionNotificationMinLevelDropdown(
+            minLevel: entry.minLevel,
             enabled: !busy,
-            items: ShakeDetectionLevel.values
-                .map(
-                  (level) => M3EDropdownItem(
-                    value: level,
-                    label: level.minLevelThresholdLabel,
-                    selected: level == entry.minLevel,
-                  ),
-                )
-                .toList(),
-            onSelectionChanged: (items) {
-              final selected = items.firstOrNull;
-              if (selected != null) onLevel(selected.value);
-            },
+            onChanged: onLevel,
           ),
           trailing: IconButton(
             tooltip: '削除',

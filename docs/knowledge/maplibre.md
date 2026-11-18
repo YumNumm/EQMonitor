@@ -54,7 +54,7 @@
 - EEW 自動フォーカスを解除するのは `apiGesture`。`developerAnimation` / `apiAnimation` では解除しない。iOS の理由は bitmask として判定し、`TransitionCancelled` 単独を gesture とみなさない。
 - 解除後は同じ EEW の更新で再開せず、新 event ID で再開する。EEW 中のホームボタンは `autoZoom` によらず EEW へ再フォーカスする。animation 開始前に状態を公開し、完了時は session 一致を確認する。揺れ検知だけの場合も同じ session（`HomeMapRealtimeFocusTransition`）で扱う。
 - 揺れ検知は南西端 inclusive の 0.25° 格子へ points を集約し、各セルの最大レベルだけを枠線で描く。空セル・中心/四隅 marker は描かない。レベル順で高い枠を上へ置き、Weaker は `#546E7A`。
-- intensity の境界は `≤ -1`、`≤ 0.5`、`≤ 2.5`、`≤ 4.5`、それより上の順に Weaker/Weak/Medium/Strong/Stronger。`ShakeDetectionGridCellBuilder` と配信側の境界を揃える。
+- intensity の境界は `< 0.5`、`< 2.5`、`< 3.5`、`< 5.5`、それ以上の順に Weaker/Weak/Medium/Strong/Stronger。`ShakeDetectionGridCellBuilder` と配信側の境界を揃える。
 
 ## PMTiles と native 障害の切り分け
 
