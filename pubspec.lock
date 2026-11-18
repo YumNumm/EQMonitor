@@ -277,10 +277,10 @@ packages:
     dependency: transitive
     description:
       name: cli_launcher
-      sha256: d2dd1baf7ae4ff1550e731dcb8fe669a5c652903e833f75359c178222c44214e
+      sha256: ff37bcc6d5fa25ab7ddcf255a60900b28e4e1712d34495e5f7952e0982933913
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.4"
+    version: "0.3.4+1"
   cli_util:
     dependency: transitive
     description:
