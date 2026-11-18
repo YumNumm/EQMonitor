@@ -2,19 +2,14 @@ import 'package:shake_detection_engine/src/shake_event_level.dart';
 import 'package:shake_detection_engine/src/shake_event_snapshot.dart';
 import 'package:shake_detection_engine/src/shake_station.dart';
 
-final class ShakeEventState {
-  new({
-    required this.id,
-    required this.createdAt,
-    required ShakeStationState firstStation,
-    required Duration lifetime,
-    required this.isBootstrap,
-  }) : updatedAt = createdAt,
-       level = ShakeEventLevel.fromIntensity(firstStation.latestIntensity),
-       minLatitude = firstStation.location.latitude,
-       maxLatitude = firstStation.location.latitude,
-       minLongitude = firstStation.location.longitude,
-       maxLongitude = firstStation.location.longitude {
+final class ShakeEventState({
+  required var String id,
+  required final DateTime createdAt,
+  required ShakeStationState firstStation,
+  required Duration lifetime,
+  required final bool isBootstrap,
+}) {
+  this {
     firstStation
       ..event = this
       ..peakIntensity = firstStation.latestIntensity
@@ -24,16 +19,15 @@ final class ShakeEventState {
     _stations.add(firstStation);
   }
 
-  String id;
-  final DateTime createdAt;
-  final bool isBootstrap;
-  DateTime updatedAt;
-  ShakeEventLevel level;
+  DateTime updatedAt = createdAt;
+  ShakeEventLevel level = ShakeEventLevel.fromIntensity(
+    firstStation.latestIntensity,
+  );
   var isConfirmed = false;
-  double minLatitude;
-  double maxLatitude;
-  double minLongitude;
-  double maxLongitude;
+  double minLatitude = firstStation.location.latitude;
+  double maxLatitude = firstStation.location.latitude;
+  double minLongitude = firstStation.location.longitude;
+  double maxLongitude = firstStation.location.longitude;
 
   final List<ShakeStationState> _stations = [];
   final List<ShakeMergedEvent> _mergedEvents = [];

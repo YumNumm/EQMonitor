@@ -48,9 +48,9 @@ void main() {
   });
 }
 
-final class _FakeEarthquakeHistoryRepository
+final class _FakeEarthquakeHistoryRepository()
     extends EarthquakeHistoryRepository {
-  new()
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _parameter,

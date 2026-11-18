@@ -1,12 +1,9 @@
 import 'package:vector_tile/raw/raw_vector_tile.dart';
 
 extension type SeismicityFixtureScalar._(VectorTile_Value raw) {
-  new string(String value)
-    : this._(createVectorTileValue(stringValue: value));
-  new float(double value)
-    : this._(createVectorTileValue(floatValue: value));
-  new double(double value)
-    : this._(createVectorTileValue(doubleValue: value));
+  new string(String value) : this._(createVectorTileValue(stringValue: value));
+  new float(double value) : this._(createVectorTileValue(floatValue: value));
+  new double(double value) : this._(createVectorTileValue(doubleValue: value));
   new signed(String value)
     : this._(VectorTile_Value.fromJson('{"4":"$value"}'));
   new unsigned(String value)

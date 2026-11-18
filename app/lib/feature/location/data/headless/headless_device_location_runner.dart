@@ -80,23 +80,18 @@ class const HeadlessDeviceLocationErrorClassifier() {
   }
 }
 
-class HeadlessDeviceLocationRunner {
-  new({
-    required this.bridge,
-    required this.createSyncService,
-    RecordHeadlessTerminalFailure? recordTerminalFailure,
-    LogHeadlessTaskResult? logResult,
-    this.errorClassifier = const HeadlessDeviceLocationErrorClassifier(),
-  }) : recordTerminalFailure =
-           recordTerminalFailure ?? HeadlessDeviceLocationRunner.ignoreFailure,
-       logResult = logResult ?? HeadlessDeviceLocationRunner.logSafeResult;
-
-  final HeadlessBackgroundLocationBridge bridge;
-  final CreateHeadlessDeviceLocationSyncService createSyncService;
-  final RecordHeadlessTerminalFailure recordTerminalFailure;
-  final LogHeadlessTaskResult logResult;
-  final HeadlessDeviceLocationErrorClassifier errorClassifier;
-
+class HeadlessDeviceLocationRunner({
+  required final HeadlessBackgroundLocationBridge bridge,
+  required final CreateHeadlessDeviceLocationSyncService createSyncService,
+  RecordHeadlessTerminalFailure? recordTerminalFailure,
+  LogHeadlessTaskResult? logResult,
+  final HeadlessDeviceLocationErrorClassifier errorClassifier =
+      const HeadlessDeviceLocationErrorClassifier(),
+}) {
+  final RecordHeadlessTerminalFailure recordTerminalFailure =
+      recordTerminalFailure ?? HeadlessDeviceLocationRunner.ignoreFailure;
+  final LogHeadlessTaskResult logResult =
+      logResult ?? HeadlessDeviceLocationRunner.logSafeResult;
   static Future<void> ignoreFailure({
     required String updateId,
     required int statusCode,

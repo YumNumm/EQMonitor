@@ -1,30 +1,18 @@
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class AuthProviderButtons extends StatelessWidget {
-  const new({
-    required this.googleEnabled,
-    required this.appleEnabled,
-    required this.passkeySignInEnabled,
-    required this.passkeyRegistrationEnabled,
-    required this.isAppleAndroid,
-    required this.onGooglePressed,
-    required this.onApplePressed,
-    required this.onPasskeySignInPressed,
-    required this.onPasskeyRegistrationPressed,
-    super.key,
-  });
-
-  final bool googleEnabled;
-  final bool appleEnabled;
-  final bool passkeySignInEnabled;
-  final bool passkeyRegistrationEnabled;
-  final bool isAppleAndroid;
-  final VoidCallback onGooglePressed;
-  final VoidCallback onApplePressed;
-  final VoidCallback onPasskeySignInPressed;
-  final VoidCallback onPasskeyRegistrationPressed;
-
+class const AuthProviderButtons({
+  required final bool googleEnabled,
+  required final bool appleEnabled,
+  required final bool passkeySignInEnabled,
+  required final bool passkeyRegistrationEnabled,
+  required final bool isAppleAndroid,
+  required final VoidCallback onGooglePressed,
+  required final VoidCallback onApplePressed,
+  required final VoidCallback onPasskeySignInPressed,
+  required final VoidCallback onPasskeyRegistrationPressed,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
     child: Padding(

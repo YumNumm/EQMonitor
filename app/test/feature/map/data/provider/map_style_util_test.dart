@@ -63,9 +63,7 @@ void main() {
 
 const isSortedAscending = _IsSortedAscending();
 
-class _IsSortedAscending extends Matcher {
-  const new();
-
+class const _IsSortedAscending() extends Matcher {
   @override
   bool matches(Object? item, Map<dynamic, dynamic> matchState) {
     if (item is! List<int>) {

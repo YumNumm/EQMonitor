@@ -12,11 +12,11 @@ const _keyExtra = 'cache.key';
 /// `if-none-match` ヘッダの付与をスキップする（200 保存は通常どおり行う）。
 const kForceFreshExtra = 'cache.force_fresh';
 
-class HttpCacheInterceptor extends Interceptor {
-  new(this.store, {DateTime Function() now = DateTime.now}) : _now = now;
-
-  final HttpCacheStore store;
-  final DateTime Function() _now;
+class HttpCacheInterceptor(
+  final HttpCacheStore store, {
+  DateTime Function() now = DateTime.now,
+}) extends Interceptor {
+  final DateTime Function() _now = now;
 
   @override
   Future<void> onRequest(

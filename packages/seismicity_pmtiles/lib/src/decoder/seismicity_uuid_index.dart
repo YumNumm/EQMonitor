@@ -10,11 +10,11 @@ typedef SeismicityUuidEquals = bool Function({
   required Uint8List candidate,
 });
 
-final class SeismicityUuidIndex {
-  new({
-    required int expectedUniqueCount,
-    Uint32List Function(int length)? allocateSlots,
-  }) : _expectedUniqueCount = expectedUniqueCount {
+final class SeismicityUuidIndex({
+  required int expectedUniqueCount,
+  Uint32List Function(int length)? allocateSlots,
+}) {
+  this {
     if (expectedUniqueCount < 0 || expectedUniqueCount > 0x3fffffff) {
       throw const SeismicityPmTilesException.invalidDescriptor(
         reason: 'Invalid UUID index capacity.',
@@ -38,7 +38,7 @@ final class SeismicityUuidIndex {
     }
   }
 
-  final int _expectedUniqueCount;
+  final _expectedUniqueCount = expectedUniqueCount;
   late final Uint32List _slots;
   var _length = 0;
 

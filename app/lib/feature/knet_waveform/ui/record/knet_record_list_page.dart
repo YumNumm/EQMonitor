@@ -10,11 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// K-NET イベントの観測点一覧ページ
-class KnetRecordListPage extends ConsumerWidget {
-  const new({required this.eventTime, super.key});
-
-  final DateTime eventTime;
-
+class const KnetRecordListPage({required final DateTime eventTime, super.key})
+    extends ConsumerWidget {
   static final _dtFmt = DateFormat('yyyy/MM/dd HH:mm:ss');
 
   @override
@@ -67,11 +64,8 @@ class KnetRecordListPage extends ConsumerWidget {
   }
 }
 
-class _DownloadProgressView extends ConsumerWidget {
-  const new({required this.eventTime});
-
-  final DateTime eventTime;
-
+class const _DownloadProgressView({required final DateTime eventTime})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final progress = ref.watch(knetDownloadProgressProvider(eventTime));
@@ -138,11 +132,8 @@ class _DownloadProgressView extends ConsumerWidget {
   }
 }
 
-class _ErrorView extends StatelessWidget {
-  const new({required this.message});
-
-  final String message;
-
+class const _ErrorView({required final String message})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(

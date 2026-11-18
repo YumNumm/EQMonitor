@@ -124,10 +124,8 @@ HypocenterArchive _archive(int index) => HypocenterArchive(
   queryRevision: '1234567890abcdef12345678',
 );
 
-final class _RecordingRepository implements HypocenterArchiveEventRepository {
-  new({this.failingLabel});
-
-  final String? failingLabel;
+final class _RecordingRepository({final String? failingLabel})
+    implements HypocenterArchiveEventRepository {
   var _active = 0;
   var _maximumActive = 0;
   final startedLabels = <String>[];

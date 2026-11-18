@@ -9,19 +9,16 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 
-class EarthquakeActivityRepository {
-  const new({
-    required EarthquakeHistoryRepository earthquakeHistoryRepository,
-    EarthquakeActivityBoundsCalculator boundsCalculator =
-        const EarthquakeActivityBoundsCalculator(),
-    EarthquakeActivityFilter filter = const EarthquakeActivityFilter(),
-  }) : _earthquakeHistoryRepository = earthquakeHistoryRepository,
-       _boundsCalculator = boundsCalculator,
-       _filter = filter;
-
-  final EarthquakeHistoryRepository _earthquakeHistoryRepository;
-  final EarthquakeActivityBoundsCalculator _boundsCalculator;
-  final EarthquakeActivityFilter _filter;
+class const EarthquakeActivityRepository({
+  required EarthquakeHistoryRepository earthquakeHistoryRepository,
+  EarthquakeActivityBoundsCalculator boundsCalculator =
+      const EarthquakeActivityBoundsCalculator(),
+  EarthquakeActivityFilter filter = const EarthquakeActivityFilter(),
+}) {
+  final EarthquakeHistoryRepository _earthquakeHistoryRepository =
+      earthquakeHistoryRepository;
+  final EarthquakeActivityBoundsCalculator _boundsCalculator = boundsCalculator;
+  final EarthquakeActivityFilter _filter = filter;
 
   Future<EarthquakeActivityDataset> fetch({
     required EarthquakeActivityQuery query,

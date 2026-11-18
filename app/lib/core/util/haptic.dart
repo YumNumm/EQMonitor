@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 /// ハプティックフィードバックを伴って [fn] を実行するためのユーティリティ。
-class HapticUtil {
-  const new _();
-
+class const HapticUtil._() {
   static Future<void> light(FutureOr<void> Function() fn) async {
     await HapticFeedback.lightImpact();
     await fn();

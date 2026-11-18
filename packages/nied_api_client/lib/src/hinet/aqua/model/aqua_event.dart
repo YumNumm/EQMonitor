@@ -82,6 +82,5 @@ abstract class AquaEvent with _$AquaEvent {
   }) = _AquaEvent;
 
   /// JSONからデシリアライズ
-  factory fromJson(Map<String, dynamic> json) =>
-      _$AquaEventFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$AquaEventFromJson(json);
 }

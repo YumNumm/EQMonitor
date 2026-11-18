@@ -6,9 +6,7 @@ import 'package:telemetry_store/src/models/notification_framework.dart';
 part 'telemetry_event.freezed.dart';
 
 @Freezed(toJson: false, fromJson: false)
-sealed class TelemetryEvent with _$TelemetryEvent {
-  const new _();
-
+sealed class const TelemetryEvent._() with _$TelemetryEvent {
   const factory notificationReceived({
     required NotificationFramework framework,
     required String channelId,

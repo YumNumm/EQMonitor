@@ -3,20 +3,13 @@ import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class RegionHierarchyBreadcrumb extends StatelessWidget {
-  const new({
-    required this.prefecture,
-    required this.region,
-    required this.onRootSelected,
-    required this.onPrefectureSelected,
-    super.key,
-  });
-
-  final RegionOption? prefecture;
-  final RegionOption? region;
-  final VoidCallback onRootSelected;
-  final VoidCallback onPrefectureSelected;
-
+class const RegionHierarchyBreadcrumb({
+  required final RegionOption? prefecture,
+  required final RegionOption? region,
+  required final VoidCallback onRootSelected,
+  required final VoidCallback onPrefectureSelected,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -70,38 +63,22 @@ class RegionHierarchyBreadcrumb extends StatelessWidget {
   }
 }
 
-class RegionHierarchyList extends StatelessWidget {
-  const new({
-    required this.catalog,
-    required this.kinds,
-    required this.prefectures,
-    required this.prefecture,
-    required this.region,
-    required this.selected,
-    required this.unavailable,
-    required this.unavailableLabel,
-    required this.multiple,
-    required this.bottomInset,
-    required this.onPrefectureSelected,
-    required this.onRegionSelected,
-    required this.onOptionSelected,
-    super.key,
-  });
-
-  final List<RegionOption> catalog;
-  final List<RegionKind> kinds;
-  final List<RegionOption> prefectures;
-  final RegionOption? prefecture;
-  final RegionOption? region;
-  final List<RegionOption> selected;
-  final Set<String> unavailable;
-  final String unavailableLabel;
-  final bool multiple;
-  final double bottomInset;
-  final ValueChanged<RegionOption> onPrefectureSelected;
-  final ValueChanged<RegionOption> onRegionSelected;
-  final ValueChanged<RegionOption> onOptionSelected;
-
+class const RegionHierarchyList({
+  required final List<RegionOption> catalog,
+  required final List<RegionKind> kinds,
+  required final List<RegionOption> prefectures,
+  required final RegionOption? prefecture,
+  required final RegionOption? region,
+  required final List<RegionOption> selected,
+  required final Set<String> unavailable,
+  required final String unavailableLabel,
+  required final bool multiple,
+  required final double bottomInset,
+  required final ValueChanged<RegionOption> onPrefectureSelected,
+  required final ValueChanged<RegionOption> onRegionSelected,
+  required final ValueChanged<RegionOption> onOptionSelected,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const hierarchy = RegionHierarchy();
@@ -173,17 +150,11 @@ class RegionHierarchyList extends StatelessWidget {
   }
 }
 
-class _BranchTile extends StatelessWidget {
-  const new({
-    required this.option,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final RegionOption option;
-  final List<RegionOption> selected;
-  final VoidCallback onTap;
-
+class const _BranchTile({
+  required final RegionOption option,
+  required final List<RegionOption> selected,
+  required final VoidCallback onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final containsSelection = selected.any(
@@ -203,27 +174,16 @@ class _BranchTile extends StatelessWidget {
   }
 }
 
-class _LeafTile extends StatelessWidget {
-  const new({
-    required this.option,
-    required this.title,
-    required this.description,
-    required this.selected,
-    required this.unavailable,
-    required this.unavailableLabel,
-    required this.multiple,
-    required this.onTap,
-  });
-
-  final RegionOption option;
-  final String title;
-  final String? description;
-  final List<RegionOption> selected;
-  final Set<String> unavailable;
-  final String unavailableLabel;
-  final bool multiple;
-  final VoidCallback onTap;
-
+class const _LeafTile({
+  required final RegionOption option,
+  required final String title,
+  required final String? description,
+  required final List<RegionOption> selected,
+  required final Set<String> unavailable,
+  required final String unavailableLabel,
+  required final bool multiple,
+  required final VoidCallback onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = selected.any(

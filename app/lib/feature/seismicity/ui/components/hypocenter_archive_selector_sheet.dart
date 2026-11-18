@@ -5,18 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class HypocenterArchiveSelectorSheet extends HookWidget {
-  const new({
-    required this.archives,
-    required this.selected,
-    required this.onApply,
-    super.key,
-  });
-
-  final List<HypocenterArchive> archives;
-  final Set<HypocenterArchiveId> selected;
-  final ValueChanged<Set<HypocenterArchiveId>> onApply;
-
+class const HypocenterArchiveSelectorSheet({
+  required final List<HypocenterArchive> archives,
+  required final Set<HypocenterArchiveId> selected,
+  required final ValueChanged<Set<HypocenterArchiveId>> onApply,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final draft = useState({...selected});

@@ -5,12 +5,9 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descript
 ///
 /// Increments [spawnCount] once immediately before each delegate.spawn call,
 /// including attempts that later fail.
-final class CountingDecoderWorkerFactory
-    implements SeismicityDecoderWorkerFactory {
-  new({required this.delegate});
-
-  final SeismicityDecoderWorkerFactory delegate;
-
+final class CountingDecoderWorkerFactory({
+  required final SeismicityDecoderWorkerFactory delegate,
+}) implements SeismicityDecoderWorkerFactory {
   var _spawnCount = 0;
   int get spawnCount => _spawnCount;
 

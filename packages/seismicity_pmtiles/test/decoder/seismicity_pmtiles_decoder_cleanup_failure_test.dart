@@ -159,21 +159,13 @@ void main() {
   });
 }
 
-final class _Task55Setup {
-  new({
-    required this.archive,
-    required this.handle,
-    required this.factory,
-    required this.operation,
-    required this.states,
-  });
-
-  final ControlledSeismicityArchive archive;
-  final ControlledSeismicityDecoderWorkerHandle handle;
-  final ControlledSeismicityDecoderWorkerFactory factory;
-  final SeismicityPmTilesDecodeOperation operation;
-  final Future<List<SeismicityPmTilesLoadState>> states;
-}
+final class _Task55Setup({
+  required final ControlledSeismicityArchive archive,
+  required final ControlledSeismicityDecoderWorkerHandle handle,
+  required final ControlledSeismicityDecoderWorkerFactory factory,
+  required final SeismicityPmTilesDecodeOperation operation,
+  required final Future<List<SeismicityPmTilesLoadState>> states,
+});
 
 final class _Task55Fixtures {
   final source = SeismicityPmTilesSource.network(

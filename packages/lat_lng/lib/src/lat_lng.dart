@@ -2,17 +2,14 @@ import 'dart:math';
 
 import 'package:latlong2/latlong.dart' as lat_long2;
 
-class LatLng extends Point<double> {
-  const new(this.lat, this.lon) : super(lat, lon);
+class const LatLng(final double lat, final double lon) extends Point<double> {
+  this : super(lat, lon);
   factory fromJson(Map<String, dynamic> json) {
     return LatLng(
       ((json['latitude'] ?? json['lat']) as num).toDouble(),
       ((json['longitude'] ?? json['lon']) as num).toDouble(),
     );
   }
-
-  final double lat;
-  final double lon;
 
   @override
   String toString() {

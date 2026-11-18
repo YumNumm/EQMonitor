@@ -134,27 +134,16 @@ final class const PmTilesV3ArchiveOpener({
   }
 }
 
-final class _PmTilesV3ArchiveImpl implements PmTilesV3Archive {
-  new({
-    required this.reader,
-    required this.header,
-    required this.rootEntries,
-    required this.archiveLowerTileId,
-    required this.archiveUpperTileIdExclusive,
-    required this.traversal,
-    required this.compressionDecoder,
-    required this.limits,
-  });
-
-  final PmTilesRandomAccessReader reader;
-  @override
-  final PmTilesV3Header header;
-  final List<PmTilesV3DirectoryEntry> rootEntries;
-  final int archiveLowerTileId;
-  final int archiveUpperTileIdExclusive;
-  final PmTilesV3DirectoryTraversal traversal;
-  final PmTilesV3CompressionDecoder compressionDecoder;
-  final PmTilesV3Limits limits;
+final class _PmTilesV3ArchiveImpl({
+  required final PmTilesRandomAccessReader reader,
+  @override required final PmTilesV3Header header,
+  required final List<PmTilesV3DirectoryEntry> rootEntries,
+  required final int archiveLowerTileId,
+  required final int archiveUpperTileIdExclusive,
+  required final PmTilesV3DirectoryTraversal traversal,
+  required final PmTilesV3CompressionDecoder compressionDecoder,
+  required final PmTilesV3Limits limits,
+}) implements PmTilesV3Archive {
   var _isClosed = false;
   Future<void>? _closeFuture;
 
@@ -318,22 +307,14 @@ final class const PmTilesV3DirectoryValidator({
   }
 }
 
-final class PmTilesV3DirectoryTraversal {
-  new({
-    required this.reader,
-    required this.header,
-    required this.directoryDecoder,
-    required this.compressionDecoder,
-    required this.validator,
-    required this.limits,
-  });
-
-  final PmTilesRandomAccessReader reader;
-  final PmTilesV3Header header;
-  final PmTilesV3DirectoryDecoder directoryDecoder;
-  final PmTilesV3CompressionDecoder compressionDecoder;
-  final PmTilesV3DirectoryValidator validator;
-  final PmTilesV3Limits limits;
+final class PmTilesV3DirectoryTraversal({
+  required final PmTilesRandomAccessReader reader,
+  required final PmTilesV3Header header,
+  required final PmTilesV3DirectoryDecoder directoryDecoder,
+  required final PmTilesV3CompressionDecoder compressionDecoder,
+  required final PmTilesV3DirectoryValidator validator,
+  required final PmTilesV3Limits limits,
+}) {
   final Map<({int offset, int length}), List<PmTilesV3DirectoryEntry>>
   _leafCache = {};
 
@@ -408,7 +389,7 @@ final class PmTilesV3DirectoryTraversal {
       lowerTileId: entry.tileId,
       upperTileIdExclusive: childUpper,
     );
-    return resolveTile(
+    return await resolveTile(
       tileId: tileId,
       entries: leafEntries,
       lowerTileId: entry.tileId,

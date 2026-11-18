@@ -4,11 +4,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// M-T図(時間 × マグニチュードの点プロット)。
-class SeismicityMtChart extends StatelessWidget {
-  const new({required this.events, super.key});
-
-  final List<SeismicityEvent> events;
-
+class const SeismicityMtChart({
+  required final List<SeismicityEvent> events,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final withMagnitude = events.where((e) => e.magnitude != null).toList()

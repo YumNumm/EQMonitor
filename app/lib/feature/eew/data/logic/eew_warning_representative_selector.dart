@@ -11,12 +11,11 @@ EewWarningRepresentativeSelector eewWarningRepresentativeSelector(Ref ref) =>
       arrivalClassifier: ref.watch(eewWarningArrivalClassifierProvider),
     );
 
-class EewWarningRepresentativeSelector {
-  new({
-    EewWarningArrivalClassifier? arrivalClassifier,
-  }) : _arrivalClassifier = arrivalClassifier ?? EewWarningArrivalClassifier();
-
-  final EewWarningArrivalClassifier _arrivalClassifier;
+class EewWarningRepresentativeSelector({
+  EewWarningArrivalClassifier? arrivalClassifier,
+}) {
+  final EewWarningArrivalClassifier _arrivalClassifier =
+      arrivalClassifier ?? EewWarningArrivalClassifier();
 
   EewWarningOverlayCandidate? select({
     required List<EewWarningOverlayCandidate> candidates,

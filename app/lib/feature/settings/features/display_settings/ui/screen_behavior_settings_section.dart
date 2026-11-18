@@ -7,9 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class ScreenBehaviorSettingsSection extends ConsumerWidget {
-  const new({super.key});
-
+class const ScreenBehaviorSettingsSection({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(screenBehaviorSettingsProvider);

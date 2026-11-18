@@ -8,9 +8,8 @@ import 'package:eqmonitor/app.dart';
 
 import 'package:material_ui/material_ui.dart';
 
-class FullScreenCircularProgressIndicator extends StatelessWidget {
-  const new({super.key});
-
+class const FullScreenCircularProgressIndicator({super.key})
+    extends StatelessWidget {
   static Future<T> showUntil<T>(
     BuildContext context,
     Future<T> Function() function, {

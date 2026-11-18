@@ -3,9 +3,7 @@ import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound_failure.dart';
 
 /// エラー詳細シートの「まとめてコピー」で共有する診断テキストを組み立てる。
-class ErrorDiagnosticsBuilder {
-  const new _();
-
+class const ErrorDiagnosticsBuilder._() {
   /// widget/platform に依存させないため、値はすべて呼び出し側が解決して渡す。
   static String build({
     required Object error,

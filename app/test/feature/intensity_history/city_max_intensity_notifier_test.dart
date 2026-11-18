@@ -20,8 +20,8 @@ CityMaxIntensityResponse _response(String cityId, JmaIntensity intensity) =>
       items: [CityMaxIntensityItem(cityId: cityId, maxIntensity: intensity)],
     );
 
-class _SwrFakeRepository extends CityMaxIntensityRepository {
-  new() : super(earthquake: ApiClient(Dio()).earthquake);
+class _SwrFakeRepository() extends CityMaxIntensityRepository {
+  this : super(earthquake: ApiClient(Dio()).earthquake);
 
   bool cacheHit = false;
   CityMaxIntensityResponse? cached;

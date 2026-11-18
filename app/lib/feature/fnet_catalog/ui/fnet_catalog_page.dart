@@ -9,9 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 
 /// F-netカタログページ
-class FnetCatalogPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const FnetCatalogPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentYear = DateTime.now().tokyoDateTime.year;
@@ -98,19 +96,12 @@ class FnetCatalogPage extends HookConsumerWidget {
   }
 }
 
-class _FilterBar extends StatelessWidget {
-  const new({
-    required this.selectedYear,
-    required this.selectedMonth,
-    required this.onYearChanged,
-    required this.onMonthChanged,
-  });
-
-  final int selectedYear;
-  final int? selectedMonth;
-  final ValueChanged<int> onYearChanged;
-  final ValueChanged<int?> onMonthChanged;
-
+class const _FilterBar({
+  required final int selectedYear,
+  required final int? selectedMonth,
+  required final ValueChanged<int> onYearChanged,
+  required final ValueChanged<int?> onMonthChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentYear = DateTime.now().tokyoDateTime.year;

@@ -13,9 +13,7 @@ const _warnings = [
   'Beta 版の更新がリリースされた場合、強制アップデートが行われる可能性があります。',
 ];
 
-class BetaTestingWarningPage extends ConsumerWidget {
-  const new({super.key});
-
+class const BetaTestingWarningPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
@@ -41,11 +39,9 @@ class BetaTestingWarningPage extends ConsumerWidget {
   }
 }
 
-class _WarningHeader extends StatelessWidget {
-  const new({required this.designSystem});
-
-  final DesignSystemThemeExtension designSystem;
-
+class const _WarningHeader({
+  required final DesignSystemThemeExtension designSystem,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -93,11 +89,9 @@ class _WarningHeader extends StatelessWidget {
   }
 }
 
-class _WarningList extends StatelessWidget {
-  const new({required this.designSystem});
-
-  final DesignSystemThemeExtension designSystem;
-
+class const _WarningList({
+  required final DesignSystemThemeExtension designSystem,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -123,17 +117,11 @@ class _WarningList extends StatelessWidget {
   }
 }
 
-class _WarningCard extends StatelessWidget {
-  const new({
-    required this.warning,
-    required this.index,
-    required this.designSystem,
-  });
-
-  final String warning;
-  final int index;
-  final DesignSystemThemeExtension designSystem;
-
+class const _WarningCard({
+  required final String warning,
+  required final int index,
+  required final DesignSystemThemeExtension designSystem,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -180,11 +168,9 @@ class _WarningCard extends StatelessWidget {
   }
 }
 
-class _AgreementBottom extends ConsumerWidget {
-  const new({required this.designSystem});
-
-  final DesignSystemThemeExtension designSystem;
-
+class const _AgreementBottom({
+  required final DesignSystemThemeExtension designSystem,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(

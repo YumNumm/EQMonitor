@@ -17,11 +17,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class TsunamiDetailsPage extends HookConsumerWidget {
-  const new({required this.tsunamiId, super.key});
-
-  final String tsunamiId;
-
+class const TsunamiDetailsPage({required final String tsunamiId, super.key})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(tsunamiDetailsProvider(tsunamiId));

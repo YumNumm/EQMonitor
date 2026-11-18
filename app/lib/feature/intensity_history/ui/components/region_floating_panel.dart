@@ -18,9 +18,7 @@ import 'package:material_ui/material_ui.dart';
 ///
 /// - 未選択: 「市区町村別 最大観測震度」と集計の最終更新時刻を表示。
 /// - 市区町村選択中: 都道府県名・市区町村名・最大震度バッジと最終更新時刻を表示。
-class RegionFloatingPanel extends ConsumerWidget {
-  const new({super.key});
-
+class const RegionFloatingPanel({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedCity = ref
@@ -40,13 +38,9 @@ class RegionFloatingPanel extends ConsumerWidget {
   }
 }
 
-class _RefreshedAtLabel extends StatelessWidget {
-  const new({
-    required this.aggregatedAt,
-  });
-
-  final DateTime? aggregatedAt;
-
+class const _RefreshedAtLabel({
+  required final DateTime? aggregatedAt,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final aggregatedAt = this.aggregatedAt;
@@ -65,11 +59,9 @@ class _RefreshedAtLabel extends StatelessWidget {
   }
 }
 
-class _NationwidePanel extends StatelessWidget {
-  const new({required this.cityMaxIntensity});
-
-  final CityMaxIntensity? cityMaxIntensity;
-
+class const _NationwidePanel({
+  required final CityMaxIntensity? cityMaxIntensity,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final typography = context.designSystem.typography;
@@ -107,12 +99,10 @@ class _NationwidePanel extends StatelessWidget {
   }
 }
 
-class _CityPanel extends StatelessWidget {
-  const new({required this.selectedCity, required this.cityMaxIntensity});
-
-  final IntensityHistorySelectedCity selectedCity;
-  final CityMaxIntensity? cityMaxIntensity;
-
+class const _CityPanel({
+  required final IntensityHistorySelectedCity selectedCity,
+  required final CityMaxIntensity? cityMaxIntensity,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

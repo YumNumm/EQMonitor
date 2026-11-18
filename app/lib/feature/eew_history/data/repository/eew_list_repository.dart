@@ -13,10 +13,8 @@ Future<EewListRepository> eewListRepository(Ref ref) async {
   return EewListRepository(eew: apiClient.eew);
 }
 
-class EewListRepository {
-  new({required api.EewApiClient eew}) : _eew = eew;
-
-  final api.EewApiClient _eew;
+class EewListRepository({required api.EewApiClient eew}) {
+  final api.EewApiClient _eew = eew;
 
   Future<EewListPage> fetchEewList({
     required EewListParameter parameter,

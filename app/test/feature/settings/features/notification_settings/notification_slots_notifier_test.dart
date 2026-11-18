@@ -80,9 +80,8 @@ void main() {
   });
 }
 
-class _Notifier extends NotificationSlotsNotifier {
-  new(this.initial);
-  final NotificationSlot initial;
+class _Notifier(final NotificationSlot initial)
+    extends NotificationSlotsNotifier {
   bool loaded = false;
   @override
   Future<List<NotificationSlot>> build() async {
@@ -92,9 +91,9 @@ class _Notifier extends NotificationSlotsNotifier {
   }
 }
 
-class _Repository extends NotificationSlotRepository {
-  new(this.current) : super(api: api.ApiClient(Dio()));
-  NotificationSlot current;
+class _Repository(var NotificationSlot current)
+    extends NotificationSlotRepository {
+  this : super(api: api.ApiClient(Dio()));
   @override
   Future<NotificationSlot> updateRegion({
     required String slotId,

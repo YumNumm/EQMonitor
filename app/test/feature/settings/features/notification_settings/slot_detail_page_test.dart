@@ -181,10 +181,8 @@ NotificationSlot _slot({required NotificationSlotType type}) =>
       earthquakeOverrides: null,
     );
 
-class _RecordingSlotsNotifier extends NotificationSlotsNotifier {
-  new(this.slot);
-
-  final NotificationSlot slot;
+class _RecordingSlotsNotifier(final NotificationSlot slot)
+    extends NotificationSlotsNotifier {
   JmaIntensity? lastEewMinIntensity;
 
   @override
@@ -203,10 +201,9 @@ class _RecordingSlotsNotifier extends NotificationSlotsNotifier {
   }
 }
 
-class _RecordingEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
-  new({this.initialWarningEnabled = true});
-
-  final bool initialWarningEnabled;
+class _RecordingEewGlobalSettingsNotifier({
+  final bool initialWarningEnabled = true,
+}) extends EewGlobalSettingsNotifier {
   bool? lastWarningEnabled;
 
   @override
@@ -237,12 +234,9 @@ class _RecordingEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
   }
 }
 
-class _RecordingEewWarningConfigNotifier extends EewWarningConfigNotifier {
-  new({
-    this.initialTarget = EewWarningTarget.currentLocationOnly,
-  });
-
-  final EewWarningTarget initialTarget;
+class _RecordingEewWarningConfigNotifier({
+  final EewWarningTarget initialTarget = EewWarningTarget.currentLocationOnly,
+}) extends EewWarningConfigNotifier {
   EewWarningTarget? lastTarget;
   InterruptionLevel? lastCurrentLocationInterruptionLevel;
   InterruptionLevel? lastNationwideInterruptionLevel;
@@ -275,19 +269,12 @@ class _RecordingEewWarningConfigNotifier extends EewWarningConfigNotifier {
   }
 }
 
-class _TestApp extends StatelessWidget {
-  const new({
-    required this.slot,
-    required this.slotsNotifier,
-    required this.eewNotifier,
-    required this.warningNotifier,
-  });
-
-  final NotificationSlot slot;
-  final _RecordingSlotsNotifier slotsNotifier;
-  final _RecordingEewGlobalSettingsNotifier eewNotifier;
-  final _RecordingEewWarningConfigNotifier warningNotifier;
-
+class const _TestApp({
+  required final NotificationSlot slot,
+  required final _RecordingSlotsNotifier slotsNotifier,
+  required final _RecordingEewGlobalSettingsNotifier eewNotifier,
+  required final _RecordingEewWarningConfigNotifier warningNotifier,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(

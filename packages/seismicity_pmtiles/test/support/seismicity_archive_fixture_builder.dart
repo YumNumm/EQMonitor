@@ -21,17 +21,14 @@ final class const SeismicityArchiveFixture({
 });
 
 /// Test-only gzip PMTiles fixture composition over Task 57 writer.
-final class SeismicityArchiveFixtureBuilder {
-  new({
-    this.archiveWriter = const SeismicityPmTilesArchiveWriter(),
-    SeismicityMvtFixtureBuilder? mvtBuilder,
-    this.tileId = const PmTilesV3TileId(),
-  }) : mvtBuilder = mvtBuilder ?? SeismicityMvtFixtureBuilder();
-
-  final SeismicityPmTilesArchiveWriter archiveWriter;
-  final SeismicityMvtFixtureBuilder mvtBuilder;
-  final PmTilesV3TileId tileId;
-
+final class SeismicityArchiveFixtureBuilder({
+  final SeismicityPmTilesArchiveWriter archiveWriter =
+      const SeismicityPmTilesArchiveWriter(),
+  SeismicityMvtFixtureBuilder? mvtBuilder,
+  final PmTilesV3TileId tileId = const PmTilesV3TileId(),
+}) {
+  final SeismicityMvtFixtureBuilder mvtBuilder =
+      mvtBuilder ?? SeismicityMvtFixtureBuilder();
   static const assetKey = 'fixture.gzip.pmtiles';
   static const dataZoom = 2;
 

@@ -9,9 +9,7 @@ import 'package:maplibre/maplibre.dart' show StyleController;
 ///
 /// maplibre の [StyleController.addImageFromWidget] と同じレンダリング
 /// パイプラインを使用する。
-class WidgetImageRenderer {
-  const new _();
-
+class const WidgetImageRenderer._() {
   /// [widget] を PNG バイト列にレンダリングする。
   ///
   /// [logicalSize] の論理サイズで描画した後、[pixelRatio]

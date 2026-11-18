@@ -9,9 +9,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 /// Weather Decoder.
 ///
 /// Decodes JMA Weather information messages.
-class WeatherDecoder {
-  const new _();
-
+class const WeatherDecoder._() {
   /// Decodes a Weather message.
   static QzssDcReport decode(JmaCommonParams params) {
     final message = params.message;

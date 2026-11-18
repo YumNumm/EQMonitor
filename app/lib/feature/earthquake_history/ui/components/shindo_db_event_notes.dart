@@ -3,11 +3,10 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:material_ui/material_ui.dart';
 
-class ShindoDbEventNotes extends StatelessWidget {
-  const new({required this.catalog, super.key});
-
-  final EarthquakeCatalog catalog;
-
+class const ShindoDbEventNotes({
+  required final EarthquakeCatalog catalog,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final damage = catalog.damageScaleLabel;

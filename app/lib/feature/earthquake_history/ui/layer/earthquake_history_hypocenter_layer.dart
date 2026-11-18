@@ -18,21 +18,14 @@ import 'package:maplibre/maplibre.dart';
 /// [points] の震源をすべて描き、番号を持つ震源にはマーカーの上へ番号を添える。
 /// [displayMode] に応じて不透明度を制御する。
 /// [HypocenterDisplayMode.belowStations] の z 順制御は呼び出し側で行う。
-class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
-  const new({
-    required this.points,
-    this.displayMode = HypocenterDisplayMode.zoomFade,
-    this.parameter = const EarthquakeHistoryMapLayerParameter(),
-    this.belowLayerId,
-    super.key,
-  });
-
-  final List<EarthquakeHistoryHypocenterPoint> points;
-  final HypocenterDisplayMode displayMode;
-  final EarthquakeHistoryMapLayerParameter parameter;
-
-  final String? belowLayerId;
-
+class const EarthquakeHistoryHypocenterLayer({
+  required final List<EarthquakeHistoryHypocenterPoint> points,
+  final HypocenterDisplayMode displayMode = HypocenterDisplayMode.zoomFade,
+  final EarthquakeHistoryMapLayerParameter parameter =
+      const EarthquakeHistoryMapLayerParameter(),
+  final String? belowLayerId,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;

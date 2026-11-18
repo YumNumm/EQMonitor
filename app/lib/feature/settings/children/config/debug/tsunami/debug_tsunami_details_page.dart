@@ -10,9 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class DebugTsunamiDetailsPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const DebugTsunamiDetailsPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSourceAsync = ref.watch(tsunamiHistoryDataSourceProvider);
@@ -31,11 +29,8 @@ class DebugTsunamiDetailsPage extends HookConsumerWidget {
   }
 }
 
-class _PagingBody extends StatelessWidget {
-  const new({required this.dataSource});
-
-  final TsunamiHistoryDataSource dataSource;
-
+class const _PagingBody({required final TsunamiHistoryDataSource dataSource})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return M3EPullToRefreshIndicator(
@@ -72,11 +67,8 @@ class _PagingBody extends StatelessWidget {
   }
 }
 
-class _TsunamiListTile extends StatelessWidget {
-  const new({required this.item});
-
-  final api.TsunamiState item;
-
+class const _TsunamiListTile({required final api.TsunamiState item})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -170,11 +162,7 @@ class _TsunamiListTile extends StatelessWidget {
   }
 }
 
-class _DateHeader extends StatelessWidget {
-  const new({required this.date});
-
-  final String date;
-
+class const _DateHeader({required final String date}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -191,12 +179,10 @@ class _DateHeader extends StatelessWidget {
   }
 }
 
-class _TsunamiListSkeleton extends StatelessWidget {
-  const new({this.itemCount = 5, this.scrollable = true});
-
-  final int itemCount;
-  final bool scrollable;
-
+class const _TsunamiListSkeleton({
+  final int itemCount = 5,
+  final bool scrollable = true,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tiles = [

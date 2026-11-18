@@ -19,18 +19,12 @@ import 'package:maplibre/maplibre.dart';
 ///
 /// `displayMode` に応じて、予報区を予想震度別、または府県予報区を
 /// 警報発表区域として塗りつぶす。
-class EewForecastRegionLayer extends HookConsumerWidget {
-  const new({
-    required this.eew,
-    required this.displayMode,
-    this.additionalRegions,
-    super.key,
-  });
-
-  final EewTelegramItem? eew;
-  final EewDisplayMode displayMode;
-  final List<EewForecastRegionInfo>? additionalRegions;
-
+class const EewForecastRegionLayer({
+  required final EewTelegramItem? eew,
+  required final EewDisplayMode displayMode,
+  final List<EewForecastRegionInfo>? additionalRegions,
+  super.key,
+}) extends HookConsumerWidget {
   static const _sourceId = 'eqmonitor_map';
   static const _intensitySourceLayerId = 'areaForecastLocalE';
   static const _warningSourceLayerId = 'areaForecastLocalEew';

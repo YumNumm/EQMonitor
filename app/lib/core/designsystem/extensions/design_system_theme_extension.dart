@@ -7,15 +7,12 @@ import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
 import 'package:material_ui/material_ui.dart';
 
 @immutable
-class DesignSystemThemeExtension
-    extends ThemeExtension<DesignSystemThemeExtension> {
-  const new({
-    required this.colorTheme,
-    required this.spacing,
-    required this.shape,
-    required this.typography,
-  });
-
+class const DesignSystemThemeExtension({
+  required final ThemeColorSet colorTheme,
+  required final SpacingThemeExtension spacing,
+  required final ShapeThemeExtension shape,
+  required final TypographyThemeExtension typography,
+}) extends ThemeExtension<DesignSystemThemeExtension> {
   /// テスト用: EQMonitor Default テーマのライトカラーで構築する。
   ///
   /// eqmonitorDefault() は light を必ず設定するファクトリであるという前提。
@@ -42,11 +39,6 @@ class DesignSystemThemeExtension
     shape: ShapeThemeExtension.standard(),
     typography: TypographyThemeExtension.fromColorTheme(colorTheme),
   );
-
-  final ThemeColorSet colorTheme;
-  final SpacingThemeExtension spacing;
-  final ShapeThemeExtension shape;
-  final TypographyThemeExtension typography;
 
   @override
   DesignSystemThemeExtension copyWith({

@@ -9,9 +9,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DebugShakeDetectionCardPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const DebugShakeDetectionCardPage({super.key})
+    extends HookConsumerWidget {
   static const _paramLabelStyle = TextStyle(fontSize: 11);
 
   @override
@@ -193,12 +192,10 @@ final List<ShakeDetectionEvent> _kSampleEvents = ShakeDetectionLevel.values.map(
   },
 ).toList();
 
-class _ParamSection extends StatelessWidget {
-  const new({required this.title, required this.child});
-
-  final String title;
-  final Widget child;
-
+class const _ParamSection({
+  required final String title,
+  required final Widget child,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -222,21 +219,13 @@ class _ParamSection extends StatelessWidget {
   }
 }
 
-class _SliderRow extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.value,
-    required this.min,
-    required this.max,
-    required this.onChanged,
-  });
-
-  final String label;
-  final double value;
-  final double min;
-  final double max;
-  final ValueChanged<double> onChanged;
-
+class const _SliderRow({
+  required final String label,
+  required final double value,
+  required final double min,
+  required final double max,
+  required final ValueChanged<double> onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(

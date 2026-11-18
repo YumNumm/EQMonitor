@@ -12,9 +12,7 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class DeviceProvisioningBanner extends ConsumerWidget {
-  const new({super.key});
-
+class const DeviceProvisioningBanner({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final provisionStatus = ref.watch(deviceProvisioningProvider);
@@ -75,19 +73,12 @@ class DeviceProvisioningBanner extends ConsumerWidget {
   }
 }
 
-class _DeviceProvisioningBannerContent extends StatelessWidget {
-  const new({
-    required this.activeRetry,
-    required this.isLoading,
-    required this.isProvisioningRequired,
-    required this.onRetry,
-  });
-
-  final RetryControllerState activeRetry;
-  final bool isLoading;
-  final bool isProvisioningRequired;
-  final VoidCallback onRetry;
-
+class const _DeviceProvisioningBannerContent({
+  required final RetryControllerState activeRetry,
+  required final bool isLoading,
+  required final bool isProvisioningRequired,
+  required final VoidCallback onRetry,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
@@ -123,12 +114,10 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
   }
 }
 
-class _WaitingBanner extends HookWidget {
-  const new({required this.resumeAt, required this.error});
-
-  final DateTime resumeAt;
-  final DeviceProvisioningException error;
-
+class const _WaitingBanner({
+  required final DateTime resumeAt,
+  required final DeviceProvisioningException error,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     Duration calcRemaining() {
@@ -163,21 +152,13 @@ class _WaitingBanner extends HookWidget {
   }
 }
 
-class _BannerTile extends StatelessWidget {
-  const new({
-    required this.icon,
-    required this.backgroundColor,
-    required this.foregroundColor,
-    required this.message,
-    this.trailing,
-  });
-
-  final IconData icon;
-  final Color backgroundColor;
-  final Color foregroundColor;
-  final String message;
-  final Widget? trailing;
-
+class const _BannerTile({
+  required final IconData icon,
+  required final Color backgroundColor,
+  required final Color foregroundColor,
+  required final String message,
+  final Widget? trailing,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AppBanner(
     icon: icon,

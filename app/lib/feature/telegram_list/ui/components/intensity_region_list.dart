@@ -5,22 +5,16 @@ import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.
 import 'package:material_ui/material_ui.dart';
 
 /// 震度地域リスト（震度階級ごとにグループ化、差分注釈付き）
-class IntensityRegionList extends StatelessWidget {
-  const new({
-    required this.entries,
-    this.groupByPrefecture = false,
-    this.prefectureMap,
-    super.key,
-  });
-
-  final List<IntensityRegionDiffEntry> entries;
+class const IntensityRegionList({
+  required final List<IntensityRegionDiffEntry> entries,
 
   /// 市区町村コード先頭2桁で都道府県ごとにグループ化するか。
-  final bool groupByPrefecture;
+  final bool groupByPrefecture = false,
 
   /// 市区町村コード先頭2桁 → 都道府県名 のマップ（VXSE53用）
-  final Map<String, String>? prefectureMap;
-
+  final Map<String, String>? prefectureMap,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (entries.isEmpty) {
@@ -53,19 +47,12 @@ class IntensityRegionList extends StatelessWidget {
   }
 }
 
-class _IntensityRow extends StatelessWidget {
-  const new({
-    required this.intensity,
-    required this.entries,
-    required this.groupByPrefecture,
-    this.prefectureMap,
-  });
-
-  final JmaIntensity intensity;
-  final List<IntensityRegionDiffEntry> entries;
-  final bool groupByPrefecture;
-  final Map<String, String>? prefectureMap;
-
+class const _IntensityRow({
+  required final JmaIntensity intensity,
+  required final List<IntensityRegionDiffEntry> entries,
+  required final bool groupByPrefecture,
+  final Map<String, String>? prefectureMap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -95,15 +82,10 @@ class _IntensityRow extends StatelessWidget {
   }
 }
 
-class _PrefectureRegionList extends StatelessWidget {
-  const new({
-    required this.entries,
-    required this.prefectureMap,
-  });
-
-  final List<IntensityRegionDiffEntry> entries;
-  final Map<String, String>? prefectureMap;
-
+class const _PrefectureRegionList({
+  required final List<IntensityRegionDiffEntry> entries,
+  required final Map<String, String>? prefectureMap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final byPrefecture = <String, List<IntensityRegionDiffEntry>>{};
@@ -128,15 +110,10 @@ class _PrefectureRegionList extends StatelessWidget {
   }
 }
 
-class _PrefectureRegionRow extends StatelessWidget {
-  const new({
-    required this.prefectureName,
-    required this.entries,
-  });
-
-  final String prefectureName;
-  final List<IntensityRegionDiffEntry> entries;
-
+class const _PrefectureRegionRow({
+  required final String prefectureName,
+  required final List<IntensityRegionDiffEntry> entries,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -157,11 +134,8 @@ class _PrefectureRegionRow extends StatelessWidget {
   }
 }
 
-class _RegionChip extends StatelessWidget {
-  const new({required this.entry});
-
-  final IntensityRegionDiffEntry entry;
-
+class const _RegionChip({required final IntensityRegionDiffEntry entry})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

@@ -15,15 +15,12 @@ Future<DeviceIdInterceptor> deviceIdInterceptor(Ref ref) async {
   );
 }
 
-class DeviceIdInterceptor extends Interceptor {
-  new({
-    required Future<String?> Function() readToken,
-    DeviceIdDecoder decoder = const DeviceIdDecoder(),
-  }) : _readToken = readToken,
-       _decoder = decoder;
-
-  final Future<String?> Function() _readToken;
-  final DeviceIdDecoder _decoder;
+class DeviceIdInterceptor({
+  required Future<String?> Function() readToken,
+  DeviceIdDecoder decoder = const DeviceIdDecoder(),
+}) extends Interceptor {
+  final Future<String?> Function() _readToken = readToken;
+  final DeviceIdDecoder _decoder = decoder;
 
   @override
   Future<void> onRequest(

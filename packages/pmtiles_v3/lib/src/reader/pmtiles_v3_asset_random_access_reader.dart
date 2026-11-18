@@ -5,13 +5,11 @@ import 'package:pmtiles_v3/src/reader/pmtiles_random_access_reader.dart';
 import 'package:pmtiles_v3/src/reader/pmtiles_v3_asset_loader.dart';
 import 'package:pmtiles_v3/src/reader/pmtiles_v3_range_validator.dart';
 
-final class PmTilesV3AssetRandomAccessReader
-    implements PmTilesRandomAccessReader {
-  new({
-    required Uint8List bytes,
-    this._rangeValidator = const PmTilesV3RangeValidator(),
-  }) : _bytes = Uint8List.fromList(bytes);
-
+final class PmTilesV3AssetRandomAccessReader({
+  required Uint8List bytes,
+  final PmTilesV3RangeValidator _rangeValidator =
+      const PmTilesV3RangeValidator(),
+}) implements PmTilesRandomAccessReader {
   static Future<PmTilesV3AssetRandomAccessReader> open({
     required String assetKey,
     required PmTilesV3AssetLoader assetLoader,
@@ -30,8 +28,7 @@ final class PmTilesV3AssetRandomAccessReader
     }
   }
 
-  final Uint8List _bytes;
-  final PmTilesV3RangeValidator _rangeValidator;
+  final _bytes = Uint8List.fromList(bytes);
   var _isClosed = false;
 
   @override

@@ -185,17 +185,15 @@ const fullShakeSnapshot = <String, Object?>{
 void main() {
   group('WsMessage.fromJson realtime contract', () {
     test('full Earthquake trees, telegrams, and catalog parse', () {
-      final message =
-          WsMessage.fromJson({
-                'type': 'realtime',
-                'data': {
-                  'type': 'earthquake',
-                  'operation': 'upsert',
-                  'event_id': '20260101000000',
-                  'record': fullEarthquake,
-                },
-              })
-              as WsRealtimeMessage;
+      final message = WsMessage.fromJson({
+        'type': 'realtime',
+        'data': {
+          'type': 'earthquake',
+          'operation': 'upsert',
+          'event_id': '20260101000000',
+          'record': fullEarthquake,
+        },
+      }) as WsRealtimeMessage;
 
       final event = message.data as RealtimeEarthquakeUpsertEvent;
       expect(event.payload.record.intensity?.intensityTree, hasLength(1));
@@ -209,17 +207,15 @@ void main() {
     });
 
     test('full EEW warning relations parse', () {
-      final message =
-          WsMessage.fromJson({
-                'type': 'realtime',
-                'data': {
-                  'type': 'eew',
-                  'operation': 'upsert',
-                  'event_id': '20260101000001',
-                  'record': fullEew,
-                },
-              })
-              as WsRealtimeMessage;
+      final message = WsMessage.fromJson({
+        'type': 'realtime',
+        'data': {
+          'type': 'eew',
+          'operation': 'upsert',
+          'event_id': '20260101000001',
+          'record': fullEew,
+        },
+      }) as WsRealtimeMessage;
 
       final event = message.data as RealtimeEewUpsertEvent;
       expect(event.payload.record.isWarning, isTrue);
@@ -227,14 +223,12 @@ void main() {
     });
 
     test('shake points, merged events, and correlation parse', () {
-      final message =
-          WsMessage.fromJson({
-                'type': 'realtime',
-                'data': {
-                  ...fullShakeSnapshot,
-                },
-              })
-              as WsRealtimeMessage;
+      final message = WsMessage.fromJson({
+        'type': 'realtime',
+        'data': {
+          ...fullShakeSnapshot,
+        },
+      }) as WsRealtimeMessage;
 
       final event = message.data as RealtimeShakeDetectionSnapshotEvent;
       final shake = event.payload.events.single;
@@ -244,33 +238,29 @@ void main() {
     });
 
     test('earthquake delete parses without record', () {
-      final message =
-          WsMessage.fromJson({
-                'type': 'realtime',
-                'data': {
-                  'type': 'earthquake',
-                  'operation': 'delete',
-                  'event_id': '20260101000000',
-                },
-              })
-              as WsRealtimeMessage;
+      final message = WsMessage.fromJson({
+        'type': 'realtime',
+        'data': {
+          'type': 'earthquake',
+          'operation': 'delete',
+          'event_id': '20260101000000',
+        },
+      }) as WsRealtimeMessage;
 
       final event = message.data as RealtimeEarthquakeDeleteEvent;
       expect(event.payload.eventId, '20260101000000');
     });
 
     test('tsunami upsert parses group_id', () {
-      final message =
-          WsMessage.fromJson({
-                'type': 'realtime',
-                'data': {
-                  'type': 'tsunami',
-                  'operation': 'upsert',
-                  'event_id': 'tsunami-1',
-                  'group_id': 'group-1',
-                },
-              })
-              as WsRealtimeMessage;
+      final message = WsMessage.fromJson({
+        'type': 'realtime',
+        'data': {
+          'type': 'tsunami',
+          'operation': 'upsert',
+          'event_id': 'tsunami-1',
+          'group_id': 'group-1',
+        },
+      }) as WsRealtimeMessage;
 
       final event = message.data as RealtimeTsunamiUpsertEvent;
       expect(event.payload.eventId, 'tsunami-1');
@@ -278,16 +268,14 @@ void main() {
     });
 
     test('tsunami delete parses without group_id', () {
-      final message =
-          WsMessage.fromJson({
-                'type': 'realtime',
-                'data': {
-                  'type': 'tsunami',
-                  'operation': 'delete',
-                  'event_id': 'tsunami-2',
-                },
-              })
-              as WsRealtimeMessage;
+      final message = WsMessage.fromJson({
+        'type': 'realtime',
+        'data': {
+          'type': 'tsunami',
+          'operation': 'delete',
+          'event_id': 'tsunami-2',
+        },
+      }) as WsRealtimeMessage;
 
       final event = message.data as RealtimeTsunamiDeleteEvent;
       expect(event.payload.eventId, 'tsunami-2');
@@ -295,21 +283,19 @@ void main() {
     });
 
     test('estimated intensity upsert parses the canonical record', () {
-      final message =
-          WsMessage.fromJson({
-                'type': 'realtime',
-                'data': {
-                  'type': 'estimated_intensity',
-                  'operation': 'upsert',
-                  'event_id': 'estimated-1',
-                  'record': {
-                    'eventId': 'estimated-1',
-                    'estimatedIntensityKey': 'ixac41/estimated-1.pmtiles',
-                    'createdAt': fixtureTime,
-                  },
-                },
-              })
-              as WsRealtimeMessage;
+      final message = WsMessage.fromJson({
+        'type': 'realtime',
+        'data': {
+          'type': 'estimated_intensity',
+          'operation': 'upsert',
+          'event_id': 'estimated-1',
+          'record': {
+            'eventId': 'estimated-1',
+            'estimatedIntensityKey': 'ixac41/estimated-1.pmtiles',
+            'createdAt': fixtureTime,
+          },
+        },
+      }) as WsRealtimeMessage;
 
       final event = message.data as RealtimeEstimatedIntensityUpsertEvent;
       expect(event.payload.eventId, 'estimated-1');

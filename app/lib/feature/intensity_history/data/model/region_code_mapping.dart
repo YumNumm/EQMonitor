@@ -13,9 +13,7 @@ import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_par
 // 返す実装とする（安全側）。
 
 /// 都道府県コード・市区町村コード・細分区域コードの相互変換ロジックを集約する。
-class RegionCodeMapping {
-  const new _();
-
+class const RegionCodeMapping._() {
   /// 市区町村コードから所属都道府県コードを返す。
   ///
   /// city.code の上 2 桁が prefecture.code の上 2 桁と一致する規則を利用する

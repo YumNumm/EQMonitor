@@ -7,9 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class KnetCredentialsSettingsPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const KnetCredentialsSettingsPage({super.key})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userIdController = useTextEditingController();
@@ -186,11 +185,8 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
   }
 }
 
-class _VerifyResultBanner extends StatelessWidget {
-  const new({required this.success});
-
-  final bool success;
-
+class const _VerifyResultBanner({required final bool success})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

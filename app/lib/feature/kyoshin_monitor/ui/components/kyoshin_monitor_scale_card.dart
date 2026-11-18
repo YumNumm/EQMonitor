@@ -7,11 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
 /// 強震モニタの設定状況を考慮したスケールカード
-class KyoshinMonitorScaleCard extends ConsumerWidget {
-  const new({this.onTap, super.key});
-
-  final void Function()? onTap;
-
+class const KyoshinMonitorScaleCard({final void Function()? onTap, super.key})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final realtimeDataType = ref.watch(

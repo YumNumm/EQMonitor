@@ -19,10 +19,8 @@ import 'package:lat_lng/lat_lng.dart';
 
 const _testEventId = 'test-event-001';
 
-class _StubDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  new(this._earthquake);
-  final Earthquake _earthquake;
-
+class _StubDetailsNotifier(final Earthquake _earthquake)
+    extends EarthquakeHistoryDetailsNotifier {
   @override
   Future<Earthquake> build(String eventId) async => _earthquake;
 }

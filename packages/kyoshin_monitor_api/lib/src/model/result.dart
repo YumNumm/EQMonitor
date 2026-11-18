@@ -5,8 +5,7 @@ part 'result.g.dart';
 
 @freezed
 abstract class Result with _$Result {
-  const factory({required String? status, required String? message}) =
-      _Result;
+  const factory({required String? status, required String? message}) = _Result;
 
   factory fromJson(Map<String, dynamic> json) => _$ResultFromJson(json);
 }

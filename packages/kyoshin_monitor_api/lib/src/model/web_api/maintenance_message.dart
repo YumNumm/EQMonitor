@@ -22,11 +22,8 @@ abstract class MaintenanceMessage
 }
 
 @JsonEnum(valueField: 'type')
-enum MaintenanceMessageType {
+enum MaintenanceMessageType(final String type) {
   non('0'),
   small('1'),
-  highLight('2');
-
-  new(this.type);
-  final String type;
+  highLight('2'),
 }

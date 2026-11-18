@@ -12,11 +12,8 @@ class const RegionDeleteConfirmDialogAction() {
   }
 }
 
-class _RegionDeleteConfirmDialog extends StatelessWidget {
-  const new({required this.name});
-
-  final String name;
-
+class const _RegionDeleteConfirmDialog({required final String name})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;

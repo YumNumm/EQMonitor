@@ -13,24 +13,15 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EarthquakeIntensityCard extends StatelessWidget {
-  const new({
-    required this.item,
-    required this.displayMode,
-    required this.onDisplayModeChanged,
-    required this.availableModes,
-    required this.source,
-    required this.showDatabaseBadge,
-    super.key,
-  });
-
-  final Earthquake item;
-  final IntensityDisplayMode displayMode;
-  final ValueChanged<IntensityDisplayMode> onDisplayModeChanged;
-  final List<IntensityDisplayMode> availableModes;
-  final EarthquakeDataSource source;
-  final bool showDatabaseBadge;
-
+class const EarthquakeIntensityCard({
+  required final Earthquake item,
+  required final IntensityDisplayMode displayMode,
+  required final ValueChanged<IntensityDisplayMode> onDisplayModeChanged,
+  required final List<IntensityDisplayMode> availableModes,
+  required final EarthquakeDataSource source,
+  required final bool showDatabaseBadge,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final showingDb = source == EarthquakeDataSource.jmaIntensityDatabase;

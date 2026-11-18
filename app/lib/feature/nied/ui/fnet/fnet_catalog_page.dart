@@ -14,9 +14,7 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:nied_api_client/nied_api_client.dart';
 
-class FnetCatalogPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const FnetCatalogPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedMonth = useState<Month?>(null);
@@ -38,11 +36,8 @@ class FnetCatalogPage extends HookConsumerWidget {
   }
 }
 
-class _FnetCatalogList extends HookConsumerWidget {
-  const new({required this.selectedMonth});
-
-  final Month? selectedMonth;
-
+class const _FnetCatalogList({required final Month? selectedMonth})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -137,15 +132,10 @@ class _FnetCatalogList extends HookConsumerWidget {
   }
 }
 
-class _MonthSelector extends StatelessWidget {
-  const new({
-    required this.selectedMonth,
-    required this.onMonthChanged,
-  });
-
-  final Month? selectedMonth;
-  final ValueChanged<Month?> onMonthChanged;
-
+class const _MonthSelector({
+  required final Month? selectedMonth,
+  required final ValueChanged<Month?> onMonthChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -194,11 +184,8 @@ class _MonthSelector extends StatelessWidget {
   }
 }
 
-class _MonthPickerDialog extends HookWidget {
-  const new({required this.initialMonth});
-
-  final Month? initialMonth;
-
+class const _MonthPickerDialog({required final Month? initialMonth})
+    extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
@@ -306,11 +293,7 @@ class _MonthPickerDialog extends HookWidget {
   }
 }
 
-class _EventCard extends HookWidget {
-  const new({required this.event});
-
-  final FnetEvent event;
-
+class const _EventCard({required final FnetEvent event}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

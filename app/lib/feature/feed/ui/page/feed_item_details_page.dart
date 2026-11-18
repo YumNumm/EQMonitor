@@ -14,12 +14,11 @@ import 'package:material_ui/material_ui.dart';
 /// [item] が無い場合は [feedProvider] のキャッシュから [id] で解決する。
 /// （id 指定で1件取得するAPIは存在しないため、解決できない場合は
 /// 見つからない旨を表示して一覧へ誘導する）
-class FeedItemDetailsPage extends ConsumerWidget {
-  const new({required this.id, this.item, super.key});
-
-  final String id;
-  final FeedItem? item;
-
+class const FeedItemDetailsPage({
+  required final String id,
+  final FeedItem? item,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final passed = item;
@@ -44,9 +43,7 @@ class FeedItemDetailsPage extends ConsumerWidget {
   }
 }
 
-class _FeedItemNotFound extends StatelessWidget {
-  const new();
-
+class const _FeedItemNotFound() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(

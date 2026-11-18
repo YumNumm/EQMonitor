@@ -1,7 +1,11 @@
 /// JMA Disaster Category definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-2.
-enum JmaDisasterCategory {
+enum JmaDisasterCategory(
+  final int code,
+  final String nameJa,
+  final String nameEn,
+) {
   earthquakeEarlyWarning(1, '緊急地震速報', 'Earthquake Early Warning'),
   hypocenter(2, '震源', 'Hypocenter'),
   seismicIntensity(3, '震度', 'Seismic Intensity'),
@@ -16,12 +20,6 @@ enum JmaDisasterCategory {
   typhoon(12, '台風', 'Typhoon'),
   // 13: Unused
   marine(14, '海上', 'Marine');
-
-  new(this.code, this.nameJa, this.nameEn);
-
-  final int code;
-  final String nameJa;
-  final String nameEn;
 
   static JmaDisasterCategory fromCode(int code) =>
       values.firstWhere((e) => e.code == code);

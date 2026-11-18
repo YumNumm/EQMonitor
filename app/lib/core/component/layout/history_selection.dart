@@ -1,15 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 
-class HistorySelection extends StatelessWidget {
-  const new({
-    required this.selected,
-    required this.child,
-    super.key,
-  });
-
-  final bool selected;
-  final Widget child;
-
+class const HistorySelection({
+  required final bool selected,
+  required final Widget child,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     selected: selected,

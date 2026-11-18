@@ -19,7 +19,7 @@ abstract class KyoshinMonitorObservationPoint
 }
 
 @freezed
-abstract class KyoshinMonitorObservationAnalyzedPoint
+abstract class const KyoshinMonitorObservationAnalyzedPoint._()
     with _$KyoshinMonitorObservationAnalyzedPoint {
   const factory({
     required KyoshinMonitorObservationPoint point,
@@ -28,8 +28,6 @@ abstract class KyoshinMonitorObservationAnalyzedPoint
     required int g,
     required int b,
   }) = _KyoshinMonitorObservationAnalyzedPoint;
-
-  const new _();
 
   factory fromJson(
     Map<String, dynamic> json,

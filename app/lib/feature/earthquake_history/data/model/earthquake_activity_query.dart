@@ -3,7 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'earthquake_activity_query.freezed.dart';
 
 @freezed
-abstract class EarthquakeActivityQuery with _$EarthquakeActivityQuery {
+abstract class const EarthquakeActivityQuery._()
+    with _$EarthquakeActivityQuery {
   const factory({
     required String baseEventId,
     required DateTime baseOriginTime,
@@ -15,8 +16,6 @@ abstract class EarthquakeActivityQuery with _$EarthquakeActivityQuery {
     required int radiusKm,
     required int? depthOffsetKm,
   }) = _EarthquakeActivityQuery;
-
-  const new _();
 
   DateTime get start => baseOriginTime.subtract(Duration(days: beforeDays));
 

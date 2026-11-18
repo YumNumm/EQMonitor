@@ -14,11 +14,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// `homeConfigurationProvider` を任意の状態で固定するためのスタブ。
-class _StubHomeConfiguration extends HomeConfigurationNotifier {
-  new(this._value);
-
-  final HomeConfigurationModel _value;
-
+class _StubHomeConfiguration(final HomeConfigurationModel _value)
+    extends HomeConfigurationNotifier {
   @override
   Future<HomeConfigurationModel> build() async => _value;
 }

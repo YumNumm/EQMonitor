@@ -49,34 +49,32 @@ final class const AssetPackReader({
 /// A verified R2 download is preferred. If it is missing or corrupt,
 /// [AssetPackStorageRepository] deactivates it and returns the immutable pack
 /// bundled with the installed app. There is no fake-data fallback.
-class AssetPackRepository {
-  new({
-    ResolveAssetPackFile? resolvePackFile,
-    Future<String> Function()? resolvePackRoot,
-    ResolveAssetPackSource? resolvePackSource,
-    DeactivateDownloadedAssetPackSource? deactivateDownloadedSource,
-  }) : assert(
-         resolvePackSource == null ||
-             (resolvePackFile == null && resolvePackRoot == null),
-       ),
-       assert(
-         resolvePackSource != null ||
-             resolvePackFile != null ||
-             resolvePackRoot != null,
-         'Asset Pack の解決手段をいずれか1つ指定してください',
-       ),
-       _resolvePackSource = resolvePackSource,
-       _deactivateDownloadedSource = deactivateDownloadedSource,
-       _resolvePackFile =
-           resolvePackFile ??
-           (resolvePackRoot == null
-               ? null
-               : (relativePath) async =>
-                     '${await resolvePackRoot()}/$relativePath');
+class AssetPackRepository({
+  ResolveAssetPackFile? resolvePackFile,
+  Future<String> Function()? resolvePackRoot,
+  ResolveAssetPackSource? resolvePackSource,
+  DeactivateDownloadedAssetPackSource? deactivateDownloadedSource,
+}) {
+  this
+    : assert(
+        resolvePackSource == null ||
+            (resolvePackFile == null && resolvePackRoot == null),
+      ),
+      assert(
+        resolvePackSource != null ||
+            resolvePackFile != null ||
+            resolvePackRoot != null,
+        'Asset Pack の解決手段をいずれか1つ指定してください',
+      );
 
-  final ResolveAssetPackFile? _resolvePackFile;
-  final ResolveAssetPackSource? _resolvePackSource;
-  final DeactivateDownloadedAssetPackSource? _deactivateDownloadedSource;
+  final ResolveAssetPackFile? _resolvePackFile =
+      resolvePackFile ??
+      (resolvePackRoot == null
+          ? null
+          : (relativePath) async => '${await resolvePackRoot()}/$relativePath');
+  final ResolveAssetPackSource? _resolvePackSource = resolvePackSource;
+  final DeactivateDownloadedAssetPackSource? _deactivateDownloadedSource =
+      deactivateDownloadedSource;
 
   /// Ids whose SHA-256 has already been verified against the manifest during
   /// this repository instance's lifetime, keyed by

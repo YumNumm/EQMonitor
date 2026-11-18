@@ -14,22 +14,14 @@ import 'package:material_ui/material_ui.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class EarthquakeHistoryPagingList extends StatelessWidget {
-  const new({
-    required this.dataSource,
-    required this.parameter,
-    required this.config,
-    this.selectedEventId,
-    this.onSelect,
-    super.key,
-  });
-
-  final EarthquakeHistoryDataSource dataSource;
-  final EarthquakeHistoryParameter parameter;
-  final EarthquakeHistoryListConfig config;
-  final String? selectedEventId;
-  final ValueChanged<String>? onSelect;
-
+class const EarthquakeHistoryPagingList({
+  required final EarthquakeHistoryDataSource dataSource,
+  required final EarthquakeHistoryParameter parameter,
+  required final EarthquakeHistoryListConfig config,
+  final String? selectedEventId,
+  final ValueChanged<String>? onSelect,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final showDateHeaders = config.dateHeaderDisplayMode.isVisible(
@@ -98,25 +90,15 @@ class EarthquakeHistoryPagingList extends StatelessWidget {
   }
 }
 
-class _EarthquakeHistoryPagingItem extends StatelessWidget {
-  const new({
-    required this.item,
-    required this.index,
-    required this.totalCount,
-    required this.parameter,
-    required this.showBackgroundColor,
-    required this.selected,
-    required this.onSelect,
-  });
-
-  final EarthquakePartial item;
-  final int index;
-  final int totalCount;
-  final EarthquakeHistoryParameter parameter;
-  final bool showBackgroundColor;
-  final bool selected;
-  final ValueChanged<String>? onSelect;
-
+class const _EarthquakeHistoryPagingItem({
+  required final EarthquakePartial item,
+  required final int index,
+  required final int totalCount,
+  required final EarthquakeHistoryParameter parameter,
+  required final bool showBackgroundColor,
+  required final bool selected,
+  required final ValueChanged<String>? onSelect,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return M3ESegmentedItem(
@@ -150,16 +132,11 @@ class _EarthquakeHistoryPagingItem extends StatelessWidget {
   }
 }
 
-class EarthquakeHistorySkeleton extends StatelessWidget {
-  const new({
-    this.itemCount = 5,
-    this.scrollable = true,
-    super.key,
-  });
-
-  final int itemCount;
-  final bool scrollable;
-
+class const EarthquakeHistorySkeleton({
+  final int itemCount = 5,
+  final bool scrollable = true,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tiles = [
@@ -180,11 +157,7 @@ class EarthquakeHistorySkeleton extends StatelessWidget {
   }
 }
 
-class _DateHeader extends StatelessWidget {
-  const new({required this.date});
-
-  final String date;
-
+class const _DateHeader({required final String date}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

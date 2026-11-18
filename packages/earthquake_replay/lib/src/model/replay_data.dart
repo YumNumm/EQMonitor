@@ -34,7 +34,7 @@ sealed class const ReplayData({
 }
 
 @freezed
-abstract class JmaXmlTelegramReplayData
+abstract class const JmaXmlTelegramReplayData._()
     with _$JmaXmlTelegramReplayData
     implements ReplayData {
   const factory({
@@ -43,7 +43,6 @@ abstract class JmaXmlTelegramReplayData
     required String title,
     required String telegram,
   }) = _JmaXmlTelegramReplayData;
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) =>
       _$JmaXmlTelegramReplayDataFromJson(json);
@@ -64,7 +63,7 @@ abstract class JmaXmlTelegramReplayData
 }
 
 @freezed
-abstract class JmaBinaryTelegramReplayData
+abstract class const JmaBinaryTelegramReplayData._()
     with _$JmaBinaryTelegramReplayData
     implements ReplayData {
   const factory({
@@ -73,7 +72,6 @@ abstract class JmaBinaryTelegramReplayData
     required String telegramType,
     required List<int> data,
   }) = _JmaBinaryTelegramReplayData;
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) =>
       _$JmaBinaryTelegramReplayDataFromJson(json);
@@ -94,7 +92,7 @@ abstract class JmaBinaryTelegramReplayData
 }
 
 @freezed
-abstract class KyoshinMonitorImageReplayData
+abstract class const KyoshinMonitorImageReplayData._()
     with _$KyoshinMonitorImageReplayData
     implements ReplayData {
   const factory({
@@ -102,7 +100,6 @@ abstract class KyoshinMonitorImageReplayData
     required DateTime time,
     required Map<ImageType, List<int>> images,
   }) = _KyoshinMonitorImageReplayData;
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorImageReplayDataFromJson(json);
@@ -125,7 +122,7 @@ abstract class KyoshinMonitorImageReplayData
 }
 
 @freezed
-abstract class KyoshinMonitorEewJsonReplayData
+abstract class const KyoshinMonitorEewJsonReplayData._()
     with _$KyoshinMonitorEewJsonReplayData
     implements ReplayData {
   const factory({
@@ -133,7 +130,6 @@ abstract class KyoshinMonitorEewJsonReplayData
     required DateTime time,
     required String json,
   }) = _KyoshinMonitorEewJsonReplayData;
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorEewJsonReplayDataFromJson(json);
@@ -152,7 +148,7 @@ abstract class KyoshinMonitorEewJsonReplayData
 }
 
 @freezed
-abstract class KeviJsonReplayData
+abstract class const KeviJsonReplayData._()
     with _$KeviJsonReplayData
     implements ReplayData {
   const factory({
@@ -161,7 +157,6 @@ abstract class KeviJsonReplayData
     required JsonType jsonType,
     required String json,
   }) = _KeviJsonReplayData;
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) =>
       _$KeviJsonReplayDataFromJson(json);
@@ -185,7 +180,7 @@ abstract class KeviJsonReplayData
 }
 
 @freezed
-abstract class SnpLogEntryReplayData
+abstract class const SnpLogEntryReplayData._()
     with _$SnpLogEntryReplayData
     implements ReplayData {
   const factory({
@@ -193,7 +188,6 @@ abstract class SnpLogEntryReplayData
     required DateTime time,
     required String message,
   }) = _SnpLogEntryReplayData;
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) =>
       _$SnpLogEntryReplayDataFromJson(json);
@@ -212,7 +206,7 @@ abstract class SnpLogEntryReplayData
 }
 
 @freezed
-abstract class AxisJsonReplayData
+abstract class const AxisJsonReplayData._()
     with _$AxisJsonReplayData
     implements ReplayData {
   const factory({
@@ -220,7 +214,6 @@ abstract class AxisJsonReplayData
     required DateTime time,
     required String json,
   }) = _AxisJsonReplayData;
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) =>
       _$AxisJsonReplayDataFromJson(json);
@@ -244,7 +237,7 @@ abstract class AxisJsonReplayData
 /// パイプラインへ流し込む。msgpack body は他の JSON フレーム (101/1002) と同様に
 /// `[time, json]` の並び。
 @freezed
-abstract class EqMonitorEewReplayData
+abstract class const EqMonitorEewReplayData._()
     with _$EqMonitorEewReplayData
     implements ReplayData {
   const factory({
@@ -252,7 +245,6 @@ abstract class EqMonitorEewReplayData
     required DateTime time,
     required String json,
   }) = _EqMonitorEewReplayData;
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) =>
       _$EqMonitorEewReplayDataFromJson(json);
@@ -271,7 +263,7 @@ abstract class EqMonitorEewReplayData
 }
 
 @JsonEnum(valueField: 'value')
-enum ReplayDataType {
+enum ReplayDataType(final int value) {
   jmaXmlTelegram(0),
   jmaBinaryTelegram(1),
   kyoshinMonitorImage(100),
@@ -279,27 +271,18 @@ enum ReplayDataType {
   keviJson(1000),
   snpLogEntry(1001),
   axisJson(1002),
-  eqMonitorEew(1003);
-
-  new(this.value);
-  final int value;
+  eqMonitorEew(1003),
 }
 
-enum ImageType {
+enum ImageType(final int value) {
   shindo(0),
   pga(1),
   pgv(2),
   psWave(3),
-  estShindo(4);
-
-  new(this.value);
-  final int value;
+  estShindo(4),
 }
 
-enum JsonType {
+enum JsonType(final int value) {
   eew(0),
-  eewWarning(1);
-
-  new(this.value);
-  final int value;
+  eewWarning(1),
 }

@@ -8,9 +8,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 /// Flood Decoder.
 ///
 /// Decodes JMA Flood information messages.
-class FloodDecoder {
-  const new _();
-
+class const FloodDecoder._() {
   /// Decodes a Flood message.
   static QzssDcReport decode(JmaCommonParams params) {
     final message = params.message;

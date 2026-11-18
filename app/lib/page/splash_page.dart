@@ -14,9 +14,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SplashPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const SplashPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // ensure cold-start getInitialLink runs even if main.dart listen is delayed

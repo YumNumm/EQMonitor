@@ -123,19 +123,12 @@ void main() {
   });
 }
 
-class _TestApp extends StatelessWidget {
-  const new({
-    required this.repository,
-    required this.kind,
-    required this.onHandled,
-    this.onConfirmed,
-  });
-
-  final PushNotificationRepository repository;
-  final TestNotificationKind kind;
-  final ValueChanged<bool> onHandled;
-  final VoidCallback? onConfirmed;
-
+class const _TestApp({
+  required final PushNotificationRepository repository,
+  required final TestNotificationKind kind,
+  required final ValueChanged<bool> onHandled,
+  final VoidCallback? onConfirmed,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(

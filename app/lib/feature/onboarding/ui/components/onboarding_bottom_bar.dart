@@ -1,28 +1,16 @@
 part of '../page/onboarding_page.dart';
 
-class _OnboardingBottomBar extends StatelessWidget {
-  const new({
-    required this.currentPage,
-    required this.totalPages,
-    required this.buttonLabel,
-    required this.processingLabel,
-    required this.isNextEnabled,
-    required this.isBackEnabled,
-    required this.isProcessing,
-    required this.onNext,
-    required this.onPrevious,
-  });
-
-  final int currentPage;
-  final int totalPages;
-  final String buttonLabel;
-  final String processingLabel;
-  final bool isNextEnabled;
-  final bool isBackEnabled;
-  final bool isProcessing;
-  final Future<void> Function() onNext;
-  final Future<void> Function()? onPrevious;
-
+class const _OnboardingBottomBar({
+  required final int currentPage,
+  required final int totalPages,
+  required final String buttonLabel,
+  required final String processingLabel,
+  required final bool isNextEnabled,
+  required final bool isBackEnabled,
+  required final bool isProcessing,
+  required final Future<void> Function() onNext,
+  required final Future<void> Function()? onPrevious,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -182,15 +170,10 @@ class _OnboardingBottomBar extends StatelessWidget {
   }
 }
 
-class _OnboardingBottomBarInlineLink extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.onTap,
-  });
-
-  final String label;
-  final VoidCallback onTap;
-
+class const _OnboardingBottomBarInlineLink({
+  required final String label,
+  required final VoidCallback onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -208,17 +191,11 @@ class _OnboardingBottomBarInlineLink extends StatelessWidget {
   }
 }
 
-class _PageDot extends StatelessWidget {
-  const new({
-    required this.isActive,
-    required this.color,
-    required this.inactiveColor,
-  });
-
-  final bool isActive;
-  final Color color;
-  final Color inactiveColor;
-
+class const _PageDot({
+  required final bool isActive,
+  required final Color color,
+  required final Color inactiveColor,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(

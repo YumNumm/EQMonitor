@@ -10,7 +10,18 @@ import 'seismicity_benchmark_feature_source.dart';
 /// On-demand deterministic [SeismicityPmTilesArchive] for decoder benchmarks.
 ///
 /// Builds one raw MVT tile during [readTile] and retains no tile map.
-final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
+final class SeismicityBenchmarkArchive._({
+  required final int featureCount,
+  required final int featuresPerTile,
+  required final SeismicityBenchmarkFeatureSource featureSource,
+  required final PmTilesV3TileId tileIdCodec,
+  required final List<int> occupiedTileIds,
+  required final Uint8List firstHypocenterId,
+  required final Uint8List lastHypocenterId,
+  required final int expectedTotalPublicBytes,
+  @override required final SeismicityPmTilesArchiveDescriptor descriptor,
+  @override required final PmTilesV3Header header,
+}) implements SeismicityPmTilesArchive {
   factory({
     required int featureCount,
     required int featuresPerTile,
@@ -101,38 +112,12 @@ final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
     );
   }
 
-  new _({
-    required this.featureCount,
-    required this.featuresPerTile,
-    required this.featureSource,
-    required this.tileIdCodec,
-    required this.occupiedTileIds,
-    required this.firstHypocenterId,
-    required this.lastHypocenterId,
-    required this.expectedTotalPublicBytes,
-    required this.descriptor,
-    required this.header,
-  }) : readCount = 0,
-       closeCount = 0,
-       maxRetainedPayloads = 0,
-       _retainedPayloads = 0,
-       _closed = false;
-
-  final int featureCount;
-  final int featuresPerTile;
-  final SeismicityBenchmarkFeatureSource featureSource;
-  final PmTilesV3TileId tileIdCodec;
-
-  @override
-  final SeismicityPmTilesArchiveDescriptor descriptor;
-
-  @override
-  final PmTilesV3Header header;
-
-  final List<int> occupiedTileIds;
-  final Uint8List firstHypocenterId;
-  final Uint8List lastHypocenterId;
-  final int expectedTotalPublicBytes;
+  this
+    : readCount = 0,
+      closeCount = 0,
+      maxRetainedPayloads = 0,
+      _retainedPayloads = 0,
+      _closed = false;
 
   int readCount;
   int closeCount;

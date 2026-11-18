@@ -13,11 +13,7 @@ import 'package:flutter/widgets.dart';
 import 'package:riverpod/src/internals.dart' show DataKind;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final class CachedOperationToken {
-  const new _(this._authority);
-
-  final int _authority;
-}
+final class const CachedOperationToken._(final int _authority);
 
 enum CachedResultSource { cache, fresh }
 

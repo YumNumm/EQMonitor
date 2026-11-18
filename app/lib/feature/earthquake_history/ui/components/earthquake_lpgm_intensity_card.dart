@@ -4,11 +4,10 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EarthquakeLpgmIntensityCard extends StatelessWidget {
-  const new({required this.item, super.key});
-
-  final Earthquake item;
-
+class const EarthquakeLpgmIntensityCard({
+  required final Earthquake item,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxLpgmIntensity = item.intensity?.maxLpgmIntensity;

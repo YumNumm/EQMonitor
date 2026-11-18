@@ -54,10 +54,8 @@ const _general = GeneralNotificationSettings(
   earthquakeNoticeEnabled: false,
 );
 
-class _RecordingSlotsNotifier extends NotificationSlotsNotifier {
-  new(this._initial);
-
-  final List<NotificationSlot> _initial;
+class _RecordingSlotsNotifier(final List<NotificationSlot> _initial)
+    extends NotificationSlotsNotifier {
   final replaceCalls = <List<NotificationSlotDraft>>[];
 
   @override
@@ -157,10 +155,8 @@ class _RecordingEewWarningNotifier extends EewWarningConfigNotifier {
   }
 }
 
-class _RecordingPresetNotifier extends NotificationPresetNotifier {
-  new(this._initial);
-
-  final NotificationPreset _initial;
+class _RecordingPresetNotifier(final NotificationPreset _initial)
+    extends NotificationPresetNotifier {
   final selected = <NotificationPreset>[];
 
   @override

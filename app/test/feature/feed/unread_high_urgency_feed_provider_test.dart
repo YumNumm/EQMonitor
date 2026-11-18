@@ -22,20 +22,12 @@ FeedItem _item({
   data: const FeedItemData.developerMessage(),
 );
 
-class _FakeFeedNotifier extends FeedNotifier {
-  new(this.items);
-
-  final List<FeedItem> items;
-
+class _FakeFeedNotifier(final List<FeedItem> items) extends FeedNotifier {
   @override
   Future<FeedNotifierState> build() async => (items: items, nextCursor: null);
 }
 
-class _FakeFeedLastRead extends FeedLastRead {
-  new(this.value);
-
-  final DateTime? value;
-
+class _FakeFeedLastRead(final DateTime? value) extends FeedLastRead {
   @override
   Future<DateTime?> build() async => value;
 }

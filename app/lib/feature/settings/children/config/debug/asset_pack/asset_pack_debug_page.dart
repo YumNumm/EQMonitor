@@ -9,9 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class AssetPackDebugPage extends ConsumerWidget {
-  const new({super.key});
-
+class const AssetPackDebugPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final diagnosticsAsync = ref.watch(assetPackDiagnosticsProvider);
@@ -55,11 +53,9 @@ class AssetPackDebugPage extends ConsumerWidget {
   }
 }
 
-class _AssetPackDebugContent extends StatelessWidget {
-  const new({required this.diagnostics});
-
-  final AssetPackDiagnostics diagnostics;
-
+class const _AssetPackDebugContent({
+  required final AssetPackDiagnostics diagnostics,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isBundled = diagnostics.sourceKind == AssetPackSourceKind.bundled;
@@ -89,11 +85,8 @@ class _AssetPackDebugContent extends StatelessWidget {
   }
 }
 
-class _AssetTile extends StatelessWidget {
-  const new({required this.asset});
-
-  final AssetPackManifestItem asset;
-
+class const _AssetTile({required final AssetPackManifestItem asset})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -108,12 +101,10 @@ class _AssetTile extends StatelessWidget {
   }
 }
 
-class _CopyableTile extends StatelessWidget {
-  const new({required this.title, required this.value});
-
-  final String title;
-  final String value;
-
+class const _CopyableTile({
+  required final String title,
+  required final String value,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(

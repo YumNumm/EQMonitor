@@ -30,12 +30,11 @@ extension EarthquakeTypeAppearance on EarthquakeType {
 /// 震度アイコン(`JmaIntensityIcon`の`.filled`)と同じ角丸矩形の見た目に揃え、
 /// ベースカラーの中にアイコンを白で表示する。
 /// [EarthquakeType.normal] は専用アイコンを持たないため何も表示しない。
-class EarthquakeTypeIcon extends StatelessWidget {
-  const new({required this.type, required this.size, super.key});
-
-  final EarthquakeType type;
-  final double size;
-
+class const EarthquakeTypeIcon({
+  required final EarthquakeType type,
+  required final double size,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch ((type.baseColor, type.iconData)) {

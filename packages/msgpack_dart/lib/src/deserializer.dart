@@ -6,29 +6,24 @@ abstract class ExtDecoder {
   dynamic decodeObject(int extType, Uint8List data);
 }
 
-class Deserializer {
-  final ExtDecoder? _extDecoder;
-  final codec = Utf8Codec();
-  final Uint8List _list;
-  final ByteData _data;
-  int _offset = 0;
-
-  int get offset => _offset;
-
-  new(
-    Uint8List list, {
-    ExtDecoder? extDecoder,
-    this.copyBinaryData = false,
-  }) : _list = list,
-       _data = ByteData.view(list.buffer, list.offsetInBytes),
-       _extDecoder = extDecoder;
+class Deserializer(
+  Uint8List list, {
+  ExtDecoder? extDecoder,
 
   /// If false, decoded binary data buffers will reference underlying input
   /// buffer and thus may change when the content of input buffer changes.
   ///
   /// If true, decoded buffers are copies and the underlying input buffer is
   /// free to change after decoding.
-  final bool copyBinaryData;
+  final bool copyBinaryData = false,
+}) {
+  final ExtDecoder? _extDecoder = extDecoder;
+  final codec = Utf8Codec();
+  final Uint8List _list = list;
+  final ByteData _data = ByteData.view(list.buffer, list.offsetInBytes);
+  int _offset = 0;
+
+  int get offset => _offset;
 
   dynamic decode() {
     final u = _list[_offset++];

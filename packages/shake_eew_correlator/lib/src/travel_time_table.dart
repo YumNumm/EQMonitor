@@ -11,8 +11,8 @@ final class const TravelTime({
 });
 
 /// JMA2001 走時表。深さと震央距離の双方向に線形補間し、範囲外は端の値を使う。
-final class TravelTimeTable {
-  new({required Iterable<TravelTimeEntry> entries}) {
+final class TravelTimeTable({required Iterable<TravelTimeEntry> entries}) {
+  this {
     final byDepth = <double, List<TravelTimeEntry>>{};
     for (final entry in entries) {
       (byDepth[entry.depth] ??= []).add(entry);

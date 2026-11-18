@@ -23,11 +23,10 @@ import 'package:maplibre/maplibre.dart';
 /// 市区町村分の `match` 式を持つので入れ替えが重く、市区町村をタップするたびに
 /// 作り直すと塗りが消えたように見える。相対順序はアンカー（細分区域の境界線の
 /// 下 / 上）で決まるので、effect を分けても順序は入れ替わらない。
-class IntensityFillLayer extends HookConsumerWidget {
-  const new({required this.items, super.key});
-
-  final List<CityMaxIntensityEntry>? items;
-
+class const IntensityFillLayer({
+  required final List<CityMaxIntensityEntry>? items,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;

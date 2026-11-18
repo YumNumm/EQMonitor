@@ -243,23 +243,21 @@ void main() {
 
 // ── fake ───────────────────────────────────────────────────────────────────
 
-class FakeDeviceRepository extends DeviceRepository {
-  new({
-    required Result<RegisteredDevice, Exception> Function() getResult,
-    required Result<RegisteredDevice, Exception> Function() putResult,
-    required Result<void, Exception> Function() migrateResult,
-  }) : _getResult = getResult,
-       _putResult = putResult,
-       _migrateResult = migrateResult,
-       super(
-         api: api.ApiClient(Dio()),
-         authRepository: _MemoryDeviceAuthRepository(),
-         apnsEnvironment: api.ApnsEnvironment.development,
-       );
+class FakeDeviceRepository({
+  required Result<RegisteredDevice, Exception> Function() getResult,
+  required Result<RegisteredDevice, Exception> Function() putResult,
+  required Result<void, Exception> Function() migrateResult,
+}) extends DeviceRepository {
+  this
+    : super(
+        api: api.ApiClient(Dio()),
+        authRepository: _MemoryDeviceAuthRepository(),
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
 
-  final Result<RegisteredDevice, Exception> Function() _getResult;
-  final Result<RegisteredDevice, Exception> Function() _putResult;
-  final Result<void, Exception> Function() _migrateResult;
+  final Result<RegisteredDevice, Exception> Function() _getResult = getResult;
+  final Result<RegisteredDevice, Exception> Function() _putResult = putResult;
+  final Result<void, Exception> Function() _migrateResult = migrateResult;
 
   // ignore: type_annotate_public_apis
   var getCalls = 0;
@@ -292,8 +290,8 @@ class FakeDeviceRepository extends DeviceRepository {
   }
 }
 
-final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  new() : super(_MemorySecurePreferencesDataSource());
+final class _MemoryDeviceAuthRepository() extends DeviceAuthRepository {
+  this : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 

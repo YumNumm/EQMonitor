@@ -12,7 +12,7 @@ part 'environment.g.dart';
 enum Flavor { dev, prod }
 
 @freezed
-abstract class BuildConfig with _$BuildConfig {
+abstract class const BuildConfig._() with _$BuildConfig {
   const factory({
     required String restApiUrl,
     required String appIdSuffix,
@@ -71,8 +71,6 @@ abstract class BuildConfig with _$BuildConfig {
       defaultValue: true,
     ),
   );
-
-  const new _();
 
   /// デバッグ向け UI（デバッグメニュー・HTTP キャッシュ操作）を表示してよいか。
   ///

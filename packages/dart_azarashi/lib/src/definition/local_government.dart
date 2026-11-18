@@ -4,9 +4,7 @@
 ///
 /// Note: This is a partial list. The full list contains thousands of entries.
 /// Unknown codes will return a fallback description.
-class JmaLocalGovernment {
-  const new _();
-
+class const JmaLocalGovernment._() {
   /// Extracts local government name from a 23-bit code.
   ///
   /// The code format is: Prefecture Code (6 bits) + City/Town Code (17 bits)

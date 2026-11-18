@@ -10,12 +10,8 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_utf8_dictionary.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_validity_bitmap.dart';
 
-final class SeismicityChunkIntensityDictionary {
-  new({required int capacity})
-    : _dictionary = SeismicityUtf8Dictionary(
-        maxBytes: 0xffffffff,
-        maxEntries: capacity,
-      ) {
+final class SeismicityChunkIntensityDictionary({required int capacity}) {
+  this {
     final storage = translateSeismicityStringColumnAllocation(
       allocate: () => allocateSeismicityStringColumn(
         () => (
@@ -28,7 +24,10 @@ final class SeismicityChunkIntensityDictionary {
     _validity = storage.validity;
   }
 
-  final SeismicityUtf8Dictionary _dictionary;
+  final _dictionary = SeismicityUtf8Dictionary(
+    maxBytes: 0xffffffff,
+    maxEntries: capacity,
+  );
   late final Uint32List _indexes;
   late final Uint8List _validity;
   var _length = 0;

@@ -2,26 +2,18 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sheet/sheet.dart';
 
-class SheetFloatingActionButtons extends HookWidget {
-  const new({
-    required this.controller,
-    required this.fab,
-    super.key,
-    this.maxHeight = 0.3,
-    this.hasAppBar = true,
-  });
+class const SheetFloatingActionButtons({
+  required final SheetController controller,
+
+  /// FAB
+  required final List<Widget> fab,
+  super.key,
 
   /// FABの最大高さ
   /// 画面から見えなくなる高さ
-  final double maxHeight;
-
-  final bool hasAppBar;
-
-  /// FAB
-  final List<Widget> fab;
-
-  final SheetController controller;
-
+  final double maxHeight = 0.3,
+  final bool hasAppBar = true,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);

@@ -33,11 +33,8 @@ class GoRouterCurrentLocationResolver {
 ///
 /// 有効かどうかの判定は [isDebugMenuAvailableProvider] に委譲する
 /// (kDebugMode / BETA ビルド / デバッグモード ON / ADMIN ロール)。
-class DebugLauncher extends HookConsumerWidget {
-  const new({required this.child, super.key});
-
-  final Widget child;
-
+class const DebugLauncher({required final Widget child, super.key})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const shakeGForceThreshold = 2.7;

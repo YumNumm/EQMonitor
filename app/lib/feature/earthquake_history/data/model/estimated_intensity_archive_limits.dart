@@ -1,14 +1,14 @@
 import 'dart:async';
 
 /// Archive取得時のcaller-owned上限。安全上の既定値は持たない。
-final class EstimatedIntensityArchiveDownloadLimits {
-  new({
-    required this.maxArchiveBytes,
-    required this.connectTimeout,
-    required this.headerTimeout,
-    required this.idleTimeout,
-    required this.totalTimeout,
-  }) {
+final class EstimatedIntensityArchiveDownloadLimits({
+  required final int maxArchiveBytes,
+  required final Duration connectTimeout,
+  required final Duration headerTimeout,
+  required final Duration idleTimeout,
+  required final Duration totalTimeout,
+}) {
+  this {
     if (maxArchiveBytes <= 0) {
       throw ArgumentError.value(maxArchiveBytes, 'maxArchiveBytes');
     }
@@ -23,12 +23,6 @@ final class EstimatedIntensityArchiveDownloadLimits {
       }
     }
   }
-
-  final int maxArchiveBytes;
-  final Duration connectTimeout;
-  final Duration headerTimeout;
-  final Duration idleTimeout;
-  final Duration totalTimeout;
 }
 
 /// Lifecycle ownerが一回のdownload停止を通知するためのsignal。

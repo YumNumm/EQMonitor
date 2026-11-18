@@ -5,16 +5,11 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_parti
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:material_ui/material_ui.dart';
 
-class HomeEarthquakeList extends StatelessWidget {
-  const new({
-    required this.earthquakes,
-    this.showCurrentLocationIntensity = false,
-    super.key,
-  });
-
-  final List<EarthquakePartial> earthquakes;
-  final bool showCurrentLocationIntensity;
-
+class const HomeEarthquakeList({
+  required final List<EarthquakePartial> earthquakes,
+  final bool showCurrentLocationIntensity = false,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

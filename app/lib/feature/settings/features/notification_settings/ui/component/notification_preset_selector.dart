@@ -9,22 +9,14 @@ import 'package:material_ui/material_ui.dart';
 
 enum NotificationPresetSelectorStyle { onboarding, settings }
 
-class NotificationPresetSelector extends HookConsumerWidget {
-  const new({
-    required this.selectedPreset,
-    required this.onChanged,
-    required this.style,
-    this.onCustomSettingsTap,
-    this.isProcessing = false,
-    super.key,
-  });
-
-  final NotificationPreset? selectedPreset;
-  final ValueChanged<NotificationPreset> onChanged;
-  final NotificationPresetSelectorStyle style;
-  final VoidCallback? onCustomSettingsTap;
-  final bool isProcessing;
-
+class const NotificationPresetSelector({
+  required final NotificationPreset? selectedPreset,
+  required final ValueChanged<NotificationPreset> onChanged,
+  required final NotificationPresetSelectorStyle style,
+  final VoidCallback? onCustomSettingsTap,
+  final bool isProcessing = false,
+  super.key,
+}) extends HookConsumerWidget {
   static const _onboardingPresetOrder = <NotificationPreset>[
     NotificationPreset.recommended,
     NotificationPreset.all,
@@ -126,23 +118,15 @@ class NotificationPresetSelector extends HookConsumerWidget {
   }
 }
 
-class _OnboardingPresetList extends StatelessWidget {
-  const new({
-    required this.presets,
-    required this.selectedPreset,
-    required this.isPresetEnabled,
-    required this.shouldShowCriticalWarning,
-    required this.onPresetTap,
-    required this.onCriticalWarningTap,
-  });
-
-  final List<NotificationPreset> presets;
-  final NotificationPreset? selectedPreset;
-  final bool Function(NotificationPreset preset) isPresetEnabled;
-  final bool Function(NotificationPreset preset) shouldShowCriticalWarning;
-  final ValueChanged<NotificationPreset> onPresetTap;
-  final VoidCallback onCriticalWarningTap;
-
+class const _OnboardingPresetList({
+  required final List<NotificationPreset> presets,
+  required final NotificationPreset? selectedPreset,
+  required final bool Function(NotificationPreset preset) isPresetEnabled,
+  required final bool Function(NotificationPreset preset)
+  shouldShowCriticalWarning,
+  required final ValueChanged<NotificationPreset> onPresetTap,
+  required final VoidCallback onCriticalWarningTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -166,23 +150,14 @@ class _OnboardingPresetList extends StatelessWidget {
   }
 }
 
-class _OnboardingPresetCard extends StatelessWidget {
-  const new({
-    required this.preset,
-    required this.isSelected,
-    required this.isEnabled,
-    required this.showCriticalWarning,
-    required this.onTap,
-    required this.onCriticalWarningTap,
-  });
-
-  final NotificationPreset preset;
-  final bool isSelected;
-  final bool isEnabled;
-  final bool showCriticalWarning;
-  final VoidCallback onTap;
-  final VoidCallback onCriticalWarningTap;
-
+class const _OnboardingPresetCard({
+  required final NotificationPreset preset,
+  required final bool isSelected,
+  required final bool isEnabled,
+  required final bool showCriticalWarning,
+  required final VoidCallback onTap,
+  required final VoidCallback onCriticalWarningTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -252,11 +227,9 @@ class _OnboardingPresetCard extends StatelessWidget {
   }
 }
 
-class _OnboardingPresetDescription extends StatelessWidget {
-  const new({required this.preset});
-
-  final NotificationPreset preset;
-
+class const _OnboardingPresetDescription({
+  required final NotificationPreset preset,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (preset) {
@@ -298,11 +271,8 @@ class _OnboardingPresetDescription extends StatelessWidget {
   }
 }
 
-class _PresetBulletItem extends StatelessWidget {
-  const new({required this.text});
-
-  final String text;
-
+class const _PresetBulletItem({required final String text})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -332,25 +302,16 @@ class _PresetBulletItem extends StatelessWidget {
   }
 }
 
-class _SettingsPresetGroup extends StatelessWidget {
-  const new({
-    required this.presets,
-    required this.selectedPreset,
-    required this.isPresetEnabled,
-    required this.shouldShowCriticalWarning,
-    required this.onPresetTap,
-    required this.onCustomSettingsTap,
-    required this.onCriticalWarningTap,
-  });
-
-  final List<NotificationPreset> presets;
-  final NotificationPreset? selectedPreset;
-  final bool Function(NotificationPreset preset) isPresetEnabled;
-  final bool Function(NotificationPreset preset) shouldShowCriticalWarning;
-  final ValueChanged<NotificationPreset> onPresetTap;
-  final VoidCallback? onCustomSettingsTap;
-  final VoidCallback onCriticalWarningTap;
-
+class const _SettingsPresetGroup({
+  required final List<NotificationPreset> presets,
+  required final NotificationPreset? selectedPreset,
+  required final bool Function(NotificationPreset preset) isPresetEnabled,
+  required final bool Function(NotificationPreset preset)
+  shouldShowCriticalWarning,
+  required final ValueChanged<NotificationPreset> onPresetTap,
+  required final VoidCallback? onCustomSettingsTap,
+  required final VoidCallback onCriticalWarningTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -393,25 +354,15 @@ class _SettingsPresetGroup extends StatelessWidget {
   }
 }
 
-class _SettingsPresetTile extends StatelessWidget {
-  const new({
-    required this.preset,
-    required this.isSelected,
-    required this.isEnabled,
-    required this.showCriticalWarning,
-    required this.onTap,
-    required this.onCustomSettingsTap,
-    required this.onCriticalWarningTap,
-  });
-
-  final NotificationPreset preset;
-  final bool isSelected;
-  final bool isEnabled;
-  final bool showCriticalWarning;
-  final VoidCallback onTap;
-  final VoidCallback? onCustomSettingsTap;
-  final VoidCallback onCriticalWarningTap;
-
+class const _SettingsPresetTile({
+  required final NotificationPreset preset,
+  required final bool isSelected,
+  required final bool isEnabled,
+  required final bool showCriticalWarning,
+  required final VoidCallback onTap,
+  required final VoidCallback? onCustomSettingsTap,
+  required final VoidCallback onCriticalWarningTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -477,11 +428,8 @@ class _SettingsPresetTile extends StatelessWidget {
   }
 }
 
-class _PresetSelectionMark extends StatelessWidget {
-  const new({required this.isSelected});
-
-  final bool isSelected;
-
+class const _PresetSelectionMark({required final bool isSelected})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -501,12 +449,10 @@ class _PresetSelectionMark extends StatelessWidget {
   }
 }
 
-class _CustomPresetTrailing extends StatelessWidget {
-  const new({required this.enabled, required this.onTap});
-
-  final bool enabled;
-  final VoidCallback onTap;
-
+class const _CustomPresetTrailing({
+  required final bool enabled,
+  required final VoidCallback onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -535,11 +481,8 @@ class _CustomPresetTrailing extends StatelessWidget {
   }
 }
 
-class _CriticalAlertWarningLink extends HookWidget {
-  const new({required this.onTap});
-
-  final VoidCallback onTap;
-
+class const _CriticalAlertWarningLink({required final VoidCallback onTap})
+    extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

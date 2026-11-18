@@ -82,8 +82,8 @@ void main() {
   );
 }
 
-final class _UnauthenticatedDeviceRepository extends DeviceRepository {
-  new()
+final class _UnauthenticatedDeviceRepository() extends DeviceRepository {
+  this
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
@@ -106,8 +106,8 @@ final class _UnauthenticatedDeviceRepository extends DeviceRepository {
   }
 }
 
-final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  new() : super(_MemorySecurePreferencesDataSource());
+final class _MemoryDeviceAuthRepository() extends DeviceAuthRepository {
+  this : super(_MemorySecurePreferencesDataSource());
 
   @override
   Future<void> saveToken({required String token}) async {}

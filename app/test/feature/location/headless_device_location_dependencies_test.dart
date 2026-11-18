@@ -219,8 +219,8 @@ void main() {
   });
 }
 
-final class TestHeadlessJmaRegionResolver extends JmaRegionResolver {
-  new()
+final class TestHeadlessJmaRegionResolver() extends JmaRegionResolver {
+  this
     : super(
         cityMapData: JmaMap_JmaMapData(),
         tsunamiMapData: JmaMap_JmaMapData(),
@@ -274,10 +274,8 @@ BuildConfig buildConfig({required String restApiUrl}) => BuildConfig(
   revenueCatApiKeyAndroid: '',
 );
 
-class RecordingAssetBundle extends CachingAssetBundle {
-  new(this.assets);
-
-  final Map<String, List<int>> assets;
+class RecordingAssetBundle(final Map<String, List<int>> assets)
+    extends CachingAssetBundle {
   final loadedKeys = <String>[];
 
   @override

@@ -10,9 +10,7 @@ import 'package:riverpod/experimental/mutation.dart';
 
 enum _ServerPreset { prod, dev, stub, custom }
 
-class HttpApiEndpointSelectorPage extends ConsumerWidget {
-  const new({super.key});
-
+class const HttpApiEndpointSelectorPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final buildCfg = ref.watch(buildConfigProvider);
@@ -119,23 +117,14 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
   }
 }
 
-class _ServerTile extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.description,
-    required this.restUrl,
-    required this.selected,
-    required this.onTap,
-    required this.accentColor,
-  });
-
-  final String label;
-  final String description;
-  final String? restUrl;
-  final bool selected;
-  final VoidCallback? onTap;
-  final Color accentColor;
-
+class const _ServerTile({
+  required final String label,
+  required final String description,
+  required final String? restUrl,
+  required final bool selected,
+  required final VoidCallback? onTap,
+  required final Color accentColor,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
@@ -199,13 +188,11 @@ class _ServerTile extends StatelessWidget {
   }
 }
 
-class _UrlRow extends StatelessWidget {
-  const new({required this.icon, required this.label, required this.url});
-
-  final IconData icon;
-  final String label;
-  final String url;
-
+class const _UrlRow({
+  required final IconData icon,
+  required final String label,
+  required final String url,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(

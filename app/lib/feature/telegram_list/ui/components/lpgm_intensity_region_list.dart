@@ -4,12 +4,11 @@ import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_intensity_region_model.dart';
 import 'package:material_ui/material_ui.dart';
 
-class LpgmIntensityRegionList extends StatelessWidget {
-  const new({required this.regions, this.previousRegions, super.key});
-
-  final List<EarthquakeTelegramBodyIntensityRegionModel> regions;
-  final List<EarthquakeTelegramBodyIntensityRegionModel>? previousRegions;
-
+class const LpgmIntensityRegionList({
+  required final List<EarthquakeTelegramBodyIntensityRegionModel> regions,
+  final List<EarthquakeTelegramBodyIntensityRegionModel>? previousRegions,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final grouped = groupBy(
@@ -74,19 +73,12 @@ class LpgmIntensityRegionList extends StatelessWidget {
   }
 }
 
-class _LpgmRegionChip extends StatelessWidget {
-  const new({
-    required this.name,
-    required this.intensity,
-    required this.previousIntensity,
-    required this.hasPrevious,
-  });
-
-  final String name;
-  final JmaLpgmIntensity intensity;
-  final JmaLpgmIntensity? previousIntensity;
-  final bool hasPrevious;
-
+class const _LpgmRegionChip({
+  required final String name,
+  required final JmaLpgmIntensity intensity,
+  required final JmaLpgmIntensity? previousIntensity,
+  required final bool hasPrevious,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final previous = previousIntensity;

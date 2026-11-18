@@ -9,12 +9,11 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class CustomNotificationSoundImportPage extends HookConsumerWidget {
-  const new({required this.inspection, required this.prepared, super.key});
-
-  final NotificationSoundInspection inspection;
-  final PreparedNotificationSound prepared;
-
+class const CustomNotificationSoundImportPage({
+  required final NotificationSoundInspection inspection,
+  required final PreparedNotificationSound prepared,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final name = useTextEditingController(

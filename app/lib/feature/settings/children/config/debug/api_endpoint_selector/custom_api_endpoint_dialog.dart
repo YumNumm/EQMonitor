@@ -7,11 +7,10 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class CustomApiEndpointDialog extends HookConsumerWidget {
-  const new({required this.initialUrl, super.key});
-
-  final String initialUrl;
-
+class const CustomApiEndpointDialog({
+  required final String initialUrl,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = useTextEditingController(text: initialUrl);

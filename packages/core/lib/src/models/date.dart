@@ -3,14 +3,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'date.freezed.dart';
 
 @Freezed(toJson: false, fromJson: false)
-abstract class Date with _$Date {
+abstract class const Date._() with _$Date {
   const factory({
     required int year,
     required int month,
     required int day,
   }) = _Date;
-
-  const new _();
 
   factory fromJson(dynamic json) {
     if (json is String) {

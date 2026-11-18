@@ -1,16 +1,11 @@
 /// JMA Typhoon Scale Category.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-51.
-enum JmaTyphoonScaleCategory {
+enum JmaTyphoonScaleCategory(final int code, final String nameJa) {
   none(0, 'なし'),
   large(1, '大型'),
   veryLarge(2, '超大型'),
   other(15, 'その他の大きさ階級分類');
-
-  new(this.code, this.nameJa);
-
-  final int code;
-  final String nameJa;
 
   /// Returns the typhoon scale category for the given code.
   ///

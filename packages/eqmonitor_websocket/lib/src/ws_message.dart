@@ -25,6 +25,5 @@ sealed class WsMessage with _$WsMessage {
   @FreezedUnionValue('ready')
   const factory ready() = WsReadyMessage;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$WsMessageFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$WsMessageFromJson(json);
 }

@@ -48,19 +48,12 @@ class CityDetailModalAction {
   );
 }
 
-class _CityDetailModal extends HookConsumerWidget {
-  const new({
-    required this.cityCode,
-    required this.cityName,
-    required this.prefectureName,
-    required this.maxIntensity,
-  });
-
-  final String cityCode;
-  final String cityName;
-  final String prefectureName;
-  final JmaIntensity? maxIntensity;
-
+class const _CityDetailModal({
+  required final String cityCode,
+  required final String cityName,
+  required final String prefectureName,
+  required final JmaIntensity? maxIntensity,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sort = useState(
@@ -155,15 +148,10 @@ class _CityDetailModal extends HookConsumerWidget {
   }
 }
 
-class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
-  const new({
-    required this.parameter,
-    required this.page,
-  });
-
-  final EarthquakeHistoryParameter parameter;
-  final PaginatedResponse<EarthquakePartial> page;
-
+class const _AreaEarthquakeListSliverGroup({
+  required final EarthquakeHistoryParameter parameter,
+  required final PaginatedResponse<EarthquakePartial> page,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (page.items.isEmpty) {
@@ -228,9 +216,7 @@ class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
   }
 }
 
-class _InitialLoadingSliver extends StatelessWidget {
-  const new();
-
+class const _InitialLoadingSliver() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SliverFillRemaining(
@@ -268,17 +254,11 @@ class _DragHandle extends StatelessWidget {
   }
 }
 
-class _SummarySection extends StatelessWidget {
-  const new({
-    required this.prefectureName,
-    required this.cityName,
-    required this.maxIntensity,
-  });
-
-  final String prefectureName;
-  final String cityName;
-  final JmaIntensity? maxIntensity;
-
+class const _SummarySection({
+  required final String prefectureName,
+  required final String cityName,
+  required final JmaIntensity? maxIntensity,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

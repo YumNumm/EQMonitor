@@ -3,22 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class HomeMapControllerCard extends StatelessWidget {
-  const new({
-    super.key,
-    this.onLayerButtonTap,
-    this.onLocationButtonTap,
-    this.isLocationButtonEnabled = true,
-    this.onDebugButtonTap,
-    this.onLabelDebugButtonTap,
-  });
-
-  final void Function()? onLayerButtonTap;
-  final void Function()? onLocationButtonTap;
-  final bool isLocationButtonEnabled;
-  final void Function()? onDebugButtonTap;
-  final void Function()? onLabelDebugButtonTap;
-
+class const HomeMapControllerCard({
+  super.key,
+  final void Function()? onLayerButtonTap,
+  final void Function()? onLocationButtonTap,
+  final bool isLocationButtonEnabled = true,
+  final void Function()? onDebugButtonTap,
+  final void Function()? onLabelDebugButtonTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -76,19 +68,12 @@ class HomeMapControllerCard extends StatelessWidget {
   }
 }
 
-class _MapToolbarButton extends StatelessWidget {
-  const new({
-    required this.icon,
-    required this.tooltip,
-    required this.onPressed,
-    this.enabled = true,
-  });
-
-  final IconData icon;
-  final String tooltip;
-  final VoidCallback? onPressed;
-  final bool enabled;
-
+class const _MapToolbarButton({
+  required final IconData icon,
+  required final String tooltip,
+  required final VoidCallback? onPressed,
+  final bool enabled = true,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => InkWell(
     child: Tooltip(

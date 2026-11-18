@@ -5,9 +5,9 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk_validator.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-final class SeismicityChunkTransfer {
-  new _(this._columns);
-
+final class SeismicityChunkTransfer._(
+  final List<TransferableTypedData> _columns,
+) {
   factory fromChunk({
     required SeismicityPmTilesChunk chunk,
   }) => SeismicityChunkTransfer._([
@@ -29,8 +29,6 @@ final class SeismicityChunkTransfer {
         column.buffer.asUint8List(column.offsetInBytes, column.lengthInBytes),
       ]),
   ]);
-
-  final List<TransferableTypedData> _columns;
 
   SeismicityPmTilesChunk materialize() {
     final buffers = [

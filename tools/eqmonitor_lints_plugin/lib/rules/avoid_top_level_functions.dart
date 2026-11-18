@@ -7,9 +7,8 @@ import 'package:analyzer/error/error.dart';
 import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 import 'package:eqmonitor_lints_plugin/src/top_level_function_exemption.dart';
 
-class AvoidTopLevelFunctions extends AnalysisRule {
-  new()
-    : super(name: _code.name, description: _code.problemMessage);
+class AvoidTopLevelFunctions() extends AnalysisRule {
+  this : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_top_level_functions',
@@ -38,11 +37,7 @@ class AvoidTopLevelFunctions extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  new(this.rule);
-
-  final AnalysisRule rule;
-
+class _Visitor(final AnalysisRule rule) extends SimpleAstVisitor<void> {
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     if (node.parent is! CompilationUnit) {

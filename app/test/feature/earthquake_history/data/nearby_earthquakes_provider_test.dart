@@ -123,16 +123,16 @@ EarthquakePartialNormal _earthquake(String eventId) => EarthquakePartialNormal(
   estimatedIntensityTileUrl: null,
 );
 
-final class _SpyEarthquakeHistoryRepository
-    extends EarthquakeHistoryRepository {
-  new({required this.items})
+final class _SpyEarthquakeHistoryRepository({
+  required final List<EarthquakePartialNormal> items,
+}) extends EarthquakeHistoryRepository {
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,
         shindoDbStations: _shindoDbStations,
       );
 
-  final List<EarthquakePartialNormal> items;
   int? limit;
   int? depthGte;
   int? depthLte;

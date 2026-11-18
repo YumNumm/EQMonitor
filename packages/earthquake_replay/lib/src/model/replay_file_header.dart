@@ -30,12 +30,9 @@ abstract class ReplayFileHeader with _$ReplayFileHeader {
   }
 }
 
-enum ReplayFileCompressionMode {
+enum ReplayFileCompressionMode(final int value) {
   none(0),
   messagePackCSharpLz4BlockArray(1),
   gzip(2),
-  brotli(3);
-
-  new(this.value);
-  final int value;
+  brotli(3),
 }

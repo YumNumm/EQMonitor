@@ -15,9 +15,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class DebugAuthPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const DebugAuthPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final buildConfig = ref.watch(buildConfigProvider);
@@ -161,29 +159,17 @@ class DebugAuthPage extends HookConsumerWidget {
   }
 }
 
-class _AuthEnvironmentSummary extends StatelessWidget {
-  const new({
-    required this.flavor,
-    required this.selectedApi,
-    required this.expectedApi,
-    required this.expectedPasskeyRpId,
-    required this.environmentStatus,
-    required this.socialFeatureEnabled,
-    required this.googleAvailable,
-    required this.appleAvailable,
-    required this.passkeyAvailable,
-  });
-
-  final String flavor;
-  final String selectedApi;
-  final String expectedApi;
-  final String expectedPasskeyRpId;
-  final String environmentStatus;
-  final bool socialFeatureEnabled;
-  final bool googleAvailable;
-  final bool appleAvailable;
-  final bool passkeyAvailable;
-
+class const _AuthEnvironmentSummary({
+  required final String flavor,
+  required final String selectedApi,
+  required final String expectedApi,
+  required final String expectedPasskeyRpId,
+  required final String environmentStatus,
+  required final bool socialFeatureEnabled,
+  required final bool googleAvailable,
+  required final bool appleAvailable,
+  required final bool passkeyAvailable,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
     child: Column(

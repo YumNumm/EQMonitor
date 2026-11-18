@@ -54,24 +54,15 @@ class const InfoNotificationBottomSheetAction() {
   }
 }
 
-class InfoNotificationTile extends StatelessWidget {
-  const new({
-    required this.title,
-    required this.subtitleText,
-    required this.value,
-    required this.onChanged,
-    required this.bottomSheetTitle,
-    required this.bottomSheetLinks,
-    super.key,
-  });
-
-  final String title;
-  final String subtitleText;
-  final bool value;
-  final Future<void> Function({required bool value}) onChanged;
-  final String bottomSheetTitle;
-  final List<InfoLink> bottomSheetLinks;
-
+class const InfoNotificationTile({
+  required final String title,
+  required final String subtitleText,
+  required final bool value,
+  required final Future<void> Function({required bool value}) onChanged,
+  required final String bottomSheetTitle,
+  required final List<InfoLink> bottomSheetLinks,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = context.designSystem.colorTheme.primary;
@@ -113,9 +104,7 @@ class InfoNotificationTile extends StatelessWidget {
   }
 }
 
-class ComingSoonBadge extends StatelessWidget {
-  const new({super.key});
-
+class const ComingSoonBadge({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;

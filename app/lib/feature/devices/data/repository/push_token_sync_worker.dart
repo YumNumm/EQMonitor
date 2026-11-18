@@ -6,24 +6,18 @@ import 'package:eqmonitor/feature/devices/data/retry/interruptible_backoff.dart'
 
 typedef PushTokenUpsert = Future<void> Function(String token);
 
-final class PushTokenSyncWorker {
-  new({
-    required PushTokenUpsert upsert,
-    required InterruptibleBackoff backoff,
-    PushTokenBackoff policy = const PushTokenBackoff(),
-    DateTime Function()? clock,
-    Future<bool> Function(String token)? shouldSync,
-  }) : _upsert = upsert,
-       _backoff = backoff,
-       _policy = policy,
-       _clock = clock ?? DateTime.now,
-       _shouldSync = shouldSync;
-
-  final PushTokenUpsert _upsert;
-  final InterruptibleBackoff _backoff;
-  final PushTokenBackoff _policy;
-  final DateTime Function() _clock;
-  final Future<bool> Function(String token)? _shouldSync;
+final class PushTokenSyncWorker({
+  required PushTokenUpsert upsert,
+  required InterruptibleBackoff backoff,
+  PushTokenBackoff policy = const PushTokenBackoff(),
+  DateTime Function()? clock,
+  Future<bool> Function(String token)? shouldSync,
+}) {
+  final PushTokenUpsert _upsert = upsert;
+  final InterruptibleBackoff _backoff = backoff;
+  final PushTokenBackoff _policy = policy;
+  final DateTime Function() _clock = clock ?? DateTime.now;
+  final Future<bool> Function(String token)? _shouldSync = shouldSync;
   final StreamController<PushTokenSyncWorkerState> _statesController =
       StreamController<PushTokenSyncWorkerState>.broadcast();
 

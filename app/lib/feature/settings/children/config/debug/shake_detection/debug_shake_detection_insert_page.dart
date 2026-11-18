@@ -3,9 +3,7 @@ import 'package:eqmonitor/feature/shake_detection/data/notifier/shake_detection_
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DebugShakeDetectionInsertPage extends ConsumerWidget {
-  const new({super.key});
-
+class const DebugShakeDetectionInsertPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final overlay = ref.watch(shakeDetectionDebugOverlayProvider);

@@ -16,24 +16,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EewDetailsMapView extends HookConsumerWidget {
-  const new({
-    required this.selectedEew,
-    required this.displayMode,
-    required this.initialCenter,
-    required this.initZoom,
-    this.isSimulation = false,
-    this.additionalRegions,
-    super.key,
-  });
-
-  final EewTelegramItem? selectedEew;
-  final Geographic initialCenter;
-  final double initZoom;
-  final EewDisplayMode displayMode;
-  final bool isSimulation;
-  final List<EewForecastRegionInfo>? additionalRegions;
-
+class const EewDetailsMapView({
+  required final EewTelegramItem? selectedEew,
+  required final EewDisplayMode displayMode,
+  required final Geographic initialCenter,
+  required final double initZoom,
+  final bool isSimulation = false,
+  final List<EewForecastRegionInfo>? additionalRegions,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
@@ -54,25 +45,15 @@ class EewDetailsMapView extends HookConsumerWidget {
   }
 }
 
-class _MapContent extends ConsumerWidget {
-  const new({
-    required this.styleString,
-    required this.selectedEew,
-    required this.displayMode,
-    required this.initialCenter,
-    required this.initZoom,
-    required this.isSimulation,
-    this.additionalRegions,
-  });
-
-  final String styleString;
-  final EewTelegramItem? selectedEew;
-  final Geographic initialCenter;
-  final double initZoom;
-  final EewDisplayMode displayMode;
-  final bool isSimulation;
-  final List<EewForecastRegionInfo>? additionalRegions;
-
+class const _MapContent({
+  required final String styleString,
+  required final EewTelegramItem? selectedEew,
+  required final EewDisplayMode displayMode,
+  required final Geographic initialCenter,
+  required final double initZoom,
+  required final bool isSimulation,
+  final List<EewForecastRegionInfo>? additionalRegions,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSettings = ref.watch(

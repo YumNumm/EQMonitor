@@ -13,10 +13,10 @@ Future<DeviceAuthTokenInterceptor> deviceAuthTokenInterceptor(Ref ref) async {
   return DeviceAuthTokenInterceptor(readToken: repository.readToken);
 }
 
-class DeviceAuthTokenInterceptor extends Interceptor {
-  new({required Future<String?> Function() readToken}) : _readToken = readToken;
-
-  final Future<String?> Function() _readToken;
+class DeviceAuthTokenInterceptor({
+  required Future<String?> Function() readToken,
+}) extends Interceptor {
+  final Future<String?> Function() _readToken = readToken;
 
   @override
   Future<void> onRequest(

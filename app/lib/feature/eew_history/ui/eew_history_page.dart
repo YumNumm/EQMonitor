@@ -19,9 +19,7 @@ import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:m3e_core/m3e_core.dart';
 
-class EewHistoryPage extends StatelessWidget {
-  const new({super.key});
-
+class const EewHistoryPage({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const ProFeatureGate(
     title: '緊急地震速報の履歴',
@@ -30,9 +28,7 @@ class EewHistoryPage extends StatelessWidget {
   );
 }
 
-class _EewHistoryContent extends HookConsumerWidget {
-  const new();
-
+class const _EewHistoryContent() extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(const EewListParameter());
@@ -98,21 +94,13 @@ class _EewHistoryContent extends HookConsumerWidget {
   }
 }
 
-class _PagingBody extends StatelessWidget {
-  const new({
-    required this.dataSource,
-    required this.selectedEventId,
-    required this.onSelect,
-    required this.parameter,
-    required this.onRefresh,
-  });
-
-  final EewListDataSource dataSource;
-  final String? selectedEventId;
-  final ValueChanged<String> onSelect;
-  final ValueNotifier<EewListParameter> parameter;
-  final Future<void> Function() onRefresh;
-
+class const _PagingBody({
+  required final EewListDataSource dataSource,
+  required final String? selectedEventId,
+  required final ValueChanged<String> onSelect,
+  required final ValueNotifier<EewListParameter> parameter,
+  required final Future<void> Function() onRefresh,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,12 +166,8 @@ class _PagingBody extends StatelessWidget {
   }
 }
 
-class _Skeleton extends StatelessWidget {
-  const new({this.itemCount = 5, this.scrollable = true});
-
-  final int itemCount;
-  final bool scrollable;
-
+class const _Skeleton({final int itemCount = 5, final bool scrollable = true})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tiles = [
@@ -203,11 +187,7 @@ class _Skeleton extends StatelessWidget {
   }
 }
 
-class _DateHeader extends StatelessWidget {
-  const new({required this.date});
-
-  final String date;
-
+class const _DateHeader({required final String date}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

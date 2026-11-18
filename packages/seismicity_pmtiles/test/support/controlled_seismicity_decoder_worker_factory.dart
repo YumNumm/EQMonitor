@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_factory.dart';
 
-final class ControlledSeismicityDecoderWorkerFactory
-    implements SeismicityDecoderWorkerFactory {
-  new({required this.handle});
-
-  final SeismicityDecoderWorkerHandle handle;
+final class ControlledSeismicityDecoderWorkerFactory({
+  required final SeismicityDecoderWorkerHandle handle,
+}) implements SeismicityDecoderWorkerFactory {
   final _spawn = Completer<SeismicityDecoderWorkerHandle>();
 
   var _spawnCount = 0;

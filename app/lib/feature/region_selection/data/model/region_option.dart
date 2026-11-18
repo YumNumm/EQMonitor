@@ -16,9 +16,7 @@ extension RegionKindLabel on RegionKind {
 }
 
 @freezed
-abstract class RegionOption with _$RegionOption {
-  const new _();
-
+abstract class const RegionOption._() with _$RegionOption {
   const factory({
     required RegionKind kind,
     required String code,

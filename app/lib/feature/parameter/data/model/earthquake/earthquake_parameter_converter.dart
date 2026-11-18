@@ -95,9 +95,9 @@ extension EarthquakeStationStatusApiConverter on api.EarthquakeStationStatus {
   };
 }
 
-final class EarthquakeStationArv400Index {
-  const new _(this._values);
-
+final class const EarthquakeStationArv400Index._(
+  final Map<String, double> _values,
+) {
   factory fromJson(Map<String, dynamic> json) =>
       EarthquakeStationArv400Index.fromSubtree(json);
 
@@ -107,14 +107,10 @@ final class EarthquakeStationArv400Index {
     return EarthquakeStationArv400Index._(values);
   }
 
-  final Map<String, double> _values;
-
   double? operator [](String stationCode) => _values[stationCode];
 }
 
-final class _Arv400Collector {
-  const new _();
-
+final class const _Arv400Collector._() {
   static void collect({
     required Map<String, dynamic> json,
     required Map<String, double> values,

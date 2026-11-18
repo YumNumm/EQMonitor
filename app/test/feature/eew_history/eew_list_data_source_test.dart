@@ -25,8 +25,8 @@ EewTelegramItem _eew({
   originTime: originTime,
 );
 
-class _FakeEewListRepository extends EewListRepository {
-  new() : super(eew: api.ApiClient(Dio()).eew);
+class _FakeEewListRepository() extends EewListRepository {
+  this : super(eew: api.ApiClient(Dio()).eew);
 
   final cursors = <String?>[];
   String? nextToken;

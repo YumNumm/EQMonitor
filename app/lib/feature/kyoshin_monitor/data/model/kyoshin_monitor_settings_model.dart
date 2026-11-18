@@ -98,13 +98,9 @@ abstract class KyoshinMonitorSettingsApiModel
 }
 
 @JsonEnum(valueField: 'url')
-enum KyoshinMonitorEndpoint {
+enum KyoshinMonitorEndpoint(final String url) {
   kmoni('http://www.kmoni.bosai.go.jp'),
-  lmoniexp('https://smi.lmoniexp.bosai.go.jp');
-
-  new(this.url);
-
-  final String url;
+  lmoniexp('https://smi.lmoniexp.bosai.go.jp'),
 }
 
 /// データソースの種類

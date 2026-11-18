@@ -4,9 +4,7 @@ import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_statu
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class ConnectionStatusCard extends ConsumerWidget {
-  const new({super.key});
-
+class const ConnectionStatusCard({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isConnected = ref.watch(isNetworkConnectedProvider);

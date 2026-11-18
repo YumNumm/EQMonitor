@@ -8,16 +8,12 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_uuid_index.dart'
     show seismicityUuidHash;
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-final class SeismicityUtf8Dictionary {
-  new({
-    required int maxBytes,
-    required int maxEntries,
-    Uint32List Function(int length)? allocateSlots,
-  }) : _maxEntries = maxEntries,
-       _arena = SeismicityUtf8Arena(
-         maxBytes: maxBytes,
-         maxEntries: maxEntries,
-       ) {
+final class SeismicityUtf8Dictionary({
+  required int maxBytes,
+  required int maxEntries,
+  Uint32List Function(int length)? allocateSlots,
+}) {
+  this {
     if (maxEntries < 0 || maxEntries > 0x3fffffff) {
       throw const SeismicityPmTilesException.invalidDescriptor(
         reason: 'Invalid UTF-8 dictionary capacity.',
@@ -41,8 +37,11 @@ final class SeismicityUtf8Dictionary {
     }
   }
 
-  final int _maxEntries;
-  final SeismicityUtf8Arena _arena;
+  final _maxEntries = maxEntries;
+  final _arena = SeismicityUtf8Arena(
+    maxBytes: maxBytes,
+    maxEntries: maxEntries,
+  );
   late final Uint32List _slots;
   var _length = 0;
 

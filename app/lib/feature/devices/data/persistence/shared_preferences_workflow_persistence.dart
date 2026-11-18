@@ -6,12 +6,9 @@ import 'package:workflows/workflows.dart';
 /// Step results are stored as `_wf:<instanceId>:<stepName>`.
 /// A manifest key `_wf:__m__:<instanceId>` tracks which step names exist so
 /// [clearInstance] can clean them up without a key-range scan.
-final class SharedPreferencesWorkflowPersistence
-    implements WorkflowPersistence {
-  new(this._prefs);
-
-  final SharedPreferencesAsync _prefs;
-
+final class SharedPreferencesWorkflowPersistence(
+  final SharedPreferencesAsync _prefs,
+) implements WorkflowPersistence {
   static const _prefix = '_wf:';
   static const _manifestPrefix = '_wf:__m__:';
 

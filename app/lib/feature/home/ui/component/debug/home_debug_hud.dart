@@ -14,9 +14,7 @@ import 'package:material_ui/material_ui.dart';
 /// 地図に重ねて表示する、機能ごとのデバッグ情報。
 ///
 /// デバッグメニューを利用でき、マップレイヤー設定で有効にした項目だけを表示する。
-class HomeDebugHud extends ConsumerWidget {
-  const new({super.key});
-
+class const HomeDebugHud({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(

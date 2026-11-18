@@ -36,7 +36,7 @@ abstract class IntensityRegionDiffEntry with _$IntensityRegionDiffEntry {
 
 /// 震源要素の差分情報
 @freezed
-abstract class HypocenterDiff with _$HypocenterDiff {
+abstract class const HypocenterDiff._() with _$HypocenterDiff {
   const factory({
     String? oldMagnitude,
     String? newMagnitude,
@@ -47,8 +47,6 @@ abstract class HypocenterDiff with _$HypocenterDiff {
     JmaIntensity? oldMaxIntensity,
     JmaIntensity? newMaxIntensity,
   }) = _HypocenterDiff;
-
-  const new _();
 
   factory fromJson(Map<String, dynamic> json) => _$HypocenterDiffFromJson(json);
 

@@ -7,9 +7,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 late final Talker talker;
 
-class RealtimeSseLog extends TalkerLog {
-  new(super.message);
-
+class RealtimeSseLog(super.message) extends TalkerLog {
   @override
   String get title => 'RealtimeSse';
 
@@ -17,9 +15,7 @@ class RealtimeSseLog extends TalkerLog {
   final pen = AnsiPen()..green();
 }
 
-class DioLog extends TalkerLog {
-  new(super.message);
-
+class DioLog(super.message) extends TalkerLog {
   @override
   String get title => 'Dio';
 
@@ -27,9 +23,7 @@ class DioLog extends TalkerLog {
   final pen = AnsiPen()..blue();
 }
 
-class KyoshinMonitorLog extends TalkerLog {
-  new(super.message);
-
+class KyoshinMonitorLog(super.message) extends TalkerLog {
   @override
   String get title => 'KyoshinMonitor';
 
@@ -37,9 +31,7 @@ class KyoshinMonitorLog extends TalkerLog {
   final pen = AnsiPen()..yellow();
 }
 
-class AppLifeCycleLog extends TalkerLog {
-  new(super.message);
-
+class AppLifeCycleLog(super.message) extends TalkerLog {
   @override
   String get title => 'AppLifeCycle';
 
@@ -47,9 +39,7 @@ class AppLifeCycleLog extends TalkerLog {
   final pen = AnsiPen()..cyan();
 }
 
-class NtpLog extends TalkerLog {
-  new(super.message);
-
+class NtpLog(super.message) extends TalkerLog {
   @override
   String get title => 'NTP';
 
@@ -57,9 +47,7 @@ class NtpLog extends TalkerLog {
   final pen = AnsiPen()..red();
 }
 
-class GoRouterLog extends TalkerLog {
-  new(super.message);
-
+class GoRouterLog(super.message) extends TalkerLog {
   @override
   String get title => 'GoRouter';
 
@@ -67,9 +55,7 @@ class GoRouterLog extends TalkerLog {
   final pen = AnsiPen()..magenta();
 }
 
-class HttpCacheLog extends TalkerLog {
-  new(super.message);
-
+class HttpCacheLog(super.message) extends TalkerLog {
   @override
   String get title => 'HttpCache';
 
@@ -77,9 +63,7 @@ class HttpCacheLog extends TalkerLog {
   final pen = AnsiPen()..blue();
 }
 
-class CrashlyticsTalkerObserver implements TalkerObserver {
-  new();
-
+class CrashlyticsTalkerObserver() implements TalkerObserver {
   @override
   void onError(TalkerError err) => unawaited(
     FirebaseCrashlytics.instance.log(

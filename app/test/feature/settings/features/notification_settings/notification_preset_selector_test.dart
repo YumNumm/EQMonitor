@@ -230,11 +230,9 @@ void main() {
   });
 }
 
-class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {
-  new(this._settings);
-
-  final NotificationSettings _settings;
-
+class _FakeFirebaseMessaging(final NotificationSettings _settings)
+    extends Fake
+    implements FirebaseMessaging {
   @override
   Future<NotificationSettings> getNotificationSettings() async => _settings;
 }

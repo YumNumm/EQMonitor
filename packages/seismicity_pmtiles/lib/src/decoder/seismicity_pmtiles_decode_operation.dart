@@ -16,13 +16,9 @@ abstract interface class SeismicityPmTilesDecodeOperation {
 }
 
 /// Non-export controller that owns result/state completion for runners.
-final class SeismicityPmTilesDecodeOperationController
-    implements SeismicityPmTilesDecodeOperation {
-  new({
-    this._onCancel,
-  });
-
-  final Future<void> Function()? _onCancel;
+final class SeismicityPmTilesDecodeOperationController({
+  final Future<void> Function()? _onCancel,
+}) implements SeismicityPmTilesDecodeOperation {
   final _result =
       Completer<SeismicityPmTilesResult<SeismicityPmTilesDataset>>();
   final _states = StreamController<SeismicityPmTilesLoadState>();

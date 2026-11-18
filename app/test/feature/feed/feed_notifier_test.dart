@@ -20,10 +20,8 @@ final _freshFeed = FeedItem(
   data: const FeedItemData.incident(),
 );
 
-final class _RecordingFeedRepository implements FeedRepository {
-  new({this.nextCursor});
-
-  final String? nextCursor;
+final class _RecordingFeedRepository({final String? nextCursor})
+    implements FeedRepository {
   final List<api.ApiClient?> clients = [];
   final List<String?> cursors = [];
 

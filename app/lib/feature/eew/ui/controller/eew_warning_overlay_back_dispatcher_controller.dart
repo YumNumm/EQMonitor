@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 
-class EewWarningOverlayBackDispatcherController {
-  new({
-    required BackButtonDispatcher parent,
-    required Future<void> Function() onFullscreenBack,
-  }) : _parent = parent,
-       _dispatcher = parent.createChildBackButtonDispatcher() {
+class EewWarningOverlayBackDispatcherController({
+  required BackButtonDispatcher parent,
+  required Future<void> Function() onFullscreenBack,
+}) {
+  this {
     _callback = () async {
       if (!_shouldIntercept || _isDisposed) {
         return false;
@@ -15,8 +14,9 @@ class EewWarningOverlayBackDispatcherController {
     };
   }
 
-  final BackButtonDispatcher _parent;
-  final ChildBackButtonDispatcher _dispatcher;
+  final BackButtonDispatcher _parent = parent;
+  final ChildBackButtonDispatcher _dispatcher = parent
+      .createChildBackButtonDispatcher();
   late final ValueGetter<Future<bool>> _callback;
   var _isAttached = false;
   var _isDisposed = false;

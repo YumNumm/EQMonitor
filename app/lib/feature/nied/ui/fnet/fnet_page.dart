@@ -1,9 +1,7 @@
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:material_ui/material_ui.dart';
 
-class FnetPage extends StatelessWidget {
-  const new({super.key});
-
+class const FnetPage({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1024,10 +1024,8 @@ Future<PmTilesV3Archive> openFixture({
   return PmTilesV3Archive.open(reader: reader, limits: _limits);
 }
 
-final class TrackingRandomAccessReader implements PmTilesRandomAccessReader {
-  new({required this.bytes});
-
-  final Uint8List bytes;
+final class TrackingRandomAccessReader({required final Uint8List bytes})
+    implements PmTilesRandomAccessReader {
   final List<({int offset, int length})> reads = [];
   var _closeCalls = 0;
   var _isClosed = false;
@@ -1061,18 +1059,12 @@ final class TrackingRandomAccessReader implements PmTilesRandomAccessReader {
   }
 }
 
-final class FailingOpenReader implements PmTilesRandomAccessReader {
-  new({
-    required this.bytes,
-    this.readFailure,
-    this.readFailureStack,
-    this.closeFailure,
-  });
-
-  final Uint8List bytes;
-  final StateError? readFailure;
-  final StackTrace? readFailureStack;
-  final StateError? closeFailure;
+final class FailingOpenReader({
+  required final Uint8List bytes,
+  final StateError? readFailure,
+  final StackTrace? readFailureStack,
+  final StateError? closeFailure,
+}) implements PmTilesRandomAccessReader {
   var _closeCalls = 0;
 
   int get closeCalls => _closeCalls;

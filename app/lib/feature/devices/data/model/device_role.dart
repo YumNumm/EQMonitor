@@ -5,14 +5,12 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 /// backend は環境変数 `ADMIN_DEVICE_IDS`(デバイス ID のカンマ区切り)に
 /// 列挙されたデバイスにのみ `ADMIN` を返し、それ以外は `USER` を返す。
 /// 管理者向け機能のゲートには [DeviceRole.admin] のみを使う。
-enum DeviceRole {
-  admin('ADMIN'),
-  user('USER');
-
-  new(this.value);
-
+enum DeviceRole(
   /// API が返すロールの値。デバッグ画面での表示にも使う。
-  final String value;
+  final String value,
+) {
+  admin('ADMIN'),
+  user('USER'),
 }
 
 extension DeviceRoleApiExtension on api.DeviceRole {

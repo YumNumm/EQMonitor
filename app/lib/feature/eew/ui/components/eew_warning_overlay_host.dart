@@ -9,16 +9,11 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EewWarningOverlayHost extends HookConsumerWidget {
-  const new({
-    required this.child,
-    required this.backButtonDispatcher,
-    super.key,
-  });
-
-  final Widget child;
-  final BackButtonDispatcher backButtonDispatcher;
-
+class const EewWarningOverlayHost({
+  required final Widget child,
+  required final BackButtonDispatcher backButtonDispatcher,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final lifecycle = ref.watch(appLifecycleProvider);

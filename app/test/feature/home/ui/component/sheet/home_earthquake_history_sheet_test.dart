@@ -160,8 +160,8 @@ void main() {
   });
 }
 
-class _Fixture {
-  new() {
+class _Fixture() {
+  this {
     addTearDown(() async {
       container.dispose();
       await positions.close();
@@ -268,14 +268,12 @@ class _HomeConfiguration extends HomeConfigurationNotifier {
   );
 }
 
-class _History extends EarthquakeHistoryNotifier {
-  new({required this.load});
-
-  final Future<PaginatedResponse<EarthquakePartial>> Function(
+class _History({
+  required final Future<PaginatedResponse<EarthquakePartial>> Function(
     EarthquakeHistoryParameter,
   )
-  load;
-
+  load,
+}) extends EarthquakeHistoryNotifier {
   @override
   Future<PaginatedResponse<EarthquakePartial>> build(
     EarthquakeHistoryParameter parameter,

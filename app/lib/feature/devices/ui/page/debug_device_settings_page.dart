@@ -40,9 +40,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_device_settings_page.g.dart';
 
-class DebugDeviceSettingsPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const DebugDeviceSettingsPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceIdAsync = ref.watch(deviceIdProvider);
@@ -89,11 +87,9 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
 
 // ── プロビジョニング起動状態セクション ──────────────────────────────────────
 
-class _ProvisioningStartupSection extends HookConsumerWidget {
-  const new({required this.deviceIdAsync});
-
-  final AsyncValue<String> deviceIdAsync;
-
+class const _ProvisioningStartupSection({
+  required final AsyncValue<String> deviceIdAsync,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final retryState = useState<RetryControllerState>(const RetryIdle());
@@ -249,19 +245,12 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
   }
 }
 
-class _StatusChip extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.color,
-    required this.textColor,
-    this.icon,
-  });
-
-  final String label;
-  final Color color;
-  final Color textColor;
-  final IconData? icon;
-
+class const _StatusChip({
+  required final String label,
+  required final Color color,
+  required final Color textColor,
+  final IconData? icon,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -293,11 +282,9 @@ class _StatusChip extends StatelessWidget {
 
 // ── デバイス操作セクション ───────────────────────────────────────────────────
 
-class _DeviceLifecycleSection extends HookConsumerWidget {
-  const new({required this.deviceIdAsync});
-
-  final AsyncValue<String> deviceIdAsync;
-
+class const _DeviceLifecycleSection({
+  required final AsyncValue<String> deviceIdAsync,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final deleteMutation = ref.watch(DeviceProvisioningNotifier.deleteMutation);
@@ -393,9 +380,7 @@ class _DeviceLifecycleSection extends HookConsumerWidget {
 
 // ── OS通知許可セクション ──────────────────────────────────────────────────────
 
-class _NotificationPermissionSection extends ConsumerWidget {
-  const new();
-
+class const _NotificationPermissionSection() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final permAsync = ref.watch(_osNotificationPermissionProvider);
@@ -471,11 +456,9 @@ class _NotificationPermissionSection extends ConsumerWidget {
 
 // ── デバイス情報（サーバー取得）────────────────────────────────────────────
 
-class _DeviceInfoSection extends ConsumerWidget {
-  const new({required this.deviceIdAsync});
-
-  final AsyncValue<String> deviceIdAsync;
-
+class const _DeviceInfoSection({
+  required final AsyncValue<String> deviceIdAsync,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceAsync = ref.watch(
@@ -523,11 +506,9 @@ Future<RegisteredDevice> _deviceInfo(Ref ref, String deviceId) async {
 
 // ── プッシュトークン同期 ────────────────────────────────────────────────────
 
-class _TokenSection extends HookConsumerWidget {
-  const new({required this.syncSnapshot});
-
-  final AsyncValue<PushTokenSyncSnapshot> syncSnapshot;
-
+class const _TokenSection({
+  required final AsyncValue<PushTokenSyncSnapshot> syncSnapshot,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final snapshot = syncSnapshot.value;
@@ -612,19 +593,12 @@ class _TokenSection extends HookConsumerWidget {
   }
 }
 
-class _TokenStatusRow extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.kindState,
-    required this.isResendEnabled,
-    this.onResend,
-  });
-
-  final String label;
-  final PushTokenKindState? kindState;
-  final bool isResendEnabled;
-  final VoidCallback? onResend;
-
+class const _TokenStatusRow({
+  required final String label,
+  required final PushTokenKindState? kindState,
+  required final bool isResendEnabled,
+  final VoidCallback? onResend,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
@@ -683,9 +657,7 @@ class _TokenStatusRow extends StatelessWidget {
 
 // ── 設定プロバイダー状態 ──────────────────────────────────────────────────────
 
-class _SettingsProviderStatusSection extends ConsumerWidget {
-  const new();
-
+class const _SettingsProviderStatusSection() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final slots = ref.watch(notificationSlotsProvider);
@@ -710,12 +682,10 @@ class _SettingsProviderStatusSection extends ConsumerWidget {
   }
 }
 
-class _ProviderStatusRow extends StatelessWidget {
-  const new({required this.label, required this.state});
-
-  final String label;
-  final AsyncValue<Object?> state;
-
+class const _ProviderStatusRow({
+  required final String label,
+  required final AsyncValue<Object?> state,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
@@ -749,11 +719,8 @@ class _ProviderStatusRow extends StatelessWidget {
 
 // ── 全般通知設定 ────────────────────────────────────────────────────────────
 
-class _NotificationSettingsSection extends HookConsumerWidget {
-  const new({required this.deviceId});
-
-  final String deviceId;
-
+class const _NotificationSettingsSection({required final String deviceId})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsAsync = ref.watch(_notificationSettingsProvider(deviceId));
@@ -891,9 +858,7 @@ Future<GeneralNotificationSettings> _notificationSettings(
 
 // ── テスト通知 ───────────────────────────────────────────────────────────────
 
-class _TestNotificationSection extends HookConsumerWidget {
-  const new();
-
+class const _TestNotificationSection() extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pendingKind = useState<TestNotificationKind?>(null);
@@ -920,11 +885,8 @@ class _TestNotificationSection extends HookConsumerWidget {
 
 // ── 通知履歴 ─────────────────────────────────────────────────────────────────
 
-class _HistorySection extends ConsumerWidget {
-  const new({required this.deviceId});
-
-  final String deviceId;
-
+class const _HistorySection({required final String deviceId})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final historyAsync = ref.watch(_notificationHistoryProvider(deviceId));
@@ -988,11 +950,9 @@ Future<List<PushNotificationLogEntry>> _notificationHistory(
   };
 }
 
-class _NotificationHistoryTile extends StatelessWidget {
-  const new({required this.item});
-
-  final PushNotificationLogEntry item;
-
+class const _NotificationHistoryTile({
+  required final PushNotificationLogEntry item,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
@@ -1058,19 +1018,12 @@ Future<NotificationSettings> _osNotificationPermission(Ref ref) async {
 
 // ── 共通ウィジェット ───────────────────────────────────────────────────────
 
-class _SectionCard extends StatelessWidget {
-  const new({
-    required this.title,
-    required this.child,
-    this.subtitle,
-    this.trailing,
-  });
-
-  final String title;
-  final String? subtitle;
-  final Widget child;
-  final Widget? trailing;
-
+class const _SectionCard({
+  required final String title,
+  required final Widget child,
+  final String? subtitle,
+  final Widget? trailing,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
@@ -1119,12 +1072,10 @@ class _SectionCard extends StatelessWidget {
   }
 }
 
-class _KeyValueRow extends StatelessWidget {
-  const new({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
+class const _KeyValueRow({
+  required final String label,
+  required final String value,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(

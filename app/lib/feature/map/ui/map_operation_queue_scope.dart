@@ -35,11 +35,8 @@ class MapOperationQueue {
 ///
 /// そのため、この Scope は MapLibreMap 本体（`ValueKey` による remount の
 /// 影響を受けるWidget）よりも外側に配置すること。
-class MapOperationQueueScope extends HookWidget {
-  const new({required this.child, super.key});
-
-  final Widget child;
-
+class const MapOperationQueueScope({required final Widget child, super.key})
+    extends HookWidget {
   static MapOperationQueue of(BuildContext context) =>
       maybeOf(context) ?? (throw Exception('MapOperationQueueScope not found'));
 
@@ -54,14 +51,10 @@ class MapOperationQueueScope extends HookWidget {
   }
 }
 
-class _InheritedMapOperationQueueScope extends InheritedWidget {
-  const new({
-    required this.queue,
-    required super.child,
-  });
-
-  final MapOperationQueue queue;
-
+class const _InheritedMapOperationQueueScope({
+  required final MapOperationQueue queue,
+  required super.child,
+}) extends InheritedWidget {
   @override
   bool updateShouldNotify(_InheritedMapOperationQueueScope oldWidget) => false;
 }

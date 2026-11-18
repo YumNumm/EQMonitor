@@ -11,9 +11,7 @@ class const FourierSpectrumResult({
 });
 
 /// 加速度波形のフーリエ振幅スペクトルを計算する (Cooley-Tukey FFT)
-class KnetFourierSpectrum {
-  const new _();
-
+class const KnetFourierSpectrum._() {
   /// フーリエ振幅スペクトルを計算する
   ///
   /// [data] 加速度波形 (gal)

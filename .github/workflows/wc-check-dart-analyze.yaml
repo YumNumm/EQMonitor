@@ -45,7 +45,7 @@ jobs:
         run: echo "::add-matcher::.github/problem-matchers/dart-analyzer.json"
 
       - name: Analyze app
-        run: mise exec -- dart analyze app --fatal-infos --format machine
+        run: mise exec -- dart analyze app --fatal-infos --format machine --plugins
 
       # tools/ は melos workspace 外のため `melos run test` の対象にならない。
       # ルール実装の回帰防止としてここで実行する。

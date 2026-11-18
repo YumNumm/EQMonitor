@@ -4,9 +4,7 @@ import 'package:telemetry_store/src/database/telemetry_events_table.dart';
 part 'telemetry_database.g.dart';
 
 @DriftDatabase(tables: [TelemetryEvents])
-class TelemetryDatabase extends _$TelemetryDatabase {
-  new(super.e);
-
+class TelemetryDatabase(super.e) extends _$TelemetryDatabase {
   @override
   int get schemaVersion => 1;
 

@@ -2,12 +2,10 @@ import 'package:kyoshin_monitor_api/src/api/lpgm_kyoshin_monitor_web_api_client.
 import 'package:kyoshin_monitor_api/src/data_source/kyoshin_monitor_web_api_data_source.dart';
 import 'package:kyoshin_monitor_api/src/model/web_api/data_time.dart';
 
-class LpgmKyoshinMonitorWebApiDataSource {
-  new({
-    required LpgmKyoshinMonitorWebApiClient client,
-  }) : _client = client;
-
-  final LpgmKyoshinMonitorWebApiClient _client;
+class LpgmKyoshinMonitorWebApiDataSource({
+  required LpgmKyoshinMonitorWebApiClient client,
+}) {
+  final LpgmKyoshinMonitorWebApiClient _client = client;
 
   /// データ時間
   Future<DataTime> getLatestDataTime() => _client.getLatestDataTime();

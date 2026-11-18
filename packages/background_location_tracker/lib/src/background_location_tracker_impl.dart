@@ -3,9 +3,7 @@ import 'dart:ui';
 
 import 'package:background_location_tracker/src/background_location.g.dart';
 
-class BackgroundLocationTracker {
-  new _();
-
+class BackgroundLocationTracker._() {
   static final _hostApi = BackgroundLocationHostApi();
   // アプリ全体のライフタイムで生存する singleton 用 controller のため close 不要。
   // ignore: close_sinks

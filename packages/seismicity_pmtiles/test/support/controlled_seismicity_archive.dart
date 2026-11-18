@@ -7,20 +7,14 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descript
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 /// Test-only [SeismicityPmTilesArchive] with deterministic pause/release/close.
-final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
-  new({
-    required this.descriptor,
-    required List<int> occupiedTileIds,
-    required Map<int, Uint8List> tileBytes,
-    PmTilesV3Header? header,
-    SeismicityPmTilesException? closeReleaseFailure,
-  }) : occupiedTileIds = List<int>.unmodifiable(occupiedTileIds),
-       _tileBytes = Map<int, Uint8List>.unmodifiable(tileBytes),
-       header = header ?? ControlledSeismicityArchive.stubHeader(),
-       closeReleaseFailure =
-           closeReleaseFailure ??
-           SeismicityPmTilesException.closed(source: descriptor.source),
-       deferCloseCompletion = false;
+final class ControlledSeismicityArchive({
+  @override required final SeismicityPmTilesArchiveDescriptor descriptor,
+  required List<int> occupiedTileIds,
+  required Map<int, Uint8List> tileBytes,
+  PmTilesV3Header? header,
+  SeismicityPmTilesException? closeReleaseFailure,
+}) implements SeismicityPmTilesArchive {
+  this : deferCloseCompletion = false;
 
   static PmTilesV3Header stubHeader({
     int minZoom = 0,
@@ -53,14 +47,16 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
   );
 
   @override
-  final SeismicityPmTilesArchiveDescriptor descriptor;
+  final PmTilesV3Header header =
+      header ?? ControlledSeismicityArchive.stubHeader();
 
-  @override
-  final PmTilesV3Header header;
-
-  final List<int> occupiedTileIds;
-  final Map<int, Uint8List> _tileBytes;
-  final SeismicityPmTilesException closeReleaseFailure;
+  final occupiedTileIds = List<int>.unmodifiable(occupiedTileIds);
+  final _tileBytes = Map<int, Uint8List>.unmodifiable(
+    tileBytes,
+  );
+  final SeismicityPmTilesException closeReleaseFailure =
+      closeReleaseFailure ??
+      SeismicityPmTilesException.closed(source: descriptor.source);
   final zoomRequests = <int>[];
   final readRequests = <int>[];
 

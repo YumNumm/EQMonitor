@@ -20,17 +20,16 @@ final class const EstimatedIntensityArchivePartWriterFactory() {
 }
 
 /// `RandomAccessFile.writeFrom`をawaitし、socketへのbackpressureを保つwriter。
-final class DartIoEstimatedIntensityArchivePartWriter
-    implements EstimatedIntensityArchivePartWriter {
-  new({required RandomAccessFile file}) : _file = file;
-
+final class DartIoEstimatedIntensityArchivePartWriter({
+  required RandomAccessFile file,
+}) implements EstimatedIntensityArchivePartWriter {
   static Future<DartIoEstimatedIntensityArchivePartWriter> open(
     File file,
   ) async => DartIoEstimatedIntensityArchivePartWriter(
     file: await file.open(mode: FileMode.writeOnly),
   );
 
-  final RandomAccessFile _file;
+  final RandomAccessFile _file = file;
   var _closed = false;
 
   @override

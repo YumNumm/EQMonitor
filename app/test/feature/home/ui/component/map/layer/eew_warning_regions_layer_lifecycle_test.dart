@@ -88,10 +88,11 @@ void main() {
   });
 }
 
-class WarningRegionStyleController extends FakeStyleController {
-  new({required this.firstAddGate}) : super(throwOnDuplicateLayerIds: true);
+class WarningRegionStyleController({
+  required final Completer<void> firstAddGate,
+}) extends FakeStyleController {
+  this : super(throwOnDuplicateLayerIds: true);
 
-  final Completer<void> firstAddGate;
   final operations = <String>[];
   final updatedCodes = <List<String>>[];
   var addCount = 0;
@@ -137,11 +138,9 @@ class WarningRegionStyleController extends FakeStyleController {
   }
 }
 
-class WarningRegionMapController implements MapController {
-  new({required this.styleController});
-
-  final StyleController styleController;
-
+class WarningRegionMapController({
+  required final StyleController styleController,
+}) implements MapController {
   @override
   StyleController get style => styleController;
 

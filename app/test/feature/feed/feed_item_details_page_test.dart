@@ -19,11 +19,7 @@ final _item = FeedItem(
   data: const FeedItemData.developerMessage(),
 );
 
-class _FakeFeedNotifier extends FeedNotifier {
-  new(this.items);
-
-  final List<FeedItem> items;
-
+class _FakeFeedNotifier(final List<FeedItem> items) extends FeedNotifier {
   @override
   Future<FeedNotifierState> build() async => (items: items, nextCursor: null);
 }

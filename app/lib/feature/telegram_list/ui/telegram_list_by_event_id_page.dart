@@ -40,11 +40,10 @@ const Set<TelegramType> _earthquakeTypes = {
 // Page
 // ---------------------------------------------------------------------------
 
-class TelegramListByEventIdPage extends HookConsumerWidget {
-  const new({required this.eventId, super.key});
-
-  final String eventId;
-
+class const TelegramListByEventIdPage({
+  required final String eventId,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncState = ref.watch(telegramListByEventIdProvider(eventId));
@@ -126,25 +125,15 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
 
 /// A flat widget list rendered inside a single [ListView] so that the
 /// scroll-based pagination still fires from [scrollController].
-class _SectionedList extends StatelessWidget {
-  const new({
-    required this.items,
-    required this.hasNext,
-    required this.isLoading,
-    required this.scrollController,
-    required this.details,
-    this.error,
-    this.onReload,
-  });
-
-  final List<TelegramItem> items;
-  final bool hasNext;
-  final bool isLoading;
-  final ScrollController scrollController;
-  final Map<String, TelegramDetailModel> details;
-  final Object? error;
-  final Future<void> Function()? onReload;
-
+class const _SectionedList({
+  required final List<TelegramItem> items,
+  required final bool hasNext,
+  required final bool isLoading,
+  required final ScrollController scrollController,
+  required final Map<String, TelegramDetailModel> details,
+  final Object? error,
+  final Future<void> Function()? onReload,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
@@ -290,11 +279,8 @@ class const _SequenceInfo({
 // Section header
 // ---------------------------------------------------------------------------
 
-class _SectionHeader extends StatelessWidget {
-  const new({required this.title});
-
-  final String title;
-
+class const _SectionHeader({required final String title})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -315,12 +301,10 @@ class _SectionHeader extends StatelessWidget {
 // EEW navigation card
 // ---------------------------------------------------------------------------
 
-class _EewNavigationCard extends StatelessWidget {
-  const new({required this.count, required this.onTap});
-
-  final int count;
-  final VoidCallback onTap;
-
+class const _EewNavigationCard({
+  required final int count,
+  required final VoidCallback onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -348,9 +332,7 @@ class _EewNavigationCard extends StatelessWidget {
 // Skeleton
 // ---------------------------------------------------------------------------
 
-class _TelegramListSkeleton extends StatelessWidget {
-  const new();
-
+class const _TelegramListSkeleton() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const itemCount = 6;

@@ -39,16 +39,11 @@ extension ShindoDbIntensityClassMapIconId on ShindoDbIntensityClass {
 ///
 /// 現行の JMA 震度と一致する階級は [JmaIntensityIcon] をそのまま利用し、
 /// 旧階級 (5/6) と歴史的階級はラベルテキスト入りの円を描画する。
-class ShindoDbIntensityClassMapIcon extends StatelessWidget {
-  const new({
-    required this.intensityClass,
-    this.size = 50,
-    super.key,
-  });
-
-  final ShindoDbIntensityClass intensityClass;
-  final double size;
-
+class const ShindoDbIntensityClassMapIcon({
+  required final ShindoDbIntensityClass intensityClass,
+  final double size = 50,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exact = intensityClass.exactJmaIntensity;
@@ -100,16 +95,11 @@ class ShindoDbIntensityClassMapIcon extends StatelessWidget {
   }
 }
 
-class ShindoDbIntensityClassIcon extends StatelessWidget {
-  const new({
-    required this.intensityClass,
-    this.size = 40,
-    super.key,
-  });
-
-  final ShindoDbIntensityClass intensityClass;
-  final double size;
-
+class const ShindoDbIntensityClassIcon({
+  required final ShindoDbIntensityClass intensityClass,
+  final double size = 40,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exact = intensityClass.exactJmaIntensity;

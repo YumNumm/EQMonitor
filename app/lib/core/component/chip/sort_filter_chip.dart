@@ -5,22 +5,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class SortFilterChip extends StatelessWidget {
-  const new({
-    this.sortBy,
-    this.sortOrder,
-    this.onChanged,
-    this.regionalIntensityEnabled = false,
-    super.key,
-  });
-
-  final EarthquakeSortBy? sortBy;
-  final SortOrder? sortOrder;
-  final void Function(EarthquakeSortBy, SortOrder)? onChanged;
+class const SortFilterChip({
+  final EarthquakeSortBy? sortBy,
+  final SortOrder? sortOrder,
+  final void Function(EarthquakeSortBy, SortOrder)? onChanged,
 
   /// 地域別 API でのみ利用できる観測震度ソートを表示する。
-  final bool regionalIntensityEnabled;
-
+  final bool regionalIntensityEnabled = false,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final displaySortBy = sortBy ?? .eventId;
@@ -57,17 +50,11 @@ class SortFilterChip extends StatelessWidget {
   }
 }
 
-class _SortFilterModal extends HookWidget {
-  const new({
-    this.currentSortBy,
-    this.currentSortOrder,
-    this.regionalIntensityEnabled = false,
-  });
-
-  final EarthquakeSortBy? currentSortBy;
-  final SortOrder? currentSortOrder;
-  final bool regionalIntensityEnabled;
-
+class const _SortFilterModal({
+  final EarthquakeSortBy? currentSortBy,
+  final SortOrder? currentSortOrder,
+  final bool regionalIntensityEnabled = false,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final sortBy = useState<EarthquakeSortBy>(currentSortBy ?? .eventId);

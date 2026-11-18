@@ -5,11 +5,8 @@ import 'package:nied_api_client/nied_api_client.dart';
 import 'package:m3e_core/m3e_core.dart';
 
 /// F-netカタログのリストタイル
-class FnetCatalogListTile extends StatelessWidget {
-  const new({required this.event, super.key});
-
-  final FnetEvent event;
-
+class const FnetCatalogListTile({required final FnetEvent event, super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -103,12 +100,10 @@ class FnetCatalogListTile extends StatelessWidget {
   );
 }
 
-class _MagnitudeChip extends StatelessWidget {
-  const new({required this.label, required this.magnitude});
-
-  final String label;
-  final double magnitude;
-
+class const _MagnitudeChip({
+  required final String label,
+  required final double magnitude,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _getMagnitudeColor(magnitude);
@@ -147,12 +142,10 @@ class _MagnitudeChip extends StatelessWidget {
   }
 }
 
-class _InfoItem extends StatelessWidget {
-  const new({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
+class const _InfoItem({
+  required final String label,
+  required final String value,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -176,12 +169,10 @@ class _InfoItem extends StatelessWidget {
   }
 }
 
-class _DetailSheet extends StatelessWidget {
-  const new({required this.event, required this.scrollController});
-
-  final FnetEvent event;
-  final ScrollController scrollController;
-
+class const _DetailSheet({
+  required final FnetEvent event,
+  required final ScrollController scrollController,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -327,12 +318,10 @@ class _DetailSheet extends StatelessWidget {
   }
 }
 
-class _Section extends StatelessWidget {
-  const new({required this.title, required this.children});
-
-  final String title;
-  final List<Widget> children;
-
+class const _Section({
+  required final String title,
+  required final List<Widget> children,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -352,12 +341,8 @@ class _Section extends StatelessWidget {
   }
 }
 
-class _InfoRow extends StatelessWidget {
-  const new({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
+class const _InfoRow({required final String label, required final String value})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(

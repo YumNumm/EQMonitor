@@ -2,19 +2,13 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class CollapsibleSegmentedControl<T> extends HookWidget {
-  const new({
-    required this.segments,
-    required this.selected,
-    required this.onSelected,
-    super.key,
-  });
-
-  final List<SegmentItem<T>> segments;
-  final T selected;
+class const CollapsibleSegmentedControl<T>({
+  required final List<SegmentItem<T>> segments,
+  required final T selected,
   // ignore: unsafe_variance
-  final ValueChanged<T> onSelected;
-
+  required final ValueChanged<T> onSelected,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);

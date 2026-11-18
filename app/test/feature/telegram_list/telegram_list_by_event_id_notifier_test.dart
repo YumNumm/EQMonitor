@@ -210,19 +210,14 @@ void main() {
   });
 }
 
-final class _StubRealtimeEvents extends RealtimeEvents {
-  new(this.stream);
-
-  final Stream<RealtimeEvent> stream;
-
+final class _StubRealtimeEvents(final Stream<RealtimeEvent> stream)
+    extends RealtimeEvents {
   @override
   Stream<RealtimeEvent> build() => stream;
 }
 
-final class _SpyTelegramDetails extends TelegramDetails {
-  new({required this.cacheClient});
-
-  final api.ApiClient cacheClient;
+final class _SpyTelegramDetails({required final api.ApiClient cacheClient})
+    extends TelegramDetails {
   var freshFetchCount = 0;
 
   @override

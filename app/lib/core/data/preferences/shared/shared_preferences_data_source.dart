@@ -12,12 +12,10 @@ Future<SharedPreferencesDataSource> sharedPreferencesDataSource(Ref ref) async {
   return SharedPreferencesDataSource(sharedPreferences: prefs);
 }
 
-class SharedPreferencesDataSource
-    implements PreferencesDataSource<SharedPreferencesKey> {
-  new({required SharedPreferences sharedPreferences})
-    : _sharedPreferences = sharedPreferences;
-
-  final SharedPreferences _sharedPreferences;
+class SharedPreferencesDataSource({
+  required SharedPreferences sharedPreferences,
+}) implements PreferencesDataSource<SharedPreferencesKey> {
+  final SharedPreferences _sharedPreferences = sharedPreferences;
 
   @override
   Future<void> setString({

@@ -51,7 +51,7 @@ Uri knetWaveformUrl(
 }
 
 /// PNG 図の種類
-enum KnetFigType {
+enum KnetFigType(final String suffix, final String label) {
   /// 加速度分布図
   accMap('all_accmap', '加速度分布図'),
 
@@ -62,18 +62,13 @@ enum KnetFigType {
   shindoMap('all_shindomap', '震度分布図'),
 
   /// 速度分布図
-  velMap('all_velmap', '速度分布図');
-
-  new(this.suffix, this.label);
-
-  final String suffix;
-  final String label;
+  velMap('all_velmap', '速度分布図'),
 }
 
 /// MP4 動画の種類
 ///
 /// サフィックス `_b` は大画面版、`_s` は小画面版。
-enum KnetMovieType {
+enum KnetMovieType(final String suffix, final String label) {
   accBig('acc_b', '加速度（大）'),
   accSmall('acc_s', '加速度（小）'),
   rsiBig('rsi_b', '速度応答（大）'),
@@ -89,12 +84,7 @@ enum KnetMovieType {
   sv2000Big('sv2000_b', 'SV 2.0s（大）'),
   sv2000Small('sv2000_s', 'SV 2.0s（小）'),
   sv4000Big('sv4000_b', 'SV 4.0s（大）'),
-  sv4000Small('sv4000_s', 'SV 4.0s（小）');
-
-  new(this.suffix, this.label);
-
-  final String suffix;
-  final String label;
+  sv4000Small('sv4000_s', 'SV 4.0s（小）'),
 }
 
 /// "YYYY/MM" 形式のパス部分を生成

@@ -7,16 +7,12 @@ import 'package:shake_detection_engine/src/shake_event_snapshot.dart';
 import 'package:shake_detection_engine/src/shake_event_state.dart';
 import 'package:shake_detection_engine/src/shake_station.dart';
 
-final class ShakeDetectionEngine {
-  new({
-    required List<ShakeStationLocation> stations,
-    this.parameters = const ShakeDetectionParameters(),
-    String Function()? createEventId,
-  }) : _createEventId = createEventId ?? ShakeEventIdGenerator().next,
-       _stations = [
-         for (final (index, location) in stations.indexed)
-           ShakeStationState(index: index, location: location),
-       ] {
+final class ShakeDetectionEngine({
+  required List<ShakeStationLocation> stations,
+  final ShakeDetectionParameters parameters = const ShakeDetectionParameters(),
+  String Function()? createEventId,
+}) {
+  this {
     for (final station in _stations) {
       final near = <NearStation>[];
       for (final other in _stations) {
@@ -45,9 +41,12 @@ final class ShakeDetectionEngine {
   /// [reset] と [seedBaseline] をやり直す。
   static const discontinuityThreshold = Duration(seconds: 5);
 
-  final ShakeDetectionParameters parameters;
-  final String Function() _createEventId;
-  final List<ShakeStationState> _stations;
+  final String Function() _createEventId =
+      createEventId ?? ShakeEventIdGenerator().next;
+  final List<ShakeStationState> _stations = [
+    for (final (index, location) in stations.indexed)
+      ShakeStationState(index: index, location: location),
+  ];
   final List<ShakeEventState> _events = [];
 
   DateTime? _lastProcessedAt;
@@ -355,10 +354,8 @@ final class ShakeDetectionEngine {
   }
 }
 
-final class ShakeEventIdGenerator {
-  new({math.Random? random}) : _random = random ?? math.Random();
-
-  final math.Random _random;
+final class ShakeEventIdGenerator({math.Random? random}) {
+  final math.Random _random = random ?? math.Random();
 
   String next() {
     final bytes = List<int>.generate(16, (_) => _random.nextInt(256));

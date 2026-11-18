@@ -1,9 +1,7 @@
 /// JMA Flood Forecast Region.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-47.
-class JmaFloodForecastRegion {
-  const new _();
-
+class const JmaFloodForecastRegion._() {
   /// Map of flood forecast region codes to names.
   static const regions = <int, String>{
     10175000100: '新川(北海道道央)',

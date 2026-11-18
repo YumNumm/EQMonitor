@@ -29,12 +29,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
-  const new({required this.eventId, this.onClose, super.key});
-
-  final String eventId;
-  final VoidCallback? onClose;
-
+class const EarthquakeHistoryDetailsPage({
+  required final String eventId,
+  final VoidCallback? onClose,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detailsState = ref.watch(earthquakeHistoryDetailsProvider(eventId));
@@ -85,12 +84,11 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   }
 }
 
-class _LoadedContent extends HookConsumerWidget {
-  const new({required this.earthquake, this.onClose, super.key});
-
-  final Earthquake earthquake;
-  final VoidCallback? onClose;
-
+class const _LoadedContent({
+  required final Earthquake earthquake,
+  final VoidCallback? onClose,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasEstimated = earthquake.estimatedIntensityTileUrl != null;
@@ -307,11 +305,8 @@ class _LoadedContent extends HookConsumerWidget {
   }
 }
 
-class _TelegramListButton extends StatelessWidget {
-  const new({required this.eventId});
-
-  final String eventId;
-
+class const _TelegramListButton({required final String eventId})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

@@ -7,25 +7,21 @@ import 'package:kyoshin_monitor_image_parser/src/worker/kyoshin_monitor_analyzer
 import 'package:shake_detection_engine/shake_detection_engine.dart';
 
 /// 解析用 Isolate の中で揺れ検知エンジンの状態を保持する。
-final class ShakeDetectionWorker {
-  new({
-    required this.parser,
-    required List<NamedObservationPoint> points,
-    required this.parsePoints,
-  }) : _stations = [
-         for (final point in points)
-           ShakeStationLocation(
-             latitude: point.latitude,
-             longitude: point.longitude,
-           ),
-       ];
-
+final class ShakeDetectionWorker({
+  required final KyoshinMonitorImageParser parser,
+  required List<NamedObservationPoint> points,
+  required final List<KyoshinMonitorObservationPoint> parsePoints,
+}) {
   /// 過去フレームの取得を待つ間に保持する、コールドスタート以降のフレーム数の上限。
   static const maxPendingFrames = 30;
 
-  final KyoshinMonitorImageParser parser;
-  final List<KyoshinMonitorObservationPoint> parsePoints;
-  final List<ShakeStationLocation> _stations;
+  final List<ShakeStationLocation> _stations = [
+    for (final point in points)
+      ShakeStationLocation(
+        latitude: point.latitude,
+        longitude: point.longitude,
+      ),
+  ];
 
   ShakeDetectionEngine? _engine;
   DateTime? _coldStartAt;

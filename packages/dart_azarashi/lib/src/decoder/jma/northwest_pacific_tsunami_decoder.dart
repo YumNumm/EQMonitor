@@ -10,9 +10,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 /// Northwest Pacific Tsunami Decoder.
 ///
 /// Decodes JMA Northwest Pacific Tsunami information messages.
-class NorthwestPacificTsunamiDecoder {
-  const new _();
-
+class const NorthwestPacificTsunamiDecoder._() {
   /// Decodes a Northwest Pacific Tsunami message.
   static QzssDcReport decode(JmaCommonParams params) {
     final message = params.message;

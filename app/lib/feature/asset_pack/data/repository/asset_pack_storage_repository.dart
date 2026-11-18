@@ -27,22 +27,17 @@ class const AssetPackStorageException(final String message)
   String toString() => 'AssetPackStorageException: $message';
 }
 
-class AssetPackStorageRepository {
-  new({
-    required SharedPreferencesDataSource preferences,
-    required ResolveBundledAssetPackRoot resolveBundledRoot,
-    required ResolveAssetPackStorageRoot resolveStorageRoot,
-    AssetPackContentValidator contentValidator =
-        const AssetPackContentValidator(),
-  }) : _preferences = preferences,
-       _resolveBundledRoot = resolveBundledRoot,
-       _resolveStorageRoot = resolveStorageRoot,
-       _contentValidator = contentValidator;
-
-  final SharedPreferencesDataSource _preferences;
-  final ResolveBundledAssetPackRoot _resolveBundledRoot;
-  final ResolveAssetPackStorageRoot _resolveStorageRoot;
-  final AssetPackContentValidator _contentValidator;
+class AssetPackStorageRepository({
+  required SharedPreferencesDataSource preferences,
+  required ResolveBundledAssetPackRoot resolveBundledRoot,
+  required ResolveAssetPackStorageRoot resolveStorageRoot,
+  AssetPackContentValidator contentValidator =
+      const AssetPackContentValidator(),
+}) {
+  final SharedPreferencesDataSource _preferences = preferences;
+  final ResolveBundledAssetPackRoot _resolveBundledRoot = resolveBundledRoot;
+  final ResolveAssetPackStorageRoot _resolveStorageRoot = resolveStorageRoot;
+  final AssetPackContentValidator _contentValidator = contentValidator;
   String? _verifiedDownloadedVersion;
   bool _didCleanupInactiveVersions = false;
 

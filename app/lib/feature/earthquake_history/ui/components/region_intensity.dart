@@ -15,16 +15,15 @@ import 'package:material_ui/material_ui.dart';
 import 'package:m3e_core/m3e_core.dart';
 
 /// JMA震度階級の各地の震度ツリー表示
-class JmaIntensityContent extends HookWidget {
-  const new({required this.item, this.isPreliminary, super.key});
-
-  final Earthquake item;
+class const JmaIntensityContent({
+  required final Earthquake item,
 
   /// 速報 (各地の震度ツリー未発表) かどうか。
   /// 区域で絞り込んだ [item] を渡す場合は、絞り込み前の地震で判定した値を渡す。
   /// null のときは [item] の震度ツリーが空かどうかで判定する。
-  final bool? isPreliminary;
-
+  final bool? isPreliminary,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final intensityColors = context.designSystem.colorTheme.intensity;
@@ -93,11 +92,8 @@ class JmaIntensityContent extends HookWidget {
 }
 
 /// 長周期地震動階級の各地のツリー表示
-class LpgmIntensityContent extends HookWidget {
-  const new({required this.item, super.key});
-
-  final Earthquake item;
-
+class const LpgmIntensityContent({required final Earthquake item, super.key})
+    extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final intensityColors = context.designSystem.colorTheme.intensity;
@@ -169,17 +165,11 @@ class _PreliminaryBadge extends StatelessWidget {
   }
 }
 
-class _PreliminaryIntensityLevelSection extends StatelessWidget {
-  const new({
-    required this.intensity,
-    required this.regions,
-    required this.dividerColor,
-  });
-
-  final JmaIntensity intensity;
-  final List<IntensityRegion> regions;
-  final Color dividerColor;
-
+class const _PreliminaryIntensityLevelSection({
+  required final JmaIntensity intensity,
+  required final List<IntensityRegion> regions,
+  required final Color dividerColor,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -214,19 +204,12 @@ class _PreliminaryIntensityLevelSection extends StatelessWidget {
   }
 }
 
-class _IntensityLevelSection extends HookWidget {
-  const new({
-    required this.intensity,
-    required this.dividerColor,
-    required this.prefectures,
-    required this.eventId,
-  });
-
-  final JmaIntensity intensity;
-  final Color dividerColor;
-  final List<PrefectureIntensityNode> prefectures;
-  final String eventId;
-
+class const _IntensityLevelSection({
+  required final JmaIntensity intensity,
+  required final Color dividerColor,
+  required final List<PrefectureIntensityNode> prefectures,
+  required final String eventId,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
@@ -314,19 +297,12 @@ class _IntensityLevelSection extends HookWidget {
   }
 }
 
-class _LpgmIntensityLevelSection extends HookWidget {
-  const new({
-    required this.intensity,
-    required this.dividerColor,
-    required this.prefectures,
-    required this.eventId,
-  });
-
-  final JmaLpgmIntensity intensity;
-  final Color dividerColor;
-  final List<PrefectureLpgmIntensityNode> prefectures;
-  final String eventId;
-
+class const _LpgmIntensityLevelSection({
+  required final JmaLpgmIntensity intensity,
+  required final Color dividerColor,
+  required final List<PrefectureLpgmIntensityNode> prefectures,
+  required final String eventId,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
@@ -408,12 +384,10 @@ class _LpgmIntensityLevelSection extends HookWidget {
   }
 }
 
-class _PrefectureTile extends HookWidget {
-  const new({required this.prefecture, required this.eventId});
-
-  final PrefectureIntensityNode prefecture;
-  final String eventId;
-
+class const _PrefectureTile({
+  required final PrefectureIntensityNode prefecture,
+  required final String eventId,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
@@ -453,12 +427,10 @@ class _PrefectureTile extends HookWidget {
   }
 }
 
-class _LpgmPrefectureTile extends HookWidget {
-  const new({required this.prefecture, required this.eventId});
-
-  final PrefectureLpgmIntensityNode prefecture;
-  final String eventId;
-
+class const _LpgmPrefectureTile({
+  required final PrefectureLpgmIntensityNode prefecture,
+  required final String eventId,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
@@ -498,12 +470,10 @@ class _LpgmPrefectureTile extends HookWidget {
   }
 }
 
-class _CityTile extends HookWidget {
-  const new({required this.city, required this.eventId});
-
-  final CityIntensityNode city;
-  final String? eventId;
-
+class const _CityTile({
+  required final CityIntensityNode city,
+  required final String? eventId,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
@@ -563,12 +533,10 @@ class _CityTile extends HookWidget {
   }
 }
 
-class _LpgmCityTile extends HookWidget {
-  const new({required this.city, required this.eventId});
-
-  final CityLpgmIntensityNode city;
-  final String? eventId;
-
+class const _LpgmCityTile({
+  required final CityLpgmIntensityNode city,
+  required final String? eventId,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);

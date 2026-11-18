@@ -18,6 +18,5 @@ abstract class RealTimeData with _$RealTimeData {
     required Security? security,
   }) = _RealTimeData;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$RealTimeDataFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$RealTimeDataFromJson(json);
 }

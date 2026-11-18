@@ -1,5 +1,14 @@
 /// 気象庁震度階級
-enum JmaIntensity {
+enum JmaIntensity({
+  /// 表示名
+  required final String displayName,
+
+  /// 説明
+  required final String description,
+
+  /// レベル値
+  required final int level,
+}) {
   /// 不明
   unknown(displayName: '不明', description: '不明', level: -1),
 
@@ -32,21 +41,6 @@ enum JmaIntensity {
 
   /// 震度7
   seven(displayName: '7', description: '震度7', level: 9);
-
-  new({
-    required this.displayName,
-    required this.description,
-    required this.level,
-  });
-
-  /// 表示名
-  final String displayName;
-
-  /// 説明
-  final String description;
-
-  /// レベル値
-  final int level;
 
   /// 文字列から震度を取得
   static JmaIntensity fromString(String? value) {

@@ -2,19 +2,13 @@ import 'package:eqmonitor/core/component/layout/pane_viewport_measurement.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class PaneViewportObserver extends SingleChildRenderObjectWidget {
-  const new({
-    required this.active,
-    required this.environment,
-    required this.onMeasurementChanged,
-    required super.child,
-    super.key,
-  });
-
-  final bool active;
-  final PaneViewportEnvironment environment;
-  final ValueChanged<PaneViewportMeasurement> onMeasurementChanged;
-
+class const PaneViewportObserver({
+  required final bool active,
+  required final PaneViewportEnvironment environment,
+  required final ValueChanged<PaneViewportMeasurement> onMeasurementChanged,
+  required super.child,
+  super.key,
+}) extends SingleChildRenderObjectWidget {
   @override
   PaneViewportRenderObject createRenderObject(
     BuildContext context,
@@ -36,22 +30,18 @@ class PaneViewportObserver extends SingleChildRenderObjectWidget {
   }
 }
 
-class PaneViewportRenderObject extends RenderProxyBox {
-  new({
-    required bool active,
-    required PaneViewportEnvironment environment,
-    required ValueChanged<PaneViewportMeasurement> onMeasurementChanged,
-  }) : _active = active,
-       _environment = environment,
-       _measurementIsCurrent = !active,
-       _onMeasurementChanged = onMeasurementChanged;
-
-  bool _active;
-  PaneViewportEnvironment _environment;
-  ValueChanged<PaneViewportMeasurement> _onMeasurementChanged;
+class PaneViewportRenderObject({
+  required bool active,
+  required PaneViewportEnvironment environment,
+  required ValueChanged<PaneViewportMeasurement> onMeasurementChanged,
+}) extends RenderProxyBox {
+  bool _active = active;
+  PaneViewportEnvironment _environment = environment;
+  ValueChanged<PaneViewportMeasurement> _onMeasurementChanged =
+      onMeasurementChanged;
   PaneViewportMeasurement? _reportedMeasurement;
   PaneViewportMeasurement? _pendingMeasurement;
-  bool _measurementIsCurrent;
+  bool _measurementIsCurrent = !active;
   bool _reportScheduled = false;
 
   set active(bool value) {

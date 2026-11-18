@@ -8,32 +8,21 @@ import 'package:material_ui/material_ui.dart';
 /// バナー同士の間隔（下余白）もこの Widget が持つ。表示条件を満たさない
 /// バナーが `SizedBox.shrink()` を返したときに、親側の `Column` の
 /// `spacing` だと余白だけが残ってしまうため。
-class AppBanner extends StatelessWidget {
-  const new({
-    required this.icon,
-    required this.title,
-    required this.backgroundColor,
-    required this.foregroundColor,
-    this.description,
-    this.onTap,
-    this.trailing,
-    this.onDismiss,
-    super.key,
-  });
-
-  final IconData icon;
-  final String title;
-  final String? description;
-  final Color backgroundColor;
-  final Color foregroundColor;
-  final VoidCallback? onTap;
+class const AppBanner({
+  required final IconData icon,
+  required final String title,
+  required final Color backgroundColor,
+  required final Color foregroundColor,
+  final String? description,
+  final VoidCallback? onTap,
 
   /// タイトル右側に置く操作（再試行ボタン・進捗表示など）。
-  final Widget? trailing;
+  final Widget? trailing,
 
   /// 指定した場合は右端に閉じるボタンを表示する。
-  final VoidCallback? onDismiss;
-
+  final VoidCallback? onDismiss,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

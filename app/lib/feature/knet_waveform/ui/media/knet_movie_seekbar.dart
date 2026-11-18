@@ -1,18 +1,12 @@
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class KnetMovieSeekbar extends StatelessWidget {
-  const new({
-    required this.position,
-    required this.duration,
-    required this.onChanged,
-    super.key,
-  });
-
-  final Duration position;
-  final Duration duration;
-  final ValueChanged<Duration> onChanged;
-
+class const KnetMovieSeekbar({
+  required final Duration position,
+  required final Duration duration,
+  required final ValueChanged<Duration> onChanged,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final total = duration.inMilliseconds;

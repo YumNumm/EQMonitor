@@ -58,18 +58,12 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
-  const new({
-    required this.earthquake,
-    required this.displayMode,
-    required this.showingDb,
-    super.key,
-  });
-
-  final Earthquake earthquake;
-  final IntensityDisplayMode displayMode;
-  final bool showingDb;
-
+class const EarthquakeHistoryDetailsMapView({
+  required final Earthquake earthquake,
+  required final IntensityDisplayMode displayMode,
+  required final bool showingDb,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
@@ -116,23 +110,14 @@ class const EarthquakeHistoryDebuggerVisibility() {
   }) => isDebugBuild || (debugPreference.value ?? false);
 }
 
-class _MapContent extends HookConsumerWidget {
-  const new({
-    required this.styleString,
-    required this.regionMap,
-    required this.viewportSize,
-    required this.earthquake,
-    required this.displayMode,
-    required this.showingDb,
-  });
-
-  final String styleString;
-  final JmaMap_JmaMapData? regionMap;
-  final Size viewportSize;
-  final Earthquake earthquake;
-  final IntensityDisplayMode displayMode;
-  final bool showingDb;
-
+class const _MapContent({
+  required final String styleString,
+  required final JmaMap_JmaMapData? regionMap,
+  required final Size viewportSize,
+  required final Earthquake earthquake,
+  required final IntensityDisplayMode displayMode,
+  required final bool showingDb,
+}) extends HookConsumerWidget {
   static const _dbStationLayerId = 'eq-history-shindo-db-station-icon';
   static const _regionSourceLayerId = 'areaForecastLocalE';
   static const _citySourceLayerId = 'areaInformationCityQuake';
@@ -628,17 +613,11 @@ class _MapContent extends HookConsumerWidget {
   }
 }
 
-class _MapControllerCard extends StatelessWidget {
-  const new({
-    required this.showingDb,
-    required this.onFitBoundsTap,
-    required this.onDebugTap,
-  });
-
-  final bool showingDb;
-  final Future<void> Function() onFitBoundsTap;
-  final Future<void> Function()? onDebugTap;
-
+class const _MapControllerCard({
+  required final bool showingDb,
+  required final Future<void> Function() onFitBoundsTap,
+  required final Future<void> Function()? onDebugTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;

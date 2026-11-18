@@ -4,17 +4,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class DepthFilterChip extends StatelessWidget {
-  const new({this.min, this.max, this.onChanged, super.key});
+class const DepthFilterChip({
+  final int? min,
+  final int? max,
 
   /// マグニチュードの範囲が変更された時に呼ばれる
   /// `min` と `max` にはそれぞれ下限値と上限値が渡される
   /// どちらかが `null` の場合はその値は指定されていないことを示す
-  final void Function(int?, int?)? onChanged;
-
-  final int? min;
-  final int? max;
-
+  final void Function(int?, int?)? onChanged,
+  super.key,
+}) extends StatelessWidget {
   static const initialMin = 0;
   static const initialMax = 700;
 
@@ -52,15 +51,10 @@ class DepthFilterChip extends StatelessWidget {
   }
 }
 
-class _DepthFilterModal extends HookWidget {
-  const new({
-    this.currentMin = initialMin,
-    this.currentMax = initialMax,
-  });
-
-  final int? currentMin;
-  final int? currentMax;
-
+class const _DepthFilterModal({
+  final int? currentMin = initialMin,
+  final int? currentMax = initialMax,
+}) extends HookWidget {
   static const int initialMin = DepthFilterChip.initialMin;
   static const int initialMax = DepthFilterChip.initialMax;
 

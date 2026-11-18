@@ -56,8 +56,7 @@ abstract class FnetEvent with _$FnetEvent {
     required int numberOfStations,
   }) = _FnetEvent;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$FnetEventFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$FnetEventFromJson(json);
 }
 
 /// 角度のペア（2つの節面を表す）
@@ -68,8 +67,7 @@ abstract class FnetAnglePair with _$FnetAnglePair {
     required double plane2,
   }) = _FnetAnglePair;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$FnetAnglePairFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$FnetAnglePairFromJson(json);
 
   /// 文字列からパース（例: "68;181"）
   factory fromString(String value) {

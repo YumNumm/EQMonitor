@@ -34,13 +34,10 @@ final class const ControlledEstimatedIntensityArchiveOpener({
   }
 }
 
-final class RecordingEstimatedIntensityArchive extends Fake
-    implements PmTilesV3Archive {
-  new({required this.header, this.closeFailure});
-
-  @override
-  final PmTilesV3Header header;
-  final FileSystemException? closeFailure;
+final class RecordingEstimatedIntensityArchive({
+  @override required final PmTilesV3Header header,
+  final FileSystemException? closeFailure,
+}) extends Fake implements PmTilesV3Archive {
   var closeCount = 0;
 
   @override

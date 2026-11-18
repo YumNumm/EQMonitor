@@ -10,21 +10,14 @@ import 'package:drift/drift.dart';
 /// HTTP キャッシュに保持する body の合計サイズ上限 (バイト)。
 const kHttpCacheMaxTotalBodyBytes = 5 * 1024 * 1024;
 
-class HttpCacheStore {
-  new({
-    required this.db,
-    required this.schemaVersion,
-    required this.appBuild,
-    this.maxTotalBodyBytes = kHttpCacheMaxTotalBodyBytes,
-  });
-
-  final CacheDatabase db;
-  final int schemaVersion;
-  final String appBuild;
+class HttpCacheStore({
+  required final CacheDatabase db,
+  required final int schemaVersion,
+  required final String appBuild,
 
   /// body の合計がこの値を超えたら、最近使われていない順に削除する。
-  final int maxTotalBodyBytes;
-
+  final int maxTotalBodyBytes = kHttpCacheMaxTotalBodyBytes,
+}) {
   Future<HttpCacheEntry?> read(String key) async {
     final row = await db.getEntry(key);
     if (row == null) {

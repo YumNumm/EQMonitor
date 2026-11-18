@@ -7,32 +7,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class ErrorCard extends ConsumerWidget {
-  const new({
-    required this.error,
-    super.key,
-    this.title,
-    this.suffixMessage,
-    this.onReload,
-    this.stackTrace,
-    this.showDetails = true,
-    this.showContact = true,
-    this.showLoadingOverlayOnReload = true,
-    this.onDioExceptionStatusOverride,
-  });
-
-  final Object error;
-  final String? title;
-  final String? suffixMessage;
-  final Future<void> Function()? onReload;
-  final StackTrace? stackTrace;
-  final bool showDetails;
-  final bool showContact;
-  final bool showLoadingOverlayOnReload;
+class const ErrorCard({
+  required final Object error,
+  super.key,
+  final String? title,
+  final String? suffixMessage,
+  final Future<void> Function()? onReload,
+  final StackTrace? stackTrace,
+  final bool showDetails = true,
+  final bool showContact = true,
+  final bool showLoadingOverlayOnReload = true,
 
   /// DioExceptionで、StatusCodeがある時にエラーメッセージを上書きする
-  final String? Function(int statusCode)? onDioExceptionStatusOverride;
-
+  final String? Function(int statusCode)? onDioExceptionStatusOverride,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);

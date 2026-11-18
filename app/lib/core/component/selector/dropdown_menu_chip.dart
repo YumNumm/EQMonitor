@@ -3,24 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// A compact selection menu shared by sheet headers.
-class DropdownMenuChip<T> extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.value,
-    required this.entries,
-    required this.onSelected,
-    this.icon,
-    this.additionalMenuChildren = const [],
-    super.key,
-  });
-
-  final String label;
-  final T value;
-  final List<DropdownMenuChipEntry<T>> entries;
-  final ValueChanged<T> onSelected;
-  final IconData? icon;
-  final List<Widget> additionalMenuChildren;
-
+class const DropdownMenuChip<T>({
+  required final String label,
+  required final T value,
+  required final List<DropdownMenuChipEntry<T>> entries,
+  required final ValueChanged<T> onSelected,
+  final IconData? icon,
+  final List<Widget> additionalMenuChildren = const [],
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -74,13 +65,11 @@ class const DropdownMenuChipEntry<T>({
   final IconData? icon,
 });
 
-class _DropdownChip extends StatelessWidget {
-  const new({required this.label, required this.onTap, this.icon});
-
-  final String label;
-  final VoidCallback onTap;
-  final IconData? icon;
-
+class const _DropdownChip({
+  required final String label,
+  required final VoidCallback onTap,
+  final IconData? icon,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

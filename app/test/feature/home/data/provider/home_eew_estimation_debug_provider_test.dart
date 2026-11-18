@@ -7,21 +7,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// `debugProvider` を固定するスタブ。
-class _StubDebug extends Debug {
-  new({required this.isEnabled});
-
-  final bool isEnabled;
-
+class _StubDebug({required final bool isEnabled}) extends Debug {
   @override
   Future<bool> build() async => isEnabled;
 }
 
 /// `homeEewEstimationDebugProvider` を固定するスタブ。
-class _StubHomeEewEstimationDebug extends HomeEewEstimationDebug {
-  new({required this.isEnabled});
-
-  final bool isEnabled;
-
+class _StubHomeEewEstimationDebug({required final bool isEnabled})
+    extends HomeEewEstimationDebug {
   @override
   Future<bool> build() async => isEnabled;
 }

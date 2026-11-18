@@ -7,9 +7,8 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
-class KyoshinMonitorMaintenanceCardnceCard extends ConsumerWidget {
-  const new({super.key});
-
+class const KyoshinMonitorMaintenanceCardnceCard({super.key})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (!ref.watch(

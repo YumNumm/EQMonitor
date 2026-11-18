@@ -15,9 +15,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const DebugNotificationDeliveryLogPage({super.key})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final refreshTick = useState(0);
@@ -207,12 +206,10 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
   }
 }
 
-class _NotificationLogTile extends StatelessWidget {
-  const new({required this.item, required this.onTap});
-
-  final PushNotificationLogEntry item;
-  final VoidCallback onTap;
-
+class const _NotificationLogTile({
+  required final PushNotificationLogEntry item,
+  required final VoidCallback onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
@@ -258,11 +255,9 @@ class _NotificationLogTile extends StatelessWidget {
   }
 }
 
-class _LogDetailSheet extends StatelessWidget {
-  const new({required this.detail});
-
-  final NotificationDeliveryLogDetail detail;
-
+class const _LogDetailSheet({
+  required final NotificationDeliveryLogDetail detail,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
@@ -317,11 +312,8 @@ class _LogDetailSheet extends StatelessWidget {
   }
 }
 
-class _LogDetailRow extends StatelessWidget {
-  const new({required this.row});
-
-  final NotificationDeliveryLogDetailRow row;
-
+class const _LogDetailRow({required final NotificationDeliveryLogDetailRow row})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(

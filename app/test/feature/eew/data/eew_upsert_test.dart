@@ -20,10 +20,9 @@ EewTelegramItem _eew({
   isPlum: false,
 );
 
-class _StubEew extends Eew {
-  new([this._initial = const <EewTelegramItem>[]]);
-  final List<EewTelegramItem> _initial;
-
+class _StubEew([
+  final List<EewTelegramItem> _initial = const <EewTelegramItem>[],
+]) extends Eew {
   @override
   AsyncValue<List<EewTelegramItem>> build() => AsyncData(_initial);
 }

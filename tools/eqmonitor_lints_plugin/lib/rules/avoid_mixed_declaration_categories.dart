@@ -6,9 +6,8 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
-class AvoidMixedDeclarationCategories extends AnalysisRule {
-  new()
-    : super(name: _code.name, description: _code.problemMessage);
+class AvoidMixedDeclarationCategories() extends AnalysisRule {
+  this : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_mixed_declaration_categories',
@@ -49,11 +48,7 @@ enum _Category {
   plain,
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  new(this.rule);
-
-  final AnalysisRule rule;
-
+class _Visitor(final AnalysisRule rule) extends SimpleAstVisitor<void> {
   static const _freezedNames = {'freezed', 'Freezed'};
   static const _riverpodNames = {'riverpod', 'Riverpod'};
 

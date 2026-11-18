@@ -58,10 +58,10 @@ final class const _Task63Case({
   required final Matcher matcher,
 });
 
-final class _CountingReader implements PmTilesRandomAccessReader {
-  new({required this.inner}) : closeCount = 0;
+final class _CountingReader({required final PmTilesRandomAccessReader inner})
+    implements PmTilesRandomAccessReader {
+  this : closeCount = 0;
 
-  final PmTilesRandomAccessReader inner;
   Future<void>? _close;
   int closeCount;
 

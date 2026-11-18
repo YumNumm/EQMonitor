@@ -8,23 +8,19 @@ part 'seismicity_pmtiles_load_state.freezed.dart';
 sealed class SeismicityPmTilesLoadState with _$SeismicityPmTilesLoadState {
   const factory idle() = SeismicityPmTilesLoadIdle;
 
-  const factory openingSource() =
-      SeismicityPmTilesLoadOpeningSource;
+  const factory openingSource() = SeismicityPmTilesLoadOpeningSource;
 
-  const factory readingDirectory() =
-      SeismicityPmTilesLoadReadingDirectory;
+  const factory readingDirectory() = SeismicityPmTilesLoadReadingDirectory;
 
   const factory decoding({
     required SeismicityPmTilesDecodeProgress progress,
   }) = SeismicityPmTilesLoadDecoding;
 
-  const factory completed() =
-      SeismicityPmTilesLoadCompleted;
+  const factory completed() = SeismicityPmTilesLoadCompleted;
 
   const factory failed({
     required SeismicityPmTilesException exception,
   }) = SeismicityPmTilesLoadFailed;
 
-  const factory cancelled() =
-      SeismicityPmTilesLoadCancelled;
+  const factory cancelled() = SeismicityPmTilesLoadCancelled;
 }

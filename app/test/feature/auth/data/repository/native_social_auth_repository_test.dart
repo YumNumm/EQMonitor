@@ -766,16 +766,16 @@ const devBuildConfig = BuildConfig(
   revenueCatApiKeyAndroid: '',
 );
 
-final class NativeSocialFixture {
-  new({
-    this.platform = NativeAuthPlatform.ios,
-    this.buildConfig = devBuildConfig,
-    this.telegramUrl = const TelegramUrlModel(
-      restApiUrl: 'https://dev.v2.api.eqmonitor.app',
-      wsApiUrl: 'wss://example.com',
-    ),
-    this.acceptance,
-  }) {
+final class NativeSocialFixture({
+  final NativeAuthPlatform platform = NativeAuthPlatform.ios,
+  final BuildConfig buildConfig = devBuildConfig,
+  final TelegramUrlModel telegramUrl = const TelegramUrlModel(
+    restApiUrl: 'https://dev.v2.api.eqmonitor.app',
+    wsApiUrl: 'wss://example.com',
+  ),
+  final Completer<Result<AuthSession, AuthFailure>>? acceptance,
+}) {
+  this {
     final dio = Dio(BaseOptions(baseUrl: telegramUrl.restApiUrl))
       ..httpClientAdapter = adapter;
     apiClient = BetterAuthApiClient(
@@ -806,10 +806,6 @@ final class NativeSocialFixture {
     );
   }
 
-  final NativeAuthPlatform platform;
-  final BuildConfig buildConfig;
-  final TelegramUrlModel telegramUrl;
-  final Completer<Result<AuthSession, AuthFailure>>? acceptance;
   final google = QueueGoogleAuthGateway();
   final apple = QueueAppleAuthGateway();
   final adapter = RecordingSocialAuthAdapter();
@@ -906,11 +902,8 @@ final class RecordingAppleSignInPlugin implements AppleSignInPlugin {
   }
 }
 
-final class QueueNonceGenerator implements NativeAuthNonceGenerator {
-  new(this.nonces);
-
-  final List<NativeAuthNonce> nonces;
-
+final class QueueNonceGenerator(final List<NativeAuthNonce> nonces)
+    implements NativeAuthNonceGenerator {
   @override
   NativeAuthNonce generate() => nonces.removeAt(0);
 }

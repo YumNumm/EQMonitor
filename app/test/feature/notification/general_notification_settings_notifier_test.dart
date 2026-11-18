@@ -21,8 +21,8 @@ const _initialSettings = GeneralNotificationSettings(
   earthquakeNoticeEnabled: false,
 );
 
-class _FakePushNotificationRepository extends PushNotificationRepository {
-  new() : super(api.ApiClient(Dio()));
+class _FakePushNotificationRepository() extends PushNotificationRepository {
+  this : super(api.ApiClient(Dio()));
 
   final patchedNotificationEnabled = <bool>[];
   final patchedEarthquakeNoticeEnabled = <bool>[];

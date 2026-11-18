@@ -10,9 +10,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 /// Typhoon Decoder.
 ///
 /// Decodes JMA Typhoon information messages.
-class TyphoonDecoder {
-  const new _();
-
+class const TyphoonDecoder._() {
   /// Decodes a Typhoon message.
   static QzssDcReport decode(JmaCommonParams params) {
     final message = params.message;

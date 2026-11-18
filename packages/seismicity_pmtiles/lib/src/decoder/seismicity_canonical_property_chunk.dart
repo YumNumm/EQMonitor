@@ -8,13 +8,9 @@ typedef SeismicityCanonicalPropertyChunkData = ({
   SeismicityCanonicalStringColumnData strings,
 });
 
-final class SeismicityCanonicalPropertyChunk {
-  new({required int capacity})
-    : _fixed = SeismicityCanonicalFixedColumns(capacity: capacity),
-      _strings = SeismicityCanonicalStringColumns(capacity: capacity);
-
-  final SeismicityCanonicalFixedColumns _fixed;
-  final SeismicityCanonicalStringColumns _strings;
+final class SeismicityCanonicalPropertyChunk({required int capacity}) {
+  final _fixed = SeismicityCanonicalFixedColumns(capacity: capacity);
+  final _strings = SeismicityCanonicalStringColumns(capacity: capacity);
 
   int get length => _fixed.length;
   bool get isFull => _fixed.isFull;

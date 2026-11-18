@@ -5,16 +5,13 @@ import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-final class SeismicityUtf8Arena {
-  new({
-    required int maxBytes,
-    required int maxEntries,
-    Uint8List Function(int length)? allocateBuildBytes,
-    Uint32List Function(int length)? allocateBuildOffsets,
-  }) : _maxBytes = maxBytes,
-       _maxEntries = maxEntries,
-       _allocateBuildBytes = allocateBuildBytes ?? Uint8List.new,
-       _allocateBuildOffsets = allocateBuildOffsets ?? Uint32List.new {
+final class SeismicityUtf8Arena({
+  required int maxBytes,
+  required int maxEntries,
+  Uint8List Function(int length)? allocateBuildBytes,
+  Uint32List Function(int length)? allocateBuildOffsets,
+}) {
+  this {
     if (maxBytes < 0 ||
         maxBytes > 0xffffffff ||
         maxEntries < 0 ||
@@ -25,10 +22,12 @@ final class SeismicityUtf8Arena {
     }
   }
 
-  final int _maxBytes;
-  final int _maxEntries;
-  final Uint8List Function(int length) _allocateBuildBytes;
-  final Uint32List Function(int length) _allocateBuildOffsets;
+  final _maxBytes = maxBytes;
+  final _maxEntries = maxEntries;
+  final Uint8List Function(int length) _allocateBuildBytes =
+      allocateBuildBytes ?? Uint8List.new;
+  final Uint32List Function(int length) _allocateBuildOffsets =
+      allocateBuildOffsets ?? Uint32List.new;
   var _bytes = Uint8List(0);
   var _entryOffsets = Uint32List(1);
   var _byteLength = 0;

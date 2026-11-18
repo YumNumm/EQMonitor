@@ -5,10 +5,10 @@ import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_manifest.dart
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_model_converter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
-class HypocenterManifestRepository {
-  const new({required api.HypocentersApiClient client}) : _client = client;
-
-  final api.HypocentersApiClient _client;
+class const HypocenterManifestRepository({
+  required api.HypocentersApiClient client,
+}) {
+  final api.HypocentersApiClient _client = client;
 
   Future<Result<HypocenterManifest, HypocenterApiException>> fetch() async {
     try {

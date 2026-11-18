@@ -14,9 +14,7 @@ import 'package:riverpod/riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:web_socket/web_socket.dart';
 
-final class _RecordingWebSocket implements WebSocket {
-  new();
-
+final class _RecordingWebSocket() implements WebSocket {
   final _controller = StreamController<WebSocketEvent>();
   final sent = <String>[];
   var sendShouldThrow = false;

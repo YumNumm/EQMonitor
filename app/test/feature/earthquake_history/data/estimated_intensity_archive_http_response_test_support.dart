@@ -20,9 +20,11 @@ final class RecordingEstimatedIntensityHttpHeaders extends Fake
   }
 }
 
-final class RecordingEstimatedIntensityHttpResponse
-    extends StreamView<List<int>>
-    implements HttpClientResponse {
+final class RecordingEstimatedIntensityHttpResponse._({
+  required final int responseStatusCode,
+  required final int responseContentLength,
+  required Stream<List<int>> body,
+}) extends StreamView<List<int>> implements HttpClientResponse {
   // ignore: unnecessary_type_name_in_constructor
   factory RecordingEstimatedIntensityHttpResponse({
     int responseStatusCode = HttpStatus.ok,
@@ -34,17 +36,9 @@ final class RecordingEstimatedIntensityHttpResponse
     body: body ?? const Stream.empty(),
   );
 
-  // ignore: unnecessary_type_name_in_constructor
-  RecordingEstimatedIntensityHttpResponse._({
-    required this.responseStatusCode,
-    required this.responseContentLength,
-    required Stream<List<int>> body,
-  }) : super(body);
+  this : super(body);
 
   final responseHeaders = RecordingEstimatedIntensityHttpHeaders();
-  final int responseStatusCode;
-  final int responseContentLength;
-
   @override
   HttpHeaders get headers => responseHeaders;
 

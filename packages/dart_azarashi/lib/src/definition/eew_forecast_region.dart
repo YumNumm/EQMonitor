@@ -1,7 +1,7 @@
 /// JMA EEW Forecast Region definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-12.
-enum JmaEewForecastRegion {
+enum JmaEewForecastRegion(final int code, final String name) {
   hokkaidoDoo(1, '北海道道央'),
   hokkaidoDoonan(2, '北海道道南'),
   hokkaidoDoohoku(3, '北海道道北'),
@@ -73,11 +73,6 @@ enum JmaEewForecastRegion {
   amamiRegion(69, '奄美(群島)'),
   okinawaRegion(70, '沖縄'),
   other(80, 'その他の府県予報区および地方予報区');
-
-  new(this.code, this.name);
-
-  final int code;
-  final String name;
 
   static JmaEewForecastRegion fromCode(int code) =>
       values.firstWhere((e) => e.code == code);

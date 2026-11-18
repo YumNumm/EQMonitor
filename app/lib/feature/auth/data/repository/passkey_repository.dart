@@ -55,45 +55,35 @@ Future<PasskeyAuthGateway> passkeyRepository(Ref ref) async {
   );
 }
 
-final class PasskeyRepository implements PasskeyAuthGateway {
-  new({
-    required BetterAuthApiClient apiClient,
-    required BetterAuthSessionRepository sessionRepository,
-    required PasskeyAuthenticatorInterface authenticator,
-    required BuildConfig buildConfig,
-    required TelegramUrlModel telegramUrl,
-    required ReadAcceptedSession hasAcceptedSession,
-    required AcceptPasskeySignIn acceptSignIn,
-    required InvalidatePasskeySession invalidateSession,
-    required NativeAuthAttemptCoordinator attemptCoordinator,
-    PasskeyOperationGate? operationGate,
-    PasskeyRequestParser? requestParser,
-    PasskeyFailureMapper? failureMapper,
-  }) : _apiClient = apiClient,
-       _sessionRepository = sessionRepository,
-       _authenticator = authenticator,
-       _buildConfig = buildConfig,
-       _telegramUrl = telegramUrl,
-       _hasAcceptedSession = hasAcceptedSession,
-       _acceptSignIn = acceptSignIn,
-       _invalidateSession = invalidateSession,
-       _attemptCoordinator = attemptCoordinator,
-       _operationGate = operationGate ?? PasskeyOperationGate(),
-       _requestParser = requestParser ?? const PasskeyRequestParser(),
-       _failureMapper = failureMapper ?? const PasskeyFailureMapper();
-
-  final BetterAuthApiClient _apiClient;
-  final BetterAuthSessionRepository _sessionRepository;
-  final PasskeyAuthenticatorInterface _authenticator;
-  final BuildConfig _buildConfig;
-  final TelegramUrlModel _telegramUrl;
-  final ReadAcceptedSession _hasAcceptedSession;
-  final AcceptPasskeySignIn _acceptSignIn;
-  final InvalidatePasskeySession _invalidateSession;
-  final NativeAuthAttemptCoordinator _attemptCoordinator;
-  final PasskeyOperationGate _operationGate;
-  final PasskeyRequestParser _requestParser;
-  final PasskeyFailureMapper _failureMapper;
+final class PasskeyRepository({
+  required BetterAuthApiClient apiClient,
+  required BetterAuthSessionRepository sessionRepository,
+  required PasskeyAuthenticatorInterface authenticator,
+  required BuildConfig buildConfig,
+  required TelegramUrlModel telegramUrl,
+  required ReadAcceptedSession hasAcceptedSession,
+  required AcceptPasskeySignIn acceptSignIn,
+  required InvalidatePasskeySession invalidateSession,
+  required NativeAuthAttemptCoordinator attemptCoordinator,
+  PasskeyOperationGate? operationGate,
+  PasskeyRequestParser? requestParser,
+  PasskeyFailureMapper? failureMapper,
+}) implements PasskeyAuthGateway {
+  final BetterAuthApiClient _apiClient = apiClient;
+  final BetterAuthSessionRepository _sessionRepository = sessionRepository;
+  final PasskeyAuthenticatorInterface _authenticator = authenticator;
+  final BuildConfig _buildConfig = buildConfig;
+  final TelegramUrlModel _telegramUrl = telegramUrl;
+  final ReadAcceptedSession _hasAcceptedSession = hasAcceptedSession;
+  final AcceptPasskeySignIn _acceptSignIn = acceptSignIn;
+  final InvalidatePasskeySession _invalidateSession = invalidateSession;
+  final NativeAuthAttemptCoordinator _attemptCoordinator = attemptCoordinator;
+  final PasskeyOperationGate _operationGate =
+      operationGate ?? PasskeyOperationGate();
+  final PasskeyRequestParser _requestParser =
+      requestParser ?? const PasskeyRequestParser();
+  final PasskeyFailureMapper _failureMapper =
+      failureMapper ?? const PasskeyFailureMapper();
 
   @override
   Future<Result<void, AuthFailure>> register() async {
@@ -246,13 +236,11 @@ final class PasskeyRepository implements PasskeyAuthGateway {
   }
 }
 
-final class PasskeyRequestParser {
-  const new({
-    PasskeyOptionsSchemaValidator schemaValidator =
-        const PasskeyOptionsSchemaValidator(),
-  }) : _schemaValidator = schemaValidator;
-
-  final PasskeyOptionsSchemaValidator _schemaValidator;
+final class const PasskeyRequestParser({
+  PasskeyOptionsSchemaValidator schemaValidator =
+      const PasskeyOptionsSchemaValidator(),
+}) {
+  final PasskeyOptionsSchemaValidator _schemaValidator = schemaValidator;
 
   Result<RegisterRequestType, AuthFailure> registration({
     required Map<String, dynamic> options,
@@ -341,13 +329,11 @@ final class PasskeyRequestParser {
   }
 }
 
-final class PasskeyOptionsSchemaValidator {
-  const new({
-    PasskeyBase64UrlValidator base64UrlValidator =
-        const PasskeyBase64UrlValidator(),
-  }) : _base64UrlValidator = base64UrlValidator;
-
-  final PasskeyBase64UrlValidator _base64UrlValidator;
+final class const PasskeyOptionsSchemaValidator({
+  PasskeyBase64UrlValidator base64UrlValidator =
+      const PasskeyBase64UrlValidator(),
+}) {
+  final PasskeyBase64UrlValidator _base64UrlValidator = base64UrlValidator;
 
   static const _knownTransports = <String>{
     'ble',

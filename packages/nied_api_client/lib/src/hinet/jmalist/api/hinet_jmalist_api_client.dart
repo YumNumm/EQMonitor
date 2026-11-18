@@ -43,19 +43,13 @@ class const HinetJmalistPartialFetchException({
 ///
 /// NIED により震源情報の二次配布が禁止されているため、このクライアントは
 /// 一般公開機能から到達不可能なデバッグ画面専用として扱うこと。
-class HinetJmalistApiClient {
-  new(
-    this._dio, {
-    this.requestInterval = const Duration(seconds: 2),
-    this.parser = const HinetJmalistParser(),
-  });
-
-  final Dio _dio;
+class HinetJmalistApiClient(
+  final Dio _dio, {
 
   /// 期間分割リクエスト間のウェイト(サーバ負荷配慮)
-  final Duration requestInterval;
-  final HinetJmalistParser parser;
-
+  final Duration requestInterval = const Duration(seconds: 2),
+  final HinetJmalistParser parser = const HinetJmalistParser(),
+}) {
   static const _baseUrl = 'https://hinetwww11.bosai.go.jp';
 
   /// フォーム認証を行い、成功した場合 true を返す。

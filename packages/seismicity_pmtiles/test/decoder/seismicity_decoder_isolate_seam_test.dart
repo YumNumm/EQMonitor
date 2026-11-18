@@ -33,12 +33,12 @@ void main() {
   });
 }
 
-final class RecordingWorkerSeam
+final class RecordingWorkerSeam()
     implements
         SeismicityDecoderIsolateLauncher,
         SeismicityDecoderWorkerEndpoint,
         SeismicityWorkerTerminalProbe {
-  new() : receivePortClosed = false;
+  this : receivePortClosed = false;
 
   final sent = <SeismicityDecoderWorkerRequest>[];
   final exitCompleter = Completer<void>();

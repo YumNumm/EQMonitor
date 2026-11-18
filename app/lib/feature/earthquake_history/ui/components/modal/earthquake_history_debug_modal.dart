@@ -6,9 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EarthquakeHistoryDebugModal extends ConsumerWidget {
-  const new({super.key});
-
+class const EarthquakeHistoryDebugModal({super.key}) extends ConsumerWidget {
   static Future<void> show({required BuildContext context}) =>
       showM3EModalBottomSheet(
         useSafeArea: false,

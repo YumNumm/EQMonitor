@@ -340,20 +340,14 @@ Future<void> pumpPaywall(
   await tester.pump(const Duration(milliseconds: 500));
 }
 
-class _SubscriptionNotifier extends SubscriptionNotifier {
-  new(this.initial);
-
-  final Future<SubscriptionStatus> initial;
-
+class _SubscriptionNotifier(final Future<SubscriptionStatus> initial)
+    extends SubscriptionNotifier {
   @override
   Future<SubscriptionStatus> build() => initial;
 }
 
-class _PendingRetry extends SubscriptionPendingRetry {
-  new({required this.isRunning});
-
-  final bool isRunning;
-
+class _PendingRetry({required final bool isRunning})
+    extends SubscriptionPendingRetry {
   @override
   int? build() => isRunning ? 1 : null;
 }

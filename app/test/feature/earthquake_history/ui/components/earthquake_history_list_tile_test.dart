@@ -116,12 +116,10 @@ void main() {
   });
 }
 
-class _TestApp extends StatelessWidget {
-  const new({required this.item, required this.parameter});
-
-  final EarthquakePartial item;
-  final EarthquakeHistoryParameter parameter;
-
+class const _TestApp({
+  required final EarthquakePartial item,
+  required final EarthquakeHistoryParameter parameter,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -3,22 +3,14 @@ import 'dart:ui' show SemanticsRole;
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class AccessibleCircularProgressIndicator extends StatelessWidget {
-  const new({
-    this.value,
-    this.color,
-    this.valueColor,
-    this.strokeWidth = 4,
-    this.semanticsLabel = '読み込み中',
-    super.key,
-  });
-
-  final double? value;
-  final Color? color;
-  final Animation<Color?>? valueColor;
-  final double strokeWidth;
-  final String semanticsLabel;
-
+class const AccessibleCircularProgressIndicator({
+  final double? value,
+  final Color? color,
+  final Animation<Color?>? valueColor,
+  final double strokeWidth = 4,
+  final String semanticsLabel = '読み込み中',
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = value;
@@ -42,18 +34,12 @@ class AccessibleCircularProgressIndicator extends StatelessWidget {
   }
 }
 
-class AccessibleLinearProgressIndicator extends StatelessWidget {
-  const new({
-    this.value,
-    this.minHeight = 4,
-    this.semanticsLabel = '読み込み中',
-    super.key,
-  });
-
-  final double? value;
-  final double minHeight;
-  final String semanticsLabel;
-
+class const AccessibleLinearProgressIndicator({
+  final double? value,
+  final double minHeight = 4,
+  final String semanticsLabel = '読み込み中',
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = value;

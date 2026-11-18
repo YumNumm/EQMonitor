@@ -197,9 +197,9 @@ final class _EmptyRealtimeEvents extends RealtimeEvents {
 // Spy – EarthquakeHistoryRepository の search メソッド呼び出しを記録する。
 // ---------------------------------------------------------------------------
 
-final class _SpyEarthquakeHistoryRepository
+final class _SpyEarthquakeHistoryRepository()
     extends EarthquakeHistoryRepository {
-  new()
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,

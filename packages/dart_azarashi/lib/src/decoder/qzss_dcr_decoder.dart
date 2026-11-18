@@ -9,9 +9,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 ///
 /// This class determines the message type (DCR/DCX) based on the preamble
 /// and delegates to the appropriate decoder.
-class QzssDcrDecoder {
-  const new _();
-
+class const QzssDcrDecoder._() {
   /// Decodes a QZSS DCR message.
   static QzssDcReport decode({
     required String sentence,

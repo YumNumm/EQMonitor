@@ -1,7 +1,7 @@
 /// JMA Coastal Region for Northwest Pacific Tsunami.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-28.
-enum JmaCoastalRegion {
+enum JmaCoastalRegion(final int code, final String nameEn) {
   ustKamchatsk(1, 'Ust-Kamchatsk (East Coasts of Kamchatka Peninsula)'),
   petropavlovskK(2, 'Petropavlovsk-K (East Coasts of Kamchatka Peninsula)'),
   severoKurilsk(3, 'Severo Kurilsk (Kuril Islands)'),
@@ -68,11 +68,6 @@ enum JmaCoastalRegion {
   wenzhou(86, 'Wenzhou (Coasts of East China Sea)'),
   unknown(99, 'Unknown'),
   otherRegion(100, 'Other region');
-
-  new(this.code, this.nameEn);
-
-  final int code;
-  final String nameEn;
 
   /// Returns the coastal region for the given code.
   ///

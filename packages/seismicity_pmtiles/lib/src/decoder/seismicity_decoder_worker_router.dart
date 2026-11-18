@@ -4,15 +4,10 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_protoco
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-final class SeismicityDecoderWorkerPendingDecode {
-  new({
-    required this.requestId,
-    required this.completion,
-  });
-
-  final int requestId;
-  final Future<SeismicityPmTilesDecodeProgress> completion;
-}
+final class SeismicityDecoderWorkerPendingDecode({
+  required final int requestId,
+  required final Future<SeismicityPmTilesDecodeProgress> completion,
+});
 
 final class SeismicityDecoderWorkerRouter {
   final _pending = <int, Completer<SeismicityPmTilesDecodeProgress>>{};

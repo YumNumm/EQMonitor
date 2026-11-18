@@ -65,16 +65,11 @@ final class const PmTilesV3FixtureBuilder() {
   }
 }
 
-final class PmTilesV3FixtureAssembly {
-  new({
-    required this.internalCompression,
-    required this.tileCompression,
-    required this.clustered,
-  });
-
-  final int internalCompression;
-  final int tileCompression;
-  final bool clustered;
+final class PmTilesV3FixtureAssembly({
+  required final int internalCompression,
+  required final int tileCompression,
+  required final bool clustered,
+}) {
   final leafBytes = BytesBuilder(copy: false);
   final tileBytes = BytesBuilder(copy: false);
   var _addressedTilesCount = 0;

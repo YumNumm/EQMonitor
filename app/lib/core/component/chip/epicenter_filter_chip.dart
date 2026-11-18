@@ -5,16 +5,11 @@ import 'package:eqmonitor/feature/region_selection/data/provider/region_catalog_
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EpicenterFilterChip extends ConsumerWidget {
-  const new({
-    required this.codes,
-    required this.onChanged,
-    super.key,
-  });
-
-  final List<int>? codes;
-  final ValueChanged<List<int>?> onChanged;
-
+class const EpicenterFilterChip({
+  required final List<int>? codes,
+  required final ValueChanged<List<int>?> onChanged,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final catalog = (codes?.isNotEmpty ?? false)

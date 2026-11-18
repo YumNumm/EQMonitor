@@ -8,24 +8,15 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// スロットの最小震度をドロップダウンで表示する。
-class NotificationMinIntensityField extends StatelessWidget {
-  const new({
-    required this.slotType,
-    required this.kind,
-    required this.value,
-    required this.enabled,
-    required this.onChanged,
-    this.width = 160,
-    super.key,
-  });
-
-  final NotificationSlotType slotType;
-  final NotificationKind kind;
-  final JmaIntensity? value;
-  final bool enabled;
-  final ValueChanged<JmaIntensity> onChanged;
-  final double width;
-
+class const NotificationMinIntensityField({
+  required final NotificationSlotType slotType,
+  required final NotificationKind kind,
+  required final JmaIntensity? value,
+  required final bool enabled,
+  required final ValueChanged<JmaIntensity> onChanged,
+  final double width = 160,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final options = notificationMinIntensityPolicy.optionsOf(

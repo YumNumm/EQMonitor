@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'replay_state.freezed.dart';
 
 @freezed
-abstract class ReplayState with _$ReplayState {
+abstract class const ReplayState._() with _$ReplayState {
   const factory({
     required ReplayFile file,
     required String fileName,
@@ -12,8 +12,6 @@ abstract class ReplayState with _$ReplayState {
     required bool isPlaying,
     required double playbackSpeed,
   }) = _ReplayState;
-
-  const new _();
 
   /// 総フレーム数
   int get totalFrames => file.data.length;

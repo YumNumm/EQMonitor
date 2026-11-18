@@ -63,11 +63,8 @@ PackageInfo _packageInfo({required String version}) => PackageInfo(
   buildNumber: '1',
 );
 
-class _FakeStartNotifier extends StartNotifier {
-  new({required this.requiredVersion});
-
-  final String requiredVersion;
-
+class _FakeStartNotifier({required final String requiredVersion})
+    extends StartNotifier {
   @override
   Future<api.StartResponse> build() async => api.StartResponse(
     flags: const api.StartFlags(

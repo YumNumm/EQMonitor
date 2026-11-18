@@ -26,12 +26,8 @@ final _feed = FeedDetail(
   data: const FeedItemData.incident(url: 'https://status.eqmonitor.app/'),
 );
 
-class _FakeFeedRepository implements FeedRepository {
-  new({this.response, this.error});
-
-  final FeedDetail? response;
-  final Object? error;
-
+class _FakeFeedRepository({final FeedDetail? response, final Object? error})
+    implements FeedRepository {
   String? lastTelegramHash;
 
   @override

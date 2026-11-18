@@ -1,7 +1,7 @@
 /// JMA Marine Forecast Region.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-55.
-enum JmaMarineForecastRegion {
+enum JmaMarineForecastRegion(final int code, final String nameJa) {
   seaOfJapanNorthOkhotsk(1000, '日本海北部及びオホーツク海南部'),
   sakhalinEast(1010, 'サハリン東方海上'),
   sakhalinWest(1020, 'サハリン西方海上'),
@@ -51,11 +51,6 @@ enum JmaMarineForecastRegion {
   okinawaEast(6020, '沖縄東方海上'),
   okinawaSouth(6030, '沖縄南方海上'),
   other(10000, 'その他の地方海上予報区');
-
-  new(this.code, this.nameJa);
-
-  final int code;
-  final String nameJa;
 
   /// Returns the marine forecast region for the given code.
   ///

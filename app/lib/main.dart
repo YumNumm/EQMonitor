@@ -112,9 +112,7 @@ Future<void> main() async {
 }
 
 /// アプリの起動シーケンス本体。`main()` から一度だけ呼ばれる。
-class AppBootstrap {
-  const new _();
-
+class const AppBootstrap._() {
   static Future<void> run() async {
     final profiler = StartupProfiler();
     final buildConfig = BuildConfig.fromEnvironment();

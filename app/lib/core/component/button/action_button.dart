@@ -1,16 +1,14 @@
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class ActionButton extends StatelessWidget {
-  const new({
-    required this.onPressed,
-    required this.isEnabled,
-    required this.child,
-    this.padding = const EdgeInsets.all(16),
-    this.accentColor,
-    super.key,
-  });
-
+class const ActionButton({
+  required final void Function() onPressed,
+  required final bool isEnabled,
+  required final Widget child,
+  final EdgeInsets padding = const EdgeInsets.all(16),
+  final Color? accentColor,
+  super.key,
+}) extends StatelessWidget {
   factory enabled({
     required void Function() onPressed,
     required Widget child,
@@ -76,12 +74,6 @@ class ActionButton extends StatelessWidget {
       ),
     ),
   );
-
-  final void Function() onPressed;
-  final bool isEnabled;
-  final Widget child;
-  final EdgeInsets padding;
-  final Color? accentColor;
 
   @override
   Widget build(BuildContext context) {

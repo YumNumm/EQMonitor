@@ -1,7 +1,7 @@
 /// JMA Epicenter and Hypocenter definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-7.
-enum JmaEpicenterAndHypocenter {
+enum JmaEpicenterAndHypocenter(final int code, final String name) {
   notSet(0, '未設定(北西太平洋津波情報)'),
   hokkaidoRegion(11, '北海道地方'),
   tohokuRegion(12, '東北地方'),
@@ -347,11 +347,6 @@ enum JmaEpicenterAndHypocenter {
   antarcticNearby(979, '南極付近'),
   distantPlace(999, '遠地'),
   other(1000, 'その他の震央地名');
-
-  new(this.code, this.name);
-
-  final int code;
-  final String name;
 
   static JmaEpicenterAndHypocenter fromCode(int code) =>
       values.firstWhere((e) => e.code == code);

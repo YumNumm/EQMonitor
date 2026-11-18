@@ -50,10 +50,9 @@ final class const SeismicityWorkerTerminalDecision<T>({
   required final SeismicityWorkerTerminalTransition? probeTransition,
 });
 
-final class SeismicityWorkerTerminalCoordinator<T> {
-  new({required this.probe});
-
-  final SeismicityWorkerTerminalProbe probe;
+final class SeismicityWorkerTerminalCoordinator<T>({
+  required final SeismicityWorkerTerminalProbe probe,
+}) {
   SeismicityWorkerTerminalOutcome<T>? _outcome;
   var _closedPort = false;
   var _killed = false;

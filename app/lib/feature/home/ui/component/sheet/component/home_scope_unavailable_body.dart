@@ -12,18 +12,12 @@ import 'package:material_ui/material_ui.dart';
 ///
 /// 文言と再試行導線をスコープごとに切り替える。
 /// 位置情報がらみのケースでは権限状態に応じてさらに細かく分岐する。
-class HomeScopeUnavailableBody extends StatelessWidget {
-  const new({
-    required this.scope,
-    required this.onRetry,
-    this.onConfigureRegion,
-    super.key,
-  });
-
-  final HomeEarthquakeHistoryScope scope;
-  final VoidCallback onRetry;
-  final VoidCallback? onConfigureRegion;
-
+class const HomeScopeUnavailableBody({
+  required final HomeEarthquakeHistoryScope scope,
+  required final VoidCallback onRetry,
+  final VoidCallback? onConfigureRegion,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (scope) {
@@ -38,17 +32,11 @@ class HomeScopeUnavailableBody extends StatelessWidget {
   }
 }
 
-class _UnavailableContainer extends StatelessWidget {
-  const new({
-    required this.icon,
-    required this.message,
-    this.actions = const [],
-  });
-
-  final IconData icon;
-  final String message;
-  final List<Widget> actions;
-
+class const _UnavailableContainer({
+  required final IconData icon,
+  required final String message,
+  final List<Widget> actions = const [],
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -97,11 +85,8 @@ class _UnavailableContainer extends StatelessWidget {
   }
 }
 
-class _CurrentLocationUnavailable extends HookWidget {
-  const new({required this.onRetry});
-
-  final VoidCallback onRetry;
-
+class const _CurrentLocationUnavailable({required final VoidCallback onRetry})
+    extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final permission = useState<LocationPermission?>(null);
@@ -178,11 +163,8 @@ class _CurrentLocationUnavailable extends HookWidget {
   }
 }
 
-class _CustomUnavailable extends StatelessWidget {
-  const new({this.onConfigureRegion});
-
-  final VoidCallback? onConfigureRegion;
-
+class const _CustomUnavailable({final VoidCallback? onConfigureRegion})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _UnavailableContainer(

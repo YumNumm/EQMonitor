@@ -383,15 +383,10 @@ const testScope = DeviceLocationSyncScope(
   apiEndpoint: 'https://api.example.com/v2/device/me/location',
 );
 
-class RecordingBackgroundLocationBridge
-    implements HeadlessBackgroundLocationBridge {
-  new({
-    required this.pending,
-    this.acknowledgeResult = true,
-  });
-
-  final PendingLocationMessage? pending;
-  final bool acknowledgeResult;
+class RecordingBackgroundLocationBridge({
+  required final PendingLocationMessage? pending,
+  final bool acknowledgeResult = true,
+}) implements HeadlessBackgroundLocationBridge {
   final events = <String>[];
   var completionCount = 0;
 

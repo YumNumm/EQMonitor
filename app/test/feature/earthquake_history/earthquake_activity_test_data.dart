@@ -53,9 +53,9 @@ EarthquakePartialNormal testActivityEarthquake({
   estimatedIntensityTileUrl: null,
 );
 
-abstract class TestEarthquakeHistoryRepository
+abstract class TestEarthquakeHistoryRepository()
     extends EarthquakeHistoryRepository {
-  new()
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: testEarthquakeParameter,

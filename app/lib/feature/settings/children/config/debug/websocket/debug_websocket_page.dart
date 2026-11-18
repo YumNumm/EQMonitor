@@ -10,9 +10,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class DebugWebSocketPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const DebugWebSocketPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messages = useState<List<({DateTime at, RealtimeEvent event})>>([]);
@@ -71,12 +69,10 @@ class DebugWebSocketPage extends HookConsumerWidget {
   }
 }
 
-class _WsStatusCard extends HookWidget {
-  const new({required this.wsStatus, required this.rtt});
-
-  final EqMonitorWsStatusState wsStatus;
-  final WsRttSample? rtt;
-
+class const _WsStatusCard({
+  required final EqMonitorWsStatusState wsStatus,
+  required final WsRttSample? rtt,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     // Rebuild every second to update elapsed-since-ping display
@@ -148,12 +144,10 @@ class _WsStatusCard extends HookWidget {
   }
 }
 
-class _WsEventCard extends StatelessWidget {
-  const new({required this.receivedAt, required this.event});
-
-  final DateTime receivedAt;
-  final RealtimeEvent event;
-
+class const _WsEventCard({
+  required final DateTime receivedAt,
+  required final RealtimeEvent event,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

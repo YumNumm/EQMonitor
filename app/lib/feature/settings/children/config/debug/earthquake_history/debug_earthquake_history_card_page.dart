@@ -25,18 +25,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-enum _DebugMode {
+enum _DebugMode(final String label) {
   preliminary('速報値'),
-  confirmed('確定値');
-
-  new(this.label);
-
-  final String label;
+  confirmed('確定値'),
 }
 
-class DebugEarthquakeHistoryCardPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const DebugEarthquakeHistoryCardPage({super.key})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paramAsync = ref.watch(jmaParameterProvider);
@@ -54,11 +49,8 @@ class DebugEarthquakeHistoryCardPage extends HookConsumerWidget {
   }
 }
 
-class _DebugBody extends HookWidget {
-  const new({required this.param});
-
-  final EarthquakeParameter param;
-
+class const _DebugBody({required final EarthquakeParameter param})
+    extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final mode = useState(_DebugMode.preliminary);
@@ -329,45 +321,31 @@ class _DebugBody extends HookWidget {
   }
 }
 
-class _StationEntry {
-  new({
-    required this.pref,
-    required this.city,
-    required this.station,
-  });
+class _StationEntry({
+  required final EarthquakeParameterPrefectureItem pref,
+  required final EarthquakeParameterCityItem city,
+  required final EarthquakeParameterStationItem station,
+});
 
-  final EarthquakeParameterPrefectureItem pref;
-  final EarthquakeParameterCityItem city;
-  final EarthquakeParameterStationItem station;
-}
+class _SelectedStation({
+  required final EarthquakeParameterStationItem station,
+  required final JmaIntensity intensity,
+});
 
-class _SelectedStation {
-  new({required this.station, required this.intensity});
-
-  final EarthquakeParameterStationItem station;
-  final JmaIntensity intensity;
-}
-
-class _PrefectureAccumulator {
-  new({required this.pref});
-
-  final EarthquakeParameterPrefectureItem pref;
+class _PrefectureAccumulator({
+  required final EarthquakeParameterPrefectureItem pref,
+}) {
   final cityMap = <String, _CityAccumulator>{};
 }
 
-class _CityAccumulator {
-  new({required this.city});
-
-  final EarthquakeParameterCityItem city;
+class _CityAccumulator({required final EarthquakeParameterCityItem city}) {
   final stations = <_SelectedStation>[];
 }
 
-class _ParamCard extends StatelessWidget {
-  const new({required this.title, required this.child});
-
-  final String title;
-  final Widget child;
-
+class const _ParamCard({
+  required final String title,
+  required final Widget child,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -387,12 +365,10 @@ class _ParamCard extends StatelessWidget {
   }
 }
 
-class _LabeledRow extends StatelessWidget {
-  const new({required this.label, required this.child});
-
-  final String label;
-  final Widget child;
-
+class const _LabeledRow({
+  required final String label,
+  required final Widget child,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(

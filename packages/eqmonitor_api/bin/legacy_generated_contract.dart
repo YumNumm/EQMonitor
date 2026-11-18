@@ -75,10 +75,8 @@ void patchLegacyApiClient({required File file}) {
   );
   source = insertAfterOnce(
     source: source,
-    anchor:
-        '  HypocentersApiClient get hypocenters => _hypocenters ??= HypocentersApiClient(_dio, baseUrl: _baseUrl);',
-    addition:
-        '  ParametersApiClient get parameters => _parameters ??= ParametersApiClient(_dio, baseUrl: _baseUrl);',
+    anchor: '  HypocentersApiClient get hypocenters => _hypocenters ??= HypocentersApiClient(_dio, baseUrl: _baseUrl);',
+    addition: '  ParametersApiClient get parameters => _parameters ??= ParametersApiClient(_dio, baseUrl: _baseUrl);',
   );
   file.writeAsStringSync(source);
 }

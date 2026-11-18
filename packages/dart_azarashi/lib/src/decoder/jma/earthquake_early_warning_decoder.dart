@@ -7,9 +7,7 @@ import 'package:dart_azarashi/src/model/exception.dart';
 import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Earthquake Early Warning Decoder.
-class EarthquakeEarlyWarningDecoder {
-  const new _();
-
+class const EarthquakeEarlyWarningDecoder._() {
   static QzssDcReport decode(JmaCommonParams params) {
     final message = params.message;
     final sentence = params.sentence;

@@ -8,9 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 ///
 /// 選択枠は初回取得前から表示する。再取得中や再取得失敗時は
 /// [AsyncValue] の previous value を使い、表示済みの塗りを維持する。
-class IntensityHistoryMapLayers extends ConsumerWidget {
-  const new({super.key});
-
+class const IntensityHistoryMapLayers({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(cityMaxIntensityProvider).valueOrPrevious?.items;

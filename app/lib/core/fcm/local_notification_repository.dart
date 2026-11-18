@@ -8,14 +8,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class LocalNotificationRepository {
-  new({
-    required this.plugin,
-    required this.channelInitializer,
-    required this.isAndroid,
-    required Stream<RemoteMessage> foregroundMessages,
-  }) : _foregroundMessages = foregroundMessages;
-
+class LocalNotificationRepository({
+  required final FlutterLocalNotificationsPlugin plugin,
+  required final AndroidNotificationChannelInitializer channelInitializer,
+  required final bool isAndroid,
+  required Stream<RemoteMessage> foregroundMessages,
+}) {
   factory forCurrentPlatform({bool isShakeDetectionEnabled = true}) =>
       LocalNotificationRepository(
         plugin: FlutterLocalNotificationsPlugin(),
@@ -27,10 +25,7 @@ class LocalNotificationRepository {
         foregroundMessages: FirebaseMessaging.onMessage,
       );
 
-  final FlutterLocalNotificationsPlugin plugin;
-  final AndroidNotificationChannelInitializer channelInitializer;
-  final bool isAndroid;
-  final Stream<RemoteMessage> _foregroundMessages;
+  final Stream<RemoteMessage> _foregroundMessages = foregroundMessages;
   final _openedMessages = StreamController<RemoteMessage>.broadcast();
   Future<void>? _initialization;
   var _nextNotificationId = 0;

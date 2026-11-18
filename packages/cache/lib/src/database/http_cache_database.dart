@@ -4,9 +4,7 @@ import 'package:drift/drift.dart';
 part 'http_cache_database.g.dart';
 
 @DriftDatabase(tables: [HttpCacheEntries])
-class CacheDatabase extends _$CacheDatabase {
-  new(super.e);
-
+class CacheDatabase(super.e) extends _$CacheDatabase {
   @override
   int get schemaVersion => 1;
 

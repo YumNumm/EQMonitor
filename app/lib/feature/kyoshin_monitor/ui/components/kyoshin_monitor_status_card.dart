@@ -6,11 +6,8 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart' hide ConnectionState;
 
-class KyoshinMonitorStatusCard extends ConsumerWidget {
-  const new({this.onTap, super.key});
-
-  final void Function()? onTap;
-
+class const KyoshinMonitorStatusCard({final void Function()? onTap, super.key})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final latestTime = ref.watch(

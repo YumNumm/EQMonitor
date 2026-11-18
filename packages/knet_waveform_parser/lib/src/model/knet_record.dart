@@ -7,7 +7,7 @@ part 'knet_record.g.dart';
 
 /// K-NET/KiK-net 強震記録（ASCII フォーマット）
 @freezed
-abstract class KnetRecord with _$KnetRecord {
+abstract class const KnetRecord._() with _$KnetRecord {
   const factory({
     /// 地震情報（即時公開データでは null）
     required KnetEarthquakeInfo? earthquakeInfo,
@@ -49,10 +49,7 @@ abstract class KnetRecord with _$KnetRecord {
     required KnetNetworkType networkType,
   }) = _KnetRecord;
 
-  const new _();
-
-  factory fromJson(Map<String, dynamic> json) =>
-      _$KnetRecordFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$KnetRecordFromJson(json);
 
   /// スケールファクタ（分子/分母）
   double get scaleFactor => scaleFactorNumerator / scaleFactorDenominator;

@@ -6,9 +6,8 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
-class AvoidStatefulWidget extends AnalysisRule {
-  new()
-    : super(name: _code.name, description: _code.problemMessage);
+class AvoidStatefulWidget() extends AnalysisRule {
+  this : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_stateful_widget',
@@ -36,11 +35,7 @@ class AvoidStatefulWidget extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  new(this.rule);
-
-  final AnalysisRule rule;
-
+class _Visitor(final AnalysisRule rule) extends SimpleAstVisitor<void> {
   static const _forbidden = {'StatefulWidget', 'ConsumerStatefulWidget'};
 
   @override

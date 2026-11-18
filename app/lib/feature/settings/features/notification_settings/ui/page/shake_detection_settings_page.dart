@@ -21,9 +21,7 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class ShakeDetectionSettingsPage extends ConsumerWidget {
-  const new({super.key});
-
+class const ShakeDetectionSettingsPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(shakeDetectionSettingsProvider);
@@ -242,9 +240,7 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
   }
 }
 
-class _CurrentLocationStatus extends ConsumerWidget {
-  const new();
-
+class const _CurrentLocationStatus() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = ref.watch(currentDeviceLocationProvider);
@@ -277,21 +273,14 @@ class _CurrentLocationStatus extends ConsumerWidget {
   }
 }
 
-class _ShakeEntryCard extends StatelessWidget {
-  const new({
-    required this.entry,
-    required this.name,
-    required this.busy,
-    required this.onEnabled,
-    required this.onLevel,
-    required this.onDelete,
-  });
-  final ShakeDetectionEntry entry;
-  final String name;
-  final bool busy;
-  final ValueChanged<bool> onEnabled;
-  final ValueChanged<ShakeDetectionLevel> onLevel;
-  final VoidCallback onDelete;
+class const _ShakeEntryCard({
+  required final ShakeDetectionEntry entry,
+  required final String name,
+  required final bool busy,
+  required final ValueChanged<bool> onEnabled,
+  required final ValueChanged<ShakeDetectionLevel> onLevel,
+  required final VoidCallback onDelete,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
     child: Column(

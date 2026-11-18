@@ -14,11 +14,9 @@ Future<TsunamiHistoryDataSource> tsunamiHistoryDataSource(Ref ref) async {
   return dataSource;
 }
 
-class TsunamiHistoryDataSource
+class TsunamiHistoryDataSource({required api.ApiClient client})
     extends GroupedDataSource<String?, String, api.TsunamiState> {
-  new({required api.ApiClient client}) : _client = client;
-
-  final api.ApiClient _client;
+  final api.ApiClient _client = client;
 
   @override
   String groupBy(api.TsunamiState value) {

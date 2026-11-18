@@ -34,15 +34,12 @@ DeviceLocationConsumersRepository deviceLocationConsumersRepository(Ref ref) {
 }
 
 /// Combines independently loaded consumers before changing headless availability.
-class DeviceLocationConsumersRepository {
-  new(
-    this.storage, {
-    this.lifecycle = const BackgroundLocationMonitoringLifecycle(),
-    this.syncLocation,
-  });
-  final DeviceLocationSyncStateRepository storage;
-  final BackgroundLocationMonitoringLifecycle lifecycle;
-  final BackgroundLocationMonitoringAction? syncLocation;
+class DeviceLocationConsumersRepository(
+  final DeviceLocationSyncStateRepository storage, {
+  final BackgroundLocationMonitoringLifecycle lifecycle =
+      const BackgroundLocationMonitoringLifecycle(),
+  final BackgroundLocationMonitoringAction? syncLocation,
+}) {
   List<NotificationSlot>? _slots;
   ShakeDetectionState? _shake;
   Future<void> _pending = Future<void>.value();

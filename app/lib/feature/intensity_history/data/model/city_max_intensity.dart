@@ -10,14 +10,12 @@ part 'city_max_intensity.freezed.dart';
 /// バックエンドが Materialized View に事前集計したものをそのまま受け取る。
 /// 観測実績のない市区町村は [items] に含まれない(震度 0 で埋められない)。
 @freezed
-abstract class CityMaxIntensity with _$CityMaxIntensity {
+abstract class const CityMaxIntensity._() with _$CityMaxIntensity {
   const factory({
     /// 集計を最後に更新した時刻。取得できなかった場合は `null`([items] は返る)。
     required DateTime? aggregatedAt,
     required List<CityMaxIntensityEntry> items,
   }) = _CityMaxIntensity;
-
-  const new _();
 
   /// [cityCode] の観測史上最大震度。観測実績がなければ `null`。
   JmaIntensity? intensityOfCity(String cityCode) =>

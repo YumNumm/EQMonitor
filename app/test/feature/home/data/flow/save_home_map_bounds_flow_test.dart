@@ -12,11 +12,9 @@ import 'package:maplibre/maplibre.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _MapController extends Mock implements MapController {
-  new({required this.visibleRegion});
-
-  final LngLatBounds visibleRegion;
-
+class _MapController({required final LngLatBounds visibleRegion})
+    extends Mock
+    implements MapController {
   @override
   LngLatBounds getVisibleRegion() => visibleRegion;
 }

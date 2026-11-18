@@ -7,9 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ThemeImportExportSection extends HookConsumerWidget {
-  const new({super.key});
-
+class const ThemeImportExportSection({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messenger = ScaffoldMessenger.of(context);

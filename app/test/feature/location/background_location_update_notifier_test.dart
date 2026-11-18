@@ -68,12 +68,11 @@ class _FakeDeviceProvisioningNotifier extends DeviceProvisioningNotifier {
 }
 
 /// `notificationSlotsProvider` を固定スロットで差し替える fake。
-class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
-  new({required List<NotificationSlot> slots, this.error}) : _slots = slots;
-
-  final List<NotificationSlot> _slots;
-  final Exception? error;
-
+class _FakeNotificationSlotsNotifier({
+  required List<NotificationSlot> slots,
+  final Exception? error,
+}) extends NotificationSlotsNotifier {
+  final List<NotificationSlot> _slots = slots;
   @override
   Future<List<NotificationSlot>> build() async {
     final error = this.error;
@@ -84,12 +83,8 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
   }
 }
 
-final class _FakeShakeDetectionSettingsNotifier
+final class _FakeShakeDetectionSettingsNotifier([final List<String>? events])
     extends ShakeDetectionSettingsNotifier {
-  new([this.events]);
-
-  final List<String>? events;
-
   @override
   Future<ShakeDetectionState> build() async => (
     entries: const <ShakeDetectionEntry>[],
@@ -97,19 +92,17 @@ final class _FakeShakeDetectionSettingsNotifier
   );
 }
 
-final class _RecordingDeviceLocationSyncStateRepository
-    extends SharedPreferencesDeviceLocationSyncStateRepository {
-  new({
-    required this.events,
-    this.availability = DeviceLocationSyncAvailability.enabled,
-    this.lastSent,
-  }) : lastSentScope = lastSent == null ? null : _deviceLocationSyncScope,
-       super(SharedPreferencesAsync());
+final class _RecordingDeviceLocationSyncStateRepository({
+  required final List<String> events,
+  var DeviceLocationSyncAvailability availability =
+      DeviceLocationSyncAvailability.enabled,
+  var DeviceLocationPayload? lastSent,
+}) extends SharedPreferencesDeviceLocationSyncStateRepository {
+  this : super(SharedPreferencesAsync());
 
-  final List<String> events;
-  DeviceLocationSyncAvailability availability;
-  DeviceLocationPayload? lastSent;
-  DeviceLocationSyncScope? lastSentScope;
+  DeviceLocationSyncScope? lastSentScope = lastSent == null
+      ? null
+      : _deviceLocationSyncScope;
 
   @override
   Future<DeviceLocationSyncAvailability> readAvailability() async {
@@ -157,8 +150,10 @@ final class const _RecordingBackgroundLocationSyncCoordinator(
   }
 }
 
-final class _FakeJmaRegionResolver extends JmaRegionResolver {
-  new({required this.earthquakeResolution})
+final class _FakeJmaRegionResolver({
+  required final EarthquakeRegionResolution? earthquakeResolution,
+}) extends JmaRegionResolver {
+  this
     : super(
         cityMapData: JmaMap_JmaMapData(),
         tsunamiMapData: JmaMap_JmaMapData(),
@@ -175,7 +170,6 @@ final class _FakeJmaRegionResolver extends JmaRegionResolver {
         ),
       );
 
-  final EarthquakeRegionResolution? earthquakeResolution;
   int resolveEarthquakeRegionCalls = 0;
 
   @override
@@ -197,11 +191,10 @@ final class _FakeJmaRegionResolver extends JmaRegionResolver {
   }
 }
 
-final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
-  new({this.events, this.error});
-
-  final List<String>? events;
-  final Exception? error;
+final class _FakeDeviceLocationApiAdapter({
+  final List<String>? events,
+  final Exception? error,
+}) implements HttpClientAdapter {
   final putDeviceLocationCalls = <api.DeviceLocationRequest>[];
   final putDeviceLocationJsonCalls = <Map<String, dynamic>>[];
 
@@ -240,10 +233,10 @@ final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
   }
 }
 
-final class _FakeNotificationSlotsApiAdapter implements HttpClientAdapter {
-  new({required List<Map<String, Object?>> slots}) : _slots = slots;
-
-  List<Map<String, Object?>> _slots;
+final class _FakeNotificationSlotsApiAdapter({
+  required List<Map<String, Object?>> slots,
+}) implements HttpClientAdapter {
+  List<Map<String, Object?>> _slots = slots;
   bool failNextMutation = false;
 
   @override

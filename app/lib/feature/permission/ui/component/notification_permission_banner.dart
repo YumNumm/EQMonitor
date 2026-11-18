@@ -11,9 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 通知権限が未許可の場合にホームシートへ表示するバナー。
 /// タップで許可要求 → まだ未許可なら OS 設定を開く。閉じるボタンで dismiss。
-class NotificationPermissionBanner extends ConsumerWidget {
-  const new({super.key});
-
+class const NotificationPermissionBanner({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final granted =

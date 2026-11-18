@@ -14,11 +14,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-class EewEstimatedIntensityLayer extends HookConsumerWidget {
-  const new({required this.eewRegions, super.key});
-
-  final List<EewForecastRegionInfo> eewRegions;
-
+class const EewEstimatedIntensityLayer({
+  required final List<EewForecastRegionInfo> eewRegions,
+  super.key,
+}) extends HookConsumerWidget {
   static const _areaFilterBuilder = EewAreaFilterBuilder();
   static const _filterUpdater = EewEstimatedIntensityLayerFilterUpdater();
 

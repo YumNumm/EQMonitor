@@ -544,11 +544,8 @@ void main() {
   });
 }
 
-final class _StubRealtimeEvents extends RealtimeEvents {
-  new(this.stream);
-
-  final Stream<RealtimeEvent> stream;
-
+final class _StubRealtimeEvents(final Stream<RealtimeEvent> stream)
+    extends RealtimeEvents {
   @override
   Stream<RealtimeEvent> build() => stream;
 }
@@ -573,15 +570,16 @@ EarthquakePartialNormal _partial({
   telegramTypes: const [],
 ).toEarthquakePartial(parameter: _earthquakeParameter);
 
-final class _CompletingListRepository extends EarthquakeHistoryRepository {
-  new(this.results)
+final class _CompletingListRepository(
+  final List<Future<PaginatedResponse<EarthquakePartial>>> results,
+) extends EarthquakeHistoryRepository {
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,
         shindoDbStations: _shindoDbStations,
       );
 
-  final List<Future<PaginatedResponse<EarthquakePartial>>> results;
   var fetchCount = 0;
 
   @override

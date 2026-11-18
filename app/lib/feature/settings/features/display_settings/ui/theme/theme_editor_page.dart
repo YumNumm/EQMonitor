@@ -7,6 +7,8 @@ import 'package:eqmonitor/core/theme/model/intensity_text_color.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_field_def.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/data/notifier/theme_editor_controller.dart';
+// flutter_colorpicker が Flutter Material の祖先を要求するため。
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart' as flutter_material;
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -14,11 +16,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class ThemeEditorPage extends ConsumerWidget {
-  const new({required this.mode, super.key});
-
-  final ThemeBrightnessMode mode;
-
+class const ThemeEditorPage({
+  required final ThemeBrightnessMode mode,
+  super.key,
+}) extends ConsumerWidget {
   static const _flatCategories = [
     ThemeColorFieldCategory.primary,
     ThemeColorFieldCategory.secondary,
@@ -123,17 +124,11 @@ class ThemeEditorPage extends ConsumerWidget {
   }
 }
 
-class _ColorFieldTile extends StatelessWidget {
-  const new({
-    required this.def,
-    required this.colorSet,
-    required this.onChanged,
-  });
-
-  final ThemeColorFieldDef def;
-  final ThemeColorSet colorSet;
-  final void Function(Color color) onChanged;
-
+class const _ColorFieldTile({
+  required final ThemeColorFieldDef def,
+  required final ThemeColorSet colorSet,
+  required final void Function(Color color) onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -165,17 +160,11 @@ class _ColorFieldTile extends StatelessWidget {
   }
 }
 
-class _IntensityFieldTile extends StatelessWidget {
-  const new({
-    required this.def,
-    required this.colorSet,
-    required this.onChanged,
-  });
-
-  final IntensityFieldDef def;
-  final ThemeColorSet colorSet;
-  final void Function(IntensityColorEntry entry) onChanged;
-
+class const _IntensityFieldTile({
+  required final IntensityFieldDef def,
+  required final ThemeColorSet colorSet,
+  required final void Function(IntensityColorEntry entry) onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final entry = def.entryGetter(colorSet);
@@ -272,11 +261,8 @@ class _IntensityFieldTile extends StatelessWidget {
   }
 }
 
-class _ColorPickerDialog extends HookWidget {
-  const new({required this.initial});
-
-  final Color initial;
-
+class const _ColorPickerDialog({required final Color initial})
+    extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final current = useState(initial);

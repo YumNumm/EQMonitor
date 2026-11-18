@@ -15,11 +15,11 @@ MapStyleUtil mapStyleUtil(Ref ref) => MapStyleUtil(
   baseMapPmtilesRepository: ref.watch(baseMapPmtilesRepositoryProvider),
 );
 
-class MapStyleUtil {
-  new({required BaseMapPmtilesRepository baseMapPmtilesRepository})
-    : _baseMapPmtilesRepository = baseMapPmtilesRepository;
-
-  final BaseMapPmtilesRepository _baseMapPmtilesRepository;
+class MapStyleUtil({
+  required BaseMapPmtilesRepository baseMapPmtilesRepository,
+}) {
+  final BaseMapPmtilesRepository _baseMapPmtilesRepository =
+      baseMapPmtilesRepository;
 
   Future<String> _saveStyleJson(Map<String, dynamic> json) async {
     final jsonStr = jsonEncode(json);

@@ -98,7 +98,7 @@ final class TestLiveActivityNotifierProvider
 }
 
 String _$testLiveActivityNotifierHash() =>
-    r'25fa8c1790713e5dcb2238977853f802bfa11516';
+    r'0653cb593c9ef69b92b30d1c8605e85cd6758a8c';
 
 abstract class _$TestLiveActivityNotifier
     extends $AsyncNotifier<TestLiveActivityStatus> {

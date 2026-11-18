@@ -25,9 +25,7 @@ import 'package:nied_api_client/nied_api_client.dart';
 /// **一般ユーザーからは到達不可能なデバッグメニュー配下限定**。
 /// NIED は震源情報の二次配布を禁止しているため、本画面の内容を
 /// 一般公開画面へ転用しないこと。
-class HinetSeismicityPage extends HookConsumerWidget {
-  const new({super.key});
-
+class const HinetSeismicityPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final credentialsAsync = ref.watch(hinetCredentialsNotifierProvider);
@@ -46,9 +44,7 @@ class HinetSeismicityPage extends HookConsumerWidget {
   }
 }
 
-class _CredentialsForm extends HookConsumerWidget {
-  const new();
-
+class const _CredentialsForm() extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userIdController = useTextEditingController();
@@ -105,11 +101,8 @@ class _CredentialsForm extends HookConsumerWidget {
   }
 }
 
-class _FetchBody extends HookConsumerWidget {
-  const new({required this.credentials});
-
-  final HinetCredentials credentials;
-
+class const _FetchBody({required final HinetCredentials credentials})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final from = useState(DateTime.now().subtract(const Duration(days: 7)));
@@ -318,17 +311,11 @@ class _FetchBody extends HookConsumerWidget {
   }
 }
 
-class _DatePickerButton extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final String label;
-  final DateTime value;
-  final ValueChanged<DateTime> onChanged;
-
+class const _DatePickerButton({
+  required final String label,
+  required final DateTime value,
+  required final ValueChanged<DateTime> onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return M3EOutlinedButton(

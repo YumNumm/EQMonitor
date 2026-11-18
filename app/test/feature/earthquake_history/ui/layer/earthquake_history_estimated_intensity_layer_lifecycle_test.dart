@@ -130,8 +130,8 @@ void main() {
   });
 }
 
-class EstimatedIntensityStyleController extends FakeStyleController {
-  new() : super(throwOnDuplicateLayerIds: true);
+class EstimatedIntensityStyleController() extends FakeStyleController {
+  this : super(throwOnDuplicateLayerIds: true);
 
   final activeSourceIds = <String>{};
   final operations = <String>[];

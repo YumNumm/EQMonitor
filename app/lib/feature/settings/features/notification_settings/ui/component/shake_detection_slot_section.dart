@@ -21,11 +21,10 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class ShakeDetectionSlotSection extends ConsumerWidget {
-  const new({required this.slot, super.key});
-
-  final NotificationSlot slot;
-
+class const ShakeDetectionSlotSection({
+  required final NotificationSlot slot,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final access = ref.watch(shakeDetectionNotificationAccessProvider);
@@ -72,11 +71,8 @@ class ShakeDetectionSlotSection extends ConsumerWidget {
   }
 }
 
-class _ShakeDetectionCondition extends ConsumerWidget {
-  const new({required this.slot});
-
-  final NotificationSlot slot;
-
+class const _ShakeDetectionCondition({required final NotificationSlot slot})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;

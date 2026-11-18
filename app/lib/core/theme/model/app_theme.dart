@@ -14,7 +14,7 @@ part 'app_theme.g.dart';
 enum ThemeBrightnessMode { light, dark }
 
 @freezed
-abstract class AppTheme with _$AppTheme {
+abstract class const AppTheme._() with _$AppTheme {
   const factory({
     required String name,
     required int version,
@@ -250,8 +250,6 @@ abstract class AppTheme with _$AppTheme {
       ),
     ),
   );
-
-  const new _();
 
   ThemeColorSet colorSetFor(Brightness brightness) {
     final colorSet = switch (brightness) {

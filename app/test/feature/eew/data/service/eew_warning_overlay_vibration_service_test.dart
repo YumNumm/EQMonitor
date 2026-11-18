@@ -103,17 +103,11 @@ void main() {
   });
 }
 
-final class _FakeVibrationGateway implements EewWarningOverlayVibrationGateway {
-  new({
-    required this.hasVibratorResult,
-    this.hasCustomVibrationsSupportResult = false,
-    this.error,
-  });
-
-  final bool hasVibratorResult;
-  final bool hasCustomVibrationsSupportResult;
-  final Object? error;
-
+final class _FakeVibrationGateway({
+  required final bool hasVibratorResult,
+  final bool hasCustomVibrationsSupportResult = false,
+  final Object? error,
+}) implements EewWarningOverlayVibrationGateway {
   int vibrateCalls = 0;
   int vibrateOnceCalls = 0;
   int cancelCalls = 0;

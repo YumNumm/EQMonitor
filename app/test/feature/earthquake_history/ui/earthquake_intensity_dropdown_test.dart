@@ -9,15 +9,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
-class _LayerHarness extends HookWidget {
-  const new({
-    this.availableModes = IntensityDisplayMode.values,
-    this.textScale = 1,
-  });
-
-  final List<IntensityDisplayMode> availableModes;
-  final double textScale;
-
+class const _LayerHarness({
+  final List<IntensityDisplayMode> availableModes = IntensityDisplayMode.values,
+  final double textScale = 1,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final mode = useState(IntensityDisplayMode.jma);

@@ -3,18 +3,12 @@ import 'package:eqmonitor/feature/notification/data/model/test_notification_deli
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class TestNotificationKindButtons extends StatelessWidget {
-  const new({
-    required this.pendingKind,
-    required this.kinds,
-    required this.onPressed,
-    super.key,
-  });
-
-  final TestNotificationKind? pendingKind;
-  final List<TestNotificationKind> kinds;
-  final Future<void> Function(TestNotificationKind) onPressed;
-
+class const TestNotificationKindButtons({
+  required final TestNotificationKind? pendingKind,
+  required final List<TestNotificationKind> kinds,
+  required final Future<void> Function(TestNotificationKind) onPressed,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Wrap(
     spacing: 8,

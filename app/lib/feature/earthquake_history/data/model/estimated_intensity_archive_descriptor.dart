@@ -24,20 +24,12 @@ final class const EstimatedIntensityArchiveDescriptorInput({
 ///
 /// `EstimatedIntensityArchiveDescriptorValidator` が検証後に生成し、downstream は
 /// この値を未検証 API input の代わりに使用する。
-final class EstimatedIntensityArchiveDescriptor {
-  // ignore: unnecessary_type_name_in_constructor
-  const EstimatedIntensityArchiveDescriptor._({
-    required this.eventId,
-    required this.url,
-    required this.sizeBytes,
-    required this.sha256,
-  });
-
-  final String eventId;
-  final Uri url;
-  final int sizeBytes;
-  final String sha256;
-
+final class const EstimatedIntensityArchiveDescriptor._({
+  required final String eventId,
+  required final Uri url,
+  required final int sizeBytes,
+  required final String sha256,
+}) {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -57,11 +49,13 @@ final class EstimatedIntensityArchiveDescriptor {
 }
 
 /// Descriptor URL と archive size に対する caller-owned policy。
-final class EstimatedIntensityArchiveUrlPolicy {
-  new({
-    required Set<String> allowedHosts,
-    required this.maxArchiveBytes,
-  }) : allowedHosts = Set.unmodifiable(allowedHosts) {
+final class EstimatedIntensityArchiveUrlPolicy({
+  required Set<String> allowedHosts,
+
+  /// Descriptor が宣言できる archive size の上限。既定値は持たない。
+  required final int maxArchiveBytes,
+}) {
+  this {
     if (allowedHosts.isEmpty) {
       throw ArgumentError.value(
         allowedHosts,
@@ -79,8 +73,5 @@ final class EstimatedIntensityArchiveUrlPolicy {
   }
 
   /// `Uri.host` と suffix ではなく完全一致で比較する hostname の集合。
-  final Set<String> allowedHosts;
-
-  /// Descriptor が宣言できる archive size の上限。既定値は持たない。
-  final int maxArchiveBytes;
+  final Set<String> allowedHosts = Set.unmodifiable(allowedHosts);
 }

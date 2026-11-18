@@ -1,18 +1,12 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 
-class CustomChip extends StatelessWidget {
-  const new({
-    required this.child,
-    this.backgroundColor,
-    this.borderWidth = 0,
-    super.key,
-  });
-
-  final Widget child;
-  final Color? backgroundColor;
-  final double borderWidth;
-
+class const CustomChip({
+  required final Widget child,
+  final Color? backgroundColor,
+  final double borderWidth = 0,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(

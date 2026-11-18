@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 /// サードパーティ素材のライセンスをアプリのライセンス画面に登録する。
-class LicenseInitializer {
-  const new _();
-
+class const LicenseInitializer._() {
   static void init() => LicenseRegistry.addLicense(() async* {
     yield const LicenseEntryWithLineBreaks(
       ['ingen084/KyoshinEewViewerIngen'],

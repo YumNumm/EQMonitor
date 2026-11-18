@@ -7,11 +7,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class EewDetailsPage extends HookConsumerWidget {
-  const new({required this.eventId, super.key});
-
-  final String eventId;
-
+class const EewDetailsPage({required final String eventId, super.key})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eewsAsyncValue = ref.watch(eewsByEventIdProvider(eventId));
@@ -27,11 +24,8 @@ class EewDetailsPage extends HookConsumerWidget {
   }
 }
 
-class _EewList extends StatelessWidget {
-  const new({required this.eews});
-
-  final List<EewTelegramItem> eews;
-
+class const _EewList({required final List<EewTelegramItem> eews})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (eews.isEmpty) {
@@ -51,9 +45,7 @@ class _EewList extends StatelessWidget {
   }
 }
 
-class _EewDetailsPageSkeleton extends StatelessWidget {
-  const new();
-
+class const _EewDetailsPageSkeleton() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Skeletonizer(
@@ -88,11 +80,8 @@ class _EewDetailsPageSkeleton extends StatelessWidget {
   }
 }
 
-class _EewCard extends StatelessWidget {
-  const new({required this.eew});
-
-  final EewTelegramItem eew;
-
+class const _EewCard({required final EewTelegramItem eew})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final originTime = switch (eew.originTime) {

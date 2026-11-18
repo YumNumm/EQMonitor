@@ -5,12 +5,11 @@ import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class PinnedActiveEewSection extends ConsumerWidget {
-  const new({this.selectedEventId, this.onSelect, super.key});
-
-  final String? selectedEventId;
-  final ValueChanged<String>? onSelect;
-
+class const PinnedActiveEewSection({
+  final String? selectedEventId,
+  final ValueChanged<String>? onSelect,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 終了済みのEEWを残さないよう、発表中のものだけを表示する。

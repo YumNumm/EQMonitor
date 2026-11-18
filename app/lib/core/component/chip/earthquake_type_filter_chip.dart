@@ -3,16 +3,11 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.
 import 'package:material_ui/material_ui.dart';
 import 'package:m3e_core/m3e_core.dart';
 
-class EarthquakeTypeFilterChip extends StatelessWidget {
-  const new({
-    this.earthquakeType,
-    this.onChanged,
-    super.key,
-  });
-
-  final EarthquakeType? earthquakeType;
-  final void Function(EarthquakeType?)? onChanged;
-
+class const EarthquakeTypeFilterChip({
+  final EarthquakeType? earthquakeType,
+  final void Function(EarthquakeType?)? onChanged,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final earthquakeType = this.earthquakeType;
@@ -47,11 +42,8 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
   }
 }
 
-class _EarthquakeTypeFilterModal extends StatelessWidget {
-  const new({this.currentType});
-
-  final EarthquakeType? currentType;
-
+class const _EarthquakeTypeFilterModal({final EarthquakeType? currentType})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

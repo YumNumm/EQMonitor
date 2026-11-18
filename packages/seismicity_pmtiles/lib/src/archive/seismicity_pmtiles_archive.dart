@@ -134,17 +134,10 @@ final class const SeismicityPmTilesArchiveOpener() {
   }
 }
 
-final class _SeismicityPmTilesArchiveImpl implements SeismicityPmTilesArchive {
-  new({
-    required this.inner,
-    required this.descriptor,
-  });
-
-  final PmTilesV3Archive inner;
-
-  @override
-  final SeismicityPmTilesArchiveDescriptor descriptor;
-
+final class _SeismicityPmTilesArchiveImpl({
+  required final PmTilesV3Archive inner,
+  @override required final SeismicityPmTilesArchiveDescriptor descriptor,
+}) implements SeismicityPmTilesArchive {
   @override
   PmTilesV3Header get header => inner.header;
 

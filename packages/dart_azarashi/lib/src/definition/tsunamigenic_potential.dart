@@ -1,7 +1,7 @@
 /// JMA Tsunamigenic Potential for Northwest Pacific Tsunami.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-25.
-enum JmaTsunamigenicPotential {
+enum JmaTsunamigenicPotential(final int code, final String descriptionEn) {
   noPossibility(0, 'There is No Possibility of a Tsunami'),
   destructiveOceanWide(
     1,
@@ -20,11 +20,6 @@ enum JmaTsunamigenicPotential {
     'There is a Very Small Possibility of a destructive Local Tsunami',
   ),
   possibilityOfTsunami(7, 'There is Possibility of a Tsunami');
-
-  new(this.code, this.descriptionEn);
-
-  final int code;
-  final String descriptionEn;
 
   /// Returns the tsunamigenic potential for the given code.
   ///

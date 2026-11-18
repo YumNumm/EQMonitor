@@ -3,36 +3,21 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Keeps parent-owned selection in sync without treating rebuilds as user input.
-class ControlledDropdown<T> extends HookWidget {
-  const new({
-    required this.items,
-    this.onSelectionChanged,
-    this.enabled = true,
-    this.singleSelect = true,
-    this.allowEmptySelection = false,
-    this.searchEnabled = false,
-    this.fieldStyle = const M3EDropdownFieldStyle(),
-    this.searchStyle = const M3ESearchStyle(),
-    this.chipStyle = const M3EChipStyle(),
-    this.dropdownStyle = const M3EDropdownStyle(),
-    this.itemBuilder,
-    this.selectedItemBuilder,
-    super.key,
-  });
-
-  final List<M3EDropdownItem<T>> items;
-  final ValueChanged<List<M3EDropdownItem<T>>>? onSelectionChanged;
-  final bool enabled;
-  final bool singleSelect;
-  final bool allowEmptySelection;
-  final bool searchEnabled;
-  final M3EDropdownFieldStyle fieldStyle;
-  final M3ESearchStyle searchStyle;
-  final M3EChipStyle chipStyle;
-  final M3EDropdownStyle dropdownStyle;
-  final M3EDropdownItemBuilder<T>? itemBuilder;
-  final Widget Function(M3EDropdownItem<T>)? selectedItemBuilder;
-
+class const ControlledDropdown<T>({
+  required final List<M3EDropdownItem<T>> items,
+  final ValueChanged<List<M3EDropdownItem<T>>>? onSelectionChanged,
+  final bool enabled = true,
+  final bool singleSelect = true,
+  final bool allowEmptySelection = false,
+  final bool searchEnabled = false,
+  final M3EDropdownFieldStyle fieldStyle = const M3EDropdownFieldStyle(),
+  final M3ESearchStyle searchStyle = const M3ESearchStyle(),
+  final M3EChipStyle chipStyle = const M3EChipStyle(),
+  final M3EDropdownStyle dropdownStyle = const M3EDropdownStyle(),
+  final M3EDropdownItemBuilder<T>? itemBuilder,
+  final Widget Function(M3EDropdownItem<T>)? selectedItemBuilder,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useMemoized(M3EDropdownController<(T,)>.new);

@@ -296,11 +296,7 @@ const _subscriptionConstraints = api.PlanConstraints(
   eewDefaultInterruptionLevel: 'timeSensitive',
 );
 
-class _TestApp extends StatelessWidget {
-  const new({required this.home});
-
-  final Widget home;
-
+class const _TestApp({required final Widget home}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 通知音・割り込みレベル系の導線は iOS 限定表示のため、iOS で検証する。
@@ -312,11 +308,9 @@ class _TestApp extends StatelessWidget {
   }
 }
 
-class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {
-  new(this._settings);
-
-  final NotificationSettings _settings;
-
+class _FakeFirebaseMessaging(final NotificationSettings _settings)
+    extends Fake
+    implements FirebaseMessaging {
   @override
   Future<NotificationSettings> getNotificationSettings() async => _settings;
 }

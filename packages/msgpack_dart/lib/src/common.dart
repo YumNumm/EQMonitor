@@ -2,10 +2,7 @@
 
 part of msgpack_dart;
 
-class FormatError implements Exception {
-  new(this.message);
-  final String message;
-
+class FormatError(final String message) implements Exception {
   @override
   String toString() {
     return 'FormatError: $message';

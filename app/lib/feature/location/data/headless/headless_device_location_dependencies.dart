@@ -88,10 +88,9 @@ class const HeadlessDeviceLocationTaskFactory() {
   }
 }
 
-class HeadlessDeviceLocationSyncServiceLoader {
-  new(this.preferences);
-
-  final SharedPreferencesAsync preferences;
+class HeadlessDeviceLocationSyncServiceLoader(
+  final SharedPreferencesAsync preferences,
+) {
   Dio? _dio;
 
   void close() => _dio?.close(force: true);
@@ -371,9 +370,7 @@ class const HeadlessApiDioFactory() {
   }
 }
 
-class HeadlessDeviceLocationSyncServiceBuilder {
-  const new _();
-
+class const HeadlessDeviceLocationSyncServiceBuilder._() {
   static DeviceLocationSyncService build({
     required DeviceLocationSyncScope scope,
     required DeviceLocationSyncStateRepository stateRepository,
@@ -410,11 +407,9 @@ class HeadlessDeviceLocationSyncServiceBuilder {
   );
 }
 
-class HeadlessDeviceLocationDiagnosticRecorder {
-  new(this.preferences);
-
-  final SharedPreferencesAsync preferences;
-
+class HeadlessDeviceLocationDiagnosticRecorder(
+  final SharedPreferencesAsync preferences,
+) {
   Future<void> recordTerminalFailure({
     required String updateId,
     required int statusCode,

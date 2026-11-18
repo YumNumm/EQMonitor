@@ -9,11 +9,10 @@ import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 
-class TsunamiWarningStatusCard extends StatelessWidget {
-  const new({required this.tsunami, super.key});
-
-  final TsunamiState tsunami;
-
+class const TsunamiWarningStatusCard({
+  required final TsunamiState tsunami,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

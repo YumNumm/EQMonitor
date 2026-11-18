@@ -7,9 +7,7 @@ import 'package:material_ui/material_ui.dart' hide LicensePage;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class LicensePage extends ConsumerWidget {
-  const new({super.key});
-
+class const LicensePage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final packageInfo = ref.watch(packageInfoProvider);

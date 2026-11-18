@@ -10,9 +10,10 @@ abstract interface class AndroidNotificationChannelPlatform {
   Future<void> createChannel(AndroidNotificationChannel channel);
 }
 
-class AndroidNotificationChannelInitializer {
-  const new({required this.platform, this.isShakeDetectionEnabled = true});
-
+class const AndroidNotificationChannelInitializer({
+  required final AndroidNotificationChannelPlatform platform,
+  final bool isShakeDetectionEnabled = true,
+}) {
   factory forCurrentPlatform({bool isShakeDetectionEnabled = true}) {
     if (kIsWeb) {
       return AndroidNotificationChannelInitializer(
@@ -58,9 +59,6 @@ class AndroidNotificationChannelInitializer {
       isShakeDetectionEnabled: isShakeDetectionEnabled,
     );
   }
-
-  final AndroidNotificationChannelPlatform platform;
-  final bool isShakeDetectionEnabled;
 
   Future<void> initialize() async {
     final activeChannels = notificationChannels.where(

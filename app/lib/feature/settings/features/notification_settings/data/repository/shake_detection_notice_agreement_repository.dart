@@ -10,11 +10,9 @@ shakeDetectionNoticeAgreementRepository(Ref ref) async =>
       await ref.watch(sharedPreferencesDataSourceProvider.future),
     );
 
-class ShakeDetectionNoticeAgreementRepository {
-  new(this._dataSource);
-
-  final SharedPreferencesDataSource _dataSource;
-
+class ShakeDetectionNoticeAgreementRepository(
+  final SharedPreferencesDataSource _dataSource,
+) {
   Future<int> loadAgreedVersion() async =>
       await _dataSource.getInt(key: .shakeDetectionNoticeAgreedVersion) ?? 0;
 

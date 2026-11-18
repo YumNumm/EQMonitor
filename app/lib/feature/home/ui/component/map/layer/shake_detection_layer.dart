@@ -16,11 +16,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-class ShakeDetectionLayer extends ConsumerWidget {
-  const new({required this.events, super.key});
-
-  final List<ShakeDetectionEvent> events;
-
+class const ShakeDetectionLayer({
+  required final List<ShakeDetectionEvent> events,
+  super.key,
+}) extends ConsumerWidget {
   static const sourceId = 'shake-detection';
   static const _lineLayerId = 'shake-detection-line';
 
@@ -38,15 +37,10 @@ class ShakeDetectionLayer extends ConsumerWidget {
   }
 }
 
-class _ShakeDetectionLayerBody extends HookConsumerWidget {
-  const new({
-    required this.events,
-    required this.settings,
-  });
-
-  final List<ShakeDetectionEvent> events;
-  final HomeShakeDetectionSettings settings;
-
+class const _ShakeDetectionLayerBody({
+  required final List<ShakeDetectionEvent> events,
+  required final HomeShakeDetectionSettings settings,
+}) extends HookConsumerWidget {
   static const _geoJsonUpdater = ShakeDetectionLayerGeoJsonUpdater();
 
   @override

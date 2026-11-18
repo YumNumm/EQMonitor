@@ -1,11 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 
-class SheetHeader extends StatelessWidget {
-  const new({required this.title, super.key, this.action});
-
-  final String title;
-  final Widget? action;
-
+class const SheetHeader({
+  required final String title,
+  super.key,
+  final Widget? action,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

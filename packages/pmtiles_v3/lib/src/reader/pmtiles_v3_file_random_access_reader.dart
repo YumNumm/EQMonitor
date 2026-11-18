@@ -22,14 +22,12 @@ final class PmTilesV3ReaderMutex {
   }
 }
 
-final class PmTilesV3FileRandomAccessReader
-    implements PmTilesRandomAccessReader {
-  new({
-    required this._file,
-    required this.sizeBytes,
-    this._rangeValidator = const PmTilesV3RangeValidator(),
-  });
-
+final class PmTilesV3FileRandomAccessReader({
+  required final RandomAccessFile _file,
+  @override required final int sizeBytes,
+  final PmTilesV3RangeValidator _rangeValidator =
+      const PmTilesV3RangeValidator(),
+}) implements PmTilesRandomAccessReader {
   static Future<PmTilesV3FileRandomAccessReader> open({
     required String path,
   }) async {
@@ -54,12 +52,7 @@ final class PmTilesV3FileRandomAccessReader
     }
   }
 
-  final RandomAccessFile _file;
-  final PmTilesV3RangeValidator _rangeValidator;
   final _mutex = PmTilesV3ReaderMutex();
-
-  @override
-  final int sizeBytes;
 
   var _isCloseRequested = false;
   Future<void>? _closeFuture;

@@ -19,10 +19,8 @@ EewTelegramItem _makeEew({
   isPlum: isPlum,
 );
 
-class _FakeEewAliveTelegram extends EewAliveTelegram {
-  new(this._value);
-  final List<EewTelegramItem>? _value;
-
+class _FakeEewAliveTelegram(final List<EewTelegramItem>? _value)
+    extends EewAliveTelegram {
   @override
   List<EewTelegramItem>? build() => _value;
 }

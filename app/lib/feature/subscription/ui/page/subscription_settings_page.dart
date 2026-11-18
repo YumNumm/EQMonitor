@@ -13,9 +13,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 /// サブスクリプションの状態確認 / 管理画面。
-class SubscriptionSettingsPage extends ConsumerWidget {
-  const new({super.key});
-
+class const SubscriptionSettingsPage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statusAsync = ref.watch(subscriptionProvider);
@@ -50,11 +48,8 @@ class SubscriptionSettingsPage extends ConsumerWidget {
   }
 }
 
-class _ActiveSection extends ConsumerWidget {
-  const new({required this.status});
-
-  final SubscriptionStatusActive status;
-
+class const _ActiveSection({required final SubscriptionStatusActive status})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -126,9 +121,7 @@ class _ActiveSection extends ConsumerWidget {
   }
 }
 
-class _InactiveSection extends ConsumerWidget {
-  const new();
-
+class const _InactiveSection() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);

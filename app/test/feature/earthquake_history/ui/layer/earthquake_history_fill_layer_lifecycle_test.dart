@@ -148,11 +148,9 @@ void main() {
   });
 }
 
-class EarthquakeHistoryLayerMapController implements MapController {
-  new({required this.styleController});
-
-  final StyleController styleController;
-
+class EarthquakeHistoryLayerMapController({
+  required final StyleController styleController,
+}) implements MapController {
   @override
   StyleController get style => styleController;
 

@@ -12,11 +12,8 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// K-NET all/fig PNG 図を表示するビュー
-class KnetFigView extends HookConsumerWidget {
-  const new({required this.eventTime, super.key});
-
-  final DateTime eventTime;
-
+class const KnetFigView({required final DateTime eventTime, super.key})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final clientAsync = ref.watch(knetDownloadClientProvider);
@@ -38,12 +35,10 @@ class KnetFigView extends HookConsumerWidget {
   }
 }
 
-class _FigContent extends HookWidget {
-  const new({required this.eventTime, required this.client});
-
-  final DateTime eventTime;
-  final KnetDownloadClient client;
-
+class const _FigContent({
+  required final DateTime eventTime,
+  required final KnetDownloadClient client,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selectedType = useState(KnetFigType.values.first);
@@ -95,12 +90,10 @@ class _FigContent extends HookWidget {
   }
 }
 
-class _FigTypeSelector extends StatelessWidget {
-  const new({required this.selected, required this.onChanged});
-
-  final KnetFigType selected;
-  final ValueChanged<KnetFigType> onChanged;
-
+class const _FigTypeSelector({
+  required final KnetFigType selected,
+  required final ValueChanged<KnetFigType> onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -129,19 +122,12 @@ class _FigTypeSelector extends StatelessWidget {
   }
 }
 
-class _ImageArea extends StatelessWidget {
-  const new({
-    required this.isLoading,
-    required this.onRetry,
-    this.errorMessage,
-    this.imageBytes,
-  });
-
-  final bool isLoading;
-  final String? errorMessage;
-  final Uint8List? imageBytes;
-  final VoidCallback onRetry;
-
+class const _ImageArea({
+  required final bool isLoading,
+  required final VoidCallback onRetry,
+  final String? errorMessage,
+  final Uint8List? imageBytes,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -172,12 +158,10 @@ class _ImageArea extends StatelessWidget {
   }
 }
 
-class _ErrorView extends StatelessWidget {
-  const new({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
+class const _ErrorView({
+  required final String message,
+  required final VoidCallback onRetry,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(

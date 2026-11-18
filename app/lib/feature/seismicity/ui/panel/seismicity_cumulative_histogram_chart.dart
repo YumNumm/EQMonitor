@@ -5,11 +5,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// 回数積算図(上段、LineChart)と日別ヒストグラム(下段、BarChart)の併記。
-class SeismicityCumulativeHistogramChart extends StatelessWidget {
-  const new({required this.events, super.key});
-
-  final List<SeismicityEvent> events;
-
+class const SeismicityCumulativeHistogramChart({
+  required final List<SeismicityEvent> events,
+  super.key,
+}) extends StatelessWidget {
   static const SeismicityCumulativeBinning _binning =
       SeismicityCumulativeBinning();
 

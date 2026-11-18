@@ -333,10 +333,9 @@ class const IntensityTreeConverter({
 // Private helpers
 // ---------------------------------------------------------------------------
 
-class _MutablePrefectureNode {
-  new({required this.prefecture});
-
-  final EarthquakeParameterPrefectureItem prefecture;
+class _MutablePrefectureNode({
+  required final EarthquakeParameterPrefectureItem prefecture,
+}) {
   final Map<String, _MutableCityNode> _cities = {};
 
   void addStation(
@@ -370,10 +369,7 @@ class _MutablePrefectureNode {
   }
 }
 
-class _MutableCityNode {
-  new({required this.city});
-
-  final EarthquakeParameterCityItem city;
+class _MutableCityNode({required final EarthquakeParameterCityItem city}) {
   final List<StationIntensityNode> stations = [];
 
   void addStation(
@@ -402,10 +398,9 @@ class _MutableCityNode {
   }
 }
 
-class _LpgmPrefectureData {
-  new({required this.region});
-
-  final EarthquakeParameterRegionItem region;
+class _LpgmPrefectureData({
+  required final EarthquakeParameterRegionItem region,
+}) {
   final Map<EarthquakeParameterCityItem, List<api.IntensityStationItem>>
   cityStations = {};
 

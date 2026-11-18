@@ -6,9 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class HomeMapLabelDebugModal extends ConsumerWidget {
-  const new _();
-
+class const HomeMapLabelDebugModal._() extends ConsumerWidget {
   static Future<void> show({required BuildContext context}) =>
       showM3EModalBottomSheet(
         useSafeArea: false,

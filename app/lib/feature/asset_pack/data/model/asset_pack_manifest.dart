@@ -67,14 +67,15 @@ final _sha256Pattern = RegExp(r'^[0-9a-f]{64}$');
 /// The one deliberate exception is asset ids unknown to this build, which are
 /// skipped rather than rejected — see [fromJson].
 @JsonSerializable(createFactory: false)
-class AssetPackManifest {
-  new({
-    required this.packVersion,
-    required this.schemaVersion,
-    required this.generatedAt,
-    required this.assets,
-  });
+class AssetPackManifest({
+  /// Pack 全体の版（Release Artifact / ストアアップロード単位）。
+  @JsonKey(name: 'pack_version') required final String packVersion,
 
+  /// manifest スキーマ自体の互換バージョン。常に 1。
+  @JsonKey(name: 'schema_version') required final int schemaVersion,
+  @JsonKey(name: 'generated_at') required final String generatedAt,
+  required final List<AssetPackManifestItem> assets,
+}) {
   /// Parses a manifest, **skipping entries whose `id` this build doesn't
   /// know** while still validating everything else strictly.
   ///
@@ -149,19 +150,6 @@ class AssetPackManifest {
     );
   }
 
-  /// Pack 全体の版（Release Artifact / ストアアップロード単位）。
-  @JsonKey(name: 'pack_version')
-  final String packVersion;
-
-  /// manifest スキーマ自体の互換バージョン。常に 1。
-  @JsonKey(name: 'schema_version')
-  final int schemaVersion;
-
-  @JsonKey(name: 'generated_at')
-  final String generatedAt;
-
-  final List<AssetPackManifestItem> assets;
-
   Map<String, dynamic> toJson() => _$AssetPackManifestToJson(this);
 
   /// Returns the manifest entry for [id], or `null` if the pack doesn't
@@ -186,19 +174,19 @@ class AssetPackManifest {
 /// here, so an unknown id only reaches this constructor when it is called
 /// directly.
 @JsonSerializable(createFactory: false)
-class AssetPackManifestItem {
-  new({
-    required this.id,
-    required this.kind,
-    required this.path,
-    required this.schemaVersion,
-    required this.sourceVersion,
-    required this.sourceUpdatedAt,
-    required this.sourceUrls,
-    required this.sha256,
-    required this.sizeBytes,
-  });
+class AssetPackManifestItem({
+  required final AssetPackAssetId id,
+  required final AssetPackAssetKind kind,
 
+  /// Pack ルートからの相対パス（例: `map/all.pmtiles`）。
+  required final String path,
+  @JsonKey(name: 'schema_version') required final int schemaVersion,
+  @JsonKey(name: 'source_version') required final String sourceVersion,
+  @JsonKey(name: 'source_updated_at') required final String? sourceUpdatedAt,
+  @JsonKey(name: 'source_urls') required final List<String> sourceUrls,
+  required final String sha256,
+  @JsonKey(name: 'size_bytes') required final int sizeBytes,
+}) {
   factory fromJson(Map<String, dynamic> json) {
     final idValue = json['id'];
     final id = _assetIdByJsonValue[idValue];
@@ -262,36 +250,11 @@ class AssetPackManifestItem {
     );
   }
 
-  final AssetPackAssetId id;
-  final AssetPackAssetKind kind;
-
-  /// Pack ルートからの相対パス（例: `map/all.pmtiles`）。
-  final String path;
-
-  @JsonKey(name: 'schema_version')
-  final int schemaVersion;
-
-  @JsonKey(name: 'source_version')
-  final String sourceVersion;
-
-  @JsonKey(name: 'source_updated_at')
-  final String? sourceUpdatedAt;
-
-  @JsonKey(name: 'source_urls')
-  final List<String> sourceUrls;
-
-  final String sha256;
-
-  @JsonKey(name: 'size_bytes')
-  final int sizeBytes;
-
   Map<String, dynamic> toJson() => _$AssetPackManifestItemToJson(this);
 }
 
 /// asset_pack_manifest.json のパース時に、必須フィールドの型を検証しつつ取得する。
-class AssetPackManifestJsonValidator {
-  const new _();
-
+class const AssetPackManifestJsonValidator._() {
   static String requireString(Map<String, dynamic> json, String key) {
     final value = json[key];
     if (value is String) {

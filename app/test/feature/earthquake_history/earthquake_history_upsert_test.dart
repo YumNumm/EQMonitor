@@ -183,16 +183,15 @@ EarthquakePartialNormal _makeEarthquake(String eventId) =>
 
 /// [EarthquakeHistoryRepository] の Fake 実装。
 /// コンストラクタで渡した [items] を fetchEarthquakeList で返す。
-final class _FakeEarthquakeHistoryRepository
-    extends EarthquakeHistoryRepository {
-  new({required this.items})
+final class _FakeEarthquakeHistoryRepository({
+  required final List<EarthquakePartialNormal> items,
+}) extends EarthquakeHistoryRepository {
+  this
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,
         shindoDbStations: _shindoDbStations,
       );
-
-  final List<EarthquakePartialNormal> items;
 
   @override
   Future<PaginatedResponse<EarthquakePartial>> fetchEarthquakeList({

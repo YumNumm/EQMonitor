@@ -18,9 +18,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class DebugKyoshinMonitorPage extends StatelessWidget {
-  const new({super.key});
-
+class const DebugKyoshinMonitorPage({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle.merge(
@@ -35,9 +33,7 @@ class DebugKyoshinMonitorPage extends StatelessWidget {
   }
 }
 
-class _Body extends ConsumerWidget {
-  const new();
-
+class const _Body() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;

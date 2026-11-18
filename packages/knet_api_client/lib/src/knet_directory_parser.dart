@@ -2,9 +2,7 @@ import 'package:html/parser.dart' as html_parser;
 import 'package:timezone/timezone.dart' as tz;
 
 /// Apache style directory listing HTML から エントリ名一覧を抽出するパーサー
-class KnetDirectoryParser {
-  const new _();
-
+class const KnetDirectoryParser._() {
   static final _tokyo = tz.getLocation('Asia/Tokyo');
 
   /// HTML から相対リンク（末尾 `/` 付きディレクトリ）の名前一覧を返す

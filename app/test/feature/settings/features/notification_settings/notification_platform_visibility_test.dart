@@ -263,6 +263,10 @@ Future<void> pumpNotificationSettings(
   Future<api.StartResponse>? Function()? loadStart,
   List<NotificationSlot> slots = const [_slot],
 }) async {
+  // Android のページ遷移は画面全体をスナップショットするため、
+  // 物理サイズをテスト用レンダラーの描画上限内に収める。
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetDevicePixelRatio);
   await tester.binding.setSurfaceSize(const Size(800, 6000));
   addTearDown(() => tester.binding.setSurfaceSize(null));
   await tester.pumpWidget(
@@ -341,13 +345,11 @@ Future<void> pumpSlotDetail(
   await tester.pumpAndSettle();
 }
 
-class _FakeSubscriptionNotifier extends SubscriptionNotifier {
-  new({required this.isPro, this.initial, this.load});
-
-  final bool isPro;
-  final Future<SubscriptionStatus>? initial;
-  final Future<SubscriptionStatus>? Function()? load;
-
+class _FakeSubscriptionNotifier({
+  required final bool isPro,
+  final Future<SubscriptionStatus>? initial,
+  final Future<SubscriptionStatus>? Function()? load,
+}) extends SubscriptionNotifier {
   @override
   Future<SubscriptionStatus> build() async =>
       load?.call() ??
@@ -359,11 +361,8 @@ class _FakeSubscriptionNotifier extends SubscriptionNotifier {
   void publish(AsyncValue<SubscriptionStatus> value) => state = value;
 }
 
-class _FakeStartNotifier extends StartNotifier {
-  new({this.load});
-
-  final Future<api.StartResponse>? Function()? load;
-
+class _FakeStartNotifier({final Future<api.StartResponse>? Function()? load})
+    extends StartNotifier {
   @override
   Future<api.StartResponse> build() async =>
       load?.call() ??
@@ -396,12 +395,12 @@ class _FakeStartNotifier extends StartNotifier {
       );
 }
 
-class _FakeNotificationPresetNotifier extends NotificationPresetNotifier {
+class _FakeNotificationPresetNotifier() extends NotificationPresetNotifier {
   @override
   Future<NotificationPreset> build() async => NotificationPreset.custom;
 }
 
-class _FakeGeneralNotificationSettingsNotifier
+class _FakeGeneralNotificationSettingsNotifier()
     extends GeneralNotificationSettingsNotifier {
   @override
   Future<GeneralNotificationSettings> build() async =>
@@ -416,16 +415,14 @@ class _FakeGeneralNotificationSettingsNotifier
       );
 }
 
-class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
-  new({this.slots = const [_slot]});
-
-  final List<NotificationSlot> slots;
-
+class _FakeNotificationSlotsNotifier({
+  final List<NotificationSlot> slots = const [_slot],
+}) extends NotificationSlotsNotifier {
   @override
   Future<List<NotificationSlot>> build() async => slots;
 }
 
-class _FakeEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
+class _FakeEewGlobalSettingsNotifier() extends EewGlobalSettingsNotifier {
   @override
   Future<EewGlobalSettings> build() async => const EewGlobalSettings(
     enabled: true,
@@ -437,7 +434,7 @@ class _FakeEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
   );
 }
 
-class _FakeEarthquakeGlobalSettingsNotifier
+class _FakeEarthquakeGlobalSettingsNotifier()
     extends EarthquakeGlobalSettingsNotifier {
   @override
   Future<EarthquakeGlobalSettings> build() async =>
@@ -450,7 +447,7 @@ class _FakeEarthquakeGlobalSettingsNotifier
       );
 }
 
-class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
+class _FakeEewWarningConfigNotifier() extends EewWarningConfigNotifier {
   @override
   Future<EewWarningSettings> build() async => const EewWarningSettings(
     target: EewWarningTarget.currentLocationOnly,
@@ -459,21 +456,17 @@ class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
   );
 }
 
-class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {
-  new(this.settings);
-
-  final NotificationSettings settings;
-
+class _FakeFirebaseMessaging(final NotificationSettings settings)
+    extends Fake
+    implements FirebaseMessaging {
   @override
   Future<NotificationSettings> getNotificationSettings() async => settings;
 }
 
-class _TestApp extends StatelessWidget {
-  const new({required this.platform, required this.home});
-
-  final TargetPlatform platform;
-  final Widget home;
-
+class const _TestApp({
+  required final TargetPlatform platform,
+  required final Widget home,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
     theme: ThemeData.light().copyWith(

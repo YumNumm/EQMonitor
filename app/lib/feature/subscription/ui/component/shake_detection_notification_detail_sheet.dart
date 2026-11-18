@@ -13,9 +13,7 @@ class const ShakeDetectionNotificationDetailSheetAction() {
   );
 }
 
-class _ShakeDetectionNotificationDetailSheet extends StatelessWidget {
-  const new();
-
+class const _ShakeDetectionNotificationDetailSheet() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

@@ -8,9 +8,8 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class DebugNotificationLanguageSetting extends ConsumerWidget {
-  const new({super.key});
-
+class const DebugNotificationLanguageSetting({super.key})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final language = ref.watch(notificationLanguageProvider);

@@ -33,20 +33,13 @@ const List<JmaIntensity> _overrideIntensities = [
 
 const _maxOverrides = 12;
 
-class OverrideEditPage extends HookConsumerWidget {
-  const new({
-    required this.slotId,
-    required this.slotType,
-    required this.overrideType,
-    required this.currentOverrides,
-    super.key,
-  });
-
-  final String slotId;
-  final NotificationSlotType slotType;
-  final NotificationKind overrideType;
-  final List<NotificationOverride> currentOverrides;
-
+class const OverrideEditPage({
+  required final String slotId,
+  required final NotificationSlotType slotType,
+  required final NotificationKind overrideType,
+  required final List<NotificationOverride> currentOverrides,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final slot = ref
@@ -324,11 +317,8 @@ class OverrideEditPage extends HookConsumerWidget {
   }
 }
 
-class _OverrideTile extends ConsumerWidget {
-  const new({required this.entry});
-
-  final NotificationOverride entry;
-
+class const _OverrideTile({required final NotificationOverride entry})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sound = ref
@@ -346,11 +336,8 @@ class _OverrideTile extends ConsumerWidget {
   }
 }
 
-class _IntensityBadge extends StatelessWidget {
-  const new({required this.intensity});
-
-  final JmaIntensity intensity;
-
+class const _IntensityBadge({required final JmaIntensity intensity})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
@@ -374,23 +361,14 @@ class _IntensityBadge extends StatelessWidget {
   }
 }
 
-class _OverrideFormDialog extends HookConsumerWidget {
-  const new({
-    required this.kind,
-    required this.availableIntensities,
-    required this.initialIntensity,
-    this.initialSound,
-    this.initialInterruptionLevel = InterruptionLevel.active,
-    this.isEditing = false,
-  });
-
-  final NotificationKind kind;
-  final List<JmaIntensity> availableIntensities;
-  final JmaIntensity initialIntensity;
-  final String? initialSound;
-  final InterruptionLevel initialInterruptionLevel;
-  final bool isEditing;
-
+class const _OverrideFormDialog({
+  required final NotificationKind kind,
+  required final List<JmaIntensity> availableIntensities,
+  required final JmaIntensity initialIntensity,
+  final String? initialSound,
+  final InterruptionLevel initialInterruptionLevel = InterruptionLevel.active,
+  final bool isEditing = false,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIntensity = useState(initialIntensity);

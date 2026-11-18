@@ -13,12 +13,10 @@ const _kDebounceMs = 30000;
 /// Prevents duplicate records when the app is backgrounded and resumed
 /// within the debounce window. Returns `true` when the event was recorded,
 /// `false` when debounced.
-class AppLaunchRecorder {
-  new(this._recorder, this._prefs);
-
-  final TelemetryRecorder _recorder;
-  final SharedPreferences _prefs;
-
+class AppLaunchRecorder(
+  final TelemetryRecorder _recorder,
+  final SharedPreferences _prefs,
+) {
   /// Records an app launch event if at least [_kDebounceMs] milliseconds
   /// have passed since the last recorded event.
   ///

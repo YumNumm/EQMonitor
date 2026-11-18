@@ -1,11 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 
-class SettingsSectionHeader extends StatelessWidget {
-  const new({required this.text, super.key});
-
-  final String text;
-
+class const SettingsSectionHeader({required final String text, super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

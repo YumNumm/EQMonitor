@@ -4,8 +4,8 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_pmtiles_decode_operati
 import 'package:seismicity_pmtiles/src/decoder/seismicity_pmtiles_decoder_runner.dart';
 
 /// Public decoder facade. Always uses the real isolate worker factory.
-final class SeismicityPmTilesDecoder {
-  new()
+final class SeismicityPmTilesDecoder() {
+  this
     : _runner = SeismicityPmTilesDecoderRunner(
         factory: IsolateSeismicityDecoderWorkerFactory(),
       );

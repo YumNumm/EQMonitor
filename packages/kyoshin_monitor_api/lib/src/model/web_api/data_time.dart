@@ -17,6 +17,5 @@ abstract class DataTime
     required DateTime requestTime,
   }) = _DataTime;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$DataTimeFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$DataTimeFromJson(json);
 }

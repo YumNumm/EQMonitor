@@ -30,9 +30,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class HomePage extends HookConsumerWidget {
-  const new({super.key});
-
+class const HomePage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorTheme = context.designSystem.colorTheme;
@@ -49,9 +47,7 @@ class HomePage extends HookConsumerWidget {
   }
 }
 
-class _SheetBody extends ConsumerWidget {
-  const new();
-
+class const _SheetBody() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
@@ -134,9 +130,7 @@ class _SheetBody extends ConsumerWidget {
 }
 
 /// ホームシート下部の各画面への導線カード。
-class _HomeActionsCard extends ConsumerWidget {
-  const new();
-
+class const _HomeActionsCard() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
@@ -201,9 +195,7 @@ class _HomeActionsCard extends ConsumerWidget {
   }
 }
 
-class _LocationPermissionBanner extends ConsumerWidget {
-  const new();
-
+class const _LocationPermissionBanner() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorTheme = context.designSystem.colorTheme;

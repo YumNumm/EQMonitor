@@ -329,26 +329,23 @@ final class _NoopPushTokenSync extends PushTokenSyncNotifier {
 // ---- 以下、v3_migration_workflow_test.dart の Fake/Memory 実装をコピー ----
 // private class なので import 不可のためここに再定義する。
 
-class FakeDeviceRepository extends DeviceRepository {
-  new({
-    required Result<RegisteredDevice, Exception> Function() getResult,
-    required Result<RegisteredDevice, Exception> Function() putResult,
-    required Result<void, Exception> Function() migrateResult,
-    Result<void, Exception> Function()? deleteResult,
-  }) : _getResult = getResult,
-       _putResult = putResult,
-       _migrateResult = migrateResult,
-       _deleteResult = deleteResult,
-       super(
-         api: api.ApiClient(Dio()),
-         authRepository: _MemoryDeviceAuthRepository(),
-         apnsEnvironment: api.ApnsEnvironment.development,
-       );
+class FakeDeviceRepository({
+  required Result<RegisteredDevice, Exception> Function() getResult,
+  required Result<RegisteredDevice, Exception> Function() putResult,
+  required Result<void, Exception> Function() migrateResult,
+  Result<void, Exception> Function()? deleteResult,
+}) extends DeviceRepository {
+  this
+    : super(
+        api: api.ApiClient(Dio()),
+        authRepository: _MemoryDeviceAuthRepository(),
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
 
-  final Result<RegisteredDevice, Exception> Function() _getResult;
-  final Result<RegisteredDevice, Exception> Function() _putResult;
-  final Result<void, Exception> Function() _migrateResult;
-  final Result<void, Exception> Function()? _deleteResult;
+  final Result<RegisteredDevice, Exception> Function() _getResult = getResult;
+  final Result<RegisteredDevice, Exception> Function() _putResult = putResult;
+  final Result<void, Exception> Function() _migrateResult = migrateResult;
+  final Result<void, Exception> Function()? _deleteResult = deleteResult;
 
   // ignore: type_annotate_public_apis
   var getCalls = 0;
@@ -385,8 +382,8 @@ class FakeDeviceRepository extends DeviceRepository {
       _deleteResult?.call() ?? const Success(null);
 }
 
-final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  new() : super(_MemorySecurePreferencesDataSource());
+final class _MemoryDeviceAuthRepository() extends DeviceAuthRepository {
+  this : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 

@@ -10,11 +10,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LpgmStationDetailSheet extends ConsumerWidget {
-  const new({required this.station, super.key});
-
-  final StationLpgmIntensityNode station;
-
+class const LpgmStationDetailSheet({
+  required final StationLpgmIntensityNode station,
+  super.key,
+}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColors = context.designSystem.colorTheme.intensity;
@@ -62,11 +61,8 @@ class LpgmStationDetailSheet extends ConsumerWidget {
   }
 }
 
-class _Header extends ConsumerWidget {
-  const new({required this.station});
-
-  final StationLpgmIntensityNode station;
-
+class const _Header({required final StationLpgmIntensityNode station})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -114,15 +110,10 @@ class _Header extends ConsumerWidget {
   }
 }
 
-class _PrePeriodsTable extends StatelessWidget {
-  const new({
-    required this.prePeriods,
-    required this.intensityColors,
-  });
-
-  final List<PrePeriod> prePeriods;
-  final IntensityColors intensityColors;
-
+class const _PrePeriodsTable({
+  required final List<PrePeriod> prePeriods,
+  required final IntensityColors intensityColors,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -247,9 +238,7 @@ class _PrePeriodsTable extends StatelessWidget {
   }
 }
 
-class _RelatedLinksCard extends StatelessWidget {
-  const new();
-
+class const _RelatedLinksCard() extends StatelessWidget {
   static const List<({String title, String url})> _links = [
     (
       title: '長周期地震動階級および長周期地震動階級関連解説表について',

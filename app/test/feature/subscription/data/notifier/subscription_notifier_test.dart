@@ -42,8 +42,8 @@ const purchased = PurchaseOutcome(
   status: active,
 );
 
-class FakeSubscriptionRepository extends SubscriptionRepository {
-  new()
+class FakeSubscriptionRepository() extends SubscriptionRepository {
+  this
     : super(monthlyProductId: 'test', session: const TestRevenueCatSession());
   SubscriptionStatus store = inactive;
   PurchaseOutcome outcome = purchased;
@@ -70,8 +70,8 @@ class FakeSubscriptionRepository extends SubscriptionRepository {
   }
 }
 
-class FakeServer extends SubscriptionServerRepository {
-  new() : super(client: api.SubscriptionApiClient(Dio()));
+class FakeServer() extends SubscriptionServerRepository {
+  this : super(client: api.SubscriptionApiClient(Dio()));
   Result<SubscriptionStatus, SubscriptionApiException> current = const Success(
     inactive,
   );

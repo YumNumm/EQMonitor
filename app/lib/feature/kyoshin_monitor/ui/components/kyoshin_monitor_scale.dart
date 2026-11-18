@@ -40,30 +40,21 @@ enum KyoshinMonitorScaleGradientDirection {
 /// [textColor] テキストの色
 /// [textStyle] テキストのスタイル
 /// [gradientDirection] グラデーションの方向
-class KyoshinMonitorScale extends StatelessWidget {
-  const new({
-    required this.type,
-    required this.width,
-    required this.height,
-    this.tickInterval = 4,
-    this.orientation = KyoshinMonitorScaleOrientation.horizontal,
-    this.textPosition = KyoshinMonitorScaleTextPosition.end,
-    this.textColor = Colors.black,
-    this.textStyle,
-    this.gradientDirection = KyoshinMonitorScaleGradientDirection.forward,
-    super.key,
-  });
-
-  final KyoshinMonitorScaleType type;
-  final double width;
-  final double height;
-  final int tickInterval;
-  final KyoshinMonitorScaleOrientation orientation;
-  final KyoshinMonitorScaleTextPosition textPosition;
-  final Color textColor;
-  final TextStyle? textStyle;
-  final KyoshinMonitorScaleGradientDirection gradientDirection;
-
+class const KyoshinMonitorScale({
+  required final KyoshinMonitorScaleType type,
+  required final double width,
+  required final double height,
+  final int tickInterval = 4,
+  final KyoshinMonitorScaleOrientation orientation =
+      KyoshinMonitorScaleOrientation.horizontal,
+  final KyoshinMonitorScaleTextPosition textPosition =
+      KyoshinMonitorScaleTextPosition.end,
+  final Color textColor = Colors.black,
+  final TextStyle? textStyle,
+  final KyoshinMonitorScaleGradientDirection gradientDirection =
+      KyoshinMonitorScaleGradientDirection.forward,
+  super.key,
+}) extends StatelessWidget {
   /// カラーストップの計算
   ///
   /// 各値に対応する位置と色を計算します
@@ -294,33 +285,20 @@ enum KyoshinMonitorScaleType {
 }
 
 /// カラースケールの描画を行うCustomPainter
-class _KyoshinMonitorScalePainter extends CustomPainter {
-  const new({
-    required this.type,
-    required this.colorStops,
-    required this.labels,
-    required this.gradientRect,
-    required this.tickInterval,
-    required this.orientation,
-    required this.textPosition,
-    required this.textColor,
-    required this.textStyle,
-    required this.textScaler,
-    required this.gradientDirection,
-  });
-
-  final KyoshinMonitorScaleType type;
-  final List<({double position, double value, Color color})> colorStops;
-  final List<String> labels;
-  final Rect gradientRect;
-  final int tickInterval;
-  final KyoshinMonitorScaleOrientation orientation;
-  final KyoshinMonitorScaleTextPosition textPosition;
-  final Color textColor;
-  final TextStyle textStyle;
-  final TextScaler textScaler;
-  final KyoshinMonitorScaleGradientDirection gradientDirection;
-
+class const _KyoshinMonitorScalePainter({
+  required final KyoshinMonitorScaleType type,
+  required final List<({double position, double value, Color color})>
+  colorStops,
+  required final List<String> labels,
+  required final Rect gradientRect,
+  required final int tickInterval,
+  required final KyoshinMonitorScaleOrientation orientation,
+  required final KyoshinMonitorScaleTextPosition textPosition,
+  required final Color textColor,
+  required final TextStyle textStyle,
+  required final TextScaler textScaler,
+  required final KyoshinMonitorScaleGradientDirection gradientDirection,
+}) extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // グラデーションの描画

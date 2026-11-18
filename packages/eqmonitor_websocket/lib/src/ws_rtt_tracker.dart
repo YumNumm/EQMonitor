@@ -11,18 +11,13 @@ import 'package:eqmonitor_websocket/src/ws_client_ping_message.dart';
 /// `pingId` は接続ごとに 1 から始まる連番。[reset] で pending を捨てるが
 /// 連番は継続するため、再接続前に送った ping の pong が遅れて届いても
 /// 別の ping の RTT として誤計上されない。
-class WsRttTracker {
-  new({
-    this.timeout = const Duration(seconds: 30),
-    this.maxPending = 8,
-  });
-
+class WsRttTracker({
   /// これを超えて応答がない ping は破棄する。
-  final Duration timeout;
+  final Duration timeout = const Duration(seconds: 30),
 
   /// 同時に保持する未応答 ping の上限。超えた分は古い順に捨てる。
-  final int maxPending;
-
+  final int maxPending = 8,
+}) {
   /// pingId -> 送信時刻。挿入順が保持されるので先頭が最古。
   final _pending = <String, DateTime>{};
   var _sequence = 0;

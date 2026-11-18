@@ -1,15 +1,10 @@
 /// JMA Typhoon Reference Time Type.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-50.
-enum JmaTyphoonReferenceTimeType {
+enum JmaTyphoonReferenceTimeType(final int code, final String nameJa) {
   analysis(1, '実況'),
   estimation(2, '推定'),
   forecast(3, '予報');
-
-  new(this.code, this.nameJa);
-
-  final int code;
-  final String nameJa;
 
   /// Returns the typhoon reference time type for the given code.
   ///

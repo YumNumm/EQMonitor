@@ -1,7 +1,7 @@
 /// JMA Volcanic Warning Code.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-35.
-enum JmaVolcanicWarningCode {
+enum JmaVolcanicWarningCode(final int code, final String nameJa) {
   level1(11, 'レベル1(活火山であることに留意)'),
   level2(12, 'レベル2(火口周辺規制)'),
   level3(13, 'レベル3(入山規制)'),
@@ -17,11 +17,6 @@ enum JmaVolcanicWarningCode {
   eruption(52, '噴火'),
   possibleEruption(62, '噴火したもよう'),
   other(127, 'その他の防災気象情報要素');
-
-  new(this.code, this.nameJa);
-
-  final int code;
-  final String nameJa;
 
   /// Returns the volcanic warning code for the given code.
   ///

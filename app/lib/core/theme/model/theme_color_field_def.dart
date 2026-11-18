@@ -24,9 +24,7 @@ class const ThemeColorFieldDef({
 ///
 /// `ThemeColorSet`の全編集可能カラーフィールドを網羅する。
 /// エディタUI(Task 5/6)は[all]を描画するだけで完結する。
-class ThemeColorFieldDefs {
-  const new _();
-
+class const ThemeColorFieldDefs._() {
   static final List<ThemeColorFieldDef> all = [
     ThemeColorFieldDef(
       label: 'プライマリ',

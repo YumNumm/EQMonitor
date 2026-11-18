@@ -35,11 +35,10 @@ import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
-class TsunamiDetailsMapView extends HookConsumerWidget {
-  const new({required this.tsunami, super.key});
-
-  final TsunamiState tsunami;
-
+class const TsunamiDetailsMapView({
+  required final TsunamiState tsunami,
+  super.key,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
@@ -61,12 +60,10 @@ class TsunamiDetailsMapView extends HookConsumerWidget {
 const _kDefaultCenter = Geographic(lon: 138, lat: 36.5);
 const _kDefaultZoom = 4.5;
 
-class _MapContent extends HookConsumerWidget {
-  const new({required this.styleString, required this.tsunami});
-
-  final String styleString;
-  final TsunamiState tsunami;
-
+class const _MapContent({
+  required final String styleString,
+  required final TsunamiState tsunami,
+}) extends HookConsumerWidget {
   // --- Source / Layer IDs ---
   static const _tsunamiLineSourceId = 'tsunami-region-lines';
   static const _tsunamiLineLayerIdPrefix = 'tsunami-region-line-';
@@ -175,11 +172,8 @@ class _MapContent extends HookConsumerWidget {
 // 津波予報区 海岸線ラインレイヤー
 // ---------------------------------------------------------------------------
 
-class _TsunamiRegionLineLayer extends HookConsumerWidget {
-  const new({required this.tsunami});
-
-  final TsunamiState tsunami;
-
+class const _TsunamiRegionLineLayer({required final TsunamiState tsunami})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
@@ -275,11 +269,8 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
 // 震源マーカーレイヤー
 // ---------------------------------------------------------------------------
 
-class _TsunamiHypocenterLayer extends HookConsumerWidget {
-  const new({required this.tsunami});
-
-  final TsunamiState tsunami;
-
+class const _TsunamiHypocenterLayer({required final TsunamiState tsunami})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
@@ -371,11 +362,9 @@ class _TsunamiHypocenterLayer extends HookConsumerWidget {
 // 観測点マーカーレイヤー
 // ---------------------------------------------------------------------------
 
-class _TsunamiObservationStationLayer extends HookConsumerWidget {
-  const new({required this.tsunami});
-
-  final TsunamiState tsunami;
-
+class const _TsunamiObservationStationLayer({
+  required final TsunamiState tsunami,
+}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
@@ -644,9 +633,7 @@ class const TsunamiMapGeoJsonBuilder() {
   }
 }
 
-class TsunamiMapLayerBuilder {
-  const new _();
-
+class const TsunamiMapLayerBuilder._() {
   static const warningKinds = [
     TsunamiWarningKind.forecast,
     TsunamiWarningKind.advisory,
@@ -751,11 +738,9 @@ class TsunamiMapLayerBuilder {
 // 地図右上コントローラカード
 // ---------------------------------------------------------------------------
 
-class _MapControllerCard extends StatelessWidget {
-  const new({required this.onFitBoundsTap});
-
-  final Future<void> Function() onFitBoundsTap;
-
+class const _MapControllerCard({
+  required final Future<void> Function() onFitBoundsTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;

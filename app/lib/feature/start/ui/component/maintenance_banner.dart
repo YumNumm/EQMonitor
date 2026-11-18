@@ -7,9 +7,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 /// ホームシートに表示するメンテナンス通知バナー。
 /// メンテナンス中の場合のみ表示する。
-class MaintenanceBanner extends ConsumerWidget {
-  const new({super.key});
-
+class const MaintenanceBanner({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startState = ref.watch(startProvider);

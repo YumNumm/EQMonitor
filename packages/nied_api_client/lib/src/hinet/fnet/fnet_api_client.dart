@@ -6,15 +6,12 @@ import 'package:nied_api_client/src/hinet/fnet/parser/fnet_catalog_parser.dart';
 /// F-net APIクライアント
 ///
 /// F-netの地震カタログデータを取得・パースするためのクライアント
-class FnetApiClient {
-  new({
-    required FnetCatalogApi api,
-    required FnetCatalogParser parser,
-  }) : _api = api,
-       _parser = parser;
-
-  final FnetCatalogApi _api;
-  final FnetCatalogParser _parser;
+class FnetApiClient({
+  required FnetCatalogApi api,
+  required FnetCatalogParser parser,
+}) {
+  final FnetCatalogApi _api = api;
+  final FnetCatalogParser _parser = parser;
 
   /// 指定した年月の地震イベントリストを取得
   ///

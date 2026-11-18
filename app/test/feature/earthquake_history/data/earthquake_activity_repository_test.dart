@@ -96,11 +96,9 @@ void main() {
   });
 }
 
-final class _SpyEarthquakeHistoryRepository
-    extends TestEarthquakeHistoryRepository {
-  new({required this.pages});
-
-  final Map<String?, PaginatedResponse<EarthquakePartial>> pages;
+final class _SpyEarthquakeHistoryRepository({
+  required final Map<String?, PaginatedResponse<EarthquakePartial>> pages,
+}) extends TestEarthquakeHistoryRepository {
   final List<String?> cursors = [];
   int? limit;
   int? depthGte;

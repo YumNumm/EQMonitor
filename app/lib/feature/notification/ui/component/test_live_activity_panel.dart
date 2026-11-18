@@ -9,9 +9,7 @@ import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class TestLiveActivityPanel extends HookConsumerWidget {
-  const new({super.key});
-
+class const TestLiveActivityPanel({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final preset = useState(DebugEewPreset.forecast);

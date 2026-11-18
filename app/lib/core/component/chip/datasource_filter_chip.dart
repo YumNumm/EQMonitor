@@ -3,12 +3,11 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_
 import 'package:material_ui/material_ui.dart';
 import 'package:m3e_core/m3e_core.dart';
 
-class DatasourceFilterChip extends StatelessWidget {
-  const new({this.datasource, this.onChanged, super.key});
-
-  final EarthquakeDataSource? datasource;
-  final ValueChanged<EarthquakeDataSource?>? onChanged;
-
+class const DatasourceFilterChip({
+  final EarthquakeDataSource? datasource,
+  final ValueChanged<EarthquakeDataSource?>? onChanged,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final datasource = this.datasource;
@@ -42,11 +41,8 @@ class DatasourceFilterChip extends StatelessWidget {
   }
 }
 
-class _DatasourceFilterModal extends StatelessWidget {
-  const new({this.current});
-
-  final EarthquakeDataSource? current;
-
+class const _DatasourceFilterModal({final EarthquakeDataSource? current})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

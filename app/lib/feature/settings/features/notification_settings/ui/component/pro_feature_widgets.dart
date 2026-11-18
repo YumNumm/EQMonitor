@@ -1,9 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 
-class ProBadge extends StatelessWidget {
-  const new({super.key});
-
+class const ProBadge({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.designSystem.colorTheme;
@@ -24,20 +22,13 @@ class ProBadge extends StatelessWidget {
   }
 }
 
-class LockedSettingTile extends StatelessWidget {
-  const new({
-    required this.title,
-    required this.subtitle,
-    required this.locked,
-    this.onTap,
-    super.key,
-  });
-
-  final String title;
-  final String subtitle;
-  final bool locked;
-  final VoidCallback? onTap;
-
+class const LockedSettingTile({
+  required final String title,
+  required final String subtitle,
+  required final bool locked,
+  final VoidCallback? onTap,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(

@@ -115,16 +115,10 @@ class KyoshinMonitorImageParser {
 
 sealed class KyoshinMonitorImageParseObservationResult;
 
-class KyoshinMonitorImageParseObservationSuccess
-    implements KyoshinMonitorImageParseObservationResult {
-  new(this.point);
+class KyoshinMonitorImageParseObservationSuccess(
+  final KyoshinMonitorObservationAnalyzedPoint point,
+) implements KyoshinMonitorImageParseObservationResult;
 
-  final KyoshinMonitorObservationAnalyzedPoint point;
-}
-
-class KyoshinMonitorImageParseObservationFailure
-    implements KyoshinMonitorImageParseObservationResult {
-  new(this.point);
-
-  final KyoshinMonitorObservationPoint point;
-}
+class KyoshinMonitorImageParseObservationFailure(
+  final KyoshinMonitorObservationPoint point,
+) implements KyoshinMonitorImageParseObservationResult;

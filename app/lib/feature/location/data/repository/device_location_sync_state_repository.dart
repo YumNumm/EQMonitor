@@ -36,17 +36,13 @@ abstract interface class DeviceLocationSyncStateRepository {
   Future<void> clearLastSent();
 }
 
-class InMemoryDeviceLocationSyncStateRepository
-    implements DeviceLocationSyncStateRepository {
-  new({
-    this.availability = DeviceLocationSyncAvailability.enabled,
-    this.lastSentScope,
-    DeviceLocationPayload? lastSent,
-  }) : _lastSent = lastSent;
-
-  DeviceLocationSyncAvailability availability;
-  DeviceLocationSyncScope? lastSentScope;
-  DeviceLocationPayload? _lastSent;
+class InMemoryDeviceLocationSyncStateRepository({
+  var DeviceLocationSyncAvailability availability =
+      DeviceLocationSyncAvailability.enabled,
+  var DeviceLocationSyncScope? lastSentScope,
+  DeviceLocationPayload? lastSent,
+}) implements DeviceLocationSyncStateRepository {
+  DeviceLocationPayload? _lastSent = lastSent;
 
   @override
   Future<DeviceLocationSyncAvailability> readAvailability() async =>
@@ -80,12 +76,9 @@ class InMemoryDeviceLocationSyncStateRepository
   }
 }
 
-class SharedPreferencesDeviceLocationSyncStateRepository
-    implements DeviceLocationSyncStateRepository {
-  new(this._preferences);
-
-  final SharedPreferencesAsync _preferences;
-
+class SharedPreferencesDeviceLocationSyncStateRepository(
+  final SharedPreferencesAsync _preferences,
+) implements DeviceLocationSyncStateRepository {
   @override
   Future<DeviceLocationSyncAvailability> readAvailability() async {
     final enabled = await _preferences.getBool(

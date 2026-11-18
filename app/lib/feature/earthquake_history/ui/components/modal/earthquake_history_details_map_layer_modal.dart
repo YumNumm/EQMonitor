@@ -12,9 +12,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
-  const new({super.key});
-
+class const EarthquakeHistoryDetailsMapLayerModal({super.key})
+    extends HookConsumerWidget {
   static Future<void> show(BuildContext context) => Navigator.of(context).push(
     AppSheetRoute(
       builder: (context) => const ClipRRect(
@@ -76,9 +75,7 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
   }
 }
 
-class _LocationSettingCards extends ConsumerWidget {
-  const new();
-
+class const _LocationSettingCards() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -163,19 +160,12 @@ class _LocationSettingCards extends ConsumerWidget {
   }
 }
 
-class _LocationCard extends StatelessWidget {
-  const new({
-    required this.title,
-    required this.icon,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final String title;
-  final IconData icon;
-  final bool isSelected;
-  final VoidCallback onTap;
-
+class const _LocationCard({
+  required final String title,
+  required final IconData icon,
+  required final bool isSelected,
+  required final VoidCallback onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

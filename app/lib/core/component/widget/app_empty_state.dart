@@ -2,22 +2,14 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class AppEmptyState extends StatelessWidget {
-  const new({
-    required this.message,
-    super.key,
-    this.icon = Icons.inbox_outlined,
-    this.description,
-    this.action,
-    this.actionLabel,
-  });
-
-  final String message;
-  final IconData icon;
-  final String? description;
-  final VoidCallback? action;
-  final String? actionLabel;
-
+class const AppEmptyState({
+  required final String message,
+  super.key,
+  final IconData icon = Icons.inbox_outlined,
+  final String? description,
+  final VoidCallback? action,
+  final String? actionLabel,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;

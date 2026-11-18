@@ -20,8 +20,8 @@ void main() {
   });
 }
 
-final class _RecordingFeedRepository extends FeedRepository {
-  new() : super(api: api.ApiClient(Dio()));
+final class _RecordingFeedRepository() extends FeedRepository {
+  this : super(api: api.ApiClient(Dio()));
 
   final List<api.ApiClient?> clients = [];
   final List<String?> cursors = [];

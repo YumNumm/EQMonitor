@@ -10,9 +10,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 /// Ash Fall Decoder.
 ///
 /// Decodes JMA Ash Fall information messages.
-class AshFallDecoder {
-  const new _();
-
+class const AshFallDecoder._() {
   /// Decodes an Ash Fall message.
   static QzssDcReport decode(JmaCommonParams params) {
     final message = params.message;

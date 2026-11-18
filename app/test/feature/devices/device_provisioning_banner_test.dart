@@ -117,11 +117,8 @@ final class _SyncBuildTracker {
   var buildCount = 0;
 }
 
-final class _TrackedPushTokenSyncNotifier extends PushTokenSyncNotifier {
-  new(this.tracker);
-
-  final _SyncBuildTracker tracker;
-
+final class _TrackedPushTokenSyncNotifier(final _SyncBuildTracker tracker)
+    extends PushTokenSyncNotifier {
   @override
   Future<PushTokenSyncSnapshot> build() async {
     tracker.buildCount++;

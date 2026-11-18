@@ -8,7 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'eew_telegram_item.freezed.dart';
 
 @Freezed()
-abstract class EewTelegramItem with _$EewTelegramItem {
+abstract class const EewTelegramItem._() with _$EewTelegramItem {
   const factory({
     required String eventId,
     required TelegramStatus status,
@@ -28,7 +28,6 @@ abstract class EewTelegramItem with _$EewTelegramItem {
     EewWarningInfo? warning,
     EewAccuracyInfo? accuracy,
   }) = _EewTelegramItem;
-  const new _();
 
   bool get isLowPreciseHypocenter =>
       isPlum || accuracy == null || accuracy?.epicenter == 1;

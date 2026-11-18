@@ -2,7 +2,7 @@ import 'package:shake_detection_engine/shake_detection_engine.dart';
 import 'package:shake_eew_correlator/shake_eew_correlator.dart';
 
 /// 変更可能な揺れ検知のパラメータ
-enum ShakeDetectionTunable {
+enum ShakeDetectionTunable(final String label, {final bool isInteger = false}) {
   maxSearchDistance('近傍として扱う最大距離 (km)'),
   peakWeightDistance('重みが最大になる距離 (km)'),
   maxNearPoints('近傍観測点の最大数', isInteger: true),
@@ -30,11 +30,6 @@ enum ShakeDetectionTunable {
   correlationMinMatchRatio('EEW 結合: 一致とみなす観測点の割合'),
   correlationPWaveMarginSeconds('EEW 結合: P 波到達前の猶予 (秒)', isInteger: true),
   correlationSWaveExtraSeconds('EEW 結合: S 波到達後の猶予 (秒)', isInteger: true);
-
-  new(this.label, {this.isInteger = false});
-
-  final String label;
-  final bool isInteger;
 
   String format(double value) =>
       isInteger ? value.round().toString() : value.toString();
