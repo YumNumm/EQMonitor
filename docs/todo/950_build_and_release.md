@@ -48,7 +48,7 @@
 
 - [ ] iOS simulator / Android debug の全体ビルドを空き容量のある環境で完走させる。ローカル実行は `No space left on device` で停止し、ネイティブのリンク・起動は未検証。
 - [ ] 署名済み IPA / AAB に Google Mobile Ads SDK と広告設定が含まれないことを確認する。iOS は `GADApplicationIdentifier` / `SKAdNetworkItems`、Android は AdMob の `APPLICATION_ID` と広告 SDK 由来の権限を確認する。
-- [ ] iOS / Android の実機で設定・地震詳細・津波詳細・Pro の説明に広告表示と広告非表示の設定が残っていないことを確認する。
+- [ ] iOS / Android の実機で設定・地震詳細・Pro の説明に広告表示と広告非表示の設定が残っていないことを確認する。
 - [ ] 広告削除を含む版の公開に合わせ、App Store Connect / Play Console の広告・データ収集の申告を残存 SDK の実態に合わせて見直す。Console の変更・公開は未実施。
 
 ## 860: iOS cold archive の actool
@@ -80,7 +80,7 @@
 
 - `NativeDioFactory` の URLSession / Cronet 通信について、HTTP/2・HTTP/3 対応の接続先で端末が実際に選択した通信規格を確認する。HTTP/3 非対応の回線・接続先でも通信が完了することを確認する。
 - Android の Cronet provider がすべて無効な環境で `IOHttpClientAdapter` に切り替わることと、通常の通信・TLS エラーで fallback しないことを確認する。
-- Better Auth と Hi-net のログイン・ログアウト・Cookie 更新、K-NET の認証確認とダウンロード、強震モニタの連続取得、headless 位置同期を実機で確認する。再取得・画面の再表示・provider 無効化後にネイティブ接続が残らないことも確認する。
+- Better Auth のログイン・ログアウト・Cookie 更新、強震モニタの連続取得、headless 位置同期を実機で確認する。再取得・画面の再表示・provider 無効化後にネイティブ接続が残らないことも確認する。
 - Dio と `NativeAdapter` の標準処理で、応答停止・本文受信停止・キャンセル時の完了と、認証・オンボーディングの待機表示が解除されることを実機で確認する。
 - 未検証: Android / iOS の配布用ビルドと実機通信。
 

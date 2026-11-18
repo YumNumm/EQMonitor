@@ -10,7 +10,8 @@ import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/feature/auth/ui/page/debug_auth_page.dart';
 import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
-import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
+import 'package:eqmonitor/feature/debug/data/model/debug_access_level.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_access_level_provider.dart';
 import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_query.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -26,20 +27,9 @@ import 'package:eqmonitor/feature/feed/ui/page/feed_item_details_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/intensity_history_page.dart';
-import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.dart';
-import 'package:eqmonitor/feature/knet_waveform/ui/knet_waveform_page.dart';
-import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_media_page.dart';
-import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_record_list_page.dart';
-import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_station_waveform_page.dart';
-import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_settings_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/page/kyoshin_monitor_about_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/page/kyoshin_monitor_data_type_page.dart';
-import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
-import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
-import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
-import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
-import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/page/onboarding_page.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
@@ -56,7 +46,6 @@ import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_de
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_list_tile_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/hinet_seismicity/ui/hinet_seismicity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
@@ -71,8 +60,6 @@ import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_insert_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_shared_preferences_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/telemetry/debug_telemetry_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_tsunami_details_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/tsunami_telegram_timeline_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
@@ -85,7 +72,6 @@ import 'package:eqmonitor/feature/settings/settings_page.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/paywall_page.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/subscription_settings_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
-import 'package:eqmonitor/feature/tsunami/ui/tsunami_details_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/splash_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
@@ -116,10 +102,12 @@ GoRouter goRouter(Ref ref) => GoRouter(
         )) {
       return const HomeRoute().location;
     }
-    final isDebugMenuAvailable = ref.read(isDebugMenuAvailableProvider);
+    final isOnboardingCompleted =
+        ref.read(onboardingCompletedProvider).value ?? false;
     final debugRouteRedirect = DebugMenuRouteGuard.redirect(
-      isAvailable: isDebugMenuAvailable,
+      accessLevel: ref.read(debugAccessLevelProvider),
       matchedLocation: state.matchedLocation,
+      isOnboardingCompleted: isOnboardingCompleted,
     );
     if (debugRouteRedirect != null) {
       return debugRouteRedirect;
@@ -133,8 +121,6 @@ GoRouter goRouter(Ref ref) => GoRouter(
       return const HomeRoute().location;
     }
 
-    final isOnboardingCompleted =
-        ref.read(onboardingCompletedProvider).value ?? false;
     if (!isOnboardingCompleted) {
       final allowedDuringOnboarding =
           [
@@ -409,37 +395,6 @@ class const TalkerRoute()
         TypedGoRoute<DebugHttpCacheRoute>(path: 'http-cache'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
         TypedGoRoute<DebugTelemetryRoute>(path: 'telemetry'),
-        TypedGoRoute<DebugTsunamiDetailsRoute>(
-          path: 'tsunami-details',
-          routes: [
-            TypedGoRoute<DebugTsunamiTimelineRoute>(
-              path: 'timeline/:tsunamiId',
-            ),
-          ],
-        ),
-        TypedGoRoute<NiedRoute>(
-          path: 'nied',
-          routes: [
-            TypedGoRoute<AquaRoute>(
-              path: 'aqua',
-              routes: [TypedGoRoute<AquaCatalogRoute>(path: 'catalog')],
-            ),
-            TypedGoRoute<FnetRoute>(
-              path: 'fnet',
-              routes: [TypedGoRoute<FnetCatalogRoute>(path: 'catalog')],
-            ),
-            TypedGoRoute<KnetWaveformRoute>(
-              path: 'knet',
-              routes: [
-                TypedGoRoute<KnetCredentialsSettingsRoute>(path: 'settings'),
-                TypedGoRoute<KnetMediaRoute>(path: 'media'),
-                TypedGoRoute<KnetRecordListRoute>(path: 'records'),
-                TypedGoRoute<KnetStationWaveformRoute>(path: 'waveform'),
-              ],
-            ),
-            TypedGoRoute<HinetSeismicityRoute>(path: 'hinet-seismicity'),
-          ],
-        ),
       ],
     ),
   ],
@@ -538,14 +493,40 @@ class const DebugRoute()
 
 final class const DebugMenuRouteGuard() {
   static String? redirect({
-    required bool isAvailable,
+    required DebugAccessLevel accessLevel,
     required String matchedLocation,
+    required bool isOnboardingCompleted,
   }) {
-    if (!isAvailable &&
+    if (accessLevel == DebugAccessLevel.none &&
         matchedLocation.startsWith(const DebugRoute().location)) {
       return const HomeRoute().location;
     }
-    return null;
+    if (accessLevel == DebugAccessLevel.full) {
+      return null;
+    }
+    final isAdminOnly =
+        [
+          const TalkerRoute().location,
+          const HttpApiEndpointSelectorRoute().location,
+          const DebugAuthRoute().location,
+          const DebugAppGroupRoute().location,
+          const DebugSharedPreferencesRoute().location,
+          const DebugSecureStorageRoute().location,
+          const DebugHttpCacheRoute().location,
+          const DebugWebSocketRoute().location,
+          const DebugNavigationRoute().location,
+          const DebugDeviceSettingsRoute().location,
+          const DebugNotificationWebhookRoute().location,
+          const DebugDeviceAdminRoute().location,
+        ].any(matchedLocation.startsWith) ||
+        (isOnboardingCompleted &&
+            matchedLocation.startsWith(const OnboardingRoute().location));
+    if (!isAdminOnly) {
+      return null;
+    }
+    return accessLevel == DebugAccessLevel.none
+        ? const HomeRoute().location
+        : const DebugRoute().location;
   }
 }
 
@@ -836,114 +817,6 @@ class const DebugTelemetryRoute()
   }
 }
 
-class const DebugTsunamiDetailsRoute()
-    extends GoRouteData
-    with $DebugTsunamiDetailsRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const DebugTsunamiDetailsPage();
-  }
-}
-
-class const DebugTsunamiTimelineRoute({required final String tsunamiId})
-    extends GoRouteData
-    with $DebugTsunamiTimelineRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return TsunamiTelegramTimelineDebugPage(tsunamiId: tsunamiId);
-  }
-}
-
-class const NiedRoute() extends GoRouteData with $NiedRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const NiedPage();
-  }
-}
-
-class const AquaRoute() extends GoRouteData with $AquaRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const AquaPage();
-  }
-}
-
-class const AquaCatalogRoute()
-    extends GoRouteData
-    with $AquaCatalogRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const AquaCatalogPage();
-  }
-}
-
-class const FnetRoute() extends GoRouteData with $FnetRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const FnetPage();
-  }
-}
-
-class const FnetCatalogRoute()
-    extends GoRouteData
-    with $FnetCatalogRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const FnetCatalogPage();
-  }
-}
-
-class const KnetWaveformRoute()
-    extends GoRouteData
-    with $KnetWaveformRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const KnetWaveformPage();
-}
-
-class const KnetCredentialsSettingsRoute()
-    extends GoRouteData
-    with $KnetCredentialsSettingsRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const KnetCredentialsSettingsPage();
-}
-
-class const KnetMediaRoute({
-  /// 地震発生時刻（JST）
-  required final DateTime $extra,
-}) extends GoRouteData with $KnetMediaRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      KnetMediaPage(eventTime: $extra);
-}
-
-class const KnetRecordListRoute({
-  /// 地震発生時刻（JST）
-  required final DateTime $extra,
-}) extends GoRouteData with $KnetRecordListRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      KnetRecordListPage(eventTime: $extra);
-}
-
-class const KnetStationWaveformRoute({required final KnetStationResult $extra})
-    extends GoRouteData
-    with $KnetStationWaveformRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      KnetStationWaveformPage(result: $extra);
-}
-
-class const HinetSeismicityRoute()
-    extends GoRouteData
-    with $HinetSeismicityRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const HinetSeismicityPage();
-  }
-}
-
 class const KyoshinMonitorAboutRoute()
     extends GoRouteData
     with $KyoshinMonitorAboutRoute, MaterialPageMixin {
@@ -984,16 +857,6 @@ class const FeedItemDetailsRoute({
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       FeedItemDetailsPage(id: id, item: $extra);
-}
-
-@TypedGoRoute<TsunamiDetailsRoute>(path: '/tsunami/:tsunamiId')
-class const TsunamiDetailsRoute({required final String tsunamiId})
-    extends GoRouteData
-    with $TsunamiDetailsRoute, MaterialPageMixin {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return TsunamiDetailsPage(tsunamiId: tsunamiId);
-  }
 }
 
 @TypedGoRoute<PaywallRoute>(path: '/subscription/paywall')

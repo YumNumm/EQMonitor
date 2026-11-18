@@ -67,8 +67,7 @@
 # app/ から
 mise exec -- flutter test test/core/component/selector \
   test/core/component/slider test/core/component/chip/m3e_filter_controls_test.dart \
-  test/feature/knet_waveform/ui/media/knet_movie_seekbar_test.dart \
-  test/feature/tsunami/tsunami_timeline_accessibility_test.dart --dart-define=CI=true
+  --dart-define=CI=true
 ```
 
 ## 条件付き表示と更新時刻

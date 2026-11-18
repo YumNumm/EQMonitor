@@ -73,7 +73,7 @@ class const DebugAuthPage({super.key}) extends HookConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Native認証デバッグ')),
+      appBar: AppBar(title: const Text('認証デバッグ')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
@@ -11,12 +12,15 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/byte_size_formatter.dart';
 import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_manifest_provider.dart';
 import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
+import 'package:eqmonitor/feature/debug/data/action/debug_mode_action.dart';
 import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/data/action/settings_app_icon_action.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -270,6 +274,21 @@ class const _AppVersionInformation() extends HookConsumerWidget {
     final textTheme = theme.textTheme;
 
     final manifestAsync = ref.watch(assetPackManifestProvider);
+    final buildNumberTapCount = useRef(0);
+    final buildNumberTapRecognizer = useMemoized(TapGestureRecognizer.new);
+    useEffect(() => buildNumberTapRecognizer.dispose, [
+      buildNumberTapRecognizer,
+    ]);
+    buildNumberTapRecognizer.onTap = () {
+      buildNumberTapCount.value += 1;
+      if (buildNumberTapCount.value < DebugModeAction.requiredTapCount) {
+        return;
+      }
+      buildNumberTapCount.value = 0;
+      unawaited(
+        ref.read(debugModeActionProvider).requestEnable(ref, context),
+      );
+    };
 
     return Text.rich(
       TextSpan(
@@ -281,7 +300,11 @@ class const _AppVersionInformation() extends HookConsumerWidget {
               fontSize: 14,
             ),
           ),
-          TextSpan(text: '(Build ${packageInfo.buildNumber})\n'),
+          TextSpan(
+            text: '(Build ${packageInfo.buildNumber})',
+            recognizer: buildNumberTapRecognizer,
+          ),
+          const TextSpan(text: '\n'),
           TextSpan(
             text: switch (manifestAsync) {
               AsyncData(:final value) => 'Asset Pack v${value.packVersion}',

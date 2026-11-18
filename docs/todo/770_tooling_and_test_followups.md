@@ -46,7 +46,7 @@
 
 ## 400: analyzer plugin の package 適用範囲
 
-- `mise exec -- dart run melos run analyze --no-select` で、app以外の13パッケージに計145件のカスタムlint警告が出る。対象は `cache`、`core`、`dart_azarashi`、`earthquake_replay`、`jma_map`、`knet_api_client`、`knet_waveform_parser`、`kyoshin_monitor_api`、`kyoshin_monitor_image_parser`、`live_activity_util`、`msgpack_dart`、`nied_api_client`、`telemetry_store`。
+- `mise exec -- dart run melos run analyze --no-select` で、app以外の10パッケージにカスタムlint警告が出る。対象は `cache`、`core`、`dart_azarashi`、`earthquake_replay`、`jma_map`、`kyoshin_monitor_api`、`kyoshin_monitor_image_parser`、`live_activity_util`、`msgpack_dart`、`telemetry_store`。件数は `knet_api_client`・`knet_waveform_parser`・`nied_api_client` の削除後に未計測。
 - 診断には生成ファイルのトップレベル関数やnullアサーションも含まれる。生成ファイルを直接修正せず、ルールの対象範囲と生成設定を確認する。
 - `analysis_options.yaml`、`app/analysis_options.yaml`、`packages/*/analysis_options.yaml` のinclude chainと `tools/eqmonitor_lints_plugin/` の対象scopeを調べる。
 - pure Dart/Flutterごとに有効ルールを決め、必要なpackageへ適用する。診断0件だけをplugin無効/有効の証拠にしない。
@@ -56,7 +56,7 @@
 
 - `packages/eqmonitor_api/lib/src/models/get_v2_subscription_me_response_union.dart` は現在も `fromJson` が `UnimplementedError`。OpenAPI discriminatorまたは `packages/eqmonitor_api/bin/generate.dart` の後処理で直し、active/grace/inactiveと不正値をtestして再生成する。
 - `app/ios/scripts/patch_purchases_paywall_color.sh` は依存pinが `purchases-ios-spm >= 5.78.0` を満たしたら不要性を検証して削除する。
-- `app/lib/feature/fnet_catalog/ui/components/fnet_catalog_list_tile.dart` は詳細modal/pageのUXを決めて古いコメントを整理する。`packages/extensions/README.md` / `packages/lat_lng/README.md` のtemplate TODOを実態に合わせる。
+- `packages/extensions/README.md` / `packages/lat_lng/README.md` のtemplate TODOを実態に合わせる。
 - map utility/asset generator のgeometry guardは入力shape契約をfixtureで確認する。問い合わせ画面の非mobile対応を採用するなら `app/lib/feature/settings/data/contact/contact_action.dart` の案内を設計する。
 
 ## 750: Flutter Material 互換delegateの整理

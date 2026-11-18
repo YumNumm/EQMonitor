@@ -102,7 +102,6 @@ dependencies:
     sdk: flutter
   flutter_markdown: ^0.7.5
   flutter_secure_storage: ^11.1.0
-  flutter_sticky_header: ^0.8.0
   flutter_test:
     sdk: flutter
   flutter_timezone: ^5.0.1
@@ -119,10 +118,6 @@ dependencies:
   jma_map:
     path: ../packages/jma_map
   json_annotation: ^4.11.0
-  knet_api_client:
-    path: ../packages/knet_api_client
-  knet_waveform_parser:
-    path: ../packages/knet_waveform_parser
   kyoshin_monitor_api:
     path: ../packages/kyoshin_monitor_api
   kyoshin_monitor_image_parser:
@@ -134,8 +129,6 @@ dependencies:
   live_activity_util:
     path: ../packages/live_activity_util
   maplibre: ^0.3.5
-  nied_api_client:
-    path: ../packages/nied_api_client
   ntp: ^2.0.0
   objective_c: ^9.2.2
   package_info_plus: ^10.1.0
@@ -166,12 +159,10 @@ dependencies:
     path: ../packages/telemetry_store
   theme_tailor_annotation: ^4.0.0
   timezone: ^0.11.0
-  two_dimensional_scrollables: ^0.5.2
   upgrader: ^13.0.0
   url_launcher: ^6.3.1
   uuid: ^4.5.1
   version: ^3.0.2
-  video_player: ^2.11.1
   web_socket: ^1.0.1
   web_socket_client: ^0.2.1
   workflows:
