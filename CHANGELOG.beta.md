@@ -1,5 +1,13 @@
 # Changelog (Beta)
 
+## [3.1.0-beta.3](https://github.com/YumNumm/EQMonitor/compare/v3.1.0-beta.2...v3.1.0-beta.3) (2026-11-18)
+
+
+### Bug Fixes
+
+* Live Activity テストで現在地の警報表示と点滅が出ない問題を直す ([4fec8fe](https://github.com/YumNumm/EQMonitor/commit/4fec8fed530a838016cbaae7bf1c992291bf3a66))
+* Live Activity テストで現在地の警報表示と点滅が出ない問題を直す ([77d7d6a](https://github.com/YumNumm/EQMonitor/commit/77d7d6a11308bec2f3acd6b9e44a351920ec5a29))
+
 ## [3.1.0-beta.2](https://github.com/YumNumm/EQMonitor/compare/v3.1.0-beta.1...v3.1.0-beta.2) (2026-11-18)
 
 
