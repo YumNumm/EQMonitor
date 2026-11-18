@@ -31,10 +31,10 @@ extension ShakeDetectionLevelThresholdLabel on ShakeDetectionLevel {
   /// 微弱な揺れは下限を持たないため目安を出さない。
   String? get intensityGuideLabel => switch (this) {
     .weaker => null,
-    .weak => '震度0程度〜',
-    .medium => '震度1程度〜',
-    .strong => '震度3程度〜',
-    .stronger => '震度5弱程度〜',
+    .weak => '震度1程度〜',
+    .medium => '震度3程度〜',
+    .strong => '震度5弱程度〜',
+    .stronger => '震度6弱程度〜',
   };
 
   /// 一行では選択中の表示が省略されるため、目安は二行目に置く。
