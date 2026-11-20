@@ -36,9 +36,6 @@ class const EqMonitorRealtimeEventMapper() {
           source: RealtimeSource.eqmonitor,
         ),
       ],
-      // 揺れ検知のサーバー配信は廃止した。生成した API クライアントに型が残る間は、
-      // 受信しても業務イベントへ変換しない。
-      api.RealtimeShakeDetectionSnapshotEvent() => const <RealtimeEvent>[],
       api.RealtimeTsunamiUpsertEvent(:final payload) => [
         RealtimeEvent.tsunamiUpsert(
           eventId: payload.eventId,
