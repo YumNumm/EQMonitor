@@ -142,6 +142,13 @@ asc testflight crashes list --paginate --sort=-createdDate --output json
 - `data` 件数、`meta.paging.total`、`links.next` で取得漏れを確認する。
   screenshot URLの `expirationDate` に注意し、投稿データはGit管理外に権限0600で保存する。
 
+## アップデート後の新機能の案内
+
+- ホームに出す新機能の案内は `app/lib/feature/release_highlight/data/model/release_highlight.dart` の `ReleaseHighlight` に値を追加して定義する。値が無いリリースでは何も表示しない。主ボタンの行き先と表示条件は `visible_release_highlight_provider.dart` と `ReleaseHighlightFlow` の `switch` に追加する。
+- 既読のバージョン（`release_highlight_seen_version`）より新しく、現在のバージョン以下の案内のうち最新の 1 件を表示する。新規インストールではオンボーディング完了時に現在のバージョンを既読にする。
+- 配布ビルドは beta でも `x.y.z` を名乗るため、バージョンは `x.y.z` だけで比較する。beta で既読にした端末には、同じ `x.y.z` の正式リリースで再表示されない。
+- 案内する機能を使えない端末では表示せず、既読にもしない。後から使えるようになった時点で表示される。
+
 ## CI の依存・権限・起動条件
 
 - repository内scriptを実行するjobは、そのstepより前にcheckoutする。
