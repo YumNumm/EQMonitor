@@ -109,7 +109,7 @@
 ## 揺れ検知（端末内検知）
 
 - 揺れ検知はサーバーから配信しない。強震モニタの画像から端末内で計算し、サーバーは通知だけを送る。
-  REST `/v2/shake-detection/active` は呼ばず、WebSocket の `shake_detection` は受信しても `EqMonitorRealtimeEventMapper` で読み捨てる。
+  REST `/v2/shake-detection/active` と WebSocket の `shake_detection` は backend から撤去済みで、アプリの API クライアントにも型が無い。
 - 検知は `packages/shake_detection_engine`、EEW との結合は `packages/shake_eew_correlator` が担う。
   前者は公開版 KyoshinEewViewer for ingen の `ShakeDetectionEngine`、後者は backend の `packages/event-correlator` の移植で、
   閾値や判定順を変える場合は移植元との差を README に残す。
