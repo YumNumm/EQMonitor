@@ -2,7 +2,6 @@ min_version = "2026.09.12"
 
 [plugins]
 flutter = "https://github.com/YumNumm/mise-flutter.git"
-gcloud = "https://github.com/jthegedus/asdf-gcloud"
 
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"
