@@ -296,7 +296,7 @@ class const _DebugWidget() extends ConsumerWidget {
               onTap: () async =>
                   const DebugEarthquakeHistoryListTileRoute().push(context),
             ),
-            if (buildCfg.isShakeDetectionAvailable)
+            if (buildCfg.isShakeDetectionEnabled)
               ListTile(
                 title: const Text('揺れ検知 Card'),
                 subtitle: Text(
@@ -324,7 +324,7 @@ class const _DebugWidget() extends ConsumerWidget {
               onTap: () async =>
                   const DebugShakeDetectionEngineRoute().push(context),
             ),
-            if (buildCfg.isShakeDetectionAvailable)
+            if (buildCfg.isShakeDetectionEnabled)
               ListTile(
                 title: const Text('揺れ検知を挿入'),
                 subtitle: Text(

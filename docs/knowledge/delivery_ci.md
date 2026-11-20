@@ -53,8 +53,8 @@
   Release PRのmergeによる新しいビルドは別バイナリになるため、同一バイナリの一般公開に使わない。
 
 - 両OSとも対応する Firebase App Distribution へ配布する。iOSストアuploadとFirebaseは別job。
-- `BuildConfig.isShakeDetectionAvailable` は `!isProduction && isShakeDetectionEnabled`。
-  production では配布先や `IS_SHAKE_DETECTION_ENABLED` に関係なく、揺れ検知通知の一般向け設定を無効にする。
+- 揺れ検知通知は `IS_SHAKE_DETECTION_ENABLED`（既定 true）だけで制御し、production かどうかを見ない。
+  ワークフローはこの値を渡さないため、配布ビルドでは揺れ検知通知が有効になる。配布先ごとに止める場合は `false` を渡す。
   端末内の揺れ検知（地図・カードの表示）はこのフラグに依存せず、デバッグ画面の設定で有効にする。
   詳細は [EEW・リアルタイム](eew_realtime.md) を参照する。
 - GitHub Actions の iOS / Android ビルドは、配布先によらず `IS_PRODUCTION=true` を渡す。
