@@ -29,7 +29,8 @@ for attempt in 1 2 3; do
   if [[ "$attempt" -eq 3 ]] ||
     ! grep -Fq \
       -e 'error: exportArchive The request timed out.' \
-      -e 'error: exportArchive The Internet connection appears to be offline.' "$log_path"; then
+      -e 'error: exportArchive The Internet connection appears to be offline.' \
+      -e 'error: exportArchive The network connection was lost.' "$log_path"; then
     exit "${pipeline_status[0]}"
   fi
 
