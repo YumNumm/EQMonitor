@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/util/map/map_geo_json_source_updater.dart';
@@ -11,6 +12,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intens
 import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_intensity_icon_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/station_icon_image_expression.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon_data.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -36,7 +38,10 @@ class const EarthquakeHistoryShindoDbStationLayer({
     final lifecycleToken = useRef<Object?>(null);
     final initialization = useRef<Future<void>?>(null);
     final isLayerInitialized = useRef(false);
-    final imagesAdded = useRef(false);
+    final registeredIcons =
+        useRef<(IntensityIconData, Map<ShindoDbIntensityClass, Uint8List>)?>(
+          null,
+        );
     final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
     // カメラ移動でも再buildされるため、観測データに変更がない間は再利用する。
     final geoJson = useMemoized(
@@ -53,7 +58,7 @@ class const EarthquakeHistoryShindoDbStationLayer({
       final token = Object();
       lifecycleToken.value = token;
       isLayerInitialized.value = false;
-      imagesAdded.value = false;
+      registeredIcons.value = null;
       geoJsonUpdater.reset();
       initialization.value = enqueue(() async {
         if (lifecycleToken.value != token) {
@@ -101,12 +106,15 @@ class const EarthquakeHistoryShindoDbStationLayer({
             if (lifecycleToken.value != token) {
               return;
             }
-            if (!imagesAdded.value) {
+            final registered = registeredIcons.value;
+            if (registered == null ||
+                !identical(registered.$1, iconData) ||
+                !identical(registered.$2, dbIconData)) {
               await styleController.addImages({
                 ...iconData.toMapStyleImages,
                 ...dbIconData.toMapStyleImages,
               });
-              imagesAdded.value = true;
+              registeredIcons.value = (iconData, dbIconData);
             }
             if (isLayerInitialized.value) {
               await styleController.removeLayer(iconLayerId);
