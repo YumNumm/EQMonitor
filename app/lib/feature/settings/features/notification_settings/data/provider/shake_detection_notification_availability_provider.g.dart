@@ -45,4 +45,4 @@ final class IsShakeDetectionNotificationAvailableProvider
 }
 
 String _$isShakeDetectionNotificationAvailableHash() =>
-    r'83829d67b1b095c31fed2dac6bb1f4c9931f85c2';
+    r'685b0f02fb772f1ac09d6e7b667a5c8631b8aaa5';

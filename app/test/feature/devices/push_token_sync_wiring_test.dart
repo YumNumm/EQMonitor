@@ -128,7 +128,7 @@ void main() {
   );
 
   test(
-    'same token is not upserted again in a fresh app session within a day',
+    'same token is not upserted again in a fresh app session within the resend interval',
     () async {
       SharedPreferences.setMockInitialValues({
         SharedPreferencesKey.deviceProvisioned.key: true,

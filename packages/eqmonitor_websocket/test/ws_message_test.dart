@@ -143,45 +143,6 @@ const fullEew = <String, Object?>{
   },
 };
 
-const fullShakeSnapshot = <String, Object?>{
-  'type': 'shake_detection',
-  'revision': 42,
-  'responseAt': fixtureTime,
-  'events': [
-    {
-      'type': 'shake_detection',
-      'eventId': 'shake-canonical',
-      'serialNo': 7,
-      'createdAt': '2025-12-31T23:59:30.000Z',
-      'updatedAt': '2025-12-31T23:59:55.000Z',
-      'expiresAt': '2026-01-01T00:00:35.000Z',
-      'level': 'Strong',
-      'changeReasons': ['level_up'],
-      'mergedEvents': [
-        {'eventId': 'shake-absorbed', 'mergedAt': '2025-12-31T23:59:50.000Z'},
-      ],
-      'pointCount': 1,
-      'region': {
-        'topLeft': {'latitude': 36.0, 'longitude': 139.0},
-        'bottomRight': {'latitude': 35.0, 'longitude': 140.0},
-      },
-      'points': [
-        {
-          'code': 'POINT-1',
-          'name': 'Point 1',
-          'region': 'Tokyo',
-          'type': 'K-NET',
-          'location': {'latitude': 35.5, 'longitude': 139.5},
-          'intensity': 3.2,
-          'intensityDiff': 0.4,
-        },
-      ],
-      'test': {'targetDeviceId': 'device-1'},
-      'correlatedEew': {'eventId': '20260101000001', 'score': 0.9},
-    },
-  ],
-};
-
 void main() {
   group('WsMessage.fromJson realtime contract', () {
     test('full Earthquake trees, telegrams, and catalog parse', () {
@@ -220,21 +181,6 @@ void main() {
       final event = message.data as RealtimeEewUpsertEvent;
       expect(event.payload.record.isWarning, isTrue);
       expect(event.payload.record.warning?.zones.single.code, '9011');
-    });
-
-    test('shake points, merged events, and correlation parse', () {
-      final message = WsMessage.fromJson({
-        'type': 'realtime',
-        'data': {
-          ...fullShakeSnapshot,
-        },
-      }) as WsRealtimeMessage;
-
-      final event = message.data as RealtimeShakeDetectionSnapshotEvent;
-      final shake = event.payload.events.single;
-      expect(shake.points.single.intensity, 3.2);
-      expect(shake.mergedEvents.single.eventId, 'shake-absorbed');
-      expect(shake.correlatedEew?.eventId, '20260101000001');
     });
 
     test('earthquake delete parses without record', () {

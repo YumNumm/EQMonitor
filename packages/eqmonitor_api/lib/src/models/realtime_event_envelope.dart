@@ -7,7 +7,6 @@ import 'realtime_earthquake_delete_payload.dart';
 import 'realtime_earthquake_upsert_payload.dart';
 import 'realtime_eew_upsert_payload.dart';
 import 'realtime_estimated_intensity_upsert_payload.dart';
-import 'realtime_shake_detection_snapshot_payload.dart';
 import 'realtime_tsunami_delete_payload.dart';
 import 'realtime_tsunami_upsert_payload.dart';
 
@@ -28,9 +27,6 @@ sealed class RealtimeEventEnvelope {
       ),
       ('estimated_intensity', 'upsert') => RealtimeEstimatedIntensityUpsertEvent(
         RealtimeEstimatedIntensityUpsertPayload.fromJson(json),
-      ),
-      ('shake_detection', null) => RealtimeShakeDetectionSnapshotEvent(
-        RealtimeShakeDetectionSnapshotPayload.fromJson(json),
       ),
       ('tsunami', 'delete') => RealtimeTsunamiDeleteEvent(
         RealtimeTsunamiDeletePayload.fromJson(json),
@@ -70,12 +66,6 @@ final class RealtimeEstimatedIntensityUpsertEvent extends RealtimeEventEnvelope 
   const RealtimeEstimatedIntensityUpsertEvent(this.payload);
 
   final RealtimeEstimatedIntensityUpsertPayload payload;
-}
-
-final class RealtimeShakeDetectionSnapshotEvent extends RealtimeEventEnvelope {
-  const RealtimeShakeDetectionSnapshotEvent(this.payload);
-
-  final RealtimeShakeDetectionSnapshotPayload payload;
 }
 
 final class RealtimeTsunamiDeleteEvent extends RealtimeEventEnvelope {
