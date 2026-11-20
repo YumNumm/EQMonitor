@@ -9,8 +9,6 @@ export 'package:eqmonitor_api/eqmonitor_api.dart'
         RealtimeEstimatedIntensityUpsertEvent,
         RealtimeEstimatedIntensityUpsertPayload,
         RealtimeEventEnvelope,
-        RealtimeShakeDetectionSnapshotEvent,
-        RealtimeShakeDetectionSnapshotPayload,
         RealtimeTsunamiDeleteEvent,
         RealtimeTsunamiDeletePayload,
         RealtimeTsunamiUpsertEvent,
