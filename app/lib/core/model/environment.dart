@@ -77,9 +77,6 @@ abstract class const BuildConfig._() with _$BuildConfig {
   /// production ビルドでは一般ユーザー向けの UI のみ表示する。
   bool get isDeveloperUiEnabled => !isProduction;
 
-  bool get isShakeDetectionAvailable =>
-      !isProduction && isShakeDetectionEnabled;
-
   /// プラットフォームに応じた RevenueCat の API キーを返す。
   /// 後続 PR の Paywall / サブスク状態取得実装で利用する想定。
   String? get revenueCatApiKey {

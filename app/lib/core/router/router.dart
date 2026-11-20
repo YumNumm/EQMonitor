@@ -112,7 +112,7 @@ GoRouter goRouter(Ref ref) => GoRouter(
     if (debugRouteRedirect != null) {
       return debugRouteRedirect;
     }
-    if (!buildConfig.isShakeDetectionAvailable &&
+    if (!buildConfig.isShakeDetectionEnabled &&
         [
           const ShakeDetectionSettingsRoute().location,
           const DebugShakeDetectionCardRoute().location,

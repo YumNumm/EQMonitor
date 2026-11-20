@@ -1,6 +1,8 @@
+import 'package:eqmonitor/core/component/chip/beta_chip.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_access_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/dialog/notification_permission_dialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -38,6 +40,9 @@ class const NotificationPresetSelector({
       _ => null,
     };
     final isOsGranted = permission?.isOsNotificationGranted ?? false;
+    final showsShakeDetection =
+        style == .settings &&
+        ref.watch(shakeDetectionNotificationAccessProvider) != .hidden;
 
     useEffect(() {
       if (style == .onboarding &&
@@ -108,6 +113,7 @@ class const NotificationPresetSelector({
         selectedPreset: selectedPreset,
         isPresetEnabled: isPresetEnabled,
         shouldShowCriticalWarning: shouldShowCriticalWarning,
+        showsShakeDetection: showsShakeDetection,
         onPresetTap: handlePresetTap,
         onCustomSettingsTap: onCustomSettingsTap,
         onCriticalWarningTap: () => ref
@@ -308,6 +314,7 @@ class const _SettingsPresetGroup({
   required final bool Function(NotificationPreset preset) isPresetEnabled,
   required final bool Function(NotificationPreset preset)
   shouldShowCriticalWarning,
+  required final bool showsShakeDetection,
   required final ValueChanged<NotificationPreset> onPresetTap,
   required final VoidCallback? onCustomSettingsTap,
   required final VoidCallback onCriticalWarningTap,
@@ -343,6 +350,8 @@ class const _SettingsPresetGroup({
               isSelected: selectedPreset == presets[index],
               isEnabled: isPresetEnabled(presets[index]),
               showCriticalWarning: shouldShowCriticalWarning(presets[index]),
+              showsShakeDetection:
+                  showsShakeDetection && presets[index] == .custom,
               onTap: () => onPresetTap(presets[index]),
               onCustomSettingsTap: onCustomSettingsTap,
               onCriticalWarningTap: onCriticalWarningTap,
@@ -359,6 +368,7 @@ class const _SettingsPresetTile({
   required final bool isSelected,
   required final bool isEnabled,
   required final bool showCriticalWarning,
+  required final bool showsShakeDetection,
   required final VoidCallback onTap,
   required final VoidCallback? onCustomSettingsTap,
   required final VoidCallback onCriticalWarningTap,
@@ -406,6 +416,10 @@ class const _SettingsPresetTile({
                       color: subtitleColor,
                     ),
                   ),
+                  if (showsShakeDetection) ...[
+                    SizedBox(height: spacing.xs),
+                    _ShakeDetectionChip(isEnabled: isEnabled),
+                  ],
                   if (showCriticalWarning) ...[
                     SizedBox(height: spacing.xs),
                     _CriticalAlertWarningLink(onTap: onCriticalWarningTap),
@@ -422,6 +436,63 @@ class const _SettingsPresetTile({
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// カスタム設定で揺れ検知の通知を設定できることを示すチップ。
+class const _ShakeDetectionChip({required final bool isEnabled})
+    extends StatelessWidget {
+  static const _betaChipHeight = 14.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+    final colorTheme = designSystem.colorTheme;
+    final spacing = designSystem.spacing;
+
+    // 幅が足りないときは折り返さず、チップ全体を縮める。
+    return FittedBox(
+      fit: .scaleDown,
+      alignment: .centerLeft,
+      child: DecoratedBox(
+        decoration: ShapeDecoration(
+          color: colorTheme.secondaryContainer,
+          shape: RoundedSuperellipseBorder(
+            borderRadius: BorderRadius.circular(designSystem.shape.xs),
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.sm,
+            vertical: spacing.xs,
+          ),
+          child: Row(
+            mainAxisSize: .min,
+            crossAxisAlignment: .baseline,
+            textBaseline: .alphabetic,
+            spacing: spacing.xs,
+            children: [
+              Text(
+                '揺れ検知',
+                // 行の高さを BETA チップより低くし、チップの上下の余白を
+                // BETA チップの高さだけで決める。
+                style: designSystem.typography.labelMedium.copyWith(
+                  color: isEnabled
+                      ? colorTheme.onSecondaryContainer
+                      : Theme.of(context).disabledColor,
+                  fontWeight: .w600,
+                  height: 0.8,
+                  leadingDistribution: .even,
+                ),
+              ),
+              BetaChip(
+                height: MediaQuery.textScalerOf(context).scale(_betaChipHeight),
+              ),
+            ],
+          ),
         ),
       ),
     );

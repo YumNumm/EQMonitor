@@ -386,7 +386,7 @@ final class _Harness._({
         deviceProvisioningProvider.overrideWith(_Provisioned.new),
         debugProvider.overrideWith(_DebugDisabled.new),
         buildConfigProvider.overrideWithValue(
-          _buildConfig(isProduction: !isShakeAvailable),
+          _buildConfig(isShakeDetectionEnabled: isShakeAvailable),
         ),
       ],
     );
@@ -413,21 +413,23 @@ class _RecordingCurrentDeviceLocation extends CurrentDeviceLocation {
   }
 }
 
-BuildConfig _buildConfig({required bool isProduction}) => BuildConfig(
-  restApiUrl: '',
-  appIdSuffix: '',
-  appName: 'EQMonitor',
-  commitInformation: 'test',
-  flavor: isProduction ? Flavor.prod : Flavor.dev,
-  wsApiUrl: '',
-  googleIosClientId: '',
-  googleAndroidClientId: '',
-  buildTimestamp: '',
-  buildCommitMessage: '',
-  revenueCatApiKeyIos: '',
-  revenueCatApiKeyAndroid: '',
-  isProduction: isProduction,
-);
+BuildConfig _buildConfig({required bool isShakeDetectionEnabled}) =>
+    BuildConfig(
+      restApiUrl: '',
+      appIdSuffix: '',
+      appName: 'EQMonitor',
+      commitInformation: 'test',
+      flavor: Flavor.prod,
+      wsApiUrl: '',
+      googleIosClientId: '',
+      googleAndroidClientId: '',
+      buildTimestamp: '',
+      buildCommitMessage: '',
+      revenueCatApiKeyIos: '',
+      revenueCatApiKeyAndroid: '',
+      isProduction: true,
+      isShakeDetectionEnabled: isShakeDetectionEnabled,
+    );
 
 class _Provisioned extends DeviceProvisioningNotifier {
   @override
