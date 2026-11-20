@@ -140,6 +140,14 @@
 - `app/lib/feature/intensity_history/data/model/intensity_history_state.dart` の `prefecture()`→`nationwide()`、`city(...)`→`prefectureFocused(...)`、controllerの `backToPrefecture()`→`backToNationwide()` を検討する。
 - 完了条件: controller/map action/page/fill layer/region panelと `app/test/feature/intensity_history/` を追従しFreezed再生成。別都道府県tapの既存修正を回帰させない。
 
+## 800: アップデート後の新機能の案内
+
+- 対象: `app/lib/feature/release_highlight/`、`app/lib/core/component/chip/beta_chip.dart`。Widget Test での描画と閉じる操作は確認済み、実機検証は未実施。
+- 3.1.0 の「揺れ検知の通知」の案内は、揺れ検知の通知を使える端末にだけ表示する。本番ビルドでは `isShakeDetectionAvailable` が false で、デバッグを有効にした Admin 端末以外には表示されない。Pro 向けにベータ提供する場合は、公開条件を開く変更を同じリリースに入れる。
+- iOS / Android 実機の Light・Dark と文字拡大で、無料プランの「Pro について」が購入画面、Pro の「通知を設定」が通知設定、「詳しく」が説明シート、「変更履歴」が変更履歴を開くことを確認する。閉じる・主ボタン・変更履歴で既読になり、再起動後も表示されないことを確認する。
+- 緊急地震速報または揺れ検知カードの表示中に 1 行へ畳まれ、表示が終わると元のカードへ戻ることを確認する。
+- 変更履歴の本文は backend の `packages/changelog` が正本で、3.1.0 の項目は未追加。案内の「変更履歴」から 3.1.0 の内容を読めるよう、リリースまでに追加する。
+
 ## 800: M3E 移行後の実機表示・操作確認
 
 - 電文一覧のVXSE62で、震度と長周期地震動階級が異なる地域を使い、階級のアイコン・地域のグループ・前報との差分が長周期地震動階級に一致することを確認する。階級欠損時の非表示、Light・Dark、文字拡大も実機未検証。

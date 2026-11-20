@@ -19,7 +19,7 @@ enum SharedPreferencesKey(final String key) {
   startBody('start_body'),
   changelogEtag('changelog_etag'),
   changelogBody('changelog_body'),
-  whatsNewSeenVersion('whats_new_seen_version'),
+  releaseHighlightSeenVersion('release_highlight_seen_version'),
   assetPackDistributionEtag('asset_pack_distribution_etag'),
   assetPackDistributionManifest('asset_pack_distribution_manifest'),
   assetPackDistributionSignature('asset_pack_distribution_signature'),

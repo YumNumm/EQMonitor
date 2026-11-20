@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/provider/package_info.dart';
-import 'package:eqmonitor/feature/start/data/notifier/update_banner_seen_version_notifier.dart';
+import 'package:eqmonitor/feature/release_highlight/data/notifier/release_highlight_seen_version_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -24,14 +24,14 @@ void main() {
       overrides: [packageInfoProvider.overrideWithValue(_packageInfo)],
     );
     addTearDown(container.dispose);
-    await container.read(updateBannerSeenVersionProvider.future);
+    await container.read(releaseHighlightSeenVersionProvider.future);
 
     // complete ステップの副作用と同等の処理
     final version = container.read(packageInfoProvider).version;
     await container
-        .read(updateBannerSeenVersionProvider.notifier)
+        .read(releaseHighlightSeenVersionProvider.notifier)
         .markSeen(version);
 
-    expect(container.read(updateBannerSeenVersionProvider).value, '3.0.0');
+    expect(container.read(releaseHighlightSeenVersionProvider).value, '3.0.0');
   });
 }
