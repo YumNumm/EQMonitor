@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/start/data/notifier/update_banner_seen_version_notifier.dart';
+import 'package:eqmonitor/feature/release_highlight/data/notifier/release_highlight_seen_version_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +12,7 @@ void main() {
     addTearDown(container.dispose);
 
     expect(
-      await container.read(updateBannerSeenVersionProvider.future),
+      await container.read(releaseHighlightSeenVersionProvider.future),
       isNull,
     );
   });
@@ -21,17 +21,17 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final container = ProviderContainer();
     addTearDown(container.dispose);
-    await container.read(updateBannerSeenVersionProvider.future);
+    await container.read(releaseHighlightSeenVersionProvider.future);
 
     await container
-        .read(updateBannerSeenVersionProvider.notifier)
+        .read(releaseHighlightSeenVersionProvider.notifier)
         .markSeen('3.0.0');
-    expect(container.read(updateBannerSeenVersionProvider).value, '3.0.0');
+    expect(container.read(releaseHighlightSeenVersionProvider).value, '3.0.0');
 
     final container2 = ProviderContainer();
     addTearDown(container2.dispose);
     expect(
-      await container2.read(updateBannerSeenVersionProvider.future),
+      await container2.read(releaseHighlightSeenVersionProvider.future),
       '3.0.0',
     );
   });

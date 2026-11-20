@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
-import 'package:eqmonitor/feature/start/data/notifier/update_banner_seen_version_notifier.dart';
+import 'package:eqmonitor/feature/release_highlight/data/notifier/release_highlight_seen_version_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,14 +25,17 @@ class const CompleteOnboardingFlow() {
     );
     try {
       final version = ref.read(packageInfoProvider).version;
-      await ref
-          .read(updateBannerSeenVersionProvider.notifier)
-          .markSeen(version);
+      await ReleaseHighlightSeenVersion.markSeenMutation.run(
+        ref,
+        (tsx) async => tsx
+            .get(releaseHighlightSeenVersionProvider.notifier)
+            .markSeen(version),
+      );
     } catch (error, stackTrace) {
       talker.handle(
         error,
         stackTrace,
-        'Failed to initialize whats-new seen version on onboarding complete',
+        'Failed to initialize release highlight seen version on onboarding complete',
       );
     }
     if (context.mounted) {

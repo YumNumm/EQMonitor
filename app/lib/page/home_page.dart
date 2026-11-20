@@ -25,7 +25,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor/feature/start/ui/component/maintenance_banner.dart';
-import 'package:eqmonitor/feature/start/ui/component/whats_new_banner.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -103,7 +102,6 @@ class const _SheetBody() extends ConsumerWidget {
                 ),
               ),
             if (isInMaintenance) MaintenanceBanner(),
-            WhatsNewBanner(),
             const AssetPackUpdateCard(),
             if (showNotificationBanner) NotificationPermissionBanner(),
             const DeviceProvisioningBanner(),
