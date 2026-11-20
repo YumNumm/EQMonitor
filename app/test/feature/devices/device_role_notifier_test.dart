@@ -167,7 +167,7 @@ void main() {
     expect(harness.storedRole, isNull);
   });
 
-  group('isShakeDetectionNotificationAvailableProvider', () {
+  group('揺れ検知を無効にしたビルドの isShakeDetectionNotificationAvailableProvider', () {
     test('ロールが未取得なら無効と断定せず例外にする', () async {
       final harness = await _Harness.create(serverRole: 'ADMIN');
 
@@ -250,7 +250,9 @@ final class _Harness._({
           () => _FixedProvisioning(provisioning),
         ),
         debugProvider.overrideWith(_DebugEnabled.new),
-        buildConfigProvider.overrideWithValue(_productionBuildConfig),
+        buildConfigProvider.overrideWithValue(
+          _shakeDetectionDisabledBuildConfig,
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -262,7 +264,7 @@ final class _Harness._({
   }
 }
 
-const _productionBuildConfig = BuildConfig(
+const _shakeDetectionDisabledBuildConfig = BuildConfig(
   restApiUrl: '',
   appIdSuffix: '',
   appName: 'EQMonitor',
@@ -276,6 +278,7 @@ const _productionBuildConfig = BuildConfig(
   revenueCatApiKeyIos: '',
   revenueCatApiKeyAndroid: '',
   isProduction: true,
+  isShakeDetectionEnabled: false,
 );
 
 class _FixedProvisioning(final DeviceProvisioningStatus status)

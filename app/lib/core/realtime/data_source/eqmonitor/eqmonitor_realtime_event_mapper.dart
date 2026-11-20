@@ -17,7 +17,7 @@ EqMonitorRealtimeEventMapper eqMonitorRealtimeEventMapper(Ref ref) =>
     EqMonitorRealtimeEventMapper(
       isShakeDetectionEnabled: ref
           .watch(buildConfigProvider)
-          .isShakeDetectionAvailable,
+          .isShakeDetectionEnabled,
     );
 
 class const EqMonitorRealtimeEventMapper({
