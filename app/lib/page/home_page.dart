@@ -20,6 +20,7 @@ import 'package:eqmonitor/feature/location/data/notifier/location_permission_ban
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
+import 'package:eqmonitor/feature/release_highlight/ui/component/release_highlight_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
@@ -102,6 +103,9 @@ class const _SheetBody() extends ConsumerWidget {
                 ),
               ),
             if (isInMaintenance) MaintenanceBanner(),
+            ReleaseHighlightCard(
+              isCompact: state.isNotEmpty || shakeEvents.isNotEmpty,
+            ),
             const AssetPackUpdateCard(),
             if (showNotificationBanner) NotificationPermissionBanner(),
             const DeviceProvisioningBanner(),
