@@ -30,6 +30,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/shake_detection_beta_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/dialog/notification_permission_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
@@ -277,6 +278,7 @@ class const _CustomNotificationSettingsPage() extends ConsumerWidget {
           padding: const EdgeInsets.only(top: 16, bottom: 24),
           children: [
             const _CustomSettingsDescription(),
+            const ShakeDetectionBetaCard(),
             const _ShakeDetectionReconfigurationNotice(),
             const SettingsSectionHeader(text: '通知地域'),
             _SlotListSection(maxRegions: plan.maxRegions.toInt()),
