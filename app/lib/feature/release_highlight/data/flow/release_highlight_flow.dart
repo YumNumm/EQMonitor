@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/release_highlight/data/model/release_highlight.dart';
 import 'package:eqmonitor/feature/release_highlight/data/notifier/release_highlight_seen_version_notifier.dart';
-import 'package:eqmonitor/feature/subscription/ui/component/shake_detection_notification_detail_sheet.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/shake_detection_notification_detail_sheet.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
