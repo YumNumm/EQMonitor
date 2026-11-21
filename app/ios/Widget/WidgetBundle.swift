@@ -12,9 +12,7 @@ import SwiftUI
 struct EQMonitorWidgetBundle: WidgetBundle {
     var body: some Widget {
         EarthquakeWidget()
-        if #available(iOS 16.1, *) {
-            EewLiveActivityWidget()
-        }
+        EewLiveActivityWidget()
         #if !IS_PRODUCTION
         if #available(iOS 18.0, *) {
             OpenEarthquakeHistoryControl()
