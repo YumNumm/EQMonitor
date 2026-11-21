@@ -101,8 +101,7 @@ enum AppFonts {
         return .custom("EQ Blink Half", size: size)
     }
 
-    /// 到達カウントダウン用。Google Sans Code の太字から作った専用フォントで、システムが描く
-    /// `0:08.5` を `8.5秒` に見せる（分が 0 のときの `0:` と十の位の 0 を消し、小数点以下と「秒」を小さく出す）
+    /// 到達カウントダウン用。システムが描く `0:08.5` を置き換え規則で `8.5秒` に見せる
     static func countdown(size: CGFloat) -> Font {
         registerIfNeeded()
         return .custom("EQ Countdown", size: size)

@@ -82,8 +82,7 @@ struct EewDisplay: Equatable {
         usesLocalIntensity && !isLocationPlum ? arrivalDate : nil
     }
 
-    /// 現在地の予想が PLUM 法のとき。到達時刻は発表されないため、カウントダウンの代わりに
-    /// [imminentArrivalTitle] を出す。
+    /// PLUM 法は到達時刻が発表されないため、カウントダウンの代わりに [imminentArrivalTitle] を出す。
     var showsImminentArrival: Bool {
         usesLocalIntensity && isLocationPlum
     }

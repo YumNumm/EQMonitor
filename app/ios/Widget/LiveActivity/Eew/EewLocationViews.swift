@@ -16,7 +16,7 @@ enum EewAlertStyle {
     }
 }
 
-/// 文字の背景を点滅させる（周期は `BlinkBlock` を参照）。濃い赤の塗りを出したり消したりし、文字は常に白。
+/// 文字の背景を点滅させる。濃い赤の塗りを出したり消したりし、文字は常に白。
 @available(iOS 16.1, *)
 struct EewAlertBlinkHighlight: ViewModifier {
     let isActive: Bool
@@ -119,7 +119,6 @@ struct EewLockScreenLocationView: View {
                         .font(AppFonts.flex(size: 10, weight: .bold))
                         .foregroundStyle(.white.opacity(0.8))
                         .fixedSize()
-                    // 右寄せにして、桁数が変わっても小数点の位置を動かさない
                     ArrivalCountdownText(
                         remaining: remaining, size: EewLockScreenMetrics.countdownSize,
                         color: .white, alignment: .trailing

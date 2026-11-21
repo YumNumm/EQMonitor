@@ -145,8 +145,7 @@ struct EewCompactTrailingView: View {
     var body: some View {
         HStack(spacing: 2) {
             if let remaining = ArrivalCountdown.remaining(until: state.display.countdownArrivalDate) {
-                // 到達までが10分を超えることはないため、狭い幅では分1桁ぶんの幅だけ確保する。
-                // この幅に 0.1 秒の桁は収まらないので、狭い幅では秒単位にする
+                // 到達までが10分を超えることはないため、狭い幅では分1桁ぶんの幅だけ確保する
                 ArrivalCountdownText(
                     remaining: remaining,
                     size: limited ? 11 : 14,

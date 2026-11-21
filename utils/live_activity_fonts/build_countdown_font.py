@@ -2,18 +2,10 @@
 # requires-python = ">=3.11"
 # dependencies = ["fonttools"]
 # ///
-"""到達カウントダウン用フォント EQCountdown.ttf を Google Sans Code と Noto Sans JP から作る。
+"""到達カウントダウン用フォント EQCountdown.ttf を作る。
 
-Live Activity のタイマー文字はシステムが描くため、文字列も字ごとの大きさもアプリからは変えられない。
-フォントの文脈依存の置き換え（calt）で、システムが描く「0:08.5」を「8.5秒」に見せる。
-
-- 分が 0 のとき「0:」と秒の十の位の 0 を幅 0 の空の字形にし、後ろに小さい「秒」を足す（1分以上は「1:15.3」）
-- 小数点とその後ろの数字を小さい字形にする
-- 「0:00.0」は「0秒」にする
-
-リポジトリの根元で実行する:
-
-    uv run utils/live_activity_fonts/build_countdown_font.py
+システムが描くタイマー文字「0:08.5」を、文脈依存の置き換え（calt）で「8.5秒」に見せる。
+リポジトリの根元で `uv run utils/live_activity_fonts/build_countdown_font.py` を実行する。
 """
 import sys
 from pathlib import Path
@@ -28,17 +20,13 @@ from fontTools.varLib import instancer
 
 ROOT = Path(__file__).resolve().parents[2]
 SRC = str(ROOT / "app/assets/fonts/GoogleSansCode/GoogleSansCode[MONO,wght].ttf")
-# 「秒」の字形の取得元
 BYOU_SRC = str(ROOT / "app/assets/fonts/NotoSansJP/NotoSansJP-Bold.ttf")
 DST = sys.argv[1] if len(sys.argv) > 1 else str(
     ROOT / "app/ios/Widget/LiveActivity/Common/EQCountdown.ttf"
 )
 FAMILY = "EQ Countdown"
-# 小数点以下の字の大きさ（整数部に対する比）
 SMALL_SCALE = 0.62
-# 小さい小数点の左右に残す余白（フォント単位）
 SEPARATOR_BEARING = 70
-# 「秒」の全角幅（整数部の文字サイズに対する比）
 BYOU_SCALE = 0.56
 BYOU = 0x79D2
 DIGITS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
@@ -51,7 +39,6 @@ def instance(weight):
     font = instancer.instantiateVariableFont(font, {"wght": weight, "MONO": 1})
     options = subset.Options()
     options.layout_features = []
-    # 著作権表示とライセンス（OFL）の記載は残す
     options.name_IDs = [0, 1, 2, 3, 4, 5, 6, 13, 14]
     options.notdef_outline = True
     options.glyph_names = True
@@ -82,7 +69,7 @@ for name in DIGITS:
     heavy_glyphs[name].draw(TransformPen(pen, (SMALL_SCALE, 0, 0, SMALL_SCALE, 0, 0)))
     add_glyph(name + ".small", pen.glyph(), round(heavy["hmtx"][name][0] * SMALL_SCALE))
 
-# 小数点は等幅のままだと左右が空きすぎるため、字形の左右に SEPARATOR_BEARING だけ残して詰める
+# 小数点は等幅のままだと左右が空きすぎるため詰める
 for name in SEPARATORS:
     bounds = BoundsPen(heavy_glyphs)
     heavy_glyphs[name].draw(bounds)
@@ -101,8 +88,7 @@ byou_name = byou_font.getBestCmap()[BYOU]
 byou_scale = font["head"].unitsPerEm / byou_font["head"].unitsPerEm * BYOU_SCALE
 pen = TTGlyphPen(None)
 byou_glyphs[byou_name].draw(TransformPen(pen, (byou_scale, 0, 0, byou_scale, 0, 0)))
-# 文字「秒」には割り当てない。漢字を文字として渡すと、描画時にシステムの日本語フォントへ
-# 差し替えられて幅が合わなくなる。置き換え規則からだけ出す
+# 文字「秒」には割り当てない。文字で渡すと描画時にシステムの日本語フォントへ差し替えられる
 add_glyph("byou", pen.glyph(), round(byou_font["hmtx"][byou_name][0] * byou_scale))
 
 font.setGlyphOrder(order)
@@ -126,7 +112,6 @@ languagesystem latn dflt;
 @sep = [period comma];
 @sepSmall = [period.small comma.small];
 
-# 分が 0 のとき「0:」と秒の十の位の 0 を幅 0 の空の字形にする（0:08.5 → 8.5、0:12.4 → 12.4）
 lookup dropMinutes {{
     ignore sub @digit zero' colon;
     sub zero' colon by zero.gone;
@@ -137,14 +122,12 @@ lookup dropColon {{
 lookup dropPad {{
     sub colon.gone zero' @digit by zero.gone;
 }} dropPad;
-# 0:00.0 は小数を出さず「0秒」にする
 lookup zeroSeparator {{
     sub colon.gone zero.gone zero @sep' zero by sep.gone;
 }} zeroSeparator;
 lookup zeroUnit {{
     sub sep.gone zero' by byou;
 }} zeroUnit;
-# 小数点とその後ろの数字を小さい字形にする
 lookup smallSeparator {{
     sub @sep' @digit by @sepSmall;
 }} smallSeparator;
@@ -172,7 +155,7 @@ feature calt {{
 """,
 )
 
-# 元の書体名は使わない。著作権表示には「秒」の取得元も足す
+# OFL のため元の書体名は使わず、著作権表示には「秒」の取得元も足す
 byou_copyright = byou_font["name"].getDebugName(0)
 name = font["name"]
 for record in list(name.names):

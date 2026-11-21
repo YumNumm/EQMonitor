@@ -60,26 +60,21 @@ extension View {
 
 // MARK: - 主要動到達カウントダウン
 
-/// 到達までの残り時間。iOS 18 以降は 0.1 秒単位（`8.5秒`、1分以上は `1:15.3`、到達後は `0秒`）、
-/// それより前は `M:SS`。
 @available(iOS 16.1, *)
 struct ArrivalCountdownText: View {
     let remaining: ClosedRange<Date>
     let size: CGFloat
     var color: Color = .primary
     var alignment: TextAlignment = .trailing
-    /// `M:SS` で出すときに幅の確保に使う文字列。表示しうる最長の桁数に合わせる。
+    /// 幅の確保に使う文字列。表示しうる最長の桁数に合わせる。
     var placeholder = "00:00"
-    /// 0.1 秒の桁を出すか。分1桁ぶんの幅しか無い場所では収まらないため切る。
     var showsTenths = true
 
     @Environment(\.isLuminanceReduced) private var isLuminanceReduced
 
     var body: some View {
-        // 常時表示では描き直しが間引かれる。止まった 0.1 秒の桁を見せないよう秒単位にする
+        // 常時表示では描き直しが間引かれ、0.1 秒の桁が止まって見えるため秒単位にする
         if #available(iOS 18.0, *), showsTenths, !isLuminanceReduced {
-            // タイマー文字は横いっぱいに広がろうとするため、同じフォントの placeholder で
-            // 幅を確保して overlay で重ねる。placeholder も字形の置き換えを受ける
             Text(tenthsPlaceholder)
                 .font(AppFonts.countdown(size: size))
                 .hidden()
@@ -120,12 +115,11 @@ struct ArrivalCountdownText: View {
         }
     }
 
-    /// フォントの置き換えで `0秒` になる。「秒」を文字として渡すと、描画時にシステムの
-    /// 日本語フォントへ差し替えられ、幅が足りず `…` になる
+    /// フォントの置き換えで `0秒` になる。「秒」を文字で渡すと描画時にシステムの日本語フォントへ
+    /// 差し替えられ、幅が足りず `…` になる
     private static let arrivedText = "0:00.0"
 
-    /// 描いた時点の残りで出しうる最長の文字列。更新が来ないまま残りが増えることはない。
-    /// 1分未満は `11.1秒`、1分以上は `1:11.1`（到達までが10分を超えることはない）。
+    /// placeholder も置き換えを受ける。`0:11.1` は `11.1秒` の幅になる
     private var tenthsPlaceholder: String {
         remaining.upperBound.timeIntervalSince(remaining.lowerBound) < 60 ? "0:11.1" : "1:11.1"
     }
@@ -139,11 +133,9 @@ struct ArrivalCountdownText: View {
     }
 }
 
-/// PLUM 法で到達時刻が発表されないときに、カウントダウンの代わりに出す文言。
 @available(iOS 16.1, *)
 struct EewImminentArrivalText: View {
     let size: CGFloat
-    /// 幅の限られる場所では2行に分ける
     var twoLines = false
 
     var body: some View {
@@ -206,13 +198,9 @@ struct StripePattern: View {
 
 // MARK: - 点滅
 
-/// 枠いっぱいの塗りを点滅させる。iOS 18 以降は 0.5 秒おき、それより前は 1 秒おき。
-///
 /// Live Activity はタイマーやアニメーションを自前で回せないため、システムが描き直す時刻の文字を使う。
-/// 数字の一部を塗りつぶし、残りを空にした専用フォントで描き、点滅させたい桁だけを枠に合わせて切り抜く。
-/// - iOS 18 以降: 0.1 秒単位のストップウォッチ文字と `EQBlinkHalf.ttf`（0〜4 が塗り、5〜9 が空）。
-///   末尾の 0.1 秒の桁を切り抜く。
-/// - それより前: 毎秒のタイマー文字と `EQBlink.ttf`（偶数が塗り、奇数が空）。秒の1桁目を切り抜く。
+/// 一部の数字だけ塗りつぶした専用フォントで描き、点滅させたい桁を枠に合わせて切り抜く。
+/// iOS 18 以降は 0.5 秒おき、それより前は 1 秒おき。
 @available(iOS 16.1, *)
 struct BlinkBlock: View {
     /// 到達カウントダウンと秒の切り替わりをそろえるための基準時刻
@@ -229,7 +217,7 @@ struct BlinkBlock: View {
             GeometryReader { geo in
                 let width = max(geo.size.width, 1)
                 if #available(iOS 18.0, *) {
-                    // 文字を右詰めで描き、末尾の1文字（0.1 秒の桁）を枠へ合わせる。
+                    // 文字を右詰めで描き、末尾の1文字（0.1 秒の桁）を枠へ合わせる
                     Color.clear.overlay(alignment: .trailing) {
                         Text(
                             .currentDate,
@@ -244,7 +232,6 @@ struct BlinkBlock: View {
                         .font(AppFonts.blinkHalf(size: width * 1.1))
                         .lineLimit(1)
                         .multilineTextAlignment(.trailing)
-                        // 「MM:SS.S」の7文字が収まる幅を渡す
                         .frame(width: width * 9, alignment: .trailing)
                         .offset(x: width * 0.05)
                     }
@@ -266,8 +253,7 @@ struct BlinkBlock: View {
         }
     }
 
-    /// ストップウォッチ文字の開始時刻。基準時刻から整数秒ずらし、塗りの出はじめを
-    /// 到達カウントダウンの秒の切り替わりにそろえる。描画時に必ず経過済みになるよう約1分前へ置く。
+    /// 基準時刻から整数秒ずらして点滅を到達カウントダウンの秒にそろえ、描画時に経過済みになるよう約1分前へ置く。
     static func start(anchor: Date?, now: Date = Date()) -> Date {
         let anchor = anchor ?? now
         let secondsUntilAnchor = anchor.timeIntervalSince(now).rounded(.up)
