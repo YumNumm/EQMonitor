@@ -8,13 +8,10 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/a
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/shake_detection_enable_flow.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/shake_detection_slot_entry_resolver.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_notification_access.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_access_provider.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/shake_detection_notification_detail_sheet.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/shake_detection_notification_min_level_dropdown.dart';
-import 'package:eqmonitor/feature/subscription/ui/component/shake_detection_notification_detail_sheet.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -59,16 +56,7 @@ class const ShakeDetectionSlotSection({
           child: Column(
             mainAxisSize: .min,
             children: [
-              if (access == ShakeDetectionNotificationAccess.locked)
-                LockedSettingTile(
-                  title: '揺れ検知の通知',
-                  subtitle: 'Proで利用できます',
-                  locked: true,
-                  onTap: () async =>
-                      const ProUpgradeDialogAction().show(context),
-                )
-              else
-                _ShakeDetectionCondition(slot: slot),
+              _ShakeDetectionCondition(slot: slot),
               const Divider(height: 1),
               ListTile(
                 leading: const Icon(Icons.info_outline),

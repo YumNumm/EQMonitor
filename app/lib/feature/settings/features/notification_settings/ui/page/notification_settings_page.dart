@@ -232,8 +232,6 @@ class const _CustomNotificationSettingsPage() extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final constraints = ref.watch(notificationPlanConstraintsProvider);
     final isPro = ref.watch(isProProvider);
-    final isShakeDetectionLocked =
-        ref.watch(shakeDetectionNotificationAccessProvider) == .locked;
     final earthquakeSettings = ref
         .watch(earthquakeGlobalSettingsProvider)
         .value;
@@ -285,7 +283,6 @@ class const _CustomNotificationSettingsPage() extends ConsumerWidget {
             const SettingsSectionHeader(text: '通知の種類'),
             _CustomSettingsSection(
               isPro: isPro,
-              isShakeDetectionLocked: isShakeDetectionLocked,
               estimatedIntensityEnabled:
                   earthquakeSettings?.estimatedIntensityEnabled ?? true,
               onEstimatedIntensityChanged: ({required value}) async {
@@ -354,7 +351,6 @@ class const _ShakeDetectionReconfigurationNotice() extends ConsumerWidget {
 
 class const _CustomSettingsSection({
   required final bool isPro,
-  required final bool isShakeDetectionLocked,
   required final bool estimatedIntensityEnabled,
   required final Future<void> Function({required bool value})
   onEstimatedIntensityChanged,
@@ -419,15 +415,6 @@ class const _CustomSettingsSection({
                       ),
                     )
                   : () async => const ProUpgradeDialogAction().show(context),
-            ),
-          ],
-          if (isShakeDetectionLocked) ...[
-            const Divider(height: 1),
-            LockedSettingTile(
-              title: '揺れ検知の通知',
-              subtitle: '通知地域ごとに揺れの検知を通知できます',
-              locked: true,
-              onTap: () async => const ProUpgradeDialogAction().show(context),
             ),
           ],
           const Divider(height: 1),

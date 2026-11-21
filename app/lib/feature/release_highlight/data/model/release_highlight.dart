@@ -13,7 +13,7 @@ enum ReleaseHighlight({
     version: '3.1.0',
     title: '揺れ検知の通知',
     description: '強震モニタで揺れを検知したときに通知します。地震以外の揺れで通知される場合があります。',
-    isProFeature: true,
+    isProFeature: false,
     isBeta: true,
   ),
 }
