@@ -79,6 +79,12 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         resValue("string", "app_name", dartDefines["appName"] ?: "EQMonitor")
+        manifestPlaceholders["appIcon"] =
+            if (dartDefines["IS_BETA_DISTRIBUTION"] == "true") {
+                "@mipmap/ic_launcher_dev"
+            } else {
+                "@mipmap/ic_launcher"
+            }
     }
 
     signingConfigs {
