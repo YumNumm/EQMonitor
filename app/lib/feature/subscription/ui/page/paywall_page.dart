@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/model/pro_benefit.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
@@ -22,7 +23,11 @@ class const PaywallPage({super.key}) extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final flow = ref.watch(paywallFlowProvider);
     final subscription = ref.watch(subscriptionProvider);
+    final isSubscriptionAvailable = ref.watch(
+      buildConfigProvider.select((config) => config.isSubscriptionAvailable),
+    );
     final canPurchase =
+        isSubscriptionAvailable &&
         !subscription.isLoading &&
         !subscription.hasError &&
         subscription.value is SubscriptionStatusInactive &&
@@ -51,6 +56,7 @@ class const PaywallPage({super.key}) extends ConsumerWidget {
       bottomNavigationBar: _PurchaseBar(
         packageState: packageState,
         isPurchasing: isPurchasing,
+        isSubscriptionAvailable: isSubscriptionAvailable,
         onRetry: isBusy
             ? null
             : () => ref.invalidate(monthlySubscriptionPackageProvider),
@@ -91,7 +97,7 @@ class const PaywallPage({super.key}) extends ConsumerWidget {
                   SizedBox(height: spacing.lg),
                   M3EButton(
                     style: .text,
-                    onPressed: isBusy
+                    onPressed: isBusy || !isSubscriptionAvailable
                         ? null
                         : () async => flow.restorePurchases(ref, context),
                     child: const Text('購入を復元する'),
@@ -270,6 +276,7 @@ class const _DetailLink({required final VoidCallback onTap})
 class const _PurchaseBar({
   required final AsyncValue<rc.Package?> packageState,
   required final bool isPurchasing,
+  required final bool isSubscriptionAvailable,
   required final VoidCallback? onRetry,
   required final VoidCallback? onPurchase,
 }) extends StatelessWidget {
@@ -299,6 +306,16 @@ class const _PurchaseBar({
             children: [
               _PlanPrice(packageState: packageState, onRetry: onRetry),
               SizedBox(height: spacing.md),
+              if (!isSubscriptionAvailable) ...[
+                Text(
+                  'ベータ版では EQMonitor Pro を利用できません。購入済みの場合も無料版として動作します。',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorTheme.onSurfaceVariant,
+                  ),
+                  textAlign: .center,
+                ),
+                SizedBox(height: spacing.sm),
+              ],
               M3EButton(
                 style: .filled,
                 decoration: .new(
