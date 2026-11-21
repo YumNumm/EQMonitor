@@ -154,16 +154,14 @@ class const AppBootstrap._() {
 
     FlutterError.onError = (error) {
       final exception = error.exception;
+      talker.handle(exception, error.stack, 'Uncaught fatal exception');
       if (exception is ParallelWaitError) {
-        talker
-          ..handle(exception, error.stack, 'Uncaught fatal exception')
-          ..log(exception.errors.toString());
+        talker.log(exception.errors.toString());
         final stackTrace = error.stack;
         if (stackTrace != null) {
           talker.log(stackTrace.toString());
         }
       }
-      talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
     };
     if (!kDebugMode) {
       ErrorWidget.builder = FatalErrorWidgetBuilder.build;
