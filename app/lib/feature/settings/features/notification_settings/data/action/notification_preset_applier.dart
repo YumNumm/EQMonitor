@@ -19,7 +19,11 @@ part 'notification_preset_applier.g.dart';
 // 適用先が変わってもカスタム設定の退避済み状態だけは残すため、スロット等を
 // 変更するステップとは instanceId を分ける
 const _snapshotInstanceId = 'notification-preset-apply-v1';
-const _stepsInstanceId = 'notification-preset-apply-steps-v2';
+
+// 破棄の途中でアプリが終了しても別の適用先のステップ結果を再利用しないよう、
+// 適用先ごとに instanceId を分ける
+String _stepsInstanceId(NotificationPreset preset) =>
+    'notification-preset-apply-steps-v2:${preset.name}';
 
 // UI から ref.read で取得後、API 呼び出しの await を跨いで Ref を使うため
 // autoDispose だと途中で dispose され UnmountedRefException になる
@@ -45,12 +49,10 @@ class NotificationPresetApplier(final Ref _ref) {
     if (previous != NotificationPreset.custom) {
       await runner.clear(_snapshotInstanceId);
     }
-    final interruptedTarget = await runner.run<String>(
-      instanceId: _stepsInstanceId,
-      workflow: (step) => step('target', () => preset.name),
-    );
-    if (interruptedTarget != preset.name) {
-      await runner.clear(_stepsInstanceId);
+    for (final other in NotificationPreset.values) {
+      if (other != preset) {
+        await runner.clear(_stepsInstanceId(other));
+      }
     }
 
     if (previous == NotificationPreset.custom &&
@@ -62,10 +64,8 @@ class NotificationPresetApplier(final Ref _ref) {
     }
 
     await runner.run<void>(
-      instanceId: _stepsInstanceId,
+      instanceId: _stepsInstanceId(preset),
       workflow: (step) async {
-        await step('target', () => preset.name);
-
         final snapshot = preset == NotificationPreset.custom
             ? await _ref
                   .read(notificationCustomSnapshotRepositoryProvider.future)
@@ -90,7 +90,7 @@ class NotificationPresetApplier(final Ref _ref) {
     );
 
     await runner.clear(_snapshotInstanceId);
-    await runner.clear(_stepsInstanceId);
+    await runner.clear(_stepsInstanceId(preset));
   }
 
   Future<void> _saveCustomSnapshot() async {
