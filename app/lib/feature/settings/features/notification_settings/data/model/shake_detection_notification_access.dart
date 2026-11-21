@@ -1,1 +1,1 @@
-enum ShakeDetectionNotificationAccess { hidden, locked, editable }
+enum ShakeDetectionNotificationAccess { hidden, editable }
