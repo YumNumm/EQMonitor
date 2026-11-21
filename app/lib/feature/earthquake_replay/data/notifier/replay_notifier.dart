@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'replay_notifier.g.dart';
@@ -221,14 +222,22 @@ class ReplayNotifier extends _$ReplayNotifier {
     final analyzer = await ref.read(
       kyoshinMonitorAnalyzerIsolateProvider.future,
     );
-    final result = await analyzer.analyze(Uint8List.fromList(imageData));
-    ref
-        .read(kyoshinMonitorProvider.notifier)
-        .setReplay(
-          geoJson: result.geoJson,
-          targetTime: data.time,
-          analyzedPointsCount: result.featureCount,
-        );
+    try {
+      final result = await analyzer.analyze(Uint8List.fromList(imageData));
+      if (!ref.mounted) {
+        return;
+      }
+      ref
+          .read(kyoshinMonitorProvider.notifier)
+          .setReplay(
+            geoJson: result.geoJson,
+            targetTime: data.time,
+            analyzedPointsCount: result.featureCount,
+          );
+    } on KyoshinMonitorWorkerExitedException {
+      // 解析中に worker が破棄された場合は、このフレームの表示だけ諦める。
+      return;
+    }
   }
 
   void _applyEew(EqMonitorEewReplayData data) {
