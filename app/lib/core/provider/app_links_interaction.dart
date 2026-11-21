@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app_links/app_links.dart';
 import 'package:eqmonitor/core/fcm/notification_deep_link.dart';
 import 'package:eqmonitor/core/provider/app_links_cold_start_gate.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,30 +23,40 @@ Stream<Uri> appLinksInteraction(Ref ref) async* {
   //
   // On iOS UIScene, the native plugin must support scene lifecycle (app_links
   // 7+) or getInitialLink stays null for widget / custom-scheme cold starts.
-  Uri? initialUri;
-  try {
-    initialUri = await appLinks.getInitialLink();
-  } finally {
-    // Splash awaits this; always complete even when getInitialLink throws.
-    coldStartGate.resolveInitial(initialUri);
-  }
+  final initialUri = await Future<Uri?>.sync(appLinks.getInitialLink).onError((
+    error,
+    stackTrace,
+  ) {
+    talker.error('Initial app link lookup failed', error, stackTrace);
+    return null;
+  });
+  // Splash awaits this; always complete even when getInitialLink throws.
+  coldStartGate.resolveInitial(initialUri);
   if (initialUri != null) {
     yield initialUri;
   }
 
-  await for (final uri in appLinks.uriLinkStream) {
+  final uriLinks = appLinks.uriLinkStream.handleError(
+    (Object error, StackTrace stackTrace) =>
+        talker.error('App link stream failed', error, stackTrace),
+  );
+  await for (final uri in uriLinks) {
     if (!coldStartGate.shouldNavigateForStreamUri(uri)) {
       continue;
     }
-    final link = NotificationDeepLink.fromUri(uri);
-    switch (link) {
-      case NotificationRouteLink(:final location):
-        // push completes when the page is popped; keep receiving new app links.
-        unawaited(ref.read(goRouterProvider).push<void>(location));
-      case NotificationUrlLink(:final uri):
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      case null:
-        break;
+    try {
+      final link = NotificationDeepLink.fromUri(uri);
+      switch (link) {
+        case NotificationRouteLink(:final location):
+          // push completes when the page is popped; keep receiving new app links.
+          unawaited(ref.read(goRouterProvider).push<void>(location));
+        case NotificationUrlLink(:final uri):
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        case null:
+          break;
+      }
+    } on Object catch (error, stackTrace) {
+      talker.error('App link handling failed', error, stackTrace);
     }
     yield uri;
   }

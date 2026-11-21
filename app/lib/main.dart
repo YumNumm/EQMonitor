@@ -28,6 +28,7 @@ import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/core/startup/non_essential_startup_step.dart';
 import 'package:eqmonitor/core/startup/startup_profiler.dart';
 import 'package:eqmonitor/core/startup/startup_profiler_provider.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
@@ -118,12 +119,6 @@ class const AppBootstrap._() {
     final buildConfig = BuildConfig.fromEnvironment();
     final isTelemetryEnabled = !kIsWeb && !buildConfig.isProduction;
 
-    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-      await BackgroundLocationTracker.initialize(
-        callbackDispatcher: backgroundLocationCallbackDispatcher,
-      );
-    }
-
     await SystemChrome.setEnabledSystemUIMode(
       .edgeToEdge,
       overlays: [.top],
@@ -148,22 +143,28 @@ class const AppBootstrap._() {
       ),
       logger: TalkerLogger(formatter: const ColoredLoggerFormatter()),
     );
-    if (!kIsWeb && !kDebugMode) {
+    const isCrashlyticsEnabled = !kIsWeb && !kDebugMode;
+    if (isCrashlyticsEnabled) {
       talker.configure(observer: CrashlyticsTalkerObserver());
     }
 
     FlutterError.onError = (error) {
       final exception = error.exception;
+      talker.handle(exception, error.stack, 'Uncaught fatal exception');
       if (exception is ParallelWaitError) {
-        talker
-          ..handle(exception, error.stack, 'Uncaught fatal exception')
-          ..log(exception.errors.toString());
+        talker.log(exception.errors.toString());
         final stackTrace = error.stack;
         if (stackTrace != null) {
           talker.log(stackTrace.toString());
         }
       }
-      talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
+      // silent はフレームワークが想定内として扱うエラー (画像の取得失敗など)。
+      if (isCrashlyticsEnabled && !error.silent) {
+        GuardedUnawaitedUtil.run(
+          () => FirebaseCrashlytics.instance.recordFlutterError(error),
+          onError: (recordError, stack) => talker.error(recordError, stack),
+        );
+      }
     };
     if (!kDebugMode) {
       ErrorWidget.builder = FatalErrorWidgetBuilder.build;
@@ -179,16 +180,47 @@ class const AppBootstrap._() {
           ..log(exception.errors.toString())
           ..log(exception.stackTrace.toString());
       }
+      if (isCrashlyticsEnabled) {
+        GuardedUnawaitedUtil.run(
+          () => FirebaseCrashlytics.instance.recordError(
+            exception,
+            stackTrace,
+            fatal: true,
+          ),
+          onError: (recordError, stack) => talker.error(recordError, stack),
+        );
+      }
       return true;
     };
 
-    await FirebaseAppCheck.instance.activate(
-      providerAndroid: kDebugMode
-          ? const AndroidDebugProvider()
-          : const AndroidPlayIntegrityProvider(),
-      providerApple: kDebugMode
-          ? const AppleDebugProvider()
-          : const AppleAppAttestProvider(),
+    final nonEssentialStep = NonEssentialStartupStep(
+      onError: (name, error, stackTrace) => talker.error(
+        'Non-essential startup step failed: $name',
+        error,
+        stackTrace,
+      ),
+    );
+
+    // 以降の Provider 起動 (監視開始・API リクエスト) より前に完了している必要があるため、
+    // 失敗は許容するが await は外さない。
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+      await nonEssentialStep.run(
+        name: 'background_location_tracker_initialize',
+        action: () => BackgroundLocationTracker.initialize(
+          callbackDispatcher: backgroundLocationCallbackDispatcher,
+        ),
+      );
+    }
+    await nonEssentialStep.run(
+      name: 'firebase_app_check_activate',
+      action: () => FirebaseAppCheck.instance.activate(
+        providerAndroid: kDebugMode
+            ? const AndroidDebugProvider()
+            : const AndroidPlayIntegrityProvider(),
+        providerApple: kDebugMode
+            ? const AppleDebugProvider()
+            : const AppleAppAttestProvider(),
+      ),
     );
 
     final deviceInfo = DeviceInfoPlugin();
@@ -206,7 +238,10 @@ class const AppBootstrap._() {
       (
         kIsWeb
             ? Future<Null>.value()
-            : const KyoshinColorMapDataSource().load(),
+            : nonEssentialStep.run(
+                name: 'kyoshin_color_map_load',
+                action: const KyoshinColorMapDataSource().load,
+              ),
         core.initializeTimeZones(),
       ).wait,
     ).wait;
