@@ -34,11 +34,19 @@ Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
     final openedMessages = StreamController<RemoteMessage>();
     final fcmSubscription = FirebaseMessaging.onMessageOpenedApp.listen(
       openedMessages.add,
-      onError: openedMessages.addError,
+      onError: (Object error, StackTrace stackTrace) => talker.error(
+        'FCM notification opened stream failed',
+        error,
+        stackTrace,
+      ),
     );
     final localSubscription = localNotifications.openedMessages.listen(
       openedMessages.add,
-      onError: openedMessages.addError,
+      onError: (Object error, StackTrace stackTrace) => talker.error(
+        'Local notification opened stream failed',
+        error,
+        stackTrace,
+      ),
     );
     ref.onDispose(() {
       unawaited(fcmSubscription.cancel());
@@ -95,17 +103,25 @@ Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
           coldStart: false,
         ),
       );
-      final link = NotificationDeepLink.fromData(message.data);
-      switch (link) {
-        case NotificationRouteLink(location: '/'):
-          ref.read(goRouterProvider).go(const HomeRoute().location);
-        case NotificationRouteLink(:final location):
-          // 詳細画面を閉じる前でも、後続の EEW 通知タップを受け付ける。
-          unawaited(ref.read(goRouterProvider).push<void>(location));
-        case NotificationUrlLink(:final uri):
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        case null:
-          break;
+      try {
+        final link = NotificationDeepLink.fromData(message.data);
+        switch (link) {
+          case NotificationRouteLink(location: '/'):
+            ref.read(goRouterProvider).go(const HomeRoute().location);
+          case NotificationRouteLink(:final location):
+            // 詳細画面を閉じる前でも、後続の EEW 通知タップを受け付ける。
+            unawaited(ref.read(goRouterProvider).push<void>(location));
+          case NotificationUrlLink(:final uri):
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          case null:
+            break;
+        }
+      } on Object catch (error, stackTrace) {
+        talker.error(
+          'Notification deep link handling failed',
+          error,
+          stackTrace,
+        );
       }
       yield message;
     }
