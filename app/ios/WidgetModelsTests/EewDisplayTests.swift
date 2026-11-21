@@ -157,6 +157,9 @@ struct EewDisplayTests {
         let subject = display(isLocationPlum: true)
         #expect(subject.localIntensity == .fiveLower)
         #expect(subject.countdownArrivalDate == nil)
+        #expect(subject.showsImminentArrival)
+        #expect(display().showsImminentArrival == false)
+        #expect(display(isCanceled: true, isLocationPlum: true).showsImminentArrival == false)
     }
 
     @Test func canceledReportSuppressesLocalWarningAndForecast() {

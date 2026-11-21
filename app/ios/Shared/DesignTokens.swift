@@ -69,6 +69,8 @@ enum AppFonts {
             "GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght]",
             "GoogleSansCode[MONO,wght]",
             "EQBlink",
+            "EQBlinkHalf",
+            "EQCountdown",
         ]
         for name in resources {
             if let url = Bundle.main.url(forResource: name, withExtension: "ttf") {
@@ -87,10 +89,22 @@ enum AppFonts {
         return .custom("Google Sans Flex", size: size).weight(weight)
     }
 
-    /// 点滅用。偶数の数字が塗りつぶし、奇数の数字が空（`BlinkBlock` 専用）
+    /// 1 秒おきの点滅用。偶数の数字が塗りつぶし、奇数の数字が空（`BlinkBlock` 専用）
     static func blink(size: CGFloat) -> Font {
         registerIfNeeded()
         return .custom("EQ Blink", size: size)
+    }
+
+    /// 0.5 秒おきの点滅用。0〜4 が塗りつぶし、5〜9 が空（`BlinkBlock` 専用）
+    static func blinkHalf(size: CGFloat) -> Font {
+        registerIfNeeded()
+        return .custom("EQ Blink Half", size: size)
+    }
+
+    /// 到達カウントダウン用。システムが描く `0:08.5` を置き換え規則で `8.5秒` に見せる
+    static func countdown(size: CGFloat) -> Font {
+        registerIfNeeded()
+        return .custom("EQ Countdown", size: size)
     }
 
     /// 数値・時刻など等幅用（アプリの GoogleSansCode 相当）

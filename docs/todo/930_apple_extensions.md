@@ -51,11 +51,12 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 - Apple Watch（Smart Stack）とCarPlayの`.small`表示は実機・Simulatorとも未確認。オフスクリーン描画で崩れが無いことだけ確認済み。Watchの実寸、常時表示（`isLuminanceReduced`）時の見え方を確認する。
 - Dynamic Typeを標準に固定したため、文字を大きくしている利用者にもLive Activityは標準の大きさで出る。Lock Screenの上限160ptの中で段階的に大きくできるか（要素を減らす専用レイアウトなど）は未検討。
 - 現在地が警報対象のときLock Screenの地色を暗い赤にした。Lock Screenの余白・スタンバイの全面・常時表示で地色がどう出るかは実機未確認。
-- `.small`の点滅（`BlinkBlock`）はSimulatorの実Dynamic Islandで動作確認しただけで、Apple Watch・CarPlayでは未確認。Watch側で専用フォントが使えない場合、枠いっぱいに数字が描かれるおそれがあるため、リリース前に実機で必ず確認する。本番のWidgetターゲットは未ビルドのため、`EQBlink.ttf`が拡張に入っているかも確認する。
+- `.small`の点滅（`BlinkBlock`）はSimulatorの実Dynamic Islandで動作確認しただけで、Apple Watch・CarPlayでは未確認。Watch側で専用フォントが使えない場合、枠いっぱいに数字が描かれるおそれがあるため、リリース前に実機で必ず確認する。本番のWidgetターゲットは未ビルドのため、`EQBlink.ttf`・`EQBlinkHalf.ttf`が拡張に入っているかも確認する。0.5秒おきの点滅（iOS 18以降）は実機のLock Screenで未確認。
 - スタンバイは2倍描画での代用確認のみ。夜間モードの赤着色でヘッダー内の文字（帯色の上の70%白）が読めるか、実機で確認する。
 - 幅が狭いDynamic Island（`isDynamicIslandLimitedInWidth`）はオフスクリーン描画のみ。実機の横向き・複数Activityで切り取りが無いか確認する。
 - Lock Screenの実表示はSimulatorで未確認（ロックする手段がない）。実機で確認する。
 - 到達カウントダウンの数字が実機で毎秒アニメーションするかを確認する。SimulatorのDynamic Islandでは動かない。
+- 到達カウントダウンの0.1秒表示（iOS 18以降、`EQCountdown.ttf`）はSimulatorのCompact・Expanded・バナーで確認しただけ。実機のLock Screen・Apple Watch・CarPlayで、`0:08.5`のまま出たり数字や`秒`が欠けたりしないか確認する。現在地PLUMの`すぐに到達`も実機未確認。0.1秒ごとの描き直しによる電池への影響も未計測。
 - Android Widget は未実装。採用する場合は `app/android/` に AppWidgetProvider/Glance を実装し、Pro未加入・未設定時の全国 fallback を iOS の `WidgetRegionResolver` と揃えてテストする。
 - extension 版番号は [ビルド・配布](950_build_and_release.md) の300を参照。
 
