@@ -112,7 +112,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     final stopwatch = Stopwatch()..start();
     final previous = state.value;
     state = const AsyncLoading<KyoshinMonitorState>();
-    final result = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard<KyoshinMonitorState?>(() async {
       final settings = ref.read(kyoshinMonitorSettingsProvider).requireValue;
       final request = ref.read(kyoshinMonitorImageRequestProvider);
       final realtimeDataType = settings.realtimeDataType;
@@ -195,19 +195,42 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
                 )
                 .timeout(_workerTimeout);
           } on Object catch (error) {
+            if (!ref.mounted ||
+                (error is! TimeoutException &&
+                    error is! KyoshinMonitorWorkerExitedException)) {
+              rethrow;
+            }
+            // 起動し直した worker は検知の履歴を持たない。
+            shakeDetection.clear();
+            final isCurrentAnalyzer = switch (ref.read(
+              kyoshinMonitorAnalyzerIsolateProvider,
+            )) {
+              // invalidate 直後は破棄済みの worker を持つ AsyncData のままになる。
+              AsyncData(:final value, isLoading: false) => identical(
+                value,
+                analyzer,
+              ),
+              _ => false,
+            };
             // 応答しない・終了した worker は以後も応答しないため、
             // 次回の取得で起動し直す。
-            if (error is TimeoutException ||
-                error is KyoshinMonitorWorkerExitedException) {
+            if (isCurrentAnalyzer) {
               ref.invalidate(kyoshinMonitorAnalyzerIsolateProvider);
-              // 起動し直した worker は検知の履歴を持たない。
-              shakeDetection.clear();
+              rethrow;
+            }
+            // provider が既に worker を破棄して起動し直している。起動し直した
+            // worker まで破棄しないよう invalidate せず、このフレームだけ諦める。
+            if (error is KyoshinMonitorWorkerExitedException) {
+              return null;
             }
             rethrow;
           }
         },
       );
       workerSw.stop();
+      if (workerResult == null) {
+        return null;
+      }
 
       final shakeEvents = workerResult.shakeEvents;
       if (shakeEvents == null) {
@@ -240,11 +263,16 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
                     shakeDetection.replaceEvents(events);
                   }
                 },
-                onError: (Object error, StackTrace stackTrace) => talker.error(
-                  'Failed to backfill shake detection history',
-                  error,
-                  stackTrace,
-                ),
+                onError: (Object error, StackTrace stackTrace) {
+                  // worker の破棄で打ち切られた作り直しは失敗として扱わない。
+                  if (error is! KyoshinMonitorWorkerExitedException) {
+                    talker.error(
+                      'Failed to backfill shake detection history',
+                      error,
+                      stackTrace,
+                    );
+                  }
+                },
               ),
         );
       }
@@ -263,7 +291,14 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       );
     });
 
+    if (!ref.mounted) {
+      return;
+    }
     switch (result) {
+      case AsyncData(value: null):
+        state = AsyncData(previous ?? const KyoshinMonitorState());
+      case AsyncData(:final value?):
+        state = AsyncData(value);
       // 404 は「その時刻の画像がまだ公開されていない」というだけなので、
       // エラー表示に落とさずオフセットを調整して直前の表示を維持する。
       case AsyncError(:final error)
@@ -286,9 +321,11 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         state = AsyncData(
           previous.copyWith(status: KyoshinMonitorStatus.delayed),
         );
-        state = result;
-      case _:
-        state = result;
+        state = AsyncError(result.error, result.stackTrace);
+      case AsyncError(:final error, :final stackTrace):
+        state = AsyncError(error, stackTrace);
+      case AsyncLoading():
+        break;
     }
   }
 
