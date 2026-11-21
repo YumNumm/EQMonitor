@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -132,6 +133,9 @@ class const _InactiveSection() extends ConsumerWidget {
       SubscriptionNotifier.restorePurchasesMutation,
     );
     final isRestoring = restoreState is MutationPending;
+    final isSubscriptionAvailable = ref.watch(
+      buildConfigProvider.select((config) => config.isSubscriptionAvailable),
+    );
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
@@ -169,7 +173,7 @@ class const _InactiveSection() extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
         M3ETextButton(
-          onPressed: isRestoring
+          onPressed: isRestoring || !isSubscriptionAvailable
               ? null
               : () async => flow.restorePurchases(ref, context),
           child: const Text('購入を復元'),
