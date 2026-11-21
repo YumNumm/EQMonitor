@@ -23,6 +23,7 @@
 | --- | --- |
 | EEW の値と状態 | [EEW・リアルタイム](eew_realtime.md)。公表震度と深さを独立に扱い、欠測値を作らず、再取得中も有効な表示を維持する。 |
 | Live Activity | [表示と検証](live_activity.md)。全国値と現在地値、取消報、到達カウントダウン、現在の Preview 方針を確認する。 |
+| Live Activity の点滅・0.1秒表示 | [動く表示の作り方](live_activity_timer_font.md)。システムが描く時刻の文字を専用フォントで描く。漢字を文字で渡さない。 |
 | 通知・バックグラウンド位置 | [通知と位置情報](notification_location.md)。OS 権限・slot 設定・処理の acknowledgment を分離し、再起動や retry を考慮する。 |
 | Android 通知 | [channel 運用](android_notification_channels.md)。利用者設定を保ち、現役 channel を起動時に削除しない。 |
 | 強震モニタ・時刻 | [強震モニタと時計](kyoshin_time.md)。NTP・画像遅延・表示時刻を分け、計測せずに GPU 化を前提としない。 |
