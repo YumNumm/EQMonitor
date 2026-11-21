@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/chip/beta_chip.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_access_provider.dart';
-import 'package:eqmonitor/feature/subscription/ui/component/shake_detection_notification_detail_sheet.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/shake_detection_notification_detail_sheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

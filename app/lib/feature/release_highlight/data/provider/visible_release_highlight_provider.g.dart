@@ -67,4 +67,4 @@ final class VisibleReleaseHighlightProvider
 }
 
 String _$visibleReleaseHighlightHash() =>
-    r'98700592e2597b5388b4601b05571bff233eb4d3';
+    r'e6da95d77f60e915576e616f8fa220192eca953f';
