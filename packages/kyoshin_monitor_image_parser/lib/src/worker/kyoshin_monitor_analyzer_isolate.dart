@@ -60,14 +60,8 @@ final class const ShakeBackfillRequest({
 });
 
 final class KyoshinMonitorAnalyzerIsolate._({
-  required final Isolate _isolate,
-  required final ReceivePort _mainReceive,
+  required final _WorkerConnection _connection,
   required final SendPort _workerSendPort,
-  required final StreamSubscription<Object?> _subscription,
-  required final Map<int, Completer<AnalyzeResult>> _pending,
-  required final Map<int, Completer<List<ShakeEventSnapshot>?>>
-  _pendingBackfills,
-  required final Completer<void> _exited,
 }) {
   var _nextId = 0;
 
@@ -75,117 +69,16 @@ final class KyoshinMonitorAnalyzerIsolate._({
   static Future<KyoshinMonitorAnalyzerIsolate> spawn({
     required List<NamedObservationPoint> points,
   }) async {
-    final mainReceive = ReceivePort();
-    final workerPortCompleter = Completer<SendPort>();
-    final initAck = Completer<void>();
-    final pending = <int, Completer<AnalyzeResult>>{};
-    final pendingBackfills = <int, Completer<List<ShakeEventSnapshot>?>>{};
-    final exited = Completer<void>();
-
-    late final StreamSubscription<Object?> subscription;
-    subscription = mainReceive.listen((message) {
-      // onExit 通知。worker が異常終了した場合に応答待ちが永久に残らないよう、
-      // 待機中のすべての要求を失敗させる。
-      if (message == null) {
-        if (!exited.isCompleted) {
-          exited.complete();
-        }
-        const error = KyoshinMonitorWorkerExitedException();
-        if (!workerPortCompleter.isCompleted) {
-          workerPortCompleter.completeError(error);
-        }
-        if (!initAck.isCompleted) {
-          initAck.completeError(error);
-        }
-        final waiting = pending.values.toList();
-        pending.clear();
-        for (final c in waiting) {
-          c.completeError(error);
-        }
-        final waitingBackfills = pendingBackfills.values.toList();
-        pendingBackfills.clear();
-        for (final c in waitingBackfills) {
-          c.completeError(error);
-        }
-        return;
-      }
-      if (message is SendPort) {
-        if (!workerPortCompleter.isCompleted) {
-          workerPortCompleter.complete(message);
-        }
-        return;
-      }
-      if (message is _InitAck) {
-        if (!initAck.isCompleted) {
-          initAck.complete();
-        }
-        return;
-      }
-      if (message is _BackfillResponseMessage) {
-        final c = pendingBackfills.remove(message.id);
-        if (c == null) {
-          return;
-        }
-        final errorMessage = message.errorMessage;
-        if (errorMessage == null) {
-          c.complete(message.events);
-        } else {
-          c.completeError(
-            KyoshinMonitorWorkerException(
-              errorMessage,
-              StackTrace.fromString(message.errorStack ?? ''),
-            ),
-          );
-        }
-        return;
-      }
-      if (message is _AnalyzeResponseMessage) {
-        final c = pending.remove(message.id);
-        if (c == null) {
-          return;
-        }
-        final result = message.result;
-        if (result == null) {
-          c.completeError(
-            KyoshinMonitorWorkerException(
-              message.errorMessage ?? 'unknown',
-              StackTrace.fromString(message.errorStack ?? ''),
-            ),
-          );
-        } else {
-          c.complete(result);
-        }
-      }
-    });
-
-    late final Isolate isolate;
-    late final SendPort workerSendPort;
+    final connection = _WorkerConnection(points: points);
     try {
-      isolate = await Isolate.spawn(
-        _workerEntryPoint,
-        mainReceive.sendPort,
-        debugName: 'kyoshin_monitor_analyzer',
-        onExit: mainReceive.sendPort,
+      return KyoshinMonitorAnalyzerIsolate._(
+        connection: connection,
+        workerSendPort: await connection.open(),
       );
-
-      workerSendPort = await workerPortCompleter.future;
-      workerSendPort.send(_InitMessage(points: points));
-      await initAck.future;
     } on Object {
-      await subscription.cancel();
-      mainReceive.close();
+      await connection.close();
       rethrow;
     }
-
-    return KyoshinMonitorAnalyzerIsolate._(
-      isolate: isolate,
-      mainReceive: mainReceive,
-      workerSendPort: workerSendPort,
-      subscription: subscription,
-      pending: pending,
-      pendingBackfills: pendingBackfills,
-      exited: exited,
-    );
   }
 
   /// GIF バイト列を解析し GeoJSON 文字列を返す。
@@ -197,12 +90,12 @@ final class KyoshinMonitorAnalyzerIsolate._({
     bool isShindo = true,
     ShakeDetectionRequest? shakeDetection,
   }) {
-    if (_exited.isCompleted) {
+    if (_connection.isClosed) {
       return Future.error(const KyoshinMonitorWorkerExitedException());
     }
     final id = _nextId++;
     final completer = Completer<AnalyzeResult>();
-    _pending[id] = completer;
+    _connection.pending[id] = completer;
     _workerSendPort.send(
       _AnalyzeMessage(
         id: id,
@@ -221,21 +114,114 @@ final class KyoshinMonitorAnalyzerIsolate._({
   Future<List<ShakeEventSnapshot>?> backfillShakeDetection(
     ShakeBackfillRequest request,
   ) {
-    if (_exited.isCompleted) {
+    if (_connection.isClosed) {
       return Future.error(const KyoshinMonitorWorkerExitedException());
     }
     final id = _nextId++;
     final completer = Completer<List<ShakeEventSnapshot>?>();
-    _pendingBackfills[id] = completer;
+    _connection.pendingBackfills[id] = completer;
     _workerSendPort.send(_BackfillMessage(id: id, request: request));
     return completer.future;
   }
 
-  Future<void> dispose() async {
-    _workerSendPort.send(const _ShutdownMessage());
-    await _subscription.cancel();
-    _mainReceive.close();
-    _isolate.kill(priority: Isolate.immediate);
+  /// 応答待ちの要求は [KyoshinMonitorWorkerExitedException] で失敗する。
+  Future<void> dispose() => _connection.close();
+}
+
+final class _WorkerConnection({
+  required final List<NamedObservationPoint> points,
+}) {
+  final receivePort = ReceivePort();
+  final ready = Completer<SendPort>();
+  final pending = <int, Completer<AnalyzeResult>>{};
+  final pendingBackfills = <int, Completer<List<ShakeEventSnapshot>?>>{};
+  late final StreamSubscription<Object?> subscription;
+  Isolate? isolate;
+  SendPort? workerSendPort;
+  Future<void>? closing;
+
+  bool get isClosed => closing != null;
+
+  Future<SendPort> open() async {
+    subscription = receivePort.listen(handle);
+    isolate = await Isolate.spawn(
+      _workerEntryPoint,
+      receivePort.sendPort,
+      debugName: 'kyoshin_monitor_analyzer',
+      onExit: receivePort.sendPort,
+    );
+    return ready.future;
+  }
+
+  Future<void> close() => closing ??= release();
+
+  Future<void> release() async {
+    const error = KyoshinMonitorWorkerExitedException();
+    if (!ready.isCompleted) {
+      // 起動の途中で失敗した場合は待ち手がいないことがある。
+      ready.future.ignore();
+      ready.completeError(error);
+    }
+    final waiting = pending.values.toList();
+    pending.clear();
+    for (final completer in waiting) {
+      completer.completeError(error);
+    }
+    final waitingBackfills = pendingBackfills.values.toList();
+    pendingBackfills.clear();
+    for (final completer in waitingBackfills) {
+      completer.completeError(error);
+    }
+    workerSendPort?.send(const _ShutdownMessage());
+    isolate?.kill(priority: Isolate.immediate);
+    await subscription.cancel();
+    receivePort.close();
+  }
+
+  Future<void> handle(Object? message) async {
+    switch (message) {
+      // onExit 通知。
+      case null:
+        await close();
+      case final SendPort port:
+        workerSendPort = port;
+        port.send(_InitMessage(points: points));
+      case _InitAck():
+        final port = workerSendPort;
+        if (port != null && !ready.isCompleted) {
+          ready.complete(port);
+        }
+      case _BackfillResponseMessage(:final errorMessage):
+        final completer = pendingBackfills.remove(message.id);
+        if (completer == null) {
+          return;
+        }
+        if (errorMessage == null) {
+          completer.complete(message.events);
+        } else {
+          completer.completeError(
+            KyoshinMonitorWorkerException(
+              errorMessage,
+              StackTrace.fromString(message.errorStack ?? ''),
+            ),
+          );
+        }
+      case _AnalyzeResponseMessage(:final result):
+        final completer = pending.remove(message.id);
+        if (completer == null) {
+          return;
+        }
+        if (result == null) {
+          completer.completeError(
+            KyoshinMonitorWorkerException(
+              message.errorMessage ?? 'unknown',
+              StackTrace.fromString(message.errorStack ?? ''),
+            ),
+          );
+        } else {
+          completer.complete(result);
+        }
+    }
   }
 }
 
