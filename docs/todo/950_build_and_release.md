@@ -98,8 +98,10 @@
 - Backend mainの正規OpenAPIからDart APIを再生成後、Android arm64 releaseのDart kernel生成は確認済み。Android SDK・Apple SDKがない環境のため、GradleによるAABとiOS archiveはCIで再確認する。
 - `app/test/feature/notification/data/logic/notification_delivery_log_detail_builder_test.dart` の3件は、既存の表示変更（ミリ秒表示・成功時の結果行非表示・失敗文言とエラー詳細非表示）に期待値が追従していない。`1dea1519d` の変更意図を確認して整理する。API生成・テスト通知の変更とは独立した不一致。
 
-## 800: beta タグの TestFlight 専用ビルドの実機確認
+## 800: beta タグのベータ配布専用ビルドの実機確認
 
-- `v*-beta.*` タグの iOS ビルドを dev アイコン・常時無料版にする変更は、ポリシースクリプトの回帰テスト、`extract_dart_defines.sh` の単体実行、Dart の解析と既存テストだけを確認した。制約は [配布・Release Please・CI 運用](../knowledge/delivery_ci.md) を参照する。
+- `v*-beta.*` タグの iOS・Android ビルドを dev アイコン・常時無料版にする変更は、ポリシースクリプトの回帰テスト、`extract_dart_defines.sh` の単体実行、Android debug APK のアイコン解決、Dart の解析と既存テストだけを確認した。制約は [配布・Release Please・CI 運用](../knowledge/delivery_ci.md) を参照する。
 - 未検証: beta タグの TestFlight ビルドでホーム画面のアイコンが `AppIcon-dev` になること。`develop` push・手動実行のビルドが本番アイコンのままであること。
 - 未検証: beta タグのビルドで、Pro 購入済みの Apple ID でも無料版として表示され、Paywall の購入・復元が無効になること。
+- 未検証: beta タグの Play `external` ビルドで、ランチャーのアイコンが `ic_launcher_dev` になり、購入済みの Google アカウントでも無料版になること。テーマアイコン（monochrome）の表示。
+- Android の `ic_launcher_dev` は iOS の `AppIcon-dev.icon` の素材から合成した暫定デザイン。デザインの確定は未了。

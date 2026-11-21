@@ -35,17 +35,17 @@
 
 正本は `scripts/ci/resolve_deploy_app_policy.sh` と `.github/workflows/deploy-app.yaml`。
 
-| 起点 | iOS | Android track | `IS_PRODUCTION` | iOS `IS_BETA_DISTRIBUTION` |
+| 起点 | iOS | Android track | `IS_PRODUCTION` | `IS_BETA_DISTRIBUTION` |
 | --- | --- | --- | --- | --- |
 | `develop` push | 内部、`[external]` を含むと外部 | `internal` | true | false |
 | `v*-beta.*` push | TestFlight 外部 | `external` | true | true |
 | 手動実行 | `ios` / `external` 入力 | `android` / `android_track` 入力（既定 `internal`） | true | false |
 
-- `v*-beta.*` push の iOS ビルドは TestFlight 専用。`resolve_deploy_app_policy.sh` の
-  `ios-beta-distribution` が true になり、iOS の `flutter build` だけに `IS_BETA_DISTRIBUTION=true` を渡す。
-  アプリアイコンは `AppIcon-dev` になり、`BuildConfig.isSubscriptionAvailable` が false になる。
-  同じ archive から作る Firebase App Distribution 向け ad-hoc IPA も同じ挙動になる。
-  Android は対象外で、Play `external` のビルドは変わらない。
+- `v*-beta.*` push のビルドはベータ配布専用。`resolve_deploy_app_policy.sh` の
+  `beta-distribution` が true になり、iOS・Android の `flutter build` に `IS_BETA_DISTRIBUTION=true` を渡す。
+  アプリアイコンは dev 用（iOS `AppIcon-dev`、Android `ic_launcher_dev`）になり、
+  `BuildConfig.isSubscriptionAvailable` が false になる。
+  同じビルドから配る Firebase App Distribution 向けバイナリも同じ挙動になる。
 - `isSubscriptionAvailable` が false のビルドは、購入済みでも常に無料版として動作する。
   `SubscriptionNotifier` は RevenueCat・バックエンドへ問い合わせず `inactive` を返し、
   購入・復元・同期を実行しない。Paywall には購入不可の案内を表示する。
@@ -59,10 +59,10 @@
   対象trackへ設定する。Firebaseへの重複配布は行わない。
 - iOS の署名済みIPAのbuild numberはCI run numberと一致するとは限らない。
   export時の採番が入るため、CI番号をASCのビルド選択へそのまま渡さない。
-- iOS の一般公開には `v*-beta.*` タグの ASC build を使わない。dev アイコン・課金無効の
-  TestFlight 専用バイナリのため、`develop` push か手動実行の run で作った ASC build を選択する。
-  `source_run_id` に beta タグの run を指定して iOS を一般公開へ再利用しない。
-  Android はベータと同じ versionCode を選択できる。
+- 一般公開には `v*-beta.*` タグのビルドを使わない。dev アイコン・課金無効のベータ配布専用バイナリのため、
+  iOS は `develop` push か手動実行の run で作った ASC build を選択し、Android も同じく
+  ベータタグの versionCode を Play Console で製品版へ昇格しない。
+  `source_run_id` に beta タグの run を指定すると、同じベータ専用バイナリが対象 track へ配られる。
 
 - 両OSとも対応する Firebase App Distribution へ配布する。iOSストアuploadとFirebaseは別job。
 - 揺れ検知通知は `IS_SHAKE_DETECTION_ENABLED`（既定 true）だけで制御し、production かどうかを見ない。

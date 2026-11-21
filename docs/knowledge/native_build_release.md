@@ -13,6 +13,10 @@ APNs・認証は [push_and_auth.md](push_and_auth.md) を参照する。
 - iOS の `IS_PRODUCTION=true` は `APP_ICON=AppIcon` を強制し、環境ファイルの指定より優先する。
   本番用資産は `app/ios/AppIcon.icon`。未指定・false の場合は入力された `APP_ICON` を使う。
   `IS_BETA_DISTRIBUTION=true` はこの強制より後に `APP_ICON=AppIcon-dev` を書き出し、最優先になる。
+- Android は `app/android/app/build.gradle.kts` が `IS_BETA_DISTRIBUTION=true` のときだけ
+  manifest の `appIcon` を `@mipmap/ic_launcher_dev` にする。それ以外は `@mipmap/ic_launcher`。
+  `ic_launcher_dev` は本番の前景に BETA バッジを重ね、背景を `AppIcon-dev` の配色にした adaptive icon。
+  `src/dev` / `src/prod` は flavor 未定義のためビルドに使われない。
 
 ## iOS SDK と SwiftPM
 
