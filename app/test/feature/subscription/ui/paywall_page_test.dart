@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
@@ -16,6 +17,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' as rc;
+
+import '../../../fixtures/build_config.dart';
 
 void main() {
   testWidgets('uses the returned localized price and enables purchase', (
@@ -307,6 +310,9 @@ Future<void> pumpPaywall(
     ProviderScope(
       retry: (_, _) => null,
       overrides: [
+        buildConfigProvider.overrideWithValue(
+          const BuildConfigFixture().build(),
+        ),
         if (flow != null) paywallFlowProvider.overrideWithValue(flow),
         monthlySubscriptionPackageProvider.overrideWith((ref) => loadPackage()),
         subscriptionProvider.overrideWith(

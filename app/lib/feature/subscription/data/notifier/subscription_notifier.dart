@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:clock/clock.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_pending_retry.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_failure_reason.dart';
@@ -30,6 +31,9 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
 
   @override
   Future<SubscriptionStatus> build() async {
+    if (!ref.watch(buildConfigProvider).isSubscriptionAvailable) {
+      return const SubscriptionStatus.inactive();
+    }
     final generation = ++_generation;
     final interruptedRetry = _pendingRetry;
     cancelPendingRetry();
@@ -110,6 +114,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
   );
 
   Future<void> _refresh() async {
+    if (!ref.read(buildConfigProvider).isSubscriptionAvailable) return;
     final current = state;
     final previous = current.value;
     if (_busy) return;
@@ -160,6 +165,11 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
     required Future<PurchaseOutcome> Function(SubscriptionRepository) purchase,
     required bool skipWhenActive,
   }) async {
+    if (!ref.read(buildConfigProvider).isSubscriptionAvailable) {
+      return const PurchaseResult.failed(
+        PurchaseFailureReason.betaDistribution,
+      );
+    }
     if (_busy)
       return const PurchaseResult.failed(
         PurchaseFailureReason.operationInProgress,
@@ -232,6 +242,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
 
   static final synchronizeMutation = Mutation<void>();
   Future<void> synchronize() async {
+    if (!ref.read(buildConfigProvider).isSubscriptionAvailable) return;
     if (_busy) return;
     _busy = true;
     stopPendingRetry();
