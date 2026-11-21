@@ -11,11 +11,13 @@ import SwiftUI
 import EQMonitorAPI
 
 /// Widget表示用の地震情報
-struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable {
+struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable, Codable {
     let id: String
     let hypocenterName: String
     /// 見出しの震度フォールバックを含まない、APIの震源名。
     let sourceHypocenterName: String?
+    /// 震度速報など震源要素が未発表のとき false。M・深さは「不明」ではなく未発表として扱う。
+    let hasHypocenter: Bool
     let magnitude: String
     let magnitudeValue: Double?
     let maxIntensity: IntensityValue?
@@ -55,7 +57,7 @@ struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable {
         return maxIntensity?.textColor ?? Color.white
     }
 
-    /// 危険度レベル（アクセシビリティ用）
+    /// 危険度レベル（0-4）
     var dangerLevel: Int {
         return maxIntensity?.dangerLevel ?? 0
     }
@@ -77,6 +79,7 @@ struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable {
         let maxIntensity = IntensityValue(from: partial.intensity?.value1.max_intensity)
         self.earthquakeMaxIntensity = maxIntensity
         self.regionalIntensity = nil
+        self.hasHypocenter = partial.hypocenter != nil
         self.sourceHypocenterName = [partial.hypocenter?.value1.name,
                                     partial.hypocenter?.value1.detailed?.value1.name]
             .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: "、")
@@ -155,6 +158,7 @@ struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable {
         // 地域の震度情報を優先（検索結果の場合）
         self.regionalIntensity = IntensityValue(from: regionIntensity)
         self.earthquakeMaxIntensity = IntensityValue(from: partial.intensity?.value1.max_intensity)
+        self.hasHypocenter = partial.hypocenter != nil
         self.sourceHypocenterName = [partial.hypocenter?.value1.name,
                                     partial.hypocenter?.value1.detailed?.value1.name]
             .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: "、")
@@ -203,14 +207,18 @@ struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable {
         magnitudeValue: Double?,
         maxIntensity: IntensityValue?,
         depth: String,
+        depthValue: Double? = nil,
         originTime: Date,
+        isArrivalTime: Bool = false,
+        hasHypocenter: Bool = true,
         latitude: Double? = nil,
         longitude: Double? = nil,
         status: TelegramStatus = .normal
     ) {
         self.id = id
         self.hypocenterName = hypocenterName
-        self.sourceHypocenterName = hypocenterName.isEmpty ? nil : hypocenterName
+        self.sourceHypocenterName = hasHypocenter && !hypocenterName.isEmpty ? hypocenterName : nil
+        self.hasHypocenter = hasHypocenter
         self.magnitude = magnitude
         self.magnitudeValue = magnitudeValue
         self.maxIntensity = maxIntensity
@@ -218,13 +226,13 @@ struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable {
         self.regionalIntensity = nil
         self.earthquakeMaxIntensityClass = nil
         self.earthquakeType = .NORMAL
-        self.sourceOriginTime = originTime
-        self.sourceArrivalTime = nil
+        self.sourceOriginTime = isArrivalTime ? nil : originTime
+        self.sourceArrivalTime = isArrivalTime ? originTime : nil
         self.originTimePrecision = .MINUTE
         self.depth = depth
-        self.depthValue = nil
+        self.depthValue = depthValue
         self.originTime = originTime
-        self.formattedTime = Self.formatTime(originTime, isArrival: false)
+        self.formattedTime = Self.formatTime(originTime, isArrival: isArrivalTime)
         self.latitude = latitude
         self.longitude = longitude
         self.status = status
@@ -302,6 +310,7 @@ struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable {
                 magnitudeValue: 5.2,
                 maxIntensity: .four,
                 depth: "50km",
+                depthValue: 50,
                 originTime: Date().addingTimeInterval(-3600),
                 latitude: 37.5,
                 longitude: 141.5
@@ -313,6 +322,7 @@ struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable {
                 magnitudeValue: 3.8,
                 maxIntensity: .three,
                 depth: "30km",
+                depthValue: 30,
                 originTime: Date().addingTimeInterval(-7200),
                 latitude: 35.8,
                 longitude: 140.1
@@ -324,24 +334,40 @@ struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable {
                 magnitudeValue: 6.5,
                 maxIntensity: .sixLower,
                 depth: "10km",
+                depthValue: 10,
                 originTime: Date().addingTimeInterval(-14400),
                 latitude: 37.2,
                 longitude: 136.8
+            ),
+            EarthquakeDisplayItem(
+                id: "20260105090000",
+                hypocenterName: "トカラ列島近海",
+                magnitude: "M2.9",
+                magnitudeValue: 2.9,
+                maxIntensity: .one,
+                depth: "ごく浅い",
+                originTime: Date().addingTimeInterval(-28800)
+            ),
+            EarthquakeDisplayItem(
+                id: "20260104210000",
+                hypocenterName: "日向灘",
+                magnitude: "M4.4",
+                magnitudeValue: 4.4,
+                maxIntensity: .two,
+                depth: "40km",
+                depthValue: 40,
+                originTime: Date().addingTimeInterval(-86400)
+            ),
+            EarthquakeDisplayItem(
+                id: "20260104120000",
+                hypocenterName: "宮城県沖",
+                magnitude: "M4.9",
+                magnitudeValue: 4.9,
+                maxIntensity: .fiveLower,
+                depth: "60km",
+                depthValue: 60,
+                originTime: Date().addingTimeInterval(-118800)
             )
         ]
-    }
-
-    static var singleMockData: EarthquakeDisplayItem {
-        EarthquakeDisplayItem(
-            id: "20260106123456",
-            hypocenterName: "福島県沖",
-            magnitude: "M5.2",
-            magnitudeValue: 5.2,
-            maxIntensity: .four,
-            depth: "50km",
-            originTime: Date().addingTimeInterval(-3600),
-            latitude: 37.5,
-            longitude: 141.5
-        )
     }
 }

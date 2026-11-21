@@ -100,6 +100,34 @@ enum JSTDateFormat {
         string(from: date, format: "HH:mm")
     }
 
+    static func monthDayTime(_ date: Date) -> String {
+        string(from: date, format: "MM/dd HH:mm")
+    }
+
+    static func yearMonthDay(_ date: Date) -> String {
+        string(from: date, format: "yyyy/MM/dd")
+    }
+
+    static func yearMonthDayTime(_ date: Date) -> String {
+        string(from: date, format: "yyyy/MM/dd HH:mm")
+    }
+
+    static func isSameYear(_ lhs: Date, _ rhs: Date) -> Bool {
+        calendar.isDate(lhs, equalTo: rhs, toGranularity: .year)
+    }
+
+    static func isSameDay(_ lhs: Date, _ rhs: Date) -> Bool {
+        calendar.isDate(lhs, inSameDayAs: rhs)
+    }
+
+    private static let calendar: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        if let timeZone {
+            calendar.timeZone = timeZone
+        }
+        return calendar
+    }()
+
     private static func string(from date: Date, format: String) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = format

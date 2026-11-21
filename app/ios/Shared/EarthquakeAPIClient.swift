@@ -52,13 +52,23 @@ enum APIError: Error, LocalizedError {
 class EarthquakeAPIService {
     private let client: Client
 
-    init(baseURL: URL, transport: any ClientTransport = URLSessionTransport()) {
+    init(baseURL: URL, transport: any ClientTransport = EarthquakeAPIService.defaultTransport) {
         self.client = Client(
             serverURL: baseURL,
             configuration: Configuration(dateTranscoder: LenientISO8601DateTranscoder()),
             transport: transport
         )
     }
+
+    // 拡張の実行時間は限られるため、URLSession 既定の 60 秒を待たずに失敗させる
+    static let defaultTransport: URLSessionTransport = {
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 10
+        configuration.timeoutIntervalForResource = 20
+        return URLSessionTransport(
+            configuration: .init(session: URLSession(configuration: configuration))
+        )
+    }()
 
     func fetchEarthquake(eventID: String) async throws -> EarthquakeDisplayItem? {
         let response = try await client.getV2EarthquakeByEventId(path: .init(eventId: eventID))
@@ -83,10 +93,15 @@ class EarthquakeAPIService {
     /// - Returns: Widget表示用の地震情報配列
     func fetchEarthquakes(
         limit: Int = 10,
-        minIntensity: Components.Schemas.JmaIntensity? = nil
+        minIntensity: Components.Schemas.JmaIntensity? = nil,
+        normalOnly: Bool = false
     ) async throws -> [EarthquakeDisplayItem] {
         let response = try await client.getV2Earthquake(
-            query: .init(limit: String(limit), intensityGte: minIntensity)
+            query: .init(
+                limit: String(limit),
+                intensityGte: minIntensity,
+                statuses: normalOnly ? .init(value2: .NORMAL) : nil
+            )
         )
         switch response {
         case .ok(let okResponse):
@@ -112,11 +127,16 @@ class EarthquakeAPIService {
     func fetchEarthquakesByRegion(
         regionCode: String,
         limit: Int = 10,
-        minIntensity: Components.Schemas.JmaIntensity? = nil
+        minIntensity: Components.Schemas.JmaIntensity? = nil,
+        normalOnly: Bool = false
     ) async throws -> [EarthquakeDisplayItem] {
         let response = try await client.getV2EarthquakeIntensityRegionByCode(
             path: .init(code: regionCode),
-            query: .init(limit: String(limit), intensityGte: minIntensity)
+            query: .init(
+                limit: String(limit),
+                intensityGte: minIntensity,
+                statuses: normalOnly ? .init(value2: .NORMAL) : nil
+            )
         )
         switch response {
         case .ok(let okResponse):
@@ -137,11 +157,16 @@ class EarthquakeAPIService {
     func fetchEarthquakesByPrefecture(
         prefectureCode: String,
         limit: Int = 10,
-        minIntensity: Components.Schemas.JmaIntensity? = nil
+        minIntensity: Components.Schemas.JmaIntensity? = nil,
+        normalOnly: Bool = false
     ) async throws -> [EarthquakeDisplayItem] {
         let response = try await client.getV2EarthquakeIntensityPrefectureByCode(
             path: .init(code: prefectureCode),
-            query: .init(limit: String(limit), intensityGte: minIntensity)
+            query: .init(
+                limit: String(limit),
+                intensityGte: minIntensity,
+                statuses: normalOnly ? .init(value2: .NORMAL) : nil
+            )
         )
         switch response {
         case .ok(let okResponse):
@@ -160,11 +185,16 @@ class EarthquakeAPIService {
     func fetchEarthquakesByCity(
         cityCode: String,
         limit: Int = 10,
-        minIntensity: Components.Schemas.JmaIntensity? = nil
+        minIntensity: Components.Schemas.JmaIntensity? = nil,
+        normalOnly: Bool = false
     ) async throws -> [EarthquakeDisplayItem] {
         let response = try await client.getV2EarthquakeIntensityCityByCode(
             path: .init(code: cityCode),
-            query: .init(limit: String(limit), intensityGte: minIntensity)
+            query: .init(
+                limit: String(limit),
+                intensityGte: minIntensity,
+                statuses: normalOnly ? .init(value2: .NORMAL) : nil
+            )
         )
         switch response {
         case .ok(let okResponse):

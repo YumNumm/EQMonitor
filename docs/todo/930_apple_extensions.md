@@ -31,6 +31,34 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 - iOS 18〜26.0でLive Activityの対応判定・push-to-start token登録とAPNs Start→Update→Endを実機確認する。Vision判定をAPI利用可能なOS内へ限定する修正後も、iOS 26.1以降、Mac・Vision実行時の除外を確認する。
 - 完了条件: iOS 18で Widget/Live Activity が表示され、26専用 Snippet Control は出ない。iOS 26で Widget/Live Activity/Control が表示される。必要な `@available` 漏れを修正し、結果を記録する。
 
+## 850: ホーム画面 Widget（地震履歴）の実表示確認
+
+対象: `app/ios/Widget/Widget.swift`、`Views/EarthquakeWidgetView.swift`、`EarthquakeWidgetCache.swift`。
+背景は [ホーム画面 Widget](../knowledge/home_widget.md)。確認済みは macOS のオフスクリーン描画（件数・文字の切れ）、
+WidgetExtension・AppIntentExtension・`EQMonitorPreview` の署名なし Simulator 向け build、`WidgetModelsTests` だけ。
+
+- Runner へ組み込んだ署名ビルドでは未確認。ホーム画面へ追加して表示を確認する。
+- ホーム画面の色つき・クリア表示、iPad のロック画面、夜間のスタンバイで、震度バッジの枠線表示と文字が
+  読めることを確認する。描画モードごとの分岐は macOS の近似描画でしか見ていない。
+- 昼のスタンバイと CarPlay はフルカラーのまま背景だけが外れる。文字色と区切り線がどう見えるかは未確認。
+- ライトの背景に重ねた青い光が、実機の画面と壁紙の上でどう見えるかを確認する。macOS の描画でしか見ていない。
+- Dynamic Type を大きくして、件数が 3 件から 2 件へ減るだけで文字が切れないことを確認する。
+  macOS では文字倍率を掛けた近似だけ。iPhone SE（148pt）は xLarge で small・medium とも 2 件になる見込み。
+- iPad の寸法表にある Device 側の高さ（120〜136pt）で配置されるなら small・medium は 2 件になる。
+  Canvas 側の寸法で配置されるかを実機で確認する。
+- 訓練・テストの電文が出ないことを、訓練報が配信された日に確認する。API への `statuses=NORMAL` の付与は
+  テスト用の通信差し替えで確認したが、backend が絞り込むことは未確認（表示前にも通常以外を落としている）。
+- VoiceOver で各行が 1 要素として「震度・震源・マグニチュード・深さ・時刻」の順に読まれること、
+  ヘッダーの取得時刻と更新失敗が読まれることを確認する。
+- 行以外（ヘッダー・余白・エラー表示）のタップで地震履歴一覧が開くことを確認する。
+- 通信を切って取得を失敗させ、前回分と警告表示が出ること、日付をまたいだ前回分に日付が付くことを確認する。
+  App Group コンテナへの保存は署名したビルドでのみ確認できる。
+- ウィジェットを追加した直後など、ギャラリー以外の一時表示で見本の地震が出ないことを確認する。
+- 強い地震の直後に Smart Stack で前面へ出るかを確認する。
+- 即時更新は VXSE 通知が届いた端末に限られ、通知を切っている端末は 15 分ごとの再取得に頼る。
+  WidgetKit push（`apns-push-type: widgets`）で backend から再読み込みさせる対応は未着手。
+  対応 OS と backend の配信経路を決めてから実装する。
+
 ## 800: backend Live Activity API の復元・再生成
 
 - 対象: `backend/api/api/src/features/device/routes/live-activity-test.ts`、OpenAPI、`packages/eqmonitor_api/`、Swift EQMonitorAPI。backend commit `83448697` / `6757aee5` 周辺を参照し、現行 submodule と照合する。

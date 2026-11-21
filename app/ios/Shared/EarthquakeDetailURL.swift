@@ -9,3 +9,7 @@ enum EarthquakeDetailURL {
         return components.url
     }
 }
+
+enum EarthquakeHistoryURL {
+    static let list = URL(string: "eqmonitor:///earthquake-history")
+}
