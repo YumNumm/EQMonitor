@@ -68,6 +68,7 @@ jobs:
       deploy-ios: ${{ steps.define-environment-matrix.outputs.deploy-ios }}
       deploy-android: ${{ steps.define-environment-matrix.outputs.deploy-android }}
       deploy-ios-external: ${{ steps.define-environment-matrix.outputs.deploy-ios-external }}
+      ios-beta-distribution: ${{ steps.define-environment-matrix.outputs.ios-beta-distribution }}
       android-track: ${{ steps.define-environment-matrix.outputs.android-track }}
     steps:
       # https://github.com/actions/checkout
@@ -340,6 +341,7 @@ jobs:
         working-directory: app
         env:
           COMMIT_INFORMATION: ${{ github.ref_type == 'tag' && github.ref_name || format('{0}-{1}', github.ref_name, github.sha) }}
+          IS_BETA_DISTRIBUTION: ${{ needs.define-matrix.outputs.ios-beta-distribution == 'true' }}
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
@@ -361,6 +363,7 @@ jobs:
             --build-number=${{ github.run_number }} \
             --dart-define-from-file=../environment/.env.prod \
             --dart-define IS_PRODUCTION="true" \
+            --dart-define IS_BETA_DISTRIBUTION="$IS_BETA_DISTRIBUTION" \
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
             --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
             --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE"

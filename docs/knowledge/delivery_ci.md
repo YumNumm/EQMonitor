@@ -35,11 +35,21 @@
 
 正本は `scripts/ci/resolve_deploy_app_policy.sh` と `.github/workflows/deploy-app.yaml`。
 
-| 起点 | iOS | Android track | `IS_PRODUCTION` |
-| --- | --- | --- | --- |
-| `develop` push | 内部、`[external]` を含むと外部 | `internal` | true |
-| `v*-beta.*` push | TestFlight 外部 | `external` | true |
-| 手動実行 | `ios` / `external` 入力 | `android` / `android_track` 入力（既定 `internal`） | true |
+| 起点 | iOS | Android track | `IS_PRODUCTION` | iOS `IS_BETA_DISTRIBUTION` |
+| --- | --- | --- | --- | --- |
+| `develop` push | 内部、`[external]` を含むと外部 | `internal` | true | false |
+| `v*-beta.*` push | TestFlight 外部 | `external` | true | true |
+| 手動実行 | `ios` / `external` 入力 | `android` / `android_track` 入力（既定 `internal`） | true | false |
+
+- `v*-beta.*` push の iOS ビルドは TestFlight 専用。`resolve_deploy_app_policy.sh` の
+  `ios-beta-distribution` が true になり、iOS の `flutter build` だけに `IS_BETA_DISTRIBUTION=true` を渡す。
+  アプリアイコンは `AppIcon-dev` になり、`BuildConfig.isSubscriptionAvailable` が false になる。
+  同じ archive から作る Firebase App Distribution 向け ad-hoc IPA も同じ挙動になる。
+  Android は対象外で、Play `external` のビルドは変わらない。
+- `isSubscriptionAvailable` が false のビルドは、購入済みでも常に無料版として動作する。
+  `SubscriptionNotifier` は RevenueCat・バックエンドへ問い合わせず `inactive` を返し、
+  購入・復元・同期を実行しない。Paywall には購入不可の案内を表示する。
+  クライアント側の判定だけを変えるため、バックエンドに登録済みの Pro 権限・通知設定は変更しない。
 
 - `develop` push はその時点の `app/pubspec.yaml` を配布する。未マージのRelease PRのバージョンは使わないため、新しいバージョンの配布前にRelease PRを取り込む。Release PleaseはApp Store側の承認済みバージョンを自動照合しない。
 - Android オープンテストは `android_track=beta`。`external` は独自のクローズドテスト。
@@ -49,8 +59,10 @@
   対象trackへ設定する。Firebaseへの重複配布は行わない。
 - iOS の署名済みIPAのbuild numberはCI run numberと一致するとは限らない。
   export時の採番が入るため、CI番号をASCのビルド選択へそのまま渡さない。
-- ベータ後の一般公開でも iOS はこの ASC build、Android は同じversionCodeを選択する。
-  Release PRのmergeによる新しいビルドは別バイナリになるため、同一バイナリの一般公開に使わない。
+- iOS の一般公開には `v*-beta.*` タグの ASC build を使わない。dev アイコン・課金無効の
+  TestFlight 専用バイナリのため、`develop` push か手動実行の run で作った ASC build を選択する。
+  `source_run_id` に beta タグの run を指定して iOS を一般公開へ再利用しない。
+  Android はベータと同じ versionCode を選択できる。
 
 - 両OSとも対応する Firebase App Distribution へ配布する。iOSストアuploadとFirebaseは別job。
 - 揺れ検知通知は `IS_SHAKE_DETECTION_ENABLED`（既定 true）だけで制御し、production かどうかを見ない。
@@ -85,7 +97,7 @@
   サーバー側の通知停止は設定の同期成功後に反映される。
   揺れ検知だけを理由とする位置情報監視を停止し、iOS Live Activity も揺れ検知を表示しない。
   Android の OS 通知設定でも揺れ検知チャネルを作成せず、更新前の同チャネルは削除する。
-- Proの購入・復元・設定導線は常時有効。有料権限はバックエンド確認値で判定する。
+- Proの購入・復元・設定導線は `isSubscriptionAvailable` が true のビルドで有効。有料権限はバックエンド確認値で判定する。
 - RevenueCatの公開SDKキーは、GitHub secret `AGE_KEY` → SOPS `.env.json` →
   `DART_DEFINE_PRODUCTION` → `environment/.env.prod` → `--dart-define-from-file` で供給する。
   iOS/Androidとも同じproduction defineを使う。ローカルの環境ファイルとは別管理。
