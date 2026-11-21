@@ -16,7 +16,7 @@ enum EewAlertStyle {
     }
 }
 
-/// 文字の背景を1秒おきに点滅させる。濃い赤の塗りを出したり消したりし、文字は常に白。
+/// 文字の背景を点滅させる。濃い赤の塗りを出したり消したりし、文字は常に白。
 @available(iOS 16.1, *)
 struct EewAlertBlinkHighlight: ViewModifier {
     let isActive: Bool
@@ -69,7 +69,7 @@ struct EewLocationNoticeView: View {
             .padding(.vertical, 8)
             .background {
                 if notice == .warning {
-                    // 警報対象は塗りを1秒おきに点滅させる
+                    // 警報対象は塗りを点滅させる
                     BlinkBlock(anchor: blinkAnchor)
                         .foregroundStyle(EewAlertStyle.fillColor)
                         .clipShape(ContainerRelativeShape())
@@ -104,8 +104,15 @@ struct EewLockScreenLocationView: View {
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 6) {
-            if state.display.localIntensity != nil,
-               let remaining = ArrivalCountdown.remaining(until: state.display.countdownArrivalDate) {
+            if state.display.showsImminentArrival {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("現在地")
+                        .font(AppFonts.flex(size: 10, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.8))
+                    EewImminentArrivalText(size: 16)
+                }
+            } else if state.display.localIntensity != nil,
+                      let remaining = ArrivalCountdown.remaining(until: state.display.countdownArrivalDate) {
                 // 予想震度と到達予想がそろうときは地名を省き、カウントダウンを大きく見せる
                 VStack(alignment: .leading, spacing: 0) {
                     Text("現在地\n揺れ到達まで")
@@ -114,7 +121,7 @@ struct EewLockScreenLocationView: View {
                         .fixedSize()
                     ArrivalCountdownText(
                         remaining: remaining, size: EewLockScreenMetrics.countdownSize,
-                        color: .white, alignment: .leading
+                        color: .white, alignment: .trailing
                     )
                 }
             } else {

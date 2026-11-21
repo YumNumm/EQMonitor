@@ -51,7 +51,6 @@ struct EewMaximumIntensityView: View {
 struct EewLocalIntensityView: View {
     let intensity: IntensityValue
     let size: CGFloat
-    var containerRelative = false
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
@@ -68,11 +67,7 @@ struct EewLocalIntensityView: View {
         .padding(.horizontal, size * 0.08)
         .frame(minWidth: size, minHeight: size)
         .background {
-            if containerRelative {
-                ContainerRelativeShape().fill(intensity.backgroundColor)
-            } else {
-                RoundedRectangle(cornerRadius: size * 0.2).fill(intensity.backgroundColor)
-            }
+            RoundedRectangle(cornerRadius: size * 0.2).fill(intensity.backgroundColor)
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("現在地の予想震度 \(intensity.displayString)")

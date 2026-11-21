@@ -82,6 +82,8 @@ struct EewSmallActivityView: View {
                         .foregroundStyle(.white.opacity(0.8))
                     ArrivalCountdownText(remaining: remaining, size: 16, color: .white, alignment: .leading)
                 }
+            } else if display.showsImminentArrival {
+                EewImminentArrivalText(size: 12)
             } else if let hypocenterName = state.hypocenterName, !hypocenterName.isEmpty {
                 Text(hypocenterName)
                     .font(AppFonts.flex(size: 11, weight: .medium))

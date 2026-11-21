@@ -150,8 +150,11 @@ struct EewCompactTrailingView: View {
                     remaining: remaining,
                     size: limited ? 11 : 14,
                     color: .white,
-                    placeholder: limited ? "0:00" : "00:00"
+                    placeholder: limited ? "0:00" : "00:00",
+                    showsTenths: !limited
                 )
+            } else if state.display.showsImminentArrival, !limited {
+                EewImminentArrivalText(size: 10, twoLines: true)
             } else {
                 EewStatusPill(
                     isWarning: state.display.isWarning,
@@ -307,9 +310,11 @@ private struct EewExpandedLocationView: View {
             if let arrivalDate = state.display.countdownArrivalDate {
                 EewArrivalView(arrivalDate: arrivalDate)
                     .fixedSize()
+            } else if state.display.showsImminentArrival {
+                EewImminentArrivalText(size: 13)
             }
             if let intensity = state.display.localIntensity {
-                EewLocalIntensityView(intensity: intensity, size: intensitySize, containerRelative: true)
+                EewLocalIntensityView(intensity: intensity, size: intensitySize)
                     .fixedSize()
             }
         }
