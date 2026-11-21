@@ -81,8 +81,10 @@
   M/深さの縦積みspacingは0、Expanded最大震度38pt・震源数値21ptを基準とする。
 - MAXは数字の右上へ置き左右4ptを確保する。単数字だけ縦積みにして行高を変えない。
   カメラ脇の混在文の外側にも4ptを確保し、切り取りをCanvasで確認する。
-- 注意帯・現在地震度背景・低精度ラベルは`ContainerRelativeShape()`を使い、
+- 注意帯・低精度ラベルは`ContainerRelativeShape()`を使い、
   独自containerShapeでIsland全体の形状を上書きしない。
+- Expandedの現在地震度バッジは他の表示と同じ角丸（半径は大きさの0.2倍）にする。`ContainerRelativeShape()`だと
+  Islandの形に沿ってほぼ円になる。角丸でもIslandの角で欠けない（Simulatorの実Islandで確認）。
 
 ## Apple Watch・CarPlay（`.small`）
 

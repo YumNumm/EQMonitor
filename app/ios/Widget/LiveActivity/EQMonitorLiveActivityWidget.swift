@@ -315,7 +315,7 @@ private struct EewExpandedLocationView: View {
                 EewImminentArrivalText(size: 13)
             }
             if let intensity = state.display.localIntensity {
-                EewLocalIntensityView(intensity: intensity, size: intensitySize, containerRelative: true)
+                EewLocalIntensityView(intensity: intensity, size: intensitySize)
                     .fixedSize()
             }
         }
