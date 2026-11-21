@@ -52,13 +52,23 @@ enum APIError: Error, LocalizedError {
 class EarthquakeAPIService {
     private let client: Client
 
-    init(baseURL: URL, transport: any ClientTransport = URLSessionTransport()) {
+    init(baseURL: URL, transport: any ClientTransport = EarthquakeAPIService.defaultTransport) {
         self.client = Client(
             serverURL: baseURL,
             configuration: Configuration(dateTranscoder: LenientISO8601DateTranscoder()),
             transport: transport
         )
     }
+
+    // 拡張の実行時間は限られるため、URLSession 既定の 60 秒を待たずに失敗させる
+    static let defaultTransport: URLSessionTransport = {
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 10
+        configuration.timeoutIntervalForResource = 20
+        return URLSessionTransport(
+            configuration: .init(session: URLSession(configuration: configuration))
+        )
+    }()
 
     func fetchEarthquake(eventID: String) async throws -> EarthquakeDisplayItem? {
         let response = try await client.getV2EarthquakeByEventId(path: .init(eventId: eventID))
