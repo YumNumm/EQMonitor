@@ -187,8 +187,8 @@
   JMA コード表の `area_forecast_local_eew` は EEW の府県予報区（4 桁）で別のコード体系のため、引き当てに使えない。
 - 表示の期限はエンジンの `expiresAt`（観測点ごとの期限の最大値）を使う。固定 TTL を入れない。
 - `IS_SHAKE_DETECTION_ENABLED` は既定 true で、production を含むすべてのビルドで揺れ検知通知を利用できる。
-  利用できる範囲は `/start` の `plan_constraints.shake_detection` で決まり、無料プランには Pro の案内を出し、Pro だけが設定できる。
-  この制限はアプリの表示だけで行っており、backend の設定 API と配信はプランを参照しない。
+  プランによる制限はなく、無料プランでも設定できる。アプリは `/start` の `plan_constraints.shake_detection` を参照しない。
+  backend の設定 API と配信もプランを参照しない。
 - `IS_SHAKE_DETECTION_ENABLED=false` のビルドでは、揺れ検知通知の一般向け設定 route と、デバッグの「揺れ検知 Card」「揺れ検知を挿入」を無効にする。
   このビルドでも、デバッグを有効にした Admin 端末は揺れ検知通知を利用できる。
   デバッグ用通知設定 route はデバッグメニューへのアクセス権で開ける。配布別の指定は [配布と CI](delivery_ci.md) を参照する。

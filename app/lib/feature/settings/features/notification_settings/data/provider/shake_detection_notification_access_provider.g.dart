@@ -60,4 +60,4 @@ final class ShakeDetectionNotificationAccessProvider
 }
 
 String _$shakeDetectionNotificationAccessHash() =>
-    r'55b90ce5478876790698b271b50473366114cab8';
+    r'b6e4d80034f5637b31029e8970914dd1ac3e038b';

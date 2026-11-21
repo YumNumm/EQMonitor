@@ -26,7 +26,6 @@ VisibleReleaseHighlight? visibleReleaseHighlight(Ref ref) {
         shakeDetectionNotificationAccessProvider,
       )) {
         .hidden => null,
-        .locked => ReleaseHighlightAction.aboutPro,
         .editable => ReleaseHighlightAction.notificationSettings,
       },
     };
