@@ -60,34 +60,99 @@ extension View {
 
 // MARK: - 主要動到達カウントダウン
 
+/// 到達までの残り時間。iOS 18 以降は 0.1 秒単位（`8.5秒`、1分以上は `1:15.3`、到達後は `0秒`）、
+/// それより前は `M:SS`。
 @available(iOS 16.1, *)
 struct ArrivalCountdownText: View {
     let remaining: ClosedRange<Date>
     let size: CGFloat
     var color: Color = .primary
     var alignment: TextAlignment = .trailing
-    /// 幅の確保に使う文字列。表示しうる最長の桁数に合わせる。
+    /// `M:SS` で出すときに幅の確保に使う文字列。表示しうる最長の桁数に合わせる。
     var placeholder = "00:00"
+    /// 0.1 秒の桁を出すか。分1桁ぶんの幅しか無い場所では収まらないため切る。
+    var showsTenths = true
+
+    @Environment(\.isLuminanceReduced) private var isLuminanceReduced
 
     var body: some View {
-        // Workaround: timerInterval は横いっぱいに広がろうとするため、
-        // 同じフォントの placeholder で幅を確保して overlay で重ねる
-        // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
-        Text(placeholder)
-            .font(font)
-            .hidden()
-            .overlay(alignment: alignment == .leading ? .leading : .trailing) {
-                Text(timerInterval: remaining, countsDown: true)
-                    .font(font)
-                    .monospacedDigit()
+        // 常時表示では描き直しが間引かれる。止まった 0.1 秒の桁を見せないよう秒単位にする
+        if #available(iOS 18.0, *), showsTenths, !isLuminanceReduced {
+            // タイマー文字は横いっぱいに広がろうとするため、同じフォントの placeholder で
+            // 幅を確保して overlay で重ねる。placeholder も字形の置き換えを受ける
+            Text(tenthsPlaceholder)
+                .font(AppFonts.countdown(size: size))
+                .hidden()
+                .overlay(alignment: overlayAlignment) {
+                    Group {
+                        if remaining.lowerBound < remaining.upperBound {
+                            Text(
+                                .currentDate,
+                                format: .timer(
+                                    countingDownIn: remaining.lowerBound..<remaining.upperBound,
+                                    maxPrecision: .milliseconds(100)
+                                )
+                            )
+                        } else {
+                            Text(Self.arrivedText)
+                        }
+                    }
+                    .font(AppFonts.countdown(size: size))
+                    .lineLimit(1)
                     .multilineTextAlignment(alignment)
                     .foregroundColor(color)
-                    .contentTransition(.numericText(countsDown: true))
-            }
+                }
+        } else {
+            // Workaround: timerInterval は横いっぱいに広がろうとするため、
+            // 同じフォントの placeholder で幅を確保して overlay で重ねる
+            // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
+            Text(placeholder)
+                .font(font)
+                .hidden()
+                .overlay(alignment: overlayAlignment) {
+                    Text(timerInterval: remaining, countsDown: true)
+                        .font(font)
+                        .monospacedDigit()
+                        .multilineTextAlignment(alignment)
+                        .foregroundColor(color)
+                        .contentTransition(.numericText(countsDown: true))
+                }
+        }
+    }
+
+    /// フォントの置き換えで `0秒` になる。「秒」を文字として渡すと、描画時にシステムの
+    /// 日本語フォントへ差し替えられ、幅が足りず `…` になる
+    private static let arrivedText = "0:00.0"
+
+    /// 描いた時点の残りで出しうる最長の文字列。更新が来ないまま残りが増えることはない。
+    /// 1分未満は `11.1秒`、1分以上は `1:11.1`（到達までが10分を超えることはない）。
+    private var tenthsPlaceholder: String {
+        remaining.upperBound.timeIntervalSince(remaining.lowerBound) < 60 ? "0:11.1" : "1:11.1"
+    }
+
+    private var overlayAlignment: Alignment {
+        alignment == .leading ? .leading : .trailing
     }
 
     private var font: Font {
         AppFonts.code(size: size, weight: .bold)
+    }
+}
+
+/// PLUM 法で到達時刻が発表されないときに、カウントダウンの代わりに出す文言。
+@available(iOS 16.1, *)
+struct EewImminentArrivalText: View {
+    let size: CGFloat
+    /// 幅の限られる場所では2行に分ける
+    var twoLines = false
+
+    var body: some View {
+        Text(twoLines ? "すぐに\n到達" : EewDisplay.imminentArrivalTitle)
+            .font(AppFonts.flex(size: size, weight: .heavy))
+            .foregroundStyle(.white)
+            .multilineTextAlignment(.trailing)
+            .fixedSize()
+            .accessibilityLabel(EewDisplay.imminentArrivalTitle)
     }
 }
 
@@ -139,13 +204,15 @@ struct StripePattern: View {
     }
 }
 
-// MARK: - 1秒おきの点滅
+// MARK: - 点滅
 
-/// 偶数秒だけ枠いっぱいを塗る。
+/// 枠いっぱいの塗りを点滅させる。iOS 18 以降は 0.5 秒おき、それより前は 1 秒おき。
 ///
-/// Live Activity はタイマーやアニメーションを自前で回せないため、システムが毎秒描き直す
-/// タイマー文字を使う。`EQBlink.ttf` は偶数の数字を塗りつぶし、奇数の数字を空にした専用フォントで、
-/// 秒の1桁目だけを枠に合わせて切り抜くと 1 秒おきの点滅になる。
+/// Live Activity はタイマーやアニメーションを自前で回せないため、システムが描き直す時刻の文字を使う。
+/// 数字の一部を塗りつぶし、残りを空にした専用フォントで描き、点滅させたい桁だけを枠に合わせて切り抜く。
+/// - iOS 18 以降: 0.1 秒単位のストップウォッチ文字と `EQBlinkHalf.ttf`（0〜4 が塗り、5〜9 が空）。
+///   末尾の 0.1 秒の桁を切り抜く。
+/// - それより前: 毎秒のタイマー文字と `EQBlink.ttf`（偶数が塗り、奇数が空）。秒の1桁目を切り抜く。
 @available(iOS 16.1, *)
 struct BlinkBlock: View {
     /// 到達カウントダウンと秒の切り替わりをそろえるための基準時刻
@@ -161,21 +228,50 @@ struct BlinkBlock: View {
         } else {
             GeometryReader { geo in
                 let width = max(geo.size.width, 1)
-                // 文字は左詰めで描かれる。「M:SS」の4文字目（秒の1桁目）を枠へ合わせる。
-                Color.clear.overlay(alignment: .leading) {
-                    Text(Self.end(anchor: anchor), style: .timer)
+                if #available(iOS 18.0, *) {
+                    // 文字を右詰めで描き、末尾の1文字（0.1 秒の桁）を枠へ合わせる。
+                    Color.clear.overlay(alignment: .trailing) {
+                        Text(
+                            .currentDate,
+                            format: .stopwatch(
+                                startingAt: Self.start(anchor: anchor),
+                                showsHours: false,
+                                maxPrecision: .milliseconds(100)
+                            )
+                        )
                         // 1文字を枠より1割広くし、枠を文字の中央へ置く。同じ幅だと字送りの丸めで
                         // 隣の桁の塗りが端に細く見える
-                        .font(AppFonts.blink(size: width * 1.1))
+                        .font(AppFonts.blinkHalf(size: width * 1.1))
                         .lineLimit(1)
-                        // fixedSize を付けるとタイマー文字が描かれなくなるため、幅を明示する
-                        .frame(width: width * 5, alignment: .leading)
-                        .offset(x: -width * 3.35)
+                        .multilineTextAlignment(.trailing)
+                        // 「MM:SS.S」の7文字が収まる幅を渡す
+                        .frame(width: width * 9, alignment: .trailing)
+                        .offset(x: width * 0.05)
+                    }
+                    .clipped()
+                } else {
+                    // 文字は左詰めで描かれる。「M:SS」の4文字目（秒の1桁目）を枠へ合わせる。
+                    Color.clear.overlay(alignment: .leading) {
+                        Text(Self.end(anchor: anchor), style: .timer)
+                            .font(AppFonts.blink(size: width * 1.1))
+                            .lineLimit(1)
+                            // fixedSize を付けるとタイマー文字が描かれなくなるため、幅を明示する
+                            .frame(width: width * 5, alignment: .leading)
+                            .offset(x: -width * 3.35)
+                    }
+                    .clipped()
                 }
-                .clipped()
             }
             .accessibilityHidden(true)
         }
+    }
+
+    /// ストップウォッチ文字の開始時刻。基準時刻から整数秒ずらし、塗りの出はじめを
+    /// 到達カウントダウンの秒の切り替わりにそろえる。描画時に必ず経過済みになるよう約1分前へ置く。
+    static func start(anchor: Date?, now: Date = Date()) -> Date {
+        let anchor = anchor ?? now
+        let secondsUntilAnchor = anchor.timeIntervalSince(now).rounded(.up)
+        return anchor.addingTimeInterval(-secondsUntilAnchor - 60)
     }
 
     /// 残りが常に「M:SS」の4文字になる終了時刻。基準時刻から偶数秒ずらし、秒の偶奇をそろえる。

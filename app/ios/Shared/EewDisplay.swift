@@ -82,6 +82,14 @@ struct EewDisplay: Equatable {
         usesLocalIntensity && !isLocationPlum ? arrivalDate : nil
     }
 
+    /// 現在地の予想が PLUM 法のとき。到達時刻は発表されないため、カウントダウンの代わりに
+    /// [imminentArrivalTitle] を出す。
+    var showsImminentArrival: Bool {
+        usesLocalIntensity && isLocationPlum
+    }
+
+    static let imminentArrivalTitle = "すぐに到達"
+
     /// 深発地震のため予想震度が発表されない旨の注釈を出すか。
     ///
     /// JMA は震源が深さ 150km より深い場合、予想震度・主要動到達時刻を発表しない。

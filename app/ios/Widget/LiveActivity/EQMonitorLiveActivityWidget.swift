@@ -145,13 +145,17 @@ struct EewCompactTrailingView: View {
     var body: some View {
         HStack(spacing: 2) {
             if let remaining = ArrivalCountdown.remaining(until: state.display.countdownArrivalDate) {
-                // 到達までが10分を超えることはないため、狭い幅では分1桁ぶんの幅だけ確保する
+                // 到達までが10分を超えることはないため、狭い幅では分1桁ぶんの幅だけ確保する。
+                // この幅に 0.1 秒の桁は収まらないので、狭い幅では秒単位にする
                 ArrivalCountdownText(
                     remaining: remaining,
                     size: limited ? 11 : 14,
                     color: .white,
-                    placeholder: limited ? "0:00" : "00:00"
+                    placeholder: limited ? "0:00" : "00:00",
+                    showsTenths: !limited
                 )
+            } else if state.display.showsImminentArrival, !limited {
+                EewImminentArrivalText(size: 10, twoLines: true)
             } else {
                 EewStatusPill(
                     isWarning: state.display.isWarning,
@@ -307,6 +311,8 @@ private struct EewExpandedLocationView: View {
             if let arrivalDate = state.display.countdownArrivalDate {
                 EewArrivalView(arrivalDate: arrivalDate)
                     .fixedSize()
+            } else if state.display.showsImminentArrival {
+                EewImminentArrivalText(size: 13)
             }
             if let intensity = state.display.localIntensity {
                 EewLocalIntensityView(intensity: intensity, size: intensitySize, containerRelative: true)

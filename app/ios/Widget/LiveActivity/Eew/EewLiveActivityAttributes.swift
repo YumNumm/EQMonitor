@@ -63,7 +63,8 @@ struct EewContentState: Codable, Hashable {
             isLowAccuracyDetection: isPlum == true || isLevel == true
                 || isOnePoint == true,
             isLocationWarning: location?.isWarning == true,
-            isLocationPlum: location?.isPlum == true
+            // 報全体が PLUM 法なら、現在地の予想も PLUM 法による
+            isLocationPlum: location?.isPlum == true || isPlum == true
         )
     }
 }
