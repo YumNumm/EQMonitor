@@ -8,6 +8,7 @@ OUTPUT_FILE="${SRCROOT}/Flutter/Environment.xcconfig"
 # Dart defineの中身を変更した時に古いプロパティが残らないように、初めにファイルを空にしています。
 : > "$OUTPUT_FILE"
 is_production=false
+is_beta_distribution=false
 
 # この関数でDart defineをデコードします。
 function decode_url() { echo "${*}" | base64 --decode; }
@@ -19,6 +20,9 @@ do
     item=$(decode_url "${define_items[$index]}")
     if [[ "$item" == IS_PRODUCTION=* ]]; then
         is_production=${item#IS_PRODUCTION=}
+    fi
+    if [[ "$item" == IS_BETA_DISTRIBUTION=* ]]; then
+        is_beta_distribution=${item#IS_BETA_DISTRIBUTION=}
     fi
     # Dartの定義にはFlutter側で自動定義された項目も含まれます。
     # しかし、それらの定義を書き出してしまうとエラーによりビルドができなくなるので、
@@ -40,5 +44,9 @@ done
 if [[ "$is_production" == "true" ]]; then
     echo 'APP_ICON = AppIcon' >> "$OUTPUT_FILE"
     echo 'EQMONITOR_PRODUCTION_SWIFT_FLAGS = -D IS_PRODUCTION' >> "$OUTPUT_FILE"
+fi
+# xcconfig は後勝ちのため、production の AppIcon 強制より後に書き出す。
+if [[ "$is_beta_distribution" == "true" ]]; then
+    echo 'APP_ICON = AppIcon-dev' >> "$OUTPUT_FILE"
 fi
 echo 'OTHER_SWIFT_FLAGS = $(inherited) $(EQMONITOR_PRODUCTION_SWIFT_FLAGS)' >> "$OUTPUT_FILE"

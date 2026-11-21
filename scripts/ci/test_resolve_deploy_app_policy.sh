@@ -22,7 +22,7 @@ assert_policy() {
 
 assert_policy \
   beta-tag \
-  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=true\nandroid-track=external\n' \
+  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=true\nios-beta-distribution=true\nandroid-track=external\n' \
   EVENT_NAME=push \
   REF_TYPE=tag \
   REF_NAME=v3.0.0-beta.2 \
@@ -33,7 +33,7 @@ assert_policy \
 
 assert_policy \
   develop \
-  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=false\nandroid-track=internal\n' \
+  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=false\nios-beta-distribution=false\nandroid-track=internal\n' \
   EVENT_NAME=push \
   REF_TYPE=branch \
   REF_NAME=develop \
@@ -44,7 +44,7 @@ assert_policy \
 
 assert_policy \
   develop-external \
-  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=true\nandroid-track=internal\n' \
+  $'deploy-ios=true\ndeploy-android=true\ndeploy-ios-external=true\nios-beta-distribution=false\nandroid-track=internal\n' \
   EVENT_NAME=push \
   REF_TYPE=branch \
   REF_NAME=develop \
@@ -55,7 +55,7 @@ assert_policy \
 
 assert_policy \
   workflow-dispatch \
-  $'deploy-android=true\ndeploy-ios-external=true\nandroid-track=internal\n' \
+  $'deploy-android=true\ndeploy-ios-external=true\nios-beta-distribution=false\nandroid-track=internal\n' \
   EVENT_NAME=workflow_dispatch \
   REF_TYPE=branch \
   REF_NAME=develop \
@@ -66,7 +66,7 @@ assert_policy \
 
 assert_policy \
   workflow-dispatch-ios \
-  $'deploy-ios=true\ndeploy-ios-external=false\nandroid-track=internal\n' \
+  $'deploy-ios=true\ndeploy-ios-external=false\nios-beta-distribution=false\nandroid-track=internal\n' \
   EVENT_NAME=workflow_dispatch \
   REF_TYPE=branch \
   REF_NAME=develop \

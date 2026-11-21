@@ -59,6 +59,10 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
         'is_production',
         (v) => v as bool? ?? false,
       ),
+      isBetaDistribution: $checkedConvert(
+        'is_beta_distribution',
+        (v) => v as bool? ?? false,
+      ),
       isNativeSocialAuthEnabled: $checkedConvert(
         'is_native_social_auth_enabled',
         (v) => v as bool? ?? false,
@@ -86,6 +90,7 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
     'revenueCatApiKeyIos': 'revenue_cat_api_key_ios',
     'revenueCatApiKeyAndroid': 'revenue_cat_api_key_android',
     'isProduction': 'is_production',
+    'isBetaDistribution': 'is_beta_distribution',
     'isNativeSocialAuthEnabled': 'is_native_social_auth_enabled',
     'isShakeDetectionEnabled': 'is_shake_detection_enabled',
   },
@@ -109,6 +114,7 @@ Map<String, dynamic> _$BuildConfigToJson(_BuildConfig instance) =>
       'revenue_cat_api_key_ios': instance.revenueCatApiKeyIos,
       'revenue_cat_api_key_android': instance.revenueCatApiKeyAndroid,
       'is_production': instance.isProduction,
+      'is_beta_distribution': instance.isBetaDistribution,
       'is_native_social_auth_enabled': instance.isNativeSocialAuthEnabled,
       'is_shake_detection_enabled': instance.isShakeDetectionEnabled,
     };
