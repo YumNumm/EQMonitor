@@ -340,6 +340,7 @@
 				AppIntent.swift,
 				Assets.xcassets,
 				DesignSystem.swift,
+				EarthquakeWidgetCache.swift,
 				LiveActivity/Common/LocationInfo.swift,
 				LiveActivity/Common/SharedComponents.swift,
 				LiveActivity/Eew/EewIntensityViews.swift,

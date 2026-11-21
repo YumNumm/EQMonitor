@@ -2,14 +2,10 @@ import Foundation
 import Testing
 
 struct WidgetBehaviorTests {
-    @Test func itemCountsFitCommonWidgetHeights() {
-        #expect(WidgetLayoutPolicy.maxItemCount(layout: .small, availableHeight: 158) == 2)
-        #expect(WidgetLayoutPolicy.maxItemCount(layout: .medium, availableHeight: 169) == 2)
-        #expect(WidgetLayoutPolicy.maxItemCount(layout: .large, availableHeight: 354) == 5)
-    }
-
-    @Test func shortWidgetsStillShowOneItem() {
-        #expect(WidgetLayoutPolicy.maxItemCount(layout: .small, availableHeight: 80) == 1)
+    @Test func itemCountLimitsCoverEveryLayout() {
+        #expect(WidgetLayoutPolicy.maxItemCount(layout: .small) == 3)
+        #expect(WidgetLayoutPolicy.maxItemCount(layout: .medium) == 3)
+        #expect(WidgetLayoutPolicy.maxItemCount(layout: .large) == WidgetLayoutPolicy.fetchLimit)
     }
 
     @Test func earthquakeDetailURLUsesExistingAppRoute() {

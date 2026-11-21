@@ -51,6 +51,8 @@ struct IntensityBadge: View {
     /// 角丸比率。アプリの JmaIntensityIcon に準拠（size / 4 = 25%）
     var cornerRatio: CGFloat = 0.25
     var weight: Font.Weight = .bold
+    /// 色が単色に置き換わる描画モードでは塗りと数字が同じ色になるため、枠線で描く
+    var outlined: Bool = false
 
     var body: some View {
         HStack(alignment: .lastTextBaseline, spacing: 0) {
@@ -70,9 +72,13 @@ struct IntensityBadge: View {
         // （固定幅にすると背景の外へ文字がはみ出す）。
         .frame(height: size)
         .frame(minWidth: size)
-        .background(
-            RoundedRectangle(cornerRadius: size * cornerRatio, style: .continuous)
-                .fill(backgroundColor)
-        )
+        .background {
+            let shape = RoundedRectangle(cornerRadius: size * cornerRatio, style: .continuous)
+            if outlined {
+                shape.strokeBorder(textColor, lineWidth: max(1.5, size * 0.06))
+            } else {
+                shape.fill(backgroundColor)
+            }
+        }
     }
 }
