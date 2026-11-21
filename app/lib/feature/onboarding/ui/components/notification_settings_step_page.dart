@@ -106,29 +106,31 @@ class const _NewUserNotificationSettingsStepPage({
       hasSaveError.value = false;
       try {
         await ref.read(notificationPresetApplierProvider).apply(preset);
-        if (!context.mounted) {
-          return;
-        }
-
-        if (preset == NotificationPreset.custom) {
-          isProcessing.value = false;
-          await Navigator.of(context).push<void>(
-            MaterialPageRoute<void>(
-              builder: (_) => const _OnboardingCustomSettingsWrapper(),
-            ),
-          );
-          if (context.mounted) {
-            await navigation.nextPage();
-          }
-        } else {
-          isProcessing.value = false;
-          await navigation.nextPage();
-        }
       } on Exception catch (_) {
         if (context.mounted) {
-          isProcessing.value = false;
           hasSaveError.value = true;
         }
+        return;
+      } finally {
+        if (context.mounted) {
+          isProcessing.value = false;
+        }
+      }
+      if (!context.mounted) {
+        return;
+      }
+
+      if (preset == NotificationPreset.custom) {
+        await Navigator.of(context).push<void>(
+          MaterialPageRoute<void>(
+            builder: (_) => const _OnboardingCustomSettingsWrapper(),
+          ),
+        );
+        if (context.mounted) {
+          await navigation.nextPage();
+        }
+      } else {
+        await navigation.nextPage();
       }
     }
 
