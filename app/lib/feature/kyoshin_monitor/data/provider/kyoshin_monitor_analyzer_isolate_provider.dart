@@ -10,6 +10,11 @@ Future<KyoshinMonitorAnalyzerIsolate> kyoshinMonitorAnalyzerIsolate(
 ) async {
   final named = await ref.watch(kyoshinNamedObservationPointsProvider.future);
   final analyzer = await KyoshinMonitorAnalyzerIsolate.spawn(points: named);
+  // 起動を待つ間に破棄されると onDispose を登録できず、worker が残り続ける。
+  if (!ref.mounted) {
+    await analyzer.dispose();
+    return analyzer;
+  }
   ref.onDispose(analyzer.dispose);
   return analyzer;
 }
