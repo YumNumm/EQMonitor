@@ -1,5 +1,63 @@
 # Changelog (Beta)
 
+## [3.1.0-beta.4](https://github.com/YumNumm/EQMonitor/compare/v3.1.0-beta.3...v3.1.0-beta.4) (2026-11-21)
+
+
+### Features
+
+* Androidにdevアイコンを追加しベータ配布ビルドで使う ([a7e100a](https://github.com/YumNumm/EQMonitor/commit/a7e100a8a47e27e0ef12cf1c4e30bb388e706b7f))
+* Androidのdevアイコンを iOS の AppIcon-dev の書き出しに差し替え ([bc8a1f1](https://github.com/YumNumm/EQMonitor/commit/bc8a1f13021a35492ed31bb40a4a5386d6960b9c))
+* Androidのdevアイコンを全面背景のadaptive iconに作り直す ([4f517b5](https://github.com/YumNumm/EQMonitor/commit/4f517b522869ba838675493ca4b07372cc4e5071))
+* betaタグのAndroidビルドもdevアイコン・常時無料版にする ([103d78b](https://github.com/YumNumm/EQMonitor/commit/103d78b71f53bcaf6b05a472339dca6bd5e8f94c))
+* betaタグのiOSビルドでdevアイコンを使う ([b90d3fe](https://github.com/YumNumm/EQMonitor/commit/b90d3fe296a6a21bb0c958f8d26c4bce8465f3b6))
+* iOS 地震履歴 Widget の表示と取得を作り直す ([6fcd918](https://github.com/YumNumm/EQMonitor/commit/6fcd918bb9729216cbba20579ebd56c3bb0f0d55))
+* Live Activityの点滅を0.5秒おきにし到達カウントダウンを0.1秒単位にする ([1f6f18c](https://github.com/YumNumm/EQMonitor/commit/1f6f18cf2eef1faccd57b6ce6506d2cde3d9844a))
+* Live Activityの点滅を0.5秒おきにし到達カウントダウンを0.1秒単位にする ([22ac2d7](https://github.com/YumNumm/EQMonitor/commit/22ac2d716f68319166312cfedd822114b425ef5a))
+* PaywallのPro機能一覧から揺れ検知の通知を外す ([a592ad1](https://github.com/YumNumm/EQMonitor/commit/a592ad1912c370f31d8991117308b0a87c2f6cfd))
+* アップデート後のホームに新機能の案内を表示する ([3feed9e](https://github.com/YumNumm/EQMonitor/commit/3feed9e764966c9621058e275303fd3a023d0e1e))
+* カスタム設定に揺れ検知 Beta の案内カードと注意事項への導線を追加 ([fc3bb27](https://github.com/YumNumm/EQMonitor/commit/fc3bb278b0a281d0d43b57352420bde711ce87c0))
+* ベータ提供中の機能に付ける BETA チップを追加 ([eb3fc0f](https://github.com/YumNumm/EQMonitor/commit/eb3fc0f26441c21500105123ebdc1702b2677635))
+* ベータ配布ビルドを常に無料版として扱う ([0fc0e2a](https://github.com/YumNumm/EQMonitor/commit/0fc0e2a8a540dc46958bbb701d3b53b76c1f05f3))
+* ホームに端末登録とトークン同期の状態を表示しない ([dd2afe9](https://github.com/YumNumm/EQMonitor/commit/dd2afe988188e81cdebde3c13b25dcc84b697c8b))
+* リリースごとの新機能の案内の定義と選択ロジックを追加 ([2be385d](https://github.com/YumNumm/EQMonitor/commit/2be385da1e5df8b42580359c06581243d0bea0dd))
+* 地震履歴 Widget の表示と取得を作り直す ([b3a4bdf](https://github.com/YumNumm/EQMonitor/commit/b3a4bdfac2bb55db9898098abe04e157f807ae47))
+* 必須でない起動ステップの失敗を記録して継続するクラスを追加 ([4a5b06e](https://github.com/YumNumm/EQMonitor/commit/4a5b06e8da0a9fb20a19088828c8b34dbec3561c))
+* 揺れ検知の通知のPro制限を撤廃 ([722f2dc](https://github.com/YumNumm/EQMonitor/commit/722f2dcdf9e38def255c60077c913129b4a6734e))
+* 揺れ検知の通知のPro制限を撤廃 ([eb0493d](https://github.com/YumNumm/EQMonitor/commit/eb0493da467fe5e705f54ebfb029b0b07fa03934))
+* 揺れ検知通知を production ビルドでも利用できるようにする ([8e0f481](https://github.com/YumNumm/EQMonitor/commit/8e0f4815408e896af37f4ef9d388fe922ee7e62a))
+* 揺れ検知通知を production ビルドでも利用できるようにする ([6134cd1](https://github.com/YumNumm/EQMonitor/commit/6134cd1a50a8148639b01bc82fd1c91f7a816fad))
+* 止まったままの端末登録とトークン送信を10分ごとにやり直す ([51a1325](https://github.com/YumNumm/EQMonitor/commit/51a1325e57c9040e7ccc54bd048b4ed7e8afbe30))
+* 通知設定のカスタムに揺れ検知の BETA チップを表示する ([9869b49](https://github.com/YumNumm/EQMonitor/commit/9869b4989afbcb677cd38d79c1e7f986f577be3e))
+
+
+### Bug Fixes
+
+* create-github-app-token の入力名を client-id に更新 ([a3be053](https://github.com/YumNumm/EQMonitor/commit/a3be053e073e6c84418b1b4083540202fe733819))
+* Dynamic Island Expandedの現在地震度バッジを角丸にする ([22c8ba5](https://github.com/YumNumm/EQMonitor/commit/22c8ba5db04c541ba11f90cdca73208ce1d73f31))
+* FlutterError.onErrorでParallelWaitErrorを二重にhandleしないようにする ([e89f065](https://github.com/YumNumm/EQMonitor/commit/e89f0656b51aa34c0ae340226d52e7ae271c7832))
+* gcloud の asdf プラグイン指定を削除 ([53dc03f](https://github.com/YumNumm/EQMonitor/commit/53dc03f900793a1b42b46e7b38556ee29a9cd2bf))
+* iOS export で network connection lost を再試行対象に追加 ([cc0de75](https://github.com/YumNumm/EQMonitor/commit/cc0de756c2239f5a5aa249a25428e8b33d508215))
+* アプリリンク処理の例外で以降のリンクが無反応になる問題を修正 ([6e9a4eb](https://github.com/YumNumm/EQMonitor/commit/6e9a4ebe85b662e2551b9cde4f59e069bf9a0334))
+* オンボーディングの通知設定保存で例外以外の失敗時も処理中表示を解除する ([5439397](https://github.com/YumNumm/EQMonitor/commit/5439397170ca3f344a1ca0516304f364c5c666eb))
+* リプレイとprovider起動中の破棄でworkerの終了を握りつぶさず扱う ([f37529d](https://github.com/YumNumm/EQMonitor/commit/f37529d77650199a5eebd284b81af775ef953414))
+* 位置情報・App Check・強震カラーマップの初期化失敗で起動を止めない ([cd9eb74](https://github.com/YumNumm/EQMonitor/commit/cd9eb74eb4fdc74ecb5e6ede72f0b3d383735ffc))
+* 地震履歴APIのリクエストにタイムアウトを設定する ([0ae0017](https://github.com/YumNumm/EQMonitor/commit/0ae00170a605695df74b120523878063e7efa9bb))
+* 必須でないSDK初期化の失敗で起動を止めない ([79aa4f5](https://github.com/YumNumm/EQMonitor/commit/79aa4f504b47787054029ebb4ae8143fc82d4f2c))
+* 未捕捉エラーをCrashlyticsのissueとして記録する ([c1fe3d9](https://github.com/YumNumm/EQMonitor/commit/c1fe3d9cd374541a8d0e76b8583bf7d451848b92))
+* 未捕捉エラーをCrashlyticsのissueとして記録する ([a31628f](https://github.com/YumNumm/EQMonitor/commit/a31628f9d87605c44cd6bca15e02b0929cfcf0b0))
+* 解析中にworkerが破棄されてもエラー表示にしない ([ef97adf](https://github.com/YumNumm/EQMonitor/commit/ef97adf979c81187fc3cd70f1ecc86a7e7b8f409))
+* 通知タップ・アプリリンク処理の例外で以降の操作が無反応になる問題を修正 ([7327421](https://github.com/YumNumm/EQMonitor/commit/7327421dde78c04e32cece84b6bf18635a6b09da))
+* 通知タップ処理の例外で以降のタップが無反応になる問題を修正 ([d718fbc](https://github.com/YumNumm/EQMonitor/commit/d718fbccb42d9de2cb1876a211db46c17730f899))
+* 通知プリセット適用が失敗後に別プリセットのステップを飛ばす問題を修正 ([7182b7a](https://github.com/YumNumm/EQMonitor/commit/7182b7a3cf9d03aeb06083f97d8369e6d675c3f8))
+* 通知プリセット適用が失敗後に別プリセットのステップを飛ばす問題を修正 ([ef6df64](https://github.com/YumNumm/EQMonitor/commit/ef6df64051fd400763fd14e1ac5d6e58cfabf7df))
+* 通知プリセット適用のステップ結果を適用先ごとの instanceId に分ける ([5bb2f47](https://github.com/YumNumm/EQMonitor/commit/5bb2f478c98c37d22be5dd85d03f829896bd8c39))
+* 配色変更後も地震履歴詳細の観測点アイコンが旧配色のまま残る問題を修正 ([b2582e1](https://github.com/YumNumm/EQMonitor/commit/b2582e144c5d64e1dd0c79d5462a9f8bfe6fdd37))
+
+
+### Performance Improvements
+
+* 通知トークンを送り直す間隔を72時間に延ばす ([4be3f71](https://github.com/YumNumm/EQMonitor/commit/4be3f71740b6ddebb7b5ad48bab345ed98e847dc))
+
 ## [3.1.0-beta.3](https://github.com/YumNumm/EQMonitor/compare/v3.1.0-beta.2...v3.1.0-beta.3) (2026-11-18)
 
 
