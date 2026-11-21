@@ -4,7 +4,6 @@ import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_exten
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/shake_detection_notification_availability_provider.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
@@ -162,25 +161,13 @@ void main() {
     );
   });
 
-  testWidgets('lists shake detection notification where it is available', (
+  testWidgets('lists Pro benefits without shake detection notification', (
     tester,
   ) async {
     await pumpPaywall(tester, loadPackage: () async => _package);
     expect(find.text('通知地域を追加'), findsOneWidget);
-    expect(find.text('揺れ検知の通知'), findsOneWidget);
     expect(find.text('緊急地震速報の履歴'), findsOneWidget);
     expect(find.text('この震源の近傍で発生した地震'), findsOneWidget);
-  });
-
-  testWidgets('omits shake detection notification where it is unavailable', (
-    tester,
-  ) async {
-    await pumpPaywall(
-      tester,
-      loadPackage: () async => _package,
-      isShakeDetectionNotificationAvailable: false,
-    );
-    expect(find.text('通知地域を追加'), findsOneWidget);
     expect(find.text('揺れ検知の通知'), findsNothing);
   });
 
@@ -201,20 +188,6 @@ void main() {
       await tester.drag(find.byType(CustomScrollView), const Offset(0, -400));
       await tester.pump();
       expect(tester.getRect(purchase), before);
-    },
-  );
-
-  testWidgets(
-    'opens the detailed explanation of shake detection notification',
-    (
-      tester,
-    ) async {
-      await pumpPaywall(tester, loadPackage: () async => _package);
-      expect(find.text('揺れ検知の通知について'), findsNothing);
-      await tester.tap(find.text('詳しく'));
-      await tester.pumpAndSettle();
-      expect(find.text('揺れ検知の通知について'), findsOneWidget);
-      expect(find.text('緊急地震速報ではありません'), findsOneWidget);
     },
   );
 
@@ -298,7 +271,6 @@ Future<void> pumpPaywall(
   double textScale = 1,
   PaywallFlow? flow,
   Size size = const Size(430, 2600),
-  bool isShakeDetectionNotificationAvailable = true,
   bool isPendingRetryRunning = false,
 }) async {
   await tester.binding.setSurfaceSize(size);
@@ -316,9 +288,6 @@ Future<void> pumpPaywall(
         ),
         deviceProvisioningProvider.overrideWith(_ProvisionedNotifier.new),
         pushTokenSyncProvider.overrideWith(_IdlePushTokenNotifier.new),
-        isShakeDetectionNotificationAvailableProvider.overrideWith(
-          (ref) async => isShakeDetectionNotificationAvailable,
-        ),
         subscriptionPendingRetryProvider.overrideWith(
           () => _PendingRetry(isRunning: isPendingRetryRunning),
         ),

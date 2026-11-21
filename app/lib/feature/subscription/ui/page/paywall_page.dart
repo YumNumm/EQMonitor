@@ -4,12 +4,10 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/model/pro_benefit.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
-import 'package:eqmonitor/feature/subscription/data/provider/pro_benefits_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/monthly_subscription_package_provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
-import 'package:eqmonitor/feature/subscription/ui/component/shake_detection_notification_detail_sheet.dart';
 import 'package:eqmonitor/feature/subscription/ui/component/subscription_sync_banner.dart';
 import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -120,13 +118,12 @@ class const PaywallPage({super.key}) extends ConsumerWidget {
   }
 }
 
-class const _BenefitsSection() extends ConsumerWidget {
+class const _BenefitsSection() extends StatelessWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
-    final benefits = ref.watch(proBenefitsProvider);
     return Column(
       crossAxisAlignment: .start,
       children: [
@@ -152,7 +149,7 @@ class const _BenefitsSection() extends ConsumerWidget {
             padding: EdgeInsets.symmetric(vertical: spacing.sm),
             child: Column(
               children: [
-                for (final (index, benefit) in benefits.indexed) ...[
+                for (final (index, benefit) in ProBenefit.values.indexed) ...[
                   if (index > 0)
                     Divider(
                       height: 1,
@@ -201,7 +198,6 @@ class const _BenefitRow({required final ProBenefit benefit})
               child: Icon(
                 switch (benefit) {
                   .notificationRegions => Icons.add_location_alt_rounded,
-                  .shakeDetectionNotification => Icons.sensors_rounded,
                   .eewHistory => Icons.history_rounded,
                   .nearbyEarthquakes => Icons.travel_explore_rounded,
                 },
@@ -223,44 +219,10 @@ class const _BenefitRow({required final ProBenefit benefit})
                     color: colorTheme.onSurfaceVariant,
                   ),
                 ),
-                if (benefit == .shakeDetectionNotification)
-                  _DetailLink(
-                    onTap: () async =>
-                        const ShakeDetectionNotificationDetailSheetAction()
-                            .show(context),
-                  ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class const _DetailLink({required final VoidCallback onTap})
-    extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-    return Semantics(
-      link: true,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(designSystem.shape.xs),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: spacing.sm),
-          child: Text(
-            '詳しく',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: colorTheme.primary,
-              decoration: .underline,
-              decorationColor: colorTheme.primary,
-            ),
-          ),
-        ),
       ),
     );
   }

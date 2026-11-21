@@ -7,10 +7,6 @@ enum ProBenefit({
     title: '通知地域を追加',
     description: '通知を受け取る地域を無料プランより多く登録できます',
   ),
-  shakeDetectionNotification(
-    title: '揺れ検知の通知',
-    description: '強震モニタで揺れを検知したときに通知します。地震以外の揺れで通知される場合があります',
-  ),
   eewHistory(
     title: '緊急地震速報の履歴',
     description: '過去に発表された緊急地震速報の一覧と詳細を確認できます',
