@@ -143,22 +143,28 @@ class const AppBootstrap._() {
       ),
       logger: TalkerLogger(formatter: const ColoredLoggerFormatter()),
     );
-    if (!kIsWeb && !kDebugMode) {
+    const isCrashlyticsEnabled = !kIsWeb && !kDebugMode;
+    if (isCrashlyticsEnabled) {
       talker.configure(observer: CrashlyticsTalkerObserver());
     }
 
     FlutterError.onError = (error) {
       final exception = error.exception;
+      talker.handle(exception, error.stack, 'Uncaught fatal exception');
       if (exception is ParallelWaitError) {
-        talker
-          ..handle(exception, error.stack, 'Uncaught fatal exception')
-          ..log(exception.errors.toString());
+        talker.log(exception.errors.toString());
         final stackTrace = error.stack;
         if (stackTrace != null) {
           talker.log(stackTrace.toString());
         }
       }
-      talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
+      // silent はフレームワークが想定内として扱うエラー (画像の取得失敗など)。
+      if (isCrashlyticsEnabled && !error.silent) {
+        GuardedUnawaitedUtil.run(
+          () => FirebaseCrashlytics.instance.recordFlutterError(error),
+          onError: (recordError, stack) => talker.error(recordError, stack),
+        );
+      }
     };
     if (!kDebugMode) {
       ErrorWidget.builder = FatalErrorWidgetBuilder.build;
@@ -173,6 +179,16 @@ class const AppBootstrap._() {
         talker
           ..log(exception.errors.toString())
           ..log(exception.stackTrace.toString());
+      }
+      if (isCrashlyticsEnabled) {
+        GuardedUnawaitedUtil.run(
+          () => FirebaseCrashlytics.instance.recordError(
+            exception,
+            stackTrace,
+            fatal: true,
+          ),
+          onError: (recordError, stack) => talker.error(recordError, stack),
+        );
       }
       return true;
     };
