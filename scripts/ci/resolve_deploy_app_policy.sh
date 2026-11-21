@@ -11,7 +11,7 @@ set -euo pipefail
 
 platforms=()
 ios_external=false
-ios_beta_distribution=false
+beta_distribution=false
 android_track=internal
 
 if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
@@ -30,7 +30,7 @@ if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
 elif [[ "$EVENT_NAME" == "push" && "$REF_TYPE" == "tag" && "$REF_NAME" == v*-beta.* ]]; then
   platforms+=(ios android)
   ios_external=true
-  ios_beta_distribution=true
+  beta_distribution=true
   android_track=external
 elif [[ "$EVENT_NAME" == "push" && "$REF_TYPE" == "branch" && "$REF_NAME" == "develop" ]]; then
   platforms+=(ios android)
@@ -46,5 +46,5 @@ for platform in "${platforms[@]}"; do
   echo "deploy-$platform=true"
 done
 echo "deploy-ios-external=$ios_external"
-echo "ios-beta-distribution=$ios_beta_distribution"
+echo "beta-distribution=$beta_distribution"
 echo "android-track=$android_track"
