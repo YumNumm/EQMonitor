@@ -15,16 +15,10 @@ APNs・認証は [push_and_auth.md](push_and_auth.md) を参照する。
   `IS_BETA_DISTRIBUTION=true` はこの強制より後に `APP_ICON=AppIcon-dev` を書き出し、最優先になる。
 - Android は `app/android/app/build.gradle.kts` が `IS_BETA_DISTRIBUTION=true` のときだけ
   manifest の `appIcon` を `@mipmap/ic_launcher_dev` にする。それ以外は `@mipmap/ic_launcher`。
-  `ic_launcher_dev` の前景は iOS の `app/ios/AppIcon-dev.icon` を Icon Composer の `ictool` で書き出した画像。
-  マスクで BETA バッジが欠けないよう、108dp のキャンバス中央に 64dp で配置し、背景は同系色のグラデーション。
-  iOS 側のアイコンを変更したら、次で 1024px を書き出して各密度へ作り直す。
-
-  ```sh
-  "$(xcode-select -p)/../Applications/Icon Composer.app/Contents/Executables/ictool" \
-    app/ios/AppIcon-dev.icon --export-image --output-file dev1024.png \
-    --platform iOS --rendition Default --width 1024 --height 1024 --scale 1
-  ```
-
+  `ic_launcher_dev` は `app/ios/AppIcon-dev.icon/Assets` の SVG から作った adaptive icon。
+  背景は全面のグラデーションとグリッド、前景は「Q」(`SVG Image 3.svg`)と BETA バッジ(`SVG Image 4.svg`)。
+  iOS の完成画像をそのまま前景に置くと、角丸アイコンの入れ子に見えるため使わない。
+  マスクで欠けないよう、バッジは中央 66dp の安全領域に収める。
   `src/dev` / `src/prod` は flavor 未定義のためビルドに使われない。
 
 ## iOS SDK と SwiftPM

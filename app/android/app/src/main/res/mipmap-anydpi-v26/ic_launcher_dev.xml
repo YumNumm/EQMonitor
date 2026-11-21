@@ -2,6 +2,6 @@
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@mipmap/ic_launcher_dev_background"/>
     <foreground android:drawable="@mipmap/ic_launcher_dev_foreground"/>
-    <!-- 前景は iOS アイコンの書き出し画像で単色化すると塗りつぶしになるため、本番と同じ前景を使う。 -->
+    <!-- BETA バッジは単色化すると塗りつぶしになるため、本番と同じ前景を使う。 -->
     <monochrome android:drawable="@mipmap/ic_launcher_foreground"/>
 </adaptive-icon>
