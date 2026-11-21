@@ -101,16 +101,5 @@ void main() {
       );
       expect(config.isShakeDetectionEnabled, isTrue);
     });
-
-    test('production では揺れ検知フラグが true でも無効', () {
-      expect(
-        _buildConfig(
-          flavor: Flavor.prod,
-          isProduction: true,
-          isShakeDetectionEnabled: true,
-        ).isShakeDetectionAvailable,
-        isFalse,
-      );
-    });
   });
 }

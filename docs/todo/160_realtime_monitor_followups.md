@@ -42,8 +42,9 @@
 - 表示種別が震度以外・地下のときは検知しない。検知用に地上の震度画像を別途取得するかを決める。
 - レベル境界は公開版の値（4.5 / 2.5 / 0.5 / -1）。サーバーが送る通知のレベルと食い違う場合の扱いを決める。
 - リプレイ再生では検知しない。再生画像を同じエンジンへ流すかを決める。
-- backend の配信経路（`shake_detection` の WebSocket 配信、`/v2/shake-detection/active`）とアプリ側に残る
-  `RealtimeShakeSnapshotEvent` の撤去は別途行う。
+- 揺れ検知のサーバー配信（`shake_detection` の WebSocket 配信、`/v2/shake-detection/active`）は backend とアプリの Dart 側から撤去済み。
+  Swift の EQMonitorAPI（`app/ios/Packages/EQMonitorAPI`）は再生成しておらず、`openapi.json` と生成済みの型に揺れ検知の配信用の定義が残る。
+  macOS で `Scripts` の手順に沿って再生成する。
 
 ## 150: WebSocket固定heartbeatの実機確認
 

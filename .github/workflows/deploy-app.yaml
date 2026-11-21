@@ -141,7 +141,7 @@ jobs:
           cp mise.local.toml.example mise.local.toml
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
           GITHUB_TOKEN: ${{ github.token }}
@@ -208,7 +208,7 @@ jobs:
           cp mise.local.toml.example mise.local.toml
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -279,7 +279,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -558,7 +558,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
           GITHUB_TOKEN: ${{ github.token }}
@@ -675,7 +675,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -755,7 +755,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -916,7 +916,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -1039,7 +1039,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:

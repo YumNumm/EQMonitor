@@ -12,14 +12,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'push_token_sync_wiring.g.dart';
 
+/// 端末登録とトークン送信が失敗したまま止まっているときに、やり直す間隔。
+///
+/// 一時的な失敗は各処理が短い間隔で再試行する。ここで扱うのは、再試行を
+/// 打ち切った失敗と、再試行しても成功しない種類の失敗である。
+const _failedRetryInterval = Duration(minutes: 10);
+
 @Riverpod(keepAlive: true)
 Future<void> pushTokenSyncStartup(Ref ref) async {
-  // 起動時の provision が打ち切られた後も、resume のたびに未登録なら
-  // やり直す (再起動やバナー操作を待たずに通知を受け取れるようにする)。
-  ref.listen(appLifecycleProvider, (_, next) {
-    if (next != AppLifecycleState.resumed) {
-      return;
-    }
+  // 起動時の provision が打ち切られた後も、未登録ならやり直す
+  // (再起動を待たずに通知を受け取れるようにする)。
+  void retryProvisioningIfRequired() {
     if (ref.read(DeviceProvisioningNotifier.provisionMutation)
         is MutationPending) {
       return;
@@ -36,14 +39,21 @@ Future<void> pushTokenSyncStartup(Ref ref) async {
                 tsx.get(deviceProvisioningProvider.notifier).provision(),
           )
           .catchError((Object error, StackTrace stackTrace) {
-            talker.error(
-              '[Provisioning] retry on resume failed',
-              error,
-              stackTrace,
-            );
+            talker.error('[Provisioning] retry failed', error, stackTrace);
           }),
     );
+  }
+
+  ref.listen(appLifecycleProvider, (_, next) {
+    if (next == AppLifecycleState.resumed) {
+      retryProvisioningIfRequired();
+    }
   });
+  final retryTimer = Timer.periodic(
+    _failedRetryInterval,
+    (_) => retryProvisioningIfRequired(),
+  );
+  ref.onDispose(retryTimer.cancel);
 
   await ref.watch(pushTokenSyncWiringProvider.future);
   final provisionStatus = await ref.read(deviceProvisioningProvider.future);
@@ -63,11 +73,17 @@ Future<void> pushTokenSyncWiring(Ref ref) async {
   }
 
   await ref.read(pushTokenSyncProvider.future);
+  final retryTimer = Timer.periodic(
+    _failedRetryInterval,
+    (_) => ref.read(pushTokenSyncProvider.notifier).retryFailed(),
+  );
+  ref.onDispose(retryTimer.cancel);
   ref.listen(appLifecycleProvider, (_, next) {
     if (next == AppLifecycleState.resumed) {
+      final notifier = ref.read(pushTokenSyncProvider.notifier)..retryFailed();
       final token = ref.read(notificationTokenStreamProvider).value;
       if (token != null) {
-        ref.read(pushTokenSyncProvider.notifier).accept(token);
+        notifier.accept(token);
       }
     }
   });

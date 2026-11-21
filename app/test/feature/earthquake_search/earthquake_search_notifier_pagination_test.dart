@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart' as app;
+import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
@@ -32,6 +34,7 @@ void main() {
     final provider = earthquakeHistoryProvider(parameter);
     final container = ProviderContainer(
       overrides: [
+        realtimeEventsProvider.overrideWith(_IdleRealtimeEvents.new),
         earthquakeHistoryRepositoryProvider.overrideWith(
           (ref) async => repository,
         ),
@@ -46,6 +49,11 @@ void main() {
 
     expect(repository.regionCursors, [null, 'next-1']);
   });
+}
+
+final class _IdleRealtimeEvents() extends RealtimeEvents {
+  @override
+  Stream<RealtimeEvent> build() => const Stream.empty();
 }
 
 final class _FakeEarthquakeHistoryRepository()

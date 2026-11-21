@@ -109,7 +109,7 @@
 ## 揺れ検知（端末内検知）
 
 - 揺れ検知はサーバーから配信しない。強震モニタの画像から端末内で計算し、サーバーは通知だけを送る。
-  REST `/v2/shake-detection/active` と WebSocket の `shake_detection` は購読しない。
+  REST `/v2/shake-detection/active` と WebSocket の `shake_detection` は backend から撤去済みで、アプリの API クライアントにも型が無い。
 - 検知は `packages/shake_detection_engine`、EEW との結合は `packages/shake_eew_correlator` が担う。
   前者は公開版 KyoshinEewViewer for ingen の `ShakeDetectionEngine`、後者は backend の `packages/event-correlator` の移植で、
   閾値や判定順を変える場合は移植元との差を README に残す。
@@ -119,8 +119,8 @@
   リプレイ再生中は端末内の検知結果を公開しない。
 - 端末内検知の有効・無効、履歴の作り直し、検知・結合のパラメータは `ShakeDetectionSettings` に保存し、
   デバッグ画面の「揺れ検知エンジン」で変更する。既定は無効で、production を含むすべてのビルドで有効にできる。
-  表示側の判定は `isDeviceShakeDetectionEnabledProvider` を使い、ビルド種別（`isShakeDetectionAvailable`）を見ない。
-  `isShakeDetectionAvailable` はサーバーが送る揺れ検知通知の設定画面と通知チャンネルだけを制御する。
+  表示側の判定は `isDeviceShakeDetectionEnabledProvider` を使い、ビルド時の `isShakeDetectionEnabled` を見ない。
+  `isShakeDetectionEnabled` はサーバーが送る揺れ検知通知の設定画面と通知チャンネルだけを制御する。
 - 有効にするときは、揺れ検知通知と同じ注意事項（`ShakeDetectionNoticeDialog`）への同意を求める。
   同意は通知と共通で、どちらかで同意済みなら再度は求めない。
 - 表示する最小レベルと自動ズームは `HomeShakeDetectionSettings`（マップレイヤー設定）に持つ。
@@ -186,7 +186,11 @@
 - 強震モニタ観測点の `region_code` は地震情報の細分区域（3 桁）で、名前は震度観測点のパラメータ（`EarthquakeParameter`）から引く。
   JMA コード表の `area_forecast_local_eew` は EEW の府県予報区（4 桁）で別のコード体系のため、引き当てに使えない。
 - 表示の期限はエンジンの `expiresAt`（観測点ごとの期限の最大値）を使う。固定 TTL を入れない。
-- `IS_SHAKE_DETECTION_ENABLED` は既定 true。無効時は揺れ検知通知の一般向け設定 route と、デバッグの「揺れ検知 Card」「揺れ検知を挿入」を無効にする。
+- `IS_SHAKE_DETECTION_ENABLED` は既定 true で、production を含むすべてのビルドで揺れ検知通知を利用できる。
+  利用できる範囲は `/start` の `plan_constraints.shake_detection` で決まり、無料プランには Pro の案内を出し、Pro だけが設定できる。
+  この制限はアプリの表示だけで行っており、backend の設定 API と配信はプランを参照しない。
+- `IS_SHAKE_DETECTION_ENABLED=false` のビルドでは、揺れ検知通知の一般向け設定 route と、デバッグの「揺れ検知 Card」「揺れ検知を挿入」を無効にする。
+  このビルドでも、デバッグを有効にした Admin 端末は揺れ検知通知を利用できる。
   デバッグ用通知設定 route はデバッグメニューへのアクセス権で開ける。配布別の指定は [配布と CI](delivery_ci.md) を参照する。
 - provider test は `BuildConfigFixture` で `buildConfigProvider` を override し、dart-define 未指定の flavor 例外を避ける。
 

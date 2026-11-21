@@ -159,7 +159,6 @@ class const _WsEventCard({
       RealtimeEarthquakeDeleteEvent() => 'earthquake/delete',
       RealtimeTsunamiUpsertEvent() => 'tsunami/upsert',
       RealtimeTsunamiDeleteEvent() => 'tsunami/delete',
-      RealtimeShakeSnapshotEvent() => 'shake_detection/snapshot',
       RealtimeEstimatedIntensityUpsertEvent() => 'estimated_intensity/upsert',
     };
 
@@ -173,8 +172,6 @@ class const _WsEventCard({
         'eventId=$eventId groupId=$groupId',
       RealtimeTsunamiDeleteEvent(:final eventId, :final groupId) =>
         'eventId=$eventId groupId=$groupId',
-      RealtimeShakeSnapshotEvent(:final record) =>
-        'revision=${record.revision} events=${record.events.length}',
       RealtimeEstimatedIntensityUpsertEvent(:final eventId) =>
         'eventId=$eventId',
     };

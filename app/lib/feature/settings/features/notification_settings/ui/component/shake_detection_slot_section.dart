@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/chip/beta_chip.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -13,6 +14,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/p
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/shake_detection_notification_min_level_dropdown.dart';
+import 'package:eqmonitor/feature/subscription/ui/component/shake_detection_notification_detail_sheet.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -39,7 +41,7 @@ class const ShakeDetectionSlotSection({
       crossAxisAlignment: .start,
       mainAxisSize: .min,
       children: [
-        const SettingsSectionHeader(text: '揺れ検知'),
+        const SettingsSectionHeader(text: '揺れ検知', trailing: BetaChip()),
         Card.outlined(
           margin: EdgeInsets.fromLTRB(
             spacing.lg,
@@ -54,15 +56,32 @@ class const ShakeDetectionSlotSection({
             borderRadius: BorderRadius.circular(designSystem.shape.card),
             side: BorderSide(color: colorTheme.outlineVariant),
           ),
-          child: access == ShakeDetectionNotificationAccess.locked
-              ? LockedSettingTile(
+          child: Column(
+            mainAxisSize: .min,
+            children: [
+              if (access == ShakeDetectionNotificationAccess.locked)
+                LockedSettingTile(
                   title: '揺れ検知の通知',
                   subtitle: 'Proで利用できます',
                   locked: true,
                   onTap: () async =>
                       const ProUpgradeDialogAction().show(context),
                 )
-              : _ShakeDetectionCondition(slot: slot),
+              else
+                _ShakeDetectionCondition(slot: slot),
+              const Divider(height: 1),
+              ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: const Text('注意事項'),
+                subtitle: const Text('揺れ検知の通知を利用する前にご確認ください'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () async =>
+                    const ShakeDetectionNotificationDetailSheetAction().show(
+                      context,
+                    ),
+              ),
+            ],
+          ),
         ),
       ],
     );

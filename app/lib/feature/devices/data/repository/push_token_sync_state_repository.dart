@@ -19,6 +19,9 @@ Future<PushTokenSyncStateRepository> pushTokenSyncStateRepository(
 class PushTokenSyncStateRepository({
   required SharedPreferencesDataSource dataSource,
 }) {
+  /// 同じトークンを送り直すまでの間隔。
+  static const resyncInterval = Duration(hours: 72);
+
   final SharedPreferencesDataSource _dataSource = dataSource;
   var _credentialGeneration = 0;
   int get credentialGeneration => _credentialGeneration;
@@ -44,7 +47,7 @@ class PushTokenSyncStateRepository({
       }) {
         return hash != sha256.convert(utf8.encode(token)).toString() ||
             clock.now().millisecondsSinceEpoch - sentAt >=
-                const Duration(days: 1).inMilliseconds;
+                resyncInterval.inMilliseconds;
       }
     } on FormatException {
       return true;

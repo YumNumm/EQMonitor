@@ -27,7 +27,7 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
-          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
+          client-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
           private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
           permission-contents: write
           permission-issues: write
@@ -41,7 +41,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         with:
           cache: false
           install_args: "python"

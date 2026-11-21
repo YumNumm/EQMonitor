@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/station_icon_image_expression.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon_data.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -49,7 +50,7 @@ class const EarthquakeHistoryStationIntensityLayer({
 
     final lifecycleToken = useRef<Object?>(null);
     final initialization = useRef<Future<void>?>(null);
-    final imagesAdded = useRef(false);
+    final registeredIconData = useRef<IntensityIconData?>(null);
     final latestLayerConfiguration = useRef<Object?>(null);
     final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
     final latestBelowLayerId = useRef(belowLayerId);
@@ -78,7 +79,7 @@ class const EarthquakeHistoryStationIntensityLayer({
       }
       final token = Object();
       lifecycleToken.value = token;
-      imagesAdded.value = false;
+      registeredIconData.value = null;
       latestLayerConfiguration.value = null;
       geoJsonUpdater.reset();
       initialization.value = enqueue(() async {
@@ -91,10 +92,10 @@ class const EarthquakeHistoryStationIntensityLayer({
             data: '{"type":"FeatureCollection","features":[]}',
           ),
         );
-        final cachedBytes = latestIconData.value?.toMapStyleImages;
-        if (cachedBytes != null && lifecycleToken.value == token) {
-          await styleController.addImages(cachedBytes);
-          imagesAdded.value = true;
+        final cachedIconData = latestIconData.value;
+        if (cachedIconData != null && lifecycleToken.value == token) {
+          await styleController.addImages(cachedIconData.toMapStyleImages);
+          registeredIconData.value = cachedIconData;
         }
         if (lifecycleToken.value != token) {
           return;
@@ -153,11 +154,12 @@ class const EarthquakeHistoryStationIntensityLayer({
       unawaited(
         enqueue(() async {
           await initialized;
-          if (lifecycleToken.value != token || imagesAdded.value) {
+          if (lifecycleToken.value != token ||
+              identical(registeredIconData.value, iconData)) {
             return;
           }
           await styleController.addImages(iconData.toMapStyleImages);
-          imagesAdded.value = true;
+          registeredIconData.value = iconData;
         }),
       );
       return null;
@@ -200,10 +202,7 @@ class const EarthquakeHistoryStationIntensityLayer({
               showStationLabel: showStationLabel,
               hasIcon: iconData != null,
             )) {
-              await styleController.addLayer(
-                layer,
-                belowLayerId: belowLayerId,
-              );
+              await styleController.addLayer(layer, belowLayerId: belowLayerId);
             }
             latestLayerConfiguration.value = configuration;
           }),

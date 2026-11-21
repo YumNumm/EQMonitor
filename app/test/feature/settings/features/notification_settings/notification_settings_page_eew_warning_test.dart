@@ -82,6 +82,13 @@ void main() {
 
     expect(find.textContaining('EQMonitor Proにすると'), findsNothing);
     expect(find.text('Live Activity'), findsNothing);
+    expect(find.text('揺れ検知の通知'), findsOneWidget);
+    expect(find.byIcon(Icons.my_location), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('推計震度分布図'),
+      200,
+      scrollable: find.byType(Scrollable).last,
+    );
     expect(find.text('推計震度分布図'), findsOneWidget);
     expect(find.text('通知音・割り込みレベル'), findsOneWidget);
     expect(find.text('震度別の音設定'), findsOneWidget);

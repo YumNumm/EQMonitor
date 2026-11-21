@@ -46,8 +46,9 @@ APNs・認証は [push_and_auth.md](push_and_auth.md) を参照する。
 - CI は `CODE_SIGNING_ALLOWED=NO` で archive し、
   `scripts/ci/sign_ios_archive_for_export.sh` で entitlement を付けて ad-hoc 署名してから export する。
 - App Store / Ad-Hoc の export は `scripts/ci/export_ios_archive.sh` を使う。
-  `error: exportArchive The request timed out.` または
-  `error: exportArchive The Internet connection appears to be offline.` の場合だけ、
+  `error: exportArchive The request timed out.`、
+  `error: exportArchive The Internet connection appears to be offline.`、または
+  `error: exportArchive The network connection was lost.` の場合だけ、
   20秒・40秒待って最大3回試行する。
   この接続失敗に続いて extension の profile 不足が出る場合もある。
   profile 不足だけのエラーや署名設定エラーは再試行せず失敗させる。

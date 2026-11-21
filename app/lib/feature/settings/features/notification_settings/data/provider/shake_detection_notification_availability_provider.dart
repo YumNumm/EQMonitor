@@ -8,7 +8,7 @@ part 'shake_detection_notification_availability_provider.g.dart';
 
 @riverpod
 Future<bool> isShakeDetectionNotificationAvailable(Ref ref) async {
-  if (ref.watch(buildConfigProvider).isShakeDetectionAvailable) {
+  if (ref.watch(buildConfigProvider).isShakeDetectionEnabled) {
     return true;
   }
   if (!await ref.watch(debugProvider.future)) {
