@@ -104,4 +104,4 @@
 - 未検証: beta タグの TestFlight ビルドでホーム画面のアイコンが `AppIcon-dev` になること。`develop` push・手動実行のビルドが本番アイコンのままであること。
 - 未検証: beta タグのビルドで、Pro 購入済みの Apple ID でも無料版として表示され、Paywall の購入・復元が無効になること。
 - 未検証: beta タグの Play `external` ビルドで、ランチャーのアイコンが `ic_launcher_dev` になり、購入済みの Google アカウントでも無料版になること。テーマアイコン（monochrome）の表示。
-- Android の `ic_launcher_dev` は iOS の `AppIcon-dev.icon` の素材から合成した暫定デザイン。デザインの確定は未了。
+- Android の `ic_launcher_dev` は iOS の `AppIcon-dev.icon` の書き出し画像を adaptive icon の安全領域に収めている。ランチャーごとのマスク形状での見え方は未検証。
