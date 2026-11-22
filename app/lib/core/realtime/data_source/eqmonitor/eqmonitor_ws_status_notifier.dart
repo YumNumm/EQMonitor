@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_provi
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:web_socket/web_socket.dart';
 
 part 'eqmonitor_ws_status_notifier.g.dart';
 
@@ -17,6 +18,14 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
       );
     });
 
+    // 切断後の再接続待ちの間、eqmonitorWebSocketProvider は閉じたソケットを
+    // data として保持し続けるため、close の受信で切断を判定する。
+    ref.listen(eqmonitorWsEventStreamProvider, (_, next) {
+      if (_isClosed(next)) {
+        state = state.copyWith(phase: WsPhase.disconnected);
+      }
+    });
+
     ref.listen(eqmonitorWsPayloadStreamProvider, (_, next) {
       next.whenData((message) {
         if (message is WsPingMessage) {
@@ -25,7 +34,9 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
       });
     });
     return EqMonitorWsStatusState(
-      phase: _phaseOf(ref.read(eqmonitorWebSocketProvider)),
+      phase: _isClosed(ref.read(eqmonitorWsEventStreamProvider))
+          ? WsPhase.disconnected
+          : _phaseOf(ref.read(eqmonitorWebSocketProvider)),
     );
   }
 
@@ -39,6 +50,10 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
           : state.serverPingInterval,
     );
   }
+
+  // 再接続の開始後は、前回接続の close が loading の前回値として残る。
+  static bool _isClosed(AsyncValue<WebSocketEvent> event) =>
+      !event.isLoading && event.value is CloseReceived;
 
   static WsPhase _phaseOf(AsyncValue<Object?> value) => value.when(
     data: (_) => WsPhase.connected,
