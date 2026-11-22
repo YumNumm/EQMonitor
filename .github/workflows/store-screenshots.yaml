@@ -121,7 +121,17 @@ jobs:
           if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
             require=false
           fi
-          args="--dart-define-from-file=../environment/.env.prod --dart-define=IS_PRODUCTION=true"
+          # deploy-app.yaml と同じく x.y.z を渡す。prerelease のままだと iOS で 3.1.0.4 になり、
+          # API の Cloudflare Snippets が User-Agent の形式違いで 403 を返す。
+          build_name=$(sed -n 's/^version: *\([^ #]*\).*/\1/p' app/pubspec.yaml)
+          build_name=${build_name%%-*}
+          build_name=${build_name%%+*}
+          if ! [[ "$build_name" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::unexpected build-name '${build_name}' derived from app/pubspec.yaml"
+            exit 1
+          fi
+          args="--build-name=$build_name --build-number=$GITHUB_RUN_NUMBER"
+          args="$args --dart-define-from-file=../environment/.env.prod --dart-define=IS_PRODUCTION=true"
           args="$args --dart-define=STORE_SCREENSHOT_REQUIRE_FIXTURES=$require"
           args="$args --dart-define=STORE_SCREENSHOT_SCENES=$SCENES"
           echo "args=$args" >> "$GITHUB_OUTPUT"
@@ -255,7 +265,17 @@ jobs:
           if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
             require=false
           fi
-          args="--dart-define-from-file=../environment/.env.prod --dart-define=IS_PRODUCTION=true"
+          # deploy-app.yaml と同じく x.y.z を渡す。prerelease のままだと iOS で 3.1.0.4 になり、
+          # API の Cloudflare Snippets が User-Agent の形式違いで 403 を返す。
+          build_name=$(sed -n 's/^version: *\([^ #]*\).*/\1/p' app/pubspec.yaml)
+          build_name=${build_name%%-*}
+          build_name=${build_name%%+*}
+          if ! [[ "$build_name" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::unexpected build-name '${build_name}' derived from app/pubspec.yaml"
+            exit 1
+          fi
+          args="--build-name=$build_name --build-number=$GITHUB_RUN_NUMBER"
+          args="$args --dart-define-from-file=../environment/.env.prod --dart-define=IS_PRODUCTION=true"
           args="$args --dart-define=STORE_SCREENSHOT_REQUIRE_FIXTURES=$require"
           args="$args --dart-define=STORE_SCREENSHOT_SCENES=$SCENES"
           echo "args=$args" >> "$GITHUB_OUTPUT"

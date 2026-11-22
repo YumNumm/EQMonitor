@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_status_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
@@ -99,14 +100,16 @@ class StoreScreenshotScenes({
     _router
         .push<void>(EarthquakeHistoryDetailsRoute(eventId: eventId).location)
         .ignore();
+    // ホームにも ErrorCard が出うるため、詳細画面の中だけを見る。
+    final errorCard = $(EarthquakeHistoryDetailsPage).$(ErrorCard);
     await _waitUntil(
-      () => $(ValueKey(eventId)).exists || $(ErrorCard).exists,
+      () => $(ValueKey(eventId)).exists || errorCard.exists,
       timeout: const Duration(minutes: 2),
       description: 'earthquake $eventId',
     );
-    if ($(ErrorCard).exists) {
-      final error = $.tester.widget<ErrorCard>(find.byType(ErrorCard)).error;
-      await $(ErrorCard).$('詳細').tap();
+    if (errorCard.exists) {
+      final error = $.tester.widget<ErrorCard>(errorCard.first).error;
+      await errorCard.$('詳細').tap();
       await _capture('failure-$scene', settle: const Duration(seconds: 2));
       fail('earthquake $eventId failed to load: ${_describe(error)}');
     }
