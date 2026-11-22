@@ -32,8 +32,13 @@ sealed class const ReplaySource._() with _$ReplaySource {
     ReplayKyoshinArchiveSource(:final eewFrames) => eewFrames,
   };
 
+  // EQRP のヘッダの開始時刻より前のフレームは、揺れ検知の平常値に使う前置き区間として再生範囲に含めない。
   DateTime get startTime => switch (this) {
-    ReplayEqrpSource(:final file) => file.data.first.time,
+    ReplayEqrpSource(:final file) =>
+      file.header.startTime.isAfter(file.data.first.time) &&
+              file.header.startTime.isBefore(file.data.last.time)
+          ? file.header.startTime
+          : file.data.first.time,
     ReplayKyoshinArchiveSource(:final windowStart) => windowStart,
   };
 

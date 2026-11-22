@@ -794,6 +794,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugHttpCacheRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'replay-creation',
+          hasOverriddenOnExit: false,
+          factory: $DebugReplayCreationRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'intensity-icon',
           hasOverriddenOnExit: false,
           factory: $DebugIntensityIconRoute._fromState,
@@ -1694,6 +1699,28 @@ mixin $DebugHttpCacheRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/http-cache');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugReplayCreationRoute on GoRouteData {
+  static DebugReplayCreationRoute _fromState(GoRouterState state) =>
+      const DebugReplayCreationRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/replay-creation');
 
   @override
   void go(BuildContext context) => context.go(location);

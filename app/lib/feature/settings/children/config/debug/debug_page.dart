@@ -228,6 +228,16 @@ class const _DebugWidget() extends ConsumerWidget {
               onTap: () async =>
                   ref.read(replayOpenActionProvider).pickAndOpen(ref, context),
             ),
+            ListTile(
+              title: const Text('リプレイファイルを作成'),
+              subtitle: Text(
+                '直近の強震モニタとEEWからリプレイファイル（.eqrp）を作成',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              leading: const Icon(Icons.fiber_manual_record_rounded),
+              onTap: () async =>
+                  const DebugReplayCreationRoute().push<void>(context),
+            ),
             Builder(
               builder: (context) {
                 final isAllowed =

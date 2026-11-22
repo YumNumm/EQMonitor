@@ -15,7 +15,7 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 - EQRP の timestamp は「JST の壁時計を UTC として格納した値」。KEVi は強震モニタ画像の JST の時刻を `DateTimeKind.Unspecified` のまま書き出し、MessagePack-CSharp は Unspecified を変換せずに格納する（`MessagePackPrimitives.TryWrite`）。
 - `ReplayTimestampDecoder` が読み込み時に 9 時間戻し、ヘッダと全フレームを実際の時刻（UTC）にする。アプリ側は UTC だけを扱う。EEW の JSON 内の時刻は元から UTC で、変換しない。
 - MessagePack-CSharp は小数秒を持つ `DateTime` を timestamp 64 で書く。`msgpack_dart` の `ExtTimeStampDecoder` は秒を 34bit、ナノ秒を論理シフトで取り出す。ナノ秒の最上位 bit が立つと `getUint64` が負数になるため、算術シフトでは誤る。timestamp 96 にも対応している。
-- EQRP を書き出す機能を作る場合も、同じ規約で JST の壁時計を UTC として格納する。
+- 書き出し（`ReplayTimestampEncoder`）も同じ規約で、実際の時刻（UTC）に 9 時間足して格納する。
 
 ## 強震モニタの過去画像
 
@@ -57,6 +57,18 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 - 発表中かどうかは `EewAliveChecker` に実時刻を渡して判定する。取消報や訓練報も、ライブで表示される間は対象。
 - 発表中の EEW がある間は、再生を開始できない。
 
+## 作成
+
+- デバッグメニューの「リプレイファイルを作成」（`ReplayCreationPage`）で、直近の強震モニタ画像と EEW から EQRP を作る。書き出しは `packages/earthquake_replay` の `ReplayDataWriter`。
+- 圧縮は gzip、timestamp は常に timestamp 64 で書く。フレームは時刻順に並べる。読み込み側が再生位置を二分探索で求め、揺れ検知が同時刻の画像を完全一致で探すため、画像フレームの時刻は秒ちょうどの観測時刻にする。
+- 選択できる範囲は `ReplayCreationRangeResolver` が決め、3 時間前から 30 秒前まで、長さは最長 30 分。過去画像の保持幅は「強震モニタの過去画像」の実測のとおりで、3 時間以内でも古い側が削除済みのことがある。範囲は実時刻（`AppClock.realtimeNow`）で求める。
+- 含められる画像は震度・最大加速度・最大速度（地表）。P/S 波と予想震度の画像は、EEW がない時刻に 302 を返すことまでしか確認できておらず、対象にしていない。EQRP の `ImageType` に無い変位・応答・長周期も含められない。
+- 画像は 1 秒ごとに 4 並列で取得する。404 のフレームは飛ばし、ほかの失敗は 3 回まで試して作成を中止する。GIF は gzip でほとんど縮まず、震度だけで 1 秒あたり約 5 KB になる。
+- 揺れ検知の平常値に使うため、既定で開始の 180 秒前から取得する。ヘッダの開始時刻は選んだ開始時刻のままにし、再生側（`ReplaySource.startTime`）はヘッダの開始時刻より前のフレームを再生範囲に含めない。
+- EEW は `GET /v2/eew` を発生日（前後 1 日）で絞って候補のイベントを集め、`GET /v2/eew/{eventId}` の全報から発表時刻が期間内のものを 1003 として格納する。フレームの時刻は発表時刻（`reportTime`）。訓練・試験も含める。
+- 保存先はアプリの `Documents/replay/`。iOS は `UIFileSharingEnabled` を設定していないため Files アプリからは見えない。`Documents/Inbox` は読み込み後に削除する対象のため使わない。
+- 外部への共有（`share_plus`）は `DebugAccessLevel.full`（admin デバイス）だけに出す。
+
 ## 揺れ検知
 
 - 端末内の揺れ検知が有効な場合、再生画像を解析用 Isolate の検知エンジンへ渡す。検知結果は再生時刻で有効期限を判定し、再生中の EEW と結合する。
@@ -71,7 +83,7 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
   スライダー・再生操作・速度・終了を操作できる。もう一度タップするか地図を操作すると畳む。
 - スライダーのトラックには地震の発生時刻の目印を描く（`ReplayOriginTrackShape`）。EQRP では最初に発生時刻を持つ EEW から取り、
   無ければ目印を出さない。「発生」のボタンでその時刻へ移動する。強震モニタの設定が無効でも、再生中は強震モニタの列と観測点レイヤーを表示する。
-- EQRP の読み込みは `/replay/open?source=<URI>`（`ReplayOpenPage`）に集約する。現在はデバッグメニューの「過去の地震を再生」と OS の「ファイルで開く」から入る。
+- EQRP の読み込みは `/replay/open?source=<URI>`（`ReplayOpenPage`）に集約する。現在はデバッグメニューの「過去の地震を再生」、作成画面の保存済みファイル、OS の「ファイルで開く」から入る。
 - OS から渡された `file://`・`content://` は `NotificationDeepLink.fromAppLinkUri` だけが `/replay/open` へ変換する。通知の link からは開けない。
 - iOS は UTI `net.yumnumm.eqmonitor.eqrp` を export する。`LSSupportsOpeningDocumentsInPlace` は `false` で、OS が `Documents/Inbox` へ複製したファイルを読み、読み込み後に削除する。
 - Android は VIEW の `content://` をパスの `.eqrp` で受け付け、`ReplayFileMethodChannel` で Activity の `ContentResolver` から読む。パスに拡張子を含まない provider（ダウンロードの `msf:` など）からは一致しない。
