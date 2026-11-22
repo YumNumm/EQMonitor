@@ -6,6 +6,7 @@ import 'package:earthquake_replay/earthquake_replay.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_isolate_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_position_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_file_repository.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
@@ -29,7 +30,7 @@ class ReplayNotifier extends _$ReplayNotifier {
   // 処理が遅れたときは基準を取り直さず、途中のフレームを飛ばして基準の位置へ追いつく。
   final _wallClock = Stopwatch()..start();
   Timer? _playbackTimer;
-  ({Duration wallTime, DateTime replayTime})? _anchor;
+  ReplayAnchor? _anchor;
   // シーク・読み込み・終了をまたいで、解析中だった古いフレームを反映しないための世代番号。
   int _generation = 0;
 
@@ -96,7 +97,13 @@ class ReplayNotifier extends _$ReplayNotifier {
       return;
     }
     _stopPlaybackTimer();
-    final position = _pendingPosition(current);
+    final position = ref
+        .read(replayPositionResolverProvider)
+        .current(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+        );
     _anchor = null;
     final paused = current.copyWith(isPlaying: false);
     state = paused;
@@ -155,7 +162,13 @@ class ReplayNotifier extends _$ReplayNotifier {
     if (current == null || speed <= 0) {
       return;
     }
-    final position = _pendingPosition(current);
+    final position = ref
+        .read(replayPositionResolverProvider)
+        .current(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+        );
     final next = current.copyWith(playbackSpeed: speed);
     state = next;
     if (next.isPlaying) {
@@ -201,13 +214,15 @@ class ReplayNotifier extends _$ReplayNotifier {
     if (current == null || !current.isPlaying) {
       return;
     }
-    final projected = _projectedPosition(current);
-    await _advanceTo(
-      current: current,
-      target: current.clampTime(
-        projected.isAfter(scheduled) ? projected : scheduled,
-      ),
-    );
+    final target = ref
+        .read(replayPositionResolverProvider)
+        .tickTarget(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+          scheduled: scheduled,
+        );
+    await _advanceTo(current: current, target: target);
     if (!ref.mounted || generation != _generation) {
       return;
     }
@@ -216,27 +231,6 @@ class ReplayNotifier extends _$ReplayNotifier {
       return;
     }
     _schedule();
-  }
-
-  DateTime _projectedPosition(ReplayState current) {
-    final anchor = _anchor;
-    if (!current.isPlaying || anchor == null) {
-      return current.currentTime;
-    }
-    return anchor.replayTime.add(
-      (_wallClock.elapsed - anchor.wallTime) * current.playbackSpeed,
-    );
-  }
-
-  /// 次の進行を待っている間の再生位置。まだ適用していないフレームは追い越さない。
-  DateTime _pendingPosition(ReplayState current) {
-    final projected = _projectedPosition(current);
-    final limit = current.nextTickTime() ?? current.endTime;
-    return projected.isBefore(current.currentTime)
-        ? current.currentTime
-        : projected.isAfter(limit)
-        ? limit
-        : projected;
   }
 
   Future<void> _advanceTo({
