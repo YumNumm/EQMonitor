@@ -63,7 +63,8 @@ class IosSimulator:
 
     def prepare(self, config: dict) -> None:
         run("xcrun", "simctl", "bootstatus", self.udid, "-b")
-        run("open", "-a", "Simulator", "--args", "-CurrentDeviceUDID", self.udid)
+        simulator_app = Path(run("xcode-select", "-p", capture=True)) / "Applications" / "Simulator.app"
+        run("open", "-a", str(simulator_app), "--args", "-CurrentDeviceUDID", self.udid)
         run("xcrun", "simctl", "ui", self.udid, "appearance", config["appearance"])
         run(
             "xcrun", "simctl", "status_bar", self.udid, "override",
