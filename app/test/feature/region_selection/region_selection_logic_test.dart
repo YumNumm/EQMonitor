@@ -10,8 +10,8 @@ import 'package:eqmonitor/feature/region_selection/data/logic/region_search.dart
 import 'package:eqmonitor/feature/region_selection/data/logic/region_selection_reducer.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_map_metadata.dart';
-import 'package:flutter/painting.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/notification_region_selection_converter.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

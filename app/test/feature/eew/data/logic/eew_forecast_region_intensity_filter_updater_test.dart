@@ -44,30 +44,36 @@ void main() {
       regionMaxIntensities: regions,
     );
 
-    expect(controller.backend.updatedFilters, [
-      (
-        layerId: 'eew-details-intensity-fill-three',
-        filter: [
-          'in',
-          ['get', 'code'],
+    expect(
+      [
+        for (final update in controller.backend.updatedFilters)
+          [update.layerId, update.filter],
+      ],
+      [
+        [
+          'eew-details-intensity-fill-three',
           [
-            'literal',
-            ['360'],
+            'in',
+            ['get', 'code'],
+            [
+              'literal',
+              ['360'],
+            ],
           ],
         ],
-      ),
-      (
-        layerId: 'eew-details-intensity-fill-four',
-        filter: [
-          'in',
-          ['get', 'code'],
+        [
+          'eew-details-intensity-fill-four',
           [
-            'literal',
-            ['350', '351'],
+            'in',
+            ['get', 'code'],
+            [
+              'literal',
+              ['350', '351'],
+            ],
           ],
         ],
-      ),
-    ]);
+      ],
+    );
   });
 
   test('layer が未追加でも例外にしない', () async {

@@ -584,6 +584,9 @@ final class _FakeMapLibrePlatform extends MapLibrePlatform
 
 final class _FakeMapLibreMapState extends MapLibreMapState {
   @override
+  StyleController? get style => null;
+
+  @override
   Widget buildPlatformWidget(BuildContext context) =>
       const SizedBox.expand(child: ColoredBox(color: Colors.transparent));
 

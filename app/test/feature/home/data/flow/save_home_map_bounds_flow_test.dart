@@ -16,7 +16,7 @@ class _MapController({required final GeoBox visibleRegion})
     extends Mock
     implements MapController {
   @override
-  GeoBox getVisibleRegion() => visibleRegion;
+  GeoBox getVisibleBounds() => visibleRegion;
 }
 
 void main() {

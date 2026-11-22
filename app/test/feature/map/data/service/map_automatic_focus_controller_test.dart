@@ -7,6 +7,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'camera_update_matcher.dart';
 import 'map_automatic_focus_controller_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<MapController>()])
@@ -55,9 +56,7 @@ void main() {
       }
       final worldSize = 512 * math.pow(2, zoom);
       final longitudeSpanPixels =
-          (wideBounds.east - wideBounds.west) /
-          360 *
-          worldSize;
+          (wideBounds.east - wideBounds.west) / 360 * worldSize;
       final latitudeSpanPixels =
           (MapAutomaticFocusController.mercatorY(
                     latitude: wideBounds.north,
@@ -235,16 +234,10 @@ void main() {
       final controller = MockMapController();
       when(
         controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
+          any,
+          animation: anyNamed('animation'),
         ),
-      ).thenAnswer((_) async {});
+      ).thenAnswer((_) async => CameraAnimationResult.completed);
 
       final result = await const MapAutomaticFocusController().fit(
         controller: controller,
@@ -256,11 +249,17 @@ void main() {
       expect(result, isTrue);
       verify(
         controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: mapAutomaticFocusMaxZoom,
-          bearing: 0,
-          pitch: 0,
-          nativeDuration: const Duration(milliseconds: 500),
+          argThat(
+            isCameraPositionUpdate(
+              zoom: mapAutomaticFocusMaxZoom,
+              bearing: 0,
+              pitch: 0,
+              padding: EdgeInsets.zero,
+            ),
+          ),
+          animation: const CameraAnimation.fly(
+            duration: Duration(milliseconds: 500),
+          ),
         ),
       ).called(1);
       verifyNoMoreInteractions(controller);
@@ -393,16 +392,10 @@ void main() {
       final controller = MockMapController();
       when(
         controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
+          any,
+          animation: anyNamed('animation'),
         ),
-      ).thenAnswer((_) async {});
+      ).thenAnswer((_) async => CameraAnimationResult.completed);
 
       final result = await const MapAutomaticFocusController().fit(
         controller: controller,
@@ -420,15 +413,20 @@ void main() {
       final center =
           verify(
                 controller.animateCamera(
-                  center: captureAnyNamed('center'),
-                  zoom: anyNamed('zoom'),
-                  bearing: 0,
-                  pitch: 0,
-                  nativeDuration: const Duration(milliseconds: 500),
+                  captureThat(
+                    isCameraPositionUpdate(
+                      bearing: 0,
+                      pitch: 0,
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+                  animation: const CameraAnimation.fly(
+                    duration: Duration(milliseconds: 500),
+                  ),
                 ),
               ).captured.single
-              as Geographic;
-      expect(center.lon, 180);
+              as CameraUpdatePosition;
+      expect(center.center?.lon, 180);
       verifyNoMoreInteractions(controller);
     });
   });
