@@ -243,7 +243,9 @@ class const _EewPsWaveLayerBody({required final List<EewTelegramItem> eews})
           }
           final now = ref.read(appClockProvider.notifier).now();
           // 設定が有効なら、強震モニタ画像の取得対象時刻に合わせる。
-          final kyoshinMonitorOffset = alignToKyoshinMonitor
+          // リプレイの画像は再生位置の時刻のものを表示するため、公開遅延を引かない。
+          final kyoshinMonitorOffset =
+              alignToKyoshinMonitor && !ref.read(isReplayModeProvider)
               ? ref.read(kyoshinMonitorImageDelayProvider)
               : null;
           final baseTime = kyoshinMonitorOffset == null
