@@ -60,14 +60,18 @@ class ReplayNotifier extends _$ReplayNotifier {
     _stopPlaybackTimer();
     _generation++;
     _anchor = null;
-    final startTime = file.data.first.time;
-    state = ReplayState(
+    final initial = ReplayState(
       file: file,
       fileName: fileName,
       currentIndex: 0,
-      currentTime: startTime,
+      currentTime: file.data.first.time,
       isPlaying: false,
       playbackSpeed: 1,
+    );
+    final startTime = initial.startTime;
+    state = initial.copyWith(
+      currentIndex: initial.indexAt(startTime),
+      currentTime: startTime,
     );
     ref.read(appClockProvider.notifier).enterReplay(startTime);
     ref.read(kyoshinMonitorAnalyzerIsolateProvider.future).ignore();

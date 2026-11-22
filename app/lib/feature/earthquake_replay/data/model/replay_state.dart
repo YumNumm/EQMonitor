@@ -20,7 +20,14 @@ abstract class const ReplayState._() with _$ReplayState {
 
   List<ReplayData> get frames => file.data;
 
-  DateTime get startTime => frames.first.time;
+  // ヘッダの開始時刻より前のフレームは、揺れ検知の平常値に使う前置き区間として再生範囲に含めない。
+  DateTime get startTime {
+    final headerStart = file.header.startTime;
+    final firstFrame = frames.first.time;
+    return headerStart.isAfter(firstFrame) && headerStart.isBefore(endTime)
+        ? headerStart
+        : firstFrame;
+  }
 
   DateTime get endTime => frames.last.time;
 
