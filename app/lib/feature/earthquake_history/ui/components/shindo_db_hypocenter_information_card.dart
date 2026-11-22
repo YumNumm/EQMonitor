@@ -31,20 +31,22 @@ class const ShindoDbHypocenterInformationCard({
         : Colors.grey;
     final cardColor = cardBackgroundColor.withValues(alpha: 0.3);
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8)
-          .add(const EdgeInsets.only(bottom: 4)),
-      elevation: 0,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: cardBackgroundColor, width: 0),
-      ),
-      color: cardColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Column(
-          children: [
-            Row(
+    const margin = EdgeInsets.only(left: 8, right: 8, bottom: 4);
+
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        Card(
+          margin: margin,
+          elevation: 0,
+          shape: RoundedSuperellipseBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: cardBackgroundColor, width: 0),
+          ),
+          color: cardColor,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Row(
               children: [
                 if (primary.maxIntensity != null) ...[
                   _MaxIntensityWidget(hypocenter: primary),
@@ -58,13 +60,16 @@ class const ShindoDbHypocenterInformationCard({
                 ),
               ],
             ),
-            _DetailsTile(
-              primary: primary,
-              others: hypocenters.skip(1).toList(),
-            ),
-          ],
+          ),
         ),
-      ),
+        Padding(
+          padding: margin,
+          child: _DetailsTile(
+            primary: primary,
+            others: hypocenters.skip(1).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -298,7 +303,8 @@ class const _DetailsTile({
           _InfoRow(label: '決定フラグ', value: label),
         if (primary.evaluationLabel case final label?)
           _InfoRow(label: '震源評価', value: label),
-        _InfoRow(label: '観測点数', value: '${primary.stationCount}'),
+        if (others.isEmpty || primary.stationCount > 0)
+          _InfoRow(label: '観測点数', value: '${primary.stationCount}'),
         ...primary.magnitudes.map(
           (m) => _InfoRow(
             label: m.typeLabel,
@@ -338,7 +344,8 @@ class const _HypocenterSection({
           _InfoRow(label: '決定フラグ', value: label),
         if (hypocenter.evaluationLabel case final label?)
           _InfoRow(label: '震源評価', value: label),
-        _InfoRow(label: '観測点数', value: '${hypocenter.stationCount}'),
+        if (hypocenter.stationCount > 0)
+          _InfoRow(label: '観測点数', value: '${hypocenter.stationCount}'),
         ...hypocenter.magnitudes.map(
           (m) => _InfoRow(
             label: m.typeLabel,
