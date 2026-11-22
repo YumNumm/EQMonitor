@@ -18,7 +18,7 @@ class AppLinksColdStartGate {
   void resolveInitial(Uri? uri) {
     _initialUri = uri;
     if (uri != null) {
-      _pending = NotificationDeepLink.fromUri(uri);
+      _pending = NotificationDeepLink.fromAppLinkUri(uri);
       _initialDuplicatePending = true;
     }
     if (!_resolved.isCompleted) {

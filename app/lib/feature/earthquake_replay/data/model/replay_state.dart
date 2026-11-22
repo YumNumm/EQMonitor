@@ -9,22 +9,59 @@ abstract class const ReplayState._() with _$ReplayState {
     required ReplayFile file,
     required String fileName,
     required int currentIndex,
+    required DateTime currentTime,
     required bool isPlaying,
     required double playbackSpeed,
   }) = _ReplayState;
 
-  /// 総フレーム数
-  int get totalFrames => file.data.length;
+  static const maxTickInterval = Duration(seconds: 1);
 
-  /// 現在のフレームの時刻
-  DateTime get currentTime => file.data[currentIndex].time;
+  List<ReplayData> get frames => file.data;
 
-  /// 開始時刻
-  DateTime get startTime => file.header.startTime;
+  DateTime get startTime => frames.first.time;
 
-  /// 終了時刻
-  DateTime get endTime => file.header.endTime;
+  DateTime get endTime => frames.last.time;
 
-  /// 再生位置（0.0 ~ 1.0）
-  double get progress => totalFrames > 1 ? currentIndex / (totalFrames - 1) : 0;
+  Duration get duration => endTime.difference(startTime);
+
+  Duration get elapsed => currentTime.difference(startTime);
+
+  bool get isAtEnd => !currentTime.isBefore(endTime);
+
+  DateTime clampTime(DateTime time) => time.isBefore(startTime)
+      ? startTime
+      : time.isAfter(endTime)
+      ? endTime
+      : time;
+
+  /// [time] 以前で最後のフレームの位置。
+  int indexAt(DateTime time) {
+    var low = 0;
+    var high = frames.length - 1;
+    while (low < high) {
+      final mid = (low + high + 1) ~/ 2;
+      if (frames[mid].time.isAfter(time)) {
+        high = mid - 1;
+      } else {
+        low = mid;
+      }
+    }
+    return low;
+  }
+
+  /// 次に再生位置を進める時刻。フレームが途切れても [maxTickInterval] ごとに時計を進める。
+  DateTime? nextTickTime() {
+    if (isAtEnd) {
+      return null;
+    }
+    final limit = currentTime.add(maxTickInterval);
+    final nextIndex = currentIndex + 1;
+    final nextFrameTime = nextIndex < frames.length
+        ? frames[nextIndex].time
+        : endTime;
+    final candidate = nextFrameTime.isAfter(limit) ? limit : nextFrameTime;
+    return clampTime(
+      candidate.isAfter(currentTime) ? candidate : currentTime,
+    );
+  }
 }

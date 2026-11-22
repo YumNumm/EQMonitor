@@ -32,6 +32,18 @@ sealed class const NotificationDeepLink() {
     return null;
   }
 
+  /// OS から渡された書類（リプレイファイル）は app_links 経由でのみ受け付け、
+  /// 通知の link からは開かせない。
+  static NotificationDeepLink? fromAppLinkUri(Uri uri) => switch (uri.scheme) {
+    'file' || 'content' => NotificationRouteLink(
+      location: Uri(
+        path: '/replay/open',
+        queryParameters: {'source': uri.toString()},
+      ).toString(),
+    ),
+    _ => fromUri(uri),
+  };
+
   static NotificationDeepLink? fromData(Map<String, Object?> data) {
     if (data['isTest'] == 'true' || data['type'] == 'TEST') {
       return const NotificationRouteLink(
