@@ -14,9 +14,6 @@ class const ReplayKyoshinArchiveWindowResolver({
   /// （2026-11-23 の実測。lmoni は毎時15分頃、kmoni は毎時45分頃）。
   final Duration retention = const Duration(hours: 3),
 
-  /// 再生中に削除が走っても先頭の画像が残るよう、範囲の端を避ける。
-  final Duration purgeMargin = const Duration(minutes: 1),
-
   /// これより古い時刻の 404 は、一時的な失敗ではなく削除済みとして扱う。
   final Duration purgedAge = const Duration(hours: 2),
   final Duration lead = const Duration(seconds: 10),
@@ -44,6 +41,9 @@ class const ReplayKyoshinArchiveWindowResolver({
     final start = origin
         .subtract(lead)
         .copyWith(millisecond: 0, microsecond: 0);
+    // 0.5 倍速では、再生し終えるまでに画像が区間の長さだけ古くなる。
+    // その間に削除が走っても残るよう、区間の長さを余裕として取る。
+    final purgeMargin = end.difference(start);
     if (now.toUtc().difference(start) > retention - purgeMargin ||
         !end.isAfter(origin)) {
       return null;
