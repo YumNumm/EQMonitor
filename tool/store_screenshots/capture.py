@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -61,7 +62,12 @@ def find_simulator_app() -> Path:
     candidates = [Path(line) for line in found.splitlines()] + [Path("/Applications/Simulator.app")]
     existing = next((path for path in candidates if path.is_dir()), None)
     if existing is None:
-        raise CaptureError(f"Simulator.app was not found under {xcode} or /Applications")
+        apps = run("find", str(xcode / "Contents"), "-maxdepth", "4", "-name", "*.app", "-type", "d", capture=True)
+        commands = run("xcrun", "simctl", "help", capture=True)
+        raise CaptureError(
+            f"Simulator.app was not found under {xcode} or /Applications.\n"
+            f"Apps in Xcode:\n{apps}\nsimctl help:\n{commands}"
+        )
     print(f"using {existing}")
     return existing
 
@@ -110,8 +116,14 @@ class IosSimulator:
     def read_text(self, relative: str) -> str:
         return self.session_path(relative).read_text()
 
-    def launch(self) -> None:
-        run("xcrun", "simctl", "launch", "--terminate-running-process", self.udid, self.bundle_id)
+    def launch(self, log: Path) -> None:
+        run(
+            "xcrun", "simctl", "launch", "--terminate-running-process",
+            f"--stdout={log}", f"--stderr={log}", self.udid, self.bundle_id,
+        )
+
+    def app_log(self, log: Path) -> str:
+        return log.read_text(errors="replace") if log.exists() else ""
 
     def screenshot(self, destination: Path) -> None:
         run("xcrun", "simctl", "io", self.udid, "screenshot", "--type=png", str(destination))
@@ -186,9 +198,13 @@ class AndroidEmulator:
     def read_text(self, relative: str) -> str:
         return self.app_shell(f"cat {self.session_path(relative)}", capture=True)
 
-    def launch(self) -> None:
+    def launch(self, log: Path) -> None:
+        self.adb("logcat", "-c")
         self.adb("shell", "am", "force-stop", self.package)
         self.adb("shell", "monkey", "-p", self.package, "-c", "android.intent.category.LAUNCHER", "1")
+
+    def app_log(self, log: Path) -> str:
+        return self.adb("logcat", "-d", "-s", "flutter:V", capture=True)
 
     def screenshot(self, destination: Path) -> None:
         # 起動直後や SystemUI の再起動で demo mode が外れるため、撮影ごとに適用し直す。
@@ -221,6 +237,19 @@ def wait_for(device: IosSimulator | AndroidEmulator, relative: str) -> None:
     raise CaptureError(f"timed out waiting for {relative}")
 
 
+APP_ERROR_PATTERN = re.compile(r"DioException|status code|Exception|Error|FORBIDDEN|\b[45]\d\d\b")
+APP_ERROR_LINES = 80
+
+
+def report_app_errors(log: str) -> None:
+    # 公開リポジトリの artifact に全文を残さないため、エラーに関係する行だけをジョブログへ出す。
+    lines = [line for line in log.splitlines() if APP_ERROR_PATTERN.search(line)]
+    if lines:
+        print("::group::app errors")
+        print("\n".join(lines[-APP_ERROR_LINES:]))
+        print("::endgroup::")
+
+
 def capture(device: IosSimulator | AndroidEmulator, config: dict, scenes: list[dict], app: Path, fixtures: Path, output: Path) -> None:
     device.prepare(config)
     device.install(app)
@@ -228,8 +257,16 @@ def capture(device: IosSimulator | AndroidEmulator, config: dict, scenes: list[d
     for fixture in sorted({scene["fixture"] for scene in scenes if "fixture" in scene}):
         device.put(f"fixtures/{fixture}", fixtures / fixture)
     put_text(device, "session.json", json.dumps(app_session(config, scenes), ensure_ascii=False))
-    device.launch()
     output.mkdir(parents=True, exist_ok=True)
+    log = output.parent / f"{output.name}-app.log"
+    device.launch(log)
+    try:
+        capture_scenes(device, scenes, output)
+    finally:
+        report_app_errors(device.app_log(log))
+
+
+def capture_scenes(device: IosSimulator | AndroidEmulator, scenes: list[dict], output: Path) -> None:
     for scene in scenes:
         try:
             wait_for(device, f"ready/{scene['name']}")
