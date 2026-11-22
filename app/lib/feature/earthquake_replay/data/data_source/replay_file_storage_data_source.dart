@@ -37,9 +37,26 @@ class const ReplayFileStorageDataSource() {
     required Uint8List bytes,
   }) async {
     final dir = await directory();
-    final file = File(p.join(dir.path, name));
+    final file = await availableFile(directory: dir, name: name);
     await file.writeAsBytes(bytes, flush: true);
     return describe(file);
+  }
+
+  // 同じ期間を別の設定で作り直しても、保存済みのファイルを上書きしない。
+  Future<File> availableFile({
+    required Directory directory,
+    required String name,
+  }) async {
+    final base = p.basenameWithoutExtension(name);
+    final suffix = p.extension(name);
+    for (var index = 1; ; index++) {
+      final file = File(
+        p.join(directory.path, index == 1 ? name : '${base}_$index$suffix'),
+      );
+      if (!file.existsSync()) {
+        return file;
+      }
+    }
   }
 
   Future<void> delete({required SavedReplayFile file}) async {
