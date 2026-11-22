@@ -137,8 +137,9 @@ class AndroidEmulator:
             ["-e", "command", "enter"],
             ["-e", "command", "clock", "-e", "hhmm", hhmm],
             ["-e", "command", "battery", "-e", "level", "100", "-e", "plugged", "false"],
-            ["-e", "command", "network", "-e", "wifi", "show", "-e", "level", "4"],
-            ["-e", "command", "network", "-e", "mobile", "show", "-e", "datatype", "none", "-e", "level", "4"],
+            ["-e", "command", "network", "-e", "wifi", "show", "-e", "level", "4", "-e", "fully", "true"],
+            ["-e", "command", "network", "-e", "mobile", "hide"],
+            ["-e", "command", "network", "-e", "nosim", "hide"],
             ["-e", "command", "notifications", "-e", "visible", "false"],
         ):
             self.adb("shell", "am", "broadcast", "-a", "com.android.systemui.demo", *extras)
@@ -229,18 +230,35 @@ def capture(device: IosSimulator | AndroidEmulator, config: dict, scenes: list[d
     wait_for(device, "done")
 
 
+def runtime_version(runtime: dict) -> tuple[int, ...]:
+    return tuple(int(part) for part in runtime["version"].split("."))
+
+
 def create_ios_simulator(device_types: list[str]) -> str:
     listing = json.loads(run("xcrun", "simctl", "list", "--json", "devicetypes", "runtimes", capture=True))
-    runtimes = [runtime for runtime in listing["runtimes"] if runtime["platform"] == "iOS" and runtime["isAvailable"]]
-    if not runtimes:
-        raise CaptureError("no available iOS simulator runtime")
-    runtime = max(runtimes, key=lambda candidate: tuple(int(part) for part in candidate["version"].split(".")))
-    supported = {device["name"]: device["identifier"] for device in runtime["supportedDeviceTypes"]}
-    name = next((candidate for candidate in device_types if candidate in supported), None)
-    if name is None:
-        raise CaptureError(f"none of {', '.join(device_types)} is supported by iOS {runtime['version']}")
-    print(f"creating {name} on iOS {runtime['version']}")
-    return run("xcrun", "simctl", "create", f"EQMonitor Store Screenshot ({name})", supported[name], runtime["identifier"], capture=True)
+    identifiers = {device["name"]: device["identifier"] for device in listing["devicetypes"]}
+    runtimes = sorted(
+        (runtime for runtime in listing["runtimes"] if runtime.get("platform") == "iOS" and runtime.get("isAvailable")),
+        key=runtime_version,
+        reverse=True,
+    )
+    for runtime in runtimes:
+        for name in (candidate for candidate in device_types if candidate in identifiers):
+            result = subprocess.run(
+                ["xcrun", "simctl", "create", f"EQMonitor Store Screenshot ({name})", identifiers[name], runtime["identifier"]],
+                check=False,
+                text=True,
+                capture_output=True,
+            )
+            if result.returncode == 0:
+                print(f"created {name} on iOS {runtime['version']}")
+                return result.stdout.strip()
+            print(f"cannot create {name} on iOS {runtime['version']}: {result.stderr.strip()}")
+    iphones = ", ".join(sorted(name for name in identifiers if name.startswith("iPhone")))
+    versions = ", ".join(runtime["version"] for runtime in runtimes)
+    raise CaptureError(
+        f"none of {', '.join(device_types)} could be created. iPhone types: {iphones}. iOS runtimes: {versions}"
+    )
 
 
 def main(argv: list[str]) -> int:

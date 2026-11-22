@@ -37,7 +37,7 @@
       "platforms": ["ios", "android"],
       "kind": "route",
       "location": "/earthquake-history-details/20240101161010",
-      "settle_milliseconds": 10000
+      "settle_milliseconds": 30000
     },
     {
       "name": "lock_screen_live_activity",
