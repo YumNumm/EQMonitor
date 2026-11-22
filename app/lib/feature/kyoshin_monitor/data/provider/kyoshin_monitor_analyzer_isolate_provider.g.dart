@@ -52,4 +52,4 @@ final class KyoshinMonitorAnalyzerIsolateProvider
 }
 
 String _$kyoshinMonitorAnalyzerIsolateHash() =>
-    r'c83afe202db6182d55fb4bac4fbb493e7c999ddc';
+    r'3f7fbe3583f5f27bb99196ed9ffed0c95af085d2';

@@ -2,7 +2,9 @@ import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_status_card.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -216,11 +218,13 @@ class const _MapLibreMapHost({
 class const _MapHeader() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isReplay = ref.watch(isReplayModeProvider);
     final useKmoni =
-        ref.watch(
-          kyoshinMonitorSettingsProvider.select((v) => v.value?.useKmoni),
-        ) ??
-        false;
+        (ref.watch(
+              kyoshinMonitorSettingsProvider.select((v) => v.value?.useKmoni),
+            ) ??
+            false) ||
+        isReplay;
     final showScale =
         ref.watch(
           kyoshinMonitorSettingsProvider.select((v) => v.value?.showScale),
@@ -235,7 +239,10 @@ class const _MapHeader() extends ConsumerWidget {
         KyoshinMonitorStatusCard(
           onTap: () async => const HomeMapLayerRoute().push<void>(context),
         ),
-        const ConnectionStatusCard(),
+        if (isReplay)
+          const ReplayStatusCard()
+        else
+          const ConnectionStatusCard(),
         if (showScale)
           Padding(
             padding: CardTheme.of(context).margin ?? const EdgeInsets.all(4),

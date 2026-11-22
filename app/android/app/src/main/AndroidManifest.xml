@@ -55,6 +55,21 @@
                 <data android:scheme="https" />
             </intent-filter>
 
+            <!-- .eqrp は MIME 型が登録されていないため、パスの拡張子で受け付ける。
+                 pathPattern の「.*」は次の文字が最初に現れた位置で止まるため、
+                 途中に「.」を含むパス向けのパターンも並べる。 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\\.eqrp" />
+                <data android:pathPattern=".*\\..*\\.eqrp" />
+                <data android:pathPattern=".*\\..*\\..*\\.eqrp" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.eqrp" />
+            </intent-filter>
+
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />

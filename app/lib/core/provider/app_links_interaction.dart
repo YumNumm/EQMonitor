@@ -45,7 +45,7 @@ Stream<Uri> appLinksInteraction(Ref ref) async* {
       continue;
     }
     try {
-      final link = NotificationDeepLink.fromUri(uri);
+      final link = NotificationDeepLink.fromAppLinkUri(uri);
       switch (link) {
         case NotificationRouteLink(:final location):
           // push completes when the page is popped; keep receiving new app links.

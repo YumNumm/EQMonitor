@@ -22,6 +22,7 @@ List<RouteBase> get $appRoutes => [
   $earthquakeHistoryDetailsRoute,
   $earthquakeActivityRoute,
   $telegramListByEventIdRoute,
+  $replayOpenRoute,
   $homeRoute,
   $talkerRoute,
   $settingsRoute,
@@ -416,6 +417,38 @@ mixin $TelegramListByEventIdRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/telegram-list/${Uri.encodeComponent(_self.eventId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $replayOpenRoute => GoRouteData.$route(
+  path: '/replay/open',
+  hasOverriddenOnExit: false,
+  factory: $ReplayOpenRoute._fromState,
+);
+
+mixin $ReplayOpenRoute on GoRouteData {
+  static ReplayOpenRoute _fromState(GoRouterState state) =>
+      ReplayOpenRoute(source: state.uri.queryParameters['source']!);
+
+  ReplayOpenRoute get _self => this as ReplayOpenRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/replay/open',
+    queryParams: {'source': _self.source},
   );
 
   @override

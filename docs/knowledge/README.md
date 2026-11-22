@@ -29,6 +29,7 @@
 | 通知・バックグラウンド位置 | [通知と位置情報](notification_location.md)。OS 権限・slot 設定・処理の acknowledgment を分離し、再起動や retry を考慮する。 |
 | Android 通知 | [channel 運用](android_notification_channels.md)。利用者設定を保ち、現役 channel を起動時に削除しない。 |
 | 強震モニタ・時刻 | [強震モニタと時計](kyoshin_time.md)。NTP・画像遅延・表示時刻を分け、計測せずに GPU 化を前提としない。 |
+| EQRP リプレイ | [リプレイ再生](earthquake_replay.md)。EQRP の時刻は JST の壁時計で、読み込み時に UTC へ戻す。1003 は EEW API の型を格納する。 |
 | Siri・Control Center | [App Intents](app_intents.md)。同じ snapshot から音声と表示を作り、欠測や保存地域の鮮度を正しく扱う。 |
 | SwiftUI Preview | [軽量 Preview](apple_previews.md)。host と Widget extension の所属・resource を揃え、配信検証とは区別する。 |
 | 履歴画面・画面遷移 | [画面構成](adaptive_ui.md)。幅と選択状態に応じたペイン、戻る操作、wakelock の所有境界を確認する。 |
