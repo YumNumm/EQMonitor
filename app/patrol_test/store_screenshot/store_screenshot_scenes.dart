@@ -110,7 +110,8 @@ class StoreScreenshotScenes({
       await _capture('failure-$scene', settle: const Duration(seconds: 2));
       fail('earthquake $eventId failed to load: ${_describe(error)}');
     }
-    await _capture(scene, settle: const Duration(seconds: 10));
+    // 震度の塗りはタイル単位で描かれ、10 秒では画面下側が欠けた。
+    await _capture(scene, settle: const Duration(seconds: 30));
   }
 
   Future<void> lockScreenLiveActivity({required String scene}) async {

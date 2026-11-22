@@ -18,6 +18,7 @@ const _requireFixtures = bool.fromEnvironment(
 const _sceneFilter = String.fromEnvironment('STORE_SCREENSHOT_SCENES');
 
 const _preferences = <String, Object>{
+  'debug': false,
   'onboarding_completed': true,
   'release_highlight_seen_version': '9999.0.0',
   'estimated_intensity_notice_shown': true,

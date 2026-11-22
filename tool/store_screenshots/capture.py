@@ -95,12 +95,14 @@ class AndroidEmulator:
         while self.adb("shell", "getprop", "sys.boot_completed", capture=True) != "1":
             time.sleep(POLL_SECONDS)
         self.status_bar_time = config["statusBarTime"].replace(":", "").zfill(4)
-        self.adb("shell", "settings", "put", "global", "sysui_demo_allowed", "1")
         self.adb("shell", "cmd", "uimode", "night", "yes" if config["appearance"] == "dark" else "no")
         location = config["location"]
         self.adb("emu", "geo", "fix", str(location["longitude"]), str(location["latitude"]))
 
     def apply_demo_mode(self) -> None:
+        self.adb("shell", "settings", "put", "global", "sysui_demo_allowed", "1")
+        allowed = self.adb("shell", "settings", "get", "global", "sysui_demo_allowed", capture=True)
+        print(f"sysui_demo_allowed={allowed}", flush=True)
         for extras in (
             ["-e", "command", "enter"],
             ["-e", "command", "clock", "-e", "hhmm", self.status_bar_time],
@@ -137,7 +139,7 @@ def pending_scenes(ready: set[str], captured: set[str]) -> list[str]:
 def capture(device: IosSimulator | AndroidEmulator, config: dict, patrol_args: list[str], output: Path) -> None:
     device.prepare(config)
     output.mkdir(parents=True, exist_ok=True)
-    command = ["patrol", "test", "--target", PATROL_TARGET, "--device", device.patrol_device, *patrol_args]
+    command = ["patrol", "test", "--target", PATROL_TARGET, "--device", device.patrol_device, "--no-label", *patrol_args]
     print(f"running: {' '.join(command)}", flush=True)
     patrol = subprocess.Popen(command, cwd=APP_DIR)
     captured: set[str] = set()

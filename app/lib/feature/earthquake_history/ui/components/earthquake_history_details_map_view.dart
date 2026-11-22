@@ -107,7 +107,7 @@ class const EarthquakeHistoryDebuggerVisibility() {
   bool shouldShow({
     required bool isDebugBuild,
     required AsyncValue<bool> debugPreference,
-  }) => isDebugBuild || (debugPreference.value ?? false);
+  }) => debugPreference.value ?? isDebugBuild;
 }
 
 class const _MapContent({
