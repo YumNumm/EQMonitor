@@ -43,7 +43,11 @@ class const MagnitudeText({
         fontFamily: FontFamily.googleSansFlex,
         fontSize: valueFontSize * 0.44,
         fontWeight: .w500,
-        fontVariations: [FontVariation.weight(500)],
+        fontVariations: [
+          FontVariation.opticalSize(valueFontSize * 0.44),
+          FontVariation.weight(500),
+        ],
+        letterSpacing: 0,
       ),
     );
     const valueStyle = TextStyle(
@@ -51,6 +55,7 @@ class const MagnitudeText({
       fontSize: valueFontSize,
       fontWeight: .bold,
       fontVariations: [FontVariation.weight(700)],
+      letterSpacing: 0,
     );
     // 等幅フォントの小数点は 1 文字分の幅を取るため、前後だけ詰める
     final kernedValueStyle = valueStyle.copyWith(
@@ -61,7 +66,11 @@ class const MagnitudeText({
       fontFamilyFallback: [FontFamily.notoSansJP],
       fontSize: valueFontSize * 0.74,
       fontWeight: .bold,
-      fontVariations: [FontVariation.weight(700)],
+      fontVariations: [
+        FontVariation.opticalSize(valueFontSize * 0.74),
+        FontVariation.weight(700),
+      ],
+      letterSpacing: 0,
     );
     return Text.rich(
       TextSpan(
