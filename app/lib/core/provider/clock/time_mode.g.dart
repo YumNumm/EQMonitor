@@ -19,24 +19,6 @@ RealtimeTimeMode _$RealtimeTimeModeFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$RealtimeTimeModeToJson(RealtimeTimeMode instance) =>
     <String, dynamic>{'runtimeType': instance.$type};
 
-TimeShiftTimeMode _$TimeShiftTimeModeFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('TimeShiftTimeMode', json, ($checkedConvert) {
-      final val = TimeShiftTimeMode(
-        offset: $checkedConvert(
-          'offset',
-          (v) => Duration(microseconds: (v as num).toInt()),
-        ),
-        $type: $checkedConvert('runtimeType', (v) => v as String?),
-      );
-      return val;
-    }, fieldKeyMap: const {r'$type': 'runtimeType'});
-
-Map<String, dynamic> _$TimeShiftTimeModeToJson(TimeShiftTimeMode instance) =>
-    <String, dynamic>{
-      'offset': instance.offset.inMicroseconds,
-      'runtimeType': instance.$type,
-    };
-
 ReplayTimeMode _$ReplayTimeModeFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('ReplayTimeMode', json, ($checkedConvert) {
