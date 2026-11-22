@@ -37,6 +37,7 @@ def render_release_section(changelog: str, version: str) -> str:
     target_version = version.removeprefix("v")
     in_target = False
     output: list[str] = []
+    seen_items: set[str] = set()
 
     for line in changelog.splitlines():
         release_match = RELEASE_HEADING_RE.match(line)
@@ -54,10 +55,15 @@ def render_release_section(changelog: str, version: str) -> str:
             if output and output[-1] != "":
                 output.append("")
             output.append(SECTION_TITLES.get(title, plain_text(title)))
+            seen_items = set()
             continue
 
         if line.startswith("* "):
-            output.append(f"・{plain_text(line.removeprefix('* '))}")
+            item = plain_text(line.removeprefix("* "))
+            if item in seen_items:
+                continue
+            seen_items.add(item)
+            output.append(f"・{item}")
 
     if not in_target:
         raise ValueError(f"changelog section was not found: {target_version}")

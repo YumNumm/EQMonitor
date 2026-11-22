@@ -123,6 +123,7 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
+      pull-requests: read
     environment:
       name: EQMonitor-iOS
     timeout-minutes: 10
@@ -162,6 +163,7 @@ jobs:
         env:
           ASC_APP_ID: "6447546703"
           ASC_BYPASS_KEYCHAIN: "1"
+          GH_TOKEN: ${{ github.token }}
           PLATFORM: ios
           OUTPUT_PATH: release-notes-ios.txt
         run: |
@@ -190,6 +192,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      pull-requests: read
     environment:
       name: EQMonitor-Android
     timeout-minutes: 10
@@ -238,6 +241,7 @@ jobs:
 
       - name: Generate Android release notes
         env:
+          GH_TOKEN: ${{ github.token }}
           GOOGLE_PLAY_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
           PACKAGE_NAME: net.yumnumm.eqmonitor
           TRACK_NAME: ${{ needs.define-matrix.outputs.android-track }}
