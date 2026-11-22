@@ -17,7 +17,8 @@ SESSION_DIR = "store_screenshot"
 READY_TIMEOUT_SECONDS = 600
 POLL_SECONDS = 1
 LOCK_SETTLE_SECONDS = 3
-APP_KEYS_EXCLUDED = ("platforms", "capture")
+APP_KEYS_EXCLUDED = ("platforms", "capture", "experimental")
+DEVICE_APPS = ("Simulator.app", "DeviceHub.app")
 
 
 class CaptureError(RuntimeError):
@@ -31,12 +32,12 @@ def run(*args: str, capture: bool = False) -> str:
 
 def select_scenes(config: dict, platform: str, names: set[str] | None) -> list[dict]:
     scenes = [scene for scene in config["scenes"] if platform in scene["platforms"]]
-    if names is not None:
-        unknown = names - {scene["name"] for scene in scenes}
-        if unknown:
-            raise CaptureError(f"unknown scenes for {platform}: {', '.join(sorted(unknown))}")
-        scenes = [scene for scene in scenes if scene["name"] in names]
-    return scenes
+    if names is None:
+        return [scene for scene in scenes if not scene.get("experimental", False)]
+    unknown = names - {scene["name"] for scene in scenes}
+    if unknown:
+        raise CaptureError(f"unknown scenes for {platform}: {', '.join(sorted(unknown))}")
+    return [scene for scene in scenes if scene["name"] in names]
 
 
 def app_session(config: dict, scenes: list[dict]) -> dict:
@@ -56,20 +57,18 @@ def drop_scenes_without_fixtures(scenes: list[dict], fixtures: Path, allow_missi
     return [scene for scene in scenes if scene.get("fixture") not in missing]
 
 
-def find_simulator_app() -> Path:
+def find_device_app() -> Path:
+    # Xcode 27 では Simulator.app が DeviceHub.app に置き換わっている（2026-11-22 の runner で確認）。
     xcode = Path(run("xcode-select", "-p", capture=True)).parents[1]
-    found = run("find", str(xcode), "-maxdepth", "6", "-name", "Simulator.app", "-type", "d", capture=True)
-    candidates = [Path(line) for line in found.splitlines()] + [Path("/Applications/Simulator.app")]
-    existing = next((path for path in candidates if path.is_dir()), None)
-    if existing is None:
-        apps = run("find", str(xcode / "Contents"), "-maxdepth", "4", "-name", "*.app", "-type", "d", capture=True)
-        commands = run("xcrun", "simctl", "help", capture=True)
-        raise CaptureError(
-            f"Simulator.app was not found under {xcode} or /Applications.\n"
-            f"Apps in Xcode:\n{apps}\nsimctl help:\n{commands}"
-        )
-    print(f"using {existing}")
-    return existing
+    for name in DEVICE_APPS:
+        found = run("find", str(xcode), "-maxdepth", "6", "-name", name, "-type", "d", capture=True)
+        candidates = [Path(line) for line in found.splitlines()] + [Path("/Applications") / name]
+        existing = next((path for path in candidates if path.is_dir()), None)
+        if existing is not None:
+            print(f"using {existing}")
+            return existing
+    apps = run("find", str(xcode / "Contents"), "-maxdepth", "4", "-name", "*.app", "-type", "d", capture=True)
+    raise CaptureError(f"none of {', '.join(DEVICE_APPS)} was found. Apps in Xcode:\n{apps}")
 
 
 class IosSimulator:
@@ -116,26 +115,29 @@ class IosSimulator:
     def read_text(self, relative: str) -> str:
         return self.session_path(relative).read_text()
 
-    def launch(self, log: Path) -> None:
-        run(
-            "xcrun", "simctl", "launch", "--terminate-running-process",
-            f"--stdout={log}", f"--stderr={log}", self.udid, self.bundle_id,
-        )
+    def launch(self) -> None:
+        run("xcrun", "simctl", "launch", "--terminate-running-process", self.udid, self.bundle_id)
 
-    def app_log(self, log: Path) -> str:
-        return log.read_text(errors="replace") if log.exists() else ""
+    def app_log(self) -> str:
+        # Flutter の print は stdout ではなく unified logging に出る。
+        return run(
+            "xcrun", "simctl", "spawn", self.udid, "log", "show", "--style", "compact", "--last", "30m",
+            "--predicate", 'process == "Runner" AND eventMessage CONTAINS "flutter:"',
+            capture=True,
+        )
 
     def screenshot(self, destination: Path) -> None:
         run("xcrun", "simctl", "io", self.udid, "screenshot", "--type=png", str(destination))
 
     def lock(self) -> None:
-        # simctl にロック操作が無いため Simulator.app のメニューを操作する。runner に Accessibility 権限が必要。
-        run("open", "-a", str(find_simulator_app()), "--args", "-CurrentDeviceUDID", self.udid)
+        # simctl にロック操作が無いためデバイス表示アプリのメニューを操作する。runner に Accessibility 権限が必要。
+        app = find_device_app()
+        run("open", "-a", str(app), "--args", "-CurrentDeviceUDID", self.udid)
         time.sleep(LOCK_SETTLE_SECONDS)
         run(
             "osascript",
-            "-e", 'tell application "Simulator" to activate',
-            "-e", 'tell application "System Events" to tell process "Simulator" '
+            "-e", f'tell application "{app.stem}" to activate',
+            "-e", f'tell application "System Events" to tell process "{app.stem}" '
             'to click menu item "Lock" of menu "Device" of menu bar 1',
         )
 
@@ -198,12 +200,12 @@ class AndroidEmulator:
     def read_text(self, relative: str) -> str:
         return self.app_shell(f"cat {self.session_path(relative)}", capture=True)
 
-    def launch(self, log: Path) -> None:
+    def launch(self) -> None:
         self.adb("logcat", "-c")
         self.adb("shell", "am", "force-stop", self.package)
         self.adb("shell", "monkey", "-p", self.package, "-c", "android.intent.category.LAUNCHER", "1")
 
-    def app_log(self, log: Path) -> str:
+    def app_log(self) -> str:
         return self.adb("logcat", "-d", "-s", "flutter:V", capture=True)
 
     def screenshot(self, destination: Path) -> None:
@@ -237,16 +239,30 @@ def wait_for(device: IosSimulator | AndroidEmulator, relative: str) -> None:
     raise CaptureError(f"timed out waiting for {relative}")
 
 
-APP_ERROR_PATTERN = re.compile(r"DioException|status code|Exception|Error|FORBIDDEN|\b[45]\d\d\b")
-APP_ERROR_LINES = 80
+APP_ERROR_PATTERN = re.compile(r"http-error|DioException|Exception|FORBIDDEN|Status: [45]\d\d")
+APP_ERROR_CONTEXT_LINES = 4
+APP_ERROR_MAX_LINES = 120
 
 
-def report_app_errors(log: str) -> None:
+def app_error_lines(log: str) -> list[str]:
+    lines = log.splitlines()
+    selected: set[int] = set()
+    for index, line in enumerate(lines):
+        if APP_ERROR_PATTERN.search(line):
+            selected.update(range(index, min(index + APP_ERROR_CONTEXT_LINES + 1, len(lines))))
+    return [lines[index] for index in sorted(selected)][-APP_ERROR_MAX_LINES:]
+
+
+def report_app_errors(device: IosSimulator | AndroidEmulator) -> None:
     # 公開リポジトリの artifact に全文を残さないため、エラーに関係する行だけをジョブログへ出す。
-    lines = [line for line in log.splitlines() if APP_ERROR_PATTERN.search(line)]
+    try:
+        lines = app_error_lines(device.app_log())
+    except subprocess.CalledProcessError as error:
+        print(f"::warning::could not read the app log: {error}")
+        return
     if lines:
         print("::group::app errors")
-        print("\n".join(lines[-APP_ERROR_LINES:]))
+        print("\n".join(lines))
         print("::endgroup::")
 
 
@@ -258,12 +274,11 @@ def capture(device: IosSimulator | AndroidEmulator, config: dict, scenes: list[d
         device.put(f"fixtures/{fixture}", fixtures / fixture)
     put_text(device, "session.json", json.dumps(app_session(config, scenes), ensure_ascii=False))
     output.mkdir(parents=True, exist_ok=True)
-    log = output.parent / f"{output.name}-app.log"
-    device.launch(log)
+    device.launch()
     try:
         capture_scenes(device, scenes, output)
     finally:
-        report_app_errors(device.app_log(log))
+        report_app_errors(device)
 
 
 def capture_scenes(device: IosSimulator | AndroidEmulator, scenes: list[dict], output: Path) -> None:
@@ -323,7 +338,9 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--config", type=Path, default=TOOL_DIR / "scenes.json")
     parser.add_argument("--device", help="simulator UDID or adb serial (default: create an iOS simulator / ANDROID_SERIAL)")
     parser.add_argument("--ios-device-type", action="append", default=[], help="preferred iOS device type, in order")
-    parser.add_argument("--scenes", help="comma separated scene names (default: every scene for the platform)")
+    parser.add_argument(
+        "--scenes", help="comma separated scene names (default: every non-experimental scene for the platform)"
+    )
     parser.add_argument("--allow-missing-fixtures", action="store_true")
     args = parser.parse_args(argv)
 

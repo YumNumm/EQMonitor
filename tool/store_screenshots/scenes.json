@@ -45,6 +45,7 @@
       "kind": "live_activity",
       "preset": "warning",
       "capture": "lock_screen",
+      "experimental": true,
       "settle_milliseconds": 3000
     }
   ]

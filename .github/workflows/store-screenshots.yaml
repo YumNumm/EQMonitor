@@ -31,6 +31,7 @@ env:
   FIREBASE_ANALYTICS_WITHOUT_ADID: "true"
   # Pull requests verify the pipeline before every fixture exists; tag runs stay strict.
   ALLOW_MISSING_FIXTURES: ${{ github.event_name == 'pull_request' }}
+  PYTHONUNBUFFERED: "1"
   SCENES: ${{ inputs.scenes || '' }}
 
 jobs:
@@ -330,15 +331,12 @@ jobs:
 
       - name: Compose
         run: |
-          args=()
-          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
-            args+=(--skip-missing)
-          fi
+          # 実験的なシーン（ロック画面）は既定で撮影しないため、そのページは合成から外れる。
           uv run tool/store_screenshots/compose.py \
             --screenshots "$RUNNER_TEMP/store-screenshots-ios-raw" \
             --fixtures "$RUNNER_TEMP/store-screenshot-fixtures" \
             --output "$RUNNER_TEMP/store-screenshots-ios" \
-            "${args[@]}"
+            --skip-missing
 
       - name: Upload composed screenshots
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
