@@ -7,7 +7,8 @@ import 'package:path_provider/path_provider.dart';
 /// host 側の `tool/store_screenshots/capture.py` とアプリの Documents 配下で同期する。
 /// テストが `ready/<scene>` を書くと host が画面全体を撮影し、`captured/<scene>` を書く。
 class StoreScreenshotCaptureChannel._(final Directory _directory) {
-  static const _captureTimeout = Duration(minutes: 5);
+  // 負荷の高い macOS runner では simctl の応答が分単位で遅れた。
+  static const _captureTimeout = Duration(minutes: 15);
   static const _pollInterval = Duration(milliseconds: 200);
 
   static Future<StoreScreenshotCaptureChannel> open() async {

@@ -29,6 +29,7 @@ class IosSimulator:
     def __init__(self, udid: str, bundle_id: str) -> None:
         self.udid = udid
         self.bundle_id = bundle_id
+        self.container: Path | None = None
 
     @property
     def patrol_device(self) -> str:
@@ -48,11 +49,14 @@ class IosSimulator:
         run("xcrun", "simctl", "location", self.udid, "set", f"{location['latitude']},{location['longitude']}")
 
     def session_root(self) -> Path | None:
-        result = subprocess.run(
-            ["xcrun", "simctl", "get_app_container", self.udid, self.bundle_id, "data"],
-            check=False, text=True, capture_output=True,
-        )
-        return Path(result.stdout.strip()) / "Documents" / SESSION_DIR if result.returncode == 0 else None
+        # 高負荷の runner では simctl の 1 回の呼び出しに数十秒かかったため、ポーリングごとに呼ばない。
+        if self.container is None or not self.container.is_dir():
+            result = subprocess.run(
+                ["xcrun", "simctl", "get_app_container", self.udid, self.bundle_id, "data"],
+                check=False, text=True, capture_output=True,
+            )
+            self.container = Path(result.stdout.strip()) if result.returncode == 0 else None
+        return self.container / "Documents" / SESSION_DIR if self.container else None
 
     def list_markers(self, directory: str) -> set[str]:
         root = self.session_root()
@@ -146,11 +150,13 @@ def capture(device: IosSimulator | AndroidEmulator, config: dict, patrol_args: l
     try:
         while patrol.poll() is None:
             for scene in pending_scenes(device.list_markers("ready"), captured):
+                started = time.monotonic()
+                print(f"ready: {scene}", flush=True)
                 destination = output / f"{scene}.png"
                 device.screenshot(destination)
                 device.write_marker(f"captured/{scene}")
                 captured.add(scene)
-                print(f"captured: {destination}", flush=True)
+                print(f"captured: {destination} ({time.monotonic() - started:.1f}s)", flush=True)
             time.sleep(POLL_SECONDS)
     except BaseException:
         patrol.kill()
