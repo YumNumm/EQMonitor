@@ -10,16 +10,17 @@
 
 ## 850: Simulator / Emulator での撮影の確認
 
+- [ ] Patrol 移行後の `capture-ios` / `capture-android` が `patrol test` の完了まで進むことを確認する（iOS の `RunnerUITests` は Xcode を使わず追加したため、ビルドが通るかも未確認）。
 - [ ] iOS の `earthquake_detail` が 403（応答本文 `{"error": "FORBIDDEN"}` と推察）になる原因を特定する。Android では同じ API が表示される。エラー表示自体の改善は #2059。
 - [ ] `eew_warning`（16:11:08）・`kyoshin_monitor`（16:10:21）が Figma の 01・04 と同じ状態（EEW カード、推定震度、ボトムシート）になるか確認し、時刻と `settle_milliseconds` を調整する。
 - [ ] `earthquake_detail` で戻るボタン以外のデバッグ用アイコンが出ないことを確認する。
 - 完了条件: 合成済みの 4 ページが Figma の構成と一致する。
 
-## 800: ロック画面の撮影と壁紙
+## 800: 通知センターの撮影と壁紙
 
-- [ ] ロックの手段を決める。Xcode 27 では Simulator.app が DeviceHub.app に置き換わり、simctl にもロックが無い。DeviceHub.app のメニュー操作（Accessibility 権限が必要）か、XCUITest の `pressLockButton` を検討する。決まったら `lock_screen_live_activity` の `experimental` を外す。
-- [ ] 壁紙の設定手段を決める。simctl に手段が無いため、設定アプリの UI 操作または別方式の調査が必要。
-- 完了条件: 03 通知ページが壁紙付きのロック画面と Live Activity で合成される。
+- [ ] Patrol の `openNotifications()` で開いた通知センターに Live Activity が表示され、host 側の `simctl io screenshot` で撮れることを CI で確認する。
+- [ ] 壁紙の設定手段を決める。simctl に手段が無いため、`simctl addmedia` で写真を入れ、Patrol のネイティブ操作で設定アプリから設定する方法を検討する。
+- 完了条件: 03 通知ページが壁紙付きの通知センターと Live Activity で合成される。
 
 ## 700: Apple Watch Ultra 4 の Live Activity
 

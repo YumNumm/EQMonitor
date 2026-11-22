@@ -1,12 +1,12 @@
 # ストア画像の自動生成
 
 2026-11-22 作成。正本は `tool/store_screenshots/` と `.github/workflows/store-screenshots.yaml`。
-撮影は PR の CI で地震詳細まで確認済み。リプレイとロック画面のシーンは未確認（下記「検証状況」）。
+画面操作は Patrol（`app/patrol_test/`）、撮影は host 側で行う。Patrol 移行後の CI は未確認（下記「検証状況」）。
 
 ## 全体の流れ
 
-1. 撮影（`capture.py`）: `lib/main_store_screenshot.dart` を入口にした debug ビルドを Simulator / Emulator で起動し、
-   `scenes.json` のシーンを順に表示して host 側から画面全体を撮る。
+1. 撮影（`capture.py`）: Simulator / Emulator を準備して `patrol test --target patrol_test/store_screenshots_test.dart` を起動する。
+   Patrol テストがシーンを順に表示し、host 側が `simctl io` / `adb screencap` で画面全体を撮る。
 2. 合成（`compose.py`）: Figma から抽出した背景（グラデーション＋ロゴ＋見出し）に、角丸のスクリーンショットと端末フレームを重ねる。
 3. `Store Screenshots` workflow: 本番タグ（`v*`、`v*-beta.*` は除外）の push と手動実行で起動する。
    成果物は artifact `store-screenshots-ios`（合成済み）と `store-screenshots-{ios,android}-raw`（撮影のみ）。
@@ -49,20 +49,23 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 
 ## 撮影のプロトコル
 
-- host がアプリの Documents 配下 `store_screenshot/` へ `session.json` と fixture を置いてから起動する
+- Patrol の `takeNativeScreenshot` は iOS では何もしない（patrol 4.11.0 の docs）。通知センターやステータスバーを含めて撮るため、撮影は host 側で行う。
+- テストはアプリの Documents 配下 `store_screenshot/` に `ready/<scene>` を書いて待つ。host は撮影後に `captured/<scene>` を書く
   （iOS は `simctl get_app_container`、Android は `run-as` と `app_flutter/`）。
-- アプリはシーンを表示して `ready/<scene>` を書き、host は撮影後に `captured/<scene>` を書く。全シーン後に `done`、例外時は `failed` に内容を書く。
-- `session.json` の `preferences` は `SharedPreferencesKey` に存在するキーだけを受け付け、起動前に書き込む。
-  オンボーディング・新機能案内・各種お知らせはここで既読にする。
-- Release ビルドは Simulator で動かないため両 OS とも debug ビルドを使い、`WidgetsApp.debugAllowBannerOverride` で DEBUG 帯を消す。
-- リプレイは fixture の file URI を `ReplayNotifier.open` に渡し、停止してから指定時刻へシークする。`seek` は範囲外の時刻を端へ丸めるため、EQRP の範囲外を指定したシーンは失敗させる。`scenes.json` の時刻は実時刻（JST の場合は `+09:00` 付き）で書く。EQRP の時刻の扱いは [リプレイ再生](earthquake_replay.md) を参照する。
-- Live Activity はデバッグ用プリセットを撮影時刻基準で組み立てて開始する。テスト用の eventId は `【テスト】` 表示になるため使わない。
+- テストは起動前に SharedPreferences へ既読フラグ（オンボーディング・新機能案内・各種お知らせ）を書き、`AppBootstrap.run()` でアプリを起動する。
+  `AppBootstrap` が差し替える `FlutterError.onError` などはテスト終了前に戻す。
+- 表示の完了は Widget で待つ。リプレイは `ReplayStatusCard`（EEW のシーンは `EewCard` も）、地震詳細は `ValueKey(eventId)`。地図の描画は検出できないため、その後に一定時間待つ。
+- 地震詳細が `ErrorCard` になった場合は「詳細」を開いて `failure-<scene>.png` として撮り、要求先と応答をテストの失敗理由に出す。
+- 権限ダイアログは `$.platform.mobile.grantPermissionWhenInUse()` で許可する。iOS は端末の言語が英語のときだけ扱える（Patrol の制約）。
+- ロック画面相当の画像は、Live Activity を開始して `$.platform.mobile.openNotifications()` で通知センターを開いて撮る（iOS のみ）。
+- EQRP は CI で `app/assets/store_screenshot_fixtures/` へ復号してからビルドし、`rootBundle` で読む。このディレクトリは平文をコミットしない（`.gitignore`）。
+  リプレイは fixture を一時ファイルへ書き出して `ReplayNotifier.open` に渡し、停止してから指定時刻へシークする。`seek` は範囲外の時刻を端へ丸めるため、EQRP の範囲外はテストを失敗させる。
+- PR では fixture が無いシーンを飛ばし、タグでは `STORE_SCREENSHOT_REQUIRE_FIXTURES=true` で失敗させる。`STORE_SCREENSHOT_SCENES` で撮るシーンを絞れる。
+- Release ビルドは Simulator で動かないため debug ビルドで撮り、`WidgetsApp.debugAllowBannerOverride` で DEBUG 帯を消す。
 - ステータスバーは iOS が `simctl status_bar override`、Android が demo mode で 9:41 に固定する。
   Android の demo mode は起動直後に送ると反映されないことがあるため撮影ごとに送り直す。`network -e mobile hide` を送ると反映されなくなったため送らない。
-- ロック画面のシーン（`lock_screen_live_activity`）は `experimental` で、`--scenes` で指名したときだけ撮影する。
-  既定では撮影しないため、03 通知ページは合成されない。
-- 撮影に失敗したシーンは `failure-<scene>.png` を残す。アプリのログからエラー関連の行（`http-error`、`Status: 4xx/5xx` とその直後の行）だけをジョブログへ出す。
-  iOS の Flutter の出力は stdout ではなく unified logging に出るため `simctl spawn log show` で読む。
+- Patrol の iOS 実行には `RunnerUITests` ターゲット（`app/ios/RunnerUITests/RunnerUITests.m`、`FlutterGeneratedPluginSwiftPackage` をリンク、`User Script Sandboxing = NO`、スキームで並列実行なし）が必要。
+  Android は `MainActivityTest.java` と `PatrolJUnitRunner`・Test Orchestrator を使う。
 
 ## 検証状況
 
@@ -72,13 +75,13 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 - iOS: iPhone 18 Pro（iOS 27.2）で `earthquake_detail` を撮影。ただし画面は 403 のエラー表示（`FORBIDDEN`）で、同じ API の Android とは結果が異なる。原因は調査中。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
-- 未検証: リプレイのシーン（fixture 未投入）、ロック画面の撮影。残件は [TODO](../todo/850_store_screenshots.md)。
+- 上記は Patrol 移行前（host がアプリを起動し、アプリ内でシーンを切り替えていた構成）の結果。Patrol での撮影は未検証。
+- 未検証: リプレイのシーン（fixture 未投入）、通知センターでの Live Activity の撮影。残件は [TODO](../todo/850_store_screenshots.md)。
 
 ## 制約
 
 - simctl には壁紙の設定とロックの操作が無い（Xcode 27 の `simctl help` で確認）。壁紙は設定アプリの UI 操作が必要と考えられる。
-- Xcode 27 の runner には Simulator.app が無く、`Xcode.app/Contents/Applications/DeviceHub.app` がある。
-  ロックはこのアプリのメニュー操作を試す実装だが、メニュー名と runner の Accessibility 権限は未確認。
+- Xcode 27 の runner には Simulator.app が無く、`Xcode.app/Contents/Applications/DeviceHub.app` がある。ロック画面の代わりに通知センターを使う。
 - simctl で作れる端末はランタイムによって異なる。iOS 27.2 のランタイムが 2 つあり、片方では iPhone 18 Pro / 17 Pro が `Incompatible device` になった。
 - watchOS Simulator の Smart Stack には、ペアリングした iPhone Simulator の Live Activity が表示されないという報告が複数ある
   （[Developer Forums](https://developer.apple.com/forums/thread/759153)）。Apple は Smart Stack 表示の確認に Xcode Preview を案内している。
