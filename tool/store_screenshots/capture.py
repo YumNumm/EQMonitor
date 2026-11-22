@@ -55,6 +55,17 @@ def drop_scenes_without_fixtures(scenes: list[dict], fixtures: Path, allow_missi
     return [scene for scene in scenes if scene.get("fixture") not in missing]
 
 
+def find_simulator_app() -> Path:
+    xcode = Path(run("xcode-select", "-p", capture=True)).parents[1]
+    found = run("find", str(xcode), "-maxdepth", "6", "-name", "Simulator.app", "-type", "d", capture=True)
+    candidates = [Path(line) for line in found.splitlines()] + [Path("/Applications/Simulator.app")]
+    existing = next((path for path in candidates if path.is_dir()), None)
+    if existing is None:
+        raise CaptureError(f"Simulator.app was not found under {xcode} or /Applications")
+    print(f"using {existing}")
+    return existing
+
+
 class IosSimulator:
     def __init__(self, udid: str, bundle_id: str) -> None:
         self.udid = udid
@@ -63,8 +74,6 @@ class IosSimulator:
 
     def prepare(self, config: dict) -> None:
         run("xcrun", "simctl", "bootstatus", self.udid, "-b")
-        simulator_app = Path(run("xcode-select", "-p", capture=True)) / "Applications" / "Simulator.app"
-        run("open", "-a", str(simulator_app), "--args", "-CurrentDeviceUDID", self.udid)
         run("xcrun", "simctl", "ui", self.udid, "appearance", config["appearance"])
         run(
             "xcrun", "simctl", "status_bar", self.udid, "override",
@@ -109,6 +118,8 @@ class IosSimulator:
 
     def lock(self) -> None:
         # simctl にロック操作が無いため Simulator.app のメニューを操作する。runner に Accessibility 権限が必要。
+        run("open", "-a", str(find_simulator_app()), "--args", "-CurrentDeviceUDID", self.udid)
+        time.sleep(LOCK_SETTLE_SECONDS)
         run(
             "osascript",
             "-e", 'tell application "Simulator" to activate',
@@ -145,7 +156,6 @@ class AndroidEmulator:
             ["-e", "command", "clock", "-e", "hhmm", self.status_bar_time],
             ["-e", "command", "battery", "-e", "level", "100", "-e", "plugged", "false"],
             ["-e", "command", "network", "-e", "wifi", "show", "-e", "level", "4", "-e", "fully", "true"],
-            ["-e", "command", "network", "-e", "mobile", "hide"],
             ["-e", "command", "notifications", "-e", "visible", "false"],
         ):
             self.adb("shell", "am", "broadcast", "-a", "com.android.systemui.demo", *extras)
