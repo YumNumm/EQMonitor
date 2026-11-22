@@ -120,6 +120,7 @@ class AndroidEmulator:
     def __init__(self, serial: str, package: str) -> None:
         self.serial = serial
         self.package = package
+        self.status_bar_time = ""
 
     def adb(self, *args: str, capture: bool = False) -> str:
         return run("adb", "-s", self.serial, *args, capture=capture)
@@ -131,21 +132,22 @@ class AndroidEmulator:
         self.adb("wait-for-device")
         while self.adb("shell", "getprop", "sys.boot_completed", capture=True) != "1":
             time.sleep(POLL_SECONDS)
+        self.status_bar_time = config["statusBarTime"].replace(":", "").zfill(4)
         self.adb("shell", "settings", "put", "global", "sysui_demo_allowed", "1")
-        hhmm = config["statusBarTime"].replace(":", "").zfill(4)
-        for extras in (
-            ["-e", "command", "enter"],
-            ["-e", "command", "clock", "-e", "hhmm", hhmm],
-            ["-e", "command", "battery", "-e", "level", "100", "-e", "plugged", "false"],
-            ["-e", "command", "network", "-e", "wifi", "show", "-e", "level", "4", "-e", "fully", "true"],
-            ["-e", "command", "network", "-e", "mobile", "hide"],
-            ["-e", "command", "network", "-e", "nosim", "hide"],
-            ["-e", "command", "notifications", "-e", "visible", "false"],
-        ):
-            self.adb("shell", "am", "broadcast", "-a", "com.android.systemui.demo", *extras)
         self.adb("shell", "cmd", "uimode", "night", "yes" if config["appearance"] == "dark" else "no")
         location = config["location"]
         self.adb("emu", "geo", "fix", str(location["longitude"]), str(location["latitude"]))
+
+    def apply_demo_mode(self) -> None:
+        for extras in (
+            ["-e", "command", "enter"],
+            ["-e", "command", "clock", "-e", "hhmm", self.status_bar_time],
+            ["-e", "command", "battery", "-e", "level", "100", "-e", "plugged", "false"],
+            ["-e", "command", "network", "-e", "wifi", "show", "-e", "level", "4", "-e", "fully", "true"],
+            ["-e", "command", "network", "-e", "mobile", "hide"],
+            ["-e", "command", "notifications", "-e", "visible", "false"],
+        ):
+            self.adb("shell", "am", "broadcast", "-a", "com.android.systemui.demo", *extras)
 
     def install(self, app: Path) -> None:
         self.adb("install", "-r", "-g", str(app))
@@ -178,6 +180,9 @@ class AndroidEmulator:
         self.adb("shell", "monkey", "-p", self.package, "-c", "android.intent.category.LAUNCHER", "1")
 
     def screenshot(self, destination: Path) -> None:
+        # 起動直後や SystemUI の再起動で demo mode が外れるため、撮影ごとに適用し直す。
+        self.apply_demo_mode()
+        time.sleep(POLL_SECONDS)
         with destination.open("wb") as file:
             subprocess.run(["adb", "-s", self.serial, "exec-out", "screencap", "-p"], check=True, stdout=file)
 
