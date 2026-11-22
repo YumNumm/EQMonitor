@@ -57,7 +57,8 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       (previous, next) {
         if (next == AppLifecycleState.resumed &&
             previous != null &&
-            previous != AppLifecycleState.resumed) {
+            previous != AppLifecycleState.resumed &&
+            !ref.read(isReplayModeProvider)) {
           ref.invalidate(kyoshinMonitorProvider, asReload: true);
         }
       },
@@ -331,7 +332,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
 
   /// リプレイ再生で解析済みの観測点 GeoJSON を表示状態へ反映する。
   void setReplay({
-    required String geoJson,
+    required String? geoJson,
     required DateTime targetTime,
     int? analyzedPointsCount,
   }) {
