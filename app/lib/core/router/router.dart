@@ -19,6 +19,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_activity_page
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/page/earthquake_history_search_page.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_creation_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_open_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
@@ -403,6 +404,7 @@ class const TalkerRoute()
         TypedGoRoute<DebugSharedPreferencesRoute>(path: 'shared-preferences'),
         TypedGoRoute<DebugSecureStorageRoute>(path: 'secure-storage'),
         TypedGoRoute<DebugHttpCacheRoute>(path: 'http-cache'),
+        TypedGoRoute<DebugReplayCreationRoute>(path: 'replay-creation'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
         TypedGoRoute<DebugTelemetryRoute>(path: 'telemetry'),
       ],
@@ -806,6 +808,15 @@ class const DebugHttpCacheRoute()
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugHttpCachePage();
+  }
+}
+
+class const DebugReplayCreationRoute()
+    extends GoRouteData
+    with $DebugReplayCreationRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ReplayCreationPage();
   }
 }
 
