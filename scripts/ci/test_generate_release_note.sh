@@ -112,18 +112,18 @@ if [ "$1" = builds ] && [ "$2" = list ]; then
 	exit 0
 fi
 if [ "$1" = builds ] && [ "$2" = test-notes ] && [ "$3" = list ]; then
-	build_number=
+	build_id=
 	shift 3
 	while [ $# -gt 0 ]; do
 		case "$1" in
-		--build-number)
-			build_number=$2
+		--build-id)
+			build_id=$2
 			shift 2
 			;;
 		*) shift ;;
 		esac
 	done
-	var="FAKE_ASC_NOTES_${build_number}"
+	var="FAKE_ASC_NOTES_${build_id}"
 	notes_json=${!var:-}
 	if [ -z "$notes_json" ]; then
 		exit 1
@@ -144,8 +144,8 @@ BASE=$(git -C "$REPO" rev-parse HEAD)
 git -C "$REPO" commit --allow-empty -m 'feat: ios change (#7)' -q
 FAKE_ASC_DIR=$(new_fake_asc)
 OUT="$REPO/ios-resolved.txt"
-FAKE_ASC_BUILDS_JSON='{"data":[{"attributes":{"version":"200"}}]}' \
-	FAKE_ASC_NOTES_200="{\"data\":[{\"attributes\":{\"whatToTest\":\"前回の配信から変更はありません。\\n\\nrev: ${BASE}\"}}]}" \
+FAKE_ASC_BUILDS_JSON='{"data":[{"id":"b200","attributes":{"version":"200"}}]}' \
+	FAKE_ASC_NOTES_b200="{\"data\":[{\"attributes\":{\"whatsNew\":\"前回の配信から変更はありません。\\n\\nrev: ${BASE}\"}}]}" \
 	ASC_BIN="$FAKE_ASC_DIR/asc" \
 	run_gen "$REPO" ios "$OUT"
 
@@ -159,9 +159,9 @@ BASE=$(git -C "$REPO" rev-parse HEAD)
 git -C "$REPO" commit --allow-empty -m 'fix: follow-up (#8)' -q
 FAKE_ASC_DIR=$(new_fake_asc)
 OUT="$REPO/ios-skip-missing.txt"
-FAKE_ASC_BUILDS_JSON='{"data":[{"attributes":{"version":"201"}},{"attributes":{"version":"200"}}]}' \
-	FAKE_ASC_NOTES_201='{"data":[{"attributes":{"whatToTest":"rev: 0000000000000000000000000000000000000000"}}]}' \
-	FAKE_ASC_NOTES_200="{\"data\":[{\"attributes\":{\"whatToTest\":\"rev: ${BASE}\"}}]}" \
+FAKE_ASC_BUILDS_JSON='{"data":[{"id":"b201","attributes":{"version":"201"}},{"id":"b200","attributes":{"version":"200"}}]}' \
+	FAKE_ASC_NOTES_b201='{"data":[{"attributes":{"whatsNew":"rev: 0000000000000000000000000000000000000000"}}]}' \
+	FAKE_ASC_NOTES_b200="{\"data\":[{\"attributes\":{\"whatsNew\":\"rev: ${BASE}\"}}]}" \
 	ASC_BIN="$FAKE_ASC_DIR/asc" \
 	run_gen "$REPO" ios "$OUT"
 
