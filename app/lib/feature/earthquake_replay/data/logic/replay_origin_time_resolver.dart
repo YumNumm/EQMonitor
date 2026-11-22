@@ -13,14 +13,20 @@ ReplayOriginTimeResolver replayOriginTimeResolver(Ref ref) =>
 class const ReplayOriginTimeResolver() {
   DateTime? resolve(List<ReplayData> frames) {
     for (final frame in frames.whereType<EqMonitorEewReplayData>()) {
+      // 読めない EEW フレームは再生時にも読み飛ばす。形式の誤りだけを対象にする。
       try {
-        final originTime = EewItemWithRelations.fromJson(
-          jsonDecode(frame.json) as Map<String, dynamic>,
-        ).originTime;
+        final decoded = jsonDecode(frame.json);
+        final originTime = decoded is Map<String, dynamic>
+            ? EewItemWithRelations.fromJson(decoded).originTime
+            : null;
         if (originTime != null) {
           return originTime.toUtc();
         }
-      } on Object {
+      } on FormatException {
+        continue;
+      } on TypeError {
+        continue;
+      } on ArgumentError {
         continue;
       }
     }
