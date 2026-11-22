@@ -10,14 +10,14 @@
 
 ## 850: Simulator / Emulator での撮影の確認
 
-- [ ] `capture-ios` / `capture-android` が起動から `done` まで進むことを確認する。初回起動で出るダイアログや権限要求の有無は未確認。
+- [ ] iOS の `earthquake_detail` が 403（応答本文 `{"error": "FORBIDDEN"}` と推察）になる原因を特定する。Android では同じ API が表示される。エラー表示自体の改善は #2059。
 - [ ] `eew_warning`（16:11:08）・`kyoshin_monitor`（16:10:21）が Figma の 01・04 と同じ状態（EEW カード、推定震度、ボトムシート）になるか確認し、時刻と `settle_milliseconds` を調整する。
 - [ ] `earthquake_detail` で戻るボタン以外のデバッグ用アイコンが出ないことを確認する。
 - 完了条件: 合成済みの 4 ページが Figma の構成と一致する。
 
 ## 800: ロック画面の撮影と壁紙
 
-- [ ] `osascript` による Simulator のロックが GitHub の macOS runner で動くか確認する。動かない場合は XCUITest のロック操作などを検討する。
+- [ ] ロックの手段を決める。Xcode 27 では Simulator.app が DeviceHub.app に置き換わり、simctl にもロックが無い。DeviceHub.app のメニュー操作（Accessibility 権限が必要）か、XCUITest の `pressLockButton` を検討する。決まったら `lock_screen_live_activity` の `experimental` を外す。
 - [ ] 壁紙の設定手段を決める。simctl に手段が無いため、設定アプリの UI 操作または別方式の調査が必要。
 - 完了条件: 03 通知ページが壁紙付きのロック画面と Live Activity で合成される。
 

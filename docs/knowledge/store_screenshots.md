@@ -1,7 +1,7 @@
 # ストア画像の自動生成
 
 2026-11-22 作成。正本は `tool/store_screenshots/` と `.github/workflows/store-screenshots.yaml`。
-iOS Simulator・Android Emulator での撮影と合成は CI で未検証（下記「検証状況」）。
+撮影は PR の CI で地震詳細まで確認済み。リプレイとロック画面のシーンは未確認（下記「検証状況」）。
 
 ## 全体の流れ
 
@@ -58,17 +58,28 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 - リプレイは fixture の file URI を `ReplayNotifier.open` に渡し、停止してから指定時刻へシークする。`seek` は範囲外の時刻を端へ丸めるため、EQRP の範囲外を指定したシーンは失敗させる。`scenes.json` の時刻は実時刻（JST の場合は `+09:00` 付き）で書く。EQRP の時刻の扱いは [リプレイ再生](earthquake_replay.md) を参照する。
 - Live Activity はデバッグ用プリセットを撮影時刻基準で組み立てて開始する。テスト用の eventId は `【テスト】` 表示になるため使わない。
 - ステータスバーは iOS が `simctl status_bar override`、Android が demo mode で 9:41 に固定する。
+  Android の demo mode は起動直後に送ると反映されないことがあるため撮影ごとに送り直す。`network -e mobile hide` を送ると反映されなくなったため送らない。
+- ロック画面のシーン（`lock_screen_live_activity`）は `experimental` で、`--scenes` で指名したときだけ撮影する。
+  既定では撮影しないため、03 通知ページは合成されない。
+- 撮影に失敗したシーンは `failure-<scene>.png` を残す。アプリのログからエラー関連の行（`http-error`、`Status: 4xx/5xx` とその直後の行）だけをジョブログへ出す。
+  iOS の Flutter の出力は stdout ではなく unified logging に出るため `simctl spawn log show` で読む。
 
 ## 検証状況
 
+2026-11-22 の PR の CI（fixture なし）で確認した結果。
+
+- Android: Pixel 6（API 35）で `earthquake_detail` を撮影。震度分布の描画には 10 秒では足りず、30 秒の待機で表示された。
+- iOS: iPhone 18 Pro（iOS 27.2）で `earthquake_detail` を撮影。ただし画面は 403 のエラー表示（`FORBIDDEN`）で、同じ API の Android とは結果が異なる。原因は調査中。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
-- 未検証: Simulator / Emulator 上の起動・撮影、ロック画面の撮影（`osascript` で Simulator.app の `Device > Lock` を押す。
-  runner の Accessibility 権限に依存）、EQRP の指定時刻での表示内容。残件は [TODO](../todo/850_store_screenshots.md)。
+- 未検証: リプレイのシーン（fixture 未投入）、ロック画面の撮影。残件は [TODO](../todo/850_store_screenshots.md)。
 
 ## 制約
 
-- simctl には壁紙の設定とロックの操作が無い。壁紙は設定アプリの UI 操作が必要と考えられる。
+- simctl には壁紙の設定とロックの操作が無い（Xcode 27 の `simctl help` で確認）。壁紙は設定アプリの UI 操作が必要と考えられる。
+- Xcode 27 の runner には Simulator.app が無く、`Xcode.app/Contents/Applications/DeviceHub.app` がある。
+  ロックはこのアプリのメニュー操作を試す実装だが、メニュー名と runner の Accessibility 権限は未確認。
+- simctl で作れる端末はランタイムによって異なる。iOS 27.2 のランタイムが 2 つあり、片方では iPhone 18 Pro / 17 Pro が `Incompatible device` になった。
 - watchOS Simulator の Smart Stack には、ペアリングした iPhone Simulator の Live Activity が表示されないという報告が複数ある
   （[Developer Forums](https://developer.apple.com/forums/thread/759153)）。Apple は Smart Stack 表示の確認に Xcode Preview を案内している。
 - Google Play のスクリーンショットは長辺が短辺の 2 倍以下である必要があり、iOS の 1290×2796 の背景をそのまま使えない。
