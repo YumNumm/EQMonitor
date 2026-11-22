@@ -114,6 +114,7 @@ class const _EewSourceMetrics({
 }) extends StatelessWidget {
   static const _size = 28.0;
   static const _compactSize = 77.23 / 3;
+  static const _lowPrecisionAlpha = 0.5;
 
   @override
   Widget build(BuildContext context) {
@@ -127,91 +128,118 @@ class const _EewSourceMetrics({
       (_, _, true) => '低精度',
       _ => null,
     };
-    if (detectionMethodLabel != null) {
-      return Padding(
-        padding: const EdgeInsets.all(4),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(color: colors.primary.withValues(alpha: 0.5)),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-            child: Text(
-              detectionMethodLabel,
-              style: EewCardFlexTextStyle(
-                size: 12,
-                weight: .w700,
-                color: colors.primary,
-              ).copyWith(height: 14 / 12),
-            ),
-          ),
-        ),
-      );
+    final badge = detectionMethodLabel == null
+        ? null
+        : _EewDetectionMethodBadge(
+            label: detectionMethodLabel,
+            color: colors.primary,
+          );
+    // PLUM法・レベル法の震源要素は仮定値のため表示しない。
+    if (eew.isPlum || eew.isLevelMethod) {
+      return Padding(padding: const EdgeInsets.all(4), child: badge);
     }
 
     final size = isCompact ? _compactSize : _size;
-    final depth = eew.hypocenter?.depth;
+    final hypocenter = eew.hypocenter;
+    final depth = hypocenter?.depth;
+    final magnitudeParts = hypocenter?.magnitude?.toStringAsFixed(1).split('.');
+    if (magnitudeParts == null && depth == null) {
+      return Padding(padding: const EdgeInsets.all(4), child: badge);
+    }
+
+    final valueColor = eew.isOnePointDetection
+        ? colors.primary.withValues(alpha: _lowPrecisionAlpha)
+        : colors.primary;
     final labelStyle = EewCardFlexTextStyle(
       size: size * 0.44,
       weight: .w500,
-      color: colors.primary,
+      color: valueColor,
     );
     final valueStyle = EewCardCodeTextStyle(
       size: size,
       weight: .w700,
-      color: colors.primary,
+      color: valueColor,
     );
-    final magnitudeParts = eew.hypocenter?.magnitude
-        ?.toStringAsFixed(1)
-        .split('.');
 
     return FittedBox(
       fit: .scaleDown,
       alignment: .centerLeft,
-      child: Text.rich(
-        TextSpan(
-          children: [
-            if (magnitudeParts != null) ...[
-              TextSpan(text: 'M', style: labelStyle),
-              // 等幅フォントの小数点は1文字分の幅を取るため、小数点の前後だけを詰める。
-              TextSpan(
-                text: '${magnitudeParts.first}.',
-                style: valueStyle.copyWith(letterSpacing: size * -0.14),
-              ),
-              TextSpan(text: magnitudeParts.last, style: valueStyle),
-            ],
-            if (magnitudeParts != null && depth != null)
-              TextSpan(
-                text: '  ',
-                style: EewCardFlexTextStyle(
-                  size: 18,
-                  weight: .w400,
-                  color: colors.primary,
-                ),
-              ),
-            if (depth != null) ...[
-              TextSpan(text: '深さ ', style: labelStyle),
-              if (depth == 0)
-                TextSpan(
-                  text: 'ごく浅い',
-                  style: EewCardFlexTextStyle(
-                    size: size,
-                    weight: .w700,
-                    color: colors.primary,
+      child: Row(
+        mainAxisSize: .min,
+        spacing: 8,
+        children: [
+          Text.rich(
+            TextSpan(
+              children: [
+                if (magnitudeParts != null) ...[
+                  TextSpan(text: 'M', style: labelStyle),
+                  // 等幅フォントの小数点は1文字分の幅を取るため、小数点の前後だけを詰める。
+                  TextSpan(
+                    text: '${magnitudeParts.first}.',
+                    style: valueStyle.copyWith(letterSpacing: size * -0.14),
                   ),
-                )
-              else ...[
-                TextSpan(text: '$depth', style: valueStyle),
-                TextSpan(
-                  text: depth == 700 ? 'km以上' : 'km',
-                  style: labelStyle,
-                ),
+                  TextSpan(text: magnitudeParts.last, style: valueStyle),
+                ],
+                if (magnitudeParts != null && depth != null)
+                  TextSpan(
+                    text: '  ',
+                    style: EewCardFlexTextStyle(
+                      size: 18,
+                      weight: .w400,
+                      color: valueColor,
+                    ),
+                  ),
+                if (depth != null) ...[
+                  TextSpan(text: '深さ ', style: labelStyle),
+                  if (depth == 0)
+                    TextSpan(
+                      text: 'ごく浅い',
+                      style: EewCardFlexTextStyle(
+                        size: size,
+                        weight: .w700,
+                        color: valueColor,
+                      ),
+                    )
+                  else ...[
+                    TextSpan(text: '$depth', style: valueStyle),
+                    TextSpan(
+                      text: depth == 700 ? 'km以上' : 'km',
+                      style: labelStyle,
+                    ),
+                  ],
+                ],
               ],
-            ],
-          ],
+            ),
+            maxLines: 1,
+          ),
+          ?badge,
+        ],
+      ),
+    );
+  }
+}
+
+class const _EewDetectionMethodBadge({
+  required final String label,
+  required final Color color,
+}) extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: color.withValues(alpha: 0.5)),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+        child: Text(
+          label,
+          style: EewCardFlexTextStyle(
+            size: 12,
+            weight: .w700,
+            color: color,
+          ).copyWith(height: 14 / 12),
         ),
-        maxLines: 1,
       ),
     );
   }
