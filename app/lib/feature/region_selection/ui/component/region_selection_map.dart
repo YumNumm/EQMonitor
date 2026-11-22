@@ -161,8 +161,8 @@ class const RegionSelectionMap({
             onStyleLoaded: (_) {
               styleLoaded.value = true;
             },
-            onEvent: (event) {
-              if (event is! MapEventClick || !ready.value) {
+            onClick: (event) {
+              if (!ready.value) {
                 return;
               }
               final map = controller.value;

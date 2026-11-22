@@ -216,42 +216,45 @@ class const EewSimulationPsWaveLayer({super.key}) extends HookConsumerWidget {
   Future<void> _initializeLayers(StyleController styleController) async {
     await _removeLayers(styleController);
     await (
-      styleController.addSource(
-        const GeoJsonSource(id: _pWaveSourceId, data: _emptyGeoJson),
+      styleController.sources.add(
+        const GeoJsonSource.data(
+          id: _pWaveSourceId,
+          data: .text(_emptyGeoJson),
+        ),
       ),
-      styleController.addSource(
-        const GeoJsonSource(id: _sWaveSourceId, data: _emptyGeoJson),
+      styleController.sources.add(
+        const GeoJsonSource.data(
+          id: _sWaveSourceId,
+          data: .text(_emptyGeoJson),
+        ),
       ),
     ).wait;
 
     await (
-      styleController.addLayer(
-        const LineStyleLayer(
+      styleController.layers.add(
+        LineStyleLayer(
           id: _pWaveLayerId,
           sourceId: _pWaveSourceId,
-          paint: {'line-color': '#0000FF', 'line-width': 1},
+          color: const .literal(Color(0xFF0000FF)),
+          width: const .literal(1),
         ),
         belowLayerId: BaseLayer.waveLineAnchor.name,
       ),
-      styleController.addLayer(
-        const LineStyleLayer(
+      styleController.layers.add(
+        LineStyleLayer(
           id: _sWaveLayerId,
           sourceId: _sWaveSourceId,
-          paint: {
-            'line-color': ['get', 'lineColor'],
-            'line-width': 2,
-          },
+          color: const .raw(['get', 'lineColor']),
+          width: const .literal(2),
         ),
         belowLayerId: BaseLayer.waveLineAnchor.name,
       ),
-      styleController.addLayer(
-        const FillStyleLayer(
+      styleController.layers.add(
+        FillStyleLayer(
           id: _sWaveFillLayerId,
           sourceId: _sWaveSourceId,
-          paint: {
-            'fill-color': ['get', 'fillColor'],
-            'fill-opacity': 0.1,
-          },
+          color: const .raw(['get', 'fillColor']),
+          opacity: const .literal(0.1),
         ),
         belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
       ),
@@ -261,14 +264,14 @@ class const EewSimulationPsWaveLayer({super.key}) extends HookConsumerWidget {
   Future<void> _removeLayers(StyleController styleController) async {
     for (final layerId in [_pWaveLayerId, _sWaveLayerId, _sWaveFillLayerId]) {
       try {
-        await styleController.removeLayer(layerId);
+        await styleController.layers.remove(layerId);
       } on Exception {
         // ignore
       }
     }
     for (final sourceId in [_pWaveSourceId, _sWaveSourceId]) {
       try {
-        await styleController.removeSource(sourceId);
+        await styleController.sources.remove(sourceId);
       } on Exception {
         // ignore
       }
@@ -299,9 +302,9 @@ class const EewSimulationPsWaveLayer({super.key}) extends HookConsumerWidget {
 
     if (shouldUpdateP) {
       try {
-        await styleController.updateGeoJsonSource(
-          id: _pWaveSourceId,
-          data: pWaveGeoJson,
+        await styleController.sources.updateGeoJsonData(
+          _pWaveSourceId,
+          .text(pWaveGeoJson),
         );
         latestP.value = pWaveGeoJson;
       } catch (e, stackTrace) {
@@ -313,9 +316,9 @@ class const EewSimulationPsWaveLayer({super.key}) extends HookConsumerWidget {
     }
     if (shouldUpdateS) {
       try {
-        await styleController.updateGeoJsonSource(
-          id: _sWaveSourceId,
-          data: sWaveGeoJson,
+        await styleController.sources.updateGeoJsonData(
+          _sWaveSourceId,
+          .text(sWaveGeoJson),
         );
         latestS.value = sWaveGeoJson;
       } catch (e, stackTrace) {

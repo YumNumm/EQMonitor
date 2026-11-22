@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:eqmonitor/core/provider/clock/replay_clock_progress.dart';
 import 'package:eqmonitor/core/provider/clock/time_mode.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,7 +24,8 @@ class AppClock extends _$AppClock {
     return switch (state) {
       RealtimeTimeMode() => now,
       TimeShiftTimeMode(:final offset) => now.add(offset),
-      ReplayTimeMode(:final currentTime) => currentTime,
+      ReplayTimeMode(:final currentTime) =>
+        ref.read(replayClockProgressProvider).positionFrom(currentTime),
     };
   }
 
@@ -36,6 +38,7 @@ class AppClock extends _$AppClock {
 
   /// リプレイファイル再生へ切り替える。
   void enterReplay(DateTime currentTime) {
+    ref.read(replayClockProgressProvider).restart(rate: 0, limit: null);
     final previous = state;
     state = TimeMode.replay(currentTime: currentTime);
     if (state == previous) {
@@ -44,10 +47,18 @@ class AppClock extends _$AppClock {
   }
 
   /// リプレイ再生中の再生位置を更新する。リプレイ中でない場合は何もしない。
-  void updateReplayTime(DateTime currentTime) {
-    if (state is ReplayTimeMode) {
-      state = TimeMode.replay(currentTime: currentTime);
+  ///
+  /// 次の更新までは [rate] 倍の速さで [limit] まで進んだ時刻を [now] が返す。
+  void updateReplayTime(
+    DateTime currentTime, {
+    double rate = 0,
+    DateTime? limit,
+  }) {
+    if (state is! ReplayTimeMode) {
+      return;
     }
+    ref.read(replayClockProgressProvider).restart(rate: rate, limit: limit);
+    state = TimeMode.replay(currentTime: currentTime);
   }
 }
 

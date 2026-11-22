@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
 import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:maplibre/maplibre.dart';
@@ -7,15 +8,16 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'camera_update_matcher.dart';
 import 'map_automatic_focus_controller_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<MapController>()])
 void main() {
-  const bounds = LngLatBounds(
-    longitudeWest: 139,
-    longitudeEast: 140,
-    latitudeSouth: 35,
-    latitudeNorth: 36,
+  const bounds = MapCameraBounds(
+    west: 139,
+    east: 140,
+    south: 35,
+    north: 36,
   );
 
   group('mapAutomaticFocusTargetForBounds', () {
@@ -33,11 +35,11 @@ void main() {
     });
 
     test('広いboundsはviewportへ収まるzoom上限未満のtargetになる', () {
-      const wideBounds = LngLatBounds(
-        longitudeWest: 122.5,
-        longitudeEast: 146,
-        latitudeSouth: 24,
-        latitudeNorth: 46,
+      const wideBounds = MapCameraBounds(
+        west: 122.5,
+        east: 146,
+        south: 24,
+        north: 46,
       );
 
       final target = MapAutomaticFocusController.targetForBounds(
@@ -55,15 +57,13 @@ void main() {
       }
       final worldSize = 512 * math.pow(2, zoom);
       final longitudeSpanPixels =
-          (wideBounds.longitudeEast - wideBounds.longitudeWest) /
-          360 *
-          worldSize;
+          (wideBounds.east - wideBounds.west) / 360 * worldSize;
       final latitudeSpanPixels =
           (MapAutomaticFocusController.mercatorY(
-                    latitude: wideBounds.latitudeNorth,
+                    latitude: wideBounds.north,
                   ) -
                   MapAutomaticFocusController.mercatorY(
-                    latitude: wideBounds.latitudeSouth,
+                    latitude: wideBounds.south,
                   ))
               .abs() /
           (2 * math.pi) *
@@ -94,11 +94,11 @@ void main() {
 
     test('緯度にNaNを含むboundsはtargetを作らない', () {
       final target = MapAutomaticFocusController.targetForBounds(
-        bounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: double.nan,
-          latitudeNorth: 36,
+        bounds: const MapCameraBounds(
+          west: 139,
+          east: 140,
+          south: double.nan,
+          north: 36,
         ),
         viewportSize: const Size(375, 667),
         padding: EdgeInsets.zero,
@@ -113,11 +113,11 @@ void main() {
         double.infinity,
       ]) {
         final target = MapAutomaticFocusController.targetForBounds(
-          bounds: LngLatBounds(
-            longitudeWest: 139,
-            longitudeEast: 140,
-            latitudeSouth: 35,
-            latitudeNorth: invalidLatitude,
+          bounds: MapCameraBounds(
+            west: 139,
+            east: 140,
+            south: 35,
+            north: invalidLatitude,
           ),
           viewportSize: const Size(375, 667),
           padding: EdgeInsets.zero,
@@ -129,11 +129,11 @@ void main() {
 
     test('南端緯度が北端緯度を超えるboundsはtargetを作らない', () {
       final target = MapAutomaticFocusController.targetForBounds(
-        bounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: 36,
-          latitudeNorth: 35,
+        bounds: const MapCameraBounds(
+          west: 139,
+          east: 140,
+          south: 36,
+          north: 35,
         ),
         viewportSize: const Size(375, 667),
         padding: EdgeInsets.zero,
@@ -145,20 +145,20 @@ void main() {
     for (final (:name, :invalidBounds) in [
       (
         name: '南端緯度が-90未満',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: -90.1,
-          latitudeNorth: 35,
+        invalidBounds: const MapCameraBounds(
+          west: 139,
+          east: 140,
+          south: -90.1,
+          north: 35,
         ),
       ),
       (
         name: '北端緯度が90超',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: 35,
-          latitudeNorth: 90.1,
+        invalidBounds: const MapCameraBounds(
+          west: 139,
+          east: 140,
+          south: 35,
+          north: 90.1,
         ),
       ),
     ]) {
@@ -176,29 +176,29 @@ void main() {
     for (final (:name, :invalidBounds) in [
       (
         name: '西端経度が-180未満',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: -180.1,
-          longitudeEast: 140,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        invalidBounds: const MapCameraBounds(
+          west: -180.1,
+          east: 140,
+          south: 35,
+          north: 36,
         ),
       ),
       (
         name: '東端経度が180超',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 180.1,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        invalidBounds: const MapCameraBounds(
+          west: 139,
+          east: 180.1,
+          south: 35,
+          north: 36,
         ),
       ),
       (
         name: '経度が非有限',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: double.nan,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        invalidBounds: const MapCameraBounds(
+          west: 139,
+          east: double.nan,
+          south: 35,
+          north: 36,
         ),
       ),
     ]) {
@@ -215,11 +215,11 @@ void main() {
 
     test('日付変更線を横断する有効boundsはtargetを作る', () {
       final target = MapAutomaticFocusController.targetForBounds(
-        bounds: const LngLatBounds(
-          longitudeWest: 170,
-          longitudeEast: -170,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        bounds: const MapCameraBounds(
+          west: 170,
+          east: -170,
+          south: 35,
+          north: 36,
         ),
         viewportSize: const Size(375, 667),
         padding: EdgeInsets.zero,
@@ -235,16 +235,10 @@ void main() {
       final controller = MockMapController();
       when(
         controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
+          any,
+          animation: anyNamed('animation'),
         ),
-      ).thenAnswer((_) async {});
+      ).thenAnswer((_) async => CameraAnimationResult.completed);
 
       final result = await const MapAutomaticFocusController().fit(
         controller: controller,
@@ -256,11 +250,17 @@ void main() {
       expect(result, isTrue);
       verify(
         controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: mapAutomaticFocusMaxZoom,
-          bearing: 0,
-          pitch: 0,
-          nativeDuration: const Duration(milliseconds: 500),
+          argThat(
+            isCameraPositionUpdate(
+              zoom: mapAutomaticFocusMaxZoom,
+              bearing: 0,
+              pitch: 0,
+              padding: EdgeInsets.zero,
+            ),
+          ),
+          animation: const CameraAnimation.fly(
+            duration: Duration(milliseconds: 500),
+          ),
         ),
       ).called(1);
       verifyNoMoreInteractions(controller);
@@ -321,11 +321,11 @@ void main() {
       ]) {
         final result = await const MapAutomaticFocusController().fit(
           controller: controller,
-          bounds: LngLatBounds(
-            longitudeWest: 139,
-            longitudeEast: 140,
-            latitudeSouth: 35,
-            latitudeNorth: invalidLatitude,
+          bounds: MapCameraBounds(
+            west: 139,
+            east: 140,
+            south: 35,
+            north: invalidLatitude,
           ),
           viewportSize: const Size(375, 667),
           isCurrent: () => true,
@@ -339,38 +339,38 @@ void main() {
     for (final (:name, :invalidBounds) in [
       (
         name: '南北緯度が逆転した',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: 36,
-          latitudeNorth: 35,
+        invalidBounds: const MapCameraBounds(
+          west: 139,
+          east: 140,
+          south: 36,
+          north: 35,
         ),
       ),
       (
         name: '緯度が範囲外の',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: -91,
-          latitudeNorth: 35,
+        invalidBounds: const MapCameraBounds(
+          west: 139,
+          east: 140,
+          south: -91,
+          north: 35,
         ),
       ),
       (
         name: '経度が範囲外の',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 181,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        invalidBounds: const MapCameraBounds(
+          west: 139,
+          east: 181,
+          south: 35,
+          north: 36,
         ),
       ),
       (
         name: '経度が非有限の',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: double.infinity,
-          longitudeEast: 140,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        invalidBounds: const MapCameraBounds(
+          west: double.infinity,
+          east: 140,
+          south: 35,
+          north: 36,
         ),
       ),
     ]) {
@@ -393,24 +393,18 @@ void main() {
       final controller = MockMapController();
       when(
         controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
+          any,
+          animation: anyNamed('animation'),
         ),
-      ).thenAnswer((_) async {});
+      ).thenAnswer((_) async => CameraAnimationResult.completed);
 
       final result = await const MapAutomaticFocusController().fit(
         controller: controller,
-        bounds: const LngLatBounds(
-          longitudeWest: 170,
-          longitudeEast: -170,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        bounds: const MapCameraBounds(
+          west: 170,
+          east: -170,
+          south: 35,
+          north: 36,
         ),
         viewportSize: const Size(375, 667),
         isCurrent: () => true,
@@ -420,15 +414,20 @@ void main() {
       final center =
           verify(
                 controller.animateCamera(
-                  center: captureAnyNamed('center'),
-                  zoom: anyNamed('zoom'),
-                  bearing: 0,
-                  pitch: 0,
-                  nativeDuration: const Duration(milliseconds: 500),
+                  captureThat(
+                    isCameraPositionUpdate(
+                      bearing: 0,
+                      pitch: 0,
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+                  animation: const CameraAnimation.fly(
+                    duration: Duration(milliseconds: 500),
+                  ),
                 ),
               ).captured.single
-              as Geographic;
-      expect(center.lon, 180);
+              as CameraUpdatePosition;
+      expect(center.center?.lon, 180);
       verifyNoMoreInteractions(controller);
     });
   });

@@ -86,10 +86,10 @@ class const EarthquakeHistoryStationIntensityLayer({
         if (lifecycleToken.value != token) {
           return;
         }
-        await styleController.addSource(
-          const GeoJsonSource(
+        await styleController.sources.add(
+          const GeoJsonSource.data(
             id: EarthquakeHistoryStationIntensityLayerBuilder.sourceId,
-            data: '{"type":"FeatureCollection","features":[]}',
+            data: .text('{"type":"FeatureCollection","features":[]}'),
           ),
         );
         final cachedIconData = latestIconData.value;
@@ -106,7 +106,7 @@ class const EarthquakeHistoryStationIntensityLayer({
           showStationLabel: latestShowStationLabel.value,
           hasIcon: latestIconData.value != null,
         )) {
-          await styleController.addLayer(
+          await styleController.layers.add(
             layer,
             belowLayerId: latestBelowLayerId.value,
           );
@@ -202,7 +202,10 @@ class const EarthquakeHistoryStationIntensityLayer({
               showStationLabel: showStationLabel,
               hasIcon: iconData != null,
             )) {
-              await styleController.addLayer(layer, belowLayerId: belowLayerId);
+              await styleController.layers.add(
+                layer,
+                belowLayerId: belowLayerId,
+              );
             }
             latestLayerConfiguration.value = configuration;
           }),
@@ -377,26 +380,26 @@ class const EarthquakeHistoryStationIntensityLayerBuilder() {
       id: iconLayerId,
       sourceId: sourceId,
       minZoom: parameter.stationMinZoom,
-      layout: {
-        'icon-image': const StationIconImageExpressionBuilder().build(
+      iconImage: .raw(
+        const StationIconImageExpressionBuilder().build(
           stationDisplayMode: stationDisplayMode,
           stationTextZoom: parameter.stationTextZoom,
         ),
-        'icon-allow-overlap': true,
-        'icon-ignore-placement': true,
-        'symbol-sort-key': ['get', 'sortKey'],
-        'icon-size': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          3,
-          parameter.stationIconSizeMin,
-          7,
-          parameter.stationIconSizeMid,
-          20,
-          parameter.stationIconSizeMax,
-        ],
-      },
+      ),
+      iconAllowOverlap: const .literal(true),
+      iconIgnorePlacement: const .literal(true),
+      sortKey: const .raw(['get', 'sortKey']),
+      iconSize: .raw([
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        3,
+        parameter.stationIconSizeMin,
+        7,
+        parameter.stationIconSizeMid,
+        20,
+        parameter.stationIconSizeMax,
+      ]),
     );
   }
 
@@ -407,19 +410,15 @@ class const EarthquakeHistoryStationIntensityLayerBuilder() {
       id: labelLayerId,
       sourceId: sourceId,
       minZoom: parameter.stationLabelMinZoom,
-      layout: {
-        'text-field': ['get', 'name'],
-        'text-size': 10,
-        'text-offset': [0, 1.2],
-        'text-anchor': 'top',
-        'text-allow-overlap': false,
-        'text-ignore-placement': true,
-      },
-      paint: {
-        'text-color': '#ffffff',
-        'text-halo-color': '#000000',
-        'text-halo-width': 1,
-      },
+      textField: const .raw(['get', 'name']),
+      textSize: const .literal(10),
+      textOffset: const .literal(Offset(0, 1.2)),
+      textAnchor: const .literal(.top),
+      textAllowOverlap: const .literal(false),
+      textIgnorePlacement: const .literal(true),
+      textColor: const .literal(Color(0xFFFFFFFF)),
+      textHaloColor: const .literal(Color(0xFF000000)),
+      textHaloWidth: const .literal(1),
     );
   }
 }
