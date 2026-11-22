@@ -31,20 +31,22 @@ class const ShindoDbHypocenterInformationCard({
         : Colors.grey;
     final cardColor = cardBackgroundColor.withValues(alpha: 0.3);
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8)
-          .add(const EdgeInsets.only(bottom: 4)),
-      elevation: 0,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: cardBackgroundColor, width: 0),
-      ),
-      color: cardColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Column(
-          children: [
-            Row(
+    const margin = EdgeInsets.only(left: 8, right: 8, bottom: 4);
+
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        Card(
+          margin: margin,
+          elevation: 0,
+          shape: RoundedSuperellipseBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: cardBackgroundColor, width: 0),
+          ),
+          color: cardColor,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Row(
               children: [
                 if (primary.maxIntensity != null) ...[
                   _MaxIntensityWidget(hypocenter: primary),
@@ -58,13 +60,16 @@ class const ShindoDbHypocenterInformationCard({
                 ),
               ],
             ),
-            _DetailsTile(
-              primary: primary,
-              others: hypocenters.skip(1).toList(),
-            ),
-          ],
+          ),
         ),
-      ),
+        Padding(
+          padding: margin,
+          child: _DetailsTile(
+            primary: primary,
+            others: hypocenters.skip(1).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
