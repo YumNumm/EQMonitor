@@ -34,6 +34,8 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/notifier/device_shake_detection.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
+import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
+import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' show EewItemWithRelations;
 import 'package:riverpod/experimental/mutation.dart';
@@ -120,9 +122,18 @@ class ReplayNotifier extends _$ReplayNotifier {
     final repository = await ref.read(
       replayKyoshinArchiveRepositoryProvider.future,
     );
-    final monitorSource =
-        ref.read(kyoshinMonitorSettingsProvider).value?.monitorSource ??
-        KyoshinMonitorSource.lmoni;
+    // 起動直後は設定と購読状態の読み込みが済んでいないことがある。
+    final settings =
+        await Result.capture<KyoshinMonitorSettingsModel, Exception>(
+          () => ref.read(kyoshinMonitorSettingsProvider.future),
+        );
+    await Result.capture<SubscriptionStatus, Exception>(
+      () => ref.read(subscriptionProvider.future),
+    );
+    final monitorSource = switch (settings) {
+      Success(:final value) => value.monitorSource,
+      Failure() => KyoshinMonitorSource.lmoni,
+    };
     repository.clear();
     // 過去画像は1時間ごとにまとめて削除されるため、範囲内でも先頭が残っているとは限らない。
     switch (await repository.fetchShindoImage(
