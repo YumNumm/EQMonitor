@@ -19,7 +19,7 @@ class const MapStyleResourceRemover._() {
     for (final id in sourceIds) {
       try {
         await styleController.sources.remove(id);
-        // 0.4 は使用中の source の削除を StateError で拒否する。
+        // 使用中の source の削除は StateError で拒否される。
         // ignore: avoid_catching_errors
       } on StateError catch (error, stackTrace) {
         talker.handle(error, stackTrace);

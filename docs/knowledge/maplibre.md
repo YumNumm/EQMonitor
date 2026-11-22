@@ -1,11 +1,13 @@
 # MapLibre の表示・ライフサイクル
 
-確認日: 2026-11-10。地図描画には MapLibre を使用する。
+確認日: 2026-11-22。地図描画には `maplibre` 0.4（描画は MapLibre Native C API ベースの `maplibre_native`）を使用する。
 対象: `app/lib/core/util/map/`、`app/lib/feature/home/ui/component/map/`、各機能の地図レイヤー。
 
 ## 初期化と更新
 
-- `addSource`・`addImage`・`addLayer` は style ごとに初期化し、可変 GeoJSON は `updateGeoJsonSource`、filter は `updateFilter` で更新する。
+- `style.sources.add`・`addImage`・`style.layers.add` は style ごとに初期化し、可変 GeoJSON は `style.sources.updateGeoJsonData`、filter は `style.layers[id]?.filter` で更新する。
+- `layers.add` は重複 ID・未登録の source・未登録の `belowLayerId` を `ArgumentError`、`sources.add` は重複 ID を `ArgumentError`、`sources.remove` は使用中の source を `StateError` で拒否する。いずれも `on Exception` では捕捉できない。未登録 ID の `remove` と、未追加 layer への filter 設定は何もしない。
+- layer は `paint` / `layout` の map ではなく型付き引数で組み立てる。定数は `.literal`、既存の style-spec 式（list）は JSON を変えずに `.raw` で包む。`StyleLayer` は可変で `const` にできず、1 つの style にしか所属できない。
 - paint/layout に更新 API がない場合は layer だけ差し替える。source の再作成は URL など定義自体が変わる場合に限定する。
 - 同じ style への操作は `MapOperationQueueScope` の共有キューで直列化する。パラメータや timer tick を初期化 effect の依存へ混ぜない。
 - 更新は初期化 Future を待ち、await 前後で lifecycle token を確認する。初期化完了時には開始時の snapshot でなく最新データを反映する。
@@ -17,26 +19,32 @@
 
 ## 描画順・式
 
-- 同じ `belowLayerId` に追加すると後から追加した layer が上になる。順序に依存する layer 群は一括で下→上に構築し、`replaceMapStyleLayers` へ渡す。
-- 挿入アンカーは style 自体が持つ `BaseLayer` だけを使う。別の Widget が追加する layer を `belowLayerId` に指定しない。style 読み込み時の `InheritedModel` 通知は `HashMap` の走査順で届き、兄弟 Widget の effect は子の並び順に実行されないため、アンカー未追加のまま `addLayer` が例外になり、再試行されず layer が欠ける。`aboveLayerId` の web 制約にも注意する。
+- 同じ `belowLayerId` に追加すると後から追加した layer が上になる。順序に依存する layer 群は一括で下→上に構築し、`MapStyleLayerReplacer.replace` へ渡す。
+- 挿入アンカーは style 自体が持つ `BaseLayer` だけを使う。別の Widget が追加する layer を `belowLayerId` に指定しない。style 読み込み時の `InheritedModel` 通知は `HashMap` の走査順で届き、兄弟 Widget の effect は子の並び順に実行されないため、アンカー未追加のまま `layers.add` が例外になり、再試行されず layer が欠ける。挿入位置は `belowLayerId` だけで指定する。
 - 複数の Widget が同じ位置（最前面や同じアンカーの直下）へ追加すると、重なり順が初期化順・再追加のタイミングで変わる。Widget ごとに `BaseLayer` の常設アンカーを分ける。アンカーは透明な `background` layer で、下から `regionFillAnchor`（不透明な区域 fill。S 波 fill はこの上、`areaForecastLocalEewLine` の下）→ 境界線 → `regionOverlayAnchor`（Home の警報区域 fill）→ `foregroundOverlayAnchor`（強震モニタ観測点）→ `markerBackgroundAnchor`（震源誤差範囲・警報区域や津波予報区の線）→ `waveLineAnchor`（P/S 波の線）→ `markerLowerAnchor` → `markerUpperAnchor`（震源マーク・観測点）。
 - アンカーを増やすときは `BaseLayer` と `MapStyleUtil.buildStyleJson` の両方へ同じ順で追加する。順序は `test/feature/map/data/provider/map_style_util_test.dart` で固定している。
 - 震度色を持つ半透明の細分区域・市区町村 fill を重ねない。切替 zoom では下側の opacity を 0 にする。
 - 英数字を描く `text-field` には `text-font` へ `Noto Sans CJK JP Regular` か `Noto Sans CJK JP Bold` を明示する。glyph の配信元 `glyphs.geolonia.com` は、MapLibre 既定の fontstack（`Open Sans Regular,Arial Unicode MS Regular`）へ 403 を返す。
-- iOS の zoom 依存 `interpolate` は式の最上位に置く。倍率は各 stop 値へ畳み込み、乗算式の内側へ zoom 式を入れない。
-- iOS の色 `match` は fork 側で型付きの `NSExpression(forMGLMatching:in:defaultValue:)` に変換する。Dart の式テストだけで native の色型変換を検証済みとしない。
-- 非表示 filter に `['==', 1, 0]` を使わない。MapLibre Native はこれを旧形式の比較と解釈し、数値の属性名を拒否する。iOS では predicate 設定時に `NSInvalidArgumentException` が発生し、Dart の catch では捕捉できない。地域選択は `RegionMapLayers.hiddenFilter` の空集合への所属判定を使う。
+- zoom 依存 `interpolate` は式の最上位に置く。倍率は各 stop 値へ畳み込み、乗算式の内側へ zoom 式を入れない。
+- Dart の式テスト（`layer.toJson()` の検証）だけで native の描画結果を検証済みとしない。
+- 非表示 filter に `['==', 1, 0]` を使わない。MapLibre Native はこれを旧形式の比較と解釈し、数値の属性名を拒否する。地域選択は `RegionMapLayers.hiddenFilter` の空集合への所属判定を使う。
 
 ## 座標・選択・初期カメラ
 
 - カメラの bounds 計算は `app/lib/feature/map/data/logic/map_camera_bounds_fitter.dart`、モデルは同 `data/model/map_camera.dart`・`map_camera_bounds.dart` に集約し、既存の fitBounds テスト・fixture は `app/test/feature/map/data/logic/` に置く。
-- `LatLng` は `(latitude, longitude)`。bounds の southwest は `(latitudeSouth, longitudeWest)` とし、保存・再読込まで異なる緯度経度値で確認する。
+- `LatLng` は `(latitude, longitude)`。geobase の `Geographic` / `GeoBox` は経度が先（`west, south, east, north`）。保存・再読込まで異なる緯度経度値で確認する。
+- アプリ内の bounds は `MapCameraBounds` で持つ。`GeoBox` のコンストラクタは経度の折り返しと緯度の丸めを黙って行うため、範囲外・非有限値の拒否ができない。`GeoBox` は `CameraUpdate.bounds` や `getVisibleBounds()` など API 境界だけで使う。
 - 緯度経度グリッドは 12 桁スケールの整数 ceil/floor と index の積から生成する。浮動小数の反復加算を避け、負値・`-0.0`・`0.3 / 0.1` などの境界を確認する。
 - ポリゴンの地域判定は `nearest_jma_feature.dart` の常駐 worker provider を使う。main isolate で `JmaMapUtility.findNearestItem` を実行しない。全画面地図は worker を事前に温める。
-- `queryLayers` は feature property を返さず、地域判定のゲートにすると zoom やタイル有無へ依存する。必要なら `featuresAtPoint`、コード体系が必要なら worker 判定を使う。
+- タップ位置の判定は `await controller.queryRenderedFeatures(.point(screenPoint))`。結果の `layerId` / `sourceLayer` で分岐する。地域判定のゲートにすると zoom やタイル有無へ依存するため、コード体系が必要なら worker 判定を使う。
+- イベントは `onClick`・`onLongClick`・`onCameraMoveStart` など個別の callback で受ける。`onClick` はズームのジェスチャーが有効な間、ダブルタップ判定を待ってから届く。
 - 市区町村別最大震度のタップは zoom にかかわらず市区町村選択。低 zoom で県へ寄せるだけの操作にしない。ディープリンクは市区町村コードから詳細を開き、領域外は選択解除する。
 - 観測点のない震度速報は `intensity.regions` の境界を使う。`jmaMapProvider` と layout サイズが揃ってから `MapCameraBoundsFitter` に論理ピクセルを渡す。
-- 初期範囲は `MapOptions.initCenter` / `initZoom` に設定する。表示後の `fitBounds` による移動を避け、境界が得られない場合は固定位置で補わない。
+- 初期範囲は `MapOptions.initCamera`（`CameraUpdate.position`）に設定する。表示後の `CameraUpdate.bounds` による移動を避け、境界が得られない場合は固定位置で補わない。
+- style は `MapStyleUtil` が書き出したファイルを `MapStyle.file(path)` で渡す。
+- `animateCamera` の既定は 300 ms の ease。範囲へ合わせる移動（旧 `fitBounds`）は既定のまま使い、時間を指定する自動フォーカスは `CameraAnimation.fly(duration:)` を渡す。中断は例外ではなく `CameraAnimationResult.cancelled` で返る。
+- 現在地は `UserLocationLayer` に `geolocator` の stream を渡して描く（`HomeMapUserLocationLayer`）。権限の要求は設定画面側で行い、レイヤーは未許可なら何も描かない。
+- 登録画像は `pixelRatio` の既定 1 で、画像 1 px が論理 1 px として表示される。`icon-size` の式はこの前提で調整している。
 - MapLibre（Native・GL JS）の zoom は 512px タイル基準（Native は `include/mln/util/constants.hpp` の `tileSize_D`）。zoom を自前で計算するときは `MapZoomCalculator.tileSize` か `MapCameraBoundsFitter` を使い、256px 基準の式を使わない。256px 基準では zoom が 1 段深くなり、指定範囲の約 2 倍に拡大されて画面に収まらない。
 
 ## 通知地域と EEW フォーカス
@@ -52,7 +60,7 @@
 
 - 通知の `regionId` は `areaForecastLocalEew`、市区町村の表示名・ふりがなは `EarthquakeParameter` が正本。観測点を含む `jma_code_table.areaInformationCity` は親区域の結合に限定し、結合不能を近隣地域で補わない。
 - 通知地域のタップ検索とカメラ操作は世代を持ち、完了時・キュー実行開始時の最新世代と mounted を確認する。dispose で世代と controller を無効化する。
-- EEW 自動フォーカスを解除するのは `apiGesture`。`developerAnimation` / `apiAnimation` では解除しない。iOS の理由は bitmask として判定し、`TransitionCancelled` 単独を gesture とみなさない。
+- EEW 自動フォーカスを解除するのは `CameraChangeReason.gesture`。`programmatic` / `map` では解除しない。
 - 解除後は同じ EEW の更新で再開せず、新 event ID で再開する。EEW 中のホームボタンは `autoZoom` によらず EEW へ再フォーカスする。animation 開始前に状態を公開し、完了時は session 一致を確認する。揺れ検知だけの場合も同じ session（`HomeMapRealtimeFocusTransition`）で扱う。
 - 揺れ検知は南西端 inclusive の 0.25° 格子へ points を集約し、各セルの最大レベルだけを枠線で描く。空セル・中心/四隅 marker は描かない。レベル順で高い枠を上へ置き、Weaker は `#546E7A`。
 - intensity の境界は `< 0.5`、`< 2.5`、`< 3.5`、`< 5.5`、それ以上の順に Weaker/Weak/Medium/Strong/Stronger。`ShakeDetectionGridCellBuilder` と配信側の境界を揃える。
@@ -62,10 +70,10 @@
 - ローカル URI は `pmtiles://${Uri.file(absolutePath)}`。`pmtiles://asset://` は使わず、asset をローカルファイルに配置してから開く。旧 `assets_util` は削除済みのため依存を復活させない。
 - 配布物には `countries`、`areaForecastLocalE`、`areaForecastLocalEew`、`areaInformationCityQuake` の source layer が必要。別用途の区域 archive や HTTPS へ黙って置換しない。
 - 市区町村地物の表示下限は `BaseMapTileSpec.cityMinZoom` に集約する。現行のタイルは z0 から市区町村地物を持つため値は 0 で、`effectiveRegionToCityZoom` の下限補正は実質無効。タイル側で下限を上げたときは、この定数だけを変更すれば参照側の補正が有効になる。metadata の minzoom だけで地物の存在を判断しない。
-- native pin の正本は `app/pubspec.yaml` の `YumNumm/flutter-maplibre` ref と lockfile。更新時は関連パッケージを揃え、SwiftPM の解決結果も確認する。
-- gzip metadata エラーの abort 対処は upstream [#4399](https://github.com/maplibre/maplibre-native/pull/4399)（Android 13.4.0 / iOS 6.28.0 以降）。これは他の decode 障害すべてを防ぐ保証ではない。
+- pin の正本は `app/pubspec.yaml` の `YumNumm/flutter-maplibre` ref と lockfile。fork の `main` は upstream（`maplibre/flutter-maplibre`）と同じツリーで、`maplibre`・`maplibre_native`・`maplibre_platform_interface`・`maplibre_web` を同じ ref に揃える。native の本体は `maplibre_native_ffi` が配布するビルド済み C ライブラリ。
+- gzip metadata エラーの abort 対処は upstream [#4399](https://github.com/maplibre/maplibre-native/pull/4399)（2026-07-14 マージ）。これは他の decode 障害すべてを防ぐ保証ではない。
 - iOS Metal で複数 vector source の fill だけがタイル単位で欠ける場合、clip mask UBO の bind cache 再利用を疑う。[#4342](https://github.com/maplibre/maplibre-native/pull/4342) が原因・回帰テストの参照先。layer 再追加や opacity 変更を恒久対策にしない。
-- clip mask 修正の配布履歴は `YumNumm/maplibre-native` の `ios-v6.29.0-yumnumm.2`。binaryTarget は release ZIP と checksum を直接参照し、巨大な source repository の clone を避ける。ZIP 更新は新 tag・URL で配布する。
+- #4342 は 2026-11-22 時点で upstream 未マージ。0.3 系では `YumNumm/maplibre-native` の `ios-v6.29.0-yumnumm.2` に修正を入れて回避していたが、0.4 の `maplibre_native_ffi` は upstream のビルドを使うため、この修正は含まれないと考えられる。iOS 実機での fill 欠けの有無は未確認。
 - Metal の確認は同じ実 archive・camera・style で fill と line を比較する。`MLNMapSnapshotter` や取得・リンク成功だけでは画面の修正を確認できない。
 
 ## 変更時の確認
