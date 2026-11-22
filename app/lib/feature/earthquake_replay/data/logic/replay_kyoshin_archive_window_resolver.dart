@@ -10,9 +10,12 @@ ReplayKyoshinArchiveWindowResolver replayKyoshinArchiveWindowResolver(
 ) => const ReplayKyoshinArchiveWindowResolver();
 
 class const ReplayKyoshinArchiveWindowResolver({
-  /// 強震モニタの過去画像は lmoni で約3時間25分、kmoni で約3時間55分前まで
-  /// 取得できた（2026-11-23 の実測）。
+  /// 強震モニタの過去画像は1時間ごとにまとめて削除され、lmoni で約3時間5分〜
+  /// 3時間28分前、kmoni で約3時間35分〜3時間58分前まで取得できた（2026-11-23 の実測）。
   final Duration retention = const Duration(hours: 3),
+
+  /// これより古い時刻の 404 は、一時的な失敗ではなく削除済みとして扱う。
+  final Duration purgedAge = const Duration(hours: 2),
   final Duration lead = const Duration(seconds: 10),
   final Duration tail = const Duration(minutes: 3),
   final Duration publishMargin = const Duration(seconds: 10),
@@ -47,5 +50,5 @@ class const ReplayKyoshinArchiveWindowResolver({
   }
 
   bool isExpired({required DateTime frameTime, required DateTime now}) =>
-      now.difference(frameTime) > retention;
+      now.difference(frameTime) > purgedAge;
 }

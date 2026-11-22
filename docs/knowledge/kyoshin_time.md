@@ -32,7 +32,8 @@
 ## 時計の確認済み事実と残件
 
 - `app/lib/core/provider/clock/app_clock.dart`のnowはclock.nowにNTP offsetを加え、
-  realtime/time-shift/replayで共通の基準を返す。
+  realtime/replayで共通の基準を返す。realtimeNowはモードに依らず実時刻を返す。
+- 過去画像を取得できる範囲と、それを使った再生は[リプレイ再生](earthquake_replay.md)を参照する。
 - `app/lib/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart`は
   発行時にappClockから公開遅延を引く。scheduleの秒境界も同じappClockで数える。
   端末時計で数えるとNTP offsetの小数部だけ発火が遅れる。較正の送信時刻も同じ時計に揃える。

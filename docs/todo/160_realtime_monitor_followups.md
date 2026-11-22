@@ -17,7 +17,7 @@
 
 - 実機未検証: 揺れ検知が無効な配布ビルドで、Admin ロールかつデバッグモード有効の端末から通知地域・最小レベルを保存できること。再起動時の条件維持、Android の前面・背面通知、権限取得失敗からの再試行、非 Admin・デバッグ無効時の変更抑止も確認する。
 - 対象: `.github/workflows/deploy-app.yaml`、`app/lib/core/model/environment.dart`、`app/lib/feature/shake_detection/`。
-- iOS external / Android external の `IS_SHAKE_DETECTION_ENABLED=false` を解除し、ホームgrid/card、timeshift自動復帰、`/settings/notification/shake` を確認する。
+- iOS external / Android external の `IS_SHAKE_DETECTION_ENABLED=false` を解除し、ホームgrid/card、`/settings/notification/shake` を確認する。
 - このflagはclient表示/購読だけを止める。無効ビルドで既登録のserver pushも止める必要があるなら、server抑止または登録設定削除の仕様を決めて配信テストを追加する。
 - 完了条件: 配布trackごとの表示/pushの挙動が仕様と一致する。削除済みの揺れ検知履歴が必要なら、RESTを持つ履歴として別途設計する。
 
@@ -56,9 +56,22 @@
 - 実機未検証: Android のファイルアプリから開けること。パスに拡張子を含まない provider（ダウンロードの `msf:` など）は intent-filter に一致しない。必要なら共有（`ACTION_SEND`）からの受け取りを検討する。
 - 実機未検証: 再生中の観測点・EEW の波面と到達カウントダウン・コントロールシートの操作、終了後にライブ表示へ戻ること。
 - 実機未検証: 端末内の揺れ検知を有効にして再生し、検知の表示・EEW との結合・地図の自動フォーカスが再生時刻に沿って動くこと。シークと終了で検知が残らないこと。
-- 導線はデバッグメニューと OS の「ファイルで開く」のみ。設定画面の導線は、Pro 限定の EQRP 作成機能と合わせて公開する。作成時の時刻の規約は [リプレイ再生](../knowledge/earthquake_replay.md) に従う。
+- EQRP の導線はデバッグメニューと OS の「ファイルで開く」のみ。設定画面の導線は、Pro 限定の EQRP 作成機能と合わせて公開する。作成時の時刻の規約は [リプレイ再生](../knowledge/earthquake_replay.md) に従う。
 - KyoshinEewViewerIngen（YumNumm fork）の `EqMonitorEventMessage` は 1003 の JSON を camelCase の EventMessage として読み、アプリの契約（EEW API の `EewItemWithRelations`）と異なる。KEVi と同じファイルを共有する場合は形式を揃える。
 - 完了条件: 上記の実機確認が済み、公開範囲（Pro 限定か）と設定画面の導線が決まっている。
+
+## 150: 強震モニタ過去画像の再生の実機確認
+
+対象: `app/lib/feature/earthquake_replay/`、`app/lib/feature/earthquake_history/ui/earthquake_history_details_page.dart`。
+
+- 実機未検証: 発生から3時間以内の地震の詳細画面に「強震モニタで再生」が表示され、ホームで観測点・EEW・発生時刻の目印が再生時刻に沿って動くこと。分割表示の詳細ペインからも開始できること。
+- 実機未検証: 再生中カードの展開・折りたたみの動き、狭い画面での操作パネルの幅、アニメーションを減らす設定での即時切り替え、読み上げ。
+- 実機未検証: 再生中に EEW が発表されたとき、リアルタイムへ戻って通知が出ること。WebSocket 切断中の10秒ごとの確認も含む。
+- 未検証: 本番 API が返す `originTimePrecision`。気象庁の電文の発生時刻は分単位のため、分単位では区間を1分延ばしている。秒単位で返る場合は延長が不要になる。
+- 未検証: 過去画像が削除される正確な時刻と、保持幅の最小値。1時間ごとにまとめて削除されることは確認した。最小値が3時間を下回る場合は、導線を出す範囲（`ReplayKyoshinArchiveWindowResolver.retention`）を短くする。
+- 未検証: 中身の小さい画像（約2.6KB、通常は約6KB）が 200 で返った時刻の解析結果。
+- 公開範囲は「強震モニタの再生は全利用者、EEW の重ね合わせは Pro」の既定案で実装した。Pro 限定にする場合は導線側で制御する。
+- 再生終了後は元の詳細画面へ戻らず、ホームに留まる。
 
 ## 150: WebSocket固定heartbeatの実機確認
 
