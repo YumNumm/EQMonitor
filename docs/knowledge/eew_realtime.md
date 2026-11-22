@@ -208,7 +208,8 @@
 
 ## EEWカードの外観
 
-対象は `app/lib/feature/home/ui/component/eew/eew_card.dart`。ホーム、EEW履歴の発表中欄、EEW詳細、デバッグ画面で共用する。
+対象は `app/lib/feature/home/ui/component/eew/` の `eew_card.dart` と `eew_card_*.dart`（ヘッダー、震源情報、現在地欄、カウントダウン、文字スタイル、配色）。
+ホーム、EEW履歴の発表中欄、EEW詳細、デバッグ画面で共用する。
 
 - 配置・文字サイズ・余白・色は Live Activity の Lock Screen（`EewLockScreenView`）の値をそのまま使う。
   幅371ptで並べて描くと、文字の位置は1pt以内、全体の高さは2pt以内で重なる。値を変えるときは両方を変える。
@@ -217,7 +218,7 @@
   現在地がPLUM法（報全体がPLUM法の場合を含む）なら `すぐに到達` を出す。
 - カウントダウンは最長の桁で幅を確保して右寄せにする。小数は0.62倍、`秒` は0.56倍で、`EQCountdown.ttf` と同じ比率。
   時刻の配信は1秒おきなので、その間は経過時間を足して0.1秒の桁を進める。
-- Google Sans Flex は `opsz` を文字サイズに合わせて指定する（`_EewFlexTextStyle`）。iOS は自動で効くが Flutter は既定値の18のままになり、
+- Google Sans Flex は `opsz` を文字サイズに合わせて指定する（`EewCardFlexTextStyle`）。iOS は自動で効くが Flutter は既定値の18のままになり、
   小さい文字の字形と字間が Live Activity とずれる。
 - 等幅フォントの小数点は1文字分の幅を取る。Mとカウントダウンは小数点の前後だけ字間を詰める。
 - 日本語は Live Activity がシステムのヒラギノ、カードが同梱の Noto Sans JP（Medium・Bold のみ）。太さと字形は一致しない。
