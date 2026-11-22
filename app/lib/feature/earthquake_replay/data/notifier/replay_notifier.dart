@@ -6,17 +6,16 @@ import 'package:earthquake_replay/earthquake_replay.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_isolate_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_shake_detection_planner.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_file_repository.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
-import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_baseline_planner.dart';
 import 'package:eqmonitor/feature/shake_detection/data/notifier/device_shake_detection.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' show EewItemWithRelations;
-import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -264,37 +263,25 @@ class ReplayNotifier extends _$ReplayNotifier {
     if (imageData == null || current == null) {
       return;
     }
-    final shakeSettings = ref.read(shakeDetectionCurrentSettingsProvider);
-    final shakeTuning = ref.read(shakeDetectionTuningProvider);
     final shakeDetection = ref.read(deviceShakeDetectionProvider.notifier);
-    // 平常値と履歴の作り直しには、ライブ取得の代わりにファイル内の過去フレームを使う。
-    final baselineTimes = shakeSettings.isEnabled
-        ? ref
-              .read(shakeDetectionBaselinePlannerProvider)
-              .plan(
-                previous: ref.read(deviceShakeDetectionProvider)?.observedAt,
-                target: data.time,
-              )
-        : null;
+    final shakePlan = ref
+        .read(replayShakeDetectionPlannerProvider)
+        .plan(
+          replay: current,
+          observedAt: data.time,
+          previousObservedAt: ref
+              .read(deviceShakeDetectionProvider)
+              ?.observedAt,
+          settings: ref.read(shakeDetectionCurrentSettingsProvider),
+          tuning: ref.read(shakeDetectionTuningProvider),
+        );
     try {
       final analyzer = await ref.read(
         kyoshinMonitorAnalyzerIsolateProvider.future,
       );
       final result = await analyzer.analyze(
         Uint8List.fromList(imageData),
-        shakeDetection: shakeSettings.isEnabled
-            ? ShakeDetectionRequest(
-                observedAt: data.time,
-                baselineGifs: baselineTimes == null
-                    ? null
-                    : [
-                        for (final time in baselineTimes)
-                          ?current.shindoImageAt(time),
-                      ],
-                fallbackBaseline: shakeTuning.fallbackBaseline,
-                parameters: shakeTuning.parameters,
-              )
-            : null,
+        shakeDetection: shakePlan?.request,
       );
       if (!ref.mounted || generation != _generation) {
         return;
@@ -316,22 +303,11 @@ class ReplayNotifier extends _$ReplayNotifier {
         events: shakeEvents,
         status: result.shakeStatus,
       );
-      if (baselineTimes == null || !shakeSettings.isBackfillEnabled) {
+      final backfill = shakePlan?.backfill;
+      if (backfill == null) {
         return;
       }
-      final backfillFrames = [
-        for (var second = 1; second <= shakeTuning.backfillSeconds; second++)
-          if (data.time.subtract(Duration(seconds: second))
-              case final observedAt)
-            if (current.shindoImageAt(observedAt) case final gif?)
-              ShakeBackfillFrame(observedAt: observedAt, gif: gif),
-      ];
-      if (backfillFrames.isEmpty) {
-        return;
-      }
-      final rebuiltEvents = await analyzer.backfillShakeDetection(
-        ShakeBackfillRequest(coldStartAt: data.time, frames: backfillFrames),
-      );
+      final rebuiltEvents = await analyzer.backfillShakeDetection(backfill);
       if (rebuiltEvents != null && ref.mounted && generation == _generation) {
         shakeDetection.replaceEvents(rebuiltEvents);
       }
