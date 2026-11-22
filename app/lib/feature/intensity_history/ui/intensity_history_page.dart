@@ -147,6 +147,19 @@ class const _MapContent({
       ],
     );
 
+    Future<void> handleTap(Geographic point) async {
+      final controller = mapController.value;
+      if (controller == null) {
+        return;
+      }
+      await action.handleMapTap(
+        ref: ref,
+        context: context,
+        point: point,
+        mapController: controller,
+      );
+    }
+
     return Scaffold(
       body: Stack(
         children: [
@@ -156,23 +169,8 @@ class const _MapContent({
                 mapController.value = controller;
               },
               options: mapOptions,
-              onEvent: (event) async {
-                final point = switch (event) {
-                  MapEventClick(:final point) => point,
-                  MapEventLongClick(:final point) => point,
-                  _ => null,
-                };
-                final controller = mapController.value;
-                if (point == null || controller == null) {
-                  return;
-                }
-                await action.handleMapTap(
-                  ref: ref,
-                  context: context,
-                  point: point,
-                  mapController: controller,
-                );
-              },
+              onClick: (event) => handleTap(event.point),
+              onLongClick: (event) => handleTap(event.point),
               children: const [IntensityHistoryMapLayers()],
             ),
           ),

@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/action/replay_open_action.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_file_exception.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_start_exception.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -40,6 +41,7 @@ class const ReplayOpenPage({required final String source, super.key})
             MutationError(:final error) => _ReplayOpenError(
               message: switch (error) {
                 ReplayFileException(:final failure) => failure.message,
+                ReplayStartException(:final failure) => failure.message,
                 _ => ReplayFileFailure.invalidFormat.message,
               },
             ),

@@ -61,15 +61,14 @@ class const _MapContent({
         (v) => v.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
+    final (:maxZoom, :movements) = const HomeMapOptionsBuilder().sharedOptions(
       mapSettings,
     );
     final mapOptions = MapOptions(
-      initCenter: initialCenter,
-      initZoom: initZoom,
-      initStyle: styleString,
+      initCamera: CameraUpdate.position(center: initialCenter, zoom: initZoom),
+      style: MapStyle.file(styleString),
       maxZoom: maxZoom,
-      gestures: gestures,
+      movements: movements,
     );
 
     return MapOperationQueueScope(

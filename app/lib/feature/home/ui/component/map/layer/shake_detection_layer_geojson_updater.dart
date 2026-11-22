@@ -23,7 +23,10 @@ class const ShakeDetectionLayerGeoJsonUpdater() {
       return;
     }
     try {
-      await styleController.updateGeoJsonSource(id: sourceId, data: geoJson);
+      await styleController.sources.updateGeoJsonData(
+        sourceId,
+        .text(geoJson),
+      );
       latestGeoJson.value = geoJson;
     } catch (e, stackTrace) {
       talker.handle(e, stackTrace);

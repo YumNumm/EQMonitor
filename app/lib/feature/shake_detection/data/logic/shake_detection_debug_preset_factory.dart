@@ -14,7 +14,7 @@ class const ShakeDetectionDebugPresetFactory() {
     ShakeDetectionDebugPresetInfo(
       id: ShakeDetectionDebugPresetId.tokyoMultiLevelGrid,
       title: '東京・多レベルグリッド',
-      description: '東京付近の複数 0.25° セルに Weaker〜Stronger を配置',
+      description: '東京付近の複数セルに Weaker〜Stronger を配置',
     ),
   ];
 
@@ -30,14 +30,12 @@ class const ShakeDetectionDebugPresetFactory() {
   }
 
   ShakeDetectionEvent _tokyoMultiLevelGrid({required DateTime now}) {
-    // 各点は異なる 0.25° セルに置き、intensity 閾値でレベルが分かれるようにする
-    // <0.5 Weaker, ≥0.5 Weak, ≥2.5 Medium, ≥3.5 Strong, ≥5.5 Stronger
     final pointSpecs = <({double lat, double lng, double intensity})>[
-      (lat: 35.55, lng: 139.55, intensity: 0), // Weaker @ 35.50/139.50
-      (lat: 35.55, lng: 139.80, intensity: 1), // Weak @ 35.50/139.75
-      (lat: 35.80, lng: 139.55, intensity: 3), // Medium @ 35.75/139.50
-      (lat: 35.80, lng: 139.80, intensity: 5), // Strong @ 35.75/139.75
-      (lat: 36.05, lng: 139.70, intensity: 6), // Stronger @ 36.00/139.50
+      (lat: 35.3, lng: 139.25, intensity: 0),
+      (lat: 35.3, lng: 139.75, intensity: 1),
+      (lat: 35.7, lng: 139.25, intensity: 3),
+      (lat: 35.7, lng: 139.75, intensity: 5),
+      (lat: 36.1, lng: 139.25, intensity: 6),
     ];
 
     final points = [

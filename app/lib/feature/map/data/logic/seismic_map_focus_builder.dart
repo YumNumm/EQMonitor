@@ -1,8 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
+import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_grid_cell_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:maplibre/maplibre.dart';
 
 const seismicMapFocusMargin = 0.1;
 
@@ -22,8 +23,8 @@ const _minimumCosineLatitude = 0.01;
 typedef SeismicMapGeoCoordinate = ({double latitude, double longitude});
 
 class const SeismicMapFocusBuilder() {
-  LngLatBounds forRealtime({
-    required LngLatBounds fallbackBounds,
+  MapCameraBounds forRealtime({
+    required MapCameraBounds fallbackBounds,
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
   }) {
@@ -70,13 +71,27 @@ class const SeismicMapFocusBuilder() {
         minimum.longitude > maximum.longitude) {
       return;
     }
-    yield minimum;
-    yield maximum;
+    yield (
+      latitude: ShakeDetectionGridCell.latitudeOfIndex(
+        ShakeDetectionGridCell.latIndexOf(minimum.latitude),
+      ).clamp(-90, 90).toDouble(),
+      longitude: ShakeDetectionGridCell.longitudeOfIndex(
+        ShakeDetectionGridCell.lngIndexOf(minimum.longitude),
+      ).clamp(-180, 180).toDouble(),
+    );
+    yield (
+      latitude: ShakeDetectionGridCell.latitudeOfIndex(
+        ShakeDetectionGridCell.latIndexOf(maximum.latitude) + 1,
+      ).clamp(-90, 90).toDouble(),
+      longitude: ShakeDetectionGridCell.longitudeOfIndex(
+        ShakeDetectionGridCell.lngIndexOf(maximum.longitude) + 1,
+      ).clamp(-180, 180).toDouble(),
+    );
   }
 
-  static LngLatBounds boundsForTargets({
+  static MapCameraBounds boundsForTargets({
     required List<SeismicMapGeoCoordinate> targets,
-    required LngLatBounds fallbackBounds,
+    required MapCameraBounds fallbackBounds,
   }) {
     if (targets.isEmpty) {
       return fallbackBounds;
@@ -109,7 +124,7 @@ class const SeismicMapFocusBuilder() {
   /// 矩形の中心から [seismicMapFocusMinimumRadiusKm] を下回る辺を押し広げる。
   ///
   /// 既に十分広い矩形はそのまま維持する。
-  static LngLatBounds expandToMinimumRadius({
+  static MapCameraBounds expandToMinimumRadius({
     required double west,
     required double east,
     required double south,
@@ -125,20 +140,20 @@ class const SeismicMapFocusBuilder() {
         .clamp(_minimumCosineLatitude, 1.0);
     final longitudeRadius = latitudeRadius / cosineLatitude;
 
-    return LngLatBounds(
-      longitudeWest: math
+    return MapCameraBounds(
+      west: math
           .min(west, centerLongitude - longitudeRadius)
           .clamp(-180, 180)
           .toDouble(),
-      longitudeEast: math
-          .max(east, centerLongitude + longitudeRadius)
-          .clamp(-180, 180)
-          .toDouble(),
-      latitudeSouth: math
+      south: math
           .min(south, centerLatitude - latitudeRadius)
           .clamp(-90, 90)
           .toDouble(),
-      latitudeNorth: math
+      east: math
+          .max(east, centerLongitude + longitudeRadius)
+          .clamp(-180, 180)
+          .toDouble(),
+      north: math
           .max(north, centerLatitude + latitudeRadius)
           .clamp(-90, 90)
           .toDouble(),

@@ -59,10 +59,10 @@ class const EarthquakeHistoryHypocenterErrorLayer({
         if (lifecycleToken.value != token) {
           return;
         }
-        await styleController.addSource(
-          const GeoJsonSource(
+        await styleController.sources.add(
+          const GeoJsonSource.data(
             id: EarthquakeHistoryHypocenterErrorLayerBuilder.sourceId,
-            data: '{"type":"FeatureCollection","features":[]}',
+            data: .text('{"type":"FeatureCollection","features":[]}'),
           ),
         );
       });
@@ -101,14 +101,14 @@ class const EarthquakeHistoryHypocenterErrorLayer({
             return;
           }
           if (isLayerInitialized.value) {
-            await styleController.removeLayer(
+            await styleController.layers.remove(
               EarthquakeHistoryHypocenterErrorLayerBuilder.layerId,
             );
           }
           if (lifecycleToken.value != token) {
             return;
           }
-          await styleController.addLayer(
+          await styleController.layers.add(
             layerBuilder.buildLineLayer(parameter: parameter, isDark: isDark),
             belowLayerId: belowLayerId,
           );
@@ -179,21 +179,21 @@ class const EarthquakeHistoryHypocenterErrorLayerBuilder() {
     return LineStyleLayer(
       id: layerId,
       sourceId: sourceId,
-      paint: {
-        'line-color': isDark ? '#ffffff' : '#000000',
-        'line-cap': 'round',
-        'line-join': 'round',
-        'line-width': 1.5,
-        'line-blur': 0.2,
-        'line-dasharray': [4, 2],
-        'line-opacity': [
-          'step',
-          ['zoom'],
-          0.0,
-          parameter.hypocenterErrorMinZoom,
-          1.0,
-        ],
-      },
+      color: .literal(
+        isDark ? const Color(0xFFFFFFFF) : const Color(0xFF000000),
+      ),
+      cap: const .literal(.round),
+      join: const .literal(.round),
+      width: const .literal(1.5),
+      blur: const .literal(0.2),
+      dasharray: const .literal([4, 2]),
+      opacity: .raw([
+        'step',
+        ['zoom'],
+        0.0,
+        parameter.hypocenterErrorMinZoom,
+        1.0,
+      ]),
     );
   }
 }

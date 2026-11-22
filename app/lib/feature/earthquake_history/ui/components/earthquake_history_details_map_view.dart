@@ -168,8 +168,11 @@ class const _MapContent({
         return;
       }
       await controller.animateCamera(
-        center: geo,
-        zoom: kEarthquakeHistoryMapFocusZoom,
+        CameraUpdate.position(
+          center: geo,
+          zoom: kEarthquakeHistoryMapFocusZoom,
+        ),
+        animation: const CameraAnimation.fly(duration: Duration(seconds: 2)),
       );
       ref
           .read(earthquakeHistoryMapFocusProvider(earthquake.eventId).notifier)
@@ -197,7 +200,7 @@ class const _MapContent({
     const mapCamera = EarthquakeHistoryMapCamera();
     var center = mapCamera.initialCenter(hypocenterPoints);
     var zoom = mapCamera.initialZoom(hypocenterPoints);
-    final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
+    final (:maxZoom, :movements) = const HomeMapOptionsBuilder().sharedOptions(
       mapSettings,
     );
     if (regionMap case final map?) {
@@ -218,11 +221,10 @@ class const _MapContent({
       // 算出済みの initialCenter / initialZoom のまま地図を表示する。
     }
     final mapOptions = MapOptions(
-      initCenter: center,
-      initZoom: zoom,
-      initStyle: styleString,
+      style: MapStyle.file(styleString),
+      initCamera: CameraUpdate.position(center: center, zoom: zoom),
       maxZoom: maxZoom,
-      gestures: gestures,
+      movements: movements,
     );
     final hypocenterLayer = EarthquakeHistoryHypocenterLayer(
       key: const ValueKey('hypocenter'),
@@ -238,26 +240,24 @@ class const _MapContent({
           onMapCreated: (controller) {
             mapController.value = controller;
           },
-          onEvent: (event) async {
-            if (event is MapEventClick) {
-              final controller = mapController.value;
-              if (controller == null) {
-                return;
-              }
-              final jmaMap = await ref.read(jmaMapProvider.future);
+          onClick: (event) async {
+            final controller = mapController.value;
+            if (controller == null) {
+              return;
+            }
+            final jmaMap = await ref.read(jmaMapProvider.future);
 
-              if (context.mounted) {
-                await _handleTap(
-                  mapController: controller,
-                  context: context,
-                  ref: ref,
-                  event: event,
-                  jmaMap: jmaMap,
-                  dbTree: dbTree,
-                  showingDb: showingDb,
-                  showingLpgmIntensity: showingLpgmIntensity,
-                );
-              }
+            if (context.mounted) {
+              await _handleTap(
+                mapController: controller,
+                context: context,
+                ref: ref,
+                event: event,
+                jmaMap: jmaMap,
+                dbTree: dbTree,
+                showingDb: showingDb,
+                showingLpgmIntensity: showingLpgmIntensity,
+              );
             }
           },
           children: [
@@ -348,7 +348,9 @@ class const _MapContent({
     required bool showingLpgmIntensity,
     ShindoDbIntensityTree? dbTree,
   }) async {
-    final hits = mapController.queryLayers(event.screenPoint);
+    final hits = await mapController.queryRenderedFeatures(
+      .point(event.screenPoint),
+    );
     if (hits.isEmpty) {
       return;
     }

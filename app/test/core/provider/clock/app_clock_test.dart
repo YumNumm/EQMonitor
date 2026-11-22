@@ -45,30 +45,6 @@ void main() {
       });
     });
 
-    test('タイムシフト中はベース時刻に offset を加算すること', () {
-      withClock(Clock.fixed(fixedWallClock), () {
-        final container = _container();
-        final clock = container.read(appClockProvider.notifier)
-          ..enterTimeShift(const Duration(minutes: -5));
-
-        expect(
-          clock.now(),
-          fixedWallClock.subtract(const Duration(minutes: 5)),
-        );
-      });
-    });
-
-    test('タイムシフト中も NTP 補正時刻を基準に offset を加算すること', () {
-      final ntpNow = DateTime.utc(2025, 1, 1, 12, 0, 10);
-      withClock(Clock.fixed(fixedWallClock), () {
-        final container = _container(ntpNow: ntpNow);
-        final clock = container.read(appClockProvider.notifier)
-          ..enterTimeShift(const Duration(minutes: -1));
-
-        expect(clock.now(), ntpNow.subtract(const Duration(minutes: 1)));
-      });
-    });
-
     test('リプレイ中はベース時刻に依らず currentTime を返すこと', () {
       final replayTime = DateTime.utc(2024, 1, 1, 7, 10, 8);
       withClock(Clock.fixed(fixedWallClock), () {
@@ -87,18 +63,6 @@ void main() {
       expect(container.read(appClockProvider), const TimeMode.realtime());
     });
 
-    test('enterTimeShift で TimeShiftTimeMode になること', () {
-      final container = _container();
-      container
-          .read(appClockProvider.notifier)
-          .enterTimeShift(const Duration(minutes: -3));
-
-      expect(
-        container.read(appClockProvider),
-        const TimeMode.timeShift(offset: Duration(minutes: -3)),
-      );
-    });
-
     test('enterReplay で ReplayTimeMode になること', () {
       final replayTime = DateTime.utc(2024);
       final container = _container();
@@ -113,7 +77,7 @@ void main() {
     test('returnToRealtime で通常再生へ戻ること', () {
       final container = _container();
       final notifier = container.read(appClockProvider.notifier)
-        ..enterTimeShift(const Duration(minutes: -3))
+        ..enterReplay(DateTime.utc(2024))
         ..returnToRealtime();
 
       expect(container.read(appClockProvider), const TimeMode.realtime());

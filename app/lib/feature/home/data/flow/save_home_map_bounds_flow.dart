@@ -18,7 +18,7 @@ class const SaveHomeMapBoundsFlow() {
     required WidgetRef ref,
     required MapController controller,
   }) async {
-    final region = controller.getVisibleRegion();
+    final region = controller.getVisibleBounds();
     final current = await ref.read(homeConfigurationProvider.future);
     await HomeConfigurationNotifier.saveMutation.run(
       ref,
@@ -28,8 +28,8 @@ class const SaveHomeMapBoundsFlow() {
             current.map.copyWith(
               defaultBounds: HomeMapDefaultBounds.custom,
               customBounds: LatLngBoundary.fromTwo(
-                LatLng(region.latitudeSouth, region.longitudeWest),
-                LatLng(region.latitudeNorth, region.longitudeEast),
+                LatLng(region.south, region.west),
+                LatLng(region.north, region.east),
               ),
             ),
           ),

@@ -271,13 +271,13 @@ Future<void> main(List<String> args) => build(
     final ffiOutputDartFile = libDir.uri.resolve('live_activity_util.dart');
     final generator = FfiGenerator(
       output: Output(
-        dartFile: ffiOutputDartFile,
+        dart: DartOutput(path: ffiOutputDartFile),
         preamble: '''
 // dart format off
 // ignore_for_file: type=lint
 ''',
       ),
-      headers: Headers(
+      input: Input(
         entryPoints: [generatedHeaderPath],
         compilerOptions: [
           '-isysroot',
@@ -286,29 +286,21 @@ Future<void> main(List<String> args) => build(
           'arm64-apple-ios16.0',
         ],
       ),
-      objectiveC: ObjectiveC(
-        interfaces: Interfaces(
-          includeMember: (declaration, member) => true,
-          include: (declaration) =>
-              declaration.originalName == 'EQMLiveActivityUtil' ||
-              {'NSString', 'NSObject'}.contains(declaration.originalName),
+      objectiveC: const ObjectiveC(),
+      visitors: [
+        Visitor(
+          objCInterface: (node) => node.isIncluded =
+              node.originalName == 'EQMLiveActivityUtil' ||
+              {'NSString', 'NSObject'}.contains(node.originalName),
+          objCProtocol: (node) =>
+              node.isIncluded = node.originalName == 'EQMLiveActivityUtil',
+          enumClass: (node) => node.style = EnumStyle.intConstants,
         ),
-        protocols: Protocols(
-          include: (declaration) =>
-              declaration.originalName == 'EQMLiveActivityUtil',
-          module: (declaration) => <String, String>{}[declaration.originalName],
-          includeMember: (declaration, member) => true,
-        ),
-      ),
-      enums: Enums(
-        style: (declaration, suggestedStyle) => EnumStyle.intConstants,
-      ),
+      ],
     );
 
-    generator.generate();
-    logger.info(
-      'Generated Dart bindings: ${generator.output.dartFile.toFilePath()}',
-    );
+    await generator.generate();
+    logger.info('Generated Dart bindings: ${ffiOutputDartFile.toFilePath()}');
 
     // Step 3: Compile Objective-C glue code
     final objcSourcePath = libDir.uri.resolve('live_activity_util.dart.m');
