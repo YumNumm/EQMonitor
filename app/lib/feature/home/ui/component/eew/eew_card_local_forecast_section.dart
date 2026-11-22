@@ -13,7 +13,7 @@ class const EewCardLocalForecastSection({
   required final DateTime? arrivalTime,
   required final bool isArrived,
   required final bool isImminentArrival,
-  required final DateTime? nowOverride,
+  required final DateTime Function()? clockOverride,
   required final EewCardColors colors,
 }) extends StatelessWidget {
   @override
@@ -68,7 +68,7 @@ class const EewCardLocalForecastSection({
                         EewCardArrivalCountdown(
                           arrivalTime: arrivalTime,
                           isArrived: isArrived,
-                          nowOverride: nowOverride,
+                          clockOverride: clockOverride,
                           color: colors.primary,
                         ),
                       ],
