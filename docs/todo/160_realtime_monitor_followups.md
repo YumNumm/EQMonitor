@@ -41,7 +41,6 @@
   地図のデバッグ表示（マップレイヤー設定の「デバッグ」）の配置・可読性。
 - 表示種別が震度以外・地下のときは検知しない。検知用に地上の震度画像を別途取得するかを決める。
 - レベル境界は公開版の値（4.5 / 2.5 / 0.5 / -1）。サーバーが送る通知のレベルと食い違う場合の扱いを決める。
-- リプレイ再生では検知しない。再生画像を同じエンジンへ流すかを決める。
 - 揺れ検知のサーバー配信（`shake_detection` の WebSocket 配信、`/v2/shake-detection/active`）は backend とアプリの Dart 側から撤去済み。
   Swift の EQMonitorAPI（`app/ios/Packages/EQMonitorAPI`）は再生成しておらず、`openapi.json` と生成済みの型に揺れ検知の配信用の定義が残る。
   macOS で `Scripts` の手順に沿って再生成する。
@@ -56,6 +55,7 @@
 - 実機未検証: iOS で Files・AirDrop・メール添付から `.eqrp` を開けること（起動中・コールドスタートの両方）。`Documents/Inbox` の複製が読み込み後に削除されること。
 - 実機未検証: Android のファイルアプリから開けること。パスに拡張子を含まない provider（ダウンロードの `msf:` など）は intent-filter に一致しない。必要なら共有（`ACTION_SEND`）からの受け取りを検討する。
 - 実機未検証: 再生中の観測点・EEW の波面と到達カウントダウン・コントロールシートの操作、終了後にライブ表示へ戻ること。
+- 実機未検証: 端末内の揺れ検知を有効にして再生し、検知の表示・EEW との結合・地図の自動フォーカスが再生時刻に沿って動くこと。シークと終了で検知が残らないこと。
 - 導線はデバッグメニューと OS の「ファイルで開く」のみ。設定画面の導線は、Pro 限定の EQRP 作成機能と合わせて公開する。作成時の時刻の規約は [リプレイ再生](../knowledge/earthquake_replay.md) に従う。
 - KyoshinEewViewerIngen（YumNumm fork）の `EqMonitorEventMessage` は 1003 の JSON を camelCase の EventMessage として読み、アプリの契約（EEW API の `EewItemWithRelations`）と異なる。KEVi と同じファイルを共有する場合は形式を揃える。
 - 完了条件: 上記の実機確認が済み、公開範囲（Pro 限定か）と設定画面の導線が決まっている。

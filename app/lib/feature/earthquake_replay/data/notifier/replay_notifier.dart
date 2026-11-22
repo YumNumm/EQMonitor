@@ -6,12 +6,16 @@ import 'package:earthquake_replay/earthquake_replay.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_isolate_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_position_resolver.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_shake_detection_planner.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_file_repository.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
+import 'package:eqmonitor/feature/shake_detection/data/notifier/device_shake_detection.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' show EewItemWithRelations;
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,13 +29,11 @@ part 'replay_notifier.g.dart';
 class ReplayNotifier extends _$ReplayNotifier {
   static final openMutation = Mutation<void>();
 
-  // 画像解析の遅れで再生が累積的に遅れないよう、再生開始時の壁時計を基準に次の時刻を決める。
-  // 基準から大きく遅れたときは追いつこうとせず基準を取り直す。
-  static const _lagTolerance = Duration(milliseconds: 500);
-
+  // 画像解析の遅れで再生が累積的に遅れないよう、再生開始時の壁時計を基準に再生位置を決める。
+  // 処理が遅れたときは基準を取り直さず、途中のフレームを飛ばして基準の位置へ追いつく。
   final _wallClock = Stopwatch()..start();
   Timer? _playbackTimer;
-  ({Duration wallTime, DateTime replayTime})? _anchor;
+  ReplayAnchor? _anchor;
   // シーク・読み込み・終了をまたいで、解析中だった古いフレームを反映しないための世代番号。
   int _generation = 0;
 
@@ -91,19 +93,29 @@ class ReplayNotifier extends _$ReplayNotifier {
     _schedule();
   }
 
-  void pause() {
+  /// 補間中の位置で止め、表示中の波面などを巻き戻さない。
+  Future<void> pause() async {
     final current = state;
     if (current == null) {
       return;
     }
     _stopPlaybackTimer();
+    final position = ref
+        .read(replayPositionResolverProvider)
+        .current(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+        );
     _anchor = null;
-    state = current.copyWith(isPlaying: false);
+    final paused = current.copyWith(isPlaying: false);
+    state = paused;
+    await _advanceTo(current: paused, target: position);
   }
 
   Future<void> togglePlayPause() async {
     if (state?.isPlaying ?? false) {
-      pause();
+      await pause();
     } else {
       await play();
     }
@@ -115,6 +127,7 @@ class ReplayNotifier extends _$ReplayNotifier {
     _generation++;
     _anchor = null;
     state = null;
+    ref.read(deviceShakeDetectionProvider.notifier).clear();
     ref.read(appClockProvider.notifier).returnToRealtime();
     // リプレイ中に発表されたライブのEEWは破棄されているため、REST も取り直す。
     ref
@@ -140,12 +153,20 @@ class ReplayNotifier extends _$ReplayNotifier {
     _schedule();
   }
 
+  /// 補間中の表示位置を基準に動かす。直前の進行位置を基準にすると最大 1 秒ずれる。
   Future<void> seekBy(Duration delta) async {
     final current = state;
     if (current == null) {
       return;
     }
-    await seek(current.currentTime.add(delta));
+    final position = ref
+        .read(replayPositionResolverProvider)
+        .current(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+        );
+    await seek(position.add(delta));
   }
 
   void setPlaybackSpeed(double speed) {
@@ -153,8 +174,21 @@ class ReplayNotifier extends _$ReplayNotifier {
     if (current == null || speed <= 0) {
       return;
     }
-    _anchor = null;
-    state = current.copyWith(playbackSpeed: speed);
+    final position = ref
+        .read(replayPositionResolverProvider)
+        .current(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+        );
+    final next = current.copyWith(playbackSpeed: speed);
+    state = next;
+    if (next.isPlaying) {
+      _anchor = (wallTime: _wallClock.elapsed, replayTime: position);
+      ref
+          .read(appClockProvider.notifier)
+          .updateReplayTime(position, rate: speed, limit: next.endTime);
+    }
     _schedule();
   }
 
@@ -166,31 +200,46 @@ class ReplayNotifier extends _$ReplayNotifier {
       return;
     }
     final now = _wallClock.elapsed;
-    final anchor = _anchor ??= (wallTime: now, replayTime: current.currentTime);
+    final anchor = _anchor ?? (wallTime: now, replayTime: current.currentTime);
+    if (_anchor == null) {
+      _anchor = anchor;
+      ref
+          .read(appClockProvider.notifier)
+          .updateReplayTime(
+            current.currentTime,
+            rate: current.playbackSpeed,
+            limit: current.endTime,
+          );
+    }
     final due =
         anchor.wallTime +
         next.difference(anchor.replayTime) * (1 / current.playbackSpeed);
     final delay = due - now;
-    if (delay < -_lagTolerance) {
-      _anchor = (wallTime: now, replayTime: current.currentTime);
-    }
     _playbackTimer = Timer(delay.isNegative ? Duration.zero : delay, () async {
-      await _tick(target: next);
+      await _tick(scheduled: next);
     });
   }
 
-  Future<void> _tick({required DateTime target}) async {
+  Future<void> _tick({required DateTime scheduled}) async {
     final generation = _generation;
     final current = state;
     if (current == null || !current.isPlaying) {
       return;
     }
+    final target = ref
+        .read(replayPositionResolverProvider)
+        .tickTarget(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+          scheduled: scheduled,
+        );
     await _advanceTo(current: current, target: target);
     if (!ref.mounted || generation != _generation) {
       return;
     }
     if (state?.isAtEnd ?? true) {
-      pause();
+      await pause();
       return;
     }
     _schedule();
@@ -216,7 +265,13 @@ class ReplayNotifier extends _$ReplayNotifier {
       }
     }
     state = current.copyWith(currentIndex: index, currentTime: target);
-    ref.read(appClockProvider.notifier).updateReplayTime(target);
+    ref
+        .read(appClockProvider.notifier)
+        .updateReplayTime(
+          target,
+          rate: current.isPlaying ? current.playbackSpeed : 0,
+          limit: current.endTime,
+        );
     if (latestImage != null) {
       await _applyKyoshinImage(latestImage, generation: _generation);
     }
@@ -230,6 +285,8 @@ class ReplayNotifier extends _$ReplayNotifier {
       return;
     }
     final generation = _generation;
+    // 再生位置が飛ぶため、揺れ検知は次の画像で平常値の投入からやり直す。
+    ref.read(deviceShakeDetectionProvider.notifier).clear();
     ref
       ..read(appClockProvider.notifier).updateReplayTime(current.currentTime)
       ..invalidate(eewProvider, asReload: true);
@@ -253,14 +310,30 @@ class ReplayNotifier extends _$ReplayNotifier {
     required int generation,
   }) async {
     final imageData = data.images[ImageType.shindo];
-    if (imageData == null) {
+    final current = state;
+    if (imageData == null || current == null) {
       return;
     }
+    final shakeDetection = ref.read(deviceShakeDetectionProvider.notifier);
+    final shakePlan = ref
+        .read(replayShakeDetectionPlannerProvider)
+        .plan(
+          replay: current,
+          observedAt: data.time,
+          previousObservedAt: ref
+              .read(deviceShakeDetectionProvider)
+              ?.observedAt,
+          settings: ref.read(shakeDetectionCurrentSettingsProvider),
+          tuning: ref.read(shakeDetectionTuningProvider),
+        );
     try {
       final analyzer = await ref.read(
         kyoshinMonitorAnalyzerIsolateProvider.future,
       );
-      final result = await analyzer.analyze(Uint8List.fromList(imageData));
+      final result = await analyzer.analyze(
+        Uint8List.fromList(imageData),
+        shakeDetection: shakePlan?.request,
+      );
       if (!ref.mounted || generation != _generation) {
         return;
       }
@@ -271,6 +344,24 @@ class ReplayNotifier extends _$ReplayNotifier {
             targetTime: data.time,
             analyzedPointsCount: result.featureCount,
           );
+      final shakeEvents = result.shakeEvents;
+      if (shakeEvents == null) {
+        shakeDetection.clear();
+        return;
+      }
+      shakeDetection.apply(
+        observedAt: data.time,
+        events: shakeEvents,
+        status: result.shakeStatus,
+      );
+      final backfill = shakePlan?.backfill;
+      if (backfill == null) {
+        return;
+      }
+      final rebuiltEvents = await analyzer.backfillShakeDetection(backfill);
+      if (rebuiltEvents != null && ref.mounted && generation == _generation) {
+        shakeDetection.replaceEvents(rebuiltEvents);
+      }
     } on Object catch (error, stackTrace) {
       // 1 フレームの解析失敗で再生全体を止めない。
       talker.warning(

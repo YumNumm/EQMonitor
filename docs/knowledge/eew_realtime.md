@@ -11,7 +11,8 @@
 - 深発注意文は「取消でない・低精度検知でない・最大震度未発表・**depth > 150km**」
   の全条件で表示する。150kmちょうどでは出さない。旧記録の「150km以上」は採用しない。
 - 距離減衰によるアプリ側推定を`depth >= 150`で停止する条件とは区別する。
-- PLUM、レベル法、IPF 1点検知はM・深さを表示しない。レベル法は
+- PLUM、レベル法の震源要素は仮定値のためM・深さを表示しない。IPF 1点検知は
+  FlutterのEEWカードでM・深さを薄く表示し、`低精度`ラベルを併記する。レベル法は
   `accuracy.epicenter == 1 && originTime == null`、IPF 1点は発生時刻あり・非PLUM。
 - PLUMの時刻は地震検知。M・深さ欠落を補わず、EEWの数値深さは`N km`で表す。
 - 最終報は`最終 第N報`。到達後はFlutterもLive Activityも`揺れ到達まで`＋`0秒`を維持する。
@@ -119,7 +120,7 @@
 - エンジンは解析用 Isolate の中で状態を持つ。観測点インデックスは `kyoshinImageObservationPointsProvider` の並びを指し、
   Isolate に渡す観測点と必ず同じ並びにする。
 - 検知は地上の震度画像でのみ行う。強震モニタが無効、表示種別が震度以外、地下の場合は検知しない。
-  リプレイ再生中は端末内の検知結果を公開しない。
+  リプレイ再生中は再生画像から検知する（[リプレイ再生](earthquake_replay.md)）。
 - 端末内検知の有効・無効、履歴の作り直し、検知・結合のパラメータは `ShakeDetectionSettings` に保存し、
   デバッグ画面の「揺れ検知エンジン」で変更する。既定は無効で、production を含むすべてのビルドで有効にできる。
   表示側の判定は `isDeviceShakeDetectionEnabledProvider` を使い、ビルド時の `isShakeDetectionEnabled` を見ない。
