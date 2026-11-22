@@ -92,19 +92,20 @@ class const IntensityHistoryMapAction() {
       viewportSize: MediaQuery.sizeOf(context),
       safePadding: MediaQuery.paddingOf(context),
     );
-    try {
-      await mapController.fitBounds(
-        bounds: LngLatBounds(
-          latitudeSouth: bounds.southWest.lat,
-          latitudeNorth: bounds.northEast.lat,
-          longitudeWest: bounds.southWest.lng,
-          longitudeEast: bounds.northEast.lng,
+    final result = await mapController.animateCamera(
+      CameraUpdate.bounds(
+        GeoBox(
+          west: bounds.southWest.lng,
+          south: bounds.southWest.lat,
+          east: bounds.northEast.lng,
+          north: bounds.northEast.lat,
         ),
         padding: padding,
-      );
-    } on Exception catch (error) {
-      // Android はカメラ移動が操作で中断されると例外で完了する。選択とシートは維持する。
-      talker.debug('IntensityHistoryMapAction: fitBounds ended early: $error');
+      ),
+      animation: const CameraAnimation.fly(duration: Duration(seconds: 2)),
+    );
+    if (result == .cancelled) {
+      talker.debug('IntensityHistoryMapAction: fitBounds ended early');
     }
   }
 

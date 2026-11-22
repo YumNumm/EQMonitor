@@ -4,7 +4,6 @@ import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
-import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
@@ -45,7 +44,7 @@ class const EarthquakeHistoryShindoDbFillLayer({
       Future<void> removeAdded() async {
         for (final id in addedLayerIds.reversed) {
           try {
-            await styleController.removeLayer(id);
+            await styleController.layers.remove(id);
           } on Exception catch (e) {
             talker.log(e);
           }
@@ -67,8 +66,7 @@ class const EarthquakeHistoryShindoDbFillLayer({
               }
               final color = colorModel
                   .fromJmaIntensity(colorJmaIntensity)
-                  .background
-                  .toHexStringRGB();
+                  .background;
               final idPrefix = 'eq-history-shindo-db-${cls.name}';
 
               final cityCodes = entry.value.cityCodes;
@@ -89,7 +87,7 @@ class const EarthquakeHistoryShindoDbFillLayer({
                   if (disposed) {
                     return;
                   }
-                  await styleController.addLayer(
+                  await styleController.layers.add(
                     layer,
                     belowLayerId: BaseLayer.areaForecastLocalELine.name,
                   );
@@ -108,7 +106,7 @@ class const EarthquakeHistoryShindoDbFillLayer({
                 if (disposed) {
                   return;
                 }
-                await styleController.addLayer(
+                await styleController.layers.add(
                   cityLayer,
                   belowLayerId: BaseLayer.areaForecastLocalELine.name,
                 );

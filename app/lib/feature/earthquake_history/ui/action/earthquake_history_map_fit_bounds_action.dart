@@ -48,10 +48,13 @@ class const EarthquakeHistoryMapFitBoundsAction() {
     if (points.isEmpty) {
       return;
     }
-    await controller.fitBounds(
-      bounds: LngLatBounds.fromPoints(points),
-      padding: const EdgeInsets.all(48),
-      webMaxZoom: 10,
+    await controller.animateCamera(
+      CameraUpdate.bounds(
+        GeoBox.from(points),
+        padding: const EdgeInsets.all(48),
+        maxZoom: 10,
+      ),
+      animation: const CameraAnimation.fly(duration: Duration(seconds: 2)),
     );
   }
 }

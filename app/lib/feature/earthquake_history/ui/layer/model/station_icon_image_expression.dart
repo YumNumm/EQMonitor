@@ -6,7 +6,7 @@ class const StationIconImageExpressionBuilder() {
   /// - `iconIdFull`: 数字入りアイコンの画像 ID
   /// - `iconIdPlain`: 色のみアイコンの画像 ID
   /// - `isMax`: その地震の最大震度観測点か
-  Object build({
+  List<Object> build({
     required StationDisplayMode stationDisplayMode,
     required double stationTextZoom,
   }) {

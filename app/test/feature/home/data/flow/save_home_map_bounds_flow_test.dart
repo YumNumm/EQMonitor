@@ -12,11 +12,11 @@ import 'package:maplibre/maplibre.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _MapController({required final LngLatBounds visibleRegion})
+class _MapController({required final GeoBox visibleRegion})
     extends Mock
     implements MapController {
   @override
-  LngLatBounds getVisibleRegion() => visibleRegion;
+  GeoBox getVisibleRegion() => visibleRegion;
 }
 
 void main() {
@@ -26,11 +26,11 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final firstContainer = ProviderContainer();
     addTearDown(firstContainer.dispose);
-    const visible = LngLatBounds(
-      longitudeWest: 129.25,
-      longitudeEast: 145.75,
-      latitudeSouth: 30.5,
-      latitudeNorth: 44.25,
+    const visible = GeoBox(
+      west: 129.25,
+      east: 145.75,
+      south: 30.5,
+      north: 44.25,
     );
     final controller = _MapController(visibleRegion: visible);
 

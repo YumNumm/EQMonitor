@@ -37,7 +37,7 @@ class const IntensityFillLayerAction() {
   }) async {
     for (final id in layerIds) {
       try {
-        await styleController.updateFilter(id: id, filter: filter);
+        styleController.layers[id]?.filter = .raw(filter);
       } on Object catch (error, stackTrace) {
         talker.handle(
           error,
@@ -54,7 +54,7 @@ class const IntensityFillLayerAction() {
   }) async {
     for (final id in layerIds.toList().reversed) {
       try {
-        await styleController.removeLayer(id);
+        await styleController.layers.remove(id);
       } on Object catch (error, stackTrace) {
         talker.handle(
           error,

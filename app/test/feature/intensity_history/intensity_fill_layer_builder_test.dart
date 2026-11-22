@@ -5,7 +5,12 @@ import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensit
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer_builder.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_map_layers.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:maplibre/maplibre.dart';
+
+Map<String, Object?> paintOf(StyleLayer layer) =>
+    layer.toJson()['paint']! as Map<String, Object?>;
 
 CityMaxIntensityEntry _entry(String cityCode, JmaIntensity intensity) =>
     CityMaxIntensityEntry(cityCode: cityCode, intensity: intensity);
@@ -48,7 +53,7 @@ void main() {
           .buildFill(cityMaxIntensities: _entries, colorModel: colorModel)
           .single;
 
-      final fillColor = cityFill.layer.paint['fill-color']! as List<Object>;
+      final fillColor = paintOf(cityFill.layer)['fill-color']! as List<Object?>;
       expect(fillColor[0], 'match');
       expect(fillColor[1], ['get', 'regioncode']);
       expect(fillColor.sublist(2), contains('0110100'));
@@ -61,7 +66,7 @@ void main() {
           .single;
 
       expect(
-        cityFill.layer.paint['fill-opacity'],
+        paintOf(cityFill.layer)['fill-opacity'],
         IntensityFillLayerBuilder.cityFillOpacity,
       );
     });
@@ -72,7 +77,6 @@ void main() {
           .single;
 
       expect(cityFill.belowLayerId, BaseLayer.areaForecastLocalELine.name);
-      expect(cityFill.aboveLayerId, isNull);
     });
   });
 
@@ -80,8 +84,8 @@ void main() {
     test('選択中の市区町村コードで絞り込むハローと本線を返す', () {
       final layers = builder.buildSelectedCityLine(
         selectedCityCode: '0110100',
-        lineColor: '#123456',
-        haloColor: '#FFFFFF',
+        lineColor: const Color(0xFF123456),
+        haloColor: const Color(0xFFFFFFFF),
       );
 
       expect(
@@ -91,7 +95,7 @@ void main() {
           IntensityFillLayerBuilder.selectedCityLineLayerId,
         ],
       );
-      expect(layers.first.layer.filter, [
+      expect(layers.first.layer.toJson()['filter'], [
         'in',
         ['get', 'regioncode'],
         [
@@ -99,10 +103,10 @@ void main() {
           ['0110100'],
         ],
       ]);
-      expect(layers.last.layer.paint['line-color'], '#123456');
-      expect(layers.first.layer.paint['line-color'], '#FFFFFF');
+      expect(paintOf(layers.last.layer)['line-color'], '#123456');
+      expect(paintOf(layers.first.layer)['line-color'], '#ffffff');
       expect(
-        layers.last.layer.paint['line-width'],
+        paintOf(layers.last.layer)['line-width'],
         IntensityFillLayerBuilder.selectedCityLineWidth,
       );
     });
@@ -111,30 +115,30 @@ void main() {
       final outline = builder
           .buildSelectedCityLine(
             selectedCityCode: '0110100',
-            lineColor: '#123456',
-            haloColor: '#FFFFFF',
+            lineColor: const Color(0xFF123456),
+            haloColor: const Color(0xFFFFFFFF),
           )
           .last
           .layer;
       final regionOutline = const RegionMapLayers()
-          .build(color: '#123456', hasEpicenter: false)
+          .build(color: const Color(0xFF123456), hasEpicenter: false)
           .singleWhere((layer) => layer.id == 'region-selection-city-line');
 
       for (final property in ['line-color', 'line-width']) {
-        expect(outline.paint[property], regionOutline.paint[property]);
+        expect(paintOf(outline)[property], paintOf(regionOutline)[property]);
       }
     });
 
     test('未選択でもレイヤーを返し、空集合の filter で非表示にする', () {
       final layers = builder.buildSelectedCityLine(
         selectedCityCode: null,
-        lineColor: '#123456',
-        haloColor: '#FFFFFF',
+        lineColor: const Color(0xFF123456),
+        haloColor: const Color(0xFFFFFFFF),
       );
 
       expect(layers, hasLength(2));
       for (final entry in layers) {
-        expect(entry.layer.filter, [
+        expect(entry.layer.toJson()['filter'], [
           'in',
           ['get', 'regioncode'],
           ['literal', <String>[]],
@@ -145,13 +149,12 @@ void main() {
     test('選択枠はマーカー背面のアンカーの下に追加する', () {
       final layers = builder.buildSelectedCityLine(
         selectedCityCode: '0110100',
-        lineColor: '#123456',
-        haloColor: '#FFFFFF',
+        lineColor: const Color(0xFF123456),
+        haloColor: const Color(0xFFFFFFFF),
       );
 
       for (final entry in layers) {
         expect(entry.belowLayerId, BaseLayer.markerBackgroundAnchor.name);
-        expect(entry.aboveLayerId, isNull);
       }
     });
   });

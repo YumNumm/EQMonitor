@@ -7,11 +7,11 @@ import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_lev
 import 'package:flutter_test/flutter_test.dart';
 import 'package:maplibre/maplibre.dart';
 
-const _fallback = LngLatBounds(
-  longitudeWest: 120,
-  longitudeEast: 154,
-  latitudeSouth: 20,
-  latitudeNorth: 46,
+const _fallback = GeoBox(
+  west: 120,
+  east: 154,
+  south: 20,
+  north: 46,
 );
 
 final _now = DateTime.utc(2026, 7, 27, 12);
@@ -64,10 +64,10 @@ void main() {
       shakes: const [],
     );
 
-    expect(bounds.latitudeSouth, lessThan(40));
-    expect(bounds.latitudeNorth, greaterThan(40));
-    expect(bounds.longitudeWest, lessThan(142));
-    expect(bounds.longitudeEast, greaterThan(142));
+    expect(bounds.south, lessThan(40));
+    expect(bounds.north, greaterThan(40));
+    expect(bounds.west, lessThan(142));
+    expect(bounds.east, greaterThan(142));
   });
 
   test('未結合揺れ検知のみの矩形を余白付きboundsへ含める', () {
@@ -77,10 +77,10 @@ void main() {
       shakes: [_shake(minLat: 33, maxLat: 34, minLng: 130, maxLng: 132)],
     );
 
-    expect(bounds.latitudeSouth, lessThan(33));
-    expect(bounds.latitudeNorth, greaterThan(34));
-    expect(bounds.longitudeWest, lessThan(130));
-    expect(bounds.longitudeEast, greaterThan(132));
+    expect(bounds.south, lessThan(33));
+    expect(bounds.north, greaterThan(34));
+    expect(bounds.west, lessThan(130));
+    expect(bounds.east, greaterThan(132));
   });
 
   test('EEWと未結合揺れ検知の全座標を同じboundsへ含める', () {
@@ -90,10 +90,10 @@ void main() {
       shakes: [_shake(minLat: 33, maxLat: 34, minLng: 130, maxLng: 132)],
     );
 
-    expect(bounds.latitudeSouth, lessThanOrEqualTo(33));
-    expect(bounds.latitudeNorth, greaterThanOrEqualTo(40));
-    expect(bounds.longitudeWest, lessThanOrEqualTo(130));
-    expect(bounds.longitudeEast, greaterThanOrEqualTo(142));
+    expect(bounds.south, lessThanOrEqualTo(33));
+    expect(bounds.north, greaterThanOrEqualTo(40));
+    expect(bounds.west, lessThanOrEqualTo(130));
+    expect(bounds.east, greaterThanOrEqualTo(142));
   });
 
   test('対象がなければユーザーのfallback boundsを返す', () {
@@ -121,10 +121,10 @@ void main() {
       ],
     );
 
-    expect(bounds.latitudeSouth, lessThanOrEqualTo(38));
-    expect(bounds.latitudeNorth, greaterThanOrEqualTo(43));
-    expect(bounds.longitudeWest, lessThanOrEqualTo(140));
-    expect(bounds.longitudeEast, greaterThanOrEqualTo(143.8));
+    expect(bounds.south, lessThanOrEqualTo(38));
+    expect(bounds.north, greaterThanOrEqualTo(43));
+    expect(bounds.west, lessThanOrEqualTo(140));
+    expect(bounds.east, greaterThanOrEqualTo(143.8));
   });
 
   test('EEW単独でも中心から最小半径ぶんのboundsを確保する', () {
@@ -135,12 +135,12 @@ void main() {
     );
 
     // 最小半径 150km は緯度およそ 1.347 度に相当する。
-    expect(bounds.latitudeNorth - 35, greaterThan(1.3));
-    expect(35 - bounds.latitudeSouth, greaterThan(1.3));
+    expect(bounds.north - 35, greaterThan(1.3));
+    expect(35 - bounds.south, greaterThan(1.3));
     // 経度方向は cos(緯度) で割るぶん緯度方向より広くなる。
     expect(
-      bounds.longitudeEast - bounds.longitudeWest,
-      greaterThan(bounds.latitudeNorth - bounds.latitudeSouth),
+      bounds.east - bounds.west,
+      greaterThan(bounds.north - bounds.south),
     );
   });
 
@@ -151,10 +151,10 @@ void main() {
       shakes: [_shake(minLat: 33, maxLat: 38, minLng: 130, maxLng: 140)],
     );
 
-    expect(bounds.latitudeSouth, closeTo(33 - seismicMapFocusMargin, 1e-9));
-    expect(bounds.latitudeNorth, closeTo(38 + seismicMapFocusMargin, 1e-9));
-    expect(bounds.longitudeWest, closeTo(130 - seismicMapFocusMargin, 1e-9));
-    expect(bounds.longitudeEast, closeTo(140 + seismicMapFocusMargin, 1e-9));
+    expect(bounds.south, closeTo(33 - seismicMapFocusMargin, 1e-9));
+    expect(bounds.north, closeTo(38 + seismicMapFocusMargin, 1e-9));
+    expect(bounds.west, closeTo(130 - seismicMapFocusMargin, 1e-9));
+    expect(bounds.east, closeTo(140 + seismicMapFocusMargin, 1e-9));
   });
 
   test('複数EEWの震源をすべて内包する', () {
@@ -167,10 +167,10 @@ void main() {
       shakes: const [],
     );
 
-    expect(bounds.latitudeSouth, lessThan(35));
-    expect(bounds.latitudeNorth, greaterThan(43));
-    expect(bounds.longitudeWest, lessThan(139));
-    expect(bounds.longitudeEast, greaterThan(145));
+    expect(bounds.south, lessThan(35));
+    expect(bounds.north, greaterThan(43));
+    expect(bounds.west, lessThan(139));
+    expect(bounds.east, greaterThan(145));
   });
 
   test('不正座標は除外して有効なEEWのみをfocusに使う', () {
@@ -187,9 +187,9 @@ void main() {
       ],
     );
 
-    expect(bounds.latitudeSouth, lessThan(36));
-    expect(bounds.latitudeNorth, greaterThan(36));
-    expect(bounds.longitudeWest, lessThan(140));
-    expect(bounds.longitudeEast, greaterThan(140));
+    expect(bounds.south, lessThan(36));
+    expect(bounds.north, greaterThan(36));
+    expect(bounds.west, lessThan(140));
+    expect(bounds.east, greaterThan(140));
   });
 }

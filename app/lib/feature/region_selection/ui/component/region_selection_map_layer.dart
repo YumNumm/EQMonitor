@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_map_layers.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -22,7 +21,7 @@ class const RegionSelectionMapLayer({
   Widget build(BuildContext context) {
     final style = MapController.maybeOf(context)?.style;
     final enqueue = useMapOperationQueue();
-    final color = Theme.of(context).colorScheme.primary.toHexStringRGB();
+    final color = Theme.of(context).colorScheme.primary.withValues(alpha: 1);
     final latest = useRef((selected: selected, kind: kind));
     latest.value = (selected: selected, kind: kind);
     final readyCallback = useRef(onReady)..value = onReady;
@@ -38,20 +37,27 @@ class const RegionSelectionMapLayer({
         unawaited(
           enqueue(() async {
             try {
-              await style.addSource(
-                GeoJsonSource(
+              await style.sources.add(
+                GeoJsonSource.data(
                   id: RegionMapLayers.prefectureSource,
-                  data: prefectureGeoJson,
+                  data: .text(prefectureGeoJson),
                 ),
               );
               for (final layer in layers) {
                 if (!mounted) {
                   return;
                 }
-                await style.addLayer(layer);
+                await style.layers.add(layer);
               }
               if (mounted) {
                 readyCallback.value();
+              }
+              // maplibre は ID 重複や source 未登録を ArgumentError で拒否する。
+              // ignore: avoid_catching_errors
+            } on ArgumentError catch (error, stack) {
+              talker.handle(error, stack);
+              if (mounted) {
+                errorCallback.value();
               }
             } on Exception catch (error, stack) {
               talker.handle(error, stack);
@@ -67,13 +73,13 @@ class const RegionSelectionMapLayer({
             enqueue(() async {
               for (final layer in layers.reversed) {
                 try {
-                  await style.removeLayer(layer.id);
+                  await style.layers.remove(layer.id);
                 } on Exception catch (error, stack) {
                   talker.handle(error, stack);
                 }
               }
               try {
-                await style.removeSource(RegionMapLayers.prefectureSource);
+                await style.sources.remove(RegionMapLayers.prefectureSource);
               } on Exception catch (error, stack) {
                 talker.handle(error, stack);
               }
@@ -115,19 +121,15 @@ class const RegionSelectionMapLayer({
                 kind: type,
                 selected: current.selected,
               );
-              await style.updateFilter(id: layer.id, filter: layer.filter);
-              await style.updateFilter(
-                id: 'region-selection-${type.name}-line',
-                filter: layer.filter,
-              );
+              style.layers[layer.id]?.filter = layer.filter;
+              style.layers['region-selection-${type.name}-line']?.filter =
+                  layer.filter;
             }
             if (mounted && hasEpicenter) {
-              await style.updateFilter(
-                id: RegionMapLayers.epicenterHit,
-                filter: current.kind == .epicenter
-                    ? null
-                    : RegionMapLayers.hiddenFilter,
-              );
+              style.layers[RegionMapLayers.epicenterHit]?.filter =
+                  current.kind == .epicenter
+                  ? null
+                  : const .raw(RegionMapLayers.hiddenFilter);
             }
           }),
         );

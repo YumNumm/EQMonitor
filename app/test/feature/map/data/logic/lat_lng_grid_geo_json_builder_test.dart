@@ -22,11 +22,11 @@ void main() {
   }
 
   test('builds a stable FeatureCollection with longitude-latitude pairs', () {
-    const bounds = LngLatBounds(
-      longitudeWest: 139,
-      longitudeEast: 140,
-      latitudeSouth: 35,
-      latitudeNorth: 36,
+    const bounds = GeoBox(
+      west: 139,
+      east: 140,
+      south: 35,
+      north: 36,
     );
 
     final first = builder.build(bounds: bounds, zoomLevel: 7);
@@ -62,11 +62,11 @@ void main() {
   test('splits horizontal lines and emits the antimeridian only once', () {
     final features = featuresOf(
       builder.build(
-        bounds: const LngLatBounds(
-          longitudeWest: 179,
-          longitudeEast: -179,
-          latitudeSouth: 0,
-          latitudeNorth: 1,
+        bounds: const GeoBox(
+          west: 179,
+          east: -179,
+          south: 0,
+          north: 1,
         ),
         zoomLevel: 7,
       ),
@@ -100,11 +100,11 @@ void main() {
   test('deduplicates exact -180 and 180 bounds', () {
     final features = featuresOf(
       builder.build(
-        bounds: const LngLatBounds(
-          longitudeWest: -180,
-          longitudeEast: 180,
-          latitudeSouth: 0,
-          latitudeNorth: 0,
+        bounds: const GeoBox(
+          west: -180,
+          east: 180,
+          south: 0,
+          north: 0,
         ),
         zoomLevel: 0,
       ),
@@ -120,11 +120,11 @@ void main() {
 
   test('returns an empty collection when tiny bounds contain no grid line', () {
     final result = builder.build(
-      bounds: const LngLatBounds(
-        longitudeWest: 139.1,
-        longitudeEast: 139.2,
-        latitudeSouth: 35.1,
-        latitudeNorth: 35.2,
+      bounds: const GeoBox(
+        west: 139.1,
+        east: 139.2,
+        south: 35.1,
+        north: 35.2,
       ),
       zoomLevel: 7,
     );
@@ -135,11 +135,11 @@ void main() {
   test('clips line endpoints to the Web Mercator latitude limits', () {
     final features = featuresOf(
       builder.build(
-        bounds: const LngLatBounds(
-          longitudeWest: 135,
-          longitudeEast: 135,
-          latitudeSouth: -90,
-          latitudeNorth: 90,
+        bounds: const GeoBox(
+          west: 135,
+          east: 135,
+          south: -90,
+          north: 90,
         ),
         zoomLevel: 0,
       ),
@@ -153,11 +153,11 @@ void main() {
 
   test('returns an empty collection outside the Web Mercator region', () {
     final result = builder.build(
-      bounds: const LngLatBounds(
-        longitudeWest: 139,
-        longitudeEast: 140,
-        latitudeSouth: 86,
-        latitudeNorth: 90,
+      bounds: const GeoBox(
+        west: 139,
+        east: 140,
+        south: 86,
+        north: 90,
       ),
       zoomLevel: 7,
     );
@@ -167,11 +167,11 @@ void main() {
 
   test('normalizes negative zero in emitted coordinates', () {
     final result = builder.build(
-      bounds: const LngLatBounds(
-        longitudeWest: -0.0,
-        longitudeEast: 0,
-        latitudeSouth: -0.0,
-        latitudeNorth: 0,
+      bounds: const GeoBox(
+        west: -0.0,
+        east: 0,
+        south: -0.0,
+        north: 0,
       ),
       zoomLevel: 0,
     );
@@ -189,11 +189,11 @@ void main() {
     for (final testCase in cases) {
       final features = featuresOf(
         builder.build(
-          bounds: LngLatBounds(
-            longitudeWest: -testCase.extent,
-            longitudeEast: testCase.extent,
-            latitudeSouth: -testCase.extent,
-            latitudeNorth: testCase.extent,
+          bounds: GeoBox(
+            west: -testCase.extent,
+            east: testCase.extent,
+            south: -testCase.extent,
+            north: testCase.extent,
           ),
           zoomLevel: testCase.zoomLevel,
         ),
@@ -216,29 +216,29 @@ void main() {
 
   test('rejects every non-finite bounds field', () {
     const invalidBounds = [
-      LngLatBounds(
-        longitudeWest: double.nan,
-        longitudeEast: 140,
-        latitudeSouth: 35,
-        latitudeNorth: 36,
+      GeoBox(
+        west: double.nan,
+        east: 140,
+        south: 35,
+        north: 36,
       ),
-      LngLatBounds(
-        longitudeWest: 139,
-        longitudeEast: double.infinity,
-        latitudeSouth: 35,
-        latitudeNorth: 36,
+      GeoBox(
+        west: 139,
+        east: double.infinity,
+        south: 35,
+        north: 36,
       ),
-      LngLatBounds(
-        longitudeWest: 139,
-        longitudeEast: 140,
-        latitudeSouth: double.negativeInfinity,
-        latitudeNorth: 36,
+      GeoBox(
+        west: 139,
+        east: 140,
+        south: double.negativeInfinity,
+        north: 36,
       ),
-      LngLatBounds(
-        longitudeWest: 139,
-        longitudeEast: 140,
-        latitudeSouth: 35,
-        latitudeNorth: double.nan,
+      GeoBox(
+        west: 139,
+        east: 140,
+        south: 35,
+        north: double.nan,
       ),
     ];
 
@@ -253,11 +253,11 @@ void main() {
   test('rejects reversed latitude bounds', () {
     expect(
       () => builder.build(
-        bounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: 36,
-          latitudeNorth: 35,
+        bounds: const GeoBox(
+          west: 139,
+          east: 140,
+          south: 36,
+          north: 35,
         ),
         zoomLevel: 7,
       ),
@@ -267,29 +267,29 @@ void main() {
 
   test('rejects out-of-range longitude and latitude values', () {
     const invalidBounds = [
-      LngLatBounds(
-        longitudeWest: -181,
-        longitudeEast: 140,
-        latitudeSouth: 35,
-        latitudeNorth: 36,
+      GeoBox(
+        west: -181,
+        east: 140,
+        south: 35,
+        north: 36,
       ),
-      LngLatBounds(
-        longitudeWest: 139,
-        longitudeEast: 181,
-        latitudeSouth: 35,
-        latitudeNorth: 36,
+      GeoBox(
+        west: 139,
+        east: 181,
+        south: 35,
+        north: 36,
       ),
-      LngLatBounds(
-        longitudeWest: 139,
-        longitudeEast: 140,
-        latitudeSouth: -91,
-        latitudeNorth: 36,
+      GeoBox(
+        west: 139,
+        east: 140,
+        south: -91,
+        north: 36,
       ),
-      LngLatBounds(
-        longitudeWest: 139,
-        longitudeEast: 140,
-        latitudeSouth: 35,
-        latitudeNorth: 91,
+      GeoBox(
+        west: 139,
+        east: 140,
+        south: 35,
+        north: 91,
       ),
     ];
 
@@ -302,11 +302,11 @@ void main() {
   });
 
   test('rejects zoom levels outside 0 through 30', () {
-    const bounds = LngLatBounds(
-      longitudeWest: 139,
-      longitudeEast: 140,
-      latitudeSouth: 35,
-      latitudeNorth: 36,
+    const bounds = GeoBox(
+      west: 139,
+      east: 140,
+      south: 35,
+      north: 36,
     );
 
     expect(
@@ -322,11 +322,11 @@ void main() {
   test('rejects requests that would exceed the feature limit', () {
     expect(
       () => builder.build(
-        bounds: const LngLatBounds(
-          longitudeWest: -180,
-          longitudeEast: 180,
-          latitudeSouth: 0,
-          latitudeNorth: 0,
+        bounds: const GeoBox(
+          west: -180,
+          east: 180,
+          south: 0,
+          north: 0,
         ),
         zoomLevel: 30,
       ),

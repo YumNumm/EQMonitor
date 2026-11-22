@@ -11,11 +11,11 @@ import 'map_automatic_focus_controller_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<MapController>()])
 void main() {
-  const bounds = LngLatBounds(
-    longitudeWest: 139,
-    longitudeEast: 140,
-    latitudeSouth: 35,
-    latitudeNorth: 36,
+  const bounds = GeoBox(
+    west: 139,
+    east: 140,
+    south: 35,
+    north: 36,
   );
 
   group('mapAutomaticFocusTargetForBounds', () {
@@ -33,11 +33,11 @@ void main() {
     });
 
     test('広いboundsはviewportへ収まるzoom上限未満のtargetになる', () {
-      const wideBounds = LngLatBounds(
-        longitudeWest: 122.5,
-        longitudeEast: 146,
-        latitudeSouth: 24,
-        latitudeNorth: 46,
+      const wideBounds = GeoBox(
+        west: 122.5,
+        east: 146,
+        south: 24,
+        north: 46,
       );
 
       final target = MapAutomaticFocusController.targetForBounds(
@@ -55,15 +55,15 @@ void main() {
       }
       final worldSize = 512 * math.pow(2, zoom);
       final longitudeSpanPixels =
-          (wideBounds.longitudeEast - wideBounds.longitudeWest) /
+          (wideBounds.east - wideBounds.west) /
           360 *
           worldSize;
       final latitudeSpanPixels =
           (MapAutomaticFocusController.mercatorY(
-                    latitude: wideBounds.latitudeNorth,
+                    latitude: wideBounds.north,
                   ) -
                   MapAutomaticFocusController.mercatorY(
-                    latitude: wideBounds.latitudeSouth,
+                    latitude: wideBounds.south,
                   ))
               .abs() /
           (2 * math.pi) *
@@ -94,11 +94,11 @@ void main() {
 
     test('緯度にNaNを含むboundsはtargetを作らない', () {
       final target = MapAutomaticFocusController.targetForBounds(
-        bounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: double.nan,
-          latitudeNorth: 36,
+        bounds: const GeoBox(
+          west: 139,
+          east: 140,
+          south: double.nan,
+          north: 36,
         ),
         viewportSize: const Size(375, 667),
         padding: EdgeInsets.zero,
@@ -113,11 +113,11 @@ void main() {
         double.infinity,
       ]) {
         final target = MapAutomaticFocusController.targetForBounds(
-          bounds: LngLatBounds(
-            longitudeWest: 139,
-            longitudeEast: 140,
-            latitudeSouth: 35,
-            latitudeNorth: invalidLatitude,
+          bounds: GeoBox(
+            west: 139,
+            east: 140,
+            south: 35,
+            north: invalidLatitude,
           ),
           viewportSize: const Size(375, 667),
           padding: EdgeInsets.zero,
@@ -129,11 +129,11 @@ void main() {
 
     test('南端緯度が北端緯度を超えるboundsはtargetを作らない', () {
       final target = MapAutomaticFocusController.targetForBounds(
-        bounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: 36,
-          latitudeNorth: 35,
+        bounds: const GeoBox(
+          west: 139,
+          east: 140,
+          south: 36,
+          north: 35,
         ),
         viewportSize: const Size(375, 667),
         padding: EdgeInsets.zero,
@@ -145,20 +145,20 @@ void main() {
     for (final (:name, :invalidBounds) in [
       (
         name: '南端緯度が-90未満',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: -90.1,
-          latitudeNorth: 35,
+        invalidBounds: const GeoBox(
+          west: 139,
+          east: 140,
+          south: -90.1,
+          north: 35,
         ),
       ),
       (
         name: '北端緯度が90超',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: 35,
-          latitudeNorth: 90.1,
+        invalidBounds: const GeoBox(
+          west: 139,
+          east: 140,
+          south: 35,
+          north: 90.1,
         ),
       ),
     ]) {
@@ -176,29 +176,29 @@ void main() {
     for (final (:name, :invalidBounds) in [
       (
         name: '西端経度が-180未満',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: -180.1,
-          longitudeEast: 140,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        invalidBounds: const GeoBox(
+          west: -180.1,
+          east: 140,
+          south: 35,
+          north: 36,
         ),
       ),
       (
         name: '東端経度が180超',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 180.1,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        invalidBounds: const GeoBox(
+          west: 139,
+          east: 180.1,
+          south: 35,
+          north: 36,
         ),
       ),
       (
         name: '経度が非有限',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: double.nan,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        invalidBounds: const GeoBox(
+          west: 139,
+          east: double.nan,
+          south: 35,
+          north: 36,
         ),
       ),
     ]) {
@@ -215,11 +215,11 @@ void main() {
 
     test('日付変更線を横断する有効boundsはtargetを作る', () {
       final target = MapAutomaticFocusController.targetForBounds(
-        bounds: const LngLatBounds(
-          longitudeWest: 170,
-          longitudeEast: -170,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        bounds: const GeoBox(
+          west: 170,
+          east: -170,
+          south: 35,
+          north: 36,
         ),
         viewportSize: const Size(375, 667),
         padding: EdgeInsets.zero,
@@ -321,11 +321,11 @@ void main() {
       ]) {
         final result = await const MapAutomaticFocusController().fit(
           controller: controller,
-          bounds: LngLatBounds(
-            longitudeWest: 139,
-            longitudeEast: 140,
-            latitudeSouth: 35,
-            latitudeNorth: invalidLatitude,
+          bounds: GeoBox(
+            west: 139,
+            east: 140,
+            south: 35,
+            north: invalidLatitude,
           ),
           viewportSize: const Size(375, 667),
           isCurrent: () => true,
@@ -339,38 +339,38 @@ void main() {
     for (final (:name, :invalidBounds) in [
       (
         name: '南北緯度が逆転した',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: 36,
-          latitudeNorth: 35,
+        invalidBounds: const GeoBox(
+          west: 139,
+          east: 140,
+          south: 36,
+          north: 35,
         ),
       ),
       (
         name: '緯度が範囲外の',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 140,
-          latitudeSouth: -91,
-          latitudeNorth: 35,
+        invalidBounds: const GeoBox(
+          west: 139,
+          east: 140,
+          south: -91,
+          north: 35,
         ),
       ),
       (
         name: '経度が範囲外の',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: 139,
-          longitudeEast: 181,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        invalidBounds: const GeoBox(
+          west: 139,
+          east: 181,
+          south: 35,
+          north: 36,
         ),
       ),
       (
         name: '経度が非有限の',
-        invalidBounds: const LngLatBounds(
-          longitudeWest: double.infinity,
-          longitudeEast: 140,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        invalidBounds: const GeoBox(
+          west: double.infinity,
+          east: 140,
+          south: 35,
+          north: 36,
         ),
       ),
     ]) {
@@ -406,11 +406,11 @@ void main() {
 
       final result = await const MapAutomaticFocusController().fit(
         controller: controller,
-        bounds: const LngLatBounds(
-          longitudeWest: 170,
-          longitudeEast: -170,
-          latitudeSouth: 35,
-          latitudeNorth: 36,
+        bounds: const GeoBox(
+          west: 170,
+          east: -170,
+          south: 35,
+          north: 36,
         ),
         viewportSize: const Size(375, 667),
         isCurrent: () => true,

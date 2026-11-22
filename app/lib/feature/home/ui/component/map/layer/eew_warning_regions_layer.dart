@@ -40,20 +40,20 @@ class const EewWarningRegionsLayer({
 
       unawaited(
         enqueue(() async {
-          await styleController.addLayer(
+          await styleController.layers.add(
             FillStyleLayer(
               id: _layerId,
               sourceId: 'eqmonitor_map',
               sourceLayerId: 'areaForecastLocalEew',
-              filter: _areaFilterBuilder.build(codes),
-              paint: const {'fill-color': '#FF0000', 'fill-opacity': 0.25},
+              filter: .raw(_areaFilterBuilder.build(codes)),
+              color: const .literal(Color(0xFFFF0000)),
+              opacity: const .literal(0.25),
             ),
             belowLayerId: BaseLayer.regionOverlayAnchor.name,
           );
           isInitialized.value = true;
-          await styleController.updateFilter(
-            id: _layerId,
-            filter: _areaFilterBuilder.build(latestCodes.value),
+          styleController.layers[_layerId]?.filter = .raw(
+            _areaFilterBuilder.build(latestCodes.value),
           );
         }),
       );
@@ -62,7 +62,7 @@ class const EewWarningRegionsLayer({
         unawaited(
           enqueue(() async {
             isInitialized.value = false;
-            await styleController.removeLayer(_layerId);
+            await styleController.layers.remove(_layerId);
           }),
         );
       };
@@ -77,12 +77,11 @@ class const EewWarningRegionsLayer({
         return null;
       }
       unawaited(
-        enqueue(
-          () => styleController.updateFilter(
-            id: _layerId,
-            filter: _areaFilterBuilder.build(codes),
-          ),
-        ),
+        enqueue(() async {
+          styleController.layers[_layerId]?.filter = .raw(
+            _areaFilterBuilder.build(codes),
+          );
+        }),
       );
       return null;
     }, [styleController, codes]);
