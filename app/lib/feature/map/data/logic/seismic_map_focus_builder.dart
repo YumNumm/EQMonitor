@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:maplibre/maplibre.dart';
 
 const seismicMapFocusMargin = 0.1;
 
@@ -22,8 +22,8 @@ const _minimumCosineLatitude = 0.01;
 typedef SeismicMapGeoCoordinate = ({double latitude, double longitude});
 
 class const SeismicMapFocusBuilder() {
-  GeoBox forRealtime({
-    required GeoBox fallbackBounds,
+  MapCameraBounds forRealtime({
+    required MapCameraBounds fallbackBounds,
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
   }) {
@@ -74,9 +74,9 @@ class const SeismicMapFocusBuilder() {
     yield maximum;
   }
 
-  static GeoBox boundsForTargets({
+  static MapCameraBounds boundsForTargets({
     required List<SeismicMapGeoCoordinate> targets,
-    required GeoBox fallbackBounds,
+    required MapCameraBounds fallbackBounds,
   }) {
     if (targets.isEmpty) {
       return fallbackBounds;
@@ -109,7 +109,7 @@ class const SeismicMapFocusBuilder() {
   /// 矩形の中心から [seismicMapFocusMinimumRadiusKm] を下回る辺を押し広げる。
   ///
   /// 既に十分広い矩形はそのまま維持する。
-  static GeoBox expandToMinimumRadius({
+  static MapCameraBounds expandToMinimumRadius({
     required double west,
     required double east,
     required double south,
@@ -125,7 +125,7 @@ class const SeismicMapFocusBuilder() {
         .clamp(_minimumCosineLatitude, 1.0);
     final longitudeRadius = latitudeRadius / cosineLatitude;
 
-    return GeoBox(
+    return MapCameraBounds(
       west: math
           .min(west, centerLongitude - longitudeRadius)
           .clamp(-180, 180)

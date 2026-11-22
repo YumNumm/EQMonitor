@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/feature/map/data/logic/lat_lng_grid_geo_json_builder.dart';
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:maplibre/maplibre.dart';
 
 void main() {
   const builder = LatLngGridGeoJsonBuilder();
@@ -22,7 +22,7 @@ void main() {
   }
 
   test('builds a stable FeatureCollection with longitude-latitude pairs', () {
-    const bounds = GeoBox(
+    const bounds = MapCameraBounds(
       west: 139,
       east: 140,
       south: 35,
@@ -62,7 +62,7 @@ void main() {
   test('splits horizontal lines and emits the antimeridian only once', () {
     final features = featuresOf(
       builder.build(
-        bounds: const GeoBox(
+        bounds: const MapCameraBounds(
           west: 179,
           east: -179,
           south: 0,
@@ -100,7 +100,7 @@ void main() {
   test('deduplicates exact -180 and 180 bounds', () {
     final features = featuresOf(
       builder.build(
-        bounds: const GeoBox(
+        bounds: const MapCameraBounds(
           west: -180,
           east: 180,
           south: 0,
@@ -120,7 +120,7 @@ void main() {
 
   test('returns an empty collection when tiny bounds contain no grid line', () {
     final result = builder.build(
-      bounds: const GeoBox(
+      bounds: const MapCameraBounds(
         west: 139.1,
         east: 139.2,
         south: 35.1,
@@ -135,7 +135,7 @@ void main() {
   test('clips line endpoints to the Web Mercator latitude limits', () {
     final features = featuresOf(
       builder.build(
-        bounds: const GeoBox(
+        bounds: const MapCameraBounds(
           west: 135,
           east: 135,
           south: -90,
@@ -153,7 +153,7 @@ void main() {
 
   test('returns an empty collection outside the Web Mercator region', () {
     final result = builder.build(
-      bounds: const GeoBox(
+      bounds: const MapCameraBounds(
         west: 139,
         east: 140,
         south: 86,
@@ -167,7 +167,7 @@ void main() {
 
   test('normalizes negative zero in emitted coordinates', () {
     final result = builder.build(
-      bounds: const GeoBox(
+      bounds: const MapCameraBounds(
         west: -0.0,
         east: 0,
         south: -0.0,
@@ -189,7 +189,7 @@ void main() {
     for (final testCase in cases) {
       final features = featuresOf(
         builder.build(
-          bounds: GeoBox(
+          bounds: MapCameraBounds(
             west: -testCase.extent,
             east: testCase.extent,
             south: -testCase.extent,
@@ -216,25 +216,25 @@ void main() {
 
   test('rejects every non-finite bounds field', () {
     const invalidBounds = [
-      GeoBox(
+      MapCameraBounds(
         west: double.nan,
         east: 140,
         south: 35,
         north: 36,
       ),
-      GeoBox(
+      MapCameraBounds(
         west: 139,
         east: double.infinity,
         south: 35,
         north: 36,
       ),
-      GeoBox(
+      MapCameraBounds(
         west: 139,
         east: 140,
-        south: double.nan,
+        south: double.negativeInfinity,
         north: 36,
       ),
-      GeoBox(
+      MapCameraBounds(
         west: 139,
         east: 140,
         south: 35,
@@ -253,7 +253,7 @@ void main() {
   test('rejects reversed latitude bounds', () {
     expect(
       () => builder.build(
-        bounds: const GeoBox(
+        bounds: const MapCameraBounds(
           west: 139,
           east: 140,
           south: 36,
@@ -265,35 +265,44 @@ void main() {
     );
   });
 
-  test(
-    'treats out-of-range values as the bounds GeoBox normalizes them to',
-    () {
-      const cases = [
-        (
-          bounds: GeoBox(west: 179, east: 181, south: 0, north: 1),
-          normalized: GeoBox(west: 179, east: -179, south: 0, north: 1),
-        ),
-        (
-          bounds: GeoBox(west: -181, east: -179, south: 0, north: 1),
-          normalized: GeoBox(west: 179, east: -179, south: 0, north: 1),
-        ),
-        (
-          bounds: GeoBox(west: 139, east: 140, south: -91, north: 91),
-          normalized: GeoBox(west: 139, east: 140, south: -90, north: 90),
-        ),
-      ];
+  test('rejects out-of-range longitude and latitude values', () {
+    const invalidBounds = [
+      MapCameraBounds(
+        west: -181,
+        east: 140,
+        south: 35,
+        north: 36,
+      ),
+      MapCameraBounds(
+        west: 139,
+        east: 181,
+        south: 35,
+        north: 36,
+      ),
+      MapCameraBounds(
+        west: 139,
+        east: 140,
+        south: -91,
+        north: 36,
+      ),
+      MapCameraBounds(
+        west: 139,
+        east: 140,
+        south: 35,
+        north: 91,
+      ),
+    ];
 
-      for (final testCase in cases) {
-        expect(
-          builder.build(bounds: testCase.bounds, zoomLevel: 0),
-          builder.build(bounds: testCase.normalized, zoomLevel: 0),
-        );
-      }
-    },
-  );
+    for (final bounds in invalidBounds) {
+      expect(
+        () => builder.build(bounds: bounds, zoomLevel: 7),
+        throwsRangeError,
+      );
+    }
+  });
 
   test('rejects zoom levels outside 0 through 30', () {
-    const bounds = GeoBox(
+    const bounds = MapCameraBounds(
       west: 139,
       east: 140,
       south: 35,
@@ -313,7 +322,7 @@ void main() {
   test('rejects requests that would exceed the feature limit', () {
     expect(
       () => builder.build(
-        bounds: const GeoBox(
+        bounds: const MapCameraBounds(
           west: -180,
           east: 180,
           south: 0,

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
 import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:maplibre/maplibre.dart';
@@ -12,7 +13,7 @@ import 'map_automatic_focus_controller_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<MapController>()])
 void main() {
-  const bounds = GeoBox(
+  const bounds = MapCameraBounds(
     west: 139,
     east: 140,
     south: 35,
@@ -34,7 +35,7 @@ void main() {
     });
 
     test('広いboundsはviewportへ収まるzoom上限未満のtargetになる', () {
-      const wideBounds = GeoBox(
+      const wideBounds = MapCameraBounds(
         west: 122.5,
         east: 146,
         south: 24,
@@ -93,7 +94,7 @@ void main() {
 
     test('緯度にNaNを含むboundsはtargetを作らない', () {
       final target = MapAutomaticFocusController.targetForBounds(
-        bounds: const GeoBox(
+        bounds: const MapCameraBounds(
           west: 139,
           east: 140,
           south: double.nan,
@@ -112,7 +113,7 @@ void main() {
         double.infinity,
       ]) {
         final target = MapAutomaticFocusController.targetForBounds(
-          bounds: GeoBox(
+          bounds: MapCameraBounds(
             west: 139,
             east: 140,
             south: 35,
@@ -128,7 +129,7 @@ void main() {
 
     test('南端緯度が北端緯度を超えるboundsはtargetを作らない', () {
       final target = MapAutomaticFocusController.targetForBounds(
-        bounds: const GeoBox(
+        bounds: const MapCameraBounds(
           west: 139,
           east: 140,
           south: 36,
@@ -144,7 +145,7 @@ void main() {
     for (final (:name, :invalidBounds) in [
       (
         name: '南端緯度が-90未満',
-        invalidBounds: const GeoBox(
+        invalidBounds: const MapCameraBounds(
           west: 139,
           east: 140,
           south: -90.1,
@@ -153,7 +154,7 @@ void main() {
       ),
       (
         name: '北端緯度が90超',
-        invalidBounds: const GeoBox(
+        invalidBounds: const MapCameraBounds(
           west: 139,
           east: 140,
           south: 35,
@@ -175,7 +176,7 @@ void main() {
     for (final (:name, :invalidBounds) in [
       (
         name: '西端経度が-180未満',
-        invalidBounds: const GeoBox(
+        invalidBounds: const MapCameraBounds(
           west: -180.1,
           east: 140,
           south: 35,
@@ -184,7 +185,7 @@ void main() {
       ),
       (
         name: '東端経度が180超',
-        invalidBounds: const GeoBox(
+        invalidBounds: const MapCameraBounds(
           west: 139,
           east: 180.1,
           south: 35,
@@ -193,7 +194,7 @@ void main() {
       ),
       (
         name: '経度が非有限',
-        invalidBounds: const GeoBox(
+        invalidBounds: const MapCameraBounds(
           west: 139,
           east: double.nan,
           south: 35,
@@ -214,7 +215,7 @@ void main() {
 
     test('日付変更線を横断する有効boundsはtargetを作る', () {
       final target = MapAutomaticFocusController.targetForBounds(
-        bounds: const GeoBox(
+        bounds: const MapCameraBounds(
           west: 170,
           east: -170,
           south: 35,
@@ -320,7 +321,7 @@ void main() {
       ]) {
         final result = await const MapAutomaticFocusController().fit(
           controller: controller,
-          bounds: GeoBox(
+          bounds: MapCameraBounds(
             west: 139,
             east: 140,
             south: 35,
@@ -338,7 +339,7 @@ void main() {
     for (final (:name, :invalidBounds) in [
       (
         name: '南北緯度が逆転した',
-        invalidBounds: const GeoBox(
+        invalidBounds: const MapCameraBounds(
           west: 139,
           east: 140,
           south: 36,
@@ -347,7 +348,7 @@ void main() {
       ),
       (
         name: '緯度が範囲外の',
-        invalidBounds: const GeoBox(
+        invalidBounds: const MapCameraBounds(
           west: 139,
           east: 140,
           south: -91,
@@ -356,7 +357,7 @@ void main() {
       ),
       (
         name: '経度が範囲外の',
-        invalidBounds: const GeoBox(
+        invalidBounds: const MapCameraBounds(
           west: 139,
           east: 181,
           south: 35,
@@ -365,7 +366,7 @@ void main() {
       ),
       (
         name: '経度が非有限の',
-        invalidBounds: const GeoBox(
+        invalidBounds: const MapCameraBounds(
           west: double.infinity,
           east: 140,
           south: 35,
@@ -399,7 +400,7 @@ void main() {
 
       final result = await const MapAutomaticFocusController().fit(
         controller: controller,
-        bounds: const GeoBox(
+        bounds: const MapCameraBounds(
           west: 170,
           east: -170,
           south: 35,

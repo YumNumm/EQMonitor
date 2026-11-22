@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:eqmonitor/feature/map/data/logic/lat_lng_grid_interval_selector.dart';
-import 'package:maplibre/maplibre.dart';
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
 
 final class const LatLngGridGeoJsonBuilder({
   final LatLngGridIntervalSelector intervalSelector =
@@ -14,7 +14,7 @@ final class const LatLngGridGeoJsonBuilder({
   static const emptyFeatureCollection =
       '{"type":"FeatureCollection","features":[]}';
 
-  String build({required GeoBox bounds, required int zoomLevel}) {
+  String build({required MapCameraBounds bounds, required int zoomLevel}) {
     final longitudeWest = bounds.west;
     final longitudeEast = bounds.east;
     final latitudeSouth = bounds.south;

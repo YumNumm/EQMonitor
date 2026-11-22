@@ -1,3 +1,5 @@
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
+
 import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
@@ -12,7 +14,7 @@ typedef MapAutomaticFocusTarget = ({Geographic center, double zoom});
 class const MapAutomaticFocusController() {
   Future<bool> fit({
     required MapController controller,
-    required GeoBox bounds,
+    required MapCameraBounds bounds,
     required Size viewportSize,
     required bool Function() isCurrent,
     EdgeInsets padding = EdgeInsets.zero,
@@ -45,7 +47,7 @@ class const MapAutomaticFocusController() {
   }
 
   static MapAutomaticFocusTarget? targetForBounds({
-    required GeoBox bounds,
+    required MapCameraBounds bounds,
     required Size viewportSize,
     required EdgeInsets padding,
   }) {
@@ -118,7 +120,7 @@ class const MapAutomaticFocusController() {
     );
   }
 
-  static double centerLongitude({required GeoBox bounds}) {
+  static double centerLongitude({required MapCameraBounds bounds}) {
     final adjustedEast = bounds.east < bounds.west
         ? bounds.east + 360
         : bounds.east;
