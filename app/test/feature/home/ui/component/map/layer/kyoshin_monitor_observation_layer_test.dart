@@ -22,6 +22,7 @@ void main() {
               radiusScaleFactor: scale,
               markerType: .never,
               hasActiveEew: false,
+              hasIcon: false,
             )
             .paint['circle-radius'],
         interpolation(scale),
@@ -48,6 +49,7 @@ void main() {
               radiusScaleFactor: scale,
               markerType: .always,
               hasActiveEew: false,
+              hasIcon: false,
             )
             .paint['circle-stroke-width'],
         interpolation(scale),
@@ -58,7 +60,12 @@ void main() {
   test('zoom依存の式を式ツリーの最上位に置く (MapLibre iOS制約)', () {
     const builder = KyoshinMonitorObservationLayerBuilder();
     final paint = builder
-        .build(radiusScaleFactor: 1.35, markerType: .always, hasActiveEew: true)
+        .build(
+          radiusScaleFactor: 1.35,
+          markerType: .always,
+          hasActiveEew: true,
+          hasIcon: false,
+        )
         .paint;
 
     for (final key in ['circle-radius', 'circle-stroke-width']) {
@@ -94,6 +101,7 @@ void main() {
           radiusScaleFactor: 1,
           markerType: markerType,
           hasActiveEew: hasActiveEew,
+          hasIcon: false,
         )
         .paint['circle-stroke-width'];
 
