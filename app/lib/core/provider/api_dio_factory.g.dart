@@ -48,4 +48,4 @@ final class ApiDioFactoryProvider
   }
 }
 
-String _$apiDioFactoryHash() => r'4a81f8c8bd466ad39e6183d2e0239f92504aa972';
+String _$apiDioFactoryHash() => r'f99d40e12631aae0b15d6b42f28e1a4cb83d1e50';

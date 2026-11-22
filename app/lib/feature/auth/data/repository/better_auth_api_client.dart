@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:eqmonitor/core/data/network/native_dio_factory.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/core/provider/api_user_agent_provider.dart';
 import 'package:eqmonitor/core/provider/dio_base_options.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
@@ -24,6 +26,9 @@ Future<BetterAuthApiClient> betterAuthApiClient(Ref ref) async {
   );
   final dio = const NativeDioFactory().build(
     options: DioBaseOptionsFactory.build(baseUrl: telegramUrl.restApiUrl),
+  );
+  dio.options.headers[HttpHeaders.userAgentHeader] = ref.watch(
+    apiUserAgentProvider,
   );
   ref.onDispose(() => dio.close(force: true));
   return BetterAuthApiClient(
