@@ -106,13 +106,12 @@ void main() {
   testWidgets('設定が有効なら推計震度と到達予想時刻を表示する', (tester) async {
     await _pump(tester, isVisible: true);
 
-    expect(find.text('東京都23区'), findsOneWidget);
-    expect(find.text('主要動到達まで'), findsOneWidget);
+    expect(find.text('現在地\n揺れ到達まで'), findsOneWidget);
   });
 
   testWidgets('設定が無効なら推計震度と到達予想時刻を表示しない', (tester) async {
     await _pump(tester, isVisible: false);
 
-    expect(find.text('主要動到達まで'), findsNothing);
+    expect(find.text('現在地\n揺れ到達まで'), findsNothing);
   });
 }
