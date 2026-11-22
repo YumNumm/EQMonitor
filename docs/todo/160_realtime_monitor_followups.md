@@ -53,6 +53,7 @@
 - 実機未検証: iOS で Files・AirDrop・メール添付から `.eqrp` を開けること（起動中・コールドスタートの両方）。`Documents/Inbox` の複製が読み込み後に削除されること。
 - 実機未検証: Android のファイルアプリから開けること。パスに拡張子を含まない provider（ダウンロードの `msf:` など）は intent-filter に一致しない。必要なら共有（`ACTION_SEND`）からの受け取りを検討する。
 - 実機未検証: 再生中の観測点・EEW の波面と到達カウントダウン・コントロールシートの操作、終了後にライブ表示へ戻ること。
+- 実機未検証: 端末内の揺れ検知を有効にして再生し、検知の表示・EEW との結合・地図の自動フォーカスが再生時刻に沿って動くこと。シークと終了で検知が残らないこと。
 - 導線はデバッグメニューと OS の「ファイルで開く」のみ。設定画面の導線は、Pro 限定の EQRP 作成機能と合わせて公開する。作成時の時刻の規約は [リプレイ再生](../knowledge/earthquake_replay.md) に従う。
 - KyoshinEewViewerIngen（YumNumm fork）の `EqMonitorEventMessage` は 1003 の JSON を camelCase の EventMessage として読み、アプリの契約（EEW API の `EewItemWithRelations`）と異なる。KEVi と同じファイルを共有する場合は形式を揃える。
 - 完了条件: 上記の実機確認が済み、公開範囲（Pro 限定か）と設定画面の導線が決まっている。
