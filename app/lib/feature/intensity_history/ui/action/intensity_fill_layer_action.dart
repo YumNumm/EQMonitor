@@ -30,6 +30,24 @@ class const IntensityFillLayerAction() {
     }
   }
 
+  Future<void> updateFilter({
+    required StyleController styleController,
+    required Iterable<String> layerIds,
+    required List<Object> filter,
+  }) async {
+    for (final id in layerIds) {
+      try {
+        await styleController.updateFilter(id: id, filter: filter);
+      } on Object catch (error, stackTrace) {
+        talker.handle(
+          error,
+          stackTrace,
+          'IntensityFillLayer: failed to update filter of $id',
+        );
+      }
+    }
+  }
+
   Future<void> removeAll({
     required StyleController styleController,
     required Iterable<String> layerIds,

@@ -21,8 +21,9 @@ import 'package:maplibre/maplibre.dart';
 ///
 /// 塗りと選択中の輪郭線は別々の `useEffect` で管理する。塗りは全国 ~1900
 /// 市区町村分の `match` 式を持つので入れ替えが重く、市区町村をタップするたびに
-/// 作り直すと塗りが消えたように見える。相対順序はアンカー（細分区域の境界線の
-/// 下 / 上）で決まるので、effect を分けても順序は入れ替わらない。
+/// 作り直すと塗りが消えたように見える。輪郭線も style・配色ごとに 1 度だけ
+/// 追加し、選択の変更は filter の更新で反映する。相対順序は style が持つ
+/// アンカーで決まるので、effect を分けても順序は入れ替わらない。
 class const IntensityFillLayer({
   required final List<CityMaxIntensityEntry>? items,
   super.key,
@@ -99,6 +100,9 @@ class const IntensityFillLayer({
       [styleController, itemsRevision.value, colorModel, enqueue, action],
     );
 
+    final latestSelectedCityCode = useRef(selectedCityCode);
+    latestSelectedCityCode.value = selectedCityCode;
+
     useEffect(
       () {
         final controller = styleController;
@@ -106,18 +110,19 @@ class const IntensityFillLayer({
           return null;
         }
 
-        final layers = builder.buildSelectedCityLine(
-          selectedCityCode: selectedCityCode,
-          lineColor: colorScheme.primary.toHexStringRGB(),
-          haloColor: isDarkMode ? '#000000' : '#FFFFFF',
-        );
+        final lineColor = colorScheme.primary.toHexStringRGB();
+        final haloColor = isDarkMode ? '#000000' : '#FFFFFF';
 
         unawaited(
           enqueue(
             () => action.replace(
               styleController: controller,
               layerIds: IntensityFillLayerBuilder.selectedCityLineLayerIds,
-              layers: layers,
+              layers: builder.buildSelectedCityLine(
+                selectedCityCode: latestSelectedCityCode.value,
+                lineColor: lineColor,
+                haloColor: haloColor,
+              ),
             ),
           ),
         );
@@ -133,14 +138,28 @@ class const IntensityFillLayer({
           );
         };
       },
-      [
-        styleController,
-        selectedCityCode,
-        colorScheme.primary,
-        isDarkMode,
-        enqueue,
-        action,
-      ],
+      [styleController, colorScheme.primary, isDarkMode, enqueue, action],
+    );
+
+    useEffect(
+      () {
+        final controller = styleController;
+        if (controller == null) {
+          return null;
+        }
+
+        unawaited(
+          enqueue(
+            () => action.updateFilter(
+              styleController: controller,
+              layerIds: IntensityFillLayerBuilder.selectedCityLineLayerIds,
+              filter: builder.selectedCityFilter(latestSelectedCityCode.value),
+            ),
+          ),
+        );
+        return null;
+      },
+      [styleController, selectedCityCode, enqueue, action],
     );
 
     return const SizedBox.shrink();
