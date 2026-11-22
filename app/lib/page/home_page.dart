@@ -170,9 +170,9 @@ class const _LocationPermissionBanner() extends ConsumerWidget {
 
     return AppBanner(
       icon: Icons.location_off_rounded,
-      title: isForegroundOnly ? '位置情報が「常に許可」になっていません' : '位置情報が許可されていません',
+      title: isForegroundOnly ? '位置情報の許可が不足しています' : '位置情報が許可されていません',
       description: isForegroundOnly
-          ? 'アプリを開いていない間は現在地を更新できません。タップして権限を変更'
+          ? 'アプリを開いていない間は現在地を更新できません。タップして「常に許可」に変更'
           : '現在地に基づく通知は届きません。タップして許可',
       backgroundColor: colorTheme.primaryContainer,
       foregroundColor: colorTheme.onPrimaryContainer,

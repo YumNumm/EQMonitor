@@ -77,6 +77,7 @@ class const _MapToolbarButton({
   @override
   Widget build(BuildContext context) => IconButton(
     icon: Icon(icon),
+    color: context.designSystem.colorTheme.onSurface,
     tooltip: tooltip,
     onPressed: enabled
         ? () async {
