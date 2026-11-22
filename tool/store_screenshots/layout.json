@@ -1,0 +1,97 @@
+{
+  "figmaFile": "AmrOwdlmvdGU03vssT9e1H",
+  "canvas": {
+    "width": 1290,
+    "height": 2796
+  },
+  "pages": [
+    {
+      "id": "01_eew",
+      "figmaNodeId": "2068:480",
+      "scene": "eew_warning",
+      "background": "backgrounds/01_eew.png",
+      "device": {
+        "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+        "bezelRect": {
+          "x": 125.04,
+          "y": 632.71,
+          "width": 1041.04,
+          "height": 2128.36
+        },
+        "screenRect": {
+          "x": 180.0,
+          "y": 686.0,
+          "width": 930.0,
+          "height": 2021.94
+        },
+        "screenCornerRadius": 130.0
+      }
+    },
+    {
+      "id": "02_earthquake_detail",
+      "figmaNodeId": "2068:489",
+      "scene": "earthquake_detail",
+      "background": "backgrounds/02_earthquake_detail.png",
+      "device": {
+        "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+        "bezelRect": {
+          "x": 125.04,
+          "y": 632.71,
+          "width": 1041.04,
+          "height": 2128.36
+        },
+        "screenRect": {
+          "x": 180.0,
+          "y": 686.0,
+          "width": 930.0,
+          "height": 2021.94
+        },
+        "screenCornerRadius": 130.0
+      }
+    },
+    {
+      "id": "03_notification",
+      "figmaNodeId": "2068:492",
+      "scene": "lock_screen_live_activity",
+      "background": "backgrounds/03_notification.png",
+      "device": {
+        "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+        "bezelRect": {
+          "x": 125.04,
+          "y": 632.71,
+          "width": 1041.04,
+          "height": 2128.36
+        },
+        "screenRect": {
+          "x": 180.0,
+          "y": 686.0,
+          "width": 930.0,
+          "height": 2021.94
+        },
+        "screenCornerRadius": 130.0
+      }
+    },
+    {
+      "id": "04_kyoshin_monitor",
+      "figmaNodeId": "2068:495",
+      "scene": "kyoshin_monitor",
+      "background": "backgrounds/04_kyoshin_monitor.png",
+      "device": {
+        "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+        "bezelRect": {
+          "x": 125.04,
+          "y": 632.71,
+          "width": 1041.04,
+          "height": 2128.36
+        },
+        "screenRect": {
+          "x": 180.0,
+          "y": 686.0,
+          "width": 930.0,
+          "height": 2021.94
+        },
+        "screenCornerRadius": 130.0
+      }
+    }
+  ]
+}
