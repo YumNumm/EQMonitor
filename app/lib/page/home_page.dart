@@ -103,67 +103,56 @@ class const _SheetBody() extends ConsumerWidget {
   }
 }
 
-/// ホームシート下部の各画面への導線カード。
 class const _HomeActionsCard() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDebugMenuVisible = ref.watch(isDebugMenuAvailableProvider);
+    final entries = [
+      (
+        icon: Icons.location_city_rounded,
+        title: '市区町村別の最大観測震度',
+        onTap: () async => const IntensityHistoryRoute().push<void>(context),
+      ),
+      (
+        icon: Icons.history_rounded,
+        title: '緊急地震速報の履歴',
+        onTap: () async => const EewHistoryRoute().push<void>(context),
+      ),
+      (
+        icon: Icons.settings_rounded,
+        title: '設定',
+        onTap: () async => const SettingsRoute().push<void>(context),
+      ),
+      if (isDebugMenuVisible)
+        (
+          icon: Icons.bug_report_rounded,
+          title: 'デバッグページ',
+          onTap: () async => const DebugRoute().push<void>(context),
+        ),
+    ];
+
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
-    final divider = Divider(
-      height: 1,
-      indent: spacing.lg,
-      endIndent: spacing.lg,
-    );
-    final isDebugMenuVisible = ref.watch(isDebugMenuAvailableProvider);
+    final colorTheme = designSystem.colorTheme;
 
     return HomeSheetCard(
       children: [
-        Theme(
-          data: Theme.of(context).copyWith(visualDensity: .compact),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              ListTile(
-                title: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '市区町村別 ',
-                        style: typography.bodySmall.copyWith(
-                          fontWeight: .bold,
-                        ),
-                      ),
-                      TextSpan(
-                        text: '最大観測震度',
-                        style: typography.titleSmall,
-                      ),
-                    ],
-                  ),
-                ),
-                onTap: () async =>
-                    const IntensityHistoryRoute().push<void>(context),
-              ),
-              divider,
-              ListTile(
-                title: Text('緊急地震速報の履歴', style: typography.titleSmall),
-                onTap: () async => const EewHistoryRoute().push<void>(context),
-              ),
-              divider,
-              ListTile(
-                title: Text('設定', style: typography.titleSmall),
-                onTap: () async => const SettingsRoute().push<void>(context),
-              ),
-              if (isDebugMenuVisible) ...[
-                divider,
-                ListTile(
-                  title: Text('デバッグページ', style: typography.titleSmall),
-                  onTap: () async => const DebugRoute().push<void>(context),
-                ),
-              ],
-            ],
+        for (final (index, entry) in entries.indexed) ...[
+          if (index != 0)
+            Divider(height: 1, indent: spacing.lg, endIndent: spacing.lg),
+          ListTile(
+            visualDensity: .compact,
+            contentPadding: EdgeInsets.symmetric(horizontal: spacing.lg),
+            leading: Icon(entry.icon, color: colorTheme.onSurfaceVariant),
+            title: Text(entry.title, style: typography.titleSmall),
+            trailing: Icon(
+              Icons.chevron_right_rounded,
+              color: colorTheme.onSurfaceVariant,
+            ),
+            onTap: entry.onTap,
           ),
-        ),
+        ],
       ],
     );
   }
