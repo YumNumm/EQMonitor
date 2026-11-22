@@ -13,7 +13,7 @@ void main() {
       '"properties":{},"geometry":{"type":"Point","coordinates":[139,35]}}]}';
 
   Future<FakeStyleController> createStyle() async {
-    final style = await createStyle();
+    final style = FakeStyleController();
     await style.sources.add(
       const GeoJsonSource.data(id: 'source', data: .text(emptyGeoJson)),
     );
