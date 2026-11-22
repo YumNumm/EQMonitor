@@ -46,7 +46,7 @@ final class const IntensityHistoryCityCamera() {
     if (bounds == null) {
       return null;
     }
-    final defaults = MapOptions(initStyle: styleString);
+    const defaults = MapOptions();
     final fit = const MapCameraBoundsFitter().fit(
       bounds: bounds,
       viewportLogicalSize: viewportSize,
@@ -57,12 +57,14 @@ final class const IntensityHistoryCityCamera() {
     );
     return switch (fit) {
       MapCameraBoundsFitSucceeded(:final camera) => MapOptions(
-        initCenter: Geographic(
-          lon: camera.centerLongitude,
-          lat: camera.centerLatitude,
+        style: MapStyle.file(styleString),
+        initCamera: CameraUpdate.position(
+          center: Geographic(
+            lon: camera.centerLongitude,
+            lat: camera.centerLatitude,
+          ),
+          zoom: camera.zoom,
         ),
-        initZoom: camera.zoom,
-        initStyle: styleString,
       ),
       MapCameraBoundsFitInvalid() => null,
     };

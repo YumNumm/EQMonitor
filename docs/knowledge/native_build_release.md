@@ -141,20 +141,15 @@ xcrun actool AppIcon-dev.icon \
 
 ## Android release の JNI / R8
 
-- MapLibreのjnigenはJavaクラスを名前で解決する。R8はDart/JNIの参照を追跡できず、
-  debug成功でもreleaseで `Expression$Converter` 等の `ClassNotFoundException` が起こりうる。
-- `app/android/app/proguard-rules.pro` の `-keep class org.maplibre.android.** { *; }` を維持する。
-  全体のminify/resource shrinkingを無効にして回避しない。
-- MapLibreはローカル `packages/` ではなく `YumNumm/flutter-maplibre` のGit依存。
-  lockfile固定 `d80b6f2ca07028f63d58f6b7203a1649774e69ab` のconsumer rulesにも
-  `-keep class org.maplibre.** { *; }` と `-keep class io.flutter.plugin.platform.** { public *; }` がある。
-- PlatformViewのkeepを削ると元の完全修飾名とJNI参照が合わず、生成時にnullが返って白画面になる。
-  `PlatformView.getView()` のNullPointerExceptionはPMTiles読込み前の障害として切り分ける。
-- release APKは `tool/verify_maplibre_android_classes.sh <apk-path>`（apkanalyzer必須）で確認する。
-  このscriptは `Expression$Converter` の存在だけを検査するため、mappingでも
-  `PlatformView` / `PlatformViewFactory` の難読化後の名前が元と同じであることを確認する。
-- 最後にrelease成果物を端末で起動し、PlatformView生成と地図表示を確認する。
-  AAB内のPMTiles存在確認だけでは代用できない。このrelease smokeは今回未実施・未確認。
+- `maplibre` 0.4 の Android 側は `maplibre_native`。jnigen が名前で解決するクラスは
+  `org.maplibre.maplibre_native.MaplibreNativeApi` と `SurfaceListener` で、keep は plugin の consumer rules が持つ。
+  アプリ側の `proguard-rules.pro` に MapLibre 用の keep は置かない。全体のminify/resource shrinkingを無効にして回避しない。
+- MapLibreはローカル `packages/` ではなく `YumNumm/flutter-maplibre` のGit依存。native の本体は
+  `maplibre_native_ffi` の build hook が取得するビルド済みライブラリ。
+- release APKは `tool/verify_maplibre_android_classes.sh <apk-path>`（apkanalyzer必須）で
+  `MaplibreNativeApi` の存在を確認する。
+- 最後にrelease成果物を端末で起動し、地図表示を確認する。
+  AAB内のPMTiles存在確認だけでは代用できない。0.4 への移行後、このrelease smokeは未実施・未確認。
 
 ## 実機デバッグの切り分け
 

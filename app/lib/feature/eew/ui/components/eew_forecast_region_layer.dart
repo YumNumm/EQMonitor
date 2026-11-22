@@ -92,13 +92,14 @@ class const EewForecastRegionLayer({
                 .where((r) => r.intensity == intensity)
                 .map((r) => r.code)
                 .toList();
-            return styleController.addLayer(
+            return styleController.layers.add(
               FillStyleLayer(
                 id: intensityFilterUpdater.detailLayerId(intensity),
                 sourceId: _sourceId,
                 sourceLayerId: _intensitySourceLayerId,
-                filter: _areaFilterBuilder.build(codes),
-                paint: {'fill-color': color.toHexString(), 'fill-opacity': 0.7},
+                filter: .raw(_areaFilterBuilder.build(codes)),
+                color: .literal(color.withValues(alpha: 1)),
+                opacity: const .literal(0.7),
               ),
               belowLayerId: BaseLayer.areaForecastLocalELine.name,
             );
@@ -116,7 +117,7 @@ class const EewForecastRegionLayer({
             for (final intensity
                 in EewForecastRegionIntensityFilterUpdater.intensityLevels) {
               try {
-                await styleController.removeLayer(
+                await styleController.layers.remove(
                   intensityFilterUpdater.detailLayerId(intensity),
                 );
               } on Exception {
@@ -166,44 +167,41 @@ class const EewForecastRegionLayer({
         return null;
       }
 
-      final filter = _areaFilterBuilder.build(warningCodes);
+      final filter = Expression<bool>.raw(
+        _areaFilterBuilder.build(warningCodes),
+      );
 
       unawaited(
         enqueue(() async {
-          await styleController.addLayer(
+          await styleController.layers.add(
             FillStyleLayer(
               id: _warningLayerId,
               sourceId: _sourceId,
               sourceLayerId: _warningSourceLayerId,
               filter: filter,
-              paint: const {'fill-color': '#DD0000', 'fill-opacity': 1},
+              color: const .literal(Color(0xFFDD0000)),
+              opacity: const .literal(1),
             ),
             belowLayerId: BaseLayer.regionFillAnchor.name,
           );
-          await styleController.addLayer(
+          await styleController.layers.add(
             LineStyleLayer(
               id: _warningLineLayerId,
               sourceId: _sourceId,
               sourceLayerId: _warningSourceLayerId,
               filter: filter,
-              paint: {
-                'line-color': isDarkMode ? '#FFFFFF' : '#222222',
-                'line-width': 1,
-              },
+              color: .literal(
+                isDarkMode ? const Color(0xFFFFFFFF) : const Color(0xFF222222),
+              ),
+              width: const .literal(1),
             ),
             belowLayerId: BaseLayer.markerBackgroundAnchor.name,
           );
-          final latestFilter = _areaFilterBuilder.build(
-            latestWarningCodes.value,
+          final latestFilter = Expression<bool>.raw(
+            _areaFilterBuilder.build(latestWarningCodes.value),
           );
-          await styleController.updateFilter(
-            id: _warningLayerId,
-            filter: latestFilter,
-          );
-          await styleController.updateFilter(
-            id: _warningLineLayerId,
-            filter: latestFilter,
-          );
+          styleController.layers[_warningLayerId]?.filter = latestFilter;
+          styleController.layers[_warningLineLayerId]?.filter = latestFilter;
         }),
       );
 
@@ -211,12 +209,12 @@ class const EewForecastRegionLayer({
         unawaited(
           enqueue(() async {
             try {
-              await styleController.removeLayer(_warningLineLayerId);
+              await styleController.layers.remove(_warningLineLayerId);
             } on Exception {
               // ignore
             }
             try {
-              await styleController.removeLayer(_warningLayerId);
+              await styleController.layers.remove(_warningLayerId);
             } on Exception {
               // ignore
             }
@@ -235,17 +233,13 @@ class const EewForecastRegionLayer({
           return null;
         }
 
-        final filter = _areaFilterBuilder.build(warningCodes);
+        final filter = Expression<bool>.raw(
+          _areaFilterBuilder.build(warningCodes),
+        );
         unawaited(
           enqueue(() async {
-            await styleController.updateFilter(
-              id: _warningLayerId,
-              filter: filter,
-            );
-            await styleController.updateFilter(
-              id: _warningLineLayerId,
-              filter: filter,
-            );
+            styleController.layers[_warningLayerId]?.filter = filter;
+            styleController.layers[_warningLineLayerId]?.filter = filter;
           }),
         );
         return null;

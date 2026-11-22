@@ -10,19 +10,18 @@ class const EewEstimatedIntensityLayerFilterUpdater() {
     required StyleController styleController,
     required List<EewForecastRegionInfo> regionMaxIntensities,
   }) async {
-    await JmaIntensity.values
-        .where((intensity) => intensity != JmaIntensity.unknown)
-        .map((intensity) {
-          final codes = regionMaxIntensities
-              .where((r) => r.intensity == intensity)
-              .map((r) => r.code)
-              .toList();
-          return styleController.updateFilter(
-            id: intensity.layerId,
-            filter: _areaFilterBuilder.build(codes),
-          );
-        })
-        .wait;
+    for (final intensity in JmaIntensity.values) {
+      if (intensity == JmaIntensity.unknown) {
+        continue;
+      }
+      final codes = regionMaxIntensities
+          .where((r) => r.intensity == intensity)
+          .map((r) => r.code)
+          .toList();
+      styleController.layers[intensity.layerId]?.filter = .raw(
+        _areaFilterBuilder.build(codes),
+      );
+    }
   }
 }
 

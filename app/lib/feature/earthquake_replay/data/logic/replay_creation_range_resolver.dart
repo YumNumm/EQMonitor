@@ -1,5 +1,4 @@
-import 'package:clock/clock.dart';
-import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_creation_request.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,9 +8,7 @@ part 'replay_creation_range_resolver.g.dart';
 @Riverpod(keepAlive: true)
 ReplayCreationRangeResolver replayCreationRangeResolver(Ref ref) =>
     ReplayCreationRangeResolver(
-      now: () => clock.now().toUtc().add(
-        ref.read(ntpProvider).value?.offset ?? Duration.zero,
-      ),
+      now: () => ref.read(appClockProvider.notifier).realtimeNow().toUtc(),
     );
 
 typedef ReplayCreationRange = ({DateTime earliest, DateTime latest});
@@ -19,8 +16,7 @@ typedef ReplayCreationRange = ({DateTime earliest, DateTime latest});
 class const ReplayCreationRangeResolver({
   required final DateTime Function() now,
 }) {
-  // 強震モニタ・長周期地震動モニタは約3時間40分前までの画像を配信する（2026-11-23 実測）。
-  // 取得中に古い側が配信終了へ掛からないよう、余裕を持たせる。
+  // 過去画像の保持幅は ReplayKyoshinArchiveWindowResolver と同じ実測に基づく。
   static const retention = Duration(hours: 3);
   static const publishMargin = Duration(seconds: 30);
   static const maxDuration = Duration(minutes: 30);

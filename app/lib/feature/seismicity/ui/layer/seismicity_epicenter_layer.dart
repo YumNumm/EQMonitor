@@ -63,8 +63,8 @@ class const SeismicityEpicenterLayer({
         if (lifecycleToken.value != token) {
           return;
         }
-        await styleController.addSource(
-          const GeoJsonSource(id: sourceId, data: _emptyGeoJson),
+        await styleController.sources.add(
+          const GeoJsonSource.data(id: sourceId, data: .text(_emptyGeoJson)),
         );
       });
 
@@ -98,12 +98,12 @@ class const SeismicityEpicenterLayer({
             return;
           }
           if (isLayerInitialized.value) {
-            await styleController.removeLayer(layerId);
+            await styleController.layers.remove(layerId);
           }
           if (lifecycleToken.value != token) {
             return;
           }
-          await styleController.addLayer(
+          await styleController.layers.add(
             const SeismicityEpicenterStyleBuilder().build(colorMode: colorMode),
           );
           isLayerInitialized.value = true;
@@ -180,41 +180,39 @@ class const SeismicityEpicenterStyleBuilder() {
       CircleStyleLayer(
         id: SeismicityEpicenterLayer.layerId,
         sourceId: SeismicityEpicenterLayer.sourceId,
-        paint: {
-          'circle-color': switch (colorMode) {
-            SeismicityColorMode.magnitude => [
-              'interpolate',
-              ['linear'],
-              ['get', 'magnitude'],
-              2,
-              '#9e9e9e',
-              4,
-              '#ffca28',
-              6,
-              '#e53935',
-            ],
-            SeismicityColorMode.elapsedTime => [
-              'interpolate',
-              ['linear'],
-              ['get', 'elapsed_hours'],
-              0,
-              '#e53935',
-              24 * 30,
-              '#9e9e9e',
-            ],
-          },
-          'circle-radius': [
+        color: switch (colorMode) {
+          SeismicityColorMode.magnitude => const .raw([
             'interpolate',
             ['linear'],
             ['get', 'magnitude'],
             2,
-            3,
-            7,
-            18,
-          ],
-          'circle-opacity': 0.75,
-          'circle-stroke-width': 0.5,
-          'circle-stroke-color': '#00000080',
+            '#9e9e9e',
+            4,
+            '#ffca28',
+            6,
+            '#e53935',
+          ]),
+          SeismicityColorMode.elapsedTime => const .raw([
+            'interpolate',
+            ['linear'],
+            ['get', 'elapsed_hours'],
+            0,
+            '#e53935',
+            24 * 30,
+            '#9e9e9e',
+          ]),
         },
+        radius: const .raw([
+          'interpolate',
+          ['linear'],
+          ['get', 'magnitude'],
+          2,
+          3,
+          7,
+          18,
+        ]),
+        opacity: const .literal(0.75),
+        strokeWidth: const .literal(0.5),
+        strokeColor: const .literal(Color(0x80000000)),
       );
 }

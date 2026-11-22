@@ -21,33 +21,23 @@ dependency_overrides:
   maplibre:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: d80b6f2
+      ref: e1bc773
       path: packages/maplibre
-  maplibre_android:
+  maplibre_native:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: d80b6f2
-      path: packages/maplibre_android
-  maplibre_ios:
-    git:
-      url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: d80b6f2
-      path: packages/maplibre_ios
+      ref: e1bc773
+      path: packages/maplibre_native
   maplibre_platform_interface:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: d80b6f2
+      ref: e1bc773
       path: packages/maplibre_platform_interface
   maplibre_web:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: d80b6f2
+      ref: e1bc773
       path: packages/maplibre_web
-  maplibre_webview:
-    git:
-      url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: d80b6f2
-      path: packages/maplibre_webview
 
 dependencies:
   app_links: ^7.0.0
@@ -128,7 +118,7 @@ dependencies:
   libserialport_plus: ^1.0.1
   live_activity_util:
     path: ../packages/live_activity_util
-  maplibre: ^0.3.5
+  maplibre: ^0.4.0
   ntp: ^2.0.0
   objective_c: ^9.2.2
   package_info_plus: ^10.1.0

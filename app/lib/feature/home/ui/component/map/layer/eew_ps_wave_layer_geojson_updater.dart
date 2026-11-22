@@ -30,9 +30,9 @@ class const EewPsWaveLayerGeoJsonUpdater() {
 
     if (shouldUpdatePWave) {
       try {
-        await styleController.updateGeoJsonSource(
-          id: pWaveSourceId,
-          data: pWaveGeojson,
+        await styleController.sources.updateGeoJsonData(
+          pWaveSourceId,
+          .text(pWaveGeojson),
         );
         latestPWaveGeoJson.value = pWaveGeojson;
       } catch (e, stackTrace) {
@@ -45,9 +45,9 @@ class const EewPsWaveLayerGeoJsonUpdater() {
 
     if (shouldUpdateSWave) {
       try {
-        await styleController.updateGeoJsonSource(
-          id: sWaveSourceId,
-          data: sWaveGeojson,
+        await styleController.sources.updateGeoJsonData(
+          sWaveSourceId,
+          .text(sWaveGeojson),
         );
         latestSWaveGeoJson.value = sWaveGeojson;
       } catch (e, stackTrace) {

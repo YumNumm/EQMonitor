@@ -10,7 +10,7 @@ part 'app_clock.g.dart';
 ///
 /// 状態として現在の [TimeMode] を保持し、`now` でモードに応じた「現在時刻」を返す。
 /// - ベース時刻は NTP 補正済み時刻（`Ntp.now`）を優先し、未同期時は `clock` にフォールバックする。
-/// - 強震モニタ・EEW・揺れ検知はこのクロックを参照することで、通常/タイムシフト/リプレイの
+/// - 強震モニタ・EEW・揺れ検知はこのクロックを参照することで、通常/リプレイの
 ///   いずれのモードでも整合した時刻基準で動作する。
 @Riverpod(keepAlive: true)
 class AppClock extends _$AppClock {
@@ -18,23 +18,17 @@ class AppClock extends _$AppClock {
   TimeMode build() => const TimeMode.realtime();
 
   /// 現在のモードに応じた「現在時刻」を返す。
-  DateTime now() {
-    final base = ref.read(ntpProvider).value?.offset ?? Duration.zero;
-    final now = clock.now().add(base);
-    return switch (state) {
-      RealtimeTimeMode() => now,
-      TimeShiftTimeMode(:final offset) => now.add(offset),
-      ReplayTimeMode(:final currentTime) =>
-        ref.read(replayClockProgressProvider).positionFrom(currentTime),
-    };
-  }
+  DateTime now() => switch (state) {
+    RealtimeTimeMode() => realtimeNow(),
+    ReplayTimeMode(:final currentTime) =>
+      ref.read(replayClockProgressProvider).positionFrom(currentTime),
+  };
+
+  DateTime realtimeNow() =>
+      clock.now().add(ref.read(ntpProvider).value?.offset ?? Duration.zero);
 
   /// 通常再生へ戻す。
   void returnToRealtime() => state = const TimeMode.realtime();
-
-  /// タイムシフト再生へ切り替える。[offset] は過去方向（負の [Duration]）。
-  void enterTimeShift(Duration offset) =>
-      state = TimeMode.timeShift(offset: offset);
 
   /// リプレイファイル再生へ切り替える。
   void enterReplay(DateTime currentTime) {

@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_warning_regions_layer.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,6 +21,13 @@ void main() {
     final styleController = WarningRegionStyleController(
       firstAddGate: firstAddGate,
     );
+    await styleController.sources.add(
+      const VectorSource.url(id: 'eqmonitor_map', url: 'pmtiles://base'),
+    );
+    await styleController.layers.add(
+      BackgroundStyleLayer(id: BaseLayer.regionOverlayAnchor.name),
+    );
+    styleController.operations.clear();
     final events = ValueNotifier<List<EewTelegramItem>>([
       warningEew(prefectureCode: '9020', regionCode: '202'),
     ]);
@@ -33,7 +41,7 @@ void main() {
               mapController: WarningRegionMapController(
                 styleController: styleController,
               ),
-              mapCamera: null,
+              cameraPosition: null,
               child: ValueListenableBuilder<bool>(
                 valueListenable: isVisible,
                 builder: (context, visible, child) =>
@@ -72,12 +80,17 @@ void main() {
       'add-done',
       'filter:9040',
     ]);
-    expect(styleController.activeLayerIds, {'eew-warning-regions-fill'});
+    expect(styleController.activeLayerIds, [
+      'eew-warning-regions-fill',
+      BaseLayer.regionOverlayAnchor.name,
+    ]);
     expect(styleController.updatedCodes.last, ['9040']);
 
-    final layer = styleController.addedLayers.last as StyleLayerWithSource;
-    expect(layer.sourceLayerId, 'areaForecastLocalEew');
-    expect(layer.filter, [
+    final added = styleController.gatedBackend.addedLayers.last;
+    expect(added.belowLayerId, BaseLayer.regionOverlayAnchor.name);
+    expect(added.json['source'], 'eqmonitor_map');
+    expect(added.json['source-layer'], 'areaForecastLocalEew');
+    expect(added.json['filter'], [
       'in',
       ['get', 'code'],
       [
@@ -85,50 +98,65 @@ void main() {
         ['9040'],
       ],
     ]);
+    expect(added.json['paint'], {
+      'fill-color': '#ff0000',
+      'fill-opacity': 0.25,
+    });
   });
 }
 
 class WarningRegionStyleController({
   required final Completer<void> firstAddGate,
 }) extends FakeStyleController {
-  this : super(throwOnDuplicateLayerIds: true);
+  late final gatedBackend = WarningRegionStyleBackend(
+    firstAddGate: firstAddGate,
+    operations: operations,
+    updatedCodes: updatedCodes,
+  );
 
   final operations = <String>[];
   final updatedCodes = <List<String>>[];
+
+  @override
+  late final StyleSources sources = StyleSources(
+    gatedBackend,
+    layers: () => layers,
+  );
+
+  @override
+  late final StyleLayers layers = StyleLayers(gatedBackend, sources: sources);
+}
+
+class WarningRegionStyleBackend({
+  required final Completer<void> firstAddGate,
+  required final List<String> operations,
+  required final List<List<String>> updatedCodes,
+}) extends FakeStyleBackend {
   var addCount = 0;
 
   @override
   Future<void> addLayer(
-    StyleLayer layer, {
+    Map<String, Object?> json, {
     String? belowLayerId,
-    String? aboveLayerId,
-    int? atIndex,
   }) async {
     addCount++;
     operations.add('add-start');
-    if (addCount == 1) {
+    if (addCount == 2) {
       await firstAddGate.future;
     }
-    await super.addLayer(
-      layer,
-      belowLayerId: belowLayerId,
-      aboveLayerId: aboveLayerId,
-      atIndex: atIndex,
-    );
+    await super.addLayer(json, belowLayerId: belowLayerId);
     operations.add('add-done');
   }
 
   @override
-  Future<void> updateFilter({
-    required String id,
-    required List<Object>? filter,
-  }) async {
+  void setFilter(String layerId, Object? filter) {
     final codes = switch (filter) {
       ['in', ['get', 'code'], ['literal', final List<String> values]] => values,
       _ => const <String>[],
     };
     updatedCodes.add(codes);
     operations.add('filter:${codes.join(',')}');
+    super.setFilter(layerId, filter);
   }
 
   @override

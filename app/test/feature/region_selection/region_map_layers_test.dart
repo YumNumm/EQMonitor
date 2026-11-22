@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/region_selection/data/logic/region_map_layers.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:maplibre/maplibre.dart';
 
@@ -20,14 +21,20 @@ void main() {
   for (final hasEpicenter in [false, true]) {
     test('初期化時の全ハイライトを空集合で隠す (hasEpicenter: $hasEpicenter)', () {
       final layers = builder
-          .build(color: '#4D8DFF', hasEpicenter: hasEpicenter)
+          .build(color: const Color(0xFF4D8DFF), hasEpicenter: hasEpicenter)
           .cast<StyleLayerWithSource>();
       final highlights = layers.where(
         (layer) => layer.id != RegionMapLayers.epicenterHit,
       );
       expect(highlights, hasLength(hasEpicenter ? 10 : 8));
       for (final layer in highlights) {
-        expect(layer.filter, hiddenFilter, reason: layer.id);
+        expect(layer.filter?.toJson(), hiddenFilter, reason: layer.id);
+        expect(
+          (layer.toJson()['paint']!
+              as Map<String, Object?>)['${layer.type}-color'],
+          '#4d8dff',
+          reason: layer.id,
+        );
       }
       if (hasEpicenter) {
         expect(
@@ -46,7 +53,7 @@ void main() {
       kind: .city,
       selected: [prefecture],
     );
-    expect(layer.filter, hiddenFilter);
+    expect(layer.filter?.toJson(), hiddenFilter);
   });
 
   test('都道府県は専用ポリゴンのコードに一致する', () {
@@ -58,7 +65,7 @@ void main() {
     );
     expect(layer.sourceId, RegionMapLayers.prefectureSource);
     expect(layer.sourceLayerId, isNull);
-    expect(layer.filter, [
+    expect(layer.filter?.toJson(), [
       'in',
       ['get', 'code'],
       [
@@ -75,13 +82,13 @@ void main() {
         kind: kind,
         selected: [option],
       );
-      expect(selected.filter, isNot(hiddenFilter));
+      expect(selected.filter?.toJson(), isNot(hiddenFilter));
       final cleared = builder.selectionLayer(
         kind: kind,
         selected: const [],
       );
       expect(cleared.id, selected.id);
-      expect(cleared.filter, hiddenFilter);
+      expect(cleared.filter?.toJson(), hiddenFilter);
     });
   }
 }

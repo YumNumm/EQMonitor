@@ -64,10 +64,10 @@ class const EarthquakeHistoryShindoDbStationLayer({
         if (lifecycleToken.value != token) {
           return;
         }
-        await styleController.addSource(
-          const GeoJsonSource(
+        await styleController.sources.add(
+          const GeoJsonSource.data(
             id: sourceId,
-            data: '{"type":"FeatureCollection","features":[]}',
+            data: .text('{"type":"FeatureCollection","features":[]}'),
           ),
         );
       });
@@ -117,12 +117,12 @@ class const EarthquakeHistoryShindoDbStationLayer({
               registeredIcons.value = (iconData, dbIconData);
             }
             if (isLayerInitialized.value) {
-              await styleController.removeLayer(iconLayerId);
+              await styleController.layers.remove(iconLayerId);
             }
             if (lifecycleToken.value != token) {
               return;
             }
-            await styleController.addLayer(
+            await styleController.layers.add(
               EarthquakeHistoryShindoDbStationLayerBuilder.build(
                 parameter: parameter,
                 stationDisplayMode: stationDisplayMode,
@@ -174,26 +174,26 @@ class const EarthquakeHistoryShindoDbStationLayerBuilder._() {
   }) => SymbolStyleLayer(
     id: EarthquakeHistoryShindoDbStationLayer.iconLayerId,
     sourceId: EarthquakeHistoryShindoDbStationLayer.sourceId,
-    layout: {
-      'icon-image': const StationIconImageExpressionBuilder().build(
+    iconImage: .raw(
+      const StationIconImageExpressionBuilder().build(
         stationDisplayMode: stationDisplayMode,
         stationTextZoom: parameter.stationTextZoom,
       ),
-      'icon-allow-overlap': true,
-      'icon-ignore-placement': true,
-      'symbol-sort-key': ['get', 'sortKey'],
-      'icon-size': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        3,
-        parameter.stationIconSizeMin,
-        7,
-        parameter.stationIconSizeMid,
-        20,
-        parameter.stationIconSizeMax,
-      ],
-    },
+    ),
+    iconAllowOverlap: const .literal(true),
+    iconIgnorePlacement: const .literal(true),
+    sortKey: const .raw(['get', 'sortKey']),
+    iconSize: .raw([
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      3,
+      parameter.stationIconSizeMin,
+      7,
+      parameter.stationIconSizeMid,
+      20,
+      parameter.stationIconSizeMax,
+    ]),
   );
 }
 

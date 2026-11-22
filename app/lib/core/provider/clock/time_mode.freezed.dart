@@ -20,10 +20,6 @@ TimeMode _$TimeModeFromJson(
           return RealtimeTimeMode.fromJson(
             json
           );
-                case 'timeShift':
-          return TimeShiftTimeMode.fromJson(
-            json
-          );
                 case 'replay':
           return ReplayTimeMode.fromJson(
             json
@@ -86,12 +82,11 @@ extension TimeModePatterns on TimeMode {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RealtimeTimeMode value)?  realtime,TResult Function( TimeShiftTimeMode value)?  timeShift,TResult Function( ReplayTimeMode value)?  replay,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RealtimeTimeMode value)?  realtime,TResult Function( ReplayTimeMode value)?  replay,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case RealtimeTimeMode() when realtime != null:
-return realtime(_that);case TimeShiftTimeMode() when timeShift != null:
-return timeShift(_that);case ReplayTimeMode() when replay != null:
+return realtime(_that);case ReplayTimeMode() when replay != null:
 return replay(_that);case _:
   return orElse();
 
@@ -110,12 +105,11 @@ return replay(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RealtimeTimeMode value)  realtime,required TResult Function( TimeShiftTimeMode value)  timeShift,required TResult Function( ReplayTimeMode value)  replay,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RealtimeTimeMode value)  realtime,required TResult Function( ReplayTimeMode value)  replay,}){
 final _that = this;
 switch (_that) {
 case RealtimeTimeMode():
-return realtime(_that);case TimeShiftTimeMode():
-return timeShift(_that);case ReplayTimeMode():
+return realtime(_that);case ReplayTimeMode():
 return replay(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -130,12 +124,11 @@ return replay(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RealtimeTimeMode value)?  realtime,TResult? Function( TimeShiftTimeMode value)?  timeShift,TResult? Function( ReplayTimeMode value)?  replay,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RealtimeTimeMode value)?  realtime,TResult? Function( ReplayTimeMode value)?  replay,}){
 final _that = this;
 switch (_that) {
 case RealtimeTimeMode() when realtime != null:
-return realtime(_that);case TimeShiftTimeMode() when timeShift != null:
-return timeShift(_that);case ReplayTimeMode() when replay != null:
+return realtime(_that);case ReplayTimeMode() when replay != null:
 return replay(_that);case _:
   return null;
 
@@ -153,11 +146,10 @@ return replay(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  realtime,TResult Function( Duration offset)?  timeShift,TResult Function( DateTime currentTime)?  replay,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  realtime,TResult Function( DateTime currentTime)?  replay,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case RealtimeTimeMode() when realtime != null:
-return realtime();case TimeShiftTimeMode() when timeShift != null:
-return timeShift(_that.offset);case ReplayTimeMode() when replay != null:
+return realtime();case ReplayTimeMode() when replay != null:
 return replay(_that.currentTime);case _:
   return orElse();
 
@@ -176,11 +168,10 @@ return replay(_that.currentTime);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  realtime,required TResult Function( Duration offset)  timeShift,required TResult Function( DateTime currentTime)  replay,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  realtime,required TResult Function( DateTime currentTime)  replay,}) {final _that = this;
 switch (_that) {
 case RealtimeTimeMode():
-return realtime();case TimeShiftTimeMode():
-return timeShift(_that.offset);case ReplayTimeMode():
+return realtime();case ReplayTimeMode():
 return replay(_that.currentTime);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -195,11 +186,10 @@ return replay(_that.currentTime);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  realtime,TResult? Function( Duration offset)?  timeShift,TResult? Function( DateTime currentTime)?  replay,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  realtime,TResult? Function( DateTime currentTime)?  replay,}) {final _that = this;
 switch (_that) {
 case RealtimeTimeMode() when realtime != null:
-return realtime();case TimeShiftTimeMode() when timeShift != null:
-return timeShift(_that.offset);case ReplayTimeMode() when replay != null:
+return realtime();case ReplayTimeMode() when replay != null:
 return replay(_that.currentTime);case _:
   return null;
 
@@ -246,79 +236,6 @@ String toString() {
 
 
 
-
-/// @nodoc
-@JsonSerializable()
-
-class TimeShiftTimeMode implements TimeMode {
-  const TimeShiftTimeMode({required this.offset,  String? $type}): $type = $type ?? 'timeShift';
-  factory TimeShiftTimeMode.fromJson(Map<String, dynamic> json) => _$TimeShiftTimeModeFromJson(json);
-
- final  Duration offset;
-
-@JsonKey(name: 'runtimeType')
-final String $type;
-
-
-/// Create a copy of TimeMode
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$TimeShiftTimeModeCopyWith<TimeShiftTimeMode> get copyWith => _$TimeShiftTimeModeCopyWithImpl<TimeShiftTimeMode>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$TimeShiftTimeModeToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TimeShiftTimeMode&&(identical(other.offset, offset) || other.offset == offset));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,offset);
-
-@override
-String toString() {
-  return 'TimeMode.timeShift(offset: $offset)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $TimeShiftTimeModeCopyWith<$Res> implements $TimeModeCopyWith<$Res> {
-  factory $TimeShiftTimeModeCopyWith(TimeShiftTimeMode value, $Res Function(TimeShiftTimeMode) _then) = _$TimeShiftTimeModeCopyWithImpl;
-@useResult
-$Res call({
- Duration offset
-});
-
-
-
-
-}
-/// @nodoc
-class _$TimeShiftTimeModeCopyWithImpl<$Res>
-    implements $TimeShiftTimeModeCopyWith<$Res> {
-  _$TimeShiftTimeModeCopyWithImpl(this._self, this._then);
-
-  final TimeShiftTimeMode _self;
-  final $Res Function(TimeShiftTimeMode) _then;
-
-/// Create a copy of TimeMode
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? offset = null,}) {
-  return _then(TimeShiftTimeMode(
-offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as Duration,
-  ));
-}
-
-
-}
 
 /// @nodoc
 @JsonSerializable()

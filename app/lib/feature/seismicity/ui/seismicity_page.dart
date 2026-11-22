@@ -329,9 +329,11 @@ class const _MapBody({
         MapOperationQueueScope(
           child: MapLibreMap(
             options: MapOptions(
-              initStyle: styleString,
-              initCenter: const Geographic(lon: 137, lat: 36.5),
-              initZoom: 4.5,
+              style: MapStyle.file(styleString),
+              initCamera: const CameraUpdate.position(
+                center: Geographic(lon: 137, lat: 36.5),
+                zoom: 4.5,
+              ),
             ),
             onMapCreated: (controller) {
               mapController.value = controller;

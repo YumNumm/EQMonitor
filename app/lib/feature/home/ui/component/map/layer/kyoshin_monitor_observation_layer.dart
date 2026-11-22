@@ -86,13 +86,15 @@ class const _KyoshinMonitorObservationLayerBody() extends HookConsumerWidget {
         if (lifecycleToken.value != token) {
           return;
         }
-        await styleController.addSource(
-          GeoJsonSource(
+        await styleController.sources.add(
+          GeoJsonSource.data(
             id: KyoshinMonitorObservationLayer._sourceId,
-            data: jsonEncode({
-              'type': 'FeatureCollection',
-              'features': <Map<String, dynamic>>[],
-            }),
+            data: .text(
+              jsonEncode({
+                'type': 'FeatureCollection',
+                'features': <Map<String, dynamic>>[],
+              }),
+            ),
           ),
         );
       });
@@ -169,7 +171,7 @@ class const _KyoshinMonitorObservationLayerBody() extends HookConsumerWidget {
                 hasActiveEew: hasActiveEew,
                 hasIcon: hasIcon,
               )) {
-            await styleController.addLayer(
+            await styleController.layers.add(
               layer,
               belowLayerId: BaseLayer.foregroundOverlayAnchor.name,
             );
@@ -199,9 +201,9 @@ class const _KyoshinMonitorObservationLayerBody() extends HookConsumerWidget {
               final sw = Stopwatch()..start();
               await Timeline.timeSync(
                 'kmoni.updateGeoJsonSource',
-                () async => styleController.updateGeoJsonSource(
-                  id: KyoshinMonitorObservationLayer._sourceId,
-                  data: next,
+                () async => styleController.sources.updateGeoJsonData(
+                  KyoshinMonitorObservationLayer._sourceId,
+                  .text(next),
                 ),
                 arguments: {
                   'sourceId': KyoshinMonitorObservationLayer._sourceId,
@@ -258,7 +260,7 @@ class const KyoshinMonitorObservationLayerBuilder() {
     return SymbolStyleLayer(
       id: KyoshinMonitorObservationLayer._iconLayerId,
       sourceId: KyoshinMonitorObservationLayer._sourceId,
-      filter: const [
+      filter: const .raw([
         'all',
         ['has', 'intensity'],
         [
@@ -266,30 +268,28 @@ class const KyoshinMonitorObservationLayerBuilder() {
           ['get', 'intensity'],
           -_boundaryTolerance,
         ],
-      ],
-      layout: {
-        'icon-image': [
-          'step',
-          ['zoom'],
-          _iconImageExpression(IntensityIconType.smallWithoutText),
-          iconTextMinZoom,
-          _iconImageExpression(IntensityIconType.small),
-        ],
-        'icon-allow-overlap': true,
-        'icon-ignore-placement': true,
-        'symbol-sort-key': ['get', 'intensity'],
-        'icon-size': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          3,
-          0.03 * radiusScaleFactor,
-          7,
-          0.13 * radiusScaleFactor,
-          20,
-          0.5 * radiusScaleFactor,
-        ],
-      },
+      ]),
+      iconImage: .raw([
+        'step',
+        ['zoom'],
+        _iconImageExpression(IntensityIconType.smallWithoutText),
+        iconTextMinZoom,
+        _iconImageExpression(IntensityIconType.small),
+      ]),
+      iconAllowOverlap: const .literal(true),
+      iconIgnorePlacement: const .literal(true),
+      sortKey: const .raw(['get', 'intensity']),
+      iconSize: .raw([
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        3,
+        0.03 * radiusScaleFactor,
+        7,
+        0.13 * radiusScaleFactor,
+        20,
+        0.5 * radiusScaleFactor,
+      ]),
     );
   }
 
@@ -327,7 +327,7 @@ class const KyoshinMonitorObservationLayerBuilder() {
       id: KyoshinMonitorObservationLayer._layerId,
       sourceId: KyoshinMonitorObservationLayer._sourceId,
       filter: hasIcon
-          ? const [
+          ? const .raw([
               'any',
               [
                 '!',
@@ -338,42 +338,40 @@ class const KyoshinMonitorObservationLayerBuilder() {
                 ['get', 'intensity'],
                 -_boundaryTolerance,
               ],
-            ]
+            ])
           : null,
-      paint: {
-        // MapLibre iOS はズーム依存の式 (interpolate + zoom) が式ツリーの
-        // 最上位にないと NSException を投げるため、係数は stop の出力値へ畳み込む
-        'circle-radius': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          3,
-          1 * radiusScaleFactor,
-          10,
-          10 * radiusScaleFactor,
-        ],
-        'circle-color': [
-          'coalesce',
-          ['get', 'color'],
-          '#808080',
-        ],
-        'circle-opacity': [
-          'case',
-          ['has', 'lost'],
-          0,
-          1,
-        ],
-        'circle-stroke-color': '#808080',
-        'circle-stroke-width': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          3,
-          strokeWidth(0.2 * radiusScaleFactor),
-          10,
-          strokeWidth(1 * radiusScaleFactor),
-        ],
-      },
+      // ズーム依存の式 (interpolate + zoom) は式ツリーの最上位にしか置けないため、
+      // 係数は stop の出力値へ畳み込む
+      radius: .raw([
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        3,
+        1 * radiusScaleFactor,
+        10,
+        10 * radiusScaleFactor,
+      ]),
+      color: const .raw([
+        'coalesce',
+        ['get', 'color'],
+        '#808080',
+      ]),
+      opacity: const .raw([
+        'case',
+        ['has', 'lost'],
+        0,
+        1,
+      ]),
+      strokeColor: const .literal(Color(0xFF808080)),
+      strokeWidth: .raw([
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        3,
+        strokeWidth(0.2 * radiusScaleFactor),
+        10,
+        strokeWidth(1 * radiusScaleFactor),
+      ]),
     );
   }
 }

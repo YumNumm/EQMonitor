@@ -23,6 +23,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/estimat
 import 'package:eqmonitor/feature/earthquake_history/ui/components/nearby_earthquake_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_event_notes.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_hypocenter_information_card.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/components/earthquake_replay_button.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -266,6 +267,7 @@ class const _LoadedContent({
                             ),
                           ),
                         ),
+                      EarthquakeReplayButton(earthquake: earthquake),
                       if (hasXml)
                         _TelegramListButton(eventId: earthquake.eventId),
                     ],
