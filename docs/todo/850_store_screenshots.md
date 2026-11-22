@@ -10,8 +10,10 @@
 
 ## 850: Simulator / Emulator での撮影の確認
 
-- [ ] Patrol 移行後の `capture-ios` / `capture-android` が `patrol test` の完了まで進むことを確認する（iOS の `RunnerUITests` は Xcode を使わず追加したため、ビルドが通るかも未確認）。
-- [ ] iOS の `earthquake_detail` が 403（応答本文 `{"error": "FORBIDDEN"}` と推察）になる原因を特定する。Android では同じ API が表示される。エラー表示自体の改善は #2059。
+- [x] Patrol 移行後の `capture-android` が `patrol test` の完了まで進むことを確認する。
+- [ ] `capture-ios` が `patrol test` の完了まで進むことを確認する（`RunnerUITests` のビルドとテストの起動は確認済み）。
+- [x] iOS の 403 の原因を特定する。prerelease の version が iOS で `3.1.0.4` になり、User-Agent が Cloudflare Snippets の許可形式に合わなかった。`--build-name` に `x.y.z` を渡す。エラー表示自体の改善は #2059。
+- [ ] Android のステータスバーに Wi-Fi アイコンが出ない原因を調べる（demo mode の `network` コマンドが反映されていない）。
 - [ ] `eew_warning`（16:11:08）・`kyoshin_monitor`（16:10:21）が Figma の 01・04 と同じ状態（EEW カード、推定震度、ボトムシート）になるか確認し、時刻と `settle_milliseconds` を調整する。
 - [ ] `earthquake_detail` で戻るボタン以外のデバッグ用アイコンが出ないことを確認する。
 - 完了条件: 合成済みの 4 ページが Figma の構成と一致する。

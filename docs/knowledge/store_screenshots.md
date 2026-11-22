@@ -1,7 +1,7 @@
 # ストア画像の自動生成
 
 2026-11-22 作成。正本は `tool/store_screenshots/` と `.github/workflows/store-screenshots.yaml`。
-画面操作は Patrol（`app/patrol_test/`）、撮影は host 側で行う。Patrol 移行後の CI は未確認（下記「検証状況」）。
+画面操作は Patrol（`app/patrol_test/`）、撮影は host 側で行う。
 
 ## 全体の流れ
 
@@ -56,12 +56,17 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   `AppBootstrap` が差し替える `FlutterError.onError` などはテスト終了前に戻す。
 - 表示の完了は Widget で待つ。リプレイは `ReplayStatusCard`（EEW のシーンは `EewCard` も）、地震詳細は `ValueKey(eventId)`。地図の描画は検出できないため、その後に一定時間待つ。
 - 地震詳細が `ErrorCard` になった場合は「詳細」を開いて `failure-<scene>.png` として撮り、要求先と応答をテストの失敗理由に出す。
+  ホームのお知らせ欄にも `ErrorCard` が出るため、`EarthquakeHistoryDetailsPage` の配下だけを見る。
+- テスト名の表示は 2 つあり、両方を消す。Patrol のラベルは `patrol test --no-label`、`LiveTestWidgetsFlutterBinding` が画面上端に描くものは `setLabel('')`。
+- 地震詳細のデバッグボタンは debug ビルドで既定表示になるため、SharedPreferences の `debug` を false にする。
 - 権限ダイアログは `$.platform.mobile.grantPermissionWhenInUse()` で許可する。iOS は端末の言語が英語のときだけ扱える（Patrol の制約）。
 - ロック画面相当の画像は、Live Activity を開始して `$.platform.mobile.openNotifications()` で通知センターを開いて撮る（iOS のみ）。
 - EQRP は CI で `app/assets/store_screenshot_fixtures/` へ復号してからビルドし、`rootBundle` で読む。このディレクトリは平文をコミットしない（`.gitignore`）。
   リプレイは fixture を一時ファイルへ書き出して `ReplayNotifier.open` に渡し、停止してから指定時刻へシークする。`seek` は範囲外の時刻を端へ丸めるため、EQRP の範囲外はテストを失敗させる。
 - PR では fixture が無いシーンを飛ばし、タグでは `STORE_SCREENSHOT_REQUIRE_FIXTURES=true` で失敗させる。`STORE_SCREENSHOT_SCENES` で撮るシーンを絞れる。
 - Release ビルドは Simulator で動かないため debug ビルドで撮り、`WidgetsApp.debugAllowBannerOverride` で DEBUG 帯を消す。
+- `--build-name` には `deploy-app.yaml` と同じく pubspec の version から prerelease を落とした `x.y.z` を渡す。
+  `3.1.0-beta.4` のままだと iOS の version が `3.1.0.4` になり、User-Agent が API 前段の Cloudflare Snippets（`eqmonitor-backend` の `tools/cloudflare-api-guard`）の許可形式に合わず 403 になる。
 - ステータスバーは iOS が `simctl status_bar override`、Android が demo mode で 9:41 に固定する。
   Android の demo mode は起動直後に送ると反映されないことがあるため撮影ごとに送り直す。`network -e mobile hide` を送ると反映されなくなったため送らない。
 - Patrol の iOS 実行には `RunnerUITests` ターゲット（`app/ios/RunnerUITests/RunnerUITests.m`、`FlutterGeneratedPluginSwiftPackage` をリンク、`User Script Sandboxing = NO`、スキームで並列実行なし）が必要。
@@ -69,13 +74,14 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 
 ## 検証状況
 
-2026-11-22 の PR の CI（fixture なし）で確認した結果。
+2026-11-22 の PR の CI（fixture なし、Patrol 移行後）で確認した結果。
 
-- Android: Pixel 6（API 35）で `earthquake_detail` を撮影。震度分布の描画には 10 秒では足りず、30 秒の待機で表示された。
-- iOS: iPhone 18 Pro（iOS 27.2）で `earthquake_detail` を撮影。ただし画面は 403 のエラー表示（`FORBIDDEN`）で、同じ API の Android とは結果が異なる。原因は調査中。
+- Android: Pixel 6（API 35）で `patrol test` が完了し、`earthquake_detail` を撮影した。9:41 のステータスバー、テスト名とデバッグボタンの非表示、30 秒待機での震度分布の描画を確認した。
+  ステータスバーの Wi-Fi アイコンは demo mode の指定どおりに出ていない。
+- iOS: iPhone 18 Pro（iOS 27.2）で `RunnerUITests` のビルドとテストの起動までは成功した。初回は SPM の取得に約 6 分、ビルドに約 17 分かかる。
+  地震詳細は上記の User-Agent の問題で 403 になった（お知らせ欄の `/v2/feeds` で確認）。`--build-name` の修正後の撮影は未確認。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
-- 上記は Patrol 移行前（host がアプリを起動し、アプリ内でシーンを切り替えていた構成）の結果。Patrol での撮影は未検証。
 - 未検証: リプレイのシーン（fixture 未投入）、通知センターでの Live Activity の撮影。残件は [TODO](../todo/850_store_screenshots.md)。
 
 ## 制約
