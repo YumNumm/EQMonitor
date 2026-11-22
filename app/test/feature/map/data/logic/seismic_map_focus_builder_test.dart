@@ -148,13 +148,21 @@ void main() {
     final bounds = builder.forRealtime(
       fallbackBounds: _fallback,
       eews: const [],
-      shakes: [_shake(minLat: 33, maxLat: 38, minLng: 130, maxLng: 140)],
+      shakes: [
+        _shake(minLat: 33.2, maxLat: 37.6, minLng: 130.4, maxLng: 139.1),
+      ],
     );
 
-    expect(bounds.latitudeSouth, closeTo(33 - seismicMapFocusMargin, 1e-9));
-    expect(bounds.latitudeNorth, closeTo(38 + seismicMapFocusMargin, 1e-9));
+    expect(
+      bounds.latitudeSouth,
+      closeTo(33.0066 - seismicMapFocusMargin, 1e-3),
+    );
+    expect(
+      bounds.latitudeNorth,
+      closeTo(37.8914 + seismicMapFocusMargin, 1e-3),
+    );
     expect(bounds.longitudeWest, closeTo(130 - seismicMapFocusMargin, 1e-9));
-    expect(bounds.longitudeEast, closeTo(140 + seismicMapFocusMargin, 1e-9));
+    expect(bounds.longitudeEast, closeTo(139.5 + seismicMapFocusMargin, 1e-9));
   });
 
   test('複数EEWの震源をすべて内包する', () {
