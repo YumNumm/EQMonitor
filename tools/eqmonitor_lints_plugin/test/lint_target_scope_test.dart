@@ -21,6 +21,15 @@ void main() {
       );
     });
 
+    test('patrol_test 配下は除外する', () {
+      expect(
+        LintTargetScope.isExcluded(
+          path: '/repo/app/patrol_test/store_screenshots_test.dart',
+        ),
+        isTrue,
+      );
+    });
+
     test('test_driver 配下は除外する', () {
       expect(
         LintTargetScope.isExcluded(path: '/repo/app/test_driver/driver.dart'),

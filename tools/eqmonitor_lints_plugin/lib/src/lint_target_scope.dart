@@ -8,6 +8,7 @@ class const LintTargetScope._() {
   static const _excludedDirectories = {
     'test',
     'integration_test',
+    'patrol_test',
     'test_driver',
   };
 

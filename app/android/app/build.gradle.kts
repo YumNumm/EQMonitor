@@ -79,12 +79,18 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         resValue("string", "app_name", dartDefines["appName"] ?: "EQMonitor")
+        testInstrumentationRunner = "pl.leancode.patrol.PatrolJUnitRunner"
+        testInstrumentationRunnerArguments["clearPackageData"] = "true"
         manifestPlaceholders["appIcon"] =
             if (dartDefines["IS_BETA_DISTRIBUTION"] == "true") {
                 "@mipmap/ic_launcher_dev"
             } else {
                 "@mipmap/ic_launcher"
             }
+    }
+
+    testOptions {
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
 
     signingConfigs {
@@ -143,4 +149,5 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.android.material:material:1.12.0")
+    androidTestUtil("androidx.test:orchestrator:1.5.1")
 }
