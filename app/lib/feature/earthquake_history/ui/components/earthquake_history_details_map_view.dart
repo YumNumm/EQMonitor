@@ -45,7 +45,6 @@ import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
-import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/map/data/model/map_camera_bounds_fit_result.dart';
@@ -83,16 +82,14 @@ class const EarthquakeHistoryDetailsMapView({
     return switch (mapConfiguration) {
       AsyncData(value: MapConfiguration(styleString: final styleString?)) =>
         MapOperationQueueScope(
-          child: MapLibreEventProvider(
-            child: LayoutBuilder(
-              builder: (context, constraints) => _MapContent(
-                styleString: styleString,
-                earthquake: earthquake,
-                displayMode: displayMode,
-                showingDb: showingDb,
-                regionMap: regionMap?.value?.areaForecastLocalE,
-                viewportSize: constraints.biggest,
-              ),
+          child: LayoutBuilder(
+            builder: (context, constraints) => _MapContent(
+              styleString: styleString,
+              earthquake: earthquake,
+              displayMode: displayMode,
+              showingDb: showingDb,
+              regionMap: regionMap?.value?.areaForecastLocalE,
+              viewportSize: constraints.biggest,
             ),
           ),
         ),
@@ -242,7 +239,6 @@ class const _MapContent({
             mapController.value = controller;
           },
           onEvent: (event) async {
-            MapLibreEventProvider.of(context).emit(event);
             if (event is MapEventClick) {
               final controller = mapController.value;
               if (controller == null) {
