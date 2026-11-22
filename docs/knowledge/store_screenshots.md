@@ -80,8 +80,10 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 - Android: Pixel 6（API 35）で `patrol test` が完了し、`earthquake_detail` を撮影した。9:41 のステータスバー、テスト名とデバッグボタンの非表示、30 秒待機での震度分布の描画を確認した。
   ステータスバーの Wi-Fi アイコンは demo mode の指定どおりに出ていない。
 - iOS: iPhone 18 Pro（iOS 27.2）で `RunnerUITests` のビルドとテストの起動までは成功した。初回は SPM の取得に約 6 分、ビルドに約 17 分かかる。
-  地震詳細は上記の User-Agent の問題で 403 になった（お知らせ欄の `/v2/feeds` で確認）。`--build-name` の修正後の撮影は未確認。
+  地震詳細は上記の User-Agent の問題で 403 になった（お知らせ欄の `/v2/feeds` で確認）。iOS に `x.y.z` を渡して表示された。
   Android にも `x.y.z` を渡した回は `3.1.0.d` となり、地震詳細が 403 になった。
+- iOS の runner が高負荷の回はビルドに 43 分かかり、`simctl` の呼び出しも分単位で遅れて撮影の同期が 5 分で timeout した。
+  host はアプリのコンテナのパスを使い回し、テストの待機を 15 分にしている。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
 - 未検証: リプレイのシーン（fixture 未投入）、通知センターでの Live Activity の撮影。残件は [TODO](../todo/850_store_screenshots.md)。
