@@ -29,6 +29,8 @@ zizmor = "latest"
 ghalint = "1.5.6"
 "github:jdx/jactionlint" = "2.6.0"
 gitleaks = "latest"
+age = "latest"
+sops = "latest"
 flutter = "22e676c57e1e6d04c2289a47368ea4093bbc3c18"
 "github:rorkai/App-Store-Connect-CLI" = { version = "latest", rename_exe = "asc" }
 
