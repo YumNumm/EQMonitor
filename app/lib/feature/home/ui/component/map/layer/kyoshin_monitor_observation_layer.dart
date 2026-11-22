@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -64,7 +65,16 @@ class const _KyoshinMonitorObservationLayerBody() extends HookConsumerWidget {
       eewAliveTelegramProvider.select((eews) => eews?.isNotEmpty ?? false),
     );
 
-    final iconData = ref.watch(intensityIconProvider).value;
+    final showIntensityIcon =
+        ref.watch(isDebugMenuAvailableProvider) &&
+        ref.watch(
+          homeConfigurationProvider.select(
+            (a) => a.value?.kyoshinMonitor.showIntensityIcon ?? false,
+          ),
+        );
+    final iconData = showIntensityIcon
+        ? ref.watch(intensityIconProvider).value
+        : null;
     final hasIcon = iconData != null;
 
     final isLayerInitialized = useRef(false);
