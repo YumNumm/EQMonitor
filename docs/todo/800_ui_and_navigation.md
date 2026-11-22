@@ -10,6 +10,14 @@
 - ロック画面表示 OFF では起動直後にもアプリ内容が表示されないこと、端末再起動後の初回 unlock 前に保存領域へのアクセスでクラッシュしないことを確認する。
 - 文字拡大・Light/Dark・画面下端の操作、再起動後の設定保持を確認する。実機検証は未実施。
 
+## 800: ホームシートの並び順・スナップ位置・地図操作ボタンの実機確認
+
+- 対象: `app/lib/page/home_page.dart`、`app/lib/core/component/sheet/basic_modal_sheet.dart`、`app/lib/feature/home/ui/component/map/home_map_controller_card.dart`、`app/lib/feature/home/ui/component/sheet/component/home_sheet_card.dart`。静的解析と既存 Widget Test は通過済み、実機検証は未実施。
+- シートのスナップ位置を 0.1 / 0.2 / 0.5 / 1.0 の 4 段にした。ホーム・EEW 詳細・地震履歴詳細で、上下フリック 1 回ごとに期待した段へ止まること、`initialPositionOverlay` の表示・非表示が従来どおりであることを iOS / Android で確認する。
+- 揺れ検知カードを緊急地震速報カードの直後、メンテナンス・権限・Asset Pack・新機能案内より上に移した。初期高さ 0.2 のまま揺れ検知と各バナーが同時に出たとき、揺れ検知カードがシート上端に見えることを確認する。
+- ホームの位置情報バナーは `isCurrentLocationPermissionMissingProvider` と `CurrentLocationPermissionAction` を通知設定画面と共用する。Android の「アプリの使用中のみ許可」からタップしたとき、アプリの権限画面で「常に許可」へ変更でき、復帰後にバナーが消えることを確認する。iOS の「使用中のみ」からの変更も同様に確認する。
+- 地図操作ボタンを `IconButton`（48dp のタップ領域）に変えた。強震モニタの状態カード・スケール表示と横幅が重ならないこと、無効時の見た目が判別できることを Light / Dark・文字拡大で確認する。
+
 ## 800: 通知設定の権限導線の実機確認
 
 - デバッグの「デバイス・通知」→全般通知設定で、日本語・English・中文を保存し、再表示・再起動後もサーバー保存値に一致することと、その言語で届く通知を iOS / Android 実機で確認する。通信失敗時の再試行と文字拡大時の表示も未検証。

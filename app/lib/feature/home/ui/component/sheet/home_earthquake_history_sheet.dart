@@ -139,16 +139,13 @@ class const HomeEarthquakeHistorySheet({super.key}) extends HookConsumerWidget {
                 ),
               ),
             ),
-            Align(
-              alignment: .centerEnd,
-              child: M3ETextButton(
-                onPressed: paramAsync.value == null
-                    ? null
-                    : () async =>
-                          EarthquakeHistoryRoute($extra: paramAsync.value)
-                              .push<void>(context),
-                child: Text('さらに表示'),
-              ),
+            HomeSheetCardFooter(
+              label: '地震履歴をすべて表示',
+              onPressed: paramAsync.value == null
+                  ? null
+                  : () async => EarthquakeHistoryRoute(
+                      $extra: paramAsync.value,
+                    ).push<void>(context),
             ),
           ],
         );

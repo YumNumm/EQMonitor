@@ -75,16 +75,11 @@ class const _MapToolbarButton({
   final bool enabled = true,
 }) extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => InkWell(
-    child: Tooltip(
-      message: tooltip,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Icon(icon),
-      ),
-    ),
-    enableFeedback: true,
-    onTap: enabled
+  Widget build(BuildContext context) => IconButton(
+    icon: Icon(icon),
+    color: context.designSystem.colorTheme.onSurface,
+    tooltip: tooltip,
+    onPressed: enabled
         ? () async {
             await HapticFeedback.lightImpact();
             onPressed?.call();
