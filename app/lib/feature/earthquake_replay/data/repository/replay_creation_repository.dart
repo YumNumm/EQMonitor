@@ -65,7 +65,8 @@ class const ReplayCreationRepository({
       ),
       isCancelled: isCancelled,
     );
-    if (images.isEmpty) {
+    // 前置き区間の画像だけでは、選んだ期間のリプレイにならない。
+    if (!images.any((image) => !image.time.isBefore(request.startTime))) {
       throw const ReplayCreationException(.noFrames);
     }
     if (isCancelled()) {
@@ -76,6 +77,9 @@ class const ReplayCreationRepository({
       endTime: request.endTime,
       frames: [...images, ...eew],
     ));
+    if (isCancelled()) {
+      throw const ReplayCreationException(.cancelled);
+    }
     return storage.save(
       name: fileName(request: request),
       bytes: bytes,
