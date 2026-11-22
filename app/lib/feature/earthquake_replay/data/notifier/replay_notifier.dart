@@ -25,10 +25,8 @@ part 'replay_notifier.g.dart';
 class ReplayNotifier extends _$ReplayNotifier {
   static final openMutation = Mutation<void>();
 
-  // 画像解析の遅れで再生が累積的に遅れないよう、再生開始時の壁時計を基準に次の時刻を決める。
-  // 基準から大きく遅れたときは追いつこうとせず基準を取り直す。
-  static const _lagTolerance = Duration(milliseconds: 500);
-
+  // 画像解析の遅れで再生が累積的に遅れないよう、再生開始時の壁時計を基準に再生位置を決める。
+  // 処理が遅れたときは基準を取り直さず、途中のフレームを飛ばして基準の位置へ追いつく。
   final _wallClock = Stopwatch()..start();
   Timer? _playbackTimer;
   ({Duration wallTime, DateTime replayTime})? _anchor;
@@ -91,19 +89,23 @@ class ReplayNotifier extends _$ReplayNotifier {
     _schedule();
   }
 
-  void pause() {
+  /// 補間中の位置で止め、表示中の波面などを巻き戻さない。
+  Future<void> pause() async {
     final current = state;
     if (current == null) {
       return;
     }
     _stopPlaybackTimer();
+    final position = _pendingPosition(current);
     _anchor = null;
-    state = current.copyWith(isPlaying: false);
+    final paused = current.copyWith(isPlaying: false);
+    state = paused;
+    await _advanceTo(current: paused, target: position);
   }
 
   Future<void> togglePlayPause() async {
     if (state?.isPlaying ?? false) {
-      pause();
+      await pause();
     } else {
       await play();
     }
@@ -153,8 +155,15 @@ class ReplayNotifier extends _$ReplayNotifier {
     if (current == null || speed <= 0) {
       return;
     }
-    _anchor = null;
-    state = current.copyWith(playbackSpeed: speed);
+    final position = _pendingPosition(current);
+    final next = current.copyWith(playbackSpeed: speed);
+    state = next;
+    if (next.isPlaying) {
+      _anchor = (wallTime: _wallClock.elapsed, replayTime: position);
+      ref
+          .read(appClockProvider.notifier)
+          .updateReplayTime(position, rate: speed, limit: next.endTime);
+    }
     _schedule();
   }
 
@@ -166,34 +175,68 @@ class ReplayNotifier extends _$ReplayNotifier {
       return;
     }
     final now = _wallClock.elapsed;
-    final anchor = _anchor ??= (wallTime: now, replayTime: current.currentTime);
+    final anchor = _anchor ?? (wallTime: now, replayTime: current.currentTime);
+    if (_anchor == null) {
+      _anchor = anchor;
+      ref
+          .read(appClockProvider.notifier)
+          .updateReplayTime(
+            current.currentTime,
+            rate: current.playbackSpeed,
+            limit: current.endTime,
+          );
+    }
     final due =
         anchor.wallTime +
         next.difference(anchor.replayTime) * (1 / current.playbackSpeed);
     final delay = due - now;
-    if (delay < -_lagTolerance) {
-      _anchor = (wallTime: now, replayTime: current.currentTime);
-    }
     _playbackTimer = Timer(delay.isNegative ? Duration.zero : delay, () async {
-      await _tick(target: next);
+      await _tick(scheduled: next);
     });
   }
 
-  Future<void> _tick({required DateTime target}) async {
+  Future<void> _tick({required DateTime scheduled}) async {
     final generation = _generation;
     final current = state;
     if (current == null || !current.isPlaying) {
       return;
     }
-    await _advanceTo(current: current, target: target);
+    final projected = _projectedPosition(current);
+    await _advanceTo(
+      current: current,
+      target: current.clampTime(
+        projected.isAfter(scheduled) ? projected : scheduled,
+      ),
+    );
     if (!ref.mounted || generation != _generation) {
       return;
     }
     if (state?.isAtEnd ?? true) {
-      pause();
+      await pause();
       return;
     }
     _schedule();
+  }
+
+  DateTime _projectedPosition(ReplayState current) {
+    final anchor = _anchor;
+    if (!current.isPlaying || anchor == null) {
+      return current.currentTime;
+    }
+    return anchor.replayTime.add(
+      (_wallClock.elapsed - anchor.wallTime) * current.playbackSpeed,
+    );
+  }
+
+  /// 次の進行を待っている間の再生位置。まだ適用していないフレームは追い越さない。
+  DateTime _pendingPosition(ReplayState current) {
+    final projected = _projectedPosition(current);
+    final limit = current.nextTickTime() ?? current.endTime;
+    return projected.isBefore(current.currentTime)
+        ? current.currentTime
+        : projected.isAfter(limit)
+        ? limit
+        : projected;
   }
 
   Future<void> _advanceTo({
@@ -216,7 +259,13 @@ class ReplayNotifier extends _$ReplayNotifier {
       }
     }
     state = current.copyWith(currentIndex: index, currentTime: target);
-    ref.read(appClockProvider.notifier).updateReplayTime(target);
+    ref
+        .read(appClockProvider.notifier)
+        .updateReplayTime(
+          target,
+          rate: current.isPlaying ? current.playbackSpeed : 0,
+          limit: current.endTime,
+        );
     if (latestImage != null) {
       await _applyKyoshinImage(latestImage, generation: _generation);
     }
