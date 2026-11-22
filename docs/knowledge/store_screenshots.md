@@ -60,7 +60,9 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 - テスト名の表示は 2 つあり、両方を消す。Patrol のラベルは `patrol test --no-label`、`LiveTestWidgetsFlutterBinding` が画面上端に描くものは `setLabel('')`。
 - 地震詳細のデバッグボタンは debug ビルドで既定表示になるため、SharedPreferences の `debug` を false にする。
 - 権限ダイアログは `$.platform.mobile.grantPermissionWhenInUse()` で許可する。iOS は端末の言語が英語のときだけ扱える（Patrol の制約）。
+  新規の Simulator は host の言語を引き継ぐため、`capture.py` は作成した Simulator を `en-US` / `en_US` に変える。`--device` で渡した Simulator の言語は変えない。
 - ロック画面相当の画像は、Live Activity を開始して `$.platform.mobile.openNotifications()` で通知センターを開いて撮る（iOS のみ）。
+  初回は Live Activity の下に許可の確認（Allow / Don't Allow）が出るため、SpringBoard の `Allow` を押してから撮る。
 - EQRP は CI で `app/assets/store_screenshot_fixtures/` へ復号してからビルドし、`rootBundle` で読む。このディレクトリは平文をコミットしない（`.gitignore`）。
   リプレイは fixture を一時ファイルへ書き出して `ReplayNotifier.open` に渡し、停止してから指定時刻へシークする。`seek` は範囲外の時刻を端へ丸めるため、EQRP の範囲外はテストを失敗させる。
 - PR では fixture が無いシーンを飛ばし、タグでは `STORE_SCREENSHOT_REQUIRE_FIXTURES=true` で失敗させる。`STORE_SCREENSHOT_SCENES` で撮るシーンを絞れる。
@@ -84,9 +86,15 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   Android にも `x.y.z` を渡した回は `3.1.0.d` となり、地震詳細が 403 になった。
 - iOS の runner が高負荷の回はビルドに 43 分かかり、`simctl` の呼び出しも分単位で遅れて撮影の同期が 5 分で timeout した。
   host はアプリのコンテナのパスを使い回し、テストの待機を 15 分にしている。
+- 2026-11-23 に手元の Mac（Xcode 27.2、iPhone 18 Pro / iOS 27.0、fixture なし）で iOS の `patrol test` が完了した。
+  - `earthquake_detail` と `lock_screen_live_activity` を撮影し、9:41 のステータスバー、テスト名・DEBUG 帯・デバッグボタンの非表示、震度分布の描画、通知センターの Live Activity を確認した。
+  - 1 シーンの撮影は 0.6〜1.6 秒。ビルドは初回 920 秒、2 回目以降は約 140 秒。iOS 27.1 のランタイムでは iPhone 18 Pro / 17 Pro が `Incompatible device` になり、27.0 で作成された。
+  - 初回は撮影後にテストが失敗した。通知センターを閉じてアプリが `resumed` に戻ると、`KyoshinMonitorNotifier` が自分自身を `ref.invalidate` し、Riverpod の debug assert（`A provider cannot depend on itself`）が未処理の例外になる。`ref.invalidateSelf` に直した。
+  - 言語が日本語の Simulator では、許可の確認が「許可」と表示されたまま写り込んだ。
+  - 撮影時の通知センターは、Dynamic Island が写る回と写らない回がある。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
-- 未検証: リプレイのシーン（fixture 未投入）、通知センターでの Live Activity の撮影。残件は [TODO](../todo/850_store_screenshots.md)。
+- 未検証: リプレイのシーン（fixture 未投入）、CI での通知センターの撮影。残件は [TODO](../todo/850_store_screenshots.md)。
 
 ## 制約
 
