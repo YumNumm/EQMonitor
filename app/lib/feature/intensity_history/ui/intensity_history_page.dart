@@ -41,7 +41,9 @@ class const IntensityHistoryPage({
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final action = ref.watch(intensityHistoryPageActionProvider);
-    final jmaMap = initialCityCode == null ? null : ref.watch(jmaMapProvider);
+    final jmaMap = initialPrefectureCode == null || initialCityCode == null
+        ? null
+        : ref.watch(jmaMapProvider);
     return switch ((ref.watch(mapConfigurationProvider), jmaMap)) {
       (
         AsyncData(value: MapConfiguration(:final styleString?)),
@@ -92,8 +94,8 @@ class const _MapContent({
   Widget build(BuildContext context, WidgetRef ref) {
     final action = ref.watch(intensityHistoryMapActionProvider);
     final mapOptions =
-        switch ((initialCityCode, initialCityMap)) {
-          (final cityCode?, final cityMap?) =>
+        switch ((initialPrefectureCode, initialCityCode, initialCityMap)) {
+          (_?, final cityCode?, final cityMap?) =>
             const IntensityHistoryCityCamera().initialMapOptions(
               cityCode: cityCode,
               cityMap: cityMap,
