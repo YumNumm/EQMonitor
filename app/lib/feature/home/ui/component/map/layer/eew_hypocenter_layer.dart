@@ -87,7 +87,7 @@ class const EewHypocenterLayer({
       // ignore_keys: isVisible.value
     }, [enableBlink]);
 
-    final iconOpacity = isVisible.value ? 1.0 : 0.75;
+    final iconOpacity = isVisible.value ? 1.0 : 0.5;
 
     // init操作の実行時点で最新のデータを使えるよう、Refに退避しておく。
     final latestNormalEews = useRef(normalEews);
