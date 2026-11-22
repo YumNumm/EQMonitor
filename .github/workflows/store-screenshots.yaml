@@ -8,13 +8,13 @@ on:
   pull_request:
     paths:
       - .github/workflows/store-screenshots.yaml
-      - app/lib/feature/store_screenshot/**
-      - app/lib/main_store_screenshot.dart
+      - app/patrol_test/**
+      - app/ios/RunnerUITests/**
       - tool/store_screenshots/**
   workflow_dispatch:
     inputs:
       scenes:
-        description: "Comma separated scene names in tool/store_screenshots/scenes.json (default: all)"
+        description: "Comma separated scene names in app/patrol_test/store_screenshots_test.dart (default: all)"
         required: false
         default: ""
         type: string
@@ -32,6 +32,7 @@ env:
   # Pull requests verify the pipeline before every fixture exists; tag runs stay strict.
   ALLOW_MISSING_FIXTURES: ${{ github.event_name == 'pull_request' }}
   PYTHONUNBUFFERED: "1"
+  PATROL_CLI_VERSION: "4.9.0"
   SCENES: ${{ inputs.scenes || '' }}
 
 jobs:
@@ -99,31 +100,40 @@ jobs:
             args+=(--allow-empty)
           fi
           tool/store_screenshots/decrypt_fixtures.sh "${args[@]}" "$RUNNER_TEMP/store-screenshot-fixtures"
+          if [[ -f "$RUNNER_TEMP/store-screenshot-fixtures/noto_peninsula_2024.eqrp" ]]; then
+            cp "$RUNNER_TEMP/store-screenshot-fixtures/noto_peninsula_2024.eqrp" app/assets/store_screenshot_fixtures/
+          fi
 
-      - name: Build for iOS Simulator
-        working-directory: app
+      - name: Install Patrol CLI
         run: |
-          set -o pipefail
-          flutter build ios --simulator --debug --no-pub \
-            --target lib/main_store_screenshot.dart \
-            --dart-define-from-file=../environment/.env.prod \
-            --dart-define IS_PRODUCTION="true"
+          flutter pub global activate patrol_cli "$PATROL_CLI_VERSION"
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+
+      - name: Prepare Patrol arguments
+        id: patrol-args
+        run: |
+          if [[ -n "$SCENES" && ! "$SCENES" =~ ^[a-z0-9_,]+$ ]]; then
+            echo "::error::scenes must be comma separated scene names"
+            exit 1
+          fi
+          require=true
+          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
+            require=false
+          fi
+          args="--dart-define-from-file=../environment/.env.prod --dart-define=IS_PRODUCTION=true"
+          args="$args --dart-define=STORE_SCREENSHOT_REQUIRE_FIXTURES=$require"
+          args="$args --dart-define=STORE_SCREENSHOT_SCENES=$SCENES"
+          echo "args=$args" >> "$GITHUB_OUTPUT"
 
       - name: Capture scenes
+        env:
+          PATROL_ARGS: ${{ steps.patrol-args.outputs.args }}
         run: |
-          args=()
-          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
-            args+=(--allow-missing-fixtures)
-          fi
-          if [[ -n "$SCENES" ]]; then
-            args+=(--scenes "$SCENES")
-          fi
+          # shellcheck disable=SC2086
           python3 tool/store_screenshots/capture.py \
             --platform ios \
-            --app app/build/ios/iphonesimulator/Runner.app \
-            --fixtures "$RUNNER_TEMP/store-screenshot-fixtures" \
             --output "$RUNNER_TEMP/store-screenshots-ios-raw" \
-            "${args[@]}"
+            -- $PATROL_ARGS
 
       - name: Upload raw screenshots
         if: always()
@@ -224,14 +234,30 @@ jobs:
             args+=(--allow-empty)
           fi
           tool/store_screenshots/decrypt_fixtures.sh "${args[@]}" "$RUNNER_TEMP/store-screenshot-fixtures"
+          if [[ -f "$RUNNER_TEMP/store-screenshot-fixtures/noto_peninsula_2024.eqrp" ]]; then
+            cp "$RUNNER_TEMP/store-screenshot-fixtures/noto_peninsula_2024.eqrp" app/assets/store_screenshot_fixtures/
+          fi
 
-      - name: Build debug APK
-        working-directory: app
+      - name: Install Patrol CLI
         run: |
-          flutter build apk --debug --no-pub \
-            --target lib/main_store_screenshot.dart \
-            --dart-define-from-file=../environment/.env.prod \
-            --dart-define IS_PRODUCTION="true"
+          flutter pub global activate patrol_cli "$PATROL_CLI_VERSION"
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+
+      - name: Prepare Patrol arguments
+        id: patrol-args
+        run: |
+          if [[ -n "$SCENES" && ! "$SCENES" =~ ^[a-z0-9_,]+$ ]]; then
+            echo "::error::scenes must be comma separated scene names"
+            exit 1
+          fi
+          require=true
+          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
+            require=false
+          fi
+          args="--dart-define-from-file=../environment/.env.prod --dart-define=IS_PRODUCTION=true"
+          args="$args --dart-define=STORE_SCREENSHOT_REQUIRE_FIXTURES=$require"
+          args="$args --dart-define=STORE_SCREENSHOT_SCENES=$SCENES"
+          echo "args=$args" >> "$GITHUB_OUTPUT"
 
       - name: Enable KVM
         run: |
@@ -240,27 +266,11 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Prepare capture arguments
-        id: capture-args
-        run: |
-          args=""
-          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
-            args="--allow-missing-fixtures"
-          fi
-          if [[ -n "$SCENES" ]]; then
-            if [[ ! "$SCENES" =~ ^[a-z0-9_,]+$ ]]; then
-              echo "::error::scenes must be comma separated scene names"
-              exit 1
-            fi
-            args="$args --scenes $SCENES"
-          fi
-          echo "args=$args" >> "$GITHUB_OUTPUT"
-
       # The action runs each script line separately, so the capture stays on one line.
       - name: Capture scenes
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         env:
-          CAPTURE_ARGS: ${{ steps.capture-args.outputs.args }}
+          PATROL_ARGS: ${{ steps.patrol-args.outputs.args }}
         with:
           api-level: 35
           arch: x86_64
@@ -268,7 +278,7 @@ jobs:
           profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: python3 tool/store_screenshots/capture.py --platform android --app app/build/app/outputs/flutter-apk/app-debug.apk --fixtures "$RUNNER_TEMP/store-screenshot-fixtures" --output "$RUNNER_TEMP/store-screenshots-android-raw" $CAPTURE_ARGS
+          script: python3 tool/store_screenshots/capture.py --platform android --output "$RUNNER_TEMP/store-screenshots-android-raw" -- $PATROL_ARGS
 
       - name: Upload raw screenshots
         if: always()
@@ -331,12 +341,15 @@ jobs:
 
       - name: Compose
         run: |
-          # 実験的なシーン（ロック画面）は既定で撮影しないため、そのページは合成から外れる。
+          args=()
+          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
+            args+=(--skip-missing)
+          fi
           uv run tool/store_screenshots/compose.py \
             --screenshots "$RUNNER_TEMP/store-screenshots-ios-raw" \
             --fixtures "$RUNNER_TEMP/store-screenshot-fixtures" \
             --output "$RUNNER_TEMP/store-screenshots-ios" \
-            --skip-missing
+            "${args[@]}"
 
       - name: Upload composed screenshots
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
