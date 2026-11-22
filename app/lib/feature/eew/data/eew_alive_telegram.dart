@@ -74,13 +74,17 @@ class EewAliveChecker {
 
     final isWarning = eew.isWarning ?? false;
     final magnitude = eew.hypocenter?.magnitude;
-    if ((magnitude != null && magnitude >= 6.0) || isWarning) {
-      return happenedDiff > 360;
+    final displaySeconds = (magnitude != null && magnitude >= 6.0) || isWarning
+        ? 360
+        : depth == null || depth < 150
+        ? 250
+        : 400;
+    if (happenedDiff <= displaySeconds) {
+      return false;
     }
-    if (depth == null || depth < 150) {
-      return happenedDiff > 250;
-    } else {
-      return happenedDiff > 400;
+    if (eew.isLastInfo) {
+      return now.toUtc().difference(reportTime).inSeconds > 30;
     }
+    return true;
   }
 }
