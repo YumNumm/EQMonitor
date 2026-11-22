@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
+import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_grid_cell_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 
 const seismicMapFocusMargin = 0.1;
@@ -70,8 +71,22 @@ class const SeismicMapFocusBuilder() {
         minimum.longitude > maximum.longitude) {
       return;
     }
-    yield minimum;
-    yield maximum;
+    yield (
+      latitude: ShakeDetectionGridCell.latitudeOfIndex(
+        ShakeDetectionGridCell.latIndexOf(minimum.latitude),
+      ).clamp(-90, 90).toDouble(),
+      longitude: ShakeDetectionGridCell.longitudeOfIndex(
+        ShakeDetectionGridCell.lngIndexOf(minimum.longitude),
+      ).clamp(-180, 180).toDouble(),
+    );
+    yield (
+      latitude: ShakeDetectionGridCell.latitudeOfIndex(
+        ShakeDetectionGridCell.latIndexOf(maximum.latitude) + 1,
+      ).clamp(-90, 90).toDouble(),
+      longitude: ShakeDetectionGridCell.longitudeOfIndex(
+        ShakeDetectionGridCell.lngIndexOf(maximum.longitude) + 1,
+      ).clamp(-180, 180).toDouble(),
+    );
   }
 
   static MapCameraBounds boundsForTargets({

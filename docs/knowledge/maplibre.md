@@ -62,7 +62,9 @@
 - 通知地域のタップ検索とカメラ操作は世代を持ち、完了時・キュー実行開始時の最新世代と mounted を確認する。dispose で世代と controller を無効化する。
 - EEW 自動フォーカスを解除するのは `CameraChangeReason.gesture`。`programmatic` / `map` では解除しない。
 - 解除後は同じ EEW の更新で再開せず、新 event ID で再開する。EEW 中のホームボタンは `autoZoom` によらず EEW へ再フォーカスする。animation 開始前に状態を公開し、完了時は session 一致を確認する。揺れ検知だけの場合も同じ session（`HomeMapRealtimeFocusTransition`）で扱う。
-- 揺れ検知は南西端 inclusive の 0.25° 格子へ points を集約し、各セルの最大レベルだけを枠線で描く。空セル・中心/四隅 marker は描かない。レベル順で高い枠を上へ置き、Weaker は `#546E7A`。
+- 揺れ検知は南西端 inclusive の格子へ points を集約し、各セルの最大レベルだけを枠線で描く。空セル・中心/四隅 marker は描かない。レベル順で高い枠を上へ置き、Weaker は `#546E7A`。
+- 揺れ検知の格子は経度 0.5°（`ShakeDetectionGridCell.step`）幅で、緯度はメルカトル投影上で同じ長さになるよう区切る。地図上では緯度によらず正方形になり、緯度方向の度数は高緯度ほど小さい（北緯 35° 付近で約 0.41°）。
+- 揺れ検知の自動フォーカスは、イベントの矩形を同じ格子の外側の辺へ広げてから bounds を求める。検知範囲がセル内で変わっても bounds が変わらず、カメラが小刻みに動かない。
 - intensity の境界は `< 0.5`、`< 2.5`、`< 3.5`、`< 5.5`、それ以上の順に Weaker/Weak/Medium/Strong/Stronger。`ShakeDetectionGridCellBuilder` と配信側の境界を揃える。
 
 ## PMTiles と native 障害の切り分け
