@@ -37,6 +37,7 @@
 - 市区町村別最大震度のタップは zoom にかかわらず市区町村選択。低 zoom で県へ寄せるだけの操作にしない。ディープリンクは市区町村コードから詳細を開き、領域外は選択解除する。
 - 観測点のない震度速報は `intensity.regions` の境界を使う。`jmaMapProvider` と layout サイズが揃ってから `MapCameraBoundsFitter` に論理ピクセルを渡す。
 - 初期範囲は `MapOptions.initCenter` / `initZoom` に設定する。表示後の `fitBounds` による移動を避け、境界が得られない場合は固定位置で補わない。
+- MapLibre（Native・GL JS）の zoom は 512px タイル基準（Native は `include/mln/util/constants.hpp` の `tileSize_D`）。zoom を自前で計算するときは `MapZoomCalculator.tileSize` か `MapCameraBoundsFitter` を使い、256px 基準の式を使わない。256px 基準では zoom が 1 段深くなり、指定範囲の約 2 倍に拡大されて画面に収まらない。
 
 ## 通知地域と EEW フォーカス
 

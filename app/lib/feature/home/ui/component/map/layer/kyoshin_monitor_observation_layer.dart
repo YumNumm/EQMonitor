@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -25,7 +26,8 @@ class const KyoshinMonitorObservationLayer({super.key}) extends ConsumerWidget {
     final useKmoni = ref.watch(
       kyoshinMonitorSettingsProvider.select((v) => v.value?.useKmoni ?? false),
     );
-    if (!useKmoni) {
+    final isReplay = ref.watch(isReplayModeProvider);
+    if (!useKmoni && !isReplay) {
       return const SizedBox.shrink();
     }
     return const _KyoshinMonitorObservationLayerBody();

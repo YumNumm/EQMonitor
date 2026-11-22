@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:earthquake_replay/src/model/replay_data.dart';
 import 'package:earthquake_replay/src/model/replay_file_header.dart';
+import 'package:earthquake_replay/src/parser/replay_timestamp_decoder.dart';
 import 'package:es_compression/brotli.dart';
 import 'package:es_compression/lz4.dart';
 import 'package:msgpack_dart/msgpack_dart.dart';
@@ -46,7 +47,10 @@ class ReplayDataParser {
   }
 
   (ReplayFileHeader, int offset) _readHeader(Uint8List data) {
-    final deserializer = Deserializer(data, extDecoder: ExtTimeStampDecoder());
+    final deserializer = Deserializer(
+      data,
+      extDecoder: ReplayTimestampDecoder(),
+    );
     final headerData = deserializer.decode();
     if (headerData is! List<dynamic>) {
       throw Exception('Header is invalid: ${headerData.runtimeType}');
@@ -61,7 +65,10 @@ class ReplayDataParser {
 
   List<ReplayData> _parseReplayData(Uint8List data) {
     final result = <ReplayData>[];
-    final deserializer = Deserializer(data, extDecoder: ExtTimeStampDecoder());
+    final deserializer = Deserializer(
+      data,
+      extDecoder: ReplayTimestampDecoder(),
+    );
     final replayData = deserializer.decode() as List<dynamic>;
     if (replayData.isEmpty) {
       throw const FormatException(
