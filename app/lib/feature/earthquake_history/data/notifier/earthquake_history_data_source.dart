@@ -112,6 +112,8 @@ class EarthquakeHistoryDataSource({
   final List<_RealtimeListMutation> _mutations = [];
   List<EarthquakePartial>? _lastRevalidatedItems;
   int? _lastRevalidatedSequence;
+  Future<void>? _revalidation;
+  var _isRevalidationRequested = false;
   var _mutationSequence = 0;
   var _hasCompletedInitialLoad = false;
 
@@ -149,7 +151,28 @@ class EarthquakeHistoryDataSource({
   };
 
   /// 先頭ページを再取得して差分を反映する。失敗しても表示中の一覧は維持する。
-  Future<void> revalidateLatest() async {
+  ///
+  /// 応答の順序が入れ替わると古い結果で上書きするため、同時には1件だけ取得する。
+  /// 取得中の要求は捨てず、完了後にもう一度だけ取得する。
+  Future<void> revalidateLatest() {
+    final running = _revalidation;
+    if (running != null) {
+      _isRevalidationRequested = true;
+      return running;
+    }
+    return _revalidation = _revalidateUntilSettled().whenComplete(
+      () => _revalidation = null,
+    );
+  }
+
+  Future<void> _revalidateUntilSettled() async {
+    do {
+      _isRevalidationRequested = false;
+      await _revalidateLatestOnce();
+    } while (_isRevalidationRequested && !_isDisposed);
+  }
+
+  Future<void> _revalidateLatestOnce() async {
     talker.debug('revalidateLatest');
     final startedAt = _mutationSequence;
     try {
