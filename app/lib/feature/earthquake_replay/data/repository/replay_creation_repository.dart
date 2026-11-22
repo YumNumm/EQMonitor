@@ -72,7 +72,7 @@ class const ReplayCreationRepository({
       throw const ReplayCreationException(.cancelled);
     }
     final bytes = await compute(const ReplayFileEncoder().encode, (
-      startTime: times.first,
+      startTime: request.startTime,
       endTime: request.endTime,
       frames: [...images, ...eew],
     ));
