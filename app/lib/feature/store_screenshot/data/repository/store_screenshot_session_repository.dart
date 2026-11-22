@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/feature/store_screenshot/data/model/store_screenshot_session.dart';
@@ -36,8 +35,8 @@ class StoreScreenshotSessionRepository({required Directory directory}) {
     );
   }
 
-  Future<Uint8List> readFixture({required String name}) =>
-      File(p.join(_directory.path, 'fixtures', name)).readAsBytes();
+  Uri fixtureUri({required String name}) =>
+      Uri.file(p.join(_directory.path, 'fixtures', name));
 
   Future<void> markReady({required String scene}) =>
       writeMarker(path: p.join('ready', scene), contents: '');

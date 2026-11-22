@@ -48,20 +48,20 @@ class StoreScreenshotDirector extends _$StoreScreenshotDirector {
   Future<void> showReplay({required StoreScreenshotReplayScene scene}) async {
     final replay = ref.read(replayProvider.notifier);
     if (ref.read(replayProvider)?.fileName != scene.fixture) {
-      final bytes = await ref
-          .read(storeScreenshotSessionRepositoryProvider)
-          .readFixture(name: scene.fixture);
-      await replay.loadFile(bytes: bytes, fileName: scene.fixture);
+      await replay.open(
+        source: ref
+            .read(storeScreenshotSessionRepositoryProvider)
+            .fixtureUri(name: scene.fixture),
+      );
     }
     replay.pause();
-    final frames = ref.read(replayProvider)?.file.data ?? const [];
-    final index = frames.indexWhere(
-      (frame) => !frame.time.isBefore(scene.time),
-    );
-    if (index < 0) {
-      throw StateError('${scene.fixture} has no frame at ${scene.time}');
+    final loaded = ref.read(replayProvider);
+    if (loaded == null ||
+        scene.time.isBefore(loaded.startTime) ||
+        scene.time.isAfter(loaded.endTime)) {
+      throw StateError('${scene.fixture} does not cover ${scene.time}');
     }
-    await replay.seekToIndex(index);
+    await replay.seek(scene.time);
     ref.read(goRouterProvider).go(const HomeRoute().location);
   }
 

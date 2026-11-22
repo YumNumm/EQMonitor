@@ -55,7 +55,7 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 - `session.json` の `preferences` は `SharedPreferencesKey` に存在するキーだけを受け付け、起動前に書き込む。
   オンボーディング・新機能案内・各種お知らせはここで既読にする。
 - Release ビルドは Simulator で動かないため両 OS とも debug ビルドを使い、`WidgetsApp.debugAllowBannerOverride` で DEBUG 帯を消す。
-- リプレイは `ReplayNotifier` に EQRP を読み込ませ、停止してから指定時刻以降の最初のフレームへシークする。
+- リプレイは fixture の file URI を `ReplayNotifier.open` に渡し、停止してから指定時刻へシークする。`seek` は範囲外の時刻を端へ丸めるため、EQRP の範囲外を指定したシーンは失敗させる。`scenes.json` の時刻は実時刻（JST の場合は `+09:00` 付き）で書く。EQRP の時刻の扱いは [リプレイ再生](earthquake_replay.md) を参照する。
 - Live Activity はデバッグ用プリセットを撮影時刻基準で組み立てて開始する。テスト用の eventId は `【テスト】` 表示になるため使わない。
 - ステータスバーは iOS が `simctl status_bar override`、Android が demo mode で 9:41 に固定する。
 

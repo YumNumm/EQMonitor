@@ -44,7 +44,7 @@ final class StoreScreenshotDirectorProvider
 }
 
 String _$storeScreenshotDirectorHash() =>
-    r'75eba7158705105f750cb0f9bdb7c67e2a9b087d';
+    r'c4947d972b872826daa84dca9b51722cd9708633';
 
 abstract class _$StoreScreenshotDirector extends $Notifier<void> {
   void build();
