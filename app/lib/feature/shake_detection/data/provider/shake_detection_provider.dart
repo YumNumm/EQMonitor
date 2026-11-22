@@ -18,8 +18,8 @@ List<ShakeDetectionEvent> shakeDetection(Ref ref) {
   if (!ref.watch(isDeviceShakeDetectionEnabledProvider)) {
     return const [];
   }
-  // リプレイ再生中は、現在発生している揺れを再生中の時刻基準に混在させない。
-  if (!ref.watch(isRealtimeModeProvider)) {
+  // リプレイ再生中は、再生画像から検知した結果だけが届く。
+  if (!ref.watch(isRealtimeModeProvider) && !ref.watch(isReplayModeProvider)) {
     return const [];
   }
   final frame = ref.watch(deviceShakeDetectionProvider);

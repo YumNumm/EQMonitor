@@ -146,7 +146,7 @@ xcrun actool AppIcon-dev.icon \
 - `app/android/app/proguard-rules.pro` の `-keep class org.maplibre.android.** { *; }` を維持する。
   全体のminify/resource shrinkingを無効にして回避しない。
 - MapLibreはローカル `packages/` ではなく `YumNumm/flutter-maplibre` のGit依存。
-  lockfile固定 `7080ae5676cae4fd6a722ee67a55f64488e20940` のconsumer rulesにも
+  lockfile固定 `d80b6f2ca07028f63d58f6b7203a1649774e69ab` のconsumer rulesにも
   `-keep class org.maplibre.** { *; }` と `-keep class io.flutter.plugin.platform.** { public *; }` がある。
 - PlatformViewのkeepを削ると元の完全修飾名とJNI参照が合わず、生成時にnullが返って白画面になる。
   `PlatformView.getView()` のNullPointerExceptionはPMTiles読込み前の障害として切り分ける。
