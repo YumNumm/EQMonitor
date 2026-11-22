@@ -11,7 +11,6 @@ import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -69,12 +68,9 @@ class const HomeFeedSheet({super.key}) extends ConsumerWidget {
           ),
           _ => const _HomeFeedSkeleton(),
         },
-        Align(
-          alignment: .centerEnd,
-          child: M3ETextButton(
-            onPressed: () async => const FeedRoute().push<void>(context),
-            child: Text('さらに表示'),
-          ),
+        HomeSheetCardFooter(
+          label: 'お知らせをすべて表示',
+          onPressed: () async => const FeedRoute().push<void>(context),
         ),
       ],
     );

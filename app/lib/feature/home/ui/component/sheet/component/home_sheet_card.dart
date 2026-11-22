@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// ホームシートに並ぶカードの共通外枠。
@@ -45,9 +46,9 @@ class const HomeSheetCardHeader({
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
+        spacing.lg,
         spacing.md,
-        spacing.md,
-        action == null ? spacing.md : spacing.sm,
+        action == null ? spacing.lg : spacing.sm,
         spacing.xs,
       ),
       child: Row(
@@ -72,6 +73,25 @@ class const HomeSheetCardHeader({
           ),
           if (action case final action?) Flexible(child: action),
         ],
+      ),
+    );
+  }
+}
+
+class const HomeSheetCardFooter({
+  required final String label,
+  required final VoidCallback? onPressed,
+  super.key,
+}) extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final spacing = context.designSystem.spacing;
+
+    return Padding(
+      padding: EdgeInsets.only(right: spacing.xs),
+      child: Align(
+        alignment: .centerEnd,
+        child: M3ETextButton(onPressed: onPressed, child: Text(label)),
       ),
     );
   }
