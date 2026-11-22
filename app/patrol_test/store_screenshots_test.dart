@@ -48,6 +48,12 @@ void main() {
       final flutterOnError = FlutterError.onError;
       final platformOnError = PlatformDispatcher.instance.onError;
       WidgetsApp.debugAllowBannerOverride = false;
+      // LiveTestWidgetsFlutterBinding がテスト名を画面上端に描くため消す。公開 API は無い。
+      if (WidgetsBinding.instance
+          case final LiveTestWidgetsFlutterBinding binding) {
+        // ignore: invalid_use_of_protected_member
+        binding.setLabel('');
+      }
       try {
         final container = await AppBootstrap.run();
         final scenes = StoreScreenshotScenes(
