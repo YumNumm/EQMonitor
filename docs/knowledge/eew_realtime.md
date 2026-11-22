@@ -44,7 +44,7 @@
 - `Eew`はRESTをlistenし、正常完了時だけ整合処理へ渡す。受信済み値がある間は
   Loading/Errorで表示状態を置き換えず、通信状態は`eewRestProvider`が保持する。
 - 初回未取得はLoading/Errorを伝える。RESTの古い前回値で新しいRealtime報を巻き戻さない。
-- 再取得契機はresumed、Realtime ready、未接続中の10秒周期、API依存変更。
+- 再取得契機はresumed、Realtime ready、未接続中の1秒周期、API依存変更。
   復帰とreadyが続いても、実機の発火回数をログなしで断定しない。
 - 正常な空結果は既存の整合規則に従い、失効判定はtickerで継続する。
   非リアルタイムモードではライブ値を破棄する。
@@ -58,13 +58,39 @@
 - 再接続の待ち時間は1、2、4、8、16、32、60秒と増やし、以後は60秒を維持する。
   失敗回数から整数のべき乗を計算しない。Dart VM の `pow(2, 63)` は負数、
   `pow(2, 64)` 以降は0になり、待ち時間なしの再送を引き起こす。
-- 接続成功・アプリ復帰・ネットワーク変更で待ち時間を初期化する。
+- 接続成功・ネットワーク変更・復帰時の再接続で待ち時間を初期化する。
 - `/v2/realtime/ticket` は `x-eqmonitor-device-id` が必須。
   保存トークンの欠落・読み取り失敗・解析失敗時は interceptor でローカルエラーにし、
   HTTP リクエストを送らない。再接続時にトークンを読み直して復旧を試みる。
   端末 ID が任意の API は引き続き利用できる。
 - 端末固有のトークン欠落原因と実機での長時間失敗・復帰の確認は、
   [リアルタイム監視の残課題](../todo/160_realtime_monitor_followups.md)で追跡する。
+
+## background と復帰時の接続維持
+
+- アプリは background へ移っても接続を閉じない。iOS が process を suspend した後の
+  切断はアプリから防げない。
+- `resumed` で再接続を判断するのは `paused` を経た復帰だけ。通知センターや
+  アプリスイッチャーによる `inactive` からの復帰では何もしない。
+- 復帰時、最後の受信から30秒以上経っていれば即座に再接続する。30秒未満なら接続を
+  維持して heartbeat を送り、5秒以内に受信がなければ再接続する。
+- suspend 中は Dart の timer が進まないため、経過は `DateTime.now()` で測る。
+- 接続処理の開始から5秒未満で復帰した場合は、進行中の接続を作り直さない。
+
+## 未接続中の REST 取得
+
+- `isRealtimeFallbackPollingActiveProvider` が、前面表示・ネットワーク接続あり・
+  WebSocket 未接続のときに true になる。background とオフラインでは取得しない。
+  取得の失敗は毎回ログに残るため、オフライン中に毎秒失敗させない。
+- 周期は EEW 最新（`/v2/eew/latest`）が1秒、地震履歴の先頭10件が10秒。
+  地震履歴は絞り込みなしの一覧（`EarthquakeHistoryParameterAll`）だけが対象。
+- 取得中は次の取得を始めない。1秒周期で作り直すと、1秒以上かかる応答が完了しない。
+- 取得には `httpCachedApiClientProvider` を使い、`HttpCacheInterceptor` が
+  `If-None-Match` を付けて304をキャッシュから復元する。復元後の応答は200と区別できない
+  ため、前回と内容が同じ結果は一覧・EEWの状態へ反映しない。
+- `WsPhase.connected` は `CloseReceived` を受信した時点で `disconnected` になる。
+  再接続待ちの間、`eqmonitorWebSocketProvider` は閉じたソケットを data として保持する。
+  close frame なしで接続が終わった場合は、コード1006の `CloseReceived` を流す。
 
 ## WebSocket heartbeat の互換性
 
