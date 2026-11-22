@@ -72,7 +72,7 @@ Future<void> _pump(
           body: EewCard(
             eew: eew,
             index: null,
-            nowOverride: _now,
+            clockOverride: () => _now,
           ),
         ),
       ),

@@ -202,8 +202,6 @@ class const _SimulationView({
     // timeTickerProvider を watch して毎秒リビルドさせる
     ref.watch(timeTickerProvider());
 
-    final virtualNow = simulation?.playbackTimeAt(clock.now());
-
     final estimatedRegions = EewEstimatedRegionsStaleCacheHook.use(
       ref: ref,
       eew: currentEew,
@@ -237,7 +235,9 @@ class const _SimulationView({
             child: EewCard(
               eew: currentEew,
               index: null,
-              nowOverride: virtualNow,
+              clockOverride: simulation == null
+                  ? null
+                  : () => simulation.playbackTimeAt(clock.now()),
               estimatedRegions: isEstimatedAllowed ? estimatedRegions : null,
               emphasizesLocalWarning: false,
             ),

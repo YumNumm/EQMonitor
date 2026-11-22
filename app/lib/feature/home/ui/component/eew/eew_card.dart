@@ -21,7 +21,9 @@ import 'package:material_ui/material_ui.dart';
 class const EewCard({
   required final EewTelegramItem eew,
   required final String? index,
-  final DateTime? nowOverride,
+
+  /// シミュレーション再生など、現在時刻の代わりに使う時刻。0.1秒の表示を進めるため描画のたびに呼ぶ。
+  final DateTime Function()? clockOverride,
 
   /// 距離減衰式による推計震度。JMAが現在地の予想震度を発表していない場合の
   /// フォールバックとして利用する。
@@ -140,7 +142,7 @@ class const EewCard({
           arrivalTime: effectiveArrivalTime,
           isArrived: effectiveIsArrived,
           isImminentArrival: !eew.isCanceled && isLocalPlum,
-          nowOverride: nowOverride,
+          clockOverride: clockOverride,
           showDeepHypocenterIntensityNotice: ref
               .watch(eewDeepHypocenterIntensityNoticeProvider)
               .shouldShow(eew: eew),
@@ -163,7 +165,7 @@ class const _EewMainCard({
   required final DateTime? arrivalTime,
   required final bool isArrived,
   required final bool isImminentArrival,
-  required final DateTime? nowOverride,
+  required final DateTime Function()? clockOverride,
   required final bool showDeepHypocenterIntensityNotice,
 }) extends StatelessWidget {
   static const _deepHypocenterIntensityNotice =
@@ -252,7 +254,7 @@ class const _EewMainCard({
                           arrivalTime: arrivalTime,
                           isArrived: isArrived,
                           isImminentArrival: isImminentArrival,
-                          nowOverride: nowOverride,
+                          clockOverride: clockOverride,
                           colors: colors,
                         ),
                       )
