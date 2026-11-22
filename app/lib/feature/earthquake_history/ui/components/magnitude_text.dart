@@ -35,27 +35,58 @@ class const MagnitudeText({
 
   Widget _buildCompact(BuildContext context) {
     final theme = Theme.of(context);
+    // iOS ウィジェットの MagnitudeText と同じ比率に揃える
+    const valueFontSize = 20.0;
+    const label = TextSpan(
+      text: 'M',
+      style: TextStyle(
+        fontFamily: FontFamily.googleSansFlex,
+        fontSize: valueFontSize * 0.44,
+        fontWeight: .w500,
+        fontVariations: [FontVariation.weight(500)],
+      ),
+    );
+    const valueStyle = TextStyle(
+      fontFamily: FontFamily.googleSansCode,
+      fontSize: valueFontSize,
+      fontWeight: .bold,
+      fontVariations: [FontVariation.weight(700)],
+    );
+    // 等幅フォントの小数点は 1 文字分の幅を取るため、前後だけ詰める
+    final kernedValueStyle = valueStyle.copyWith(
+      letterSpacing: valueFontSize * -0.14,
+    );
+    const wordStyle = TextStyle(
+      fontFamily: FontFamily.googleSansFlex,
+      fontFamilyFallback: [FontFamily.notoSansJP],
+      fontSize: valueFontSize * 0.74,
+      fontWeight: .bold,
+      fontVariations: [FontVariation.weight(700)],
+    );
     return Text.rich(
       TextSpan(
         children: switch (magnitude) {
           EarthquakeMagnitudeValue(:final value) => [
-            const TextSpan(
-              text: 'M',
-              style: TextStyle(
-                fontFamily: FontFamily.googleSansCode,
-                letterSpacing: 1,
-              ),
-            ),
-            TextSpan(
-              text: value.toStringAsFixed(1),
-              style: const TextStyle(
-                fontFamily: FontFamily.googleSansCode,
-                letterSpacing: -1,
-              ),
-            ),
+            label,
+            ...switch (value.toStringAsFixed(1).split('.')) {
+              [final integer, final fraction] => [
+                TextSpan(text: integer, style: kernedValueStyle),
+                TextSpan(text: '.', style: kernedValueStyle),
+                TextSpan(text: fraction, style: valueStyle),
+              ],
+              final parts => [
+                TextSpan(text: parts.join('.'), style: valueStyle),
+              ],
+            },
           ],
-          EarthquakeMagnitudeUnknown() => [const TextSpan(text: 'M不明')],
-          EarthquakeMagnitudeOverM8() => [const TextSpan(text: 'M8超')],
+          EarthquakeMagnitudeUnknown() => [
+            label,
+            const TextSpan(text: '不明', style: wordStyle),
+          ],
+          EarthquakeMagnitudeOverM8() => [
+            label,
+            const TextSpan(text: '8超', style: wordStyle),
+          ],
           null => [],
         },
         style: theme.textTheme.labelLarge?.copyWith(
