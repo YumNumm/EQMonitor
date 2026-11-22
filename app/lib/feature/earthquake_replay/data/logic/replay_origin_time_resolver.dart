@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:earthquake_replay/earthquake_replay.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' show EewItemWithRelations;
+import 'package:json_annotation/json_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'replay_origin_time_resolver.g.dart';
@@ -24,9 +25,7 @@ class const ReplayOriginTimeResolver() {
         }
       } on FormatException {
         continue;
-      } on TypeError {
-        continue;
-      } on ArgumentError {
+      } on CheckedFromJsonException {
         continue;
       }
     }
