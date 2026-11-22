@@ -6,12 +6,15 @@ import 'package:earthquake_replay/earthquake_replay.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_isolate_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_shake_detection_planner.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_file_repository.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
+import 'package:eqmonitor/feature/shake_detection/data/notifier/device_shake_detection.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' show EewItemWithRelations;
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -115,6 +118,7 @@ class ReplayNotifier extends _$ReplayNotifier {
     _generation++;
     _anchor = null;
     state = null;
+    ref.read(deviceShakeDetectionProvider.notifier).clear();
     ref.read(appClockProvider.notifier).returnToRealtime();
     // リプレイ中に発表されたライブのEEWは破棄されているため、REST も取り直す。
     ref
@@ -230,6 +234,8 @@ class ReplayNotifier extends _$ReplayNotifier {
       return;
     }
     final generation = _generation;
+    // 再生位置が飛ぶため、揺れ検知は次の画像で平常値の投入からやり直す。
+    ref.read(deviceShakeDetectionProvider.notifier).clear();
     ref
       ..read(appClockProvider.notifier).updateReplayTime(current.currentTime)
       ..invalidate(eewProvider, asReload: true);
@@ -253,14 +259,30 @@ class ReplayNotifier extends _$ReplayNotifier {
     required int generation,
   }) async {
     final imageData = data.images[ImageType.shindo];
-    if (imageData == null) {
+    final current = state;
+    if (imageData == null || current == null) {
       return;
     }
+    final shakeDetection = ref.read(deviceShakeDetectionProvider.notifier);
+    final shakePlan = ref
+        .read(replayShakeDetectionPlannerProvider)
+        .plan(
+          replay: current,
+          observedAt: data.time,
+          previousObservedAt: ref
+              .read(deviceShakeDetectionProvider)
+              ?.observedAt,
+          settings: ref.read(shakeDetectionCurrentSettingsProvider),
+          tuning: ref.read(shakeDetectionTuningProvider),
+        );
     try {
       final analyzer = await ref.read(
         kyoshinMonitorAnalyzerIsolateProvider.future,
       );
-      final result = await analyzer.analyze(Uint8List.fromList(imageData));
+      final result = await analyzer.analyze(
+        Uint8List.fromList(imageData),
+        shakeDetection: shakePlan?.request,
+      );
       if (!ref.mounted || generation != _generation) {
         return;
       }
@@ -271,6 +293,24 @@ class ReplayNotifier extends _$ReplayNotifier {
             targetTime: data.time,
             analyzedPointsCount: result.featureCount,
           );
+      final shakeEvents = result.shakeEvents;
+      if (shakeEvents == null) {
+        shakeDetection.clear();
+        return;
+      }
+      shakeDetection.apply(
+        observedAt: data.time,
+        events: shakeEvents,
+        status: result.shakeStatus,
+      );
+      final backfill = shakePlan?.backfill;
+      if (backfill == null) {
+        return;
+      }
+      final rebuiltEvents = await analyzer.backfillShakeDetection(backfill);
+      if (rebuiltEvents != null && ref.mounted && generation == _generation) {
+        shakeDetection.replaceEvents(rebuiltEvents);
+      }
     } on Object catch (error, stackTrace) {
       // 1 フレームの解析失敗で再生全体を止めない。
       talker.warning(
