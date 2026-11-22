@@ -45,6 +45,9 @@
 - 揺れ検知のサーバー配信（`shake_detection` の WebSocket 配信、`/v2/shake-detection/active`）は backend とアプリの Dart 側から撤去済み。
   Swift の EQMonitorAPI（`app/ios/Packages/EQMonitorAPI`）は再生成しておらず、`openapi.json` と生成済みの型に揺れ検知の配信用の定義が残る。
   macOS で `Scripts` の手順に沿って再生成する。
+- 実機未検証: 異常値として除外中の観測点が地図に描かれないこと、直近 10 フレームに実測があり最新フレームが欠測の観測点が
+  灰色の枠線だけで描かれること（枠表示の設定が「表示しない」でも描く）。iOS / Android の両方で `circle-opacity` と
+  `circle-stroke-width` の式が例外にならないことも確認する。
 
 ## 150: EQRP リプレイ再生の実機確認と公開
 

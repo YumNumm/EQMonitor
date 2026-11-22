@@ -113,7 +113,46 @@ void main() {
       strokeWidth(markerType: .onlyEew, hasActiveEew: true),
       visibleStrokeWidth,
     );
-    expect(strokeWidth(markerType: .onlyEew, hasActiveEew: false), 0);
-    expect(strokeWidth(markerType: .never, hasActiveEew: true), 0);
+    final lostOnlyStrokeWidth = [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      3,
+      [
+        'case',
+        ['has', 'lost'],
+        0.2,
+        0,
+      ],
+      10,
+      [
+        'case',
+        ['has', 'lost'],
+        1.0,
+        0,
+      ],
+    ];
+    expect(
+      strokeWidth(markerType: .onlyEew, hasActiveEew: false),
+      lostOnlyStrokeWidth,
+    );
+    expect(
+      strokeWidth(markerType: .never, hasActiveEew: true),
+      lostOnlyStrokeWidth,
+    );
+  });
+
+  test('欠測中の観測点は塗りを透明にして枠線だけを描く', () {
+    const builder = KyoshinMonitorObservationLayerBuilder();
+    final paint = builder
+        .build(radiusScaleFactor: 1, markerType: .never, hasActiveEew: false)
+        .paint;
+
+    expect(paint['circle-opacity'], [
+      'case',
+      ['has', 'lost'],
+      0,
+      1,
+    ]);
   });
 }

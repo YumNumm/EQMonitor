@@ -24,6 +24,7 @@ final class ShakeStationState({
   final Float64List _history = Float64List(historyCount)
     ..fillRange(0, historyCount, double.nan);
   var _position = 0;
+  var _unobservedFrames = historyCount;
 
   var intensityDiff = 0.0;
   var intensityAverage = 0.0;
@@ -39,14 +40,22 @@ final class ShakeStationState({
   DateTime? eventedExpireAt;
   DateTime? initialEventedAt;
 
+  bool get hasRecentObservation => _unobservedFrames < historyCount;
+
   double? get latestIntensity {
     final value = _history[_position];
     return value.isNaN ? null : value;
   }
 
-  void update(double? intensity) {
+  /// 実測に基づかない値を履歴へ入れる場合は [isObservation] を `false` にする。
+  void update(double? intensity, {bool isObservation = true}) {
     _position = _position + 1 >= historyCount ? 0 : _position + 1;
     _history[_position] = intensity ?? double.nan;
+    if (intensity != null && isObservation) {
+      _unobservedFrames = 0;
+    } else if (_unobservedFrames < historyCount) {
+      _unobservedFrames += 1;
+    }
 
     // 新しい順にたどった隣接差の和で、窓内の最新値と最古の有効値の差になる。
     double? newer;
@@ -77,6 +86,7 @@ final class ShakeStationState({
   void resetHistory() {
     _history.fillRange(0, historyCount, double.nan);
     _position = 0;
+    _unobservedFrames = historyCount;
     intensityDiff = 0;
     intensityAverage = 0;
   }
