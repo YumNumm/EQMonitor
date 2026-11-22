@@ -10,19 +10,19 @@ part of 'replay_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// EQRP リプレイファイルの再生を司り、再生時刻と各フレームを
+/// EQRP リプレイファイルと強震モニタの過去画像の再生を司り、再生時刻と各フレームを
 /// 本物の表示パイプライン（appClock / [eewProvider] / [kyoshinMonitorProvider]）
 /// へ流し込むコントローラ。
 
 @ProviderFor(ReplayNotifier)
 final replayProvider = ReplayNotifierProvider._();
 
-/// EQRP リプレイファイルの再生を司り、再生時刻と各フレームを
+/// EQRP リプレイファイルと強震モニタの過去画像の再生を司り、再生時刻と各フレームを
 /// 本物の表示パイプライン（appClock / [eewProvider] / [kyoshinMonitorProvider]）
 /// へ流し込むコントローラ。
 final class ReplayNotifierProvider
     extends $NotifierProvider<ReplayNotifier, ReplayState?> {
-  /// EQRP リプレイファイルの再生を司り、再生時刻と各フレームを
+  /// EQRP リプレイファイルと強震モニタの過去画像の再生を司り、再生時刻と各フレームを
   /// 本物の表示パイプライン（appClock / [eewProvider] / [kyoshinMonitorProvider]）
   /// へ流し込むコントローラ。
   ReplayNotifierProvider._()
@@ -52,9 +52,9 @@ final class ReplayNotifierProvider
   }
 }
 
-String _$replayNotifierHash() => r'f78f4d2d7799d1a92e8de7ea98fa1d818f8cc833';
+String _$replayNotifierHash() => r'8a02d27c750f28c1f9ceb5dc28a9194a9ecfb08c';
 
-/// EQRP リプレイファイルの再生を司り、再生時刻と各フレームを
+/// EQRP リプレイファイルと強震モニタの過去画像の再生を司り、再生時刻と各フレームを
 /// 本物の表示パイプライン（appClock / [eewProvider] / [kyoshinMonitorProvider]）
 /// へ流し込むコントローラ。
 
