@@ -264,7 +264,7 @@ jobs:
           api-level: 35
           arch: x86_64
           target: google_apis
-          profile: pixel_8
+          profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: python3 tool/store_screenshots/capture.py --platform android --app app/build/app/outputs/flutter-apk/app-debug.apk --fixtures "$RUNNER_TEMP/store-screenshot-fixtures" --output "$RUNNER_TEMP/store-screenshots-android-raw" $CAPTURE_ARGS
