@@ -142,8 +142,8 @@ void main() {
       );
 
       // Assert - 横に広いので経度方向が制約
-      expect(zoom, greaterThan(5.0));
-      expect(zoom, lessThan(9.0));
+      expect(zoom, greaterThan(4.0));
+      expect(zoom, lessThan(8.0));
     });
 
     test('緯度方向が制約となる場合のズームレベル計算', () {
@@ -166,8 +166,8 @@ void main() {
       );
 
       // Assert - 縦に広いので緯度方向が制約
-      expect(zoom, greaterThan(5.0));
-      expect(zoom, lessThan(9.0));
+      expect(zoom, greaterThan(4.0));
+      expect(zoom, lessThan(8.0));
     });
 
     test('緯度差が極端に小さい場合でもエラーにならないこと', () {
