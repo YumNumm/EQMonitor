@@ -9,6 +9,7 @@
 | [950: 地図データ](950_map_data_pipeline.md) | manifest 契約、展開メモリ予算、推計震度の低 zoom |
 | [930: Apple 拡張](930_apple_extensions.md) | App Intents・Widget・Live Activity の契約と実機確認 |
 | [900: 認証・課金](900_auth_subscription_and_ads.md) | native 認証の配布設定、App Check、subscription と Pro 再有効化 |
+| [850: ストア画像](850_store_screenshots.md) | fixture の投入、Simulator / Emulator の撮影確認、ロック画面と壁紙、Watch、Android |
 | [850: Asset Pack](850_asset_pack.md) | R2 更新・Flutter assets の release 検証、旧 native 残骸削除、容量と地物被覆 |
 | [800: 地図](800_map_display_verification.md) | 観測点キャッシュ、描画順、市区町村・地域選択の実機確認 |
 | [800: EEW・推定震度](800_eew_and_estimated_intensity.md) | 震度不明の配信方針、再取得中の表示、不完全な震源のテスト |
