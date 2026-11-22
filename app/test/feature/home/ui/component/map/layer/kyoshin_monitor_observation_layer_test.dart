@@ -145,7 +145,12 @@ void main() {
   test('欠測中の観測点は塗りを透明にして枠線だけを描く', () {
     const builder = KyoshinMonitorObservationLayerBuilder();
     final paint = builder
-        .build(radiusScaleFactor: 1, markerType: .never, hasActiveEew: false)
+        .build(
+          radiusScaleFactor: 1,
+          markerType: .never,
+          hasActiveEew: false,
+          hasIcon: false,
+        )
         .paint;
 
     expect(paint['circle-opacity'], [

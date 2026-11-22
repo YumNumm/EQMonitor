@@ -63,4 +63,4 @@ final class ShakeDetectionProvider
   }
 }
 
-String _$shakeDetectionHash() => r'962122e0ad8cd4ca61b918f0a77da5f04d7c38de';
+String _$shakeDetectionHash() => r'08af0fffbbcf6a3cec40ae5620ac4951b16d7361';
