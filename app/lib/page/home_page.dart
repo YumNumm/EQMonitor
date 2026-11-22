@@ -66,7 +66,9 @@ class const _SheetBody() extends ConsumerWidget {
             // 間隔は Column の spacing ではなく各 Widget 側の下余白で確保する
             for (final (index, eew) in state.reversed.indexed)
               Padding(
-                padding: EdgeInsets.only(bottom: spacing.md),
+                padding: EdgeInsets.only(
+                  bottom: index == state.length - 1 ? spacing.md : spacing.sm,
+                ),
                 child: HomeEewCard(
                   eew: eew,
                   index: (state.length > 1) ? '${index + 1}' : null,
