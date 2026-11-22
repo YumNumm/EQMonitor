@@ -303,7 +303,8 @@ class const _DetailsTile({
           _InfoRow(label: '決定フラグ', value: label),
         if (primary.evaluationLabel case final label?)
           _InfoRow(label: '震源評価', value: label),
-        _InfoRow(label: '観測点数', value: '${primary.stationCount}'),
+        if (others.isEmpty || primary.stationCount > 0)
+          _InfoRow(label: '観測点数', value: '${primary.stationCount}'),
         ...primary.magnitudes.map(
           (m) => _InfoRow(
             label: m.typeLabel,
@@ -343,7 +344,8 @@ class const _HypocenterSection({
           _InfoRow(label: '決定フラグ', value: label),
         if (hypocenter.evaluationLabel case final label?)
           _InfoRow(label: '震源評価', value: label),
-        _InfoRow(label: '観測点数', value: '${hypocenter.stationCount}'),
+        if (hypocenter.stationCount > 0)
+          _InfoRow(label: '観測点数', value: '${hypocenter.stationCount}'),
         ...hypocenter.magnitudes.map(
           (m) => _InfoRow(
             label: m.typeLabel,
