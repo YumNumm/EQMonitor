@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:eqmonitor/core/api/api_client_provider.dart';
+import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
-import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
-import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor/core/realtime/realtime_fallback_polling_provider.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -16,7 +16,10 @@ part 'eew.g.dart';
 
 @Riverpod(keepAlive: true)
 class Eew extends _$Eew {
+  static const fallbackPollingInterval = Duration(seconds: 1);
+
   final Map<String, api.EewItemWithRelations> _realtimeRecords = {};
+  List<EewTelegramItem>? _lastRestItems;
 
   @override
   AsyncValue<List<EewTelegramItem>> build() {
@@ -24,6 +27,7 @@ class Eew extends _$Eew {
     // 現在発生しているEEWが混在することを防ぐ。
     if (!ref.watch(isRealtimeModeProvider)) {
       _realtimeRecords.clear();
+      _lastRestItems = null;
       return const AsyncData([]);
     }
 
@@ -36,7 +40,14 @@ class Eew extends _$Eew {
         }
         return;
       }
-      state = next.whenData(reconcileRestItems);
+      final items = next.requireValue;
+      // 切断中の毎秒取得で、内容が変わらない結果を通知し続けない。
+      if (state.hasValue &&
+          const ListEquality<EewTelegramItem>().equals(_lastRestItems, items)) {
+        return;
+      }
+      _lastRestItems = items;
+      state = AsyncData(reconcileRestItems(items));
     });
 
     ref.listen(appLifecycleProvider, (_, next) {
@@ -58,15 +69,20 @@ class Eew extends _$Eew {
       });
     });
 
-    final refreshTimer = Timer.periodic(const Duration(seconds: 10), (_) {
-      final wsPhase = ref.read(eqMonitorWsStatusProvider).phase;
-      if (wsPhase != WsPhase.connected) {
-        ref.invalidate(eewRestProvider, asReload: true);
+    final pollingTimer = Timer.periodic(fallbackPollingInterval, (_) {
+      if (!ref.read(isRealtimeFallbackPollingActiveProvider)) {
+        return;
       }
+      // 取得中に作り直すと、1秒以上かかる応答が永久に完了しない。
+      if (ref.read(eewRestProvider).isLoading) {
+        return;
+      }
+      ref.invalidate(eewRestProvider, asReload: true);
     });
-    ref.onDispose(refreshTimer.cancel);
+    ref.onDispose(pollingTimer.cancel);
     final restResult = ref.read(eewRestProvider);
     final initialItems = restResult.value;
+    _lastRestItems = initialItems;
     return initialItems == null
         ? restResult
         : AsyncData(reconcileRestItems(initialItems));
@@ -131,7 +147,7 @@ class Eew extends _$Eew {
 
 @Riverpod(keepAlive: true)
 Future<List<EewTelegramItem>> eewRest(Ref ref) async {
-  final api = await ref.watch(apiClientProvider.future);
+  final api = await ref.watch(httpCachedApiClientProvider.future);
   final response = await api.eew.getV2EewLatest();
   return response.data.items.map((e) => e.toEewTelegramItem).toList();
 }

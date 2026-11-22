@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/core/realtime/realtime_fallback_polling_provider.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
@@ -31,6 +34,7 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
     parameter: parameter,
     onRefreshStarted: () =>
         ref.invalidate(earthquakeHistoryDetailsProvider, asReload: true),
+    revalidationClient: () => ref.read(httpCachedApiClientProvider.future),
   );
 
   ref.onDispose(dataSource.dispose);
@@ -57,8 +61,24 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
       const Duration(minutes: 5),
       (_) async => dataSource.revalidateLatest(),
     );
+    var isPolling = false;
+    final fallbackPollingTimer = Timer.periodic(
+      EarthquakeHistoryDataSource.fallbackPollingInterval,
+      (_) async {
+        if (isPolling || !ref.read(isRealtimeFallbackPollingActiveProvider)) {
+          return;
+        }
+        isPolling = true;
+        try {
+          await dataSource.revalidateLatest();
+        } finally {
+          isPolling = false;
+        }
+      },
+    );
     ref
       ..onDispose(refetchTimer.cancel)
+      ..onDispose(fallbackPollingTimer.cancel)
       ..listen(appLifecycleProvider, (_, next) async {
         if (next == AppLifecycleState.resumed) {
           await dataSource.revalidateLatest();
@@ -73,6 +93,7 @@ class EarthquakeHistoryDataSource({
   required EarthquakeHistoryRepository repository,
   required EarthquakeHistoryParameter parameter,
   VoidCallback? onRefreshStarted,
+  Future<api.ApiClient> Function()? revalidationClient,
 }) extends GroupedDataSource<String?, String, EarthquakePartial> {
   this {
     onLoadStarted = (action) {
@@ -82,9 +103,15 @@ class EarthquakeHistoryDataSource({
     };
   }
 
+  static const fallbackPollingInterval = Duration(seconds: 10);
+
   final EarthquakeHistoryRepository _repository = repository;
   final EarthquakeHistoryParameter _parameter = parameter;
+  final Future<api.ApiClient> Function()? _revalidationClient =
+      revalidationClient;
   final List<_RealtimeListMutation> _mutations = [];
+  List<EarthquakePartial>? _lastRevalidatedItems;
+  int? _lastRevalidatedSequence;
   var _mutationSequence = 0;
   var _hasCompletedInitialLoad = false;
 
@@ -126,8 +153,24 @@ class EarthquakeHistoryDataSource({
     talker.debug('revalidateLatest');
     final startedAt = _mutationSequence;
     try {
-      final latest = await _fetch(limit: 10, cursor: null);
+      final latest = await _fetch(
+        limit: 10,
+        cursor: null,
+        client: await _revalidationClient?.call(),
+      );
       if (_isDisposed) {
+        return;
+      }
+      // 前回の再取得から REST も Realtime も変化がなければ、一覧を更新しない。
+      final isUnchanged =
+          _lastRevalidatedSequence == _mutationSequence &&
+          const ListEquality<EarthquakePartial>().equals(
+            _lastRevalidatedItems,
+            latest.items,
+          );
+      _lastRevalidatedItems = latest.items;
+      _lastRevalidatedSequence = _mutationSequence;
+      if (isUnchanged) {
         return;
       }
       final reconciled = _reconcileMutations(
@@ -166,11 +209,13 @@ class EarthquakeHistoryDataSource({
   Future<PaginatedResponse<EarthquakePartial>> _fetch({
     required int limit,
     required String? cursor,
+    api.ApiClient? client,
   }) async {
     final parameter = _parameter;
 
     return switch (parameter) {
       EarthquakeHistoryParameterAll() => _repository.fetchEarthquakeList(
+        client: client,
         limit: limit,
         cursor: cursor,
         magnitudeGte: parameter.magnitudeGte,

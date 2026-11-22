@@ -45,7 +45,7 @@ final class EewProvider
   }
 }
 
-String _$eewHash() => r'9af2659f9279226a9e0c991759d5ed4d4c49c313';
+String _$eewHash() => r'bf1a6c6aa7aa0c4df4cd9c4fad73ba0f6a6a09de';
 
 abstract class _$Eew extends $Notifier<AsyncValue<List<EewTelegramItem>>> {
   AsyncValue<List<EewTelegramItem>> build();
@@ -112,4 +112,4 @@ final class EewRestProvider
   }
 }
 
-String _$eewRestHash() => r'd69f4421e4998eb4cbdbee58c222a0a7c63c37a8';
+String _$eewRestHash() => r'07924065a7f77271ca93b974145d12da104e4cd4';
