@@ -1,0 +1,51 @@
+{
+  "applicationId": "net.yumnumm.eqmonitor",
+  "statusBarTime": "9:41",
+  "appearance": "dark",
+  "location": {
+    "latitude": 35.6812,
+    "longitude": 139.7671
+  },
+  "preferences": {
+    "onboarding_completed": true,
+    "release_highlight_seen_version": "9999.0.0",
+    "estimated_intensity_notice_shown": true,
+    "eew_history_notice_shown": true,
+    "is_estimated_intensity_on_eew_replay_allowed": true,
+    "location_permission_banner_dismissed": true,
+    "notification_permission_banner_dismissed": true
+  },
+  "scenes": [
+    {
+      "name": "eew_warning",
+      "platforms": ["ios", "android"],
+      "kind": "replay",
+      "fixture": "noto_peninsula_2024.eqrp",
+      "time": "2024-01-01T16:11:08+09:00",
+      "settle_milliseconds": 8000
+    },
+    {
+      "name": "kyoshin_monitor",
+      "platforms": ["ios", "android"],
+      "kind": "replay",
+      "fixture": "noto_peninsula_2024.eqrp",
+      "time": "2024-01-01T16:10:21+09:00",
+      "settle_milliseconds": 8000
+    },
+    {
+      "name": "earthquake_detail",
+      "platforms": ["ios", "android"],
+      "kind": "route",
+      "location": "/earthquake-history-details/20240101161010",
+      "settle_milliseconds": 10000
+    },
+    {
+      "name": "lock_screen_live_activity",
+      "platforms": ["ios"],
+      "kind": "live_activity",
+      "preset": "warning",
+      "capture": "lock_screen",
+      "settle_milliseconds": 3000
+    }
+  ]
+}
