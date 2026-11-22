@@ -4,6 +4,8 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_control_panel_expanded_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_exit_notice_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_status_card.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -207,6 +209,7 @@ class const _MapLibreMapHost({
             ref
                 .read(homeMapCameraStateProvider.notifier)
                 .handleUserMapGesture();
+            ref.read(replayControlPanelExpandedProvider.notifier).collapse();
           }
         },
         children: children,
@@ -218,6 +221,15 @@ class const _MapLibreMapHost({
 class const _MapHeader() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(replayExitNoticeProvider, (_, notice) {
+      if (notice == null) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(notice.message)));
+      ref.read(replayExitNoticeProvider.notifier).clear();
+    });
     final isReplay = ref.watch(isReplayModeProvider);
     final useKmoni =
         (ref.watch(
