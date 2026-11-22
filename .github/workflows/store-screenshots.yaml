@@ -40,7 +40,8 @@ jobs:
     name: Capture (iOS Simulator)
     # SearchEarthquakesIntent uses the iOS 27 system.searchInApp schema.
     runs-on: xcode-27
-    timeout-minutes: 60
+    # SPM の取得だけで約 20 分かかり、RunnerUITests のビルドと撮影を足すと 60 分を超えうる。
+    timeout-minutes: 120
     permissions:
       contents: read
     steps:
