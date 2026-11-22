@@ -1,3 +1,5 @@
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
+
 import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
@@ -12,7 +14,7 @@ typedef MapAutomaticFocusTarget = ({Geographic center, double zoom});
 class const MapAutomaticFocusController() {
   Future<bool> fit({
     required MapController controller,
-    required LngLatBounds bounds,
+    required MapCameraBounds bounds,
     required Size viewportSize,
     required bool Function() isCurrent,
     EdgeInsets padding = EdgeInsets.zero,
@@ -32,18 +34,20 @@ class const MapAutomaticFocusController() {
       return false;
     }
     await controller.animateCamera(
-      center: target.center,
-      zoom: target.zoom,
-      bearing: bearing,
-      pitch: pitch,
-      nativeDuration: nativeDuration,
-      padding: padding,
+      CameraUpdate.position(
+        center: target.center,
+        zoom: target.zoom,
+        bearing: bearing,
+        pitch: pitch,
+        padding: padding,
+      ),
+      animation: CameraAnimation.fly(duration: nativeDuration),
     );
     return isCurrent();
   }
 
   static MapAutomaticFocusTarget? targetForBounds({
-    required LngLatBounds bounds,
+    required MapCameraBounds bounds,
     required Size viewportSize,
     required EdgeInsets padding,
   }) {
@@ -52,33 +56,33 @@ class const MapAutomaticFocusController() {
     if (!width.isFinite || !height.isFinite || width <= 0 || height <= 0) {
       return null;
     }
-    if (!bounds.latitudeSouth.isFinite ||
-        !bounds.latitudeNorth.isFinite ||
-        !bounds.longitudeWest.isFinite ||
-        !bounds.longitudeEast.isFinite) {
+    if (!bounds.south.isFinite ||
+        !bounds.north.isFinite ||
+        !bounds.west.isFinite ||
+        !bounds.east.isFinite) {
       return null;
     }
-    if (bounds.latitudeSouth < -90 ||
-        bounds.latitudeSouth > 90 ||
-        bounds.latitudeNorth < -90 ||
-        bounds.latitudeNorth > 90 ||
-        bounds.longitudeWest < -180 ||
-        bounds.longitudeWest > 180 ||
-        bounds.longitudeEast < -180 ||
-        bounds.longitudeEast > 180 ||
-        bounds.latitudeSouth > bounds.latitudeNorth) {
+    if (bounds.south < -90 ||
+        bounds.south > 90 ||
+        bounds.north < -90 ||
+        bounds.north > 90 ||
+        bounds.west < -180 ||
+        bounds.west > 180 ||
+        bounds.east < -180 ||
+        bounds.east > 180 ||
+        bounds.south > bounds.north) {
       return null;
     }
 
-    final south = bounds.latitudeSouth.clamp(
+    final south = bounds.south.clamp(
       -mapAutomaticFocusMercatorMaxLatitude,
       mapAutomaticFocusMercatorMaxLatitude,
     );
-    final north = bounds.latitudeNorth.clamp(
+    final north = bounds.north.clamp(
       -mapAutomaticFocusMercatorMaxLatitude,
       mapAutomaticFocusMercatorMaxLatitude,
     );
-    var longitudeDelta = bounds.longitudeEast - bounds.longitudeWest;
+    var longitudeDelta = bounds.east - bounds.west;
     if (longitudeDelta < 0) {
       longitudeDelta += 360;
     }
@@ -116,11 +120,11 @@ class const MapAutomaticFocusController() {
     );
   }
 
-  static double centerLongitude({required LngLatBounds bounds}) {
-    final adjustedEast = bounds.longitudeEast < bounds.longitudeWest
-        ? bounds.longitudeEast + 360
-        : bounds.longitudeEast;
-    final center = (bounds.longitudeWest + adjustedEast) / 2;
+  static double centerLongitude({required MapCameraBounds bounds}) {
+    final adjustedEast = bounds.east < bounds.west
+        ? bounds.east + 360
+        : bounds.east;
+    final center = (bounds.west + adjustedEast) / 2;
     return center > 180 ? center - 360 : center;
   }
 

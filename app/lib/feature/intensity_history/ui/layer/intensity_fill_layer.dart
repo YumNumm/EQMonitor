@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
-import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_fill_layer_action.dart';
@@ -110,8 +109,10 @@ class const IntensityFillLayer({
           return null;
         }
 
-        final lineColor = colorScheme.primary.toHexStringRGB();
-        final haloColor = isDarkMode ? '#000000' : '#FFFFFF';
+        final lineColor = colorScheme.primary.withValues(alpha: 1);
+        final haloColor = isDarkMode
+            ? const Color(0xFF000000)
+            : const Color(0xFFFFFFFF);
 
         unawaited(
           enqueue(

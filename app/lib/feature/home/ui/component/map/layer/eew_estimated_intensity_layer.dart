@@ -67,16 +67,14 @@ class const EewEstimatedIntensityLayer({
                     .map((r) => r.code)
                     .toList();
 
-                return styleController.addLayer(
+                return styleController.layers.add(
                   FillStyleLayer(
                     id: layerId,
                     sourceId: 'eqmonitor_map',
                     sourceLayerId: 'areaForecastLocalE',
-                    filter: _areaFilterBuilder.build(codes),
-                    paint: {
-                      'fill-color': color.toHexString(),
-                      'fill-opacity': 1,
-                    },
+                    filter: .raw(_areaFilterBuilder.build(codes)),
+                    color: .literal(color.withValues(alpha: 1)),
+                    opacity: const .literal(1),
                   ),
                   belowLayerId: BaseLayer.areaForecastLocalELine.name,
                 );
@@ -98,7 +96,8 @@ class const EewEstimatedIntensityLayer({
             final futures = JmaIntensity.values
                 .where((intensity) => intensity != JmaIntensity.unknown)
                 .map(
-                  (intensity) => styleController.removeLayer(intensity.layerId),
+                  (intensity) =>
+                      styleController.layers.remove(intensity.layerId),
                 );
             await Future.wait(futures);
           }),

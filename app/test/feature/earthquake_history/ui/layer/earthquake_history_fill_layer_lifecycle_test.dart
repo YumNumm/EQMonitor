@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_t
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:material_ui/material_ui.dart';
@@ -24,7 +25,7 @@ import '../../../../core/util/map/fake_style_controller.dart';
 
 void main() {
   testWidgets('JMAから長周期へ切り替えると長周期レイヤーだけが残る', (tester) async {
-    final styleController = FakeStyleController();
+    final styleController = await baseStyleController();
     final showingLpgm = ValueNotifier(false);
 
     await tester.pumpWidget(
@@ -35,7 +36,7 @@ void main() {
               mapController: EarthquakeHistoryLayerMapController(
                 styleController: styleController,
               ),
-              mapCamera: null,
+              cameraPosition: null,
               child: ValueListenableBuilder<bool>(
                 valueListenable: showingLpgm,
                 builder: (context, value, child) => EarthquakeHistoryFillLayer(
@@ -54,14 +55,14 @@ void main() {
     showingLpgm.value = true;
     await tester.pumpAndSettle();
 
-    expect(styleController.activeLayerIds, {
+    expect(addedLayerIdsOf(styleController), {
       'eq-history-lpgm-two-region-fill',
       'eq-history-lpgm-two-region-line',
     });
   });
 
   testWidgets('震度データ更新で同じIDを再構築してもJMAレイヤーが残る', (tester) async {
-    final styleController = FakeStyleController();
+    final styleController = await baseStyleController();
     final currentEarthquake = ValueNotifier(earthquake);
 
     await tester.pumpWidget(
@@ -72,7 +73,7 @@ void main() {
               mapController: EarthquakeHistoryLayerMapController(
                 styleController: styleController,
               ),
-              mapCamera: null,
+              cameraPosition: null,
               child: ValueListenableBuilder<Earthquake>(
                 valueListenable: currentEarthquake,
                 builder: (context, value, child) => EarthquakeHistoryFillLayer(
@@ -90,7 +91,7 @@ void main() {
     currentEarthquake.value = updatedEarthquake;
     await tester.pumpAndSettle();
 
-    expect(styleController.activeLayerIds, {
+    expect(addedLayerIdsOf(styleController), {
       'eq-history-jma-four-region-fill',
       'eq-history-jma-four-region-line',
     });
@@ -99,7 +100,7 @@ void main() {
   testWidgets('JMAから長周期を経て推計震度へ切り替えると推計震度レイヤーだけが残る', (
     tester,
   ) async {
-    final styleController = FakeStyleController();
+    final styleController = await baseStyleController();
     final displayMode = ValueNotifier(IntensityDisplayMode.jma);
 
     await tester.pumpWidget(
@@ -110,7 +111,7 @@ void main() {
               mapController: EarthquakeHistoryLayerMapController(
                 styleController: styleController,
               ),
-              mapCamera: null,
+              cameraPosition: null,
               child: ValueListenableBuilder<IntensityDisplayMode>(
                 valueListenable: displayMode,
                 builder: (context, value, child) => switch (value) {
@@ -141,12 +142,28 @@ void main() {
     displayMode.value = IntensityDisplayMode.estimated;
     await tester.pumpAndSettle();
 
-    expect(styleController.activeLayerIds, {
+    expect(addedLayerIdsOf(styleController), {
       'earthquake-history-estimated-intensity-fill',
       'earthquake-history-estimated-intensity-line',
     });
   });
 }
+
+Future<FakeStyleController> baseStyleController() async {
+  final styleController = FakeStyleController();
+  await styleController.sources.add(
+    const VectorSource.tiles(id: 'eqmonitor_map', tiles: []),
+  );
+  await styleController.layers.add(
+    BackgroundStyleLayer(id: BaseLayer.areaForecastLocalELine.name),
+  );
+  return styleController;
+}
+
+Set<String> addedLayerIdsOf(FakeStyleController styleController) => {
+  for (final id in styleController.activeLayerIds)
+    if (id != BaseLayer.areaForecastLocalELine.name) id,
+};
 
 class EarthquakeHistoryLayerMapController({
   required final StyleController styleController,

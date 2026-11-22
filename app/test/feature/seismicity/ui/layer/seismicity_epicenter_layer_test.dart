@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/feature/seismicity/data/model/seismicity_color_mode.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:eqmonitor/feature/seismicity/ui/layer/seismicity_epicenter_layer.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -51,6 +52,57 @@ void main() {
       expect(first, isNot(second));
       expect(SeismicityEpicenterLayer.sourceId, 'seismicity-epicenter');
       expect(SeismicityEpicenterLayer.layerId, 'seismicity-epicenter-circle');
+    });
+  });
+
+  group('SeismicityEpicenterStyleBuilder', () {
+    test('色分けモードごとの style-spec の paint を維持する', () {
+      const builder = SeismicityEpicenterStyleBuilder();
+      final magnitude = builder.build(colorMode: SeismicityColorMode.magnitude);
+      final elapsed = builder.build(colorMode: SeismicityColorMode.elapsedTime);
+
+      expect(magnitude.toJson(), {
+        'id': 'seismicity-epicenter-circle',
+        'type': 'circle',
+        'source': 'seismicity-epicenter',
+        'paint': {
+          'circle-color': [
+            'interpolate',
+            ['linear'],
+            ['get', 'magnitude'],
+            2,
+            '#9e9e9e',
+            4,
+            '#ffca28',
+            6,
+            '#e53935',
+          ],
+          'circle-radius': [
+            'interpolate',
+            ['linear'],
+            ['get', 'magnitude'],
+            2,
+            3,
+            7,
+            18,
+          ],
+          'circle-opacity': 0.75,
+          'circle-stroke-width': 0.5,
+          'circle-stroke-color': 'rgba(0, 0, 0, ${0x80 / 0xFF})',
+        },
+      });
+      expect(
+        (elapsed.toJson()['paint']! as Map<String, Object?>)['circle-color'],
+        [
+          'interpolate',
+          ['linear'],
+          ['get', 'elapsed_hours'],
+          0,
+          '#e53935',
+          720,
+          '#9e9e9e',
+        ],
+      );
     });
   });
 

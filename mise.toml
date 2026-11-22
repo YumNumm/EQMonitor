@@ -1,7 +1,7 @@
-min_version = "2026.09.12"
+min_version = "2026.11.8"
 
-[plugins]
-flutter = "https://github.com/YumNumm/mise-flutter.git"
+[tool_alias]
+flutter = "asdf:https://github.com/YumNumm/mise-flutter.git"
 
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"

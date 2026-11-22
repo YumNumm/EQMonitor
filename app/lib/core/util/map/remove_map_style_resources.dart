@@ -11,14 +11,18 @@ class const MapStyleResourceRemover._() {
   }) async {
     for (final id in layerIds) {
       try {
-        await styleController.removeLayer(id);
+        await styleController.layers.remove(id);
       } on Exception catch (error, stackTrace) {
         talker.handle(error, stackTrace);
       }
     }
     for (final id in sourceIds) {
       try {
-        await styleController.removeSource(id);
+        await styleController.sources.remove(id);
+        // 使用中の source の削除は StateError で拒否される。
+        // ignore: avoid_catching_errors
+      } on StateError catch (error, stackTrace) {
+        talker.handle(error, stackTrace);
       } on Exception catch (error, stackTrace) {
         talker.handle(error, stackTrace);
       }
