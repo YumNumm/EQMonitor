@@ -19,6 +19,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_activity_page
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/page/earthquake_history_search_page.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_open_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
@@ -273,6 +274,15 @@ class const TelegramListByEventIdRoute({required final String eventId})
   Widget build(BuildContext context, GoRouterState state) {
     return TelegramListByEventIdPage(eventId: eventId);
   }
+}
+
+@TypedGoRoute<ReplayOpenRoute>(path: '/replay/open')
+class const ReplayOpenRoute({required final String source})
+    extends GoRouteData
+    with $ReplayOpenRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      ReplayOpenPage(source: source);
 }
 
 @TypedGoRoute<HomeRoute>(

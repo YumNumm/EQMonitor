@@ -16,6 +16,7 @@ import 'package:eqmonitor/feature/debug/data/provider/debug_access_level_provide
 import 'package:eqmonitor/feature/devices/data/notifier/device_role_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/action/replay_open_action.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_eew_estimation_debug_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/home_eew_estimation_debug_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
@@ -216,6 +217,16 @@ class const _DebugWidget() extends ConsumerWidget {
               title: const Text('KyoshinMonitor'),
               leading: const Icon(Icons.list),
               onTap: () async => const DebugKyoshinMonitorRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('過去の地震を再生'),
+              subtitle: Text(
+                'リプレイファイル（.eqrp）の強震モニタとEEWをホームで再生',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              leading: const Icon(Icons.history_rounded),
+              onTap: () async =>
+                  ref.read(replayOpenActionProvider).pickAndOpen(ref, context),
             ),
             Builder(
               builder: (context) {
