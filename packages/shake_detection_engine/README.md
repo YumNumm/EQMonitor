@@ -26,4 +26,6 @@ final events = engine.process(time: observedAt, intensities: intensities);
 - 観測点はイベントの終了まで外さない。移植元は上昇が止まり検知期限が過ぎた観測点を個別に外すが、
   本パッケージはすべての観測点の検知期限が過ぎた時点でイベントを終了する。観測点数は終了まで減らない。
 - 観測点ごとに、イベント中の最大震度（`peakIntensity`）を保持する。
+- 観測点ごとの表示用の状態（`stationStatuses`）を返す。異常値として除外中は `outlier`、直近 10 フレームに実測があり
+  最新フレームが欠測の場合は `lost`。固定値の平常値は実測として数えない。
 - 最高レベルを検知した地域の集合（`PeakLevelRegions`）とデバッグ用の値は持たない。

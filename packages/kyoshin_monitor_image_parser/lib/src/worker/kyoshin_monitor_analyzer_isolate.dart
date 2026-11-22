@@ -348,19 +348,20 @@ Future<void> _runAnalyze(
     sw.stop();
     final parseMicros = sw.elapsedMicroseconds;
 
+    final request = message.shakeDetection;
+    final shakeEvents = shakeDetection == null || request == null
+        ? null
+        : await shakeDetection.detect(results: results, request: request);
+
     final sw2 = Stopwatch()..start();
     final built = _buildGeoJsonString(
       results,
       namedPoints,
       isShindo: message.isShindo,
+      statuses: shakeEvents == null ? null : shakeDetection?.stationStatuses,
     );
     sw2.stop();
     final geoMicros = sw2.elapsedMicroseconds;
-
-    final request = message.shakeDetection;
-    final shakeEvents = shakeDetection == null || request == null
-        ? null
-        : await shakeDetection.detect(results: results, request: request);
 
     mainSendPort.send(
       _AnalyzeResponseMessage(
@@ -390,39 +391,50 @@ Future<void> _runAnalyze(
   List<KyoshinMonitorImageParseObservationResult> parseResults,
   List<NamedObservationPoint> namedPoints, {
   required bool isShindo,
+  required List<ShakeStationStatus>? statuses,
 }) {
   final sb = StringBuffer('{"type":"FeatureCollection","features":[');
-  var first = true;
   var count = 0;
   for (var i = 0; i < parseResults.length; i++) {
+    final status = statuses?[i];
+    if (status == .outlier) {
+      continue;
+    }
     final r = parseResults[i];
-    if (r is! KyoshinMonitorImageParseObservationSuccess) {
+    final obs = r is KyoshinMonitorImageParseObservationSuccess
+        ? r.point
+        : null;
+    if (obs == null && status != .lost) {
       continue;
     }
     final named = namedPoints[i];
-    final obs = r.point;
-    if (!first) {
+    if (count > 0) {
       sb.write(',');
     }
-    first = false;
     count++;
-    final colorHex =
-        '#${obs.r.toRadixString(16).padLeft(2, '0')}'
-                '${obs.g.toRadixString(16).padLeft(2, '0')}'
-                '${obs.b.toRadixString(16).padLeft(2, '0')}'
-            .toUpperCase();
     sb
       ..write('{"type":"Feature","geometry":{"type":"Point","coordinates":[')
       ..write(named.longitude.toStringAsFixed(6))
       ..write(',')
       ..write(named.latitude.toStringAsFixed(6))
-      ..write(']},"properties":{"color":"')
-      ..write(colorHex)
-      ..write('"');
-    if (isShindo) {
+      ..write(']},"properties":{');
+    if (obs == null) {
+      sb.write('"lost":true');
+    } else {
+      final colorHex =
+          '#${obs.r.toRadixString(16).padLeft(2, '0')}'
+                  '${obs.g.toRadixString(16).padLeft(2, '0')}'
+                  '${obs.b.toRadixString(16).padLeft(2, '0')}'
+              .toUpperCase();
       sb
-        ..write(',"intensity":')
-        ..write(obs.scaleToIntensity);
+        ..write('"color":"')
+        ..write(colorHex)
+        ..write('"');
+      if (isShindo) {
+        sb
+          ..write(',"intensity":')
+          ..write(obs.scaleToIntensity);
+      }
     }
     sb
       ..write(',"name":')

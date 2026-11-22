@@ -314,6 +314,15 @@ class const KyoshinMonitorObservationLayerBuilder() {
       KyoshinMonitorMarkerType.onlyEew => hasActiveEew,
       KyoshinMonitorMarkerType.never => false,
     };
+    // 欠測中の観測点は枠の設定によらず、枠線だけを描く。
+    Object strokeWidth(double width) => showMarkerBorder
+        ? width
+        : [
+            'case',
+            ['has', 'lost'],
+            width,
+            0,
+          ];
     return CircleStyleLayer(
       id: KyoshinMonitorObservationLayer._layerId,
       sourceId: KyoshinMonitorObservationLayer._sourceId,
@@ -343,19 +352,27 @@ class const KyoshinMonitorObservationLayerBuilder() {
           10,
           10 * radiusScaleFactor,
         ],
-        'circle-color': ['get', 'color'],
+        'circle-color': [
+          'coalesce',
+          ['get', 'color'],
+          '#808080',
+        ],
+        'circle-opacity': [
+          'case',
+          ['has', 'lost'],
+          0,
+          1,
+        ],
         'circle-stroke-color': '#808080',
-        'circle-stroke-width': showMarkerBorder
-            ? [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
-                3,
-                0.2 * radiusScaleFactor,
-                10,
-                1 * radiusScaleFactor,
-              ]
-            : 0,
+        'circle-stroke-width': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          strokeWidth(0.2 * radiusScaleFactor),
+          10,
+          strokeWidth(1 * radiusScaleFactor),
+        ],
       },
     );
   }

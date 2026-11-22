@@ -78,6 +78,8 @@ final class ShakeDetectionWorker({
     return engine.process(time: request.observedAt, intensities: intensities);
   }
 
+  List<ShakeStationStatus>? get stationStatuses => _engine?.stationStatuses;
+
   ShakeDetectionStatus? get status {
     final coldStartAt = _coldStartAt;
     if (coldStartAt == null) {
