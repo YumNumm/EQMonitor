@@ -116,95 +116,95 @@ class const EewHypocenterLayer({
           ).wait;
 
           await (
-            styleController.addSource(
-              GeoJsonSource(
+            styleController.sources.add(
+              GeoJsonSource.data(
                 id: sourceId.normal,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': <Map<String, dynamic>>[],
-                }),
+                data: .text(
+                  jsonEncode({
+                    'type': 'FeatureCollection',
+                    'features': <Map<String, dynamic>>[],
+                  }),
+                ),
               ),
             ),
-            styleController.addSource(
-              GeoJsonSource(
+            styleController.sources.add(
+              GeoJsonSource.data(
                 id: sourceId.lowPrecise,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': <Map<String, dynamic>>[],
-                }),
+                data: .text(
+                  jsonEncode({
+                    'type': 'FeatureCollection',
+                    'features': <Map<String, dynamic>>[],
+                  }),
+                ),
               ),
             ),
           ).wait;
 
           await (
-            styleController.addLayer(
+            styleController.layers.add(
               SymbolStyleLayer(
                 id: layerId.normal,
                 sourceId: sourceId.normal,
-                layout: {
-                  'icon-allow-overlap': true,
-                  'icon-ignore-placement': true,
-                  'icon-image': 'normal-hypocenter',
-                  'icon-size': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    3,
-                    0.15,
-                    20,
-                    0.4,
-                  ],
-                },
-                paint: const {
-                  'icon-opacity': ['get', 'opacity'],
-                },
+                iconAllowOverlap: const .literal(true),
+                iconIgnorePlacement: const .literal(true),
+                iconImage: const .literal('normal-hypocenter'),
+                iconSize: const .raw([
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  0.15,
+                  20,
+                  0.4,
+                ]),
+                iconOpacity: const .raw(['get', 'opacity']),
               ),
               belowLayerId: BaseLayer.markerUpperAnchor.name,
             ),
-            styleController.addLayer(
+            styleController.layers.add(
               SymbolStyleLayer(
                 id: layerId.lowPrecise,
                 sourceId: sourceId.lowPrecise,
-                layout: {
-                  'icon-allow-overlap': true,
-                  'icon-ignore-placement': true,
-                  'icon-image': 'low-precise-hypocenter',
-                  'icon-size': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    3,
-                    0.15,
-                    20,
-                    0.4,
-                  ],
-                },
-                paint: const {
-                  'icon-opacity': ['get', 'opacity'],
-                },
+                iconAllowOverlap: const .literal(true),
+                iconIgnorePlacement: const .literal(true),
+                iconImage: const .literal('low-precise-hypocenter'),
+                iconSize: const .raw([
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  0.15,
+                  20,
+                  0.4,
+                ]),
+                iconOpacity: const .raw(['get', 'opacity']),
               ),
               belowLayerId: BaseLayer.markerUpperAnchor.name,
             ),
           ).wait;
           isInitialized.value = true;
           await (
-            styleController.updateGeoJsonSource(
-              id: sourceId.normal,
-              data: jsonEncode({
-                'type': 'FeatureCollection',
-                'features': latestNormalEews.value
-                    .map((eew) => _convertEew(eew, latestIconOpacity.value))
-                    .toList(),
-              }),
+            styleController.sources.updateGeoJsonData(
+              sourceId.normal,
+              .text(
+                jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': latestNormalEews.value
+                      .map((eew) => _convertEew(eew, latestIconOpacity.value))
+                      .toList(),
+                }),
+              ),
             ),
-            styleController.updateGeoJsonSource(
-              id: sourceId.lowPrecise,
-              data: jsonEncode({
-                'type': 'FeatureCollection',
-                'features': latestLowPreciseEews.value
-                    .map((eew) => _convertEew(eew, latestIconOpacity.value))
-                    .toList(),
-              }),
+            styleController.sources.updateGeoJsonData(
+              sourceId.lowPrecise,
+              .text(
+                jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': latestLowPreciseEews.value
+                      .map((eew) => _convertEew(eew, latestIconOpacity.value))
+                      .toList(),
+                }),
+              ),
             ),
           ).wait;
         }),
@@ -236,23 +236,27 @@ class const EewHypocenterLayer({
       unawaited(
         enqueue(() async {
           await (
-            styleController.updateGeoJsonSource(
-              id: sourceId.normal,
-              data: jsonEncode({
-                'type': 'FeatureCollection',
-                'features': normalEews
-                    .map((eew) => _convertEew(eew, iconOpacity))
-                    .toList(),
-              }),
+            styleController.sources.updateGeoJsonData(
+              sourceId.normal,
+              .text(
+                jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': normalEews
+                      .map((eew) => _convertEew(eew, iconOpacity))
+                      .toList(),
+                }),
+              ),
             ),
-            styleController.updateGeoJsonSource(
-              id: sourceId.lowPrecise,
-              data: jsonEncode({
-                'type': 'FeatureCollection',
-                'features': lowPreciseEews
-                    .map((eew) => _convertEew(eew, iconOpacity))
-                    .toList(),
-              }),
+            styleController.sources.updateGeoJsonData(
+              sourceId.lowPrecise,
+              .text(
+                jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': lowPreciseEews
+                      .map((eew) => _convertEew(eew, iconOpacity))
+                      .toList(),
+                }),
+              ),
             ),
           ).wait;
         }),
@@ -260,7 +264,7 @@ class const EewHypocenterLayer({
 
       return null;
       // 3つとも enqueue に渡すクロージャ内で実際に参照している
-      // (updateGeoJsonSource の features 生成)。keys から外すと
+      // (updateGeoJsonData の features 生成)。keys から外すと
       // EEWの更新でソースが再描画されなくなるため残す。
       // ignore_keys: normalEews, lowPreciseEews, iconOpacity
     }, [styleController, normalEews, lowPreciseEews, iconOpacity]);

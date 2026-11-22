@@ -14,6 +14,7 @@ import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_kyoshin_archive_window_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_origin_time_resolver.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_position_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_shake_detection_planner.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_exit_notice.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_source.dart';
@@ -45,15 +46,13 @@ part 'replay_notifier.g.dart';
 class ReplayNotifier extends _$ReplayNotifier {
   static const _liveEewPollInterval = Duration(seconds: 10);
 
-  // 画像解析の遅れで再生が累積的に遅れないよう、再生開始時の壁時計を基準に次の時刻を決める。
-  // 基準から大きく遅れたときは追いつこうとせず基準を取り直す。
-  static const _lagTolerance = Duration(milliseconds: 500);
-
+  // 画像解析の遅れで再生が累積的に遅れないよう、再生開始時の壁時計を基準に再生位置を決める。
+  // 処理が遅れたときは基準を取り直さず、途中のフレームを飛ばして基準の位置へ追いつく。
   final _wallClock = Stopwatch()..start();
   Timer? _playbackTimer;
   Timer? _liveEewTimer;
   DateTime? _appliedArchiveImageTime;
-  ({Duration wallTime, DateTime replayTime})? _anchor;
+  ReplayAnchor? _anchor;
   // シーク・読み込み・終了をまたいで、解析中だった古いフレームを反映しないための世代番号。
   int _generation = 0;
 
@@ -204,19 +203,29 @@ class ReplayNotifier extends _$ReplayNotifier {
     _schedule();
   }
 
-  void pause() {
+  /// 補間中の位置で止め、表示中の波面などを巻き戻さない。
+  Future<void> pause() async {
     final current = state;
     if (current == null) {
       return;
     }
     _stopPlaybackTimer();
+    final position = ref
+        .read(replayPositionResolverProvider)
+        .current(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+        );
     _anchor = null;
-    state = current.copyWith(isPlaying: false);
+    final paused = current.copyWith(isPlaying: false);
+    state = paused;
+    await _advanceTo(current: paused, target: position);
   }
 
   Future<void> togglePlayPause() async {
     if (state?.isPlaying ?? false) {
-      pause();
+      await pause();
     } else {
       await play();
     }
@@ -258,12 +267,20 @@ class ReplayNotifier extends _$ReplayNotifier {
     _schedule();
   }
 
+  /// 補間中の表示位置を基準に動かす。直前の進行位置を基準にすると最大 1 秒ずれる。
   Future<void> seekBy(Duration delta) async {
     final current = state;
     if (current == null) {
       return;
     }
-    await seek(current.currentTime.add(delta));
+    final position = ref
+        .read(replayPositionResolverProvider)
+        .current(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+        );
+    await seek(position.add(delta));
   }
 
   void setPlaybackSpeed(double speed) {
@@ -271,8 +288,21 @@ class ReplayNotifier extends _$ReplayNotifier {
     if (current == null || !current.source.playbackSpeeds.contains(speed)) {
       return;
     }
-    _anchor = null;
-    state = current.copyWith(playbackSpeed: speed);
+    final position = ref
+        .read(replayPositionResolverProvider)
+        .current(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+        );
+    final next = current.copyWith(playbackSpeed: speed);
+    state = next;
+    if (next.isPlaying) {
+      _anchor = (wallTime: _wallClock.elapsed, replayTime: position);
+      ref
+          .read(appClockProvider.notifier)
+          .updateReplayTime(position, rate: speed, limit: next.endTime);
+    }
     _schedule();
   }
 
@@ -284,31 +314,46 @@ class ReplayNotifier extends _$ReplayNotifier {
       return;
     }
     final now = _wallClock.elapsed;
-    final anchor = _anchor ??= (wallTime: now, replayTime: current.currentTime);
+    final anchor = _anchor ?? (wallTime: now, replayTime: current.currentTime);
+    if (_anchor == null) {
+      _anchor = anchor;
+      ref
+          .read(appClockProvider.notifier)
+          .updateReplayTime(
+            current.currentTime,
+            rate: current.playbackSpeed,
+            limit: current.endTime,
+          );
+    }
     final due =
         anchor.wallTime +
         next.difference(anchor.replayTime) * (1 / current.playbackSpeed);
     final delay = due - now;
-    if (delay < -_lagTolerance) {
-      _anchor = (wallTime: now, replayTime: current.currentTime);
-    }
     _playbackTimer = Timer(delay.isNegative ? Duration.zero : delay, () async {
-      await _tick(target: next);
+      await _tick(scheduled: next);
     });
   }
 
-  Future<void> _tick({required DateTime target}) async {
+  Future<void> _tick({required DateTime scheduled}) async {
     final generation = _generation;
     final current = state;
     if (current == null || !current.isPlaying) {
       return;
     }
+    final target = ref
+        .read(replayPositionResolverProvider)
+        .tickTarget(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+          scheduled: scheduled,
+        );
     await _advanceTo(current: current, target: target);
     if (!ref.mounted || generation != _generation) {
       return;
     }
     if (state?.isAtEnd ?? true) {
-      pause();
+      await pause();
       return;
     }
     _schedule();
@@ -328,7 +373,13 @@ class ReplayNotifier extends _$ReplayNotifier {
       passedFrameCount: passedFrameCount,
       currentTime: target,
     );
-    ref.read(appClockProvider.notifier).updateReplayTime(target);
+    ref
+        .read(appClockProvider.notifier)
+        .updateReplayTime(
+          target,
+          rate: current.isPlaying ? current.playbackSpeed : 0,
+          limit: current.endTime,
+        );
     switch (current.source) {
       case ReplayEqrpSource():
         final latestImage = passed

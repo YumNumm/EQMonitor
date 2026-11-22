@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/util/map/replace_map_style_layers.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_expression.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
+import 'package:flutter/painting.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// 市区町村別最大震度マップの fill/line レイヤーを組み立てる。
@@ -64,8 +65,8 @@ class const IntensityFillLayerBuilder() {
           id: cityFillLayerId,
           sourceId: sourceId,
           sourceLayerId: citySourceLayerId,
-          paint: {
-            'fill-color': IntensityMatchExpressionBuilder.build(
+          color: .raw(
+            IntensityMatchExpressionBuilder.build(
               cityMaxIntensities
                   .map(
                     (entry) => (
@@ -77,8 +78,8 @@ class const IntensityFillLayerBuilder() {
               colorModel,
               propertyKey: 'regioncode',
             ),
-            'fill-opacity': cityFillOpacity,
-          },
+          ),
+          opacity: const .literal(cityFillOpacity),
         ),
       ),
     ];
@@ -89,14 +90,10 @@ class const IntensityFillLayerBuilder() {
   /// [selectedCityCode] が null でもレイヤーは返し、filter で非表示にする。
   List<MapStyleLayerEntry> buildSelectedCityLine({
     required String? selectedCityCode,
-    required String lineColor,
-    required String haloColor,
+    required Color lineColor,
+    required Color haloColor,
   }) {
-    final filter = selectedCityFilter(selectedCityCode);
-    const layout = <String, Object>{
-      'line-cap': 'round',
-      'line-join': 'round',
-    };
+    final filter = Expression<bool>.raw(selectedCityFilter(selectedCityCode));
 
     return [
       belowMarkerBackground(
@@ -105,12 +102,11 @@ class const IntensityFillLayerBuilder() {
           sourceId: sourceId,
           sourceLayerId: citySourceLayerId,
           filter: filter,
-          layout: layout,
-          paint: {
-            'line-color': haloColor,
-            'line-width': selectedCityHaloWidth,
-            'line-opacity': 0.9,
-          },
+          cap: const .literal(.round),
+          join: const .literal(.round),
+          color: .literal(haloColor),
+          width: const .literal(selectedCityHaloWidth),
+          opacity: const .literal(0.9),
         ),
       ),
       belowMarkerBackground(
@@ -119,12 +115,11 @@ class const IntensityFillLayerBuilder() {
           sourceId: sourceId,
           sourceLayerId: citySourceLayerId,
           filter: filter,
-          layout: layout,
-          paint: {
-            'line-color': lineColor,
-            'line-width': selectedCityLineWidth,
-            'line-opacity': 1,
-          },
+          cap: const .literal(.round),
+          join: const .literal(.round),
+          color: .literal(lineColor),
+          width: const .literal(selectedCityLineWidth),
+          opacity: const .literal(1),
         ),
       ),
     ];
@@ -143,15 +138,11 @@ class const IntensityFillLayerBuilder() {
   MapStyleLayerEntry belowMarkerBackground(StyleLayer layer) => (
     layer: layer,
     belowLayerId: BaseLayer.markerBackgroundAnchor.name,
-    aboveLayerId: null,
-    atIndex: null,
   );
 
   /// 細分区域の境界線より下に挿入する。
   MapStyleLayerEntry belowRegionLine(StyleLayer layer) => (
     layer: layer,
     belowLayerId: BaseLayer.areaForecastLocalELine.name,
-    aboveLayerId: null,
-    atIndex: null,
   );
 }

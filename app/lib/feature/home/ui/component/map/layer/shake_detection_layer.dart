@@ -48,7 +48,7 @@ class const _ShakeDetectionLayerBody({
     final styleController = MapController.maybeOf(context)?.style;
     final isInitialized = useRef(false);
     final initFuture = useRef<Future<void>?>(null);
-    // 破棄開始後は毎フレームの更新(updateGeoJsonSource)を実行しないためのガード。
+    // 破棄開始後は毎フレームの更新(updateGeoJsonData)を実行しないためのガード。
     // enqueue にすべての更新を積むとチェーンが肥大化するため、更新自体は
     // enqueue を経由させず、このフラグで破棄後の実行のみを止める。
     final disposed = useRef(false);
@@ -64,25 +64,21 @@ class const _ShakeDetectionLayerBody({
 
       disposed.value = false;
       initFuture.value = enqueue(() async {
-        await styleController.addSource(
-          const GeoJsonSource(
+        await styleController.sources.add(
+          const GeoJsonSource.data(
             id: ShakeDetectionLayer.sourceId,
-            data: _emptyGeoJson,
+            data: .text(_emptyGeoJson),
           ),
         );
 
-        await styleController.addLayer(
-          const LineStyleLayer(
+        await styleController.layers.add(
+          LineStyleLayer(
             id: ShakeDetectionLayer._lineLayerId,
             sourceId: ShakeDetectionLayer.sourceId,
-            layout: {
-              'line-sort-key': ['get', 'sortKey'],
-            },
-            paint: {
-              'line-color': ['get', 'lineColor'],
-              'line-width': 2,
-              'line-opacity': 1,
-            },
+            sortKey: const .raw(['get', 'sortKey']),
+            color: const .raw(['get', 'lineColor']),
+            width: const .literal(2),
+            opacity: const .literal(1),
           ),
           belowLayerId: BaseLayer.markerLowerAnchor.name,
         );

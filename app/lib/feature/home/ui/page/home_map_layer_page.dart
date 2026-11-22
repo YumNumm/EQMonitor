@@ -1166,7 +1166,7 @@ class const _ShakeDetectionShowTile() extends ConsumerWidget {
     return _SettingSwitchTile(
       title: '揺れ検知を地図上に表示',
       subtitle: cfg.shakeDetection.show
-          ? '検知イベントを 0.25° グリッドで表示します。'
+          ? '検知イベントを約 0.5° のグリッドで表示します。'
           : '揺れ検知を表示しません。',
       value: cfg.shakeDetection.show,
       onChanged: (next) async {

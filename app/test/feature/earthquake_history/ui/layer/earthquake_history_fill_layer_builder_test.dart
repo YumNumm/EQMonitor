@@ -8,8 +8,15 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_t
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
+import 'package:flutter/painting.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:test/test.dart';
+
+Map<String, Object?> paintOf(StyleLayer layer) =>
+    layer.toJson()['paint']! as Map<String, Object?>;
+
+List<Object?> filterOf(StyleLayer layer) =>
+    layer.toJson()['filter']! as List<Object?>;
 
 void main() {
   const resolver = EarthquakeHistoryMapLayerModeResolver();
@@ -75,7 +82,7 @@ void main() {
       final layers = builder.buildRegionLayers(
         idPrefix: 'test',
         codes: ['001'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       );
@@ -88,7 +95,7 @@ void main() {
       final layers = builder.buildRegionLayers(
         idPrefix: 'test',
         codes: ['001'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       );
@@ -100,7 +107,7 @@ void main() {
       final layers = builder.buildRegionLayers(
         idPrefix: 'test',
         codes: ['001'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       );
@@ -112,7 +119,7 @@ void main() {
       final layers = builder.buildRegionLayers(
         idPrefix: 'eq-history-jma-four',
         codes: ['001'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       );
@@ -124,12 +131,12 @@ void main() {
       final layers = builder.buildRegionLayers(
         idPrefix: 'test',
         codes: ['001', '002'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       );
       final fill = layers[0] as FillStyleLayer;
-      expect(fill.filter, [
+      expect(filterOf(fill), [
         'in',
         ['get', 'code'],
         [
@@ -143,22 +150,22 @@ void main() {
       final layers = builder.buildRegionLayers(
         idPrefix: 'test',
         codes: ['001'],
-        color: '#ABCDEF',
+        color: const Color(0xFFABCDEF),
         mode: mode,
         parameter: parameter,
       );
-      expect((layers[0] as FillStyleLayer).paint['fill-color'], '#ABCDEF');
+      expect(paintOf(layers[0])['fill-color'], '#abcdef');
     });
 
     test('line-color は固定で白 (#ffffff)', () {
       final layers = builder.buildRegionLayers(
         idPrefix: 'test',
         codes: ['001'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       );
-      expect((layers[1] as LineStyleLayer).paint['line-color'], '#ffffff');
+      expect(paintOf(layers[1])['line-color'], '#ffffff');
     });
   });
 
@@ -173,7 +180,7 @@ void main() {
       final layer = builder.buildCityLayer(
         idPrefix: 'test',
         codes: ['1010001'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       );
@@ -184,7 +191,7 @@ void main() {
       final layer = builder.buildCityLayer(
         idPrefix: 'test',
         codes: ['1010001'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       ) as FillStyleLayer;
@@ -195,7 +202,7 @@ void main() {
       final layer = builder.buildCityLayer(
         idPrefix: 'test',
         codes: ['1010001'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       ) as FillStyleLayer;
@@ -206,7 +213,7 @@ void main() {
       final layer = builder.buildCityLayer(
         idPrefix: 'eq-history-jma-four',
         codes: ['1010001'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       );
@@ -217,11 +224,11 @@ void main() {
       final layer = builder.buildCityLayer(
         idPrefix: 'test',
         codes: ['1010001', '1310000'],
-        color: '#FF0000',
+        color: const Color(0xFFFF0000),
         mode: mode,
         parameter: parameter,
       ) as FillStyleLayer;
-      expect(layer.filter, [
+      expect(filterOf(layer), [
         'in',
         ['get', 'regioncode'],
         [
@@ -235,11 +242,11 @@ void main() {
       final layer = builder.buildCityLayer(
         idPrefix: 'test',
         codes: ['1010001'],
-        color: '#ABCDEF',
+        color: const Color(0xFFABCDEF),
         mode: mode,
         parameter: parameter,
       ) as FillStyleLayer;
-      expect(layer.paint['fill-color'], '#ABCDEF');
+      expect(paintOf(layer)['fill-color'], '#abcdef');
     });
   });
 
@@ -333,7 +340,7 @@ void main() {
       );
       final fills = layers.whereType<FillStyleLayer>().toList();
       for (final fill in fills) {
-        final filterField = (fill.filter![1] as List<Object>)[1] as String;
+        final filterField = (filterOf(fill)[1]! as List<Object?>)[1]! as String;
         expect(filterField, 'code', reason: 'region filter は code フィールドを使う');
       }
     });
@@ -347,7 +354,7 @@ void main() {
       );
       final fills = layers.whereType<FillStyleLayer>().toList();
       for (final fill in fills) {
-        final filterField = (fill.filter![1] as List<Object>)[1] as String;
+        final filterField = (filterOf(fill)[1]! as List<Object?>)[1]! as String;
         expect(
           filterField,
           'regioncode',
@@ -395,7 +402,7 @@ void main() {
       );
       final fills = layers.whereType<FillStyleLayer>().toList();
       for (final fill in fills) {
-        final filterField = (fill.filter![1] as List<Object>)[1] as String;
+        final filterField = (filterOf(fill)[1]! as List<Object?>)[1]! as String;
         expect(filterField, 'regioncode');
       }
     });
@@ -444,7 +451,7 @@ void main() {
       );
       final codes = layers
           .whereType<FillStyleLayer>()
-          .expand((l) => ((l.filter![2] as List<Object>)[1] as List<String>))
+          .expand((l) => (filterOf(l)[2]! as List<Object?>)[1]! as List<String>)
           .toList();
       expect(codes.toSet(), hasLength(codes.length), reason: '市区町村コードの重複なし');
     });

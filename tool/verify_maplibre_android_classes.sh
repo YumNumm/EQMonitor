@@ -2,7 +2,7 @@
 set -eu
 
 apk_path=${1:?Usage: verify_maplibre_android_classes.sh <apk-path>}
-class_name='org.maplibre.android.style.expressions.Expression$Converter'
+class_name='org.maplibre.maplibre_native.MaplibreNativeApi'
 
 if ! command -v apkanalyzer >/dev/null 2>&1; then
   echo 'apkanalyzer is required' >&2

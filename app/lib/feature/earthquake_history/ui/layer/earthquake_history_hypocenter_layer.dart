@@ -61,10 +61,10 @@ class const EarthquakeHistoryHypocenterLayer({
         if (lifecycleToken.value != token) {
           return;
         }
-        await styleController.addSource(
-          const GeoJsonSource(
+        await styleController.sources.add(
+          const GeoJsonSource.data(
             id: EarthquakeHistoryHypocenterLayerBuilder.sourceId,
-            data: '{"type":"FeatureCollection","features":[]}',
+            data: .text('{"type":"FeatureCollection","features":[]}'),
           ),
         );
       });
@@ -102,14 +102,14 @@ class const EarthquakeHistoryHypocenterLayer({
             return;
           }
           if (isLayerInitialized.value) {
-            await styleController.removeLayer(
+            await styleController.layers.remove(
               EarthquakeHistoryHypocenterLayerBuilder.layerId,
             );
           }
           if (lifecycleToken.value != token) {
             return;
           }
-          await styleController.addLayer(
+          await styleController.layers.add(
             layerBuilder.buildSymbolLayer(
               parameter: parameter,
               displayMode: displayMode,
@@ -182,57 +182,53 @@ class const EarthquakeHistoryHypocenterLayerBuilder() {
     required EarthquakeHistoryMapLayerParameter parameter,
     required HypocenterDisplayMode displayMode,
   }) {
-    final opacity = switch (displayMode) {
-      .zoomFade => [
+    final Expression<num> opacity = switch (displayMode) {
+      .zoomFade => .raw([
         'step',
         ['zoom'],
         1.0,
         parameter.hypocenterFadeZoom,
         parameter.hypocenterFadeOpacity,
-      ],
-      .alwaysOpaque || .belowStations => 1.0,
+      ]),
+      .alwaysOpaque || .belowStations => const .literal(1.0),
     };
     return SymbolStyleLayer(
       id: layerId,
       sourceId: sourceId,
-      layout: {
-        'icon-allow-overlap': true,
-        'icon-ignore-placement': true,
-        'icon-image': iconId,
-        'icon-size': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          3,
-          parameter.hypocenterIconSizeMin,
-          20,
-          parameter.hypocenterIconSizeMax,
-        ],
-        'text-field': ['get', indexLabelProperty],
-        // 地図 style の glyph 配信元は既定の fontstack を返さないため明示する。
-        'text-font': ['Noto Sans CJK JP Bold'],
-        'text-size': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          3,
-          parameter.hypocenterIconSizeMin * _indexTextSizePerIconSize,
-          20,
-          parameter.hypocenterIconSizeMax * _indexTextSizePerIconSize,
-        ],
-        'text-anchor': 'bottom',
-        'text-offset': [0, -1.65],
-        // 近接した震源でも番号が衝突判定で消えないようにする。
-        'text-allow-overlap': true,
-        'text-ignore-placement': true,
-      },
-      paint: {
-        'icon-opacity': opacity,
-        'text-opacity': opacity,
-        'text-color': '#ffffff',
-        'text-halo-color': '#000000',
-        'text-halo-width': 1.5,
-      },
+      iconAllowOverlap: const .literal(true),
+      iconIgnorePlacement: const .literal(true),
+      iconImage: const .literal(iconId),
+      iconSize: .raw([
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        3,
+        parameter.hypocenterIconSizeMin,
+        20,
+        parameter.hypocenterIconSizeMax,
+      ]),
+      textField: const .raw(['get', indexLabelProperty]),
+      // 地図 style の glyph 配信元は既定の fontstack を返さないため明示する。
+      textFont: const .literal(['Noto Sans CJK JP Bold']),
+      textSize: .raw([
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        3,
+        parameter.hypocenterIconSizeMin * _indexTextSizePerIconSize,
+        20,
+        parameter.hypocenterIconSizeMax * _indexTextSizePerIconSize,
+      ]),
+      textAnchor: const .literal(.bottom),
+      textOffset: const .literal(Offset(0, -1.65)),
+      // 近接した震源でも番号が衝突判定で消えないようにする。
+      textAllowOverlap: const .literal(true),
+      textIgnorePlacement: const .literal(true),
+      iconOpacity: opacity,
+      textOpacity: opacity,
+      textColor: const .literal(Color(0xFFFFFFFF)),
+      textHaloColor: const .literal(Color(0xFF000000)),
+      textHaloWidth: const .literal(1.5),
     );
   }
 }

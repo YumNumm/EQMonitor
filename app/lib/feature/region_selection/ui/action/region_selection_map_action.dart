@@ -34,14 +34,16 @@ final class const RegionSelectionMapAction() {
     if (bounds == null) {
       return;
     }
-    await controller.fitBounds(
-      bounds: LngLatBounds(
-        latitudeSouth: bounds.south,
-        latitudeNorth: bounds.north,
-        longitudeWest: bounds.west,
-        longitudeEast: bounds.east,
+    await controller.animateCamera(
+      CameraUpdate.bounds(
+        GeoBox(
+          west: bounds.west,
+          south: bounds.south,
+          east: bounds.east,
+          north: bounds.north,
+        ),
+        padding: padding,
       ),
-      padding: padding,
     );
   }
 
@@ -55,8 +57,8 @@ final class const RegionSelectionMapAction() {
   }) async {
     const matcher = RegionMapMatcher();
     if (kind == .epicenter) {
-      final features = controller.featuresAtPoint(
-        controller.toScreenLocation(point),
+      final features = await controller.queryRenderedFeatures(
+        .point(controller.toScreenLocation(point)),
         layerIds: const [RegionMapLayers.epicenterHit],
       );
       return matcher.epicenters(
