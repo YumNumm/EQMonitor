@@ -190,9 +190,7 @@ void main() {
       await container.pump();
       container.invalidate(eewRestProvider, asReload: true);
       await container.pump();
-      container
-          .read(appClockProvider.notifier)
-          .enterTimeShift(const Duration(minutes: -1));
+      container.read(appClockProvider.notifier).enterReplay(DateTime.utc(2024));
       await container.pump();
       expect(container.read(eewProvider).value, isEmpty);
       requests.last.complete([
@@ -393,9 +391,7 @@ void main() {
     await container.pump();
     expect(container.read(eewProvider).value?.single.serialNo, 2);
 
-    container
-        .read(appClockProvider.notifier)
-        .enterTimeShift(const Duration(minutes: -1));
+    container.read(appClockProvider.notifier).enterReplay(DateTime.utc(2024));
     await container.pump();
     expect(container.read(eewProvider).value, isEmpty);
 
