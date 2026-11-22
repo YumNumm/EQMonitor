@@ -39,17 +39,7 @@ class const BasicModalSheet({
               side: BorderSide(color: colorTheme.outlineVariant),
             ),
             initialExtent: initialExtent,
-            physics: const SnapSheetPhysics(
-              stops: [
-                0.1,
-                0.2,
-                0.3,
-                0.5,
-                0.7,
-                0.8,
-                1,
-              ],
-            ),
+            physics: const SnapSheetPhysics(stops: [0.1, 0.2, 0.5, 1]),
             child: Column(
               children: [
                 Container(
