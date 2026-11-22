@@ -52,9 +52,7 @@ class const EarthquakeHistoryMapFitBoundsAction() {
       CameraUpdate.bounds(
         GeoBox.from(points),
         padding: const EdgeInsets.all(48),
-        maxZoom: 10,
       ),
-      animation: const CameraAnimation.fly(duration: Duration(seconds: 2)),
     );
   }
 }

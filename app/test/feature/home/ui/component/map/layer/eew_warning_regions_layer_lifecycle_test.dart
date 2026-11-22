@@ -105,8 +105,9 @@ void main() {
   });
 }
 
-class WarningRegionStyleController({required Completer<void> firstAddGate})
-    extends FakeStyleController {
+class WarningRegionStyleController({
+  required final Completer<void> firstAddGate,
+}) extends FakeStyleController {
   late final gatedBackend = WarningRegionStyleBackend(
     firstAddGate: firstAddGate,
     operations: operations,

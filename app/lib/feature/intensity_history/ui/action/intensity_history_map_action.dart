@@ -102,7 +102,6 @@ class const IntensityHistoryMapAction() {
         ),
         padding: padding,
       ),
-      animation: const CameraAnimation.fly(duration: Duration(seconds: 2)),
     );
     if (result == .cancelled) {
       talker.debug('IntensityHistoryMapAction: fitBounds ended early');

@@ -231,7 +231,7 @@ void main() {
       GeoBox(
         west: 139,
         east: 140,
-        south: double.negativeInfinity,
+        south: double.nan,
         north: 36,
       ),
       GeoBox(
@@ -265,41 +265,32 @@ void main() {
     );
   });
 
-  test('rejects out-of-range longitude and latitude values', () {
-    const invalidBounds = [
-      GeoBox(
-        west: -181,
-        east: 140,
-        south: 35,
-        north: 36,
-      ),
-      GeoBox(
-        west: 139,
-        east: 181,
-        south: 35,
-        north: 36,
-      ),
-      GeoBox(
-        west: 139,
-        east: 140,
-        south: -91,
-        north: 36,
-      ),
-      GeoBox(
-        west: 139,
-        east: 140,
-        south: 35,
-        north: 91,
-      ),
-    ];
+  test(
+    'treats out-of-range values as the bounds GeoBox normalizes them to',
+    () {
+      const cases = [
+        (
+          bounds: GeoBox(west: 179, east: 181, south: 0, north: 1),
+          normalized: GeoBox(west: 179, east: -179, south: 0, north: 1),
+        ),
+        (
+          bounds: GeoBox(west: -181, east: -179, south: 0, north: 1),
+          normalized: GeoBox(west: 179, east: -179, south: 0, north: 1),
+        ),
+        (
+          bounds: GeoBox(west: 139, east: 140, south: -91, north: 91),
+          normalized: GeoBox(west: 139, east: 140, south: -90, north: 90),
+        ),
+      ];
 
-    for (final bounds in invalidBounds) {
-      expect(
-        () => builder.build(bounds: bounds, zoomLevel: 7),
-        throwsRangeError,
-      );
-    }
-  });
+      for (final testCase in cases) {
+        expect(
+          builder.build(bounds: testCase.bounds, zoomLevel: 0),
+          builder.build(bounds: testCase.normalized, zoomLevel: 0),
+        );
+      }
+    },
+  );
 
   test('rejects zoom levels outside 0 through 30', () {
     const bounds = GeoBox(

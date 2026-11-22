@@ -44,7 +44,6 @@ final class const RegionSelectionMapAction() {
         ),
         padding: padding,
       ),
-      animation: const CameraAnimation.fly(duration: Duration(seconds: 2)),
     );
   }
 
