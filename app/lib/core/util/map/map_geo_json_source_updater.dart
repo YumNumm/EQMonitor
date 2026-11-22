@@ -17,7 +17,7 @@ class MapGeoJsonSourceUpdater {
     if (isDisposed() || _latestGeoJson == geoJson) {
       return;
     }
-    await styleController.updateGeoJsonSource(id: sourceId, data: geoJson);
+    await styleController.sources.updateGeoJsonData(sourceId, .text(geoJson));
     _latestGeoJson = geoJson;
   }
 

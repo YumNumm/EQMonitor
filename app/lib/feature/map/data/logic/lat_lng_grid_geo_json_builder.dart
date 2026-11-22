@@ -14,11 +14,11 @@ final class const LatLngGridGeoJsonBuilder({
   static const emptyFeatureCollection =
       '{"type":"FeatureCollection","features":[]}';
 
-  String build({required LngLatBounds bounds, required int zoomLevel}) {
-    final longitudeWest = bounds.longitudeWest;
-    final longitudeEast = bounds.longitudeEast;
-    final latitudeSouth = bounds.latitudeSouth;
-    final latitudeNorth = bounds.latitudeNorth;
+  String build({required GeoBox bounds, required int zoomLevel}) {
+    final longitudeWest = bounds.west;
+    final longitudeEast = bounds.east;
+    final latitudeSouth = bounds.south;
+    final latitudeNorth = bounds.north;
     final values = <double>[
       longitudeWest,
       longitudeEast,

@@ -22,8 +22,8 @@ const _minimumCosineLatitude = 0.01;
 typedef SeismicMapGeoCoordinate = ({double latitude, double longitude});
 
 class const SeismicMapFocusBuilder() {
-  LngLatBounds forRealtime({
-    required LngLatBounds fallbackBounds,
+  GeoBox forRealtime({
+    required GeoBox fallbackBounds,
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
   }) {
@@ -74,9 +74,9 @@ class const SeismicMapFocusBuilder() {
     yield maximum;
   }
 
-  static LngLatBounds boundsForTargets({
+  static GeoBox boundsForTargets({
     required List<SeismicMapGeoCoordinate> targets,
-    required LngLatBounds fallbackBounds,
+    required GeoBox fallbackBounds,
   }) {
     if (targets.isEmpty) {
       return fallbackBounds;
@@ -109,7 +109,7 @@ class const SeismicMapFocusBuilder() {
   /// 矩形の中心から [seismicMapFocusMinimumRadiusKm] を下回る辺を押し広げる。
   ///
   /// 既に十分広い矩形はそのまま維持する。
-  static LngLatBounds expandToMinimumRadius({
+  static GeoBox expandToMinimumRadius({
     required double west,
     required double east,
     required double south,
@@ -125,20 +125,20 @@ class const SeismicMapFocusBuilder() {
         .clamp(_minimumCosineLatitude, 1.0);
     final longitudeRadius = latitudeRadius / cosineLatitude;
 
-    return LngLatBounds(
-      longitudeWest: math
+    return GeoBox(
+      west: math
           .min(west, centerLongitude - longitudeRadius)
           .clamp(-180, 180)
           .toDouble(),
-      longitudeEast: math
-          .max(east, centerLongitude + longitudeRadius)
-          .clamp(-180, 180)
-          .toDouble(),
-      latitudeSouth: math
+      south: math
           .min(south, centerLatitude - latitudeRadius)
           .clamp(-90, 90)
           .toDouble(),
-      latitudeNorth: math
+      east: math
+          .max(east, centerLongitude + longitudeRadius)
+          .clamp(-180, 180)
+          .toDouble(),
+      north: math
           .max(north, centerLatitude + latitudeRadius)
           .clamp(-90, 90)
           .toDouble(),

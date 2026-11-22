@@ -48,12 +48,14 @@ class const MapZoomCalculator() {
     final adjustedZoom = zoom + math.log(padding) / math.ln2;
 
     return MapOptions(
-      initCenter: const Geographic(
-        lon: JapanBounds.centerLng,
-        lat: JapanBounds.centerLat,
+      style: MapStyle.file(styleString),
+      initCamera: CameraUpdate.position(
+        center: const Geographic(
+          lon: JapanBounds.centerLng,
+          lat: JapanBounds.centerLat,
+        ),
+        zoom: adjustedZoom,
       ),
-      initZoom: adjustedZoom,
-      initStyle: styleString,
     );
   }
 
