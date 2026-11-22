@@ -9,6 +9,10 @@ import 'package:package_info_plus/package_info_plus.dart';
 class const ApiUserAgentBuilder() {
   static const repositoryUrl = 'https://github.com/YumNumm/EQMonitor';
 
+  // API のエッジは product token をこの値に固定して照合する。
+  // `.dev` などの suffix 付き applicationId を送ると 403 になる。
+  static const productToken = 'net.yumnumm.eqmonitor';
+
   String build({
     required PackageInfo packageInfo,
     AndroidDeviceInfo? androidDeviceInfo,
@@ -22,7 +26,7 @@ class const ApiUserAgentBuilder() {
       _ => Platform.operatingSystem,
     };
 
-    return '${packageInfo.packageName}/'
+    return '$productToken/'
         '${packageInfo.version}+${packageInfo.buildNumber} '
         '(+$repositoryUrl) ($devicePart)';
   }

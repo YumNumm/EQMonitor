@@ -3,9 +3,8 @@ import 'dart:io';
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/data/network/native_dio_factory.dart';
-import 'package:eqmonitor/core/provider/api_user_agent_builder.dart';
+import 'package:eqmonitor/core/provider/api_user_agent_provider.dart';
 import 'package:eqmonitor/core/provider/chuck_provider.dart';
-import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/dio_base_options.dart';
 import 'package:eqmonitor/core/provider/interceptor/app_check_interceptor.dart';
 import 'package:eqmonitor/core/provider/interceptor/device_auth_token_interceptor.dart';
@@ -65,13 +64,7 @@ final class const ApiDioFactory({
 Future<ApiDioFactory> apiDioFactory(Ref ref) async {
   final package = ref.watch(packageInfoProvider);
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
-  final userAgent = const ApiUserAgentBuilder().build(
-    packageInfo: package,
-    androidDeviceInfo: Platform.isAndroid
-        ? ref.watch(androidDeviceInfoProvider)
-        : null,
-    iosDeviceInfo: Platform.isIOS ? ref.watch(iosDeviceInfoProvider) : null,
-  );
+  final userAgent = ref.watch(apiUserAgentProvider);
   final baseInterceptors = <Interceptor>[
     ref.watch(appCheckInterceptorProvider),
     await ref.watch(deviceIdInterceptorProvider.future),
