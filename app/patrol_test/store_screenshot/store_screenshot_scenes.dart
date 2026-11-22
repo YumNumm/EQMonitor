@@ -130,8 +130,22 @@ class StoreScreenshotScenes({
         .read(liveActivityLocalControllerProvider)
         .start(kind: .eew, eventId: eventId, contentState: contentState);
     await $.platform.mobile.openNotifications();
+    await _allowLiveActivities();
     await _capture(scene, settle: const Duration(seconds: 3));
     await $.platform.mobile.closeNotifications();
+  }
+
+  // 初回だけ Live Activity の下に許可の確認が出る。許可済みの端末では出ない。
+  Future<void> _allowLiveActivities() async {
+    try {
+      await $.platform.ios.tap(
+        const IOSSelector(label: 'Allow', elementType: .button),
+        appId: 'com.apple.springboard',
+        timeout: const Duration(seconds: 5),
+      );
+    } on PatrolActionException {
+      return;
+    }
   }
 
   Future<void> _capture(String scene, {required Duration settle}) async {

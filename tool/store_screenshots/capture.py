@@ -172,6 +172,14 @@ def runtime_version(runtime: dict) -> tuple[int, ...]:
     return tuple(int(part) for part in runtime["version"].split("."))
 
 
+def use_english(udid: str) -> None:
+    # 新規の Simulator は host の言語を引き継ぐ。Patrol のシステムダイアログ操作は英語のラベルで探す。
+    run("xcrun", "simctl", "bootstatus", udid, "-b")
+    run("xcrun", "simctl", "spawn", udid, "defaults", "write", "-g", "AppleLanguages", "-array", "en-US")
+    run("xcrun", "simctl", "spawn", udid, "defaults", "write", "-g", "AppleLocale", "en_US")
+    run("xcrun", "simctl", "shutdown", udid)
+
+
 def create_ios_simulator(device_types: list[str]) -> str:
     listing = json.loads(run("xcrun", "simctl", "list", "--json", "devicetypes", "runtimes", capture=True))
     identifiers = {device["name"]: device["identifier"] for device in listing["devicetypes"]}
@@ -190,7 +198,9 @@ def create_ios_simulator(device_types: list[str]) -> str:
             )
             if result.returncode == 0:
                 print(f"created {name} on iOS {runtime['version']}", flush=True)
-                return result.stdout.strip()
+                udid = result.stdout.strip()
+                use_english(udid)
+                return udid
             print(f"cannot create {name} on iOS {runtime['version']}: {result.stderr.strip()}", flush=True)
     iphones = ", ".join(sorted(name for name in identifiers if name.startswith("iPhone")))
     versions = ", ".join(runtime["version"] for runtime in runtimes)

@@ -157,3 +157,6 @@ macos/GoogleService-Info.plist
 ios/*.p8
 
 *.pem
+
+# patrol test が生成する
+/patrol_test/test_bundle.dart
