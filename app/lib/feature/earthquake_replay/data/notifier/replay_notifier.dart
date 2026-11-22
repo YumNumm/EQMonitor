@@ -12,7 +12,11 @@ import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
+import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_baseline_planner.dart';
+import 'package:eqmonitor/feature/shake_detection/data/notifier/device_shake_detection.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' show EewItemWithRelations;
+import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -115,6 +119,7 @@ class ReplayNotifier extends _$ReplayNotifier {
     _generation++;
     _anchor = null;
     state = null;
+    ref.read(deviceShakeDetectionProvider.notifier).clear();
     ref.read(appClockProvider.notifier).returnToRealtime();
     // リプレイ中に発表されたライブのEEWは破棄されているため、REST も取り直す。
     ref
@@ -230,6 +235,8 @@ class ReplayNotifier extends _$ReplayNotifier {
       return;
     }
     final generation = _generation;
+    // 再生位置が飛ぶため、揺れ検知は次の画像で平常値の投入からやり直す。
+    ref.read(deviceShakeDetectionProvider.notifier).clear();
     ref
       ..read(appClockProvider.notifier).updateReplayTime(current.currentTime)
       ..invalidate(eewProvider, asReload: true);
@@ -253,14 +260,42 @@ class ReplayNotifier extends _$ReplayNotifier {
     required int generation,
   }) async {
     final imageData = data.images[ImageType.shindo];
-    if (imageData == null) {
+    final current = state;
+    if (imageData == null || current == null) {
       return;
     }
+    final shakeSettings = ref.read(shakeDetectionCurrentSettingsProvider);
+    final shakeTuning = ref.read(shakeDetectionTuningProvider);
+    final shakeDetection = ref.read(deviceShakeDetectionProvider.notifier);
+    // 平常値と履歴の作り直しには、ライブ取得の代わりにファイル内の過去フレームを使う。
+    final baselineTimes = shakeSettings.isEnabled
+        ? ref
+              .read(shakeDetectionBaselinePlannerProvider)
+              .plan(
+                previous: ref.read(deviceShakeDetectionProvider)?.observedAt,
+                target: data.time,
+              )
+        : null;
     try {
       final analyzer = await ref.read(
         kyoshinMonitorAnalyzerIsolateProvider.future,
       );
-      final result = await analyzer.analyze(Uint8List.fromList(imageData));
+      final result = await analyzer.analyze(
+        Uint8List.fromList(imageData),
+        shakeDetection: shakeSettings.isEnabled
+            ? ShakeDetectionRequest(
+                observedAt: data.time,
+                baselineGifs: baselineTimes == null
+                    ? null
+                    : [
+                        for (final time in baselineTimes)
+                          ?current.shindoImageAt(time),
+                      ],
+                fallbackBaseline: shakeTuning.fallbackBaseline,
+                parameters: shakeTuning.parameters,
+              )
+            : null,
+      );
       if (!ref.mounted || generation != _generation) {
         return;
       }
@@ -271,6 +306,35 @@ class ReplayNotifier extends _$ReplayNotifier {
             targetTime: data.time,
             analyzedPointsCount: result.featureCount,
           );
+      final shakeEvents = result.shakeEvents;
+      if (shakeEvents == null) {
+        shakeDetection.clear();
+        return;
+      }
+      shakeDetection.apply(
+        observedAt: data.time,
+        events: shakeEvents,
+        status: result.shakeStatus,
+      );
+      if (baselineTimes == null || !shakeSettings.isBackfillEnabled) {
+        return;
+      }
+      final backfillFrames = [
+        for (var second = 1; second <= shakeTuning.backfillSeconds; second++)
+          if (data.time.subtract(Duration(seconds: second))
+              case final observedAt)
+            if (current.shindoImageAt(observedAt) case final gif?)
+              ShakeBackfillFrame(observedAt: observedAt, gif: gif),
+      ];
+      if (backfillFrames.isEmpty) {
+        return;
+      }
+      final rebuiltEvents = await analyzer.backfillShakeDetection(
+        ShakeBackfillRequest(coldStartAt: data.time, frames: backfillFrames),
+      );
+      if (rebuiltEvents != null && ref.mounted && generation == _generation) {
+        shakeDetection.replaceEvents(rebuiltEvents);
+      }
     } on Object catch (error, stackTrace) {
       // 1 フレームの解析失敗で再生全体を止めない。
       talker.warning(

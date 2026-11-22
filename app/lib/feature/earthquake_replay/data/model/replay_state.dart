@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:earthquake_replay/earthquake_replay.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -47,6 +49,21 @@ abstract class const ReplayState._() with _$ReplayState {
       }
     }
     return low;
+  }
+
+  /// [time] ちょうどに記録された強震モニタの震度画像。
+  Uint8List? shindoImageAt(DateTime time) {
+    for (var index = indexAt(time); index >= 0; index--) {
+      final frame = frames[index];
+      if (!frame.time.isAtSameMomentAs(time)) {
+        return null;
+      }
+      if (frame case KyoshinMonitorImageReplayData(:final images)) {
+        final image = images[ImageType.shindo];
+        return image == null ? null : Uint8List.fromList(image);
+      }
+    }
+    return null;
   }
 
   /// 次に再生位置を進める時刻。フレームが途切れても [maxTickInterval] ごとに時計を進める。

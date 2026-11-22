@@ -229,7 +229,8 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         },
       );
       workerSw.stop();
-      if (workerResult == null) {
+      // 取得中にリプレイが始まった場合、ライブの結果を再生中の検知へ混ぜない。
+      if (workerResult == null || ref.read(isReplayModeProvider)) {
         return null;
       }
 
@@ -292,7 +293,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       );
     });
 
-    if (!ref.mounted) {
+    if (!ref.mounted || ref.read(isReplayModeProvider)) {
       return;
     }
     switch (result) {
