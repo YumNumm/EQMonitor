@@ -6,6 +6,7 @@ import 'package:shake_detection_engine/src/shake_event_level.dart';
 import 'package:shake_detection_engine/src/shake_event_snapshot.dart';
 import 'package:shake_detection_engine/src/shake_event_state.dart';
 import 'package:shake_detection_engine/src/shake_station.dart';
+import 'package:shake_detection_engine/src/shake_station_status.dart';
 
 final class ShakeDetectionEngine({
   required List<ShakeStationLocation> stations,
@@ -59,6 +60,18 @@ final class ShakeDetectionEngine({
     for (final event in _events) event.toSnapshot(),
   ];
 
+  List<ShakeStationStatus> get stationStatuses => [
+    for (final station in _stations)
+      if (station.isTmpDisabled)
+        .outlier
+      else if (station.latestIntensity != null)
+        .observed
+      else if (station.hasRecentObservation)
+        .lost
+      else
+        .absent,
+  ];
+
   bool requiresColdStart(DateTime time) {
     final last = _lastProcessedAt;
     return last == null ||
@@ -97,7 +110,7 @@ final class ShakeDetectionEngine({
     }
     for (final (index, value) in baseline.values.indexed) {
       if (value != null) {
-        _stations[index].update(value);
+        _stations[index].update(value, isObservation: baseline.isReliable);
       }
     }
     _bootstrapFramesRemaining = ShakeStationState.historyCount - 1;
