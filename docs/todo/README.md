@@ -14,7 +14,7 @@
 | [800: EEW・推定震度](800_eew_and_estimated_intensity.md) | 震度不明の配信方針、再取得中の表示、不完全な震源のテスト |
 | [800: UI・遷移](800_ui_and_navigation.md) | onboarding preset、戻る操作、tablet 表示、UI 移行の残件 |
 | [770: 開発ツール](770_tooling_and_test_followups.md) | Melos・起動設定、CI 時間、文書リンク、解析の適用範囲 |
-| [160: リアルタイム監視](160_realtime_monitor_followups.md) | 強震モニタの時計・状態所有、揺れ検知の再有効化条件 |
+| [160: リアルタイム監視](160_realtime_monitor_followups.md) | 強震モニタの時計・状態所有、揺れ検知の再有効化条件、EQRP リプレイの実機確認と公開 |
 
 ## 保守
 
