@@ -153,12 +153,20 @@ class ReplayNotifier extends _$ReplayNotifier {
     _schedule();
   }
 
+  /// 補間中の表示位置を基準に動かす。直前の進行位置を基準にすると最大 1 秒ずれる。
   Future<void> seekBy(Duration delta) async {
     final current = state;
     if (current == null) {
       return;
     }
-    await seek(current.currentTime.add(delta));
+    final position = ref
+        .read(replayPositionResolverProvider)
+        .current(
+          state: current,
+          anchor: _anchor,
+          wallTime: _wallClock.elapsed,
+        );
+    await seek(position.add(delta));
   }
 
   void setPlaybackSpeed(double speed) {

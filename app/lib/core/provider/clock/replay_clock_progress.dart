@@ -1,4 +1,10 @@
 import 'package:clock/clock.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'replay_clock_progress.g.dart';
+
+@Riverpod(keepAlive: true)
+ReplayClockProgress replayClockProgress(Ref ref) => ReplayClockProgress();
 
 /// リプレイの再生位置は進行のたびにしか届かないため、その間は経過時間に再生速度を掛けて進める。
 class ReplayClockProgress {

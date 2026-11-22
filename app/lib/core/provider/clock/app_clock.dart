@@ -14,8 +14,6 @@ part 'app_clock.g.dart';
 ///   いずれのモードでも整合した時刻基準で動作する。
 @Riverpod(keepAlive: true)
 class AppClock extends _$AppClock {
-  final _replayProgress = ReplayClockProgress();
-
   @override
   TimeMode build() => const TimeMode.realtime();
 
@@ -26,9 +24,8 @@ class AppClock extends _$AppClock {
     return switch (state) {
       RealtimeTimeMode() => now,
       TimeShiftTimeMode(:final offset) => now.add(offset),
-      ReplayTimeMode(:final currentTime) => _replayProgress.positionFrom(
-        currentTime,
-      ),
+      ReplayTimeMode(:final currentTime) =>
+        ref.read(replayClockProgressProvider).positionFrom(currentTime),
     };
   }
 
@@ -41,7 +38,7 @@ class AppClock extends _$AppClock {
 
   /// リプレイファイル再生へ切り替える。
   void enterReplay(DateTime currentTime) {
-    _replayProgress.restart(rate: 0, limit: null);
+    ref.read(replayClockProgressProvider).restart(rate: 0, limit: null);
     final previous = state;
     state = TimeMode.replay(currentTime: currentTime);
     if (state == previous) {
@@ -60,7 +57,7 @@ class AppClock extends _$AppClock {
     if (state is! ReplayTimeMode) {
       return;
     }
-    _replayProgress.restart(rate: rate, limit: limit);
+    ref.read(replayClockProgressProvider).restart(rate: rate, limit: limit);
     state = TimeMode.replay(currentTime: currentTime);
   }
 }
