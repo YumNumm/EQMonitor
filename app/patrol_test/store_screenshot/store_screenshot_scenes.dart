@@ -1,0 +1,161 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_status_card.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/controller/live_activity_local_controller.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_preset.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/repository/debug_live_activity_content_builder.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:patrol/patrol.dart';
+
+import 'capture_channel.dart';
+
+const storeScreenshotFixtureDirectory = 'assets/store_screenshot_fixtures';
+
+class StoreScreenshotScenes({
+  required final PatrolIntegrationTester $,
+  required final ProviderContainer container,
+  required final StoreScreenshotCaptureChannel channel,
+}) {
+  GoRouter get _router => container.read(goRouterProvider);
+
+  Future<void> waitForHome() => _waitUntil(
+    () =>
+        _router.routerDelegate.currentConfiguration.uri.path ==
+        const HomeRoute().location,
+    timeout: const Duration(minutes: 3),
+    description: 'home',
+  );
+
+  Future<void> grantPermissionDialogs() async {
+    while (await $.platform.mobile.isPermissionDialogVisible(
+      timeout: const Duration(seconds: 2),
+    )) {
+      await $.platform.mobile.grantPermissionWhenInUse();
+    }
+  }
+
+  Future<bool> hasFixture(String name) async {
+    try {
+      await rootBundle.load('$storeScreenshotFixtureDirectory/$name');
+      return true;
+    } on FlutterError {
+      return false;
+    }
+  }
+
+  Future<void> replay({
+    required String scene,
+    required String fixture,
+    required DateTime time,
+    required bool expectEew,
+  }) async {
+    final replay = container.read(replayProvider.notifier);
+    if (container.read(replayProvider)?.fileName != fixture) {
+      final data = await rootBundle.load(
+        '$storeScreenshotFixtureDirectory/$fixture',
+      );
+      final file = File(p.join((await getTemporaryDirectory()).path, fixture));
+      await file.writeAsBytes(
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+      );
+      await replay.open(source: Uri.file(file.path));
+    }
+    replay.pause();
+    final loaded = container.read(replayProvider);
+    if (loaded == null ||
+        time.isBefore(loaded.startTime) ||
+        time.isAfter(loaded.endTime)) {
+      fail('$fixture does not cover $time');
+    }
+    await replay.seek(time);
+    _router.go(const HomeRoute().location);
+    await $(ReplayStatusCard)
+        .waitUntilVisible(timeout: const Duration(minutes: 1));
+    if (expectEew) {
+      await $(EewCard).waitUntilVisible(timeout: const Duration(minutes: 1));
+    }
+    await _capture(scene, settle: const Duration(seconds: 8));
+  }
+
+  Future<void> earthquakeDetail({
+    required String scene,
+    required String eventId,
+  }) async {
+    if (container.read(replayProvider) != null) {
+      container.read(replayProvider.notifier).exit();
+    }
+    _router.go(const HomeRoute().location);
+    _router
+        .push<void>(EarthquakeHistoryDetailsRoute(eventId: eventId).location)
+        .ignore();
+    await _waitUntil(
+      () => $(ValueKey(eventId)).exists || $(ErrorCard).exists,
+      timeout: const Duration(minutes: 2),
+      description: 'earthquake $eventId',
+    );
+    if ($(ErrorCard).exists) {
+      final error = $.tester.widget<ErrorCard>(find.byType(ErrorCard)).error;
+      await $(ErrorCard).$('詳細').tap();
+      await _capture('failure-$scene', settle: const Duration(seconds: 2));
+      fail('earthquake $eventId failed to load: ${_describe(error)}');
+    }
+    await _capture(scene, settle: const Duration(seconds: 10));
+  }
+
+  Future<void> lockScreenLiveActivity({required String scene}) async {
+    const eventId = 'eqmonitor-store-screenshot';
+    final contentState = container
+        .read(debugLiveActivityContentBuilderProvider)
+        .eewFromPreset(
+          preset: DebugEewPreset.warning,
+          eventId: eventId,
+          now: DateTime.now(),
+        );
+    await container
+        .read(liveActivityLocalControllerProvider)
+        .start(kind: .eew, eventId: eventId, contentState: contentState);
+    await $.platform.mobile.openNotifications();
+    await _capture(scene, settle: const Duration(seconds: 3));
+    await $.platform.mobile.closeNotifications();
+  }
+
+  Future<void> _capture(String scene, {required Duration settle}) async {
+    await grantPermissionDialogs();
+    await Future<void>.delayed(settle);
+    await $.pump();
+    await channel.capture(scene);
+  }
+
+  Future<void> _waitUntil(
+    bool Function() condition, {
+    required Duration timeout,
+    required String description,
+  }) async {
+    final stopwatch = Stopwatch()..start();
+    while (!condition()) {
+      if (stopwatch.elapsed > timeout) {
+        fail('timed out waiting for $description');
+      }
+      await $.pump(const Duration(milliseconds: 200));
+    }
+  }
+
+  String _describe(Object error) => switch (error) {
+    DioException(:final requestOptions, :final response) =>
+      '${requestOptions.method} ${requestOptions.uri.replace(query: '')} '
+          '-> ${response?.statusCode} ${response?.headers.value('content-type')} '
+          '${response?.data}',
+    _ => '$error',
+  };
+}
