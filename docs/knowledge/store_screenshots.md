@@ -65,8 +65,9 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   リプレイは fixture を一時ファイルへ書き出して `ReplayNotifier.open` に渡し、停止してから指定時刻へシークする。`seek` は範囲外の時刻を端へ丸めるため、EQRP の範囲外はテストを失敗させる。
 - PR では fixture が無いシーンを飛ばし、タグでは `STORE_SCREENSHOT_REQUIRE_FIXTURES=true` で失敗させる。`STORE_SCREENSHOT_SCENES` で撮るシーンを絞れる。
 - Release ビルドは Simulator で動かないため debug ビルドで撮り、`WidgetsApp.debugAllowBannerOverride` で DEBUG 帯を消す。
-- `--build-name` には `deploy-app.yaml` と同じく pubspec の version から prerelease を落とした `x.y.z` を渡す。
-  `3.1.0-beta.4` のままだと iOS の version が `3.1.0.4` になり、User-Agent が API 前段の Cloudflare Snippets（`eqmonitor-backend` の `tools/cloudflare-api-guard`）の許可形式に合わず 403 になる。
+- API 前段の Cloudflare Snippets（`eqmonitor-backend` の `tools/cloudflare-api-guard`）は User-Agent の version が `x.y.z` か `x.y.z-<prerelease>` でないと 403 を返す。
+  - iOS は `--build-name` に pubspec の version から prerelease を落とした `x.y.z` を渡す（`deploy-app.yaml` と同じ）。`3.1.0-beta.4` のままだと `3.1.0.4` になる。
+  - Android は渡さない。debug ビルドは `versionNameSuffix` で `.d` が付き、`x.y.z` を渡すと `3.1.0.d` で拒否される。`3.1.0-beta.4.d` は通る。
 - ステータスバーは iOS が `simctl status_bar override`、Android が demo mode で 9:41 に固定する。
   Android の demo mode は起動直後に送ると反映されないことがあるため撮影ごとに送り直す。`network -e mobile hide` を送ると反映されなくなったため送らない。
 - Patrol の iOS 実行には `RunnerUITests` ターゲット（`app/ios/RunnerUITests/RunnerUITests.m`、`FlutterGeneratedPluginSwiftPackage` をリンク、`User Script Sandboxing = NO`、スキームで並列実行なし）が必要。
@@ -80,6 +81,7 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   ステータスバーの Wi-Fi アイコンは demo mode の指定どおりに出ていない。
 - iOS: iPhone 18 Pro（iOS 27.2）で `RunnerUITests` のビルドとテストの起動までは成功した。初回は SPM の取得に約 6 分、ビルドに約 17 分かかる。
   地震詳細は上記の User-Agent の問題で 403 になった（お知らせ欄の `/v2/feeds` で確認）。`--build-name` の修正後の撮影は未確認。
+  Android にも `x.y.z` を渡した回は `3.1.0.d` となり、地震詳細が 403 になった。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
 - 未検証: リプレイのシーン（fixture 未投入）、通知センターでの Live Activity の撮影。残件は [TODO](../todo/850_store_screenshots.md)。
