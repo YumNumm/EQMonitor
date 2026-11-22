@@ -55,9 +55,9 @@ class const HypocenterPmTilesLayer({
               colorMode: colorMode,
               now: DateTime.now().toUtc(),
             );
-            await styleController.addSource(source);
-            await styleController.addLayer(layers.cluster);
-            await styleController.addLayer(layers.hypocenter);
+            await styleController.sources.add(source);
+            await styleController.layers.add(layers.cluster);
+            await styleController.layers.add(layers.hypocenter);
           }
         }),
       );
@@ -102,11 +102,15 @@ class const HypocenterPmTilesStyleBuilder() {
     );
   }
 
-  VectorSource sourceFor({required HypocenterArchive archive}) {
+  VectorSourceUrl sourceFor({required HypocenterArchive archive}) {
     final url = archive.url.startsWith('pmtiles://')
         ? archive.url
         : 'pmtiles://${archive.url}';
-    return VectorSource(id: idsFor(archive).sourceId, url: url, volatile: true);
+    return VectorSourceUrl(
+      id: idsFor(archive).sourceId,
+      url: url,
+      volatile: true,
+    );
   }
 
   HypocenterPmTilesLayers layersFor({
@@ -145,19 +149,17 @@ class const HypocenterPmTilesStyleBuilder() {
         sourceId: ids.sourceId,
         sourceLayerId: 'clusters',
         maxZoom: 7,
-        paint: {
-          'circle-color': clusterColor,
-          'circle-radius': [
-            'interpolate',
-            ['linear'],
-            ['get', 'count'],
-            1,
-            4,
-            1000,
-            18,
-          ],
-          'circle-opacity': 0.7,
-        },
+        color: .raw(clusterColor),
+        radius: const .raw([
+          'interpolate',
+          ['linear'],
+          ['get', 'count'],
+          1,
+          4,
+          1000,
+          18,
+        ]),
+        opacity: const .literal(0.7),
       ),
       hypocenter: CircleStyleLayer(
         id: ids.hypocenterLayerId,
@@ -165,23 +167,21 @@ class const HypocenterPmTilesStyleBuilder() {
         sourceLayerId: 'hypocenters',
         minZoom: 7,
         maxZoom: 15,
-        paint: {
-          'circle-color': pointColor,
-          'circle-radius': [
-            'interpolate',
-            ['linear'],
-            magnitude,
-            -1,
-            2,
-            2,
-            3,
-            7,
-            14,
-          ],
-          'circle-opacity': 0.75,
-          'circle-stroke-width': 0.5,
-          'circle-stroke-color': '#00000080',
-        },
+        color: .raw(pointColor),
+        radius: .raw([
+          'interpolate',
+          ['linear'],
+          magnitude,
+          -1,
+          2,
+          2,
+          3,
+          7,
+          14,
+        ]),
+        opacity: const .literal(0.75),
+        strokeWidth: const .literal(0.5),
+        strokeColor: const .literal(Color(0x80000000)),
       ),
     );
   }

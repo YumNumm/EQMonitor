@@ -72,54 +72,55 @@ class const EewStaticPsWaveLayer({
     // 残っている場合に「already exists」例外となるため、追加前に削除を試みる。
     await _removeLayers(styleController);
     await (
-      styleController.addSource(
-        GeoJsonSource(
+      styleController.sources.add(
+        GeoJsonSource.data(
           id: _pWaveSourceId,
-          data: jsonEncode({
-            'type': 'FeatureCollection',
-            'features': <Map<String, dynamic>>[],
-          }),
+          data: .text(
+            jsonEncode({
+              'type': 'FeatureCollection',
+              'features': <Map<String, dynamic>>[],
+            }),
+          ),
         ),
       ),
-      styleController.addSource(
-        GeoJsonSource(
+      styleController.sources.add(
+        GeoJsonSource.data(
           id: _sWaveSourceId,
-          data: jsonEncode({
-            'type': 'FeatureCollection',
-            'features': <Map<String, dynamic>>[],
-          }),
+          data: .text(
+            jsonEncode({
+              'type': 'FeatureCollection',
+              'features': <Map<String, dynamic>>[],
+            }),
+          ),
         ),
       ),
     ).wait;
 
     await (
-      styleController.addLayer(
-        const LineStyleLayer(
+      styleController.layers.add(
+        LineStyleLayer(
           id: _pWaveLayerId,
           sourceId: _pWaveSourceId,
-          paint: {'line-color': '#0000FF', 'line-width': 1},
+          color: const .literal(Color(0xFF0000FF)),
+          width: const .literal(1),
         ),
         belowLayerId: BaseLayer.waveLineAnchor.name,
       ),
-      styleController.addLayer(
-        const LineStyleLayer(
+      styleController.layers.add(
+        LineStyleLayer(
           id: _sWaveLayerId,
           sourceId: _sWaveSourceId,
-          paint: {
-            'line-color': ['get', 'lineColor'],
-            'line-width': 2,
-          },
+          color: const .raw(['get', 'lineColor']),
+          width: const .literal(2),
         ),
         belowLayerId: BaseLayer.waveLineAnchor.name,
       ),
-      styleController.addLayer(
-        const FillStyleLayer(
+      styleController.layers.add(
+        FillStyleLayer(
           id: _sWaveFillLayerId,
           sourceId: _sWaveSourceId,
-          paint: {
-            'fill-color': ['get', 'fillColor'],
-            'fill-opacity': 0.2,
-          },
+          color: const .raw(['get', 'fillColor']),
+          opacity: const .literal(0.2),
         ),
         belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
       ),
@@ -131,14 +132,14 @@ class const EewStaticPsWaveLayer({
     // 存在しない場合の例外は無視する。
     for (final layerId in [_pWaveLayerId, _sWaveLayerId, _sWaveFillLayerId]) {
       try {
-        await styleController.removeLayer(layerId);
+        await styleController.layers.remove(layerId);
       } on Exception {
         // ignore
       }
     }
     for (final sourceId in [_pWaveSourceId, _sWaveSourceId]) {
       try {
-        await styleController.removeSource(sourceId);
+        await styleController.sources.remove(sourceId);
       } on Exception {
         // ignore
       }
@@ -210,19 +211,23 @@ class const EewStaticPsWaveLayer({
 
     try {
       await (
-        styleController.updateGeoJsonSource(
-          id: _pWaveSourceId,
-          data: jsonEncode({
-            'type': 'FeatureCollection',
-            'features': pWaveFeatures,
-          }),
+        styleController.sources.updateGeoJsonData(
+          _pWaveSourceId,
+          .text(
+            jsonEncode({
+              'type': 'FeatureCollection',
+              'features': pWaveFeatures,
+            }),
+          ),
         ),
-        styleController.updateGeoJsonSource(
-          id: _sWaveSourceId,
-          data: jsonEncode({
-            'type': 'FeatureCollection',
-            'features': sWaveFeatures,
-          }),
+        styleController.sources.updateGeoJsonData(
+          _sWaveSourceId,
+          .text(
+            jsonEncode({
+              'type': 'FeatureCollection',
+              'features': sWaveFeatures,
+            }),
+          ),
         ),
       ).wait;
     } catch (e, stackTrace) {
@@ -233,19 +238,23 @@ class const EewStaticPsWaveLayer({
   Future<void> _clearLayers(StyleController styleController) async {
     try {
       await (
-        styleController.updateGeoJsonSource(
-          id: _pWaveSourceId,
-          data: jsonEncode({
-            'type': 'FeatureCollection',
-            'features': <Map<String, dynamic>>[],
-          }),
+        styleController.sources.updateGeoJsonData(
+          _pWaveSourceId,
+          .text(
+            jsonEncode({
+              'type': 'FeatureCollection',
+              'features': <Map<String, dynamic>>[],
+            }),
+          ),
         ),
-        styleController.updateGeoJsonSource(
-          id: _sWaveSourceId,
-          data: jsonEncode({
-            'type': 'FeatureCollection',
-            'features': <Map<String, dynamic>>[],
-          }),
+        styleController.sources.updateGeoJsonData(
+          _sWaveSourceId,
+          .text(
+            jsonEncode({
+              'type': 'FeatureCollection',
+              'features': <Map<String, dynamic>>[],
+            }),
+          ),
         ),
       ).wait;
     } catch (e, stackTrace) {

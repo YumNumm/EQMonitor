@@ -43,7 +43,7 @@ class const HomeMapLabelLayer({super.key}) extends HookConsumerWidget {
           enqueue(() async {
             for (final id in [_regionLabelLayerId, _cityLabelLayerId]) {
               try {
-                await styleController.removeLayer(id);
+                await styleController.layers.remove(id);
               } on Exception catch (_) {}
             }
           }),
@@ -71,47 +71,39 @@ class const HomeMapLabelLayer({super.key}) extends HookConsumerWidget {
     required HomeMapLabelParameter param,
   }) async {
     if (param.showRegionLabel) {
-      await styleController.addLayer(
+      await styleController.layers.add(
         SymbolStyleLayer(
           id: _regionLabelLayerId,
           sourceId: 'eqmonitor_map',
           sourceLayerId: 'areaForecastLocalE',
           minZoom: param.regionLabelMinZoom,
-          layout: {
-            'text-field': ['get', 'name'],
-            'text-size': param.regionTextSize,
-            'text-font': ['Noto Sans CJK JP Bold'],
-            'text-allow-overlap': false,
-            'text-ignore-placement': false,
-          },
-          paint: {
-            'text-color': '#ffffff',
-            'text-halo-color': '#000000',
-            'text-halo-width': param.textHaloWidth,
-          },
+          textField: const .raw(['get', 'name']),
+          textSize: .literal(param.regionTextSize),
+          textFont: const .literal(['Noto Sans CJK JP Bold']),
+          textAllowOverlap: const .literal(false),
+          textIgnorePlacement: const .literal(false),
+          textColor: const .literal(Color(0xFFFFFFFF)),
+          textHaloColor: const .literal(Color(0xFF000000)),
+          textHaloWidth: .literal(param.textHaloWidth),
         ),
       );
     }
 
     if (param.showCityLabel) {
-      await styleController.addLayer(
+      await styleController.layers.add(
         SymbolStyleLayer(
           id: _cityLabelLayerId,
           sourceId: 'eqmonitor_map',
           sourceLayerId: 'areaInformationCityQuake',
           minZoom: param.cityLabelMinZoom,
-          layout: {
-            'text-field': ['get', 'name'],
-            'text-size': param.cityTextSize,
-            'text-font': ['Noto Sans CJK JP Regular'],
-            'text-allow-overlap': false,
-            'text-ignore-placement': false,
-          },
-          paint: {
-            'text-color': '#ffffff',
-            'text-halo-color': '#000000',
-            'text-halo-width': param.textHaloWidth,
-          },
+          textField: const .raw(['get', 'name']),
+          textSize: .literal(param.cityTextSize),
+          textFont: const .literal(['Noto Sans CJK JP Regular']),
+          textAllowOverlap: const .literal(false),
+          textIgnorePlacement: const .literal(false),
+          textColor: const .literal(Color(0xFFFFFFFF)),
+          textHaloColor: const .literal(Color(0xFF000000)),
+          textHaloWidth: .literal(param.textHaloWidth),
         ),
       );
     }
@@ -123,7 +115,7 @@ class const HomeMapLabelLayer({super.key}) extends HookConsumerWidget {
   }) async {
     for (final id in [_regionLabelLayerId, _cityLabelLayerId]) {
       try {
-        await styleController.removeLayer(id);
+        await styleController.layers.remove(id);
       } on Exception catch (_) {}
     }
     await _addLayers(styleController: styleController, param: param);

@@ -6,7 +6,6 @@ import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
-import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
@@ -110,7 +109,7 @@ class const _EarthquakeHistoryFillLayerBody({
                   previousGeneration.id != generation.id) {
                 for (final id in previousGeneration.layerIds.reversed) {
                   try {
-                    await styleController.removeLayer(id);
+                    await styleController.layers.remove(id);
                   } on Exception catch (e) {
                     talker.log(e);
                   }
@@ -134,7 +133,7 @@ class const _EarthquakeHistoryFillLayerBody({
                 if (disposed) {
                   return;
                 }
-                await styleController.addLayer(
+                await styleController.layers.add(
                   layer,
                   belowLayerId: BaseLayer.areaForecastLocalELine.name,
                 );
@@ -155,7 +154,7 @@ class const _EarthquakeHistoryFillLayerBody({
               }
               for (final id in generation.layerIds.reversed) {
                 try {
-                  await styleController.removeLayer(id);
+                  await styleController.layers.remove(id);
                 } on Exception catch (e) {
                   talker.log(e);
                 }
@@ -196,7 +195,7 @@ class const _EarthquakeHistoryFillLayerBody({
 
             for (final id in generation.layerIds.reversed) {
               try {
-                await styleController.removeLayer(id);
+                await styleController.layers.remove(id);
               } on Exception catch (e) {
                 talker.log(e);
               }
@@ -212,7 +211,7 @@ class const _EarthquakeHistoryFillLayerBody({
                 parameter: parameter,
               );
               for (final layer in layers) {
-                await styleController.addLayer(
+                await styleController.layers.add(
                   layer,
                   belowLayerId: BaseLayer.areaForecastLocalELine.name,
                 );
@@ -279,10 +278,7 @@ class const EarthquakeHistoryFillLayerBuilder({
         if (codes.isEmpty) {
           continue;
         }
-        final color = colorModel
-            .fromJmaIntensity(level)
-            .background
-            .toHexStringRGB();
+        final color = colorModel.fromJmaIntensity(level).background;
         layers.addAll(
           buildRegionLayers(
             idPrefix: 'eq-history-jma-${level.name}',
@@ -301,10 +297,7 @@ class const EarthquakeHistoryFillLayerBuilder({
         if (codes.isEmpty) {
           continue;
         }
-        final color = colorModel
-            .fromJmaIntensity(level)
-            .background
-            .toHexStringRGB();
+        final color = colorModel.fromJmaIntensity(level).background;
         layers.add(
           buildCityLayer(
             idPrefix: 'eq-history-jma-${level.name}',
@@ -333,10 +326,7 @@ class const EarthquakeHistoryFillLayerBuilder({
         if (codes.isEmpty) {
           continue;
         }
-        final color = colorModel
-            .fromJmaLpgmIntensity(level)
-            .background
-            .toHexStringRGB();
+        final color = colorModel.fromJmaLpgmIntensity(level).background;
         layers.addAll(
           buildRegionLayers(
             idPrefix: 'eq-history-lpgm-${level.name}',
@@ -355,10 +345,7 @@ class const EarthquakeHistoryFillLayerBuilder({
         if (codes.isEmpty) {
           continue;
         }
-        final color = colorModel
-            .fromJmaLpgmIntensity(level)
-            .background
-            .toHexStringRGB();
+        final color = colorModel.fromJmaLpgmIntensity(level).background;
         layers.add(
           buildCityLayer(
             idPrefix: 'eq-history-lpgm-${level.name}',
@@ -376,42 +363,42 @@ class const EarthquakeHistoryFillLayerBuilder({
   List<StyleLayer> buildRegionLayers({
     required String idPrefix,
     required List<String> codes,
-    required String color,
+    required Color color,
     required EarthquakeHistoryMapLayerMode mode,
     required EarthquakeHistoryMapLayerParameter parameter,
   }) {
     final fillId = '$idPrefix-region-fill';
     final lineId = '$idPrefix-region-line';
-    final filter = regionCodeFilter(codes);
+    final filter = Expression<bool>.raw(regionCodeFilter(codes));
     return [
       FillStyleLayer(
         id: fillId,
         sourceId: 'eqmonitor_map',
         sourceLayerId: _regionSourceLayerId,
         filter: filter,
-        paint: {
-          'fill-color': color,
-          'fill-opacity': modeResolver.regionFillOpacity(
+        color: .literal(color.withValues(alpha: 1)),
+        opacity: _opacity(
+          modeResolver.regionFillOpacity(
             mode: mode,
             regionToCity: parameter.regionToCity,
             visibleOpacity: parameter.regionFillOpacity,
           ),
-        },
+        ),
       ),
       LineStyleLayer(
         id: lineId,
         sourceId: 'eqmonitor_map',
         sourceLayerId: _regionSourceLayerId,
         filter: filter,
-        paint: {
-          'line-color': '#ffffff',
-          'line-width': 0.5,
-          'line-opacity': modeResolver.regionFillOpacity(
+        color: const .literal(Color(0xFFFFFFFF)),
+        width: const .literal(0.5),
+        opacity: _opacity(
+          modeResolver.regionFillOpacity(
             mode: mode,
             regionToCity: parameter.regionToCity,
             visibleOpacity: parameter.regionLineOpacity,
           ),
-        },
+        ),
       ),
     ];
   }
@@ -419,7 +406,7 @@ class const EarthquakeHistoryFillLayerBuilder({
   StyleLayer buildCityLayer({
     required String idPrefix,
     required List<String> codes,
-    required String color,
+    required Color color,
     required EarthquakeHistoryMapLayerMode mode,
     required EarthquakeHistoryMapLayerParameter parameter,
   }) {
@@ -427,15 +414,15 @@ class const EarthquakeHistoryFillLayerBuilder({
       id: '$idPrefix-city-fill',
       sourceId: 'eqmonitor_map',
       sourceLayerId: _citySourceLayerId,
-      filter: cityCodeFilter(codes),
-      paint: {
-        'fill-color': color,
-        'fill-opacity': modeResolver.cityFillOpacity(
+      filter: .raw(cityCodeFilter(codes)),
+      color: .literal(color.withValues(alpha: 1)),
+      opacity: _opacity(
+        modeResolver.cityFillOpacity(
           mode: mode,
           regionToCity: parameter.regionToCity,
           visibleOpacity: parameter.cityFillOpacity,
         ),
-      },
+      ),
     );
   }
 
@@ -450,6 +437,11 @@ class const EarthquakeHistoryFillLayerBuilder({
     ['get', 'regioncode'],
     ['literal', codes],
   ];
+
+  Expression<num> _opacity(Object value) => switch (value) {
+    final num constant => .literal(constant),
+    _ => .raw(value as List<Object?>),
+  };
 
   List<JmaIntensity> sortedJmaLevels(EarthquakeIntensity intensity) {
     final levels = <JmaIntensity>{};

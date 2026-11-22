@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/region_selection/data/logic/region_selection_r
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_map_metadata.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/notification_region_selection_converter.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -199,7 +200,8 @@ void main() {
             kind: .epicenter,
             selected: [epicenter],
           )
-          .filter,
+          .filter
+          ?.toJson(),
       [
         'in',
         ['get', 'id'],
@@ -215,7 +217,8 @@ void main() {
             kind: .prefecture,
             selected: [tokyo],
           )
-          .filter,
+          .filter
+          ?.toJson(),
       [
         'in',
         ['get', 'code'],
@@ -227,7 +230,7 @@ void main() {
     );
     expect(
       layers
-          .build(color: '#123456', hasEpicenter: false)
+          .build(color: const Color(0xFF123456), hasEpicenter: false)
           .any((layer) => layer.id.contains('epicenter')),
       isFalse,
     );

@@ -49,6 +49,81 @@ void main() {
     expect(bundle.cluster.sourceLayerId, 'clusters');
     expect(bundle.hypocenter.sourceLayerId, 'hypocenters');
   });
+
+  test('style-spec の paint を維持する', () {
+    final bundle = const HypocenterPmTilesStyleBuilder().layersFor(
+      archive: archive,
+      colorMode: SeismicityColorMode.elapsedTime,
+      now: DateTime.utc(2026, 8, 2),
+    );
+
+    expect(bundle.cluster.toJson()['paint'], {
+      'circle-color': [
+        'interpolate',
+        ['linear'],
+        [
+          '/',
+          [
+            '-',
+            DateTime.utc(2026, 8, 2).millisecondsSinceEpoch,
+            ['get', 'latest_origin_time_unix_ms'],
+          ],
+          3600000,
+        ],
+        0,
+        '#e53935',
+        720,
+        '#9e9e9e',
+      ],
+      'circle-radius': [
+        'interpolate',
+        ['linear'],
+        ['get', 'count'],
+        1,
+        4,
+        1000,
+        18,
+      ],
+      'circle-opacity': 0.7,
+    });
+    expect(bundle.hypocenter.toJson()['paint'], {
+      'circle-color': [
+        'interpolate',
+        ['linear'],
+        [
+          '/',
+          [
+            '-',
+            DateTime.utc(2026, 8, 2).millisecondsSinceEpoch,
+            ['get', 'origin_time_unix_ms'],
+          ],
+          3600000,
+        ],
+        0,
+        '#e53935',
+        720,
+        '#9e9e9e',
+      ],
+      'circle-radius': [
+        'interpolate',
+        ['linear'],
+        [
+          'coalesce',
+          ['get', 'magnitude'],
+          -1,
+        ],
+        -1,
+        2,
+        2,
+        3,
+        7,
+        14,
+      ],
+      'circle-opacity': 0.75,
+      'circle-stroke-width': 0.5,
+      'circle-stroke-color': 'rgba(0, 0, 0, ${0x80 / 0xFF})',
+    });
+  });
 }
 
 final _from = DateTime.utc(2026, 8, 1, 15);

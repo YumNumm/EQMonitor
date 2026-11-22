@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_lay
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_warning_regions_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_label_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_user_location_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/modal/home_map_label_debug_modal.dart';
@@ -104,7 +105,6 @@ class const _MapContent({required final String styleString})
         child: _MapLibreMapHost(
           key: ValueKey(mapKey),
           mapOptions: mapOptions,
-          showLocation: showLocation,
           children: [
             Consumer(
               builder: (context, ref, _) {
@@ -144,6 +144,7 @@ class const _MapContent({required final String styleString})
               ),
             ),
             const HomeMapLabelLayer(),
+            if (showLocation) const HomeMapUserLocationLayer(),
             const SafeArea(child: _MapHeader()),
           ],
         ),
@@ -159,7 +160,6 @@ class const _MapContent({required final String styleString})
 /// [HomeMapCameraState] が保持する [MapController] を確実にクリアできる。
 class const _MapLibreMapHost({
   required final MapOptions mapOptions,
-  required final bool showLocation,
   required final List<Widget> children,
   super.key,
 }) extends HookConsumerWidget {
@@ -196,14 +196,10 @@ class const _MapLibreMapHost({
                 controller: controller,
                 viewportSize: constraints.biggest,
               );
-          if (showLocation) {
-            await controller.enableLocation();
-          }
         },
-        onEvent: (event) {
+        onCameraMoveStart: (event) {
           MapLibreEventProvider.maybeOf(context)?.emit(event);
-          if (event is MapEventStartMoveCamera &&
-              event.reason == CameraChangeReason.apiGesture) {
+          if (event.reason == CameraChangeReason.gesture) {
             ref
                 .read(homeMapCameraStateProvider.notifier)
                 .handleUserMapGesture();
