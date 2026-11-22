@@ -10,9 +10,12 @@ ReplayKyoshinArchiveWindowResolver replayKyoshinArchiveWindowResolver(
 ) => const ReplayKyoshinArchiveWindowResolver();
 
 class const ReplayKyoshinArchiveWindowResolver({
-  /// 強震モニタの過去画像は1時間ごとにまとめて削除され、lmoni で約3時間5分〜
-  /// 3時間28分前、kmoni で約3時間35分〜3時間58分前まで取得できた（2026-11-23 の実測）。
+  /// 強震モニタの過去画像は1時間ごとに、その時点の3時間前までがまとめて削除される
+  /// （2026-11-23 の実測。lmoni は毎時15分頃、kmoni は毎時45分頃）。
   final Duration retention = const Duration(hours: 3),
+
+  /// 再生中に削除が走っても先頭の画像が残るよう、範囲の端を避ける。
+  final Duration purgeMargin = const Duration(minutes: 1),
 
   /// これより古い時刻の 404 は、一時的な失敗ではなく削除済みとして扱う。
   final Duration purgedAge = const Duration(hours: 2),
@@ -38,11 +41,15 @@ class const ReplayKyoshinArchiveWindowResolver({
     final latest = now.toUtc().subtract(publishMargin);
     final tailEnd = origin.add(uncertainty + tail);
     final end = tailEnd.isAfter(latest) ? latest : tailEnd;
-    if (now.toUtc().difference(origin) > retention || !end.isAfter(origin)) {
+    final start = origin
+        .subtract(lead)
+        .copyWith(millisecond: 0, microsecond: 0);
+    if (now.toUtc().difference(start) > retention - purgeMargin ||
+        !end.isAfter(origin)) {
       return null;
     }
     return ReplayKyoshinArchiveWindow(
-      startTime: origin.subtract(lead).copyWith(millisecond: 0, microsecond: 0),
+      startTime: start,
       endTime: end.copyWith(millisecond: 0, microsecond: 0),
       originTime: origin,
       isOriginTimeApproximate: uncertainty > Duration.zero,
