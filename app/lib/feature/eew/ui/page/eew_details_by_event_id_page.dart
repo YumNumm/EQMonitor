@@ -239,6 +239,7 @@ class const _SimulationView({
               index: null,
               nowOverride: virtualNow,
               estimatedRegions: isEstimatedAllowed ? estimatedRegions : null,
+              emphasizesLocalWarning: false,
             ),
           ),
       ],

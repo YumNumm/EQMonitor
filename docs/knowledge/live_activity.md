@@ -192,6 +192,13 @@
 - `Shared/`追加はXcode Sources所属、`Widget/`追加はPreview側membershipを確認する。
   Previewターゲット構成は [軽量 Preview](apple_previews.md) を参照。
 
+- Lock Screen表示だけを画像にするには、`Shared/`と`Widget/LiveActivity/`のSwiftを`xcrun -sdk iphonesimulator swiftc`で
+  1つの実行ファイルにまとめ、`xcrun simctl spawn <起動済みSimulator> <実行ファイル>`で動かして`ImageRenderer`の結果をPNGに書き出す。
+  Xcodeのビルドは要らない。`IntensityValue.swift`は`EQMonitorAPI`に依存する変換を除いた写しを使い、`EewSmallActivityView.swift`は外す。
+  フォントは`CTFontManagerRegisterFontsForURL`へ`app/assets/fonts`と`Widget/LiveActivity/Common`のTTFを直接渡す。
+  点滅は描画時刻で塗りの有無が変わる。最初の描画は遅いため数回空描きしてから、秒の前半に合わせて撮る。
+  `ContainerRelativeShape`は外枠が無く四角になる。
+
 - Simulatorで実際のExpandedを撮るには、Activityをバックグラウンドから`AlertConfiguration`付きで
   更新する。Dynamic Islandが数秒展開するので`simctl io screenshot`で撮れる（CompactはHomeへ戻れば写る）。
   Lock Screenは`simctl`からロックする手段がなく、この方法では撮れない。

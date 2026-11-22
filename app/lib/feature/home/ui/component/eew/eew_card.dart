@@ -1,21 +1,22 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/core/component/decoration/warning_stripe_decoration.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:eqmonitor/core/provider/time_ticker.dart';
-import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_deep_hypocenter_intensity_notice.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/eew_card_colors.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/eew_card_header.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/eew_card_local_forecast_section.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/eew_card_source_section.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/eew_card_text_style.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
+import 'package:material_ui/material_ui.dart';
 
 class const EewCard({
   required final EewTelegramItem eew,
@@ -25,11 +26,15 @@ class const EewCard({
   /// 距離減衰式による推計震度。JMAが現在地の予想震度を発表していない場合の
   /// フォールバックとして利用する。
   final List<EewEstimatedRegion>? estimatedRegions,
+
+  /// 過去のEEWを再生する画面では、現在地への警報と誤解させないため無効にする。
+  final bool emphasizesLocalWarning = true,
   super.key,
 }) extends ConsumerWidget {
+  static const _localWarningSurfaceColor = Color.fromRGBO(51, 0, 0, 1);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final now = ref.watch(timeTickerProvider());
     final isWarning = eew.isWarning ?? false;
 
     // 取消報は発生時刻を持たないが、取消の旨を表示するためカードは描画する。
@@ -77,8 +82,9 @@ class const EewCard({
         localRegion?.intensity ?? estimate?.jmaIntensity;
     final effectiveRegionName = regionDisplayName ?? estimate?.regionName;
 
-    // 取消報とPLUM法の地域では到達予想を表示しない。
-    final hideArrival = eew.isCanceled || (localRegion?.isPlum ?? false);
+    // PLUM法は到達時刻が発表されない。報全体がPLUM法なら現在地の予想もPLUM法による。
+    final isLocalPlum = eew.isPlum || (localRegion?.isPlum ?? false);
+    final hideArrival = eew.isCanceled || isLocalPlum;
 
     // 到達時間: JMA値を優先、なければ推定値
     final effectiveArrivalTime = hideArrival
@@ -88,54 +94,59 @@ class const EewCard({
         ? false
         : (localRegion?.isArrived ?? estimate?.isArrived ?? false);
 
-    final nowValue = nowOverride ?? now.asData?.value;
-    final hasArrived =
-        effectiveIsArrived ||
-        (effectiveArrivalTime != null &&
-            nowValue != null &&
-            !nowValue.isBefore(effectiveArrivalTime));
+    // 推計値は警報対象かどうかを持たないため、JMAの発表値だけで判定する。
+    final isLocalWarning =
+        emphasizesLocalWarning &&
+        !eew.isCanceled &&
+        isWarning &&
+        (localRegion?.isWarning ?? false);
 
-    final secondsUntilArrival =
-        !hasArrived && effectiveArrivalTime != null && nowValue != null
-        ? (effectiveArrivalTime.difference(nowValue).inMicroseconds /
-                  Duration.microsecondsPerSecond)
-              .ceil()
-        : null;
-
-    final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
+    final colorTheme = context.designSystem.colorTheme;
+    final usesDarkSurface =
+        isLocalWarning || Theme.of(context).brightness == Brightness.dark;
+    final colors = usesDarkSurface
+        ? EewCardColors(
+            surface: isLocalWarning ? _localWarningSurfaceColor : Colors.black,
+            border: isLocalWarning
+                ? _localWarningSurfaceColor
+                : colorTheme.outlineVariant,
+            primary: Colors.white,
+            secondary: Colors.white.withValues(alpha: 0.8),
+            divider: Colors.white.withValues(alpha: 0.35),
+            watermark: Colors.white.withValues(alpha: 0.2),
+          )
+        : EewCardColors(
+            surface: colorTheme.surfaceContainer,
+            border: colorTheme.outlineVariant,
+            primary: colorTheme.onSurface,
+            secondary: colorTheme.onSurfaceVariant,
+            divider: colorTheme.outline,
+            watermark: colorTheme.onSurfaceVariant.withValues(alpha: 0.2),
+          );
 
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (index case final index?) _BackgroundIndexText(index: index),
+        if (index case final index?)
+          _WatermarkText(text: index, color: colors.watermark),
         _EewMainCard(
           eew: eew,
+          colors: colors,
           isWarning: isWarning,
+          isLocalWarning: isLocalWarning,
           happenedTime: happenedTime,
           localForecastIntensity: effectiveLocalIntensity,
           regionDisplayName: effectiveRegionName,
-          secondsUntilArrival: secondsUntilArrival,
-          showArrived: (localRegion != null || estimate != null) && hasArrived,
+          arrivalTime: effectiveArrivalTime,
+          isArrived: effectiveIsArrived,
+          isImminentArrival: !eew.isCanceled && isLocalPlum,
+          nowOverride: nowOverride,
           showDeepHypocenterIntensityNotice: ref
               .watch(eewDeepHypocenterIntensityNoticeProvider)
               .shouldShow(eew: eew),
         ),
         if (eew.status != TelegramStatus.normal)
-          Center(
-            child: FittedBox(
-              child: Text(
-                eew.status.name,
-                style: TextStyle(
-                  fontSize: 100,
-                  fontWeight: .w700,
-                  color: colorTheme.onSurfaceVariant.withValues(alpha: 0.2),
-                  fontFamily: codeFontFamily,
-                  letterSpacing: -0.5,
-                ),
-              ),
-            ),
-          ),
+          _WatermarkText(text: eew.status.name, color: colors.watermark),
       ],
     );
   }
@@ -143,506 +154,189 @@ class const EewCard({
 
 class const _EewMainCard({
   required final EewTelegramItem eew,
+  required final EewCardColors colors,
   required final bool isWarning,
+  required final bool isLocalWarning,
   required final DateTime? happenedTime,
   required final JmaIntensity? localForecastIntensity,
   required final String? regionDisplayName,
-  required final bool showArrived,
+  required final DateTime? arrivalTime,
+  required final bool isArrived,
+  required final bool isImminentArrival,
+  required final DateTime? nowOverride,
   required final bool showDeepHypocenterIntensityNotice,
-  final int? secondsUntilArrival,
 }) extends StatelessWidget {
-  static const _warningHeaderColor = Color.fromRGBO(179, 26, 26, 1);
-  static const _forecastHeaderColor = Color.fromRGBO(255, 167, 4, 1);
-  static const _canceledHeaderColor = Color.fromRGBO(102, 102, 102, 1);
+  static const _deepHypocenterIntensityNotice =
+      '震源の深さが150kmより深いため、予想震度は発表されていません';
+  static const _deepHypocenterIntensityNoticeLines =
+      '震源の深さが150kmより深いため、\n予想震度は発表されていません';
 
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
-    final shape = designSystem.shape;
     final forecastIntensity = eew.forecastIntensity;
-    final maxIntensity =
-        forecastIntensity?.maxIntensity ?? JmaIntensity.unknown;
     final maxLpgmIntensity = forecastIntensity?.maxLpgmIntensity;
-
-    final headerBackgroundColor = eew.isCanceled
-        ? _canceledHeaderColor
-        : isWarning
-        ? _warningHeaderColor
-        : _forecastHeaderColor;
-
-    final regionDisplayName = this.regionDisplayName;
     final happenedTime = this.happenedTime;
-    final showLocalForecast =
-        (localForecastIntensity != null ||
-            secondsUntilArrival != null ||
-            showArrived) &&
+    final regionDisplayName = this.regionDisplayName;
+    final localForecastIntensity = this.localForecastIntensity;
+    final showsLocalForecast =
         regionDisplayName != null &&
         regionDisplayName.isNotEmpty &&
         localForecastIntensity != null;
+    final deepNotice = Text(
+      _deepHypocenterIntensityNoticeLines,
+      semanticsLabel: _deepHypocenterIntensityNotice,
+      style: EewCardFlexTextStyle(
+        size: 11,
+        weight: .w500,
+        color: colors.secondary,
+      ),
+    );
 
     return Card(
       elevation: 0,
       clipBehavior: .antiAlias,
       margin: EdgeInsets.zero,
-      color: colorTheme.surfaceContainerHigh,
+      color: colors.surface,
       shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: colorTheme.outlineVariant),
+        borderRadius: BorderRadius.circular(designSystem.shape.card),
+        side: BorderSide(color: colors.border),
       ),
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          _EewCardHeader(
-            eew: eew,
-            isWarning: isWarning,
-            headerBackgroundColor: headerBackgroundColor,
-            secondsUntilArrival: secondsUntilArrival,
-            showArrived: showArrived,
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: spacing.xs,
-              left: spacing.sm,
-              right: spacing.sm,
-              bottom: spacing.xs,
+      child: Padding(
+        padding: EdgeInsets.all(spacing.md),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            EewCardHeader(
+              eew: eew,
+              isWarning: isWarning,
+              maxIntensity:
+                  forecastIntensity?.maxIntensity ?? JmaIntensity.unknown,
             ),
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                if (eew.isCanceled)
-                  Text(
-                    '緊急地震速報は取り消されました',
-                    style: designSystem.typography.titleMedium.copyWith(
-                      fontWeight: .w700,
+            SizedBox(height: showsLocalForecast ? 6 : spacing.sm),
+            if (eew.isCanceled)
+              Text(
+                '緊急地震速報は取り消されました',
+                style: EewCardFlexTextStyle(
+                  size: 15,
+                  weight: .w800,
+                  color: colors.primary,
+                ),
+              )
+            else if (happenedTime != null) ...[
+              LayoutBuilder(
+                builder: (context, constraints) => Row(
+                  crossAxisAlignment: .end,
+                  spacing: spacing.sm,
+                  children: [
+                    Expanded(
+                      child: EewCardSourceSection(
+                        eew: eew,
+                        happenedTime: happenedTime,
+                        colors: colors,
+                        isLocalWarning: isLocalWarning,
+                        isCompact:
+                            isLocalWarning || showDeepHypocenterIntensityNotice,
+                      ),
                     ),
-                  )
-                else if (happenedTime != null) ...[
-                  Row(
-                    spacing: spacing.sm,
-                    children: [
-                      _EewMaxIntensitySection(
-                        maxIntensity: maxIntensity,
-                        depth: eew.hypocenter?.depth ?? 0,
-                      ),
-                      Expanded(
-                        child: _EewHypocenterSection(
-                          eew: eew,
-                          happenedTime: happenedTime,
+                    if (showsLocalForecast)
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: constraints.maxWidth * 0.6,
                         ),
-                      ),
-                      if (showLocalForecast)
-                        _EewLocalForecastSection(
+                        child: EewCardLocalForecastSection(
                           intensity: localForecastIntensity,
                           regionDisplayName: regionDisplayName,
+                          isLocalWarning: isLocalWarning,
+                          arrivalTime: arrivalTime,
+                          isArrived: isArrived,
+                          isImminentArrival: isImminentArrival,
+                          nowOverride: nowOverride,
+                          colors: colors,
                         ),
-                    ],
-                  ),
-                  if (maxLpgmIntensity != null &&
-                      maxLpgmIntensity != JmaLpgmIntensity.zero)
-                    _EewLpgmSection(intensity: maxLpgmIntensity),
-                  if (showDeepHypocenterIntensityNotice)
-                    Text(
-                      '震源の深さが150kmより深いため、予想震度は発表されていません',
-                      style: designSystem.typography.labelMedium,
-                    ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class const _EewCardHeader({
-  required final EewTelegramItem eew,
-  required final bool isWarning,
-  required final Color headerBackgroundColor,
-  required final bool showArrived,
-  final int? secondsUntilArrival,
-}) extends StatelessWidget {
-  static const _secondaryTextColor = Color.fromRGBO(255, 255, 255, 0.7);
-
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final typography = designSystem.typography;
-    final spacing = designSystem.spacing;
-
-    final typeLabel = eew.isCanceled
-        ? '緊急地震速報(取消)'
-        : isWarning
-        ? '緊急地震速報(警報)'
-        : '緊急地震速報(予報)';
-    final serialLabel = eew.isLastInfo
-        ? '最終 第${eew.serialNo}報'
-        : '第${eew.serialNo}報';
-    final typeLabelWithSerial = '$typeLabel $serialLabel';
-    final headline = eew.headline;
-
-    final secs = secondsUntilArrival;
-    final countdownText = (secs != null && secs > 0) ? '$secs秒' : null;
-    final hypocenterName = eew.hypocenter?.name;
-    final String? headlineText = eew.isCanceled
-        ? null
-        : (headline != null && headline.isNotEmpty)
-        ? headline.replaceAll('　', ' ').replaceAll('で地震 ', 'で地震\n')
-        : hypocenterName != null
-        ? '$hypocenterNameで地震発生'
-        : '地震発生';
-
-    final leftColumn = Expanded(
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          Text(
-            typeLabelWithSerial,
-            style: typography.monoSmall.copyWith(
-              color: Colors.white,
-              letterSpacing: 0,
-            ),
-          ),
-          if (headlineText != null)
-            Text(
-              headlineText,
-              style: typography.titleSmall.copyWith(
-                fontWeight: .w700,
-                color: Colors.white,
-              ),
-              overflow: .visible,
-            ),
-        ],
-      ),
-    );
-
-    final Widget? rightColumn;
-    if (countdownText != null || showArrived) {
-      rightColumn = Column(
-        crossAxisAlignment: .end,
-        children: [
-          Text(
-            countdownText != null ? '主要動到達まで' : '主要動',
-            style: typography.labelSmall.copyWith(color: _secondaryTextColor),
-          ),
-          Text(
-            countdownText ?? '到達済み',
-            style: typography.monoMedium.copyWith(
-              fontSize: 20,
-              fontWeight: .w700,
-              color: Colors.white,
-              letterSpacing: -0.5,
-            ),
-          ),
-        ],
-      );
-    } else {
-      rightColumn = null;
-    }
-
-    return DecoratedBox(
-      decoration: BoxDecoration(color: headerBackgroundColor),
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          WarningStripeDecoration(
-            colors: eew.isCanceled
-                ? const [
-                    Color.fromRGBO(128, 128, 128, 1),
-                    Color.fromRGBO(64, 64, 64, 1),
-                  ]
-                : isWarning
-                ? const [Colors.red, Colors.black]
-                : const [
-                    Color.fromARGB(255, 255, 230, 0),
-                    Color.fromRGBO(197, 101, 4, 1),
+                      )
+                    else if (showDeepHypocenterIntensityNotice)
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: constraints.maxWidth * 0.6,
+                        ),
+                        child: deepNotice,
+                      ),
                   ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: spacing.sm,
-              vertical: spacing.sm,
-            ),
-            child: Row(
-              spacing: spacing.sm,
-              children: [leftColumn, ?rightColumn],
-            ),
-          ),
-        ],
+                ),
+              ),
+              if (showsLocalForecast && showDeepHypocenterIntensityNotice)
+                Padding(
+                  padding: EdgeInsets.only(top: spacing.sm),
+                  child: deepNotice,
+                ),
+              if (maxLpgmIntensity != null &&
+                  maxLpgmIntensity != JmaLpgmIntensity.zero)
+                Padding(
+                  padding: EdgeInsets.only(top: spacing.sm),
+                  child: _EewLpgmSection(
+                    intensity: maxLpgmIntensity,
+                    colors: colors,
+                  ),
+                ),
+            ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class const _EewMaxIntensitySection({
-  required final JmaIntensity maxIntensity,
-  required final int depth,
+class const _EewLpgmSection({
+  required final JmaLpgmIntensity intensity,
+  required final EewCardColors colors,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final typography = designSystem.typography;
-    final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-
-    return Column(
-      mainAxisSize: .min,
-      spacing: spacing.xs,
-      children: [
-        Text(
-          '最大震度',
-          style: typography.labelMedium.copyWith(
-            color: colorTheme.onSurfaceVariant,
-          ),
-        ),
-        JmaIntensityIcon(intensity: maxIntensity, type: .filled),
-      ],
-    );
-  }
-}
-
-class const _EewHypocenterSection({
-  required final EewTelegramItem eew,
-  required final DateTime happenedTime,
-}) extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final typography = designSystem.typography;
-    final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-    final hypocenter = eew.hypocenter;
-    final timeLabel =
-        (eew.originTime == null || eew.isPlum || eew.isLevelMethod)
-        ? '地震検知'
-        : '地震発生';
-    final detectionMethodLabel = switch ((
-      eew.isPlum,
-      eew.isLevelMethod,
-      eew.isOnePointDetection,
-    )) {
-      (true, _, _) => 'PLUM法による検知',
-      (_, true, _) => 'レベル法による検知',
-      (_, _, true) => '低精度の緊急地震速報',
-      _ => null,
-    };
-    final magnitude = hypocenter?.magnitude;
-    final depth = hypocenter?.depth;
-
     return Column(
       crossAxisAlignment: .start,
-      spacing: spacing.xs,
       children: [
-        if (detectionMethodLabel != null)
-          Text(
-            detectionMethodLabel,
-            style: typography.titleMedium.copyWith(fontFamily: codeFontFamily),
-          )
-        else if (magnitude != null || depth != null)
-          Row(
-            spacing: spacing.md,
-            children: [
-              if (magnitude != null) _MagnitudeRow(magnitude: magnitude),
-              if (depth != null) _DepthRow(depth: depth),
-            ],
+        Text(
+          '予想最大長周期地震動階級 ${intensity.label}',
+          style: EewCardFlexTextStyle(
+            size: 15,
+            weight: .w700,
+            color: colors.primary,
           ),
-        Row(
-          crossAxisAlignment: .baseline,
-          textBaseline: .alphabetic,
-          children: [
-            _SecondaryLabel(text: timeLabel),
-            const SizedBox(width: 4),
-            Text(
-              happenedTime.formatWithTz(.monthDay),
-              style: typography.labelLarge.copyWith(
-                fontFamily: codeFontFamily,
-                letterSpacing: -0.5,
-                color: colorTheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              happenedTime.formatWithTz(.hourMinuteSecond),
-              style: typography.titleMedium.copyWith(
-                fontFamily: codeFontFamily,
-                letterSpacing: -0.5,
-              ),
-            ),
-          ],
+        ),
+        Text(
+          '高層階では特に周期の長い揺れに注意してください',
+          style: EewCardFlexTextStyle(
+            size: 11,
+            weight: .w500,
+            color: colors.secondary,
+          ),
         ),
       ],
     );
   }
 }
 
-class const _EewLocalForecastSection({
-  required final JmaIntensity? intensity,
-  required final String regionDisplayName,
+class const _WatermarkText({
+  required final String text,
+  required final Color color,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final typography = designSystem.typography;
-    final colorTheme = designSystem.colorTheme;
-
-    return Column(
-      mainAxisSize: .min,
-      children: [
-        Row(
-          mainAxisSize: .min,
-          children: [
-            Icon(
-              Icons.location_on,
-              size: 9,
-              color: colorTheme.onSurfaceVariant,
-            ),
-            const SizedBox(width: 2),
-            Flexible(
-              child: Text(
-                regionDisplayName,
-                style: typography.labelMedium,
-                maxLines: 1,
-                overflow: .ellipsis,
-              ),
-            ),
-          ],
-        ),
-        if (intensity case final intensity?) ...[
-          const SizedBox(height: 2),
-          JmaIntensityIcon(intensity: intensity, type: .filled),
-        ],
-      ],
-    );
-  }
-}
-
-class const _EewLpgmSection({required final JmaLpgmIntensity intensity})
-    extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final typography = designSystem.typography;
-    final spacing = designSystem.spacing;
-
-    return Padding(
-      padding: EdgeInsets.all(spacing.sm),
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          Text(
-            '予想最大長周期地震動階級 ${intensity.label}',
-            style: typography.titleMedium,
-          ),
-          Text('高層階では特に周期の長い揺れに注意してください', style: typography.bodySmall),
-        ],
-      ),
-    );
-  }
-}
-
-class const _BackgroundIndexText({required final String index})
-    extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final colorTheme = context.designSystem.colorTheme;
-
     return Center(
       child: FittedBox(
         child: Text(
-          index,
+          text,
           style: TextStyle(
             fontSize: 100,
             fontWeight: .w700,
             fontFamily: codeFontFamily,
-            color: colorTheme.onSurfaceVariant.withValues(alpha: 0.3),
+            letterSpacing: -0.5,
+            color: color,
           ),
         ),
       ),
-    );
-  }
-}
-
-class const _SecondaryLabel({required final String text})
-    extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final typography = designSystem.typography;
-    final colorTheme = designSystem.colorTheme;
-
-    return Text(
-      text,
-      style: typography.labelSmall.copyWith(color: colorTheme.onSurfaceVariant),
-    );
-  }
-}
-
-class const _MagnitudeRow({required final double magnitude})
-    extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final typography = designSystem.typography;
-    final colorTheme = designSystem.colorTheme;
-
-    return Row(
-      mainAxisSize: .min,
-      crossAxisAlignment: .baseline,
-      textBaseline: .alphabetic,
-      children: [
-        Text(
-          'M ',
-          style: typography.labelSmall.copyWith(
-            color: colorTheme.onSurfaceVariant,
-          ),
-        ),
-        Text(
-          magnitude.toStringAsFixed(1),
-          style: typography.titleLarge.copyWith(
-            fontFamily: codeFontFamily,
-            letterSpacing: -2,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class const _DepthRow({required final int depth}) extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final typography = designSystem.typography;
-    final colorTheme = designSystem.colorTheme;
-
-    return Row(
-      mainAxisSize: .min,
-      crossAxisAlignment: .baseline,
-      textBaseline: .alphabetic,
-      children: [
-        Text(
-          '深さ ',
-          style: typography.labelSmall.copyWith(
-            color: colorTheme.onSurfaceVariant,
-          ),
-        ),
-        Text(
-          depth == 0 ? 'ごく浅い' : '$depth',
-          style: typography.titleLarge.copyWith(
-            fontFamily: codeFontFamily,
-            letterSpacing: -0.5,
-          ),
-        ),
-        if (depth != 0)
-          Text(
-            depth == 700 ? ' km以上' : ' km',
-            style: typography.labelSmall.copyWith(
-              color: colorTheme.onSurfaceVariant,
-            ),
-          ),
-      ],
     );
   }
 }

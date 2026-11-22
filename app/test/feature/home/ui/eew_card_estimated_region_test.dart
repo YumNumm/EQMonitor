@@ -109,22 +109,21 @@ Future<void> _pump(
 }
 
 void main() {
-  testWidgets('推計震度が渡されると現在地の予報区名と到達予想を表示する', (tester) async {
+  testWidgets('推計震度が渡されると現在地の到達予想を表示する', (tester) async {
     await _pump(tester, estimatedRegions: [_estimatedRegion]);
 
-    expect(find.text('東京都23区'), findsOneWidget);
-    expect(find.text('主要動到達まで'), findsOneWidget);
-    expect(find.text('30秒'), findsOneWidget);
+    expect(find.text('現在地\n揺れ到達まで'), findsOneWidget);
+    expect(find.text('30.0秒'), findsOneWidget);
   });
 
   testWidgets('推計震度が渡されないと到達予想を表示しない', (tester) async {
     await _pump(tester, estimatedRegions: null);
 
-    expect(find.text('主要動到達まで'), findsNothing);
-    expect(find.text('30秒'), findsNothing);
+    expect(find.text('現在地\n揺れ到達まで'), findsNothing);
+    expect(find.text('30.0秒'), findsNothing);
   });
 
-  testWidgets('到達後はカウントダウンと同じ組で主要動 到達済みを表示する', (tester) async {
+  testWidgets('到達後もカウントダウンを0秒のまま表示する', (tester) async {
     await _pump(
       tester,
       estimatedRegions: [
@@ -134,9 +133,9 @@ void main() {
       ],
     );
 
-    expect(find.text('主要動'), findsOneWidget);
-    expect(find.text('到達済み'), findsOneWidget);
-    expect(find.text('主要動到達まで'), findsNothing);
+    expect(find.text('現在地\n揺れ到達まで'), findsOneWidget);
+    expect(find.text('0秒'), findsOneWidget);
+    expect(find.text('到達済み'), findsNothing);
   });
 
   testWidgets('現在地の予報区と一致しない推計震度は使わない', (tester) async {
@@ -145,6 +144,6 @@ void main() {
       estimatedRegions: [_estimatedRegion.copyWith(regionCode: '270000')],
     );
 
-    expect(find.text('主要動到達まで'), findsNothing);
+    expect(find.text('現在地\n揺れ到達まで'), findsNothing);
   });
 }
