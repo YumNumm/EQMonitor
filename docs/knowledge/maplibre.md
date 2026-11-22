@@ -61,7 +61,7 @@
 
 - ローカル URI は `pmtiles://${Uri.file(absolutePath)}`。`pmtiles://asset://` は使わず、asset をローカルファイルに配置してから開く。旧 `assets_util` は削除済みのため依存を復活させない。
 - 配布物には `countries`、`areaForecastLocalE`、`areaForecastLocalEew`、`areaInformationCityQuake` の source layer が必要。別用途の区域 archive や HTTPS へ黙って置換しない。
-- 市区町村地物の表示下限は `BaseMapTileSpec.cityMinZoom`（現行 6）。低 zoom は細分区域を使い、保存済み設定も `effectiveRegionToCityZoom` で下限補正する。metadata の minzoom だけで地物の存在を判断しない。
+- 市区町村地物の表示下限は `BaseMapTileSpec.cityMinZoom` に集約する。現行のタイルは z0 から市区町村地物を持つため値は 0 で、`effectiveRegionToCityZoom` の下限補正は実質無効。タイル側で下限を上げたときは、この定数だけを変更すれば参照側の補正が有効になる。metadata の minzoom だけで地物の存在を判断しない。
 - native pin の正本は `app/pubspec.yaml` の `YumNumm/flutter-maplibre` ref と lockfile。更新時は関連パッケージを揃え、SwiftPM の解決結果も確認する。
 - gzip metadata エラーの abort 対処は upstream [#4399](https://github.com/maplibre/maplibre-native/pull/4399)（Android 13.4.0 / iOS 6.28.0 以降）。これは他の decode 障害すべてを防ぐ保証ではない。
 - iOS Metal で複数 vector source の fill だけがタイル単位で欠ける場合、clip mask UBO の bind cache 再利用を疑う。[#4342](https://github.com/maplibre/maplibre-native/pull/4342) が原因・回帰テストの参照先。layer 再追加や opacity 変更を恒久対策にしない。

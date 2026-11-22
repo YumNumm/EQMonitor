@@ -1,9 +1,12 @@
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_city_camera.dart';
+import 'package:eqmonitor/feature/location/data/model/map_data_item.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
@@ -61,8 +64,35 @@ class const IntensityHistoryMapAction() {
     if (!context.mounted) {
       return;
     }
-    final bounds = city?.bounds;
-    if (bounds != null) {
+    await Future.wait([
+      fitCityAboveSheet(
+        context: context,
+        mapController: mapController,
+        bounds: city?.bounds,
+      ),
+      handleCityTap(
+        ref: ref,
+        context: context,
+        cityCode: target.cityCode,
+        cityName: target.cityName,
+        prefectureName: target.prefectureName,
+      ),
+    ]);
+  }
+
+  Future<void> fitCityAboveSheet({
+    required BuildContext context,
+    required MapController mapController,
+    required MapDataBounds? bounds,
+  }) async {
+    if (bounds == null) {
+      return;
+    }
+    final padding = const IntensityHistoryCityCamera().padding(
+      viewportSize: MediaQuery.sizeOf(context),
+      safePadding: MediaQuery.paddingOf(context),
+    );
+    try {
       await mapController.fitBounds(
         bounds: LngLatBounds(
           latitudeSouth: bounds.southWest.lat,
@@ -70,26 +100,12 @@ class const IntensityHistoryMapAction() {
           longitudeWest: bounds.southWest.lng,
           longitudeEast: bounds.northEast.lng,
         ),
-        padding: EdgeInsets.fromLTRB(
-          24,
-          MediaQuery.paddingOf(context).top + 96,
-          24,
-          MediaQuery.sizeOf(context).height *
-                  CityDetailModalAction.initialChildSize +
-              24,
-        ),
+        padding: padding,
       );
+    } on Exception catch (error) {
+      // Android はカメラ移動が操作で中断されると例外で完了する。選択とシートは維持する。
+      talker.debug('IntensityHistoryMapAction: fitBounds ended early: $error');
     }
-    if (!context.mounted) {
-      return;
-    }
-    await handleCityTap(
-      ref: ref,
-      context: context,
-      cityCode: target.cityCode,
-      cityName: target.cityName,
-      prefectureName: target.prefectureName,
-    );
   }
 
   /// ヒットした市区町村と所属都道府県を組にする。解決できない場合は `null`。
@@ -158,8 +174,8 @@ class const IntensityHistoryMapAction() {
 
   /// ディープリンクで市区町村詳細モーダルを開く。
   ///
-  /// カメラは動かさない。[cityCode] が無い、または都道府県配下に存在しない
-  /// 場合は何もしない。
+  /// 選択枠は初期カメラでシートの上に収めているため、ここではカメラを動かさない。
+  /// [cityCode] が無い、または都道府県配下に存在しない場合は何もしない。
   Future<void> openFromDeepLink({
     required WidgetRef ref,
     required BuildContext context,

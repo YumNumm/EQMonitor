@@ -92,9 +92,12 @@ void main() {
         ],
       );
       expect(layers.first.layer.filter, [
-        '==',
+        'in',
         ['get', 'regioncode'],
-        '0110100',
+        [
+          'literal',
+          ['0110100'],
+        ],
       ]);
       expect(layers.last.layer.paint['line-color'], '#123456');
       expect(layers.first.layer.paint['line-color'], '#FFFFFF');
@@ -122,18 +125,24 @@ void main() {
       }
     });
 
-    test('未選択なら何も返さない', () {
-      expect(
-        builder.buildSelectedCityLine(
-          selectedCityCode: null,
-          lineColor: '#123456',
-          haloColor: '#FFFFFF',
-        ),
-        isEmpty,
+    test('未選択でもレイヤーを返し、空集合の filter で非表示にする', () {
+      final layers = builder.buildSelectedCityLine(
+        selectedCityCode: null,
+        lineColor: '#123456',
+        haloColor: '#FFFFFF',
       );
+
+      expect(layers, hasLength(2));
+      for (final entry in layers) {
+        expect(entry.layer.filter, [
+          'in',
+          ['get', 'regioncode'],
+          ['literal', <String>[]],
+        ]);
+      }
     });
 
-    test('選択枠は最前面に追加する', () {
+    test('選択枠はマーカー背面のアンカーの下に追加する', () {
       final layers = builder.buildSelectedCityLine(
         selectedCityCode: '0110100',
         lineColor: '#123456',
@@ -141,8 +150,8 @@ void main() {
       );
 
       for (final entry in layers) {
+        expect(entry.belowLayerId, BaseLayer.markerBackgroundAnchor.name);
         expect(entry.aboveLayerId, isNull);
-        expect(entry.belowLayerId, isNull);
       }
     });
   });

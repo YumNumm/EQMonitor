@@ -5,9 +5,11 @@ import 'dart:async';
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_history_map_action.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_history_page_action.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_city_camera.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_error_overlay.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_legend.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_loading_overlay.dart';
@@ -22,13 +24,15 @@ import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// 市区町村別最大震度マップのページ。
 ///
 /// - [initialCityCode] と [initialPrefectureCode] の両方が指定されたとき、
-///   起動直後に当該市区町村の詳細モーダルを自動表示する。カメラは動かさない。
+///   当該市区町村が詳細モーダルの上に収まる初期カメラで開き、起動直後に
+///   詳細モーダルを自動表示する。
 class const IntensityHistoryPage({
   final String? initialPrefectureCode,
   final String? initialCityCode,
@@ -37,13 +41,24 @@ class const IntensityHistoryPage({
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final action = ref.watch(intensityHistoryPageActionProvider);
-    return switch (ref.watch(mapConfigurationProvider)) {
-      AsyncData(value: MapConfiguration(:final styleString?)) => _MapContent(
-        styleString: styleString,
-        initialPrefectureCode: initialPrefectureCode,
-        initialCityCode: initialCityCode,
-      ),
-      AsyncError(:final error) => Scaffold(
+    final jmaMap = initialPrefectureCode == null || initialCityCode == null
+        ? null
+        : ref.watch(jmaMapProvider);
+    return switch ((ref.watch(mapConfigurationProvider), jmaMap)) {
+      (
+        AsyncData(value: MapConfiguration(:final styleString?)),
+        null || AsyncData() || AsyncError(),
+      ) =>
+        _MapContent(
+          styleString: styleString,
+          initialPrefectureCode: initialPrefectureCode,
+          initialCityCode: initialCityCode,
+          initialCityMap: switch (jmaMap) {
+            AsyncData(:final value) => value[JmaMapType.areaInformationCity],
+            _ => null,
+          },
+        ),
+      (AsyncError(:final error), _) => Scaffold(
         appBar: AppBar(title: const Text('市区町村別 最大震度')),
         body: Center(
           child: ErrorCard(
@@ -73,10 +88,27 @@ class const _MapContent({
   required final String styleString,
   required final String? initialPrefectureCode,
   required final String? initialCityCode,
+  required final JmaMap_JmaMapData? initialCityMap,
 }) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final action = ref.watch(intensityHistoryMapActionProvider);
+    final mapOptions =
+        switch ((initialPrefectureCode, initialCityCode, initialCityMap)) {
+          (_?, final cityCode?, final cityMap?) =>
+            const IntensityHistoryCityCamera().initialMapOptions(
+              cityCode: cityCode,
+              cityMap: cityMap,
+              viewportSize: MediaQuery.sizeOf(context),
+              safePadding: MediaQuery.paddingOf(context),
+              styleString: styleString,
+            ),
+          _ => null,
+        } ??
+        const MapZoomCalculator().japanViewMapOptions(
+          context: context,
+          styleString: styleString,
+        );
     final mapController = useState<MapController?>(null);
     final didInitializeDeepLink = useRef(false);
     // パラメータ到着を effect の再実行契機にするため watch する。
@@ -123,10 +155,7 @@ class const _MapContent({
               onMapCreated: (controller) {
                 mapController.value = controller;
               },
-              options: const MapZoomCalculator().japanViewMapOptions(
-                context: context,
-                styleString: styleString,
-              ),
+              options: mapOptions,
               onEvent: (event) async {
                 final point = switch (event) {
                   MapEventClick(:final point) => point,
