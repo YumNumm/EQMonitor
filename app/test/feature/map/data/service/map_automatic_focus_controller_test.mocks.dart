@@ -7,7 +7,6 @@
 import 'dart:async' as _i4;
 import 'dart:ui' as _i3;
 
-import 'package:flutter/widgets.dart' as _i5;
 import 'package:maplibre_platform_interface/maplibre_platform_interface.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
@@ -43,13 +42,14 @@ class _FakeGeographic_2 extends _i1.SmartFake implements _i2.Geographic {
     : super(parent, parentInvocation);
 }
 
-class _FakeMapCamera_3 extends _i1.SmartFake implements _i2.MapCamera {
-  _FakeMapCamera_3(Object parent, Invocation parentInvocation)
+class _FakeCameraPosition_3 extends _i1.SmartFake
+    implements _i2.CameraPosition {
+  _FakeCameraPosition_3(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeLngLatBounds_4 extends _i1.SmartFake implements _i2.LngLatBounds {
-  _FakeLngLatBounds_4(Object parent, Invocation parentInvocation)
+class _FakeGeoBox_4 extends _i1.SmartFake implements _i2.GeoBox {
+  _FakeGeoBox_4(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -66,6 +66,13 @@ class MockMapController extends _i1.Mock implements _i2.MapController {
       Invocation.getter(#options),
     ),
   ) as _i2.MapOptions);
+
+  @override
+  bool get isRenderingPaused => (super.noSuchMethod(
+    Invocation.getter(#isRenderingPaused),
+    returnValue: false,
+    returnValueForMissingStub: false,
+  ) as bool);
 
   @override
   _i3.Offset toScreenLocation(_i2.Geographic? lngLat) => (super.noSuchMethod(
@@ -110,87 +117,54 @@ class MockMapController extends _i1.Mock implements _i2.MapController {
       ) as List<_i2.Geographic>);
 
   @override
-  _i4.Future<void> moveCamera({
-    _i2.Geographic? center,
-    double? zoom,
-    double? bearing,
-    double? pitch,
-    _i5.EdgeInsets? padding = _i5.EdgeInsets.zero,
-  }) => (super.noSuchMethod(
-    Invocation.method(#moveCamera, [], {
-      #center: center,
-      #zoom: zoom,
-      #bearing: bearing,
-      #pitch: pitch,
-      #padding: padding,
-    }),
+  _i4.Future<void> moveCamera(_i2.CameraUpdate? update) => (super.noSuchMethod(
+    Invocation.method(#moveCamera, [update]),
     returnValue: _i4.Future<void>.value(),
     returnValueForMissingStub: _i4.Future<void>.value(),
   ) as _i4.Future<void>);
 
   @override
-  _i4.Future<void> animateCamera({
-    _i2.Geographic? center,
-    double? zoom,
-    double? bearing,
-    double? pitch,
-    Duration? nativeDuration = const Duration(seconds: 2),
-    double? webSpeed = 1.2,
-    Duration? webMaxDuration,
-    _i5.EdgeInsets? padding = _i5.EdgeInsets.zero,
+  _i4.Future<_i2.CameraAnimationResult> animateCamera(
+    _i2.CameraUpdate? update, {
+    _i2.CameraAnimation? animation = const _i2.CameraAnimation.ease(),
   }) => (super.noSuchMethod(
-    Invocation.method(#animateCamera, [], {
-      #center: center,
-      #zoom: zoom,
-      #bearing: bearing,
-      #pitch: pitch,
-      #nativeDuration: nativeDuration,
-      #webSpeed: webSpeed,
-      #webMaxDuration: webMaxDuration,
-      #padding: padding,
-    }),
+    Invocation.method(#animateCamera, [update], {#animation: animation}),
+    returnValue: _i4.Future<_i2.CameraAnimationResult>.value(
+      _i2.CameraAnimationResult.completed,
+    ),
+    returnValueForMissingStub: _i4.Future<_i2.CameraAnimationResult>.value(
+      _i2.CameraAnimationResult.completed,
+    ),
+  ) as _i4.Future<_i2.CameraAnimationResult>);
+
+  @override
+  _i4.Future<void> stopCamera() => (super.noSuchMethod(
+    Invocation.method(#stopCamera, []),
     returnValue: _i4.Future<void>.value(),
     returnValueForMissingStub: _i4.Future<void>.value(),
   ) as _i4.Future<void>);
 
   @override
-  _i4.Future<void> fitBounds({
-    required _i2.LngLatBounds? bounds,
-    double? bearing,
-    double? pitch,
-    Duration? nativeDuration = const Duration(seconds: 2),
-    double? webSpeed = 1.2,
-    Duration? webMaxDuration,
-    _i3.Offset? offset = _i3.Offset.zero,
-    double? webMaxZoom = 1.7976931348623157e+308,
-    bool? webLinear = false,
-    _i5.EdgeInsets? padding = _i5.EdgeInsets.zero,
-  }) => (super.noSuchMethod(
-    Invocation.method(#fitBounds, [], {
-      #bounds: bounds,
-      #bearing: bearing,
-      #pitch: pitch,
-      #nativeDuration: nativeDuration,
-      #webSpeed: webSpeed,
-      #webMaxDuration: webMaxDuration,
-      #offset: offset,
-      #webMaxZoom: webMaxZoom,
-      #webLinear: webLinear,
-      #padding: padding,
-    }),
-    returnValue: _i4.Future<void>.value(),
-    returnValueForMissingStub: _i4.Future<void>.value(),
-  ) as _i4.Future<void>);
+  _i4.Future<_i2.CameraPosition> cameraFor(_i2.CameraUpdate? update) =>
+      (super.noSuchMethod(
+        Invocation.method(#cameraFor, [update]),
+        returnValue: _i4.Future<_i2.CameraPosition>.value(
+          _FakeCameraPosition_3(this, Invocation.method(#cameraFor, [update])),
+        ),
+        returnValueForMissingStub: _i4.Future<_i2.CameraPosition>.value(
+          _FakeCameraPosition_3(this, Invocation.method(#cameraFor, [update])),
+        ),
+      ) as _i4.Future<_i2.CameraPosition>);
 
   @override
-  _i2.MapCamera getCamera() => (super.noSuchMethod(
+  _i2.CameraPosition getCamera() => (super.noSuchMethod(
     Invocation.method(#getCamera, []),
-    returnValue: _FakeMapCamera_3(this, Invocation.method(#getCamera, [])),
-    returnValueForMissingStub: _FakeMapCamera_3(
+    returnValue: _FakeCameraPosition_3(this, Invocation.method(#getCamera, [])),
+    returnValueForMissingStub: _FakeCameraPosition_3(
       this,
       Invocation.method(#getCamera, []),
     ),
-  ) as _i2.MapCamera);
+  ) as _i2.CameraPosition);
 
   @override
   double getMetersPerPixelAtLatitude(double? latitude) => (super.noSuchMethod(
@@ -200,85 +174,94 @@ class MockMapController extends _i1.Mock implements _i2.MapController {
   ) as double);
 
   @override
-  _i2.LngLatBounds getVisibleRegion() => (super.noSuchMethod(
-    Invocation.method(#getVisibleRegion, []),
-    returnValue: _FakeLngLatBounds_4(
+  _i2.GeoBox getVisibleBounds() => (super.noSuchMethod(
+    Invocation.method(#getVisibleBounds, []),
+    returnValue: _FakeGeoBox_4(this, Invocation.method(#getVisibleBounds, [])),
+    returnValueForMissingStub: _FakeGeoBox_4(
       this,
-      Invocation.method(#getVisibleRegion, []),
+      Invocation.method(#getVisibleBounds, []),
     ),
-    returnValueForMissingStub: _FakeLngLatBounds_4(
-      this,
-      Invocation.method(#getVisibleRegion, []),
+  ) as _i2.GeoBox);
+
+  @override
+  _i4.Future<List<_i2.RenderedFeature>> queryRenderedFeatures(
+    _i2.QueryGeometry? geometry, {
+    List<String>? layerIds,
+    _i2.Expression<bool>? filter,
+  }) => (super.noSuchMethod(
+    Invocation.method(
+      #queryRenderedFeatures,
+      [geometry],
+      {#layerIds: layerIds, #filter: filter},
     ),
-  ) as _i2.LngLatBounds);
+    returnValue: _i4.Future<List<_i2.RenderedFeature>>.value(
+      <_i2.RenderedFeature>[],
+    ),
+    returnValueForMissingStub: _i4.Future<List<_i2.RenderedFeature>>.value(
+      <_i2.RenderedFeature>[],
+    ),
+  ) as _i4.Future<List<_i2.RenderedFeature>>);
 
   @override
-  List<_i2.QueriedLayer> queryLayers(_i3.Offset? screenLocation) =>
-      (super.noSuchMethod(
-        Invocation.method(#queryLayers, [screenLocation]),
-        returnValue: <_i2.QueriedLayer>[],
-        returnValueForMissingStub: <_i2.QueriedLayer>[],
-      ) as List<_i2.QueriedLayer>);
-
-  @override
-  List<_i2.RenderedFeature> featuresAtPoint(
-    _i3.Offset? point, {
-    List<String>? layerIds,
+  _i4.Future<List<_i2.SourceFeature>> querySourceFeatures(
+    String? sourceId, {
+    String? sourceLayer,
+    _i2.Expression<bool>? filter,
   }) => (super.noSuchMethod(
-    Invocation.method(#featuresAtPoint, [point], {#layerIds: layerIds}),
-    returnValue: <_i2.RenderedFeature>[],
-    returnValueForMissingStub: <_i2.RenderedFeature>[],
-  ) as List<_i2.RenderedFeature>);
+    Invocation.method(
+      #querySourceFeatures,
+      [sourceId],
+      {#sourceLayer: sourceLayer, #filter: filter},
+    ),
+    returnValue: _i4.Future<List<_i2.SourceFeature>>.value(
+      <_i2.SourceFeature>[],
+    ),
+    returnValueForMissingStub: _i4.Future<List<_i2.SourceFeature>>.value(
+      <_i2.SourceFeature>[],
+    ),
+  ) as _i4.Future<List<_i2.SourceFeature>>);
 
   @override
-  List<_i2.RenderedFeature> featuresInRect(
-    _i3.Rect? rect, {
-    List<String>? layerIds,
+  _i4.Future<double> getClusterExpansionZoom(
+    String? sourceId,
+    int? clusterId,
+  ) => (super.noSuchMethod(
+    Invocation.method(#getClusterExpansionZoom, [sourceId, clusterId]),
+    returnValue: _i4.Future<double>.value(0.0),
+    returnValueForMissingStub: _i4.Future<double>.value(0.0),
+  ) as _i4.Future<double>);
+
+  @override
+  _i4.Future<List<_i2.SourceFeature>> getClusterChildren(
+    String? sourceId,
+    int? clusterId,
+  ) => (super.noSuchMethod(
+    Invocation.method(#getClusterChildren, [sourceId, clusterId]),
+    returnValue: _i4.Future<List<_i2.SourceFeature>>.value(
+      <_i2.SourceFeature>[],
+    ),
+    returnValueForMissingStub: _i4.Future<List<_i2.SourceFeature>>.value(
+      <_i2.SourceFeature>[],
+    ),
+  ) as _i4.Future<List<_i2.SourceFeature>>);
+
+  @override
+  _i4.Future<List<_i2.SourceFeature>> getClusterLeaves(
+    String? sourceId,
+    int? clusterId, {
+    int? limit = 10,
+    int? offset = 0,
   }) => (super.noSuchMethod(
-    Invocation.method(#featuresInRect, [rect], {#layerIds: layerIds}),
-    returnValue: <_i2.RenderedFeature>[],
-    returnValueForMissingStub: <_i2.RenderedFeature>[],
-  ) as List<_i2.RenderedFeature>);
-
-  @override
-  _i4.Future<void> enableLocation({
-    Duration? fastestInterval = const Duration(milliseconds: 750),
-    Duration? maxWaitTime = const Duration(seconds: 1),
-    bool? pulseFade = true,
-    bool? accuracyAnimation = true,
-    bool? compassAnimation = true,
-    bool? pulse = true,
-    _i2.BearingRenderMode? bearingRenderMode = _i2.BearingRenderMode.gps,
-  }) => (super.noSuchMethod(
-    Invocation.method(#enableLocation, [], {
-      #fastestInterval: fastestInterval,
-      #maxWaitTime: maxWaitTime,
-      #pulseFade: pulseFade,
-      #accuracyAnimation: accuracyAnimation,
-      #compassAnimation: compassAnimation,
-      #pulse: pulse,
-      #bearingRenderMode: bearingRenderMode,
-    }),
-    returnValue: _i4.Future<void>.value(),
-    returnValueForMissingStub: _i4.Future<void>.value(),
-  ) as _i4.Future<void>);
-
-  @override
-  _i4.Future<void> trackLocation({
-    bool? trackLocation = true,
-    _i2.BearingTrackMode? trackBearing = _i2.BearingTrackMode.gps,
-  }) => (super.noSuchMethod(
-    Invocation.method(#trackLocation, [], {
-      #trackLocation: trackLocation,
-      #trackBearing: trackBearing,
-    }),
-    returnValue: _i4.Future<void>.value(),
-    returnValueForMissingStub: _i4.Future<void>.value(),
-  ) as _i4.Future<void>);
-
-  @override
-  void setStyle(String? style) => super.noSuchMethod(
-    Invocation.method(#setStyle, [style]),
-    returnValueForMissingStub: null,
-  );
+    Invocation.method(
+      #getClusterLeaves,
+      [sourceId, clusterId],
+      {#limit: limit, #offset: offset},
+    ),
+    returnValue: _i4.Future<List<_i2.SourceFeature>>.value(
+      <_i2.SourceFeature>[],
+    ),
+    returnValueForMissingStub: _i4.Future<List<_i2.SourceFeature>>.value(
+      <_i2.SourceFeature>[],
+    ),
+  ) as _i4.Future<List<_i2.SourceFeature>>);
 }
