@@ -471,13 +471,6 @@ class const _MapContent({
           );
     } else {
       final region = _findRegionByCode(code);
-      final prefInfo = RegionCodeMapping.prefectureOfRegionCode(
-        code,
-        prefectures,
-      );
-      final intensityHistoryRoute = prefInfo != null
-          ? IntensityHistoryRoute(prefectureCode: prefInfo.code)
-          : null;
       await ref
           .read(earthquakeHistoryMapPopupActionProvider)
           .showArea(
@@ -485,7 +478,6 @@ class const _MapContent({
             areaName: name,
             intensityContent: intensityContent,
             maxIntensity: dbTree == null ? region?.maxIntensity : null,
-            intensityHistoryRoute: intensityHistoryRoute,
           );
     }
   }
