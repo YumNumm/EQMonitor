@@ -32,7 +32,7 @@ mise exec -- tool/store_screenshots/decrypt_fixtures.sh build/store_screenshots/
 | --- | --- |
 | `bezel_iphone_18_pro_glacier_portrait.png` | 合成の端末フレーム。`figma_extract.py --bezel-out` で取得する |
 | `noto_peninsula_2024.eqrp` | 能登半島地震のリプレイ（`eew_warning` / `kyoshin_monitor`） |
-| `wallpaper_lock_screen.*` / `wallpaper_home_screen.*` | ロック画面・ホーム画面の壁紙。Simulator への設定方法が未解決のため未使用 |
+| `wallpaper_lock_screen.jpg` | ロック画面の壁紙（2576×1717 の横長）。Simulator で設定すると黒く描画されたため未使用（「制約」を参照） |
 
 ## Figma からの抽出
 
@@ -92,13 +92,24 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   - 初回は撮影後にテストが失敗した。通知センターを閉じてアプリが `resumed` に戻ると、`KyoshinMonitorNotifier` が自分自身を `ref.invalidate` し、Riverpod の debug assert（`A provider cannot depend on itself`）が未処理の例外になる。`ref.invalidateSelf` に直した。
   - 言語が日本語の Simulator では、許可の確認が「許可」と表示されたまま写り込んだ。
   - 撮影時の通知センターは、Dynamic Island が写る回と写らない回がある。
+- 2026-11-23 に fixture の鍵を作り、`noto_peninsula_2024.eqrp` と `wallpaper_lock_screen.jpg` を暗号化して追加した。復号結果が元ファイルと一致することを SHA-256 で確認した。
+  - 同じ Mac で `STORE_SCREENSHOT_REQUIRE_FIXTURES=true` の全 4 シーンが完了した（テスト 76 秒、撮影は 1 シーン 0.7〜0.9 秒）。
+  - `eew_warning`（16:11:08）は警報 第30報・M7.4・最大震度 7 の EEW カードと推定震度の塗り、`kyoshin_monitor`（16:10:21）は警報 第10報・M6.2・最大震度 6強 の EEW カードと観測点が表示された。
+    どちらもボトムシートは最小の高さ（EEW カードの上部が見える状態）で、Figma との照合は未実施。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
-- 未検証: リプレイのシーン（fixture 未投入）、CI での通知センターの撮影。残件は [TODO](../todo/850_store_screenshots.md)。
+- 未検証: CI でのリプレイのシーンと通知センターの撮影、端末フレームの fixture（未投入）。残件は [TODO](../todo/850_store_screenshots.md)。
 
 ## 制約
 
-- simctl には壁紙の設定とロックの操作が無い（Xcode 27 の `simctl help` で確認）。壁紙は設定アプリの UI 操作が必要と考えられる。
+- simctl には壁紙の設定とロックの操作が無い（Xcode 27 の `simctl help` で確認）。`prefs:root=Wallpaper` も Simulator では開けない。
+- 写真を壁紙にする操作は Patrol のネイティブ操作で最後まで通るが、試した範囲では壁紙が黒く描画された（2026-11-23、iPhone 18 Pro / iOS 27.0 の Simulator、`wallpaper_lock_screen.jpg` の 1 枚）。原因は特定できていない。
+  - 手順: `simctl addmedia` → 写真アプリで写真を開く → `Share` → `Use as Wallpaper` → `Add` → `Set as Wallpaper Pair`（いずれも `appId: com.apple.mobileslideshow`）。
+    写真アプリの初回は `Continue` と通知の許可（SpringBoard の alert）が出る。
+  - PosterBoard のデータには切り抜いた画像（`output.layerStack/portrait-layer_background.HEIC`、792×1717）が正しく作られる。
+    編集画面・ロック画面・ホーム画面・通知センターのどれも黒く、再起動しても変わらない。
+  - `PhotosPosterProvider` のログには `Could not create inference context`（Vision）と `Failed to create espresso context` が出る。 画像の切り抜きは成功しているため、これが黒くなる原因かは分からない。
+  - 未確認: Simulator に最初から入っている写真で同じ結果になるか、CI の iOS 27.2 のランタイムで同じ結果になるか。
 - Xcode 27 の runner には Simulator.app が無く、`Xcode.app/Contents/Applications/DeviceHub.app` がある。ロック画面の代わりに通知センターを使う。
 - simctl で作れる端末はランタイムによって異なる。iOS 27.2 のランタイムが 2 つあり、片方では iPhone 18 Pro / 17 Pro が `Incompatible device` になった。
 - watchOS Simulator の Smart Stack には、ペアリングした iPhone Simulator の Live Activity が表示されないという報告が複数ある

@@ -4,8 +4,9 @@
 
 ## 900: fixture の鍵と暗号化ファイルの投入
 
-- [ ] `setup_fixture_key.sh` で鍵を作り、`.env.json` と `fixtures/recipients.txt` をコミットする。
-- [ ] 端末フレーム・`noto_peninsula_2024.eqrp`・壁紙を `encrypt_fixture.sh` で暗号化してコミットする。
+- [x] `setup_fixture_key.sh` で鍵を作り、`.env.json` と `fixtures/recipients.txt` をコミットする。
+- [x] `noto_peninsula_2024.eqrp` と壁紙（`wallpaper_lock_screen.jpg`）を `encrypt_fixture.sh` で暗号化してコミットする。
+- [ ] 端末フレーム（`bezel_iphone_18_pro_glacier_portrait.png`）を暗号化してコミットする。
 - 完了条件: タグの workflow で `decrypt_fixtures.sh` が全 fixture を復号できる。
 
 ## 850: Simulator / Emulator での撮影の確認
@@ -15,6 +16,7 @@
 - [x] iOS の 403 の原因を特定する。prerelease の version が iOS で `3.1.0.4` になり、User-Agent が Cloudflare Snippets の許可形式に合わなかった。iOS だけ `--build-name` に `x.y.z` を渡す。エラー表示自体の改善は #2059。
 - [ ] Android のステータスバーに Wi-Fi アイコンが出ない原因を調べる（demo mode の `network` コマンドが反映されていない）。
 - [ ] `eew_warning`（16:11:08）・`kyoshin_monitor`（16:10:21）が Figma の 01・04 と同じ状態（EEW カード、推定震度、ボトムシート）になるか確認し、時刻と `settle_milliseconds` を調整する。
+  手元の Mac では両シーンとも EEW カードと推定震度・観測点が表示され、ボトムシートは最小の高さで撮れた（2026-11-23）。Figma との照合が残る。
 - [x] `earthquake_detail` で戻るボタン以外のデバッグ用アイコンが出ないことを確認する。
 - 完了条件: 合成済みの 4 ページが Figma の構成と一致する。
 
@@ -23,7 +25,8 @@
 - [ ] Patrol の `openNotifications()` で開いた通知センターに Live Activity が表示され、host 側の `simctl io screenshot` で撮れることを CI で確認する（手元の Mac では確認済み）。
 - [ ] 通知センターの日付が英語（`Sat Jan 1`）になる。Patrol の操作に英語の端末が必要なため、日本語表示にする手段を決める。
 - [ ] 通知センターに Dynamic Island が写る回と写らない回がある。どちらに揃えるか決めて固定する。
-- [ ] 壁紙の設定手段を決める。simctl に手段が無いため、`simctl addmedia` で写真を入れ、Patrol のネイティブ操作で設定アプリから設定する方法を検討する。
+- [ ] 壁紙の設定手段を決める。写真アプリからの設定は操作できるが、iOS 27.0 の Simulator では黒く描画された（知見の「制約」、原因は未特定）。
+  候補: 合成時に通知センターの画像の背景を壁紙に差し替える、実機で撮る、Simulator の PosterBoard のデータを直接置き換える。
 - 完了条件: 03 通知ページが壁紙付きの通知センターと Live Activity で合成される。
 
 ## 700: Apple Watch Ultra 4 の Live Activity
