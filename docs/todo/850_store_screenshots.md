@@ -35,13 +35,13 @@
 - [x] 03 通知ページに Apple Watch Ultra 4 のフレームと画面の配置を追加する（配置は `layout.json` の `devices` に手で書いた仮のもの）。
 - [ ] Watch のバンドを黒のミラネーゼループにする。Apple の配布物に無いため、素材の入手元を決める。
 - [ ] Watch の文字盤をアナログにする。
-- [ ] Liquid Glass を最も不透明な設定にして撮る。
+- [x] Liquid Glass を最も不透明な設定にして撮る。
 - [ ] `capture-ios` で watchOS のランタイムの用意とペアの作成を行い、CI でも撮れるようにする。
-- [ ] Watch の時刻・日付を固定する。「強い揺れに警戒!」の塗りは点滅するため、撮影の瞬間によって有無が変わる（iPhone 側も同じ）。
+- Watch の時刻・日付は固定できない（`simctl status_bar` が watchOS 非対応）。撮影時のものが写る。点滅と到達までの秒数は固定済み。
 
 ## 600: Android とストアへの反映
 
 - [ ] Google Play 用のデザイン（長辺が短辺の 2 倍以下）を Figma に作り、Android の合成を追加する。
 - [ ] App Store Connect / Google Play へのアップロードを自動化するか決める。現在は artifact の生成まで。
-  2026-11-23 に iOS 3.1.0・日本語の iPhone 6.7 / 6.5 / 5.5 インチの各 4 枚を、手元で合成した画像へ App Store Connect API で手動で差し替えた。iPad は古いまま。
+  2026-11-24 に iOS 3.1.0・日本語の iPhone 6.7 / 6.5 / 5.5 インチの各 4 枚を、手元で合成した画像（通知＋Apple Watch、履歴一覧＋詳細を含む版）へ App Store Connect API で手動で差し替えた。iPad は古いまま。
   6.5 インチは 1242×2688 へ縮小、5.5 インチは高さ 2208 へ縮小して左右に背景の端の色を延ばした（1242×2208）。この変換は `compose.py` には入っていない。

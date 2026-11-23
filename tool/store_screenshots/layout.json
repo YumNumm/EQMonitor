@@ -28,65 +28,7 @@
       }
     },
     {
-      "id": "02_earthquake_detail",
-      "figmaNodeId": "2068:489",
-      "scene": "earthquake_detail",
-      "background": "backgrounds/02_earthquake_detail.png",
-      "device": {
-        "bezel": "bezel_iphone_18_pro_black_portrait.png",
-        "bezelRect": {
-          "x": 125.04,
-          "y": 632.71,
-          "width": 1041.04,
-          "height": 2128.36
-        },
-        "screenRect": {
-          "x": 180.0,
-          "y": 686.0,
-          "width": 930.0,
-          "height": 2021.94
-        },
-        "screenCornerRadius": 130.0
-      },
-      "devices": [
-        {
-          "scene": "earthquake_history_list",
-          "bezel": "bezel_iphone_18_pro_black_portrait.png",
-          "bezelRect": {
-            "x": 60,
-            "y": 640,
-            "width": 770.37,
-            "height": 1574.99
-          },
-          "screenRect": {
-            "x": 100.67,
-            "y": 679.43,
-            "width": 688.2,
-            "height": 1496.24
-          },
-          "screenCornerRadius": 96.2
-        },
-        {
-          "scene": "earthquake_detail",
-          "bezel": "bezel_iphone_18_pro_black_portrait.png",
-          "bezelRect": {
-            "x": 459.63,
-            "y": 1161.01,
-            "width": 770.37,
-            "height": 1574.99
-          },
-          "screenRect": {
-            "x": 500.3,
-            "y": 1200.45,
-            "width": 688.2,
-            "height": 1496.24
-          },
-          "screenCornerRadius": 96.2
-        }
-      ]
-    },
-    {
-      "id": "03_notification",
+      "id": "02_notification",
       "figmaNodeId": "2068:492",
       "scene": "lock_screen_live_activity",
       "background": "backgrounds/03_notification.png",
@@ -140,6 +82,64 @@
             "height": 462.6
           },
           "screenCornerRadius": 90.0
+        }
+      ]
+    },
+    {
+      "id": "03_earthquake_detail",
+      "figmaNodeId": "2068:489",
+      "scene": "earthquake_detail",
+      "background": "backgrounds/02_earthquake_detail.png",
+      "device": {
+        "bezel": "bezel_iphone_18_pro_black_portrait.png",
+        "bezelRect": {
+          "x": 125.04,
+          "y": 632.71,
+          "width": 1041.04,
+          "height": 2128.36
+        },
+        "screenRect": {
+          "x": 180.0,
+          "y": 686.0,
+          "width": 930.0,
+          "height": 2021.94
+        },
+        "screenCornerRadius": 130.0
+      },
+      "devices": [
+        {
+          "scene": "earthquake_history_list",
+          "bezel": "bezel_iphone_18_pro_black_portrait.png",
+          "bezelRect": {
+            "x": 60,
+            "y": 640,
+            "width": 770.37,
+            "height": 1574.99
+          },
+          "screenRect": {
+            "x": 100.67,
+            "y": 679.43,
+            "width": 688.2,
+            "height": 1496.24
+          },
+          "screenCornerRadius": 96.2
+        },
+        {
+          "scene": "earthquake_detail",
+          "bezel": "bezel_iphone_18_pro_black_portrait.png",
+          "bezelRect": {
+            "x": 459.63,
+            "y": 1161.01,
+            "width": 770.37,
+            "height": 1574.99
+          },
+          "screenRect": {
+            "x": 500.3,
+            "y": 1200.45,
+            "width": 688.2,
+            "height": 1496.24
+          },
+          "screenCornerRadius": 96.2
         }
       ]
     },

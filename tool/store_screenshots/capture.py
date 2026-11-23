@@ -7,9 +7,7 @@ import os
 import shutil
 import subprocess
 import sys
-import tempfile
 import time
-from collections.abc import Callable
 from pathlib import Path
 
 TOOL_DIR = Path(__file__).resolve().parent
@@ -19,13 +17,12 @@ SESSION_DIR = "store_screenshot"
 POLL_SECONDS = 1
 # 続けて送ると到着順が入れ替わることがある。バナーが出きるのも待つ。
 PUSH_INTERVAL_SECONDS = 1.5
+# 通知を送るだけで撮らない合図。
+NOTIFY_SUFFIX = "_notify"
 WATCH_PREPARE_SCENE = "watch_live_activity_prepare"
-WATCH_SCENE = "watch_live_activity"
-WATCH_UPDATE_SCENE = "watch_live_activity_update"
 WATCH_SYNC_TIMEOUT_SECONDS = 600
+# 届いた直後はスマートスタックの並べ替えのアニメーションが残る。
 WATCH_SETTLE_SECONDS = 3
-# 点滅は 1 秒周期。撮影 1 回に 0.3〜1 秒かかるため、数回撮れば塗られている瞬間が入る。
-BLINK_SHOTS = 6
 
 
 class CaptureError(RuntimeError):
@@ -52,7 +49,7 @@ class IosSimulator:
         return self.udid
 
     def prepare(self, config: dict) -> None:
-        use_japanese(self.udid)
+        configure_simulator(self.udid, config)
         if self.wallpaper is not None:
             # 非公開の保存形式に依存するため、ランタイムが変わると失敗しうる。壁紙なしで撮影を続ける。
             result = subprocess.run([str(TOOL_DIR / "set_ios_wallpaper.sh"), self.udid, str(self.wallpaper)], check=False)
@@ -119,8 +116,7 @@ class IosSimulator:
         run("xcrun", "simctl", "bootstatus", self.watch_udid, "-b")
         self.watch_xcodebuild("build-for-testing", derived_data)
 
-    def wait_for_watch_log(self, predicate: str, expected: str, description: str, lookback: float = 0) -> None:
-        started = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() - lookback))
+    def wait_for_watch_log(self, started: str, predicate: str, expected: str, description: str) -> None:
         deadline = time.monotonic() + WATCH_SYNC_TIMEOUT_SECONDS
         while time.monotonic() < deadline:
             result = subprocess.run(
@@ -135,24 +131,16 @@ class IosSimulator:
             time.sleep(POLL_SECONDS * 2)
         raise CaptureError(f"{description} did not reach the watch")
 
-    # iPhone の Live Activity が Watch に届くまでの時間は、開始も更新も数秒〜数分とばらつく。ログで確かめてから進む。
+    # iPhone の Live Activity が Watch に届くまでの時間は数秒〜数分とばらつく。ログで確かめてから進む。
     def open_watch_smart_stack(self, derived_data: Path) -> None:
+        # スマートスタックを開いている間に届くことがあるため、開く前の時刻からログを見る。
+        started = time.strftime("%Y-%m-%d %H:%M:%S")
         self.watch_xcodebuild("test-without-building", derived_data)
         self.wait_for_watch_log(
+            started,
             'process == "Carousel" AND eventMessage CONTAINS "received live activity element"',
             self.bundle_id,
             "the Live Activity",
-        )
-        # 到着時の配信のログを、次に待つ更新のログと取り違えない。
-        time.sleep(WATCH_SETTLE_SECONDS)
-
-    def wait_for_watch_update(self) -> None:
-        self.wait_for_watch_log(
-            'process == "liveactivitiesd" AND eventMessage CONTAINS "Delivering activity changes for com.apple.Carousel"',
-            "Delivering activity changes",
-            "the Live Activity update",
-            # テストは更新してから合図を書くため、合図を見た時点で既に届いていることがある。
-            lookback=WATCH_SETTLE_SECONDS - 1,
         )
         time.sleep(WATCH_SETTLE_SECONDS)
 
@@ -260,18 +248,15 @@ def capture(device: IosSimulator | AndroidEmulator, config: dict, patrol_args: l
                 for name in pushes:
                     device.push(TOOL_DIR / "push" / f"{name}.json")
                     time.sleep(PUSH_INTERVAL_SECONDS)
-                    if os.environ.get("STORE_SCREENSHOT_DEBUG_PUSH"):
-                        device.screenshot(output / f"debug_push_{name}.png")
+                watch_scene = config.get("watch", {}).get(scene)
                 if scene == WATCH_PREPARE_SCENE:
                     device.open_watch_smart_stack(output.parent / "watch-derived-data")
-                elif scene == WATCH_UPDATE_SCENE:
-                    device.wait_for_watch_update()
-                elif scene == WATCH_SCENE:
-                    screenshot_lit(device.watch_screenshot, destination)
-                elif scene in config.get("blink", []):
-                    screenshot_lit(device.screenshot, destination)
+                elif scene.endswith(NOTIFY_SUFFIX):
+                    pass
                 else:
                     device.screenshot(destination)
+                if watch_scene and isinstance(device, IosSimulator) and device.watch_udid:
+                    device.watch_screenshot(output / f"{watch_scene}.png")
                 device.write_marker(f"captured/{scene}")
                 captured.add(scene)
                 print(f"captured: {destination} ({time.monotonic() - started:.1f}s)", flush=True)
@@ -290,45 +275,33 @@ def runtime_version(runtime: dict) -> tuple[int, ...]:
     return tuple(int(part) for part in runtime["version"].split("."))
 
 
-def use_japanese(udid: str) -> None:
-    # 新規の Simulator は host の言語を引き継ぐ。テストはシステムダイアログを日本語のラベルで探す。
-    run("xcrun", "simctl", "bootstatus", udid, "-b")
-    current = subprocess.run(
-        ["xcrun", "simctl", "spawn", udid, "defaults", "read", "-g", "AppleLanguages"],
+def read_default(udid: str, domain: str, key: str) -> str:
+    result = subprocess.run(
+        ["xcrun", "simctl", "spawn", udid, "defaults", "read", domain, key],
         check=False, text=True, capture_output=True,
-    ).stdout
-    if '"ja-JP"' in current.split(",")[0]:
-        return
-    run("xcrun", "simctl", "spawn", udid, "defaults", "write", "-g", "AppleLanguages", "-array", "ja-JP")
-    run("xcrun", "simctl", "spawn", udid, "defaults", "write", "-g", "AppleLocale", "ja_JP")
-    run("xcrun", "simctl", "shutdown", udid)
+    )
+    return result.stdout.strip() if result.returncode == 0 else ""
+
+
+def configure_simulator(udid: str, config: dict) -> None:
     run("xcrun", "simctl", "bootstatus", udid, "-b")
-
-
-# 「強い揺れに警戒!」の塗り（0xBE0100）。点滅するため、塗られている瞬間の画像を選ぶのに使う。
-def highlight_score(image: Path) -> int:
-    with tempfile.TemporaryDirectory() as directory:
-        bitmap = Path(directory) / "image.bmp"
-        run("sips", "-s", "format", "bmp", "-Z", "600", str(image), "--out", str(bitmap), capture=True)
-        data = bitmap.read_bytes()
-    offset = int.from_bytes(data[10:14], "little")
-    bytes_per_pixel = int.from_bytes(data[28:30], "little") // 8
-    pixels = data[offset:]
-    blue, green, red = pixels[0::bytes_per_pixel], pixels[1::bytes_per_pixel], pixels[2::bytes_per_pixel]
-    return sum(1 for r, g, b in zip(red, green, blue) if 175 <= r <= 205 and g <= 14 and b <= 14)
-
-
-def screenshot_lit(take: Callable[[Path], None], destination: Path) -> None:
-    best = -1
-    candidate = destination.with_suffix(".candidate.png")
-    for _ in range(BLINK_SHOTS):
-        take(candidate)
-        score = highlight_score(candidate)
-        if score > best:
-            best = score
-            candidate.replace(destination)
-    candidate.unlink(missing_ok=True)
-    print(f"highlight: {destination.name} score={best}", flush=True)
+    changed = False
+    # 新規の Simulator は host の言語を引き継ぐ。テストはシステムダイアログを日本語のラベルで探す。
+    if '"ja-JP"' not in read_default(udid, "-g", "AppleLanguages").split(",")[0]:
+        run("xcrun", "simctl", "spawn", udid, "defaults", "write", "-g", "AppleLanguages", "-array", "ja-JP")
+        run("xcrun", "simctl", "spawn", udid, "defaults", "write", "-g", "AppleLocale", "ja_JP")
+        changed = True
+    # Device Hub の「Liquid Glass」のスライダーが書く値。1 が最も不透明。
+    tint = config.get("liquidGlassTintAmount")
+    if tint is not None and read_default(udid, "com.apple.UIKit", "UIViewGlassTintAmount") != f"{tint:g}":
+        run(
+            "xcrun", "simctl", "spawn", udid, "defaults", "write",
+            "com.apple.UIKit", "UIViewGlassTintAmount", "-float", str(tint),
+        )
+        changed = True
+    if changed:
+        run("xcrun", "simctl", "shutdown", udid)
+        run("xcrun", "simctl", "bootstatus", udid, "-b")
 
 
 def create_ios_simulator(device_types: list[str]) -> str:

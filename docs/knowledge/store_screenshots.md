@@ -79,22 +79,29 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   - 保存領域の `PRPosterRoleLockScreen-switcher-index.json` ができるのを待ってから終了し、書き込んで再起動する。設定済みの Simulator では何もしない。
     新規の Simulator ではこのファイルができるまで起動から約 10 分かかった。できる前に書き込むと、SQLite には選択中と記録されるのに既定の壁紙が描画され、再起動しても変わらなかった。
   - 非公開の形式に依存する。失敗しても `capture.py` は警告を出して壁紙なしで撮影を続ける。
-- 通知センターの通知は、撮影の直前に host が `simctl push` で送る（`device.json` の `push`、payload は `tool/store_screenshots/push/`）。
+- 通知センターの通知は host が `simctl push` で送る（`device.json` の `push`、payload は `tool/store_screenshots/push/`）。
+  - テストが `<scene>_notify` の合図を書いたとき、アプリを表示した状態で送る。通知センターを開いた状態で送ると、ペアリングした Apple Watch 側に出て iPhone に並ばない回があった。
+  - 重大な通知のバナーは自動では消えず、通知センターを開く操作を妨げる。`closeHeadsUpNotification()` で閉じてから開く。
   - 文面と `aps` の形は backend（`packages/notification-message`）のテンプレートに合わせた。警報は専用の経路（重大な通知）と通常の経路（即時通知）の 2 通が届く仕様。
   - 警報対象地域・報番号・時刻・予報の数値は仮の値。
   - テストは `FirebaseMessaging.requestPermission(criticalAlert: true)` を呼び、ダイアログを許可する。
 - Apple Watch の Live Activity は `--watch-device <UDID>` と `--dart-define=STORE_SCREENSHOT_WATCH=true` を付けたときだけ撮る（`watch_live_activity.png`）。
   - Watch は `simctl` でも Patrol でも操作できない。`tool/store_screenshots/watch_ui_tests/`（watchOS の UI テストだけの Xcode プロジェクト）が文字盤から上スワイプしてスマートスタックを開く。デジタルクラウンの回転では開かなかった。
   - iPhone と Watch の Simulator は `simctl pair` でつなぐ。iOS 27.0 と watchOS 27.2 の組では同期のハンドシェイクが `networkFailure` で失敗し続け、Live Activity が届かなかった。iOS 27.2 と watchOS 27.2 では届いた。
-  - 届くまでの時間は開始も更新も数秒〜数分とばらつく。host は Watch のログで到着（Carousel の `received live activity element`）と更新の反映（liveactivitiesd の `Delivering activity changes for com.apple.Carousel`）を確かめてから撮る。
-    到達までの秒数が 0 にならないよう、テストは先の時刻で開始し、Watch に届いてから現在の時刻で更新する。
+  - 届くまでの時間は数秒〜数分とばらつく。host は Watch のログ（Carousel の `received live activity element`）で到着を確かめてから進み、iPhone の通知センターを撮った直後に Watch を撮る。
+    届いても Watch 側の表示が `Transaction failed. (timed out)` で出ない回があった（ほかの Simulator を同時に動かしていたとき）。その回は到着のログが出ず、10 分で失敗する。
+  - 実際の到達時刻を過ぎると表示が切り替わるため、テストは到達を 30 分先に置き、表示する秒数は `fixedRemainingSeconds` で決める。
   - `simctl status_bar` は watchOS では使えない（`Status bar overrides not supported on this platform`）。Watch の時刻と日付は撮影時のものが写る。CI には watchOS のランタイムとペアの作成が無く、未対応。
 - `capture.py` は開始前にアプリの `store_screenshot/` を消す。中断した実行のアプリが残っていると、古い `ready` をビルド中に撮ってしまい、テストが撮影待ちで timeout する。
 - 現在地は `device.json` の `location`。富山県高岡市太田 24 番地（国土地理院の住所検索の結果。枝番までは解決されない）を設定している。
 - 地震詳細のデバッグボタンは debug ビルドで既定表示になるため、SharedPreferences の `debug` を false にする。
 - 撮影は日本語の端末で行う。`capture.py` は Simulator の言語が `ja-JP` でなければ変えて再起動する（`--device` で渡した Simulator も対象）。
   Patrol の `grantPermissionWhenInUse()` は iOS では英語の端末でしか動かないため、iOS の権限ダイアログは SpringBoard のボタンを日本語のラベル（`アプリの使用中は許可` / `許可`）で押す。
-- 「強い揺れに警戒!」の塗り（`0xBE0100`）は 1 秒周期で点滅する。`device.json` の `blink` に挙げたシーンと Watch は 6 回撮り、塗りの画素が最も多い画像を残す（`sips` で BMP にして数える）。
+- 点滅と到達までの秒数は固定して撮る。撮る瞬間で変わる表示を連写や文字認識で選ぶ方式は、iPhone と Apple Watch の秒数が 0.1 秒ずれるなど安定しなかった。
+  - Live Activity: ContentState の任意の項目 `fixedRemainingSeconds` を指定すると、到達までの秒数をその値で止め、「強い揺れに警戒!」の塗りを点灯のままにする（`\.fixedArrivalCountdown`）。サーバーは送らない。Dynamic Island には適用していない。
+    `Runner/LiveActivityDebugMethodChannel.swift` に ContentState の写しがあり、項目を足すときは両方に足す。片方だけだと開始時に値が落ちる。
+  - アプリ内: `_EewLocalWarningNotice` は `MediaQuery.disableAnimations` のとき塗ったままになる。テストは `FakeAccessibilityFeatures(disableAnimations: true)` を設定する。
+- Liquid Glass は最も不透明な設定で撮る。Device Hub の「Liquid Glass」のスライダーは Simulator の `com.apple.UIKit` の `UIViewGlassTintAmount`（実数、右端が 1）を書く。`capture.py` が `device.json` の `liquidGlassTintAmount` を書き込み、変えたときは再起動する。
 - ロック画面相当の画像は、Live Activity を開始して `$.platform.mobile.openNotifications()` で通知センターを開いて撮る（iOS のみ）。
   初回は Live Activity の下に許可の確認が出るため、SpringBoard の `許可` を押してから撮る。
 - EQRP は CI で `app/assets/store_screenshot_fixtures/` へ復号してからビルドし、`rootBundle` で読む。このディレクトリは平文をコミットしない（`.gitignore`）。
@@ -112,9 +119,11 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 - `STORE_SCREENSHOT_SCENES` にカンマ区切りで複数のシーンを渡すと、`--dart-define` がカンマで分割されて先頭のシーンしか撮られない（2026-11-23 に手元で確認）。
 - Apple の配布物（2026-11 時点）の Watch Ultra 4 は、黒のケースにアルパインループ・オーシャンバンド・トレイルループの 3 種で、ミラネーゼループは無い。ディスクイメージは開くときに使用許諾への同意を求める。
 - 黒の iPhone 18 Pro のフレームは Figma のグレイシャーと同じ寸法（1350×2760、画面の穴も同じ）で、`layout.json` の `bezel` を差し替えるだけで使える。`figma_extract.py` を再実行すると `device.bezel` がグレイシャーに戻る。
-- 03 は iPhone（元の 86%）を左、Apple Watch（素材の 90%）を右下の手前に置いている。Figma にこの配置は無い。
+- 02 は iPhone（元の 86%）を左、Apple Watch（素材の 90%）を右下の手前に置いている。Figma にこの配置は無い。ページの順番は Figma と違い、通知が 2 枚目、履歴が 3 枚目。
+- リプレイの EQRP は、本震（`20240101161010`）以外の EEW のフレームを `packages/earthquake_replay/tool/filter_eew.dart` で除いたもの。前後の地震の EEW カードや震央が出ない。
+- CarPlay は撮れていない。`simctl io` に CarPlay 種別の画面（Screen ID 3）があり電源も入るが、iOS 27.2 のランタイムでは CarPlay のセッションが始まらず黒いまま。Device Hub は Simulator の CarPlay に対応していない（Apple Developer Forums thread/834440）。
 - ページに複数の端末を置くときは `layout.json` の `devices` に手で書く（後ろの要素ほど手前）。`figma_extract.py` は `device` だけを更新し、`devices` は残す。
-  02 は履歴一覧（震度 4 以上、`earthquake_history_list`）を奥、地震詳細（`20260823020050`）を手前に、元の 74% の大きさで斜めに重ねている。Figma にこの配置は無い。
+  03 は履歴一覧（震度 4 以上、`earthquake_history_list`）を奥、地震詳細（`20260823020050`）を手前に、元の 74% の大きさで斜めに重ねている。Figma にこの配置は無い。
 - Patrol の iOS 実行には `RunnerUITests` ターゲット（`app/ios/RunnerUITests/RunnerUITests.m`、`FlutterGeneratedPluginSwiftPackage` をリンク、`User Script Sandboxing = NO`、スキームで並列実行なし）が必要。
   Android は `MainActivityTest.java` と `PatrolJUnitRunner`・Test Orchestrator を使う。
 

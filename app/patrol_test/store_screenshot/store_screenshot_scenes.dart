@@ -219,47 +219,38 @@ class StoreScreenshotScenes({
     required String? watchScene,
   }) async {
     const eventId = 'eqmonitor-store-screenshot';
-    final builder = container.read(debugLiveActivityContentBuilderProvider);
-    final controller = container.read(liveActivityLocalControllerProvider);
-    Map<String, dynamic> contentState({Duration offset = Duration.zero}) =>
-        builder.eewFromPreset(
-          preset: DebugEewPreset.warning,
-          eventId: eventId,
-          now: DateTime.now().add(offset),
-        );
-    if (watchScene == null) {
-      await controller.start(
-        kind: .eew,
-        eventId: eventId,
-        contentState: contentState(),
-      );
-    } else {
-      // Watch に届くまでの時間は 20〜90 秒とばらつく。届く前に到達までの秒数が 0 にならないよう先の時刻で開始し、
-      // host が Watch への到着を確かめてから更新する。
-      final activityId = await controller.start(
-        kind: .eew,
-        eventId: eventId,
-        contentState: contentState(offset: const Duration(minutes: 30)),
-      );
+    // 到達までの秒数は撮る瞬間で変わり、iPhone と Apple Watch でも揃わない。表示を固定し、
+    // 待っている間に実際の到達時刻を過ぎて表示が切り替わらないよう、到達は十分先に置く。
+    final contentState =
+        container
+            .read(debugLiveActivityContentBuilderProvider)
+            .eewFromPreset(
+              preset: DebugEewPreset.warning,
+              eventId: eventId,
+              now: DateTime.now().add(const Duration(minutes: 30)),
+            )
+          ..['fixedRemainingSeconds'] = _fixedRemainingSeconds;
+    await container
+        .read(liveActivityLocalControllerProvider)
+        .start(kind: .eew, eventId: eventId, contentState: contentState);
+    if (watchScene != null) {
+      // Watch に届くまでの時間は数秒〜数分とばらつく。host が Watch のスマートスタックを開き、到着をログで確かめる。
       await channel.capture('${watchScene}_prepare');
-      await controller.update(
-        kind: .eew,
-        activityId: activityId,
-        contentState: contentState(offset: const Duration(seconds: 15)),
-      );
-      await channel.capture('${watchScene}_update');
-      await channel.capture(watchScene);
-      await controller.update(
-        kind: .eew,
-        activityId: activityId,
-        contentState: contentState(),
-      );
     }
+    // 通知センターを開いた状態で届いた通知は、ペアリングした Apple Watch 側に出て iPhone に並ばないことがあった。
+    // アプリを表示している間に host に送らせ、バナーが消えてから通知センターを開く。
+    await channel.capture('${scene}_notify');
+    // 重大な通知のバナーは自動では消えず、残っていると通知センターを開く操作を妨げる。
+    await Future<void>.delayed(const Duration(seconds: 2));
+    await $.platform.ios.closeHeadsUpNotification();
+    await Future<void>.delayed(const Duration(seconds: 2));
     await $.platform.mobile.openNotifications();
     await _allowLiveActivities();
     await _capture(scene, settle: const Duration(seconds: 3));
     await $.platform.mobile.closeNotifications();
   }
+
+  static const _fixedRemainingSeconds = 16.3;
 
   // 初回だけ Live Activity の下に許可の確認が出る。許可済みの端末では出ない。
   Future<void> _allowLiveActivities() async {

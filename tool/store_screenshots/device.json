@@ -7,14 +7,14 @@
     "longitude": 137.03363
   },
   "push": {
-    "lock_screen_live_activity": [
+    "lock_screen_live_activity_notify": [
       "eew_forecast",
       "eew_warning",
       "eew_warning_dedicated"
     ]
   },
-  "blink": [
-    "eew_warning",
-    "lock_screen_live_activity"
-  ]
+  "watch": {
+    "lock_screen_live_activity": "watch_live_activity"
+  },
+  "liquidGlassTintAmount": 1
 }

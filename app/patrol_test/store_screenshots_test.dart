@@ -54,6 +54,9 @@ void main() {
       final flutterOnError = FlutterError.onError;
       final platformOnError = PlatformDispatcher.instance.onError;
       WidgetsApp.debugAllowBannerOverride = false;
+      // アプリ内の「強い揺れに警戒!」の点滅は、アニメーションを減らす設定のとき塗ったままになる。
+      $.tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
       // LiveTestWidgetsFlutterBinding がテスト名を画面上端に描くため消す。公開 API は無い。
       if (WidgetsBinding.instance
           case final LiveTestWidgetsFlutterBinding binding) {
@@ -119,6 +122,7 @@ void main() {
         FlutterError.onError = flutterOnError;
         PlatformDispatcher.instance.onError = platformOnError;
         WidgetsApp.debugAllowBannerOverride = true;
+        $.tester.platformDispatcher.clearAccessibilityFeaturesTestValue();
       }
     },
   );
