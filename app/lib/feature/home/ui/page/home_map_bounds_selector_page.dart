@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
@@ -5,7 +6,6 @@ import 'package:eqmonitor/feature/home/data/flow/save_home_map_bounds_flow.dart'
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
-import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -28,12 +28,15 @@ class const HomeMapBoundsSelectorPage({super.key}) extends ConsumerWidget {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
     final homeAsync = ref.watch(homeConfigurationProvider);
 
-    return switch (mapConfiguration) {
-      AsyncData(value: MapConfiguration(:final styleString?)) => _Body(
+    return switch ((
+      mapConfiguration.valueOrPrevious?.styleString,
+      mapConfiguration,
+    )) {
+      (final styleString?, _) => _Body(
         styleString: styleString,
         mapSettings: homeAsync.value?.map ?? const HomeMapSettings(),
       ),
-      AsyncError(:final error) => Scaffold(
+      (null, AsyncError(:final error)) => Scaffold(
         appBar: AppBar(),
         body: Center(child: ErrorCard(error: error)),
       ),

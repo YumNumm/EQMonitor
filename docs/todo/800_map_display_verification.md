@@ -16,6 +16,23 @@
 - 完了条件: 上記を実機で確認し、震度データベース表示・市区町村別最大震度・EEW 予報区域へ展開するかを決める。
 - `packages/jma_map/bin/jma_map.dart` の `polylabel2D` は精度が既定の 1.0（度）で、`app/assets/jma_map.pb` の点の大半が bbox の隅にある。精度を指定して再生成する。
 
+## 800: テーマ切替・リサイズ時の地図の作り直し
+
+- ホーム、EEW 詳細、地震履歴詳細、震央分布、地域選択は、テーマ切替で `mapConfigurationProvider` が再読込されるたびに `MapLibreMap` を作り直し、カメラが初期位置へ戻る。ホームは `ValueKey(constraints.biggest)` により、表示領域の大きさが変わるたびにも作り直す。市区町村別最大震度と表示範囲選択は style の差し替えへ移行済み（2026-11-23、iOS Simulator で確認）。
+- 残りの画面を移行する前に、次のレイヤーを style の差し替えへ対応させる。いずれもコードの読解による指摘で、実機での再現は未確認。
+  - 新しい `StyleController` へ直接切り替わると、古い cleanup が共有の `disposed` / `isInitialized` を後から書き換え、以後の更新が止まる: `eew_ps_wave_layer.dart`、`eew_estimated_intensity_layer.dart`、`eew_warning_regions_layer.dart`、`eew_hypocenter_layer.dart`、`shake_detection_layer.dart`、`eew_simulation_ps_wave_layer.dart`。
+  - 送信済み GeoJSON のキャッシュを新しい `StyleController` で破棄しない: `eew_ps_wave_layer.dart`、`shake_detection_layer.dart`。
+  - cleanup が世代を確認せず固定 ID を削除する: `eew_forecast_region_layer.dart`（配色・明暗）、`earthquake_history_area_icon_layer.dart`（アイコン画像・設定）、`earthquake_history_details_estimated_intensity_layer.dart`（配色・タイル URL）。
+- 次の 2 つは style の差し替えと無関係に、現行の構成でも layer が消える可能性がある。再現を確認する。
+  - `hypocenter_pmtiles_layer.dart`: 配色モードの切替、経過時間表示の 10 分ごとの更新、アーカイブ選択の変更。
+  - `kyoshin_monitor_observation_layer.dart` の観測点名ラベル: 観測点サイズの変更。
+- `intensity_icon_provider.dart` と `shindo_db_intensity_icon_provider.dart` は OS の明暗（`brightnessProvider`）を監視する。アプリの明暗を固定していても、OS の切替でアイコンを再生成する。
+- 観測点アイコンは生成時の端末ピクセル比で描画する。ピクセル比の異なる画面へ移動すると、アイコンの大きさと観測点名ラベルの位置がずれる。
+- 地域選択は地図を作り直すが、テーマ切替後に「地図を読み込めませんでした」と表示される不具合は `region_selection_map_layer.dart` の cleanup で修正した（2026-11-23、iOS Simulator で確認）。
+- 地域選択で都道府県を選んで拡大すると、塗りと輪郭にタイル境界の筋が出る（テーマ切替の有無によらない）。原因は未調査。
+- 市区町村別最大震度の塗りは、style の差し替え後の再表示を実データで未確認（検証環境で API が 403 を返したため）。選択枠は両方向の切替で残ることを確認した。
+- BasicModalSheet の回転は iPhone のシミュレータで確認した。iPad のウィンドウサイズ変更とキーボード表示時の位置は未確認。
+
 ## 800: 地震履歴の観測点キャッシュの実機性能確認
 
 - Android の profile/release で、観測点の多い地震詳細を移動・拡大縮小し、通常震度・長周期・震度DBの表示とフレーム時間を確認する。GeoJSON の再生成抑止による実機での改善幅は未計測。

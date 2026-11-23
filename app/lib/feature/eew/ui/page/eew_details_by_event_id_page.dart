@@ -374,16 +374,8 @@ class const _ResponsiveLayout({
           );
         }
 
-        if (isLandscape) {
-          return Row(
-            children: [
-              Expanded(child: tableWidget),
-              Expanded(child: mapWidget),
-            ],
-          );
-        }
-
-        return Column(
+        return Flex(
+          direction: isLandscape ? .horizontal : .vertical,
           children: [
             Expanded(child: tableWidget),
             Expanded(child: mapWidget),

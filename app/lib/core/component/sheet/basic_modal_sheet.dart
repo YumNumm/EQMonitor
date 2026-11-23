@@ -18,6 +18,7 @@ class const BasicModalSheet({
     final spacing = designSystem.spacing;
     final controller = useMemoized(SheetController.new);
     useEffect(() => controller.dispose, [controller]);
+    final lastHeight = useRef<double?>(null);
 
     return SafeArea(
       bottom: false,
@@ -29,8 +30,22 @@ class const BasicModalSheet({
           );
           final isLandscape = size.width > size.height;
           final initialExtent = size.height * 0.2;
+          final previousHeight = lastHeight.value;
+          lastHeight.value = size.height;
+          if (previousHeight != null &&
+              previousHeight > 0 &&
+              previousHeight != size.height &&
+              controller.hasClients) {
+            // Sheet は位置を px で保持するため、高さが変わったら同じ割合へ合わせ直す。
+            final relativeExtent = controller.offset / previousHeight;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (controller.hasClients) {
+                controller.jumpTo(relativeExtent * size.height);
+              }
+            });
+          }
           final sheet = Sheet(
-            controller: initialPositionOverlay == null ? null : controller,
+            controller: controller,
             backgroundColor: colorTheme.surface,
             shape: RoundedSuperellipseBorder(
               borderRadius: BorderRadius.vertical(
@@ -104,17 +119,16 @@ class const BasicModalSheet({
                   ],
                 );
 
-          if (isLandscape && !expandToPane) {
-            return Align(
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                width: size.width * 0.5,
-                height: size.height,
-                child: content,
-              ),
-            );
-          }
-          return content;
+          return Align(
+            alignment: Alignment.centerRight,
+            child: SizedBox(
+              width: isLandscape && !expandToPane
+                  ? size.width * 0.5
+                  : size.width,
+              height: size.height,
+              child: content,
+            ),
+          );
         },
       ),
     );

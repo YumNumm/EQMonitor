@@ -36,6 +36,8 @@
 - HistoryPaneは一覧/詳細に別PrimaryScrollControllerを与える。loading ListViewも対象。
   MediaQueryサイズ/余白は各ペイン、keyboard縮小は外側Scaffoldが担当する。
 - 地図上詳細シートはBasicModalSheet(expandToPane:true)で、横長ペインをさらに半幅にしない。
+- BasicModalSheetは縦長・横長で同じWidget構成を返し、幅だけを変える。構成を切り替えるとSheetと子の状態（高さ・scroll・展開状態）が回転やリサイズで失われる。
+- Sheetは位置をpxで保持する。BasicModalSheetは高さが変わったとき、変更前の高さに対する割合を保つ位置へ移動する。
 - `BasicModalSheet.initialPositionOverlay` はSheetと同じSafeArea・ペイン制約内で、初期高さの直上かつSheetの背面に固定する。SheetControllerの実際の移動量から透明度を計算し、透明度が0になったときは入力と読み上げも抑止する。
 - EEW各報シートは最新報から表示し、event選択変更/詳細closeで履歴再生を止める。
   選択は震度色を塗り替えず輪郭とSemanticsで伝える。

@@ -12,6 +12,10 @@
 - 同じ style への操作は `MapOperationQueueScope` の共有キューで直列化する。パラメータや timer tick を初期化 effect の依存へ混ぜない。
 - 更新は初期化 Future を待ち、await 前後で lifecycle token を確認する。初期化完了時には開始時の snapshot でなく最新データを反映する。
 - dispose は同期的に無効化してから layer → source → image の順に削除する。各削除を独立して試行し、途中の失敗で後続 cleanup を止めない。
+- `flutter_hooks` の `useEffect` は依存が変わると、新しい effect を先に実行し、古い cleanup をその後に呼ぶ。「effect で固定 ID を追加し、cleanup で同じ ID を削除する」だけの実装は、style 以外の依存が変わるたびに追加直後の layer を削除する。cleanup は、後発の effect が置き換えていないこと（世代・トークンの一致）を確認してから削除する。
+- `Theme.of(context)` 由来の色は、テーマ切替のアニメーション中、フレームごとに変わる。effect の依存に置くとその回数だけ再実行される。
+- 取得済みの `styleString` がある間は `mapConfigurationProvider` の再読込中も `MapLibreMap` を保持すれば、テーマ切替は style の差し替えになり、カメラと Widget の状態が残る（市区町村別最大震度・表示範囲選択）。差し替えでは旧 `StyleController` への操作が無視され、追加済みの layer・source・画像を持たない新しい `StyleController` が渡る。`AsyncData` だけを地図表示の条件にすると、再読込のたびに地図が作り直され、カメラが初期位置へ戻る。
+- style の差し替えに対応するレイヤーは、上記の cleanup の確認に加え、初期化済みフラグ・送信済みデータのキャッシュを新しい `StyleController` で作り直す必要がある。未対応のレイヤーは[地図の描画・操作・実機検証](../todo/800_map_display_verification.md)に記録している。
 - 非同期データの初回取得前はレイヤー Widget をマウントしない。`AsyncValue.valueOrPrevious` を使い、再取得中・失敗時も既存表示を維持する。
 - loading overlay は戻る操作を遮らない。再試行 Future の例外は画面の provider 状態で扱い、ボタンから再伝播させない。
 - EEW が既に活性中なら controller 接続直後にも現在値を同期する。空の EEW 領域には非表示 filter を返す。
