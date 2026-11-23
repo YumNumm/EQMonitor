@@ -604,12 +604,13 @@ class const AboutThisAppRoute()
       const AboutThisAppPage();
 }
 
-class const EewDetailsByEventIdRoute({required final String eventId})
-    extends GoRouteData
-    with $EewDetailsByEventIdRoute, MaterialPageMixin {
+class const EewDetailsByEventIdRoute({
+  required final String eventId,
+  final bool useSheet = false,
+}) extends GoRouteData with $EewDetailsByEventIdRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return EewDetailsByEventIdPage(eventId: eventId);
+    return EewDetailsByEventIdPage(eventId: eventId, useSheet: useSheet);
   }
 }
 

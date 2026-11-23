@@ -526,13 +526,25 @@ mixin $HomeMapLayerRoute on GoRouteData {
 
 mixin $EewDetailsByEventIdRoute on GoRouteData {
   static EewDetailsByEventIdRoute _fromState(GoRouterState state) =>
-      EewDetailsByEventIdRoute(eventId: state.pathParameters['eventId']!);
+      EewDetailsByEventIdRoute(
+        eventId: state.pathParameters['eventId']!,
+        useSheet:
+            _$convertMapValue(
+              'use-sheet',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+      );
 
   EewDetailsByEventIdRoute get _self => this as EewDetailsByEventIdRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/eew-details-by-event-id/${Uri.encodeComponent(_self.eventId)}',
+    queryParams: {
+      if (_self.useSheet != false) 'use-sheet': _self.useSheet.toString(),
+    },
   );
 
   @override
@@ -547,6 +559,26 @@ mixin $EewDetailsByEventIdRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
+}
+
+bool _$boolConverter(String value) {
+  switch (value) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      throw UnsupportedError('Cannot convert "$value" into a bool.');
+  }
 }
 
 RouteBase get $talkerRoute => GoRouteData.$route(
