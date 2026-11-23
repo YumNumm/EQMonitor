@@ -178,12 +178,17 @@ _HomeKyoshinMonitorSettings _$HomeKyoshinMonitorSettingsFromJson(
             $enumDecodeNullable(_$HomeKmoniMarkerSizeEnumMap, v) ??
             HomeKmoniMarkerSize.medium,
       ),
+      showIntensityIcon: $checkedConvert(
+        'show_intensity_icon',
+        (v) => v as bool? ?? false,
+      ),
     );
     return val;
   },
   fieldKeyMap: const {
     'minRealtimeShindo': 'min_realtime_shindo',
     'markerSize': 'marker_size',
+    'showIntensityIcon': 'show_intensity_icon',
   },
 );
 
@@ -192,6 +197,7 @@ Map<String, dynamic> _$HomeKyoshinMonitorSettingsToJson(
 ) => <String, dynamic>{
   'min_realtime_shindo': instance.minRealtimeShindo,
   'marker_size': _$HomeKmoniMarkerSizeEnumMap[instance.markerSize]!,
+  'show_intensity_icon': instance.showIntensityIcon,
 };
 
 const _$HomeKmoniMarkerSizeEnumMap = {
