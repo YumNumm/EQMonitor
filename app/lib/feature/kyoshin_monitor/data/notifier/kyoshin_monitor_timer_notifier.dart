@@ -101,6 +101,27 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
       );
     }
 
+    var isSettled = false;
+    var isVerifyPending = false;
+    late final Future<void> Function() verify;
+    var wasBackground = false;
+    ref.listen(appLifecycleProvider, (_, next) {
+      if (KyoshinMonitorBackground.isBackground(next)) {
+        wasBackground = true;
+        return;
+      }
+      if (next != AppLifecycleState.resumed || !wasBackground) {
+        return;
+      }
+      wasBackground = false;
+      // 初回の測定が background をまたいだ場合は、確定後に検証する。
+      if (!isSettled) {
+        isVerifyPending = true;
+        return;
+      }
+      unawaited(verify());
+    });
+
     // 1. 最初の 1 サンプルをそのまま使う。
     KyoshinMonitorTimerState? first;
     while (!disposed) {
@@ -121,8 +142,6 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
     yield current;
 
     // 2. 位相をずらした連続測定で見積もりを詰める。
-    var isSettled = false;
-    Future<void> Function()? verifyAfterSettled;
     unawaited(
       Future<void>(() async {
         for (var i = 1; i < _burstSampleCount; i++) {
@@ -143,7 +162,10 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
         current = current.copyWith(settledAt: clock.now());
         isSettled = true;
         controller.add(current);
-        unawaited(verifyAfterSettled?.call());
+        if (isVerifyPending) {
+          isVerifyPending = false;
+          unawaited(verify());
+        }
       }),
     );
 
@@ -177,7 +199,7 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
 
     // 3. 定期測定と復帰時の測定は矛盾の検出だけに使う。
     var isResyncing = false;
-    Future<void> verify() async {
+    verify = () async {
       if (disposed || controller.isClosed || isResyncing || !isSettled) {
         return;
       }
@@ -207,7 +229,7 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
       } finally {
         isResyncing = false;
       }
-    }
+    };
 
     final resyncTimer = Timer.periodic(resyncInterval, (_) {
       if (KyoshinMonitorBackground.isBackground(
@@ -218,23 +240,6 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
       unawaited(verify());
     });
     ref.onDispose(resyncTimer.cancel);
-
-    var wasBackground = false;
-    ref.listen(appLifecycleProvider, (_, next) {
-      if (KyoshinMonitorBackground.isBackground(next)) {
-        wasBackground = true;
-        return;
-      }
-      if (next != AppLifecycleState.resumed || !wasBackground) {
-        return;
-      }
-      wasBackground = false;
-      if (!isSettled) {
-        verifyAfterSettled = verify;
-        return;
-      }
-      unawaited(verify());
-    });
 
     yield* controller.stream;
   }

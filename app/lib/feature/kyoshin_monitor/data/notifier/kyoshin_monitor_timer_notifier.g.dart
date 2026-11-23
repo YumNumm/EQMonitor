@@ -67,7 +67,7 @@ final class KyoshinMonitorTimerNotifierProvider
 }
 
 String _$kyoshinMonitorTimerNotifierHash() =>
-    r'2bc38e38414f90dc1b2e3b884df3bb3dfbab8181';
+    r'fc0f3be677dd2350aa809ba2514f78c5dfb1d9c8';
 
 /// `latest.json` でサーバ時刻と端末時計のずれを測る時刻同期エンジン。
 ///
