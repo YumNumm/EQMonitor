@@ -102,6 +102,7 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
     }
 
     var isSettled = false;
+    var isResyncing = false;
     var isVerifyPending = false;
     late final Future<void> Function() verify;
     var wasBackground = false;
@@ -114,8 +115,8 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
         return;
       }
       wasBackground = false;
-      // 初回の測定が background をまたいだ場合は、確定後に検証する。
-      if (!isSettled) {
+      // 進行中の測定が background をまたいだ場合は、その完了後に検証する。
+      if (!isSettled || isResyncing) {
         isVerifyPending = true;
         return;
       }
@@ -198,7 +199,6 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
     }
 
     // 3. 定期測定と復帰時の測定は矛盾の検出だけに使う。
-    var isResyncing = false;
     verify = () async {
       if (disposed || controller.isClosed || isResyncing || !isSettled) {
         return;
@@ -228,6 +228,10 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
         await remeasure(sample);
       } finally {
         isResyncing = false;
+        if (isVerifyPending) {
+          isVerifyPending = false;
+          unawaited(verify());
+        }
       }
     };
 
