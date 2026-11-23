@@ -1,4 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -95,7 +97,9 @@ class const LatLngFilterChip({
               style: const TextStyle(fontWeight: .bold),
             )
           : const Text('緯度経度'),
-      onDeleted: _isActive ? () => onChanged?.call(null) : null,
+      onDeleted: _isActive
+          ? () => HapticUtil.light(() => onChanged?.call(null))
+          : null,
       selected: _isActive,
       selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
@@ -221,11 +225,13 @@ class const _LatLngFilterModal({
                     for (final preset in LatLngFilterChip._presets)
                       ActionChip(
                         label: Text(preset.label),
-                        onPressed: () => applyPreset(preset.range),
+                        onPressed: () =>
+                            HapticUtil.light(() => applyPreset(preset.range)),
                       ),
                     ActionChip(
                       label: const Text('クリア'),
-                      onPressed: () {
+                      onPressed: () async {
+                        await HapticFeedback.lightImpact();
                         latGte.value = null;
                         latLte.value = null;
                         lngGte.value = null;
@@ -299,12 +305,14 @@ class const _LatLngFilterModal({
                   ),
                   M3ETextButton(
                     onPressed: isValid
-                        ? () => Navigator.of(context).pop((
-                            latitudeGte: latGte.value,
-                            latitudeLte: latLte.value,
-                            longitudeGte: lngGte.value,
-                            longitudeLte: lngLte.value,
-                          ))
+                        ? () => HapticUtil.light(
+                            () => Navigator.of(context).pop((
+                              latitudeGte: latGte.value,
+                              latitudeLte: latLte.value,
+                              longitudeGte: lngGte.value,
+                              longitudeLte: lngLte.value,
+                            )),
+                          )
                         : null,
                     child: const Text('完了'),
                   ),

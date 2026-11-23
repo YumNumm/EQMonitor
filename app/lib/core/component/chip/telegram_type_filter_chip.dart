@@ -1,5 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -40,7 +42,9 @@ class const TelegramTypeFilterChip({
               style: const TextStyle(fontWeight: .bold),
             )
           : const Text('電文種別'),
-      onDeleted: isActive ? () => onChanged?.call(null) : null,
+      onDeleted: isActive
+          ? () => HapticUtil.light(() => onChanged?.call(null))
+          : null,
       selected: isActive,
       selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
@@ -108,7 +112,8 @@ class const _TelegramTypeFilterModal({
                 enabled:
                     !(selected.value.contains(type) &&
                         selected.value.length == 1),
-                onChanged: (checked) {
+                onChanged: (checked) async {
+                  await HapticFeedback.selectionClick();
                   final newSet = Set<EarthquakeTelegramType>.from(
                     selected.value,
                   );
@@ -132,9 +137,11 @@ class const _TelegramTypeFilterModal({
                   child: const Text('キャンセル'),
                 ),
                 M3ETextButton(
-                  onPressed: () => Navigator.of(context).pop(
-                    selected.value.toList()
-                      ..sort((a, b) => a.index.compareTo(b.index)),
+                  onPressed: () => HapticUtil.light(
+                    () => Navigator.of(context).pop(
+                      selected.value.toList()
+                        ..sort((a, b) => a.index.compareTo(b.index)),
+                    ),
                   ),
                   child: const Text('完了'),
                 ),

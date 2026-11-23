@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -51,7 +52,9 @@ class const AccessibleSlider({
           divisions: divisions,
           label: label,
           onChangeStart: onChangeStart,
-          onChangeEnd: onChangeEnd,
+          onChangeEnd: enabled
+              ? (value) => HapticUtil.selection(() => onChangeEnd?.call(value))
+              : onChangeEnd,
         ),
       ),
     );
