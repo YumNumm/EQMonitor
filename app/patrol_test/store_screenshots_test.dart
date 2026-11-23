@@ -11,7 +11,7 @@ import 'store_screenshot/capture_channel.dart';
 import 'store_screenshot/store_screenshot_scenes.dart';
 
 const _notoFixture = 'noto_peninsula_2024.eqrp';
-const _notoEventId = '20240101161010';
+const _detailEventId = '20260823020050';
 const _requireFixtures = bool.fromEnvironment(
   'STORE_SCREENSHOT_REQUIRE_FIXTURES',
 );
@@ -95,10 +95,13 @@ void main() {
             location: _takaoka,
           );
         }
+        if (wanted('earthquake_history_list')) {
+          await scenes.earthquakeHistoryList(scene: 'earthquake_history_list');
+        }
         if (wanted('earthquake_detail')) {
           await scenes.earthquakeDetail(
             scene: 'earthquake_detail',
-            eventId: _notoEventId,
+            eventId: _detailEventId,
           );
         }
         if (Platform.isIOS && wanted('lock_screen_live_activity')) {

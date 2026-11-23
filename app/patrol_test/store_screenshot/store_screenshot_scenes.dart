@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
@@ -118,6 +120,24 @@ class StoreScreenshotScenes({
       );
     }
     await _capture(scene, settle: const Duration(seconds: 8));
+  }
+
+  Future<void> earthquakeHistoryList({required String scene}) async {
+    if (container.read(replayProvider) != null) {
+      container.read(replayProvider.notifier).exit();
+    }
+    _router.go(const HomeRoute().location);
+    const parameter = EarthquakeHistoryParameter.all(
+      sortBy: .eventId,
+      sortOrder: .desc,
+      intensityGte: .four,
+    );
+    _router
+        .push<void>(const EarthquakeHistoryRoute().location, extra: parameter)
+        .ignore();
+    await $(EarthquakeHistoryListTile)
+        .waitUntilVisible(timeout: const Duration(minutes: 2));
+    await _capture(scene, settle: const Duration(seconds: 5));
   }
 
   Future<void> earthquakeDetail({

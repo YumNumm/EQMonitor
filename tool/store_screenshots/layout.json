@@ -47,7 +47,43 @@
           "height": 2021.94
         },
         "screenCornerRadius": 130.0
-      }
+      },
+      "devices": [
+        {
+          "scene": "earthquake_history_list",
+          "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+          "bezelRect": {
+            "x": 60,
+            "y": 640,
+            "width": 770.37,
+            "height": 1574.99
+          },
+          "screenRect": {
+            "x": 100.67,
+            "y": 679.43,
+            "width": 688.2,
+            "height": 1496.24
+          },
+          "screenCornerRadius": 96.2
+        },
+        {
+          "scene": "earthquake_detail",
+          "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+          "bezelRect": {
+            "x": 459.63,
+            "y": 1161.01,
+            "width": 770.37,
+            "height": 1574.99
+          },
+          "screenRect": {
+            "x": 500.3,
+            "y": 1200.45,
+            "width": 688.2,
+            "height": 1496.24
+          },
+          "screenCornerRadius": 96.2
+        }
+      ]
     },
     {
       "id": "03_notification",

@@ -48,23 +48,31 @@ def place_screen(canvas: Image.Image, screenshot: Image.Image, device: dict) -> 
     canvas.alpha_composite(screen, position)
 
 
+def page_devices(page: dict) -> list[dict]:
+    # devices は手で書いた配置で、Figma から抽出する device より優先する。後ろの要素ほど手前に描く。
+    return page.get("devices") or [{**page["device"], "scene": page["scene"]}]
+
+
 def compose_page(
-    page: dict, canvas_size: tuple[int, int], screenshot: Image.Image, layout_dir: Path, fixtures: Path
+    page: dict, canvas_size: tuple[int, int], screenshots: Path, layout_dir: Path, fixtures: Path
 ) -> Image.Image:
     background = Image.open(layout_dir / page["background"]).convert("RGBA")
     if background.size != canvas_size:
         raise ComposeError(f"{page['background']} is {background.size}, expected {canvas_size}")
-    device = page["device"]
-    place_screen(background, screenshot, device)
-    bezel_path = fixtures / device["bezel"]
-    position, size = box(device["bezelRect"])
-    background.alpha_composite(Image.open(bezel_path).convert("RGBA").resize(size, Image.LANCZOS), position)
+    for device in page_devices(page):
+        with Image.open(screenshots / f"{device['scene']}.png") as screenshot:
+            place_screen(background, screenshot, device)
+        position, size = box(device["bezelRect"])
+        bezel = Image.open(fixtures / device["bezel"]).convert("RGBA").resize(size, Image.LANCZOS)
+        background.alpha_composite(bezel, position)
     return background.convert("RGB")
 
 
 def missing_inputs(page: dict, screenshots: Path, fixtures: Path) -> list[Path]:
-    required = [screenshots / f"{page['scene']}.png", fixtures / page["device"]["bezel"]]
-    return [path for path in required if not path.is_file()]
+    required = []
+    for device in page_devices(page):
+        required += [screenshots / f"{device['scene']}.png", fixtures / device["bezel"]]
+    return [path for path in dict.fromkeys(required) if not path.is_file()]
 
 
 def compose_all(
@@ -91,8 +99,7 @@ def compose_all(
     output.mkdir(parents=True, exist_ok=True)
     written = []
     for page in (page for page in pages if page["id"] not in missing):
-        with Image.open(screenshots / f"{page['scene']}.png") as screenshot:
-            image = compose_page(page, canvas_size, screenshot, layout_path.parent, fixtures)
+        image = compose_page(page, canvas_size, screenshots, layout_path.parent, fixtures)
         destination = output / f"{page['id']}.png"
         image.save(destination, optimize=True)
         written.append(destination)

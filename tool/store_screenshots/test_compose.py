@@ -84,6 +84,25 @@ class ComposeTest(unittest.TestCase):
     def test_skip_missing_composes_nothing_without_inputs(self) -> None:
         self.assertEqual(self.compose(skip_missing=True), [])
 
+    def test_draws_later_devices_in_front(self) -> None:
+        layout = json.loads(self.layout.read_text())
+        device = layout["pages"][0]["device"]
+        front = {
+            **device,
+            "scene": "front",
+            "bezelRect": {**device["bezelRect"], "x": 60.4, "y": 120},
+            "screenRect": {**device["screenRect"], "x": 70, "y": 130},
+        }
+        layout["pages"][0]["devices"] = [{**device, "scene": "back"}, front]
+        self.layout.write_text(json.dumps(layout))
+        Image.new("RGB", (500, 1100), SCREEN).save(self.root / "screens" / "back.png")
+        Image.new("RGB", (500, 1100), (0, 0, 255)).save(self.root / "screens" / "front.png")
+        [path] = self.compose()
+        image = Image.open(path)
+        self.assertEqual(image.getpixel((60, 110)), SCREEN)
+        self.assertEqual(image.getpixel((120, 250)), (0, 0, 255))
+        self.assertEqual(image.getpixel((65, 250)), BEZEL)
+
     def test_rejects_unknown_page_id(self) -> None:
         with self.assertRaisesRegex(ComposeError, "unknown page ids: 99_missing"):
             self.compose({"99_missing"})
