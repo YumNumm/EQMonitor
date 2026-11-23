@@ -31,6 +31,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthqu
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_content.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_area_icon_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_error_layer.dart';
@@ -283,6 +284,16 @@ class const _MapContent({
                   parameter: parameter,
                   showingLpgmIntensity: showingLpgmIntensity,
                 ),
+                if (details.showAreaIcons)
+                  EarthquakeHistoryAreaIconLayer(
+                    key: const ValueKey('area-icon'),
+                    earthquake: earthquake,
+                    parameter: parameter,
+                    stationMinZoom: showStations
+                        ? parameter.stationMinZoom
+                        : null,
+                    showingLpgmIntensity: showingLpgmIntensity,
+                  ),
                 EarthquakeHistoryHypocenterErrorLayer(
                   key: const ValueKey('hypocenter-error'),
                   belowLayerId: BaseLayer.markerBackgroundAnchor.name,

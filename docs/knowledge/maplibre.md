@@ -24,6 +24,10 @@
 - 複数の Widget が同じ位置（最前面や同じアンカーの直下）へ追加すると、重なり順が初期化順・再追加のタイミングで変わる。Widget ごとに `BaseLayer` の常設アンカーを分ける。アンカーは透明な `background` layer で、下から `regionFillAnchor`（不透明な区域 fill。S 波 fill はこの上、`areaForecastLocalEewLine` の下）→ 境界線 → `regionOverlayAnchor`（Home の警報区域 fill）→ `foregroundOverlayAnchor`（強震モニタ観測点）→ `markerBackgroundAnchor`（震源誤差範囲・警報区域や津波予報区の線）→ `waveLineAnchor`（P/S 波の線）→ `markerLowerAnchor` → `markerUpperAnchor`（震源マーク・観測点）。
 - アンカーを増やすときは `BaseLayer` と `MapStyleUtil.buildStyleJson` の両方へ同じ順で追加する。順序は `test/feature/map/data/provider/map_style_util_test.dart` で固定している。
 - 震度色を持つ半透明の細分区域・市区町村 fill を重ねない。切替 zoom では下側の opacity を 0 にする。
+- 細分区域・市区町村の震度アイコンは、ポリゴン層でなく専用の点層 `areaForecastLocalELabel` / `areaInformationCityQuakeLabel` に symbol を置く。ポリゴン層の symbol はタイルで分割された断片ごとに 1 個ずつ描かれる。点層の属性は塗りと同じ `code` / `regioncode` で、塗りと同じコード集合を filter に使う。
+- 区域アイコンの zoom 切替は symbol layer の `minzoom` / `maxzoom` で行う。不透明度 0 の symbol は衝突判定に残り、他のアイコンを隠す。範囲は `EarthquakeHistoryMapLayerModeResolver.regionIconZoomRange` / `cityIconZoomRange` に集約し、観測点を表示していて観測点データがある地震では、観測点アイコンが見える zoom（`stationMinZoom` 以上）で出さない。
+- 衝突する symbol は style の上にある layer が優先して配置される。震度別の layer は震度の小さい順に追加し、大きい震度を残す。
+- 点層を持たない旧 Asset Pack では、区域アイコンの layer は何も描かない。iOS Simulator では例外なく塗りだけが表示された（2026-11-23）。Android は未検証。
 - 英数字を描く `text-field` には `text-font` へ `Noto Sans CJK JP Regular` か `Noto Sans CJK JP Bold` を明示する。glyph の配信元 `glyphs.geolonia.com` は、MapLibre 既定の fontstack（`Open Sans Regular,Arial Unicode MS Regular`）へ 403 を返す。
 - 観測点名ラベルは `text-variable-anchor` の symbol layer で描く。symbol の配置は上の layer から行われるため、ラベル layer は観測点アイコン layer の下に置き、アイコン側は `icon-ignore-placement: false` にして衝突判定へ参加させる。逆順ではラベルが他の観測点へ重なる。
 - ラベルの `text-radial-offset` は観測点の実寸から計算する。震度アイコンは論理 50px を端末のピクセル比で拡大した画像をピクセル比 1 で登録するため、半径は `25 × devicePixelRatio × icon-size`。小さく見積もると全ラベルが自分のアイコンと衝突して消える。`icon-padding`・`text-padding`（既定 2px）も衝突範囲に含まれる。

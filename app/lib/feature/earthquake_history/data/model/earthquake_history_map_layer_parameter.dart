@@ -12,7 +12,7 @@ abstract class EarthquakeHistoryMapLayerParameter
     // (BaseMapTileSpec.cityMinZoom = 0) ので、これは見やすさの既定値。
     // 下限は EarthquakeHistoryMapLayerModeResolver が切り上げる。
     @Default(6) double regionToCity,
-    @Default(6) double stationMinZoom,
+    @Default(8) double stationMinZoom,
     @Default(9) double stationLabelMinZoom,
     @Default(9) double stationTextZoom,
     @Default(8) double hypocenterFadeZoom,
@@ -27,6 +27,9 @@ abstract class EarthquakeHistoryMapLayerParameter
     @Default(0.03) double stationIconSizeMin,
     @Default(0.13) double stationIconSizeMid,
     @Default(0.5) double stationIconSizeMax,
+
+    // 区域アイコンサイズ
+    @Default(0.13) double areaIconSize,
 
     // 震央マーカー
     @Default(0.15) double hypocenterIconSizeMin,

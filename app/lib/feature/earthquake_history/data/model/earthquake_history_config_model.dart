@@ -57,6 +57,7 @@ abstract class EarthquakeHistoryDetailsConfig
     with _$EarthquakeHistoryDetailsConfig {
   const factory({
     @Default(true) bool showStations,
+    @Default(true) bool showAreaIcons,
     @Default(false) bool showStationsOnEstimatedIntensity,
     @Default(true) bool hypocenterAboveStations,
 
