@@ -76,10 +76,10 @@
 - gzip metadata エラーの abort 対処は upstream [#4399](https://github.com/maplibre/maplibre-native/pull/4399)（2026-07-14 マージ）。これは他の decode 障害すべてを防ぐ保証ではない。
 - iOS Metal で複数 vector source の fill だけがタイル単位で欠ける場合、clip mask UBO の bind cache 再利用を疑う。[#4342](https://github.com/maplibre/maplibre-native/pull/4342) が原因・回帰テストの参照先。layer 再追加や opacity 変更を恒久対策にしない。
 - #4342 は 2026-11-22 時点で upstream 未マージ。0.3 系では `YumNumm/maplibre-native` の `ios-v6.29.0-yumnumm.2` に修正を入れて回避していたが、0.4 の `maplibre_native_ffi` は upstream のビルドを使うため、この修正は含まれないと考えられる。iOS 実機での fill 欠けの有無は未確認。
-- 0.4 の native 本体は `maplibre_native_ffi` の `hook/native_release.json` が指す `maplibre/maplibre-native-ffi` の release（0.202611.0 は MapLibre Native `8e144d0` に同リポジトリの `patches/` を当てたビルド）。差し替えは `hooks.user_defines.maplibre_native_ffi` の `local_build` か `release_url` で行う。
+- 0.4 の native 本体は `maplibre_native_ffi` の `hook/native_release.json` が指す `maplibre/maplibre-native-ffi` の release（0.202611.0 は MapLibre Native `8e144d0` に同リポジトリの `patches/` を当てたビルド）。build hook は `hooks.user_defines.maplibre_native_ffi` の `local_build`・`release_url` で差し替え先を受け取る（hook の実装から読んだもので、差し替えの動作は未確認）。
 - iOS シミュレータでは、タイル境界の両側（tippecanoe のバッファ幅。z8 タイルで約 ±0.027°）に line の直線が 2 本 1 組で出る。0.3 系（`MLNMapView`）では出ない。原因は `maplibre-native-ffi` v0.202611.0 の `src/render/metal/metal_texture_backend.mm` が `#if !TARGET_OS_SIMULATOR` で stencil を作らないこと。シミュレータの depth は `Depth32Float_Stencil8` だが stencil attachment に設定されず、タイルの clip mask が無効になり、バッファ領域で切断されたポリゴンの辺が隣のタイルへはみ出す。
 - 同じ原因で、半透明の fill はバッファ幅の帯で二重に塗られる。line の直線と帯が同じ位置に出れば clip mask の無効を疑う。実機は別の `Stencil8` を付ける経路で、コード上は該当しない（実機での確認は未実施）。
-- 修正は `metal_surface_session.mm` と同じく、depth が `Depth32Float_Stencil8` のとき同じ texture を stencil attachment にも設定する。style 側の filter・layer 分割やタイル再生成で隠さない。upstream の `main` は C++ 実装を `mln-rs` へ置き換えており（2026-11-23 時点）、v0.202611.0 系への修正は fork したビルドの配布が必要になる。
+- 修正案は `metal_surface_session.mm` と同じく、depth が `Depth32Float_Stencil8` のとき同じ texture を stencil attachment にも設定すること。この修正を入れたビルドでの表示は未確認。style 側の filter・layer 分割やタイル再生成で隠さない。v0.202611.0 より後の release はなく、upstream の `main` は構成が変わっている（`src/` がなく `third_party/mln-rs` を参照。2026-11-23 時点）。`main` に同じ欠陥が残るかは未確認。
 - Metal の確認は同じ実 archive・camera・style で fill と line を比較する。`MLNMapSnapshotter` や取得・リンク成功だけでは画面の修正を確認できない。
 
 ## 変更時の確認
