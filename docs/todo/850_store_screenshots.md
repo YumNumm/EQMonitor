@@ -6,7 +6,7 @@
 
 - [x] `setup_fixture_key.sh` で鍵を作り、`.env.json` と `fixtures/recipients.txt` をコミットする。
 - [x] `noto_peninsula_2024.eqrp` と壁紙（`wallpaper_lock_screen.jpg`）を `encrypt_fixture.sh` で暗号化してコミットする。
-- [ ] 端末フレーム（`bezel_iphone_18_pro_glacier_portrait.png`）を暗号化してコミットする。
+- [x] 端末フレーム（`bezel_iphone_18_pro_glacier_portrait.png`）を暗号化してコミットする。
 - 完了条件: タグの workflow で `decrypt_fixtures.sh` が全 fixture を復号できる。
 
 ## 850: Simulator / Emulator での撮影の確認
@@ -39,3 +39,4 @@
 
 - [ ] Google Play 用のデザイン（長辺が短辺の 2 倍以下）を Figma に作り、Android の合成を追加する。
 - [ ] App Store Connect / Google Play へのアップロードを自動化するか決める。現在は artifact の生成まで。
+  2026-11-23 に iOS 3.1.0・日本語・iPhone 6.7 インチの 4 枚だけ、手元で合成した画像へ App Store Connect API で手動で差し替えた。6.5 / 5.5 インチと iPad は古いまま。

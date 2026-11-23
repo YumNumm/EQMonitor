@@ -43,6 +43,10 @@ mise exec -- tool/store_screenshots/decrypt_fixtures.sh build/store_screenshots/
 - 2026-11-22 に、Figma 上の現行スクリーンショットを入力にした合成結果と Figma の frame 書き出しを比較した。
   平均差は 1/255 前後で、差は文字の輪郭のサブピクセル位置に限られる。
 
+- Figma の画像書き出し API（`/v1/images`）は Starter プランだと回数制限が厳しい。2026-11-23 は HTTP 429 で `Retry-After` が約 3.6 日だった。
+  端末フレームは画像塗りの元画像（`/v1/files/<key>/images`）から取るため、この制限中でも取得できた。背景の再生成（ロゴ・見出しの書き出し）はできない。
+- 2026-11-23 に端末フレームを取得して暗号化した。`layout.json` の端末の座標は Figma の現状と一致していた。
+
 ```sh
 FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py --bezel-out build/store_screenshots/figma
 ```
@@ -117,7 +121,8 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   - 使用済みの Simulator と新規の Simulator の両方で、壁紙を設定した通知センター、現在地の予想震度と到達までの時間（`kyoshin_monitor` は震度 4・12.0 秒、`eew_warning` は震度 6弱・「すぐに到達」・「強い揺れに警戒!」）、カード全体が見えるシートの高さを確認した。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
-- 未検証: CI（iOS 27.2 のランタイム）での壁紙の設定・リプレイのシーン・通知センターの撮影、端末フレームの fixture（未投入）。残件は [TODO](../todo/850_store_screenshots.md)。
+- 2026-11-23 に手元で 4 ページを合成し（1290×2796）、Figma の構成どおりにフレーム・背景・見出しが重なることを確認した。
+- 未検証: CI（iOS 27.2 のランタイム）での壁紙の設定・リプレイのシーン・通知センターの撮影・合成。残件は [TODO](../todo/850_store_screenshots.md)。
 
 ## 制約
 
