@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/slider/accessible_range_slider.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -46,7 +47,9 @@ class const IntensityFilterChip({
             ),
       onDeleted: range.isAllSelected
           ? null
-          : () => onChanged?.call(initialMin, initialMax),
+          : () => HapticUtil.light(
+              () => onChanged?.call(initialMin, initialMax),
+            ),
       selected: !range.isAllSelected,
       selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
@@ -149,8 +152,9 @@ class const _IntensityFilterModal({
                   child: const Text('キャンセル'),
                 ),
                 M3ETextButton(
-                  onPressed: () =>
-                      Navigator.of(context).pop((min.value, max.value)),
+                  onPressed: () => HapticUtil.light(
+                    () => Navigator.of(context).pop((min.value, max.value)),
+                  ),
                   child: const Text('完了'),
                 ),
               ],

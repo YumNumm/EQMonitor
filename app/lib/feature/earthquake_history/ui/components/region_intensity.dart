@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
@@ -259,7 +260,9 @@ class const _IntensityLevelSection({
                 )
               : null,
           onTap: hasCityData
-              ? () => isExpanded.value = !isExpanded.value
+              ? () => HapticUtil.selection(
+                  () => isExpanded.value = !isExpanded.value,
+                )
               : null,
         ),
         if (isExpanded.value)
@@ -346,7 +349,9 @@ class const _LpgmIntensityLevelSection({
                 )
               : null,
           onTap: hasCityData
-              ? () => isExpanded.value = !isExpanded.value
+              ? () => HapticUtil.selection(
+                  () => isExpanded.value = !isExpanded.value,
+                )
               : null,
         ),
         if (isExpanded.value)
@@ -409,7 +414,11 @@ class const _PrefectureTile({
             style: const TextStyle(fontWeight: .bold),
           ),
           trailing: trailing,
-          onTap: hasCities ? () => isExpanded.value = !isExpanded.value : null,
+          onTap: hasCities
+              ? () => HapticUtil.selection(
+                  () => isExpanded.value = !isExpanded.value,
+                )
+              : null,
         ),
         if (isExpanded.value)
           Padding(
@@ -452,7 +461,11 @@ class const _LpgmPrefectureTile({
             style: const TextStyle(fontWeight: .bold),
           ),
           trailing: trailing,
-          onTap: hasCities ? () => isExpanded.value = !isExpanded.value : null,
+          onTap: hasCities
+              ? () => HapticUtil.selection(
+                  () => isExpanded.value = !isExpanded.value,
+                )
+              : null,
         ),
         if (isExpanded.value)
           Padding(
@@ -493,7 +506,9 @@ class const _CityTile({
           title: Text(city.city.name.ja),
           trailing: trailing,
           onTap: hasStations
-              ? () => isExpanded.value = !isExpanded.value
+              ? () => HapticUtil.selection(
+                  () => isExpanded.value = !isExpanded.value,
+                )
               : null,
         ),
         if (isExpanded.value)
@@ -555,7 +570,9 @@ class const _LpgmCityTile({
           title: Text(city.city.name.ja),
           trailing: trailing,
           onTap: hasStations
-              ? () => isExpanded.value = !isExpanded.value
+              ? () => HapticUtil.selection(
+                  () => isExpanded.value = !isExpanded.value,
+                )
               : null,
         ),
         if (isExpanded.value)

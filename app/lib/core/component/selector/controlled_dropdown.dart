@@ -84,6 +84,7 @@ class const ControlledDropdown<T>({
       controller: controller,
       items: const [],
       onSelectionChanged: handleSelection,
+      haptic: .light,
       enabled: enabled,
       singleSelect: singleSelect,
       showChipAnimation: false,

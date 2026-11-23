@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -25,7 +26,7 @@ class const CollapsibleSegmentedControl<T>({
       return Align(
         alignment: .centerRight,
         child: GestureDetector(
-          onTap: () => isExpanded.value = true,
+          onTap: () => HapticUtil.selection(() => isExpanded.value = true),
           child: Container(
             padding: const .symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
@@ -73,10 +74,10 @@ class const CollapsibleSegmentedControl<T>({
               children: [
                 for (final segment in segments)
                   GestureDetector(
-                    onTap: () {
+                    onTap: () => HapticUtil.selection(() {
                       onSelected(segment.value);
                       isExpanded.value = false;
-                    },
+                    }),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       padding: .symmetric(

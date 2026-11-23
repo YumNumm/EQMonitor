@@ -11,6 +11,7 @@ class const SeismicityColorModeSelector({
   Widget build(BuildContext context) {
     return M3EToggleButtonGroup(
       type: M3EButtonGroupType.connected,
+      haptic: .light,
       actions: const [
         M3EToggleButtonGroupAction(
           label: Text('経過時間'),

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -43,7 +44,9 @@ class const SortFilterChip({
         '${displaySortBy.label} ${displayOrder.arrow}',
         style: isDefault ? null : const TextStyle(fontWeight: .bold),
       ),
-      onDeleted: isDefault ? null : () => onChanged?.call(.eventId, .desc),
+      onDeleted: isDefault
+          ? null
+          : () => HapticUtil.light(() => onChanged?.call(.eventId, .desc)),
       selected: !isDefault,
       selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
@@ -95,11 +98,11 @@ class const _SortFilterModal({
             const SizedBox(height: 8),
             RadioGroup<EarthquakeSortBy>(
               groupValue: sortBy.value,
-              onChanged: (value) {
+              onChanged: (value) => HapticUtil.selection(() {
                 if (value != null) {
                   sortBy.value = value;
                 }
-              },
+              }),
               child: Column(
                 mainAxisSize: .min,
                 children: [
@@ -125,6 +128,7 @@ class const _SortFilterModal({
                       label: Text('${order.label} ${order.arrow}'),
                     ),
                 ],
+                haptic: .light,
                 selectedIndex: SortOrder.values.indexOf(sortOrder.value),
                 onSelectedIndexChanged: (index) {
                   if (index != null) {
@@ -142,9 +146,11 @@ class const _SortFilterModal({
                   child: const Text('キャンセル'),
                 ),
                 M3ETextButton(
-                  onPressed: () =>
-                      Navigator.of(context)
-                          .pop((sortBy.value, sortOrder.value)),
+                  onPressed: () => HapticUtil.light(
+                    () =>
+                        Navigator.of(context)
+                            .pop((sortBy.value, sortOrder.value)),
+                  ),
                   child: const Text('完了'),
                 ),
               ],

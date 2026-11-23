@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -35,7 +36,8 @@ class const DropdownMenuChip<T>({
             trailingIcon: entry.value == value
                 ? Icon(Icons.check_rounded, size: 20, color: colorTheme.primary)
                 : null,
-            onPressed: () => onSelected(entry.value),
+            onPressed: () =>
+                HapticUtil.selection(() => onSelected(entry.value)),
             child: Text(entry.label, style: designSystem.typography.bodyLarge),
           ),
         if (additionalMenuChildren.isNotEmpty) ...[

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
 import 'package:eqmonitor/feature/region_selection/data/provider/region_catalog_provider.dart';
@@ -55,7 +56,9 @@ class const EpicenterFilterChip({
           );
         }
       },
-      onDeleted: selected.isEmpty ? null : () => onChanged(null),
+      onDeleted: selected.isEmpty
+          ? null
+          : () => HapticUtil.light(() => onChanged(null)),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/screen_behavior/data/notifier/screen_behavior_settings_notifier.dart';
 import 'package:eqmonitor/core/screen_behavior/data/provider/screen_behavior_platform.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -73,7 +74,9 @@ class const ScreenBehaviorSettingsSection({super.key}) extends ConsumerWidget {
           ListTile(
             title: const Text('画面の設定を読み込めませんでした'),
             subtitle: const Text('タップして再読み込み'),
-            onTap: () => ref.invalidate(screenBehaviorSettingsProvider),
+            onTap: () => HapticUtil.light(
+              () => ref.invalidate(screenBehaviorSettingsProvider),
+            ),
           ),
         if (keepAwakeMutation is MutationError ||
             lockScreenMutation is MutationError)

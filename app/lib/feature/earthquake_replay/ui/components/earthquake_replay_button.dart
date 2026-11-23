@@ -41,6 +41,7 @@ class const EarthquakeReplayButton({
           minimumSize: const Size(double.infinity, 48),
           backgroundColor: designSystem.colorTheme.secondaryContainer,
           foregroundColor: designSystem.colorTheme.onSecondaryContainer,
+          haptic: .light,
         ),
       ),
     );

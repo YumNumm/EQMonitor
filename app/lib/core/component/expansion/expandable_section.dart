@@ -34,6 +34,7 @@ class const ExpandableSection({
       totalCount: totalCount,
       isExpanded: expanded.value,
       onToggle: toggle,
+      haptic: .light,
       padding: tilePadding,
       childPadding: EdgeInsets.zero,
       showTrailingIcon: trailing == null,

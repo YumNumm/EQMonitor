@@ -1,6 +1,6 @@
 # MapLibre の表示・ライフサイクル
 
-確認日: 2026-11-22。地図描画には `maplibre` 0.4（描画は MapLibre Native C API ベースの `maplibre_native`）を使用する。
+確認日: 2026-11-23。地図描画には `maplibre` 0.4（描画は MapLibre Native C API ベースの `maplibre_native`）を使用する。
 対象: `app/lib/core/util/map/`、`app/lib/feature/home/ui/component/map/`、各機能の地図レイヤー。
 
 ## 初期化と更新
@@ -12,6 +12,10 @@
 - 同じ style への操作は `MapOperationQueueScope` の共有キューで直列化する。パラメータや timer tick を初期化 effect の依存へ混ぜない。
 - 更新は初期化 Future を待ち、await 前後で lifecycle token を確認する。初期化完了時には開始時の snapshot でなく最新データを反映する。
 - dispose は同期的に無効化してから layer → source → image の順に削除する。各削除を独立して試行し、途中の失敗で後続 cleanup を止めない。
+- `flutter_hooks` の `useEffect` は依存が変わると、新しい effect を先に実行し、古い cleanup をその後に呼ぶ。「effect で固定 ID を追加し、cleanup で同じ ID を削除する」だけの実装は、style 以外の依存が変わるたびに追加直後の layer を削除する。cleanup は、後発の effect が置き換えていないこと（世代・トークンの一致）を確認してから削除する。
+- `Theme.of(context)` 由来の色は、テーマ切替のアニメーション中、フレームごとに変わる。effect の依存に置くとその回数だけ再実行される。
+- 取得済みの `styleString` がある間は `mapConfigurationProvider` の再読込中も `MapLibreMap` を保持すれば、テーマ切替は style の差し替えになり、カメラと Widget の状態が残る（市区町村別最大震度・表示範囲選択）。差し替えでは旧 `StyleController` への操作が無視され、追加済みの layer・source・画像を持たない新しい `StyleController` が渡る。`AsyncData` だけを地図表示の条件にすると、再読込のたびに地図が作り直され、カメラが初期位置へ戻る。
+- style の差し替えに対応するレイヤーは、上記の cleanup の確認に加え、初期化済みフラグ・送信済みデータのキャッシュを新しい `StyleController` で作り直す必要がある。未対応のレイヤーは[地図の描画・操作・実機検証](../todo/800_map_display_verification.md)に記録している。
 - 非同期データの初回取得前はレイヤー Widget をマウントしない。`AsyncValue.valueOrPrevious` を使い、再取得中・失敗時も既存表示を維持する。
 - loading overlay は戻る操作を遮らない。再試行 Future の例外は画面の provider 状態で扱い、ボタンから再伝播させない。
 - EEW が既に活性中なら controller 接続直後にも現在値を同期する。空の EEW 領域には非表示 filter を返す。
@@ -29,6 +33,10 @@
 - 衝突する symbol は style の上にある layer が優先して配置される。震度別の layer は震度の小さい順に追加し、大きい震度を残す。
 - 点層を持たない旧 Asset Pack では、区域アイコンの layer は何も描かない。iOS Simulator では例外なく塗りだけが表示された（2026-11-23）。Android は未検証。
 - 英数字を描く `text-field` には `text-font` へ `Noto Sans CJK JP Regular` か `Noto Sans CJK JP Bold` を明示する。glyph の配信元 `glyphs.geolonia.com` は、MapLibre 既定の fontstack（`Open Sans Regular,Arial Unicode MS Regular`）へ 403 を返す。
+- 観測点名ラベルは `text-variable-anchor` の symbol layer で描く。symbol の配置は上の layer から行われるため、ラベル layer は観測点アイコン layer の下に置き、アイコン側は `icon-ignore-placement: false` にして衝突判定へ参加させる。逆順ではラベルが他の観測点へ重なる。
+- ラベルの `text-radial-offset` は観測点の実寸から計算する。震度アイコンは論理 50px を端末のピクセル比で拡大した画像をピクセル比 1 で登録するため、半径は `25 × devicePixelRatio × icon-size`。小さく見積もると全ラベルが自分のアイコンと衝突して消える。`icon-padding`・`text-padding`（既定 2px）も衝突範囲に含まれる。
+- circle layer は衝突判定に入らない。強震モニタのラベルは、観測点と同じ大きさの透明画像を置く symbol layer をラベル layer の上に重ねて他の観測点を避ける。ラベルの source は毎秒更新される観測値の source と分け、観測点の集合が変わったときだけ更新する。
+- ラベルの背景は `icon-text-fit: both` と `StyleImageOptions.stretchX` / `stretchY` を指定した画像で描ける（`text-variable-anchor` との併用を iOS シミュレータで確認済み）。
 - zoom 依存 `interpolate` は式の最上位に置く。倍率は各 stop 値へ畳み込み、乗算式の内側へ zoom 式を入れない。
 - Dart の式テスト（`layer.toJson()` の検証）だけで native の描画結果を検証済みとしない。
 - 非表示 filter に `['==', 1, 0]` を使わない。MapLibre Native はこれを旧形式の比較と解釈し、数値の属性名を拒否する。地域選択は `RegionMapLayers.hiddenFilter` の空集合への所属判定を使う。
@@ -84,10 +92,17 @@
 - ローカル URI は `pmtiles://${Uri.file(absolutePath)}`。`pmtiles://asset://` は使わず、asset をローカルファイルに配置してから開く。旧 `assets_util` は削除済みのため依存を復活させない。
 - 配布物には `countries`、`areaForecastLocalE`、`areaForecastLocalEew`、`areaInformationCityQuake` の source layer が必要。別用途の区域 archive や HTTPS へ黙って置換しない。
 - 市区町村地物の表示下限は `BaseMapTileSpec.cityMinZoom` に集約する。現行のタイルは z0 から市区町村地物を持つため値は 0 で、`effectiveRegionToCityZoom` の下限補正は実質無効。タイル側で下限を上げたときは、この定数だけを変更すれば参照側の補正が有効になる。metadata の minzoom だけで地物の存在を判断しない。
-- pin の正本は `app/pubspec.yaml` の `YumNumm/flutter-maplibre` ref と lockfile。fork の `main` は upstream（`maplibre/flutter-maplibre`）と同じツリーで、`maplibre`・`maplibre_native`・`maplibre_platform_interface`・`maplibre_web` を同じ ref に揃える。native の本体は `maplibre_native_ffi` が配布するビルド済み C ライブラリ。
+- pin の正本は `app/pubspec.yaml` の `YumNumm/flutter-maplibre`・`YumNumm/maplibre-native-ffi` の ref と lockfile。fork の `main` は upstream（`maplibre/flutter-maplibre`）と同じツリーで、`maplibre`・`maplibre_native`・`maplibre_platform_interface`・`maplibre_web` を同じ ref に揃える。native の本体は `maplibre_native_ffi` が配布するビルド済み C ライブラリ。
 - gzip metadata エラーの abort 対処は upstream [#4399](https://github.com/maplibre/maplibre-native/pull/4399)（2026-07-14 マージ）。これは他の decode 障害すべてを防ぐ保証ではない。
 - iOS Metal で複数 vector source の fill だけがタイル単位で欠ける場合、clip mask UBO の bind cache 再利用を疑う。[#4342](https://github.com/maplibre/maplibre-native/pull/4342) が原因・回帰テストの参照先。layer 再追加や opacity 変更を恒久対策にしない。
 - #4342 は 2026-11-22 時点で upstream 未マージ。0.3 系では `YumNumm/maplibre-native` の `ios-v6.29.0-yumnumm.2` に修正を入れて回避していたが、0.4 の `maplibre_native_ffi` は upstream のビルドを使うため、この修正は含まれないと考えられる。iOS 実機での fill 欠けの有無は未確認。
+- 0.4 の native 本体は `maplibre_native_ffi` の `hook/native_release.json` が指すビルド済みアーカイブで、build hook が sha256 を照合して取得する。`app/pubspec.yaml` で `maplibre_native_ffi` を `YumNumm/maplibre-native-ffi`（`bindings/dart`）へ override している。fork は upstream の tag `v0.202611.0`（MapLibre Native `8e144d0` に同リポジトリの `patches/` を当てたもの）から切った `yumnumm/v0.202611.0` が基点。
+- fork の差分は iOS シミュレータ（`ios-simulator-arm64`）だけ。このアーカイブは fork の release `v0.202611.0-yumnumm.1` から取得し、ほかのプラットフォームは upstream v0.202611.0 のアーカイブと sha256 のまま。fork の hook は `native_release.json` の artifact が持つ `url` を優先する。
+- upstream v0.202611.0 のままだと、iOS シミュレータでタイル境界の両側（tippecanoe のバッファ幅。z8 タイルで約 ±0.027°）に line の直線が 2 本 1 組で出る。0.3 系（`MLNMapView`）では出ない。原因は `src/render/metal/metal_texture_backend.mm` が `#if !TARGET_OS_SIMULATOR` で stencil を作らないこと。シミュレータの depth は `Depth32Float_Stencil8` だが stencil attachment に設定されず、タイルの clip mask が無効になり、バッファ領域で切断されたポリゴンの辺が隣のタイルへはみ出す。
+- 同じ原因で、半透明の fill はバッファ幅の帯で二重に塗られる。line の直線と帯が同じ位置に出れば clip mask の無効を疑う。実機は別の `Stencil8` を付ける経路で、コード上は該当しない（実機での確認は未実施）。
+- fork の修正は `metal_surface_session.mm` と同じく、depth が `Depth32Float_Stencil8` のとき同じ texture を stencil attachment にも設定する。style 側の filter・layer 分割やタイル再生成で隠さない。
+- `maplibre` を更新して `maplibre_native_ffi` の版が上がるときは、override を外して upstream のビルドで同じカメラ位置（ズーム 10・北緯 32.8 / 東経 130.7 と九州の広域）を確認する。直線が残る場合は fork を新しい tag へ作り直す。upstream の `main` は構成が変わっており（`src/` がなく `third_party/mln-rs` を参照。2026-11-23 時点）、同じ欠陥が残るかは未確認。
+- シミュレータ用アーカイブの再ビルドは、fork で `tools/deps/sync-submodules` の後に CMake preset `ios-simulator-arm64-metal` を install まで実行する。Rust の target `aarch64-apple-ios-sim` と `cargo-about` が要る。`hooks.user_defines.maplibre_native_ffi.local_build` に install 先を指定すると手元のビルドを使えるが、全プラットフォームに効くためコミットしない。
 - Metal の確認は同じ実 archive・camera・style で fill と line を比較する。`MLNMapSnapshotter` や取得・リンク成功だけでは画面の修正を確認できない。
 
 ## 変更時の確認

@@ -123,6 +123,8 @@ abstract class HomeDebugOverlaySettings with _$HomeDebugOverlaySettings {
     @Default(false) bool shakeDetection,
     @Default(false) bool kyoshinMonitor,
     @Default(false) bool eew,
+    @Default(false) bool focusBounds,
+    @Default(false) bool shakeDetectionDuringEew,
   }) = _HomeDebugOverlaySettings;
 
   factory fromJson(Map<String, dynamic> json) =>
@@ -161,6 +163,7 @@ abstract class HomeKyoshinMonitorSettings with _$HomeKyoshinMonitorSettings {
     @Default(null) double? minRealtimeShindo,
     @Default(HomeKmoniMarkerSize.medium) HomeKmoniMarkerSize markerSize,
     @Default(false) bool showIntensityIcon,
+    @Default(false) bool showStationName,
   }) = _HomeKyoshinMonitorSettings;
 
   factory fromJson(Map<String, dynamic> json) =>

@@ -1529,12 +1529,13 @@ packages:
     source: git
     version: "0.4.0"
   maplibre_native_ffi:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: maplibre_native_ffi
-      sha256: "12f332177cbe874d9866d350b7ce9490af6e7845a68cbf21b7e1bd4b45fda0f8"
-      url: "https://pub.dev"
-    source: hosted
+      path: "bindings/dart"
+      ref: bd595f2
+      resolved-ref: bd595f25f9de235fef70199f5f1545ee147cfef0
+      url: "https://github.com/YumNumm/maplibre-native-ffi.git"
+    source: git
     version: "0.202611.0"
   maplibre_platform_interface:
     dependency: "direct overridden"

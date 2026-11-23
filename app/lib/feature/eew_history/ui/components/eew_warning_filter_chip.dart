@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// 「警報のみ」を絞り込むトグルチップ。
@@ -11,7 +12,7 @@ class const EewWarningFilterChip({
     return FilterChip(
       label: const Text('警報のみ'),
       selected: selected,
-      onSelected: onChanged,
+      onSelected: (value) => HapticUtil.selection(() => onChanged(value)),
     );
   }
 }
