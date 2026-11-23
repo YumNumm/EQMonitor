@@ -68,8 +68,28 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 - 画像は 1 秒ごとに 4 並列で取得する。404 のフレームは飛ばし、ほかの失敗は 3 回まで試して作成を中止する。GIF は gzip でほとんど縮まず、震度だけで 1 秒あたり約 5 KB になる。
 - 揺れ検知の平常値に使うため、既定で開始の 180 秒前から取得する。ヘッダの開始時刻は選んだ開始時刻のままにし、再生側（`ReplaySource.startTime`）はヘッダの開始時刻より前のフレームを再生範囲に含めない。
 - EEW は `GET /v2/eew` を発生日（前後 1 日）で絞って候補のイベントを集め、`GET /v2/eew/{eventId}` の全報から発表時刻が期間内のものを 1003 として格納する。フレームの時刻は発表時刻（`reportTime`）。訓練・試験も含める。
+- 作成画面で名前とフォルダを指定できる。空欄の場合、名前は `eqmonitor_<開始時刻>_<秒数>s.eqrp`、フォルダは開始時刻（JST）の `年/月`（例: `2026/11`）にする。
+
+## 保存と管理
+
 - 保存先はアプリの `Documents/replay/`。iOS は `UIFileSharingEnabled` を設定していないため Files アプリからは見えない。`Documents/Inbox` は読み込み後に削除する対象のため使わない。
+- 一覧・再生・追加・名前とフォルダの変更・削除は「保存済みのリプレイ」（`ReplayLibraryPage`）で行う。フォルダごとに表示し、ファイルをタップすると再生する。
+- フォルダはファイルのパスから導く。空になったフォルダは削除や移動のときに消すため、空のフォルダは表示されない。`年/月` 導入前にルート直下へ保存したファイルは、そのまま最上位に表示する。
+- 名前とフォルダの規則は `ReplayFilePathResolver` に集める。`/`・`\`・`:`・制御文字・先頭の `.` を拒否し、拡張子は `.eqrp` に揃える。保存と追加は同名があれば `_2` を付け、名前の変更は同名があれば失敗にする。
+- ファイルの追加は権限を問わず使える。選んだファイルを EQRP として読み込めた場合だけ、ヘッダの開始時刻の `年/月` へ複製する。`file_picker` が一時領域へ作った複製は取り込み後に消す。
 - 外部への共有（`share_plus`）は `DebugAccessLevel.full`（admin デバイス）だけに出す。
+- 複数選択は長押しか「選択」で始める。フォルダを選ぶと配下のファイルをまとめて選ぶ。
+- 画面の先頭にリプレイファイルの合計と端末の空き・使用中・全体の容量を出す。端末の容量は `packages/native_plugin` の `DeviceStorageReader` で取得する。
+- iOS の空きは `volumeAvailableCapacityForImportantUsage`（削除できるキャッシュを空きに含む値）で、設定アプリの表示に近い。容量の API は Required Reason API のため、`PrivacyInfo.xcprivacy` に `NSPrivacyAccessedAPICategoryDiskSpace`（理由 `85F4.1`: 利用者への表示）を宣言している。
+- `ReplayFileDataSource.readFile` が読み込み後に削除するのは `Documents/Inbox` 直下のファイルだけ。フォルダ名は利用者が決められるため、パスに `Inbox` を含むだけでは削除しない。
+
+## OS の API の直接呼び出し（`packages/native_plugin`）
+
+- MethodChannel を使わず、FFIgen（Objective-C）と JNIgen（Java）のバインディングで Dart から直接呼ぶ。生成手順はパッケージの README にある。
+- 公開する型は Freezed。OS で値の意味が異なる `DeviceStorage` は sealed class（`android` / `ios`）にしている。
+- iOS は `package:objective_c` の `NSURL` を使い、FFIgen では `NSURLVolume*Key` の定数だけを生成する。`@Native` のシンボルはプロセス内の Foundation から解決されるため、build hook は要らない。
+- Android は `android.jar` から `android.os.StatFs` を ASM で読んで生成する。Android SDK のスタブはソースからの生成（doclet）に向かない。
+- JNI の Java 例外は `JThrowable` として届く。`JniException` という型は無い。
 
 ## 揺れ検知
 
@@ -85,7 +105,7 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
   スライダー・再生操作・速度・終了を操作できる。もう一度タップするか地図を操作すると畳む。
 - スライダーのトラックには地震の発生時刻の目印を描く（`ReplayOriginTrackShape`）。EQRP では最初に発生時刻を持つ EEW から取り、
   無ければ目印を出さない。「発生」のボタンでその時刻へ移動する。強震モニタの設定が無効でも、再生中は強震モニタの列と観測点レイヤーを表示する。
-- EQRP の読み込みは `/replay/open?source=<URI>`（`ReplayOpenPage`）に集約する。現在はデバッグメニューの「ファイルを読み込んで再生」、作成画面の保存済みファイル、OS の「ファイルで開く」から入る。
+- EQRP の読み込みは `/replay/open?source=<URI>`（`ReplayOpenPage`）に集約する。現在はデバッグメニューの「保存済みから再生・ファイルを追加」（保存済みのリプレイ）と OS の「ファイルで開く」から入る。
 - OS から渡された `file://`・`content://` は `NotificationDeepLink.fromAppLinkUri` だけが `/replay/open` へ変換する。通知の link からは開けない。
 - iOS は UTI `net.yumnumm.eqmonitor.eqrp` を export する。`LSSupportsOpeningDocumentsInPlace` は `false` で、OS が `Documents/Inbox` へ複製したファイルを読み、読み込み後に削除する。
 - Android は VIEW の `content://` をパスの `.eqrp` で受け付け、`ReplayFileMethodChannel` で Activity の `ContentResolver` から読む。パスに拡張子を含まない provider（ダウンロードの `msf:` など）からは一致しない。
