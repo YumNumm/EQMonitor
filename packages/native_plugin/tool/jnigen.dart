@@ -8,20 +8,20 @@ Future<void> main(List<String> args) async {
     exit(64);
   }
   final packageRoot = Platform.script.resolve('../');
-  await generateJniBindings(
-    Config(
-      outputConfig: OutputConfig(
-        dartConfig: DartCodeOutputConfig(
-          path: packageRoot.resolve(
-            'lib/src/device_storage/android/android_bindings.g.dart',
-          ),
-          structure: OutputStructure.singleFile,
-        ),
-      ),
-      preamble: '// ignore_for_file: type=lint',
+  await JniGenerator(
+    input: Input(
       classPath: [File(args.single).absolute.uri],
-      summarizerOptions: SummarizerOptions(backend: SummarizerBackend.asm),
+      backend: SummarizerBackend.asm,
       classes: ['android.os.StatFs'],
     ),
-  );
+    output: Output(
+      dart: DartOutput(
+        path: packageRoot.resolve(
+          'lib/src/device_storage/android/android_bindings.g.dart',
+        ),
+        structure: OutputStructure.singleFile,
+      ),
+      preamble: '// ignore_for_file: type=lint',
+    ),
+  ).generate();
 }

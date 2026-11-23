@@ -14,3 +14,6 @@ mise exec -- dart run build_runner build --delete-conflicting-outputs
 ```
 
 JNIgen は初回に Gradle で ApiSummarizer をビルドするため、JDK が必要。
+
+JNIgen 1.1.0 は `package:jni` 1.2.1 に無い `JType.className` を override するコードを生成し、解析が警告になる。
+対応する `package:jni` が公開されるまで 1.0.1 に固定する。

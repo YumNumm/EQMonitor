@@ -14,7 +14,7 @@ dependencies:
   ffi: ^2.1.5
   freezed_annotation: ^3.0.0
   jni: ^1.2.1
-  objective_c: ^9.2.2
+  objective_c: ^9.6.0
 
 dev_dependencies:
   build_runner: ^2.4.15
@@ -22,5 +22,6 @@ dev_dependencies:
     path: ../eqmonitor_lints
   ffigen: ^23.0.0
   freezed: ^4.0.0-dev.3
-  jnigen: ^0.17.0
+  # 1.1.0 は jni 1.2.1 に無い JType.className を override するコードを生成する。
+  jnigen: 1.0.1
   test: ^1.29.0
