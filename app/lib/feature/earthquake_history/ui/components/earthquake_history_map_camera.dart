@@ -22,15 +22,10 @@ const double kEarthquakeHistoryMapFocusZoom = 8;
 /// 地震履歴詳細マップのカメラ位置（中心・ズーム・フォーカス座標）を算出する。
 class const EarthquakeHistoryMapCamera() {
   MapCameraBoundsFitResult initialRegionCamera({
-    required Earthquake earthquake,
-    required JmaMap_JmaMapData regionMap,
+    required MapCameraBounds? bounds,
     required Size viewportSize,
     required double maxZoom,
   }) {
-    final bounds = initialRegionBounds(
-      earthquake: earthquake,
-      regionMap: regionMap,
-    );
     if (bounds == null) {
       return const MapCameraBoundsFitInvalid(
         reason: MapCameraBoundsFitInvalidReason.invalidBounds,

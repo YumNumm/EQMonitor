@@ -218,10 +218,9 @@ class const _MapContent({
       ),
       null => null,
     };
-    if (regionMap case final map?) {
+    if (regionMap != null) {
       final fit = mapCamera.initialRegionCamera(
-        earthquake: earthquake,
-        regionMap: map,
+        bounds: initialBounds,
         viewportSize: viewportSize,
         maxZoom: maxZoom,
       );

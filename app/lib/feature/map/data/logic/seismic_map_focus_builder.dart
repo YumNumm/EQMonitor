@@ -45,15 +45,15 @@ class const SeismicMapFocusBuilder() {
     required List<SeismicMapGeoCoordinate> targets,
     required List<ShakeDetectionEvent> shakes,
   }) {
-    final bounds = expandedBounds(targets: targets);
     final hasShakeTarget = shakes.any(
       (shake) => shakeTargetCoordinates(shake).isNotEmpty,
     );
     if (!hasShakeTarget) {
-      return bounds;
+      return expandedBounds(targets: targets);
     }
+    // 格子に揃える分が余白になる。余白を足してから揃えると、格子上の辺が1格子ぶん余計に広がる。
     return snapOutward(
-      bounds: bounds,
+      bounds: expandedBounds(targets: targets, margin: 0),
       degrees: seismicMapFocusShakeGridDegrees,
     );
   }
@@ -145,6 +145,7 @@ class const SeismicMapFocusBuilder() {
 
   static MapCameraBounds expandedBounds({
     required List<SeismicMapGeoCoordinate> targets,
+    double margin = seismicMapFocusMargin,
   }) {
     final first = targets.first;
     final minLat = targets.fold(
@@ -164,10 +165,10 @@ class const SeismicMapFocusBuilder() {
       (value, point) => point.longitude > value ? point.longitude : value,
     );
     return expandToMinimumRadius(
-      west: minLng - seismicMapFocusMargin,
-      east: maxLng + seismicMapFocusMargin,
-      south: minLat - seismicMapFocusMargin,
-      north: maxLat + seismicMapFocusMargin,
+      west: minLng - margin,
+      east: maxLng + margin,
+      south: minLat - margin,
+      north: maxLat + margin,
     );
   }
 

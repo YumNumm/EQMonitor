@@ -155,7 +155,7 @@ void main() {
 
     expect(bounds.south, 32);
     expect(bounds.north, 38);
-    expect(bounds.west, 128);
+    expect(bounds.west, 130);
     expect(bounds.east, 140);
   });
 
@@ -171,7 +171,7 @@ void main() {
       fallbackBounds: _fallback,
       eews: const [],
       shakes: [
-        _shake(minLat: 32.8, maxLat: 37.7, minLng: 129.6, maxLng: 139.3),
+        _shake(minLat: 32.8, maxLat: 37.7, minLng: 130.1, maxLng: 139.6),
       ],
     );
 

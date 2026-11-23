@@ -272,7 +272,7 @@ void main() {
         animate: () => newAnimation.future,
       );
       final shakes = [
-        _sampleShake(minLat: 20, maxLat: 46, minLng: 120, maxLng: 154),
+        _sampleShake(minLat: 30, maxLat: 40, minLng: 120, maxLng: 154),
       ];
 
       final oldFocus = coordinator.setController(
