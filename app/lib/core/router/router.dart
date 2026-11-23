@@ -813,12 +813,19 @@ class const DebugHttpCacheRoute()
   }
 }
 
-class const DebugReplayCreationRoute()
-    extends GoRouteData
-    with $DebugReplayCreationRoute, MaterialPageMixin {
+class const DebugReplayCreationRoute({
+  final int? startTimeMs,
+  final String? name,
+}) extends GoRouteData with $DebugReplayCreationRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const ReplayCreationPage();
+    final startTimeMs = this.startTimeMs;
+    return ReplayCreationPage(
+      initialStartTime: startTimeMs == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(startTimeMs, isUtc: true),
+      initialName: name,
+    );
   }
 }
 

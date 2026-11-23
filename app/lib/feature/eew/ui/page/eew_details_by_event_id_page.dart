@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_creation_entry_button.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
@@ -154,27 +155,34 @@ class const _EewDetailsByEventIdContent({
             );
           }
 
-          return Column(
-            children: [
-              if (sortedEews.length > 1)
-                _SimulationStartBanner(
-                  onStart: () => ref
-                      .read(eewSimulationProvider.notifier)
-                      .start(sortedEews),
-                ),
-              Expanded(
-                child: _ResponsiveLayout(
-                  eews: displayedEews,
-                  selectedIndex: idx,
-                  useSheet: onClose != null,
-                  onSelect: (index) => selectedIndex.value = index,
-                  selectedEew: selectedEew,
-                  displayMode: displayMode.value,
-                  initialCenter: initialCenter,
-                  initZoom: 5,
-                ),
-              ),
-            ],
+          return _ResponsiveLayout(
+            eews: displayedEews,
+            selectedIndex: idx,
+            useSheet: onClose != null,
+            onSelect: (index) => selectedIndex.value = index,
+            selectedEew: selectedEew,
+            displayMode: displayMode.value,
+            initialCenter: initialCenter,
+            initZoom: 5,
+            mapActions: _MapActions(
+              onStartSimulation: sortedEews.length > 1
+                  ? () => ref
+                        .read(eewSimulationProvider.notifier)
+                        .start(sortedEews)
+                  : null,
+              originTime:
+                  sortedEews
+                      .map((eew) => eew.originTime)
+                      .nonNulls
+                      .firstOrNull ??
+                  sortedEews.first.reportTime,
+              label:
+                  sortedEews
+                      .map((eew) => eew.hypocenter?.name)
+                      .nonNulls
+                      .lastOrNull ??
+                  '緊急地震速報',
+            ),
           );
         },
         loading: () => const _EewDetailsByEventIdSkeleton(),
@@ -305,6 +313,7 @@ class const _ResponsiveLayout({
   required final EewDisplayMode displayMode,
   required final Geographic initialCenter,
   required final double initZoom,
+  required final Widget mapActions,
   final bool useSheet = false,
 }) extends HookConsumerWidget {
   @override
@@ -339,12 +348,19 @@ class const _ResponsiveLayout({
               : null,
         );
 
-        final mapWidget = EewDetailsMapView(
-          selectedEew: selectedEew,
-          displayMode: displayMode,
-          initialCenter: initialCenter,
-          initZoom: initZoom,
-          additionalRegions: additionalRegions,
+        final mapWidget = Stack(
+          children: [
+            Positioned.fill(
+              child: EewDetailsMapView(
+                selectedEew: selectedEew,
+                displayMode: displayMode,
+                initialCenter: initialCenter,
+                initZoom: initZoom,
+                additionalRegions: additionalRegions,
+              ),
+            ),
+            Positioned(top: 8, right: 8, child: mapActions),
+          ],
         );
 
         if (useSheet) {
@@ -380,41 +396,35 @@ class const _ResponsiveLayout({
   }
 }
 
-class const _SimulationStartBanner({required final VoidCallback onStart})
-    extends StatelessWidget {
+class const _MapActions({
+  required final VoidCallback? onStartSimulation,
+  required final DateTime originTime,
+  required final String label,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-
-    return Material(
-      color: designSystem.colorTheme.primaryContainer,
-      child: InkWell(
-        onTap: onStart,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              Icon(
-                Icons.play_circle_outline,
-                color: designSystem.colorTheme.onPrimaryContainer,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'シミュレーション再生',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: designSystem.colorTheme.onPrimaryContainer,
-                  ),
-                ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                color: designSystem.colorTheme.onPrimaryContainer,
-              ),
-            ],
+    final onStart = onStartSimulation;
+    return Column(
+      crossAxisAlignment: .end,
+      spacing: designSystem.spacing.sm,
+      children: [
+        if (onStart != null)
+          M3EFilledButton.tonalIcon(
+            onPressed: onStart,
+            icon: const Icon(Icons.play_circle_outline),
+            label: const Text('シミュレーション再生'),
+            decoration: M3EButtonDecoration.styleFrom(
+              backgroundColor: designSystem.colorTheme.primaryContainer,
+              foregroundColor: designSystem.colorTheme.onPrimaryContainer,
+            ),
           ),
+        ReplayCreationEntryButton(
+          originTime: originTime,
+          label: label,
+          isExpanded: false,
         ),
-      ),
+      ],
     );
   }
 }

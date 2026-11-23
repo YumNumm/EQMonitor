@@ -14,7 +14,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
-class const ReplayCreationPage({super.key}) extends HookConsumerWidget {
+class const ReplayCreationPage({
+  final DateTime? initialStartTime,
+  final String? initialName,
+  super.key,
+}) extends HookConsumerWidget {
   static const durations = [
     Duration(minutes: 1),
     Duration(minutes: 3),
@@ -27,12 +31,12 @@ class const ReplayCreationPage({super.key}) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final range = ref.watch(replayCreationSelectableRangeProvider).value;
-    final selectedStart = useState<DateTime?>(null);
+    final selectedStart = useState(initialStartTime);
     final duration = useState(const Duration(minutes: 5));
     final imageKinds = useState({ReplayCreationImageKind.shindo});
     final includeEew = useState(true);
     final includePreRoll = useState(true);
-    final name = useTextEditingController();
+    final name = useTextEditingController(text: initialName);
     final directory = useTextEditingController();
     final pathResolver = ref.watch(replayFilePathResolverProvider);
     final progress = ref.watch(replayCreationProvider);

@@ -36,6 +36,15 @@ class const ReplayCreationRangeResolver({
     );
   }
 
+  static const originLead = Duration(minutes: 1);
+
+  bool contains({required ReplayCreationRange range, required DateTime time}) =>
+      !time.isBefore(range.earliest) && time.isBefore(range.latest);
+
+  // 揺れ始める前の様子も含めるため、発生時刻より少し前から始める。
+  DateTime initialStartTime({required DateTime originTime}) =>
+      originTime.subtract(originLead);
+
   bool isSelectable({required ReplayCreationRequest request}) {
     final range = selectableRange();
     return request.duration > Duration.zero &&

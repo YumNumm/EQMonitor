@@ -28,6 +28,14 @@ class const ReplayFilePathResolver() {
         '${duration == null ? '' : '_${duration.inSeconds}s'}$extension';
   }
 
+  String suggestedName({required String label, required DateTime time}) {
+    final stamp = DateFormat(
+      'yyyyMMdd_HHmm',
+    ).format(time.toUtc().add(_jstOffset));
+    final base = label.replaceAll(_forbidden, '').trim();
+    return base.isEmpty || base.startsWith('.') ? stamp : '${base}_$stamp';
+  }
+
   String fileName({required String input}) {
     final trimmed = input.trim();
     final base = trimmed.toLowerCase().endsWith(extension)

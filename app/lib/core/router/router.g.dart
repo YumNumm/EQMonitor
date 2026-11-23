@@ -1721,11 +1721,26 @@ mixin $DebugHttpCacheRoute on GoRouteData {
 
 mixin $DebugReplayCreationRoute on GoRouteData {
   static DebugReplayCreationRoute _fromState(GoRouterState state) =>
-      const DebugReplayCreationRoute();
+      DebugReplayCreationRoute(
+        startTimeMs: _$convertMapValue(
+          'start-time-ms',
+          state.uri.queryParameters,
+          int.tryParse,
+        ),
+        name: state.uri.queryParameters['name'],
+      );
+
+  DebugReplayCreationRoute get _self => this as DebugReplayCreationRoute;
 
   @override
-  String get location =>
-      GoRouteData.$location('/settings/debug/replay-creation');
+  String get location => GoRouteData.$location(
+    '/settings/debug/replay-creation',
+    queryParams: {
+      if (_self.startTimeMs != null)
+        'start-time-ms': _self.startTimeMs!.toString(),
+      if (_self.name != null) 'name': _self.name,
+    },
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1804,6 +1819,15 @@ mixin $DebugTelemetryRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
 }
 
 RouteBase get $feedRoute => GoRouteData.$route(
