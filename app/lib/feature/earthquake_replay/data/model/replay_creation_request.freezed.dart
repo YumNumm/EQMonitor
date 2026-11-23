@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReplayCreationRequest {
 
- DateTime get startTime; Duration get duration; Set<ReplayCreationImageKind> get imageKinds; bool get includeEew; bool get includePreRoll;
+ DateTime get startTime; Duration get duration; Set<ReplayCreationImageKind> get imageKinds; bool get includeEew; bool get includePreRoll; String get name; String get directory;
 /// Create a copy of ReplayCreationRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $ReplayCreationRequestCopyWith<ReplayCreationRequest> get copyWith => _$ReplayCr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReplayCreationRequest&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.duration, duration) || other.duration == duration)&&const DeepCollectionEquality().equals(other.imageKinds, imageKinds)&&(identical(other.includeEew, includeEew) || other.includeEew == includeEew)&&(identical(other.includePreRoll, includePreRoll) || other.includePreRoll == includePreRoll));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReplayCreationRequest&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.duration, duration) || other.duration == duration)&&const DeepCollectionEquality().equals(other.imageKinds, imageKinds)&&(identical(other.includeEew, includeEew) || other.includeEew == includeEew)&&(identical(other.includePreRoll, includePreRoll) || other.includePreRoll == includePreRoll)&&(identical(other.name, name) || other.name == name)&&(identical(other.directory, directory) || other.directory == directory));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,startTime,duration,const DeepCollectionEquality().hash(imageKinds),includeEew,includePreRoll);
+int get hashCode => Object.hash(runtimeType,startTime,duration,const DeepCollectionEquality().hash(imageKinds),includeEew,includePreRoll,name,directory);
 
 @override
 String toString() {
-  return 'ReplayCreationRequest(startTime: $startTime, duration: $duration, imageKinds: $imageKinds, includeEew: $includeEew, includePreRoll: $includePreRoll)';
+  return 'ReplayCreationRequest(startTime: $startTime, duration: $duration, imageKinds: $imageKinds, includeEew: $includeEew, includePreRoll: $includePreRoll, name: $name, directory: $directory)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $ReplayCreationRequestCopyWith<$Res>  {
   factory $ReplayCreationRequestCopyWith(ReplayCreationRequest value, $Res Function(ReplayCreationRequest) _then) = _$ReplayCreationRequestCopyWithImpl;
 @useResult
 $Res call({
- DateTime startTime, Duration duration, Set<ReplayCreationImageKind> imageKinds, bool includeEew, bool includePreRoll
+ DateTime startTime, Duration duration, Set<ReplayCreationImageKind> imageKinds, bool includeEew, bool includePreRoll, String name, String directory
 });
 
 
@@ -63,14 +63,16 @@ class _$ReplayCreationRequestCopyWithImpl<$Res>
 
 /// Create a copy of ReplayCreationRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? startTime = null,Object? duration = null,Object? imageKinds = null,Object? includeEew = null,Object? includePreRoll = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? startTime = null,Object? duration = null,Object? imageKinds = null,Object? includeEew = null,Object? includePreRoll = null,Object? name = null,Object? directory = null,}) {
   return _then(ReplayCreationRequest(
 startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
 as DateTime,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as Duration,imageKinds: null == imageKinds ? _self.imageKinds : imageKinds // ignore: cast_nullable_to_non_nullable
 as Set<ReplayCreationImageKind>,includeEew: null == includeEew ? _self.includeEew : includeEew // ignore: cast_nullable_to_non_nullable
 as bool,includePreRoll: null == includePreRoll ? _self.includePreRoll : includePreRoll // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,directory: null == directory ? _self.directory : directory // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime startTime,  Duration duration,  Set<ReplayCreationImageKind> imageKinds,  bool includeEew,  bool includePreRoll)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime startTime,  Duration duration,  Set<ReplayCreationImageKind> imageKinds,  bool includeEew,  bool includePreRoll,  String name,  String directory)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReplayCreationRequest() when $default != null:
-return $default(_that.startTime,_that.duration,_that.imageKinds,_that.includeEew,_that.includePreRoll);case _:
+return $default(_that.startTime,_that.duration,_that.imageKinds,_that.includeEew,_that.includePreRoll,_that.name,_that.directory);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.startTime,_that.duration,_that.imageKinds,_that.includeEew
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime startTime,  Duration duration,  Set<ReplayCreationImageKind> imageKinds,  bool includeEew,  bool includePreRoll)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime startTime,  Duration duration,  Set<ReplayCreationImageKind> imageKinds,  bool includeEew,  bool includePreRoll,  String name,  String directory)  $default,) {final _that = this;
 switch (_that) {
 case _ReplayCreationRequest():
-return $default(_that.startTime,_that.duration,_that.imageKinds,_that.includeEew,_that.includePreRoll);case _:
+return $default(_that.startTime,_that.duration,_that.imageKinds,_that.includeEew,_that.includePreRoll,_that.name,_that.directory);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.startTime,_that.duration,_that.imageKinds,_that.includeEew
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime startTime,  Duration duration,  Set<ReplayCreationImageKind> imageKinds,  bool includeEew,  bool includePreRoll)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime startTime,  Duration duration,  Set<ReplayCreationImageKind> imageKinds,  bool includeEew,  bool includePreRoll,  String name,  String directory)?  $default,) {final _that = this;
 switch (_that) {
 case _ReplayCreationRequest() when $default != null:
-return $default(_that.startTime,_that.duration,_that.imageKinds,_that.includeEew,_that.includePreRoll);case _:
+return $default(_that.startTime,_that.duration,_that.imageKinds,_that.includeEew,_that.includePreRoll,_that.name,_that.directory);case _:
   return null;
 
 }
@@ -211,7 +213,7 @@ return $default(_that.startTime,_that.duration,_that.imageKinds,_that.includeEew
 
 
 class _ReplayCreationRequest extends ReplayCreationRequest {
-  const _ReplayCreationRequest({required this.startTime, required this.duration, required  Set<ReplayCreationImageKind> imageKinds, required this.includeEew, required this.includePreRoll}): _imageKinds = imageKinds,super._();
+  const _ReplayCreationRequest({required this.startTime, required this.duration, required  Set<ReplayCreationImageKind> imageKinds, required this.includeEew, required this.includePreRoll, this.name = '', this.directory = ''}): _imageKinds = imageKinds,super._();
   
 
 @override final  DateTime startTime;
@@ -225,6 +227,8 @@ class _ReplayCreationRequest extends ReplayCreationRequest {
 
 @override final  bool includeEew;
 @override final  bool includePreRoll;
+@override@JsonKey() final  String name;
+@override@JsonKey() final  String directory;
 
 /// Create a copy of ReplayCreationRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -236,16 +240,16 @@ _$ReplayCreationRequestCopyWith<_ReplayCreationRequest> get copyWith => __$Repla
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReplayCreationRequest&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.duration, duration) || other.duration == duration)&&const DeepCollectionEquality().equals(other._imageKinds, _imageKinds)&&(identical(other.includeEew, includeEew) || other.includeEew == includeEew)&&(identical(other.includePreRoll, includePreRoll) || other.includePreRoll == includePreRoll));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReplayCreationRequest&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.duration, duration) || other.duration == duration)&&const DeepCollectionEquality().equals(other._imageKinds, _imageKinds)&&(identical(other.includeEew, includeEew) || other.includeEew == includeEew)&&(identical(other.includePreRoll, includePreRoll) || other.includePreRoll == includePreRoll)&&(identical(other.name, name) || other.name == name)&&(identical(other.directory, directory) || other.directory == directory));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,startTime,duration,const DeepCollectionEquality().hash(_imageKinds),includeEew,includePreRoll);
+int get hashCode => Object.hash(runtimeType,startTime,duration,const DeepCollectionEquality().hash(_imageKinds),includeEew,includePreRoll,name,directory);
 
 @override
 String toString() {
-  return 'ReplayCreationRequest(startTime: $startTime, duration: $duration, imageKinds: $imageKinds, includeEew: $includeEew, includePreRoll: $includePreRoll)';
+  return 'ReplayCreationRequest(startTime: $startTime, duration: $duration, imageKinds: $imageKinds, includeEew: $includeEew, includePreRoll: $includePreRoll, name: $name, directory: $directory)';
 }
 
 
@@ -256,7 +260,7 @@ abstract mixin class _$ReplayCreationRequestCopyWith<$Res> implements $ReplayCre
   factory _$ReplayCreationRequestCopyWith(_ReplayCreationRequest value, $Res Function(_ReplayCreationRequest) _then) = __$ReplayCreationRequestCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime startTime, Duration duration, Set<ReplayCreationImageKind> imageKinds, bool includeEew, bool includePreRoll
+ DateTime startTime, Duration duration, Set<ReplayCreationImageKind> imageKinds, bool includeEew, bool includePreRoll, String name, String directory
 });
 
 
@@ -273,14 +277,16 @@ class __$ReplayCreationRequestCopyWithImpl<$Res>
 
 /// Create a copy of ReplayCreationRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? startTime = null,Object? duration = null,Object? imageKinds = null,Object? includeEew = null,Object? includePreRoll = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? startTime = null,Object? duration = null,Object? imageKinds = null,Object? includeEew = null,Object? includePreRoll = null,Object? name = null,Object? directory = null,}) {
   return _then(_ReplayCreationRequest(
 startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
 as DateTime,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as Duration,imageKinds: null == imageKinds ? _self._imageKinds : imageKinds // ignore: cast_nullable_to_non_nullable
 as Set<ReplayCreationImageKind>,includeEew: null == includeEew ? _self.includeEew : includeEew // ignore: cast_nullable_to_non_nullable
 as bool,includePreRoll: null == includePreRoll ? _self.includePreRoll : includePreRoll // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,directory: null == directory ? _self.directory : directory // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

@@ -35,7 +35,7 @@ final class SavedReplayFilesProvider
   SavedReplayFiles create() => SavedReplayFiles();
 }
 
-String _$savedReplayFilesHash() => r'6da16168e7b9be6892cb2fd30204fa409cdf49c2';
+String _$savedReplayFilesHash() => r'eeee821a3fc2ce01024e775db6caae3678b02a07';
 
 abstract class _$SavedReplayFiles
     extends $AsyncNotifier<List<SavedReplayFile>> {
