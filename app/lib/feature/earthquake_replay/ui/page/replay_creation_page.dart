@@ -1,16 +1,13 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/util/byte_size_formatter.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
-import 'package:eqmonitor/feature/debug/data/model/debug_access_level.dart';
-import 'package:eqmonitor/feature/debug/data/provider/debug_access_level_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/action/replay_creation_action.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_creation_range_resolver.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_file_path_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_creation_request.dart';
-import 'package:eqmonitor/feature/earthquake_replay/data/model/saved_replay_file.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_creation_notifier.dart';
-import 'package:eqmonitor/feature/earthquake_replay/data/notifier/saved_replay_files_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_creation_selectable_range_provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -35,6 +32,9 @@ class const ReplayCreationPage({super.key}) extends HookConsumerWidget {
     final imageKinds = useState({ReplayCreationImageKind.shindo});
     final includeEew = useState(true);
     final includePreRoll = useState(true);
+    final name = useTextEditingController();
+    final directory = useTextEditingController();
+    final pathResolver = ref.watch(replayFilePathResolverProvider);
     final progress = ref.watch(replayCreationProvider);
     final isCreating =
         ref.watch(ReplayCreationNotifier.createMutation) is MutationPending;
@@ -67,6 +67,8 @@ class const ReplayCreationPage({super.key}) extends HookConsumerWidget {
       includeEew: includeEew.value,
       includePreRoll: includePreRoll.value,
     );
+    useListenable(name);
+    useListenable(directory);
 
     return Scaffold(
       appBar: AppBar(title: const Text('リプレイファイルを作成')),
@@ -144,6 +146,38 @@ class const ReplayCreationPage({super.key}) extends HookConsumerWidget {
                 ? null
                 : (value) => includePreRoll.value = value,
           ),
+          const _SectionHeader(title: '保存先'),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: spacing.lg),
+            child: Column(
+              children: [
+                TextField(
+                  controller: name,
+                  enabled: !isCreating,
+                  decoration: InputDecoration(
+                    labelText: '名前',
+                    hintText: pathResolver.defaultFileName(
+                      startTime: request.startTime,
+                      duration: request.duration,
+                    ),
+                    helperText: '空欄にすると期間から名前を付けます',
+                  ),
+                ),
+                SizedBox(height: spacing.sm),
+                TextField(
+                  controller: directory,
+                  enabled: !isCreating,
+                  decoration: InputDecoration(
+                    labelText: 'フォルダ',
+                    hintText: pathResolver.defaultDirectory(
+                      startTime: request.startTime,
+                    ),
+                    helperText: '空欄にすると開始時刻の年/月に保存します',
+                  ),
+                ),
+              ],
+            ),
+          ),
           Padding(
             padding: EdgeInsets.all(spacing.lg),
             child: isCreating
@@ -153,13 +187,26 @@ class const ReplayCreationPage({super.key}) extends HookConsumerWidget {
                         ? null
                         : () async => ref
                               .read(replayCreationActionProvider)
-                              .create(ref, context, request: request),
+                              .create(
+                                ref,
+                                context,
+                                request: request.copyWith(
+                                  name: name.text,
+                                  directory: directory.text,
+                                ),
+                              ),
                     icon: const Icon(Icons.save_alt_rounded),
                     label: const Text('作成してアプリ内に保存'),
                   ),
           ),
-          const _SectionHeader(title: '保存済みのリプレイファイル'),
-          const _SavedReplayFileList(),
+          ListTile(
+            leading: const Icon(Icons.folder_open_rounded),
+            title: const Text('保存済みのリプレイ'),
+            subtitle: const Text('再生・名前の変更・削除はこちらから'),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () async =>
+                const DebugReplayLibraryRoute().push<void>(context),
+          ),
         ],
       ),
     );
@@ -214,71 +261,6 @@ class const _CreationProgress({
           child: const Text('中止'),
         ),
       ],
-    );
-  }
-}
-
-class const _SavedReplayFileList() extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final files = ref.watch(savedReplayFilesProvider);
-    final canExport =
-        ref.watch(debugAccessLevelProvider) == DebugAccessLevel.full;
-    return switch (files) {
-      AsyncValue(:final value?) when value.isEmpty => const ListTile(
-        title: Text('保存済みのファイルはありません'),
-      ),
-      AsyncValue(:final value?) => Column(
-        children: [
-          for (final file in value)
-            _SavedReplayFileTile(file: file, canExport: canExport),
-        ],
-      ),
-      AsyncValue(:final error?) => ListTile(
-        title: Text('一覧の取得に失敗しました: $error'),
-      ),
-      _ => const Center(child: AccessibleCircularProgressIndicator()),
-    };
-  }
-}
-
-class const _SavedReplayFileTile({
-  required final SavedReplayFile file,
-  required final bool canExport,
-}) extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final action = ref.watch(replayCreationActionProvider);
-    return ListTile(
-      title: Text(file.name),
-      subtitle: Text(
-        '${const ByteSizeFormatter().format(file.sizeBytes)}・'
-        '${file.modifiedAt.formatWithTz(.monthDayHourMinute)} 作成',
-      ),
-      onTap: () async => action.play(context, file: file),
-      trailing: Row(
-        mainAxisSize: .min,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.play_arrow_rounded),
-            tooltip: '再生',
-            onPressed: () async => action.play(context, file: file),
-          ),
-          if (canExport)
-            Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.ios_share_rounded),
-                tooltip: '外部へエクスポート',
-                onPressed: () async => action.export(ref, context, file: file),
-              ),
-            ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline_rounded),
-            tooltip: '削除',
-            onPressed: () async => action.delete(ref, context, file: file),
-          ),
-        ],
-      ),
     );
   }
 }

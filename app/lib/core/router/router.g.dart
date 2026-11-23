@@ -799,6 +799,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugReplayCreationRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'replay-library',
+          hasOverriddenOnExit: false,
+          factory: $DebugReplayLibraryRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'intensity-icon',
           hasOverriddenOnExit: false,
           factory: $DebugIntensityIconRoute._fromState,
@@ -1721,6 +1726,28 @@ mixin $DebugReplayCreationRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/replay-creation');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugReplayLibraryRoute on GoRouteData {
+  static DebugReplayLibraryRoute _fromState(GoRouterState state) =>
+      const DebugReplayLibraryRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/replay-library');
 
   @override
   void go(BuildContext context) => context.go(location);
