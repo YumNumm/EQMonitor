@@ -1,6 +1,6 @@
 # MapLibre の表示・ライフサイクル
 
-確認日: 2026-11-22。地図描画には `maplibre` 0.4（描画は MapLibre Native C API ベースの `maplibre_native`）を使用する。
+確認日: 2026-11-23。地図描画には `maplibre` 0.4（描画は MapLibre Native C API ベースの `maplibre_native`）を使用する。
 対象: `app/lib/core/util/map/`、`app/lib/feature/home/ui/component/map/`、各機能の地図レイヤー。
 
 ## 初期化と更新
@@ -84,10 +84,17 @@
 - ローカル URI は `pmtiles://${Uri.file(absolutePath)}`。`pmtiles://asset://` は使わず、asset をローカルファイルに配置してから開く。旧 `assets_util` は削除済みのため依存を復活させない。
 - 配布物には `countries`、`areaForecastLocalE`、`areaForecastLocalEew`、`areaInformationCityQuake` の source layer が必要。別用途の区域 archive や HTTPS へ黙って置換しない。
 - 市区町村地物の表示下限は `BaseMapTileSpec.cityMinZoom` に集約する。現行のタイルは z0 から市区町村地物を持つため値は 0 で、`effectiveRegionToCityZoom` の下限補正は実質無効。タイル側で下限を上げたときは、この定数だけを変更すれば参照側の補正が有効になる。metadata の minzoom だけで地物の存在を判断しない。
-- pin の正本は `app/pubspec.yaml` の `YumNumm/flutter-maplibre` ref と lockfile。fork の `main` は upstream（`maplibre/flutter-maplibre`）と同じツリーで、`maplibre`・`maplibre_native`・`maplibre_platform_interface`・`maplibre_web` を同じ ref に揃える。native の本体は `maplibre_native_ffi` が配布するビルド済み C ライブラリ。
+- pin の正本は `app/pubspec.yaml` の `YumNumm/flutter-maplibre`・`YumNumm/maplibre-native-ffi` の ref と lockfile。fork の `main` は upstream（`maplibre/flutter-maplibre`）と同じツリーで、`maplibre`・`maplibre_native`・`maplibre_platform_interface`・`maplibre_web` を同じ ref に揃える。native の本体は `maplibre_native_ffi` が配布するビルド済み C ライブラリ。
 - gzip metadata エラーの abort 対処は upstream [#4399](https://github.com/maplibre/maplibre-native/pull/4399)（2026-07-14 マージ）。これは他の decode 障害すべてを防ぐ保証ではない。
 - iOS Metal で複数 vector source の fill だけがタイル単位で欠ける場合、clip mask UBO の bind cache 再利用を疑う。[#4342](https://github.com/maplibre/maplibre-native/pull/4342) が原因・回帰テストの参照先。layer 再追加や opacity 変更を恒久対策にしない。
 - #4342 は 2026-11-22 時点で upstream 未マージ。0.3 系では `YumNumm/maplibre-native` の `ios-v6.29.0-yumnumm.2` に修正を入れて回避していたが、0.4 の `maplibre_native_ffi` は upstream のビルドを使うため、この修正は含まれないと考えられる。iOS 実機での fill 欠けの有無は未確認。
+- 0.4 の native 本体は `maplibre_native_ffi` の `hook/native_release.json` が指すビルド済みアーカイブで、build hook が sha256 を照合して取得する。`app/pubspec.yaml` で `maplibre_native_ffi` を `YumNumm/maplibre-native-ffi`（`bindings/dart`）へ override している。fork は upstream の tag `v0.202611.0`（MapLibre Native `8e144d0` に同リポジトリの `patches/` を当てたもの）から切った `yumnumm/v0.202611.0` が基点。
+- fork の差分は iOS シミュレータ（`ios-simulator-arm64`）だけ。このアーカイブは fork の release `v0.202611.0-yumnumm.1` から取得し、ほかのプラットフォームは upstream v0.202611.0 のアーカイブと sha256 のまま。fork の hook は `native_release.json` の artifact が持つ `url` を優先する。
+- upstream v0.202611.0 のままだと、iOS シミュレータでタイル境界の両側（tippecanoe のバッファ幅。z8 タイルで約 ±0.027°）に line の直線が 2 本 1 組で出る。0.3 系（`MLNMapView`）では出ない。原因は `src/render/metal/metal_texture_backend.mm` が `#if !TARGET_OS_SIMULATOR` で stencil を作らないこと。シミュレータの depth は `Depth32Float_Stencil8` だが stencil attachment に設定されず、タイルの clip mask が無効になり、バッファ領域で切断されたポリゴンの辺が隣のタイルへはみ出す。
+- 同じ原因で、半透明の fill はバッファ幅の帯で二重に塗られる。line の直線と帯が同じ位置に出れば clip mask の無効を疑う。実機は別の `Stencil8` を付ける経路で、コード上は該当しない（実機での確認は未実施）。
+- fork の修正は `metal_surface_session.mm` と同じく、depth が `Depth32Float_Stencil8` のとき同じ texture を stencil attachment にも設定する。style 側の filter・layer 分割やタイル再生成で隠さない。
+- `maplibre` を更新して `maplibre_native_ffi` の版が上がるときは、override を外して upstream のビルドで同じカメラ位置（ズーム 10・北緯 32.8 / 東経 130.7 と九州の広域）を確認する。直線が残る場合は fork を新しい tag へ作り直す。upstream の `main` は構成が変わっており（`src/` がなく `third_party/mln-rs` を参照。2026-11-23 時点）、同じ欠陥が残るかは未確認。
+- シミュレータ用アーカイブの再ビルドは、fork で `tools/deps/sync-submodules` の後に CMake preset `ios-simulator-arm64-metal` を install まで実行する。Rust の target `aarch64-apple-ios-sim` と `cargo-about` が要る。`hooks.user_defines.maplibre_native_ffi.local_build` に install 先を指定すると手元のビルドを使えるが、全プラットフォームに効くためコミットしない。
 - Metal の確認は同じ実 archive・camera・style で fill と line を比較する。`MLNMapSnapshotter` や取得・リンク成功だけでは画面の修正を確認できない。
 
 ## 変更時の確認

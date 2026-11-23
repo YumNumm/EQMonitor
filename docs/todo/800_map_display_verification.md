@@ -2,6 +2,11 @@
 
 実機での可視出力と性能は未検証。
 
+## 800: タイル境界の直線の実機確認
+
+- iOS シミュレータでタイル境界の両側に出ていた直線は、`maplibre_native_ffi` を fork のビルドへ override して解消した。経緯は [MapLibre の知見](../knowledge/maplibre.md) の「PMTiles と native 障害の切り分け」を参照。
+- iOS 実機と Android で、ズーム 10・熊本付近（北緯 32.8 / 東経 130.7）と九州の広域表示に直線が出ないことを確認する。実機は upstream のビルドのままで、コード上は該当しないが未検証。
+
 ## 800: 区域アイコンの配信と実機確認
 
 - 対象: `app/lib/feature/earthquake_history/ui/layer/earthquake_history_area_icon_layer.dart`、backend `tools/base-map-pmtiles/label_points.py`。
