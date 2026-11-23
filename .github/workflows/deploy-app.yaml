@@ -50,8 +50,8 @@ concurrency:
 env:
   FIREBASE_ANALYTICS_WITHOUT_ADID: "true"
   # App Store builds must use the stable release, not the runner's latest beta.
-  XCODE_VERSION: "27.0"
-  XCODE_BUILD_VERSION: "27A266a"
+  XCODE_VERSION: "27.2"
+  XCODE_BUILD_VERSION: "27B52"
   GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER: projects/179553945248/locations/global/workloadIdentityPools/github-actions-identity-pool/providers/github-actions-identity-provider
   GOOGLE_CLOUD_SERVICE_ACCOUNT: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
 
@@ -344,8 +344,8 @@ jobs:
           fi
           sdk_version="$(xcrun --sdk iphoneos --show-sdk-version)"
           echo "iOS SDK: $sdk_version"
-          if [[ "$sdk_version" != "27.0" ]]; then
-            echo "::error::App Store builds require the stable iOS 27.0 SDK."
+          if [[ "$sdk_version" != "27.2" ]]; then
+            echo "::error::App Store builds require the stable iOS 27.2 SDK."
             exit 1
           fi
 

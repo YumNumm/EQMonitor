@@ -25,6 +25,11 @@ jobs:
         with:
           persist-credentials: false
 
+      # 配布と同じ SDK で確かめる。runner の既定は 27.1。
+      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
+        with:
+          xcode-version: "27.2"
+
       - name: Select iPhone simulator
         id: simulator
         run: |

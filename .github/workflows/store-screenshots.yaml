@@ -27,7 +27,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  XCODE_VERSION: "27.0"
+  XCODE_VERSION: "27.2"
   FIREBASE_ANALYTICS_WITHOUT_ADID: "true"
   # Pull requests verify the pipeline before every fixture exists; tag runs stay strict.
   ALLOW_MISSING_FIXTURES: ${{ github.event_name == 'pull_request' }}
