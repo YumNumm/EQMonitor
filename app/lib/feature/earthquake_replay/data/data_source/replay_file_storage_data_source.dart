@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_file_path_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_library_exception.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_library_folder.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/saved_replay_file.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -23,17 +24,24 @@ class const ReplayFileStorageDataSource() {
     return Directory(p.join(documents.path, directoryName)).create();
   }
 
-  Future<List<SavedReplayFile>> list() async {
+  Future<ReplayLibraryContents> list() async {
     final root = await this.root();
-    final files = [
-      await for (final entity in root.list(recursive: true, followLinks: false))
-        if (entity is File &&
-            entity.path.toLowerCase().endsWith(
-              ReplayFilePathResolver.extension,
-            ))
-          await describe(root: root, file: entity),
-    ];
-    return files..sort((a, b) => b.modifiedAt.compareTo(a.modifiedAt));
+    final files = <SavedReplayFile>[];
+    final directories = <String>[];
+    await for (final entity in root.list(recursive: true, followLinks: false)) {
+      if (entity is Directory) {
+        directories.add(relativePath(root: root, path: entity.path));
+      } else if (entity is File &&
+          entity.path.toLowerCase().endsWith(
+            ReplayFilePathResolver.extension,
+          )) {
+        files.add(await describe(root: root, file: entity));
+      }
+    }
+    return ReplayLibraryContents(
+      files: files..sort((a, b) => b.modifiedAt.compareTo(a.modifiedAt)),
+      directories: directories..sort(),
+    );
   }
 
   Future<SavedReplayFile> save({
@@ -69,7 +77,6 @@ class const ReplayFileStorageDataSource() {
     }
     await target.parent.create(recursive: true);
     final moved = await source.rename(target.path);
-    await pruneEmptyDirectories(root: root, directory: source.parent);
     return describe(root: root, file: moved);
   }
 
@@ -80,8 +87,57 @@ class const ReplayFileStorageDataSource() {
       if (target.existsSync()) {
         await target.delete();
       }
-      await pruneEmptyDirectories(root: root, directory: target.parent);
     }
+  }
+
+  Future<void> createDirectory({required String directory}) async {
+    final root = await this.root();
+    final target = childDirectory(root: root, directory: directory);
+    if (FileSystemEntity.typeSync(target.path) != .notFound) {
+      throw const ReplayLibraryException(.directoryConflict);
+    }
+    await target.create(recursive: true);
+  }
+
+  Future<void> moveDirectory({
+    required String from,
+    required String to,
+  }) async {
+    final root = await this.root();
+    final source = childDirectory(root: root, directory: from);
+    final target = childDirectory(root: root, directory: to);
+    if (p.equals(source.path, target.path)) {
+      return;
+    }
+    if (p.isWithin(source.path, target.path)) {
+      throw const ReplayLibraryException(.moveIntoItself);
+    }
+    if (FileSystemEntity.typeSync(target.path) != .notFound) {
+      throw const ReplayLibraryException(.directoryConflict);
+    }
+    await target.parent.create(recursive: true);
+    await source.rename(target.path);
+  }
+
+  Future<void> deleteDirectories({required List<String> directories}) async {
+    final root = await this.root();
+    for (final directory in directories) {
+      final target = childDirectory(root: root, directory: directory);
+      if (target.existsSync()) {
+        await target.delete(recursive: true);
+      }
+    }
+  }
+
+  Directory childDirectory({
+    required Directory root,
+    required String directory,
+  }) {
+    final target = Directory(p.joinAll([root.path, ...directory.split('/')]));
+    if (!p.isWithin(root.path, target.path)) {
+      throw const ReplayLibraryException(.invalidDirectory);
+    }
+    return target;
   }
 
   Future<Directory> resolveDirectory({
@@ -120,31 +176,22 @@ class const ReplayFileStorageDataSource() {
     }
   }
 
-  Future<void> pruneEmptyDirectories({
-    required Directory root,
-    required Directory directory,
-  }) async {
-    var current = directory;
-    while (p.isWithin(root.path, current.path) &&
-        current.existsSync() &&
-        await current.list().isEmpty) {
-      await current.delete();
-      current = current.parent;
-    }
-  }
-
   Future<SavedReplayFile> describe({
     required Directory root,
     required File file,
   }) async {
     final stat = await file.stat();
-    final directory = p.relative(p.dirname(file.path), from: root.path);
     return SavedReplayFile(
       path: file.path,
       name: p.basename(file.path),
-      directory: directory == '.' ? '' : p.split(directory).join('/'),
+      directory: relativePath(root: root, path: p.dirname(file.path)),
       sizeBytes: stat.size,
       modifiedAt: stat.modified,
     );
+  }
+
+  String relativePath({required Directory root, required String path}) {
+    final relative = p.relative(path, from: root.path);
+    return relative == '.' ? '' : p.split(relative).join('/');
   }
 }

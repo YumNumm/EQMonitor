@@ -13,6 +13,278 @@ part of 'replay_library_folder.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
+mixin _$ReplayLibraryContents {
+
+ List<SavedReplayFile> get files; List<String> get directories;
+/// Create a copy of ReplayLibraryContents
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ReplayLibraryContentsCopyWith<ReplayLibraryContents> get copyWith => _$ReplayLibraryContentsCopyWithImpl<ReplayLibraryContents>(this as ReplayLibraryContents, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReplayLibraryContents&&const DeepCollectionEquality().equals(other.files, files)&&const DeepCollectionEquality().equals(other.directories, directories));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(files),const DeepCollectionEquality().hash(directories));
+
+@override
+String toString() {
+  return 'ReplayLibraryContents(files: $files, directories: $directories)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ReplayLibraryContentsCopyWith<$Res>  {
+  factory $ReplayLibraryContentsCopyWith(ReplayLibraryContents value, $Res Function(ReplayLibraryContents) _then) = _$ReplayLibraryContentsCopyWithImpl;
+@useResult
+$Res call({
+ List<SavedReplayFile> files, List<String> directories
+});
+
+
+
+
+}
+/// @nodoc
+class _$ReplayLibraryContentsCopyWithImpl<$Res>
+    implements $ReplayLibraryContentsCopyWith<$Res> {
+  _$ReplayLibraryContentsCopyWithImpl(this._self, this._then);
+
+  final ReplayLibraryContents _self;
+  final $Res Function(ReplayLibraryContents) _then;
+
+/// Create a copy of ReplayLibraryContents
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? files = null,Object? directories = null,}) {
+  return _then(ReplayLibraryContents(
+files: null == files ? _self.files : files // ignore: cast_nullable_to_non_nullable
+as List<SavedReplayFile>,directories: null == directories ? _self.directories : directories // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ReplayLibraryContents].
+extension ReplayLibraryContentsPatterns on ReplayLibraryContents {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ReplayLibraryContents value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ReplayLibraryContents() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ReplayLibraryContents value)  $default,){
+final _that = this;
+switch (_that) {
+case _ReplayLibraryContents():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ReplayLibraryContents value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ReplayLibraryContents() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<SavedReplayFile> files,  List<String> directories)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ReplayLibraryContents() when $default != null:
+return $default(_that.files,_that.directories);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<SavedReplayFile> files,  List<String> directories)  $default,) {final _that = this;
+switch (_that) {
+case _ReplayLibraryContents():
+return $default(_that.files,_that.directories);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<SavedReplayFile> files,  List<String> directories)?  $default,) {final _that = this;
+switch (_that) {
+case _ReplayLibraryContents() when $default != null:
+return $default(_that.files,_that.directories);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _ReplayLibraryContents implements ReplayLibraryContents {
+  const _ReplayLibraryContents({required  List<SavedReplayFile> files, required  List<String> directories}): _files = files,_directories = directories;
+  
+
+ final  List<SavedReplayFile> _files;
+@override List<SavedReplayFile> get files {
+  if (_files is EqualUnmodifiableListView) return _files;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_files);
+}
+
+ final  List<String> _directories;
+@override List<String> get directories {
+  if (_directories is EqualUnmodifiableListView) return _directories;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_directories);
+}
+
+
+/// Create a copy of ReplayLibraryContents
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ReplayLibraryContentsCopyWith<_ReplayLibraryContents> get copyWith => __$ReplayLibraryContentsCopyWithImpl<_ReplayLibraryContents>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReplayLibraryContents&&const DeepCollectionEquality().equals(other._files, _files)&&const DeepCollectionEquality().equals(other._directories, _directories));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_files),const DeepCollectionEquality().hash(_directories));
+
+@override
+String toString() {
+  return 'ReplayLibraryContents(files: $files, directories: $directories)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ReplayLibraryContentsCopyWith<$Res> implements $ReplayLibraryContentsCopyWith<$Res> {
+  factory _$ReplayLibraryContentsCopyWith(_ReplayLibraryContents value, $Res Function(_ReplayLibraryContents) _then) = __$ReplayLibraryContentsCopyWithImpl;
+@override @useResult
+$Res call({
+ List<SavedReplayFile> files, List<String> directories
+});
+
+
+
+
+}
+/// @nodoc
+class __$ReplayLibraryContentsCopyWithImpl<$Res>
+    implements _$ReplayLibraryContentsCopyWith<$Res> {
+  __$ReplayLibraryContentsCopyWithImpl(this._self, this._then);
+
+  final _ReplayLibraryContents _self;
+  final $Res Function(_ReplayLibraryContents) _then;
+
+/// Create a copy of ReplayLibraryContents
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? files = null,Object? directories = null,}) {
+  return _then(_ReplayLibraryContents(
+files: null == files ? _self._files : files // ignore: cast_nullable_to_non_nullable
+as List<SavedReplayFile>,directories: null == directories ? _self._directories : directories // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$ReplayLibraryFolder {
 
  String get path; String get name; List<SavedReplayFile> get files;

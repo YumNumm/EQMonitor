@@ -172,7 +172,8 @@ class const ReplayCreationPage({super.key}) extends HookConsumerWidget {
                     hintText: pathResolver.defaultDirectory(
                       startTime: request.startTime,
                     ),
-                    helperText: '空欄にすると開始時刻の年/月に保存します',
+                    helperText: '好きなフォルダを「/」区切りで指定できます。空欄にすると開始時刻の年/月に保存します',
+                    helperMaxLines: 2,
                   ),
                 ),
               ],

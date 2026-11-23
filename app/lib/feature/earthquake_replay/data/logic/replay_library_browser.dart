@@ -10,24 +10,29 @@ ReplayLibraryBrowser replayLibraryBrowser(Ref ref) =>
 
 class const ReplayLibraryBrowser() {
   ReplayLibraryListing browse({
-    required List<SavedReplayFile> files,
+    required ReplayLibraryContents contents,
     required String directory,
   }) {
     final prefix = directory.isEmpty ? '' : '$directory/';
-    final grouped = <String, List<SavedReplayFile>>{};
-    for (final file in files) {
-      if (file.directory != directory && file.directory.startsWith(prefix)) {
-        final name = file.directory.substring(prefix.length).split('/').first;
-        grouped.putIfAbsent(name, () => []).add(file);
-      }
-    }
+    final names = {
+      for (final path in [
+        ...contents.directories,
+        for (final file in contents.files) file.directory,
+      ])
+        if (path != directory && path.startsWith(prefix))
+          path.substring(prefix.length).split('/').first,
+    }.toList()..sort((a, b) => b.compareTo(a));
     return ReplayLibraryListing(
       folders: [
-        for (final MapEntry(:key, :value) in grouped.entries)
-          ReplayLibraryFolder(path: '$prefix$key', name: key, files: value),
-      ]..sort((a, b) => b.name.compareTo(a.name)),
+        for (final name in names)
+          ReplayLibraryFolder(
+            path: '$prefix$name',
+            name: name,
+            files: filesUnder(files: contents.files, directory: '$prefix$name'),
+          ),
+      ],
       files: [
-        for (final file in files)
+        for (final file in contents.files)
           if (file.directory == directory) file,
       ],
     );
@@ -38,20 +43,21 @@ class const ReplayLibraryBrowser() {
     required String directory,
   }) => [
     for (final file in files)
-      if (directory.isEmpty ||
-          file.directory == directory ||
-          file.directory.startsWith('$directory/'))
-        file,
+      if (isWithin(path: file.directory, directory: directory)) file,
   ];
 
-  // 表示中のフォルダが削除や移動で空になった場合は、ファイルが残っている上位のフォルダを表示する。
+  bool isWithin({required String path, required String directory}) =>
+      directory.isEmpty || path == directory || path.startsWith('$directory/');
+
+  // 表示中のフォルダが削除や名前の変更で無くなった場合は、残っている上位のフォルダを表示する。
   String existingDirectory({
-    required List<SavedReplayFile> files,
+    required ReplayLibraryContents contents,
     required String directory,
   }) {
     var current = directory;
     while (current.isNotEmpty &&
-        filesUnder(files: files, directory: current).isEmpty) {
+        !contents.directories.contains(current) &&
+        filesUnder(files: contents.files, directory: current).isEmpty) {
       current = parent(directory: current);
     }
     return current;
@@ -61,4 +67,10 @@ class const ReplayLibraryBrowser() {
     final index = directory.lastIndexOf('/');
     return index < 0 ? '' : directory.substring(0, index);
   }
+
+  String name({required String directory}) =>
+      directory.substring(directory.lastIndexOf('/') + 1);
+
+  String join({required String parent, required String child}) =>
+      parent.isEmpty ? child : '$parent/$child';
 }

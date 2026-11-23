@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/saved_replay_file.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_directory_field.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -8,6 +9,7 @@ typedef ReplayFileLocation = ({String name, String directory});
 
 class const ReplayFileLocationDialog({
   required final SavedReplayFile file,
+  required final List<String> directories,
   super.key,
 }) extends HookWidget {
   @override
@@ -26,13 +28,10 @@ class const ReplayFileLocationDialog({
             decoration: const InputDecoration(labelText: '名前'),
           ),
           SizedBox(height: context.designSystem.spacing.md),
-          TextField(
+          ReplayDirectoryField(
             controller: directory,
-            decoration: const InputDecoration(
-              labelText: 'フォルダ',
-              hintText: '2026/11',
-              helperText: '「/」で区切ります。空欄にすると最上位に置きます',
-            ),
+            directories: directories,
+            helperText: '「/」で区切ります。無いフォルダは作成します。空欄にすると最上位に置きます',
           ),
         ],
       ),

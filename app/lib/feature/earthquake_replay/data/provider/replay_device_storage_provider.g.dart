@@ -49,4 +49,4 @@ final class ReplayDeviceStorageProvider
 }
 
 String _$replayDeviceStorageHash() =>
-    r'a63168dbeb7cac53b89c51028ccdf70c174459ad';
+    r'6ff8a2b3449db2500f0453f19086c1e748a7defc';

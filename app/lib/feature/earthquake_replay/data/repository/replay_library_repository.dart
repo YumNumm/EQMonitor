@@ -1,7 +1,9 @@
 import 'package:eqmonitor/feature/earthquake_replay/data/data_source/replay_device_storage_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/data_source/replay_file_storage_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_file_path_resolver.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_library_browser.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_library_exception.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_library_folder.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/saved_replay_file.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_file_repository.dart';
 import 'package:native_plugin/native_plugin.dart';
@@ -16,6 +18,7 @@ ReplayLibraryRepository replayLibraryRepository(Ref ref) =>
       deviceStorage: ref.watch(replayDeviceStorageDataSourceProvider),
       files: ref.watch(replayFileRepositoryProvider),
       pathResolver: ref.watch(replayFilePathResolverProvider),
+      browser: ref.watch(replayLibraryBrowserProvider),
     );
 
 class const ReplayLibraryRepository({
@@ -23,8 +26,9 @@ class const ReplayLibraryRepository({
   required final ReplayDeviceStorageDataSource deviceStorage,
   required final ReplayFileRepository files,
   required final ReplayFilePathResolver pathResolver,
+  required final ReplayLibraryBrowser browser,
 }) {
-  Future<List<SavedReplayFile>> list() => storage.list();
+  Future<ReplayLibraryContents> list() => storage.list();
 
   Future<DeviceStorage?> readDeviceStorage() async {
     final root = await storage.root();
@@ -33,12 +37,18 @@ class const ReplayLibraryRepository({
 
   Future<Uri?> pick() => files.pick();
 
-  Future<SavedReplayFile> add({required Uri source}) async {
+  /// [directory] が空の場合は、ヘッダの開始時刻の年/月へ保存する。
+  Future<SavedReplayFile> add({
+    required Uri source,
+    required String directory,
+  }) async {
     try {
       final document = await files.loadDocument(source: source);
       final startTime = document.file.header.startTime;
       return await storage.save(
-        directory: pathResolver.defaultDirectory(startTime: startTime),
+        directory: directory.isEmpty
+            ? pathResolver.defaultDirectory(startTime: startTime)
+            : directory,
         name: importFileName(name: document.name, startTime: startTime),
         bytes: document.bytes,
       );
@@ -65,6 +75,48 @@ class const ReplayLibraryRepository({
     name: pathResolver.fileName(input: name),
   );
 
-  Future<void> delete({required List<SavedReplayFile> files}) =>
-      storage.deleteAll(files: files);
+  Future<void> createDirectory({required String directory}) =>
+      storage.createDirectory(directory: nonEmptyDirectory(input: directory));
+
+  Future<void> moveDirectory({required String from, required String to}) =>
+      storage.moveDirectory(
+        from: from,
+        to: nonEmptyDirectory(input: to),
+      );
+
+  Future<void> moveEntries({
+    required List<SavedReplayFile> files,
+    required List<String> directories,
+    required String destination,
+  }) async {
+    final target = pathResolver.directory(input: destination);
+    for (final directory in directories) {
+      await storage.moveDirectory(
+        from: directory,
+        to: browser.join(
+          parent: target,
+          child: browser.name(directory: directory),
+        ),
+      );
+    }
+    for (final file in files) {
+      await storage.move(file: file, directory: target, name: file.name);
+    }
+  }
+
+  Future<void> delete({
+    required List<SavedReplayFile> files,
+    required List<String> directories,
+  }) async {
+    await storage.deleteAll(files: files);
+    await storage.deleteDirectories(directories: directories);
+  }
+
+  String nonEmptyDirectory({required String input}) {
+    final directory = pathResolver.directory(input: input);
+    if (directory.isEmpty) {
+      throw const ReplayLibraryException(.invalidDirectory);
+    }
+    return directory;
+  }
 }

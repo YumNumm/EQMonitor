@@ -8,7 +8,7 @@ import 'package:eqmonitor/feature/earthquake_replay/data/action/replay_library_a
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_library_browser.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_library_folder.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/saved_replay_file.dart';
-import 'package:eqmonitor/feature/earthquake_replay/data/notifier/saved_replay_files_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_library_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_device_storage_provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,40 +17,50 @@ import 'package:riverpod/experimental/mutation.dart';
 
 enum _FileMenu { relocate, export, delete }
 
+enum _FolderMenu { rename, delete }
+
 class const ReplayLibraryPage({super.key}) extends HookConsumerWidget {
+  static const _empty = ReplayLibraryContents(files: [], directories: []);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(savedReplayFilesProvider);
+    final state = ref.watch(replayLibraryProvider);
     final browser = ref.watch(replayLibraryBrowserProvider);
     final action = ref.watch(replayLibraryActionProvider);
-    final isAdding = ref.watch(SavedReplayFiles.addMutation) is MutationPending;
+    final isAdding =
+        ref.watch(ReplayLibraryNotifier.addMutation) is MutationPending;
     final selectedDirectory = useState('');
     final isSelecting = useState(false);
-    final selectedPaths = useState(const <String>{});
+    final selectedFilePaths = useState(const <String>{});
+    final selectedFolderPaths = useState(const <String>{});
 
-    final files = state.value ?? const <SavedReplayFile>[];
+    final contents = state.value ?? _empty;
     final directory = browser.existingDirectory(
-      files: files,
+      contents: contents,
       directory: selectedDirectory.value,
     );
-    final listing = browser.browse(files: files, directory: directory);
-    final visibleFiles = browser.filesUnder(files: files, directory: directory);
+    final listing = browser.browse(contents: contents, directory: directory);
     final selectedFiles = [
-      for (final file in files)
-        if (selectedPaths.value.contains(file.path)) file,
+      for (final file in listing.files)
+        if (selectedFilePaths.value.contains(file.path)) file,
     ];
+    final selectedFolders = [
+      for (final folder in listing.folders)
+        if (selectedFolderPaths.value.contains(folder.path)) folder,
+    ];
+    final selectedCount = selectedFiles.length + selectedFolders.length;
 
     void endSelection() {
       isSelecting.value = false;
-      selectedPaths.value = const {};
+      selectedFilePaths.value = const {};
+      selectedFolderPaths.value = const {};
     }
 
-    void toggle(List<SavedReplayFile> targets) {
-      final paths = {for (final file in targets) file.path};
+    void toggle(ValueNotifier<Set<String>> selection, String path) {
       isSelecting.value = true;
-      selectedPaths.value = selectedPaths.value.containsAll(paths)
-          ? selectedPaths.value.difference(paths)
-          : selectedPaths.value.union(paths);
+      selection.value = selection.value.contains(path)
+          ? selection.value.difference({path})
+          : {...selection.value, path};
     }
 
     return PopScope(
@@ -73,26 +83,60 @@ class const ReplayLibraryPage({super.key}) extends HookConsumerWidget {
                   tooltip: '選択を終了',
                   onPressed: endSelection,
                 ),
-                title: Text('${selectedFiles.length}件を選択'),
+                title: Text('$selectedCount件を選択'),
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.select_all_rounded),
                     tooltip: 'すべて選択',
-                    onPressed: () => selectedPaths.value = {
-                      ...selectedPaths.value,
-                      for (final file in visibleFiles) file.path,
+                    onPressed: () {
+                      selectedFilePaths.value = {
+                        for (final file in listing.files) file.path,
+                      };
+                      selectedFolderPaths.value = {
+                        for (final folder in listing.folders) folder.path,
+                      };
                     },
                   ),
                   IconButton(
+                    icon: const Icon(Icons.drive_file_move_outline),
+                    tooltip: '選択した項目を移動',
+                    onPressed: selectedCount == 0
+                        ? null
+                        : () async {
+                            final isMoved = await action.moveEntries(
+                              ref,
+                              context,
+                              files: selectedFiles,
+                              folders: [
+                                for (final folder in selectedFolders)
+                                  folder.path,
+                              ],
+                              currentDirectory: directory,
+                              directories: contents.directories,
+                            );
+                            if (isMoved) {
+                              endSelection();
+                            }
+                          },
+                  ),
+                  IconButton(
                     icon: const Icon(Icons.delete_outline_rounded),
-                    tooltip: '選択したファイルを削除',
-                    onPressed: selectedFiles.isEmpty
+                    tooltip: '選択した項目を削除',
+                    onPressed: selectedCount == 0
                         ? null
                         : () async {
                             final isDeleted = await action.delete(
                               ref,
                               context,
                               files: selectedFiles,
+                              folders: [
+                                for (final folder in selectedFolders)
+                                  folder.path,
+                              ],
+                              folderFileCount: selectedFolders.fold(
+                                0,
+                                (total, folder) => total + folder.files.length,
+                              ),
                             );
                             if (isDeleted) {
                               endSelection();
@@ -104,18 +148,25 @@ class const ReplayLibraryPage({super.key}) extends HookConsumerWidget {
             : AppBar(
                 title: Text(directory.isEmpty ? '保存済みのリプレイ' : directory),
                 actions: [
-                  if (files.isNotEmpty)
+                  if (listing.files.isNotEmpty || listing.folders.isNotEmpty)
                     IconButton(
                       icon: const Icon(Icons.checklist_rounded),
                       tooltip: '選択',
                       onPressed: () => isSelecting.value = true,
                     ),
                   IconButton(
+                    icon: const Icon(Icons.create_new_folder_outlined),
+                    tooltip: '新しいフォルダ',
+                    onPressed: () async =>
+                        action.createFolder(ref, context, parent: directory),
+                  ),
+                  IconButton(
                     icon: const Icon(Icons.add_rounded),
                     tooltip: 'ファイルを追加',
                     onPressed: isAdding
                         ? null
-                        : () async => action.add(ref, context),
+                        : () async =>
+                              action.add(ref, context, directory: directory),
                   ),
                 ],
               ),
@@ -128,27 +179,35 @@ class const ReplayLibraryPage({super.key}) extends HookConsumerWidget {
           ),
           _ => ListView(
             children: [
-              _StorageUsageCard(files: files),
+              _StorageUsageCard(files: contents.files),
               if (isAdding) const LinearProgressIndicator(),
-              if (files.isEmpty)
-                const ListTile(
-                  title: Text('保存済みのファイルはありません'),
-                  subtitle: Text('右上の「＋」から .eqrp ファイルを追加できます'),
+              if (listing.files.isEmpty && listing.folders.isEmpty)
+                ListTile(
+                  title: Text(
+                    directory.isEmpty ? '保存済みのファイルはありません' : 'このフォルダは空です',
+                  ),
+                  subtitle: Text(
+                    directory.isEmpty
+                        ? '右上の「＋」から .eqrp ファイルを追加できます。'
+                              '追加したファイルは開始時刻の年/月のフォルダに入ります'
+                        : '右上の「＋」から、このフォルダへ .eqrp ファイルを追加できます',
+                  ),
                 ),
               for (final folder in listing.folders)
                 _FolderTile(
                   folder: folder,
                   isSelecting: isSelecting.value,
-                  selectedPaths: selectedPaths.value,
+                  isSelected: selectedFolderPaths.value.contains(folder.path),
                   onOpen: () => selectedDirectory.value = folder.path,
-                  onToggle: () => toggle(folder.files),
+                  onToggle: () => toggle(selectedFolderPaths, folder.path),
                 ),
               for (final file in listing.files)
                 _FileTile(
                   file: file,
+                  directories: contents.directories,
                   isSelecting: isSelecting.value,
-                  isSelected: selectedPaths.value.contains(file.path),
-                  onToggle: () => toggle([file]),
+                  isSelected: selectedFilePaths.value.contains(file.path),
+                  onToggle: () => toggle(selectedFilePaths, file.path),
                 ),
             ],
           ),
@@ -217,41 +276,58 @@ class const _StorageUsageCard({required final List<SavedReplayFile> files})
 class const _FolderTile({
   required final ReplayLibraryFolder folder,
   required final bool isSelecting,
-  required final Set<String> selectedPaths,
+  required final bool isSelected,
   required final VoidCallback onOpen,
   required final VoidCallback onToggle,
-}) extends StatelessWidget {
+}) extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final selectedCount = folder.files
-        .where((file) => selectedPaths.contains(file.path))
-        .length;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final action = ref.watch(replayLibraryActionProvider);
     return ListTile(
       leading: isSelecting
-          ? Checkbox(
-              tristate: true,
-              value: selectedCount == 0
-                  ? false
-                  : selectedCount == folder.files.length
-                  ? true
-                  : null,
-              onChanged: (_) => onToggle(),
-            )
+          ? Checkbox(value: isSelected, onChanged: (_) => onToggle())
           : const Icon(Icons.folder_outlined),
       title: Text(folder.name),
       subtitle: Text(
         '${folder.files.length}件・'
         '${const ByteSizeFormatter().format(folder.sizeBytes)}',
       ),
-      trailing: isSelecting ? null : const Icon(Icons.chevron_right_rounded),
+      selected: isSelected,
       onTap: isSelecting ? onToggle : onOpen,
       onLongPress: isSelecting ? null : onToggle,
+      trailing: isSelecting
+          ? null
+          : PopupMenuButton<_FolderMenu>(
+              tooltip: 'その他の操作',
+              onSelected: (menu) async => switch (menu) {
+                .rename => action.renameFolder(
+                  ref,
+                  context,
+                  directory: folder.path,
+                ),
+                .delete => action.delete(
+                  ref,
+                  context,
+                  files: const [],
+                  folders: [folder.path],
+                  folderFileCount: folder.files.length,
+                ),
+              },
+              itemBuilder: (context) => const [
+                PopupMenuItem(
+                  value: _FolderMenu.rename,
+                  child: Text('名前と場所を変更'),
+                ),
+                PopupMenuItem(value: _FolderMenu.delete, child: Text('削除')),
+              ],
+            ),
     );
   }
 }
 
 class const _FileTile({
   required final SavedReplayFile file,
+  required final List<String> directories,
   required final bool isSelecting,
   required final bool isSelected,
   required final VoidCallback onToggle,
@@ -280,9 +356,20 @@ class const _FileTile({
           : PopupMenuButton<_FileMenu>(
               tooltip: 'その他の操作',
               onSelected: (menu) async => switch (menu) {
-                .relocate => action.relocate(ref, context, file: file),
+                .relocate => action.relocate(
+                  ref,
+                  context,
+                  file: file,
+                  directories: directories,
+                ),
                 .export => action.export(ref, context, file: file),
-                .delete => action.delete(ref, context, files: [file]),
+                .delete => action.delete(
+                  ref,
+                  context,
+                  files: [file],
+                  folders: const [],
+                  folderFileCount: 0,
+                ),
               },
               itemBuilder: (context) => [
                 const PopupMenuItem(
@@ -294,10 +381,7 @@ class const _FileTile({
                     value: _FileMenu.export,
                     child: Text('外部へエクスポート'),
                   ),
-                const PopupMenuItem(
-                  value: _FileMenu.delete,
-                  child: Text('削除'),
-                ),
+                const PopupMenuItem(value: _FileMenu.delete, child: Text('削除')),
               ],
             ),
     );
