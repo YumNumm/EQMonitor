@@ -153,10 +153,40 @@ void main() {
       ],
     );
 
-    expect(bounds.south, closeTo(33.0066 - seismicMapFocusMargin, 1e-3));
-    expect(bounds.north, closeTo(37.8914 + seismicMapFocusMargin, 1e-3));
-    expect(bounds.west, closeTo(130 - seismicMapFocusMargin, 1e-9));
-    expect(bounds.east, closeTo(139.5 + seismicMapFocusMargin, 1e-9));
+    expect(bounds.south, 32);
+    expect(bounds.north, 38);
+    expect(bounds.west, 128);
+    expect(bounds.east, 140);
+  });
+
+  test('揺れ検知の範囲が同じ2度格子に収まる間は同じ範囲を返す', () {
+    final first = builder.forRealtime(
+      fallbackBounds: _fallback,
+      eews: const [],
+      shakes: [
+        _shake(minLat: 33.2, maxLat: 37.6, minLng: 130.4, maxLng: 139.1),
+      ],
+    );
+    final grown = builder.forRealtime(
+      fallbackBounds: _fallback,
+      eews: const [],
+      shakes: [
+        _shake(minLat: 32.8, maxLat: 37.7, minLng: 129.6, maxLng: 139.3),
+      ],
+    );
+
+    expect(grown, first);
+  });
+
+  test('EEWだけの場合は2度格子に揃えない', () {
+    final bounds = builder.forRealtime(
+      fallbackBounds: _fallback,
+      eews: [_eew(latitude: 35.3, longitude: 139.7)],
+      shakes: const [],
+    );
+
+    expect(bounds.south % 2, isNot(0));
+    expect(bounds.west % 2, isNot(0));
   });
 
   test('複数EEWの震源をすべて内包する', () {
