@@ -194,8 +194,13 @@ class StoreScreenshotScenes({
     await $(EarthquakeHistoryListTile)
         .waitUntilVisible(timeout: const Duration(minutes: 2));
     // iPhone Duo の内側のように広い画面では一覧と詳細が並ぶ。詳細を空欄のまま撮らないよう、
-    // 地震詳細のシーンと同じ地震を一覧から選ぶ。
-    if (!$('一覧から表示する情報を選択してください').exists) {
+    // 地震詳細のシーンと同じ地震を一覧から選ぶ。空欄の案内の文字は見つけられなかったため、一覧の幅で判断する。
+    final listWidth = $.tester
+        .getSize(find.byType(EarthquakeHistoryListTile).first)
+        .width;
+    final screenWidth =
+        $.tester.view.physicalSize.width / $.tester.view.devicePixelRatio;
+    if (listWidth > screenWidth * 0.7) {
       await _capture(scene, settle: const Duration(seconds: 5));
       return;
     }
@@ -206,11 +211,13 @@ class StoreScreenshotScenes({
             widget.item.earthquake.eventId == detailEventId,
       ),
     );
+    // 絞り込みのチップの行も横に動く Scrollable のため、縦の一覧を選ぶ。
     await tile.scrollTo(
       view: find
-          .ancestor(
-            of: find.byType(EarthquakeHistoryListTile).first,
-            matching: find.byType(Scrollable),
+          .byWidgetPredicate(
+            (widget) =>
+                widget is Scrollable &&
+                widget.axisDirection == AxisDirection.down,
           )
           .first,
       maxScrolls: 80,
