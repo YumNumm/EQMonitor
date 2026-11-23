@@ -143,6 +143,7 @@ class const _MapContent({required final String styleString})
             Consumer(
               builder: (context, ref, _) => EewHypocenterLayer(
                 eews: ref.watch(eewAliveTelegramProvider) ?? [],
+                enableBlink: true,
               ),
             ),
             const HomeMapLabelLayer(),
