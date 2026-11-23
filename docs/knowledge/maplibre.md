@@ -41,6 +41,14 @@
 - Dart の式テスト（`layer.toJson()` の検証）だけで native の描画結果を検証済みとしない。
 - 非表示 filter に `['==', 1, 0]` を使わない。MapLibre Native はこれを旧形式の比較と解釈し、数値の属性名を拒否する。地域選択は `RegionMapLayers.hiddenFilter` の空集合への所属判定を使う。
 
+## 推計震度の raster-dem 表示
+
+- 推計震度は API の `estimated_intensity_dem_archive` があれば raster-dem の PMTiles（計測震度を 0.1 刻みの標高として持つ Mapbox Terrain-RGB、512px、z0〜10、データなしは標高 -10000）を `color-relief` layer で描く。無い地震は従来のベクトル archive を使う。
+- 階級表示と 0.1 単位表示の切り替えは `color-relief-color` の式だけを差し替える。source と layer は作り直さない。
+- MapLibre Native は `color-relief` の `resampling` を受け付けず、layer 追加が `invalidArgument` で失敗する（iOS Simulator、2026-11-23）。DEM は線形補間で読まれるため、色の境界の両側に stop を置いて中間値のにじみを抑える。データなしを -10000 に置くことで、領域の縁に低い震度の色が出ない。
+- `color-relief-color` は `['elevation']` を入力にした `interpolate` で書く。Android での表示は未確認。
+- 配色: 階級表示はテーマの推計震度色、0.1 単位表示は `EstimatedIntensityScaleColorResolver` の専用配色。
+
 ## 座標・選択・初期カメラ
 
 - カメラの bounds 計算は `app/lib/feature/map/data/logic/map_camera_bounds_fitter.dart`、モデルは同 `data/model/map_camera.dart`・`map_camera_bounds.dart` に集約し、既存の fitBounds テスト・fixture は `app/test/feature/map/data/logic/` に置く。

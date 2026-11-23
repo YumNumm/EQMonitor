@@ -32,6 +32,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intens
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_content.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_area_icon_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_dem_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_error_layer.dart';
@@ -195,6 +196,7 @@ class const _MapContent({
         : null;
 
     final tileUrl = earthquake.estimatedIntensityTileUrl;
+    final demTileUrl = earthquake.estimatedIntensityDemTileUrl;
     final showingLpgmIntensity = displayMode == IntensityDisplayMode.lpgm;
     final showEstimated = displayMode == IntensityDisplayMode.estimated;
     final showStations = showEstimated
@@ -285,7 +287,13 @@ class const _MapContent({
                   showStationLabel: true,
                 ),
             ] else ...[
-              if (showEstimated && tileUrl != null)
+              if (showEstimated && demTileUrl != null)
+                EarthquakeHistoryDetailsEstimatedIntensityDemLayer(
+                  key: const ValueKey('estimated-dem'),
+                  tileUrl: demTileUrl,
+                  displayMode: details.estimatedIntensityDemDisplayMode,
+                )
+              else if (showEstimated && tileUrl != null)
                 EarthquakeHistoryDetailsEstimatedIntensityLayer(
                   key: const ValueKey('estimated'),
                   tileUrl: tileUrl,

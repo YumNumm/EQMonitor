@@ -36,6 +36,9 @@ abstract class Earthquake with _$Earthquake {
 
     /// 推計震度PMTilesのフルURL
     required String? estimatedIntensityTileUrl,
+
+    /// 計測震度を 0.1 単位で格納した raster-dem PMTiles のフルURL
+    String? estimatedIntensityDemTileUrl,
     @JsonKey(includeFromJson: false, includeToJson: false)
     EarthquakeCatalog? catalog,
   }) = _Earthquake;
@@ -75,6 +78,7 @@ extension EarthquakeApiExtension on api.Earthquake {
     ),
     hypocenter: hypocenter?.toEarthquakeHypocenter,
     estimatedIntensityTileUrl: estimatedIntensityTile,
+    estimatedIntensityDemTileUrl: estimatedIntensityDemArchive?.url,
     catalog: catalog?.toEarthquakeCatalog,
     intensity: intensity?.toEarthquakeIntensity(
       parameter: parameter,

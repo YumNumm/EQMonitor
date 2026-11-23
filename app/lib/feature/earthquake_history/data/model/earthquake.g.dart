@@ -86,6 +86,10 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
         'estimated_intensity_tile_url',
         (v) => v as String?,
       ),
+      estimatedIntensityDemTileUrl: $checkedConvert(
+        'estimated_intensity_dem_tile_url',
+        (v) => v as String?,
+      ),
     );
     return val;
   },
@@ -100,6 +104,7 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
     'telegramComments': 'telegram_comments',
     'earthquakeType': 'earthquake_type',
     'estimatedIntensityTileUrl': 'estimated_intensity_tile_url',
+    'estimatedIntensityDemTileUrl': 'estimated_intensity_dem_tile_url',
   },
 );
 
@@ -123,6 +128,7 @@ Map<String, dynamic> _$EarthquakeToJson(_Earthquake instance) =>
       'intensity': instance.intensity,
       'earthquake_type': _$EarthquakeTypeEnumMap[instance.earthquakeType],
       'estimated_intensity_tile_url': instance.estimatedIntensityTileUrl,
+      'estimated_intensity_dem_tile_url': instance.estimatedIntensityDemTileUrl,
     };
 
 const _$TelegramStatusEnumMap = {

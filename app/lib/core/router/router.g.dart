@@ -766,6 +766,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugJmaMapRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'estimated-intensity-dem',
+          hasOverriddenOnExit: false,
+          factory: $DebugEstimatedIntensityDemRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'playground',
           hasOverriddenOnExit: false,
           factory: $PlaygroundRoute._fromState,
@@ -1474,6 +1479,28 @@ mixin $DebugJmaMapRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/jma-map');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugEstimatedIntensityDemRoute on GoRouteData {
+  static DebugEstimatedIntensityDemRoute _fromState(GoRouterState state) =>
+      const DebugEstimatedIntensityDemRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/estimated-intensity-dem');
 
   @override
   void go(BuildContext context) => context.go(location);
