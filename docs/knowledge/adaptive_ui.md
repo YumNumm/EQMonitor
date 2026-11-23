@@ -21,7 +21,7 @@
   ページ内の差し替えはPopScope(canPop:false)となり、`popGestureEnabled`がfalseを返してiOSのスワイプバックが無効になる。
   一覧側もHistoryDetailScopeで包み、各ページが選択時にHistoryDetailScope.isSplitOf(context)で判断する。
 - 分割中に選択してから幅を狭めた場合は、HistoryAdaptiveViewのonCollapseDetailで選択を解除し、同じeventの詳細ルートをpushする。
-  詳細は作り直すため、地図位置やシートの状態は引き継がない。履歴ページが最前面のルートでない間は呼ばない。
+  詳細は作り直すため、地図位置やシートの状態は引き継がない。履歴ページが最前面のルートでない間と、アプリがhidden/pausedの間は呼ばない。
 - EEW詳細の地図上シートと最新報の初期選択はuseSheetで決め、onCloseの有無で判断しない。
 - 電文一覧のVXSE62は地域の`lpgmIntensity`を使い、長周期地震動階級の降順で専用アイコンと地域名を表示する。階級が欠けた地域を震度で代用しない。前報との差分注記も長周期地震動階級で比較する。
 

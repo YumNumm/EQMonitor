@@ -21,6 +21,10 @@ class const HistoryAdaptiveView({
     final avoidBounds = DisplayFeatureSubScreen.avoidBounds(media).toList();
     final hasDetail = detail != null;
     final isCurrentRoute = ModalRoute.isCurrentOf(context) ?? true;
+    final lifecycle = useAppLifecycleState();
+    final isBackground =
+        lifecycle == AppLifecycleState.hidden ||
+        lifecycle == AppLifecycleState.paused;
 
     return PopScope(
       canPop: !hasDetail,
@@ -62,7 +66,8 @@ class const HistoryAdaptiveView({
                 hasDetail &&
                 !isSplit &&
                 !waiting &&
-                isCurrentRoute) {
+                isCurrentRoute &&
+                !isBackground) {
               WidgetsBinding.instance.addPostFrameCallback((_) => collapse());
             }
             return IgnorePointer(
