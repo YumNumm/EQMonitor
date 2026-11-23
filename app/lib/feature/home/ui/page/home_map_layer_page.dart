@@ -132,6 +132,7 @@ class const HomeMapLayerPage({super.key}) extends ConsumerWidget {
                         _DebugOverlayShakeDetectionTile(),
                         _DebugOverlayKyoshinMonitorTile(),
                         _DebugOverlayEewTile(),
+                        _DebugKyoshinIntensityIconTile(),
                       ],
                     ),
                   ],
@@ -1324,6 +1325,31 @@ class const _DebugOverlayKyoshinMonitorTile() extends ConsumerWidget {
               .get(homeConfigurationProvider.notifier)
               .updateDebugOverlay(
                 cfg.debugOverlay.copyWith(kyoshinMonitor: next),
+              ),
+        );
+      },
+    );
+  }
+}
+
+class const _DebugKyoshinIntensityIconTile() extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: '強震モニタの震度アイコン',
+      subtitle: 'リアルタイム震度が 0 以上の観測点を震度アイコンで表示します。',
+      value: cfg.kyoshinMonitor.showIntensityIcon,
+      onChanged: (next) async {
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateKyoshinMonitor(
+                cfg.kyoshinMonitor.copyWith(showIntensityIcon: next),
               ),
         );
       },

@@ -854,7 +854,7 @@ as bool,
 /// @nodoc
 mixin _$HomeKyoshinMonitorSettings {
 
- double? get minRealtimeShindo; HomeKmoniMarkerSize get markerSize;
+ double? get minRealtimeShindo; HomeKmoniMarkerSize get markerSize; bool get showIntensityIcon;
 /// Create a copy of HomeKyoshinMonitorSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -867,16 +867,16 @@ $HomeKyoshinMonitorSettingsCopyWith<HomeKyoshinMonitorSettings> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeKyoshinMonitorSettings&&(identical(other.minRealtimeShindo, minRealtimeShindo) || other.minRealtimeShindo == minRealtimeShindo)&&(identical(other.markerSize, markerSize) || other.markerSize == markerSize));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeKyoshinMonitorSettings&&(identical(other.minRealtimeShindo, minRealtimeShindo) || other.minRealtimeShindo == minRealtimeShindo)&&(identical(other.markerSize, markerSize) || other.markerSize == markerSize)&&(identical(other.showIntensityIcon, showIntensityIcon) || other.showIntensityIcon == showIntensityIcon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,minRealtimeShindo,markerSize);
+int get hashCode => Object.hash(runtimeType,minRealtimeShindo,markerSize,showIntensityIcon);
 
 @override
 String toString() {
-  return 'HomeKyoshinMonitorSettings(minRealtimeShindo: $minRealtimeShindo, markerSize: $markerSize)';
+  return 'HomeKyoshinMonitorSettings(minRealtimeShindo: $minRealtimeShindo, markerSize: $markerSize, showIntensityIcon: $showIntensityIcon)';
 }
 
 
@@ -887,7 +887,7 @@ abstract mixin class $HomeKyoshinMonitorSettingsCopyWith<$Res>  {
   factory $HomeKyoshinMonitorSettingsCopyWith(HomeKyoshinMonitorSettings value, $Res Function(HomeKyoshinMonitorSettings) _then) = _$HomeKyoshinMonitorSettingsCopyWithImpl;
 @useResult
 $Res call({
- double? minRealtimeShindo, HomeKmoniMarkerSize markerSize
+ double? minRealtimeShindo, HomeKmoniMarkerSize markerSize, bool showIntensityIcon
 });
 
 
@@ -904,11 +904,12 @@ class _$HomeKyoshinMonitorSettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeKyoshinMonitorSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? minRealtimeShindo = freezed,Object? markerSize = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? minRealtimeShindo = freezed,Object? markerSize = null,Object? showIntensityIcon = null,}) {
   return _then(HomeKyoshinMonitorSettings(
 minRealtimeShindo: freezed == minRealtimeShindo ? _self.minRealtimeShindo : minRealtimeShindo // ignore: cast_nullable_to_non_nullable
 as double?,markerSize: null == markerSize ? _self.markerSize : markerSize // ignore: cast_nullable_to_non_nullable
-as HomeKmoniMarkerSize,
+as HomeKmoniMarkerSize,showIntensityIcon: null == showIntensityIcon ? _self.showIntensityIcon : showIntensityIcon // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -993,10 +994,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  HomeKmoniMarkerSize markerSize)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  HomeKmoniMarkerSize markerSize,  bool showIntensityIcon)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeKyoshinMonitorSettings() when $default != null:
-return $default(_that.minRealtimeShindo,_that.markerSize);case _:
+return $default(_that.minRealtimeShindo,_that.markerSize,_that.showIntensityIcon);case _:
   return orElse();
 
 }
@@ -1014,10 +1015,10 @@ return $default(_that.minRealtimeShindo,_that.markerSize);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  HomeKmoniMarkerSize markerSize)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  HomeKmoniMarkerSize markerSize,  bool showIntensityIcon)  $default,) {final _that = this;
 switch (_that) {
 case _HomeKyoshinMonitorSettings():
-return $default(_that.minRealtimeShindo,_that.markerSize);case _:
+return $default(_that.minRealtimeShindo,_that.markerSize,_that.showIntensityIcon);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1034,10 +1035,10 @@ return $default(_that.minRealtimeShindo,_that.markerSize);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? minRealtimeShindo,  HomeKmoniMarkerSize markerSize)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? minRealtimeShindo,  HomeKmoniMarkerSize markerSize,  bool showIntensityIcon)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeKyoshinMonitorSettings() when $default != null:
-return $default(_that.minRealtimeShindo,_that.markerSize);case _:
+return $default(_that.minRealtimeShindo,_that.markerSize,_that.showIntensityIcon);case _:
   return null;
 
 }
@@ -1049,11 +1050,12 @@ return $default(_that.minRealtimeShindo,_that.markerSize);case _:
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _HomeKyoshinMonitorSettings implements HomeKyoshinMonitorSettings {
-  const _HomeKyoshinMonitorSettings({this.minRealtimeShindo = null, this.markerSize = HomeKmoniMarkerSize.medium});
+  const _HomeKyoshinMonitorSettings({this.minRealtimeShindo = null, this.markerSize = HomeKmoniMarkerSize.medium, this.showIntensityIcon = false});
   factory _HomeKyoshinMonitorSettings.fromJson(Map<String, dynamic> json) => _$HomeKyoshinMonitorSettingsFromJson(json);
 
 @override@JsonKey() final  double? minRealtimeShindo;
 @override@JsonKey() final  HomeKmoniMarkerSize markerSize;
+@override@JsonKey() final  bool showIntensityIcon;
 
 /// Create a copy of HomeKyoshinMonitorSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -1068,16 +1070,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeKyoshinMonitorSettings&&(identical(other.minRealtimeShindo, minRealtimeShindo) || other.minRealtimeShindo == minRealtimeShindo)&&(identical(other.markerSize, markerSize) || other.markerSize == markerSize));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeKyoshinMonitorSettings&&(identical(other.minRealtimeShindo, minRealtimeShindo) || other.minRealtimeShindo == minRealtimeShindo)&&(identical(other.markerSize, markerSize) || other.markerSize == markerSize)&&(identical(other.showIntensityIcon, showIntensityIcon) || other.showIntensityIcon == showIntensityIcon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,minRealtimeShindo,markerSize);
+int get hashCode => Object.hash(runtimeType,minRealtimeShindo,markerSize,showIntensityIcon);
 
 @override
 String toString() {
-  return 'HomeKyoshinMonitorSettings(minRealtimeShindo: $minRealtimeShindo, markerSize: $markerSize)';
+  return 'HomeKyoshinMonitorSettings(minRealtimeShindo: $minRealtimeShindo, markerSize: $markerSize, showIntensityIcon: $showIntensityIcon)';
 }
 
 
@@ -1088,7 +1090,7 @@ abstract mixin class _$HomeKyoshinMonitorSettingsCopyWith<$Res> implements $Home
   factory _$HomeKyoshinMonitorSettingsCopyWith(_HomeKyoshinMonitorSettings value, $Res Function(_HomeKyoshinMonitorSettings) _then) = __$HomeKyoshinMonitorSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- double? minRealtimeShindo, HomeKmoniMarkerSize markerSize
+ double? minRealtimeShindo, HomeKmoniMarkerSize markerSize, bool showIntensityIcon
 });
 
 
@@ -1105,11 +1107,12 @@ class __$HomeKyoshinMonitorSettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeKyoshinMonitorSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? minRealtimeShindo = freezed,Object? markerSize = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? minRealtimeShindo = freezed,Object? markerSize = null,Object? showIntensityIcon = null,}) {
   return _then(_HomeKyoshinMonitorSettings(
 minRealtimeShindo: freezed == minRealtimeShindo ? _self.minRealtimeShindo : minRealtimeShindo // ignore: cast_nullable_to_non_nullable
 as double?,markerSize: null == markerSize ? _self.markerSize : markerSize // ignore: cast_nullable_to_non_nullable
-as HomeKmoniMarkerSize,
+as HomeKmoniMarkerSize,showIntensityIcon: null == showIntensityIcon ? _self.showIntensityIcon : showIntensityIcon // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

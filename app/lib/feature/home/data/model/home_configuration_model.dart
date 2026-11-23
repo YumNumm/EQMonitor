@@ -160,6 +160,7 @@ abstract class HomeKyoshinMonitorSettings with _$HomeKyoshinMonitorSettings {
   const factory({
     @Default(null) double? minRealtimeShindo,
     @Default(HomeKmoniMarkerSize.medium) HomeKmoniMarkerSize markerSize,
+    @Default(false) bool showIntensityIcon,
   }) = _HomeKyoshinMonitorSettings;
 
   factory fromJson(Map<String, dynamic> json) =>
