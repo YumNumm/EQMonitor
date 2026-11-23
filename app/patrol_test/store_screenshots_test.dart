@@ -17,6 +17,11 @@ const _requireFixtures = bool.fromEnvironment(
 );
 const _sceneFilter = String.fromEnvironment('STORE_SCREENSHOT_SCENES');
 
+// 第30報（16:11:08）で警報の対象になり、揺れの到達まで時間が残る地域（千葉県北西部、千葉市役所）。
+const _chiba = (latitude: 35.6073, longitude: 140.1063);
+// 第10報（16:10:21）で予想震度と到達までの時間が出る地域（富山県西部、device.json と同じ高岡市太田）。
+const _takaoka = (latitude: 36.815006, longitude: 137.03363);
+
 const _preferences = <String, Object>{
   'debug': false,
   'onboarding_completed': true,
@@ -78,6 +83,7 @@ void main() {
             fixture: _notoFixture,
             time: DateTime.parse('2024-01-01T16:11:08+09:00'),
             expectEew: true,
+            location: _chiba,
           );
         }
         if (hasNoto && wanted('kyoshin_monitor')) {
@@ -86,6 +92,7 @@ void main() {
             fixture: _notoFixture,
             time: DateTime.parse('2024-01-01T16:10:21+09:00'),
             expectEew: false,
+            location: _takaoka,
           );
         }
         if (wanted('earthquake_detail')) {

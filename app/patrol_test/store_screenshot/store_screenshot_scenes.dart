@@ -79,7 +79,14 @@ class StoreScreenshotScenes({
     required String fixture,
     required DateTime time,
     required bool expectEew,
+    ({double latitude, double longitude})? location,
   }) async {
+    if (location != null) {
+      await $.platform.mobile.setMockLocation(
+        location.latitude,
+        location.longitude,
+      );
+    }
     final replay = container.read(replayProvider.notifier);
     if (container.read(replayProvider)?.fileName != fixture) {
       final data = await rootBundle.load(
@@ -104,6 +111,11 @@ class StoreScreenshotScenes({
         .waitUntilVisible(timeout: const Duration(minutes: 1));
     if (expectEew) {
       await $(EewCard).waitUntilVisible(timeout: const Duration(minutes: 1));
+    }
+    if (location != null) {
+      await $('現在地\n揺れ到達まで').waitUntilVisible(
+        timeout: const Duration(minutes: 1),
+      );
     }
     await _capture(scene, settle: const Duration(seconds: 8));
   }
