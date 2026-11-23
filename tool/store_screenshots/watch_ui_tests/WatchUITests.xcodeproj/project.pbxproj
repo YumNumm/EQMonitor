@@ -1,0 +1,47 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+		A10000000000000000000001 /* SmartStackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* SmartStackTests.swift */; };
+		A10000000000000000000002 /* SmartStackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartStackTests.swift; sourceTree = "<group>"; };
+		A10000000000000000000003 /* WatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000004 = {isa = PBXGroup; children = (A10000000000000000000005 /* WatchUITests */, A10000000000000000000006 /* Products */, ); sourceTree = "<group>"; };
+		A10000000000000000000005 /* WatchUITests */ = {isa = PBXGroup; children = (A10000000000000000000002 /* SmartStackTests.swift */, ); path = WatchUITests; sourceTree = "<group>"; };
+		A10000000000000000000006 /* Products */ = {isa = PBXGroup; children = (A10000000000000000000003 /* WatchUITests.xctest */, ); name = Products; sourceTree = "<group>"; };
+		A10000000000000000000007 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000001 /* SmartStackTests.swift in Sources */, ); runOnlyForDeploymentPostprocessing = 0; };
+		A10000000000000000000008 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		A10000000000000000000009 /* WatchUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000000000000000000000C /* Build configuration list for PBXNativeTarget "WatchUITests" */;
+			buildPhases = (A10000000000000000000007 /* Sources */, A10000000000000000000008 /* Frameworks */, );
+			buildRules = ();
+			dependencies = ();
+			name = WatchUITests;
+			productName = WatchUITests;
+			productReference = A10000000000000000000003 /* WatchUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		A1000000000000000000000A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {BuildIndependentTargetsInParallel = 1; LastUpgradeCheck = 2700; };
+			buildConfigurationList = A1000000000000000000000B /* Build configuration list for PBXProject "WatchUITests" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en, Base, );
+			mainGroup = A10000000000000000000004;
+			productRefGroup = A10000000000000000000006 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (A10000000000000000000009 /* WatchUITests */, );
+		};
+		A1000000000000000000000D /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; ENABLE_TESTABILITY = YES; ONLY_ACTIVE_ARCH = YES; SDKROOT = watchos; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; SWIFT_VERSION = 5.0; WATCHOS_DEPLOYMENT_TARGET = 11.0; }; name = Debug; };
+		A1000000000000000000000E /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = net.yumnumm.eqmonitor.storescreenshot.WatchUITests; PRODUCT_NAME = "$(TARGET_NAME)"; SDKROOT = watchos; TARGETED_DEVICE_FAMILY = 4; }; name = Debug; };
+		A1000000000000000000000B /* Build configuration list for PBXProject "WatchUITests" */ = {isa = XCConfigurationList; buildConfigurations = (A1000000000000000000000D /* Debug */, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug; };
+		A1000000000000000000000C /* Build configuration list for PBXNativeTarget "WatchUITests" */ = {isa = XCConfigurationList; buildConfigurations = (A1000000000000000000000E /* Debug */, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug; };
+	};
+	rootObject = A1000000000000000000000A /* Project object */;
+}

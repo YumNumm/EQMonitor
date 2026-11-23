@@ -16,6 +16,7 @@ const _requireFixtures = bool.fromEnvironment(
   'STORE_SCREENSHOT_REQUIRE_FIXTURES',
 );
 const _sceneFilter = String.fromEnvironment('STORE_SCREENSHOT_SCENES');
+const _captureWatch = bool.fromEnvironment('STORE_SCREENSHOT_WATCH');
 
 // 第30報（16:11:08）で警報の対象になり、揺れの到達まで時間が残る地域（千葉県北西部、千葉市役所）。
 const _chiba = (latitude: 35.6073, longitude: 140.1063);
@@ -110,6 +111,7 @@ void main() {
         if (Platform.isIOS && wanted('lock_screen_live_activity')) {
           await scenes.lockScreenLiveActivity(
             scene: 'lock_screen_live_activity',
+            watchScene: _captureWatch ? 'watch_live_activity' : null,
           );
         }
         await channel.markDone();

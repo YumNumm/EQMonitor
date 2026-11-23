@@ -31,9 +31,10 @@
 
 ## 700: Apple Watch Ultra 4 の Live Activity
 
-- [ ] Figma の 03 通知ページに Apple Watch Ultra 4 のフレームと画面の配置を追加する（現在のファイルに Watch のノードは無い）。
-- [ ] Smart Stack の表示を作る。watchOS Simulator は Live Activity を表示しない報告があるため、`EewSmallActivityView` を Ultra の `.small` 寸法でオフスクリーン描画する方式を優先して検討する。
-- [ ] `figma_extract.py` と `compose.py` を 1 ページ複数端末に対応させる。
+- [x] Watch の Simulator のスマートスタックで Live Activity を撮る（`--watch-device`、手元の iOS 27.2 / watchOS 27.2 で確認）。
+- [ ] 03 通知ページに Apple Watch Ultra 4 のフレームと画面の配置を追加する（Figma にも端末フレームの fixture にも Watch が無い）。
+- [ ] `capture-ios` で watchOS のランタイムの用意とペアの作成を行い、CI でも撮れるようにする。
+- [ ] Watch の時刻・日付を固定する。「強い揺れに警戒!」の塗りは点滅するため、撮影の瞬間によって有無が変わる（iPhone 側も同じ）。
 
 ## 600: Android とストアへの反映
 

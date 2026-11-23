@@ -43,12 +43,35 @@ class StoreScreenshotScenes({
     description: 'home',
   );
 
+  // Patrol の権限ダイアログの操作は英語の端末でしか動かない。撮影は日本語の端末で行うため、iOS はラベルで押す。
+  static const _iosAllowLabels = ['アプリの使用中は許可', '許可'];
+
   Future<void> grantPermissionDialogs() async {
-    while (await $.platform.mobile.isPermissionDialogVisible(
-      timeout: const Duration(seconds: 2),
-    )) {
-      await $.platform.mobile.grantPermissionWhenInUse();
+    if (!Platform.isIOS) {
+      while (await $.platform.mobile.isPermissionDialogVisible(
+        timeout: const Duration(seconds: 2),
+      )) {
+        await $.platform.mobile.grantPermissionWhenInUse();
+      }
+      return;
     }
+    while (await _tapIosAllowButton()) {}
+  }
+
+  Future<bool> _tapIosAllowButton() async {
+    for (final label in _iosAllowLabels) {
+      try {
+        await $.platform.ios.tap(
+          IOSSelector(label: label, elementType: .button),
+          appId: 'com.apple.springboard',
+          timeout: const Duration(seconds: 2),
+        );
+        return true;
+      } on PatrolActionException {
+        continue;
+      }
+    }
+    return false;
   }
 
   // EEW カードの現在地の予想震度と到達までの時間は、位置情報が取れるときだけ出る。
@@ -191,18 +214,47 @@ class StoreScreenshotScenes({
     await _capture(scene, settle: const Duration(seconds: 30));
   }
 
-  Future<void> lockScreenLiveActivity({required String scene}) async {
+  Future<void> lockScreenLiveActivity({
+    required String scene,
+    required String? watchScene,
+  }) async {
     const eventId = 'eqmonitor-store-screenshot';
-    final contentState = container
-        .read(debugLiveActivityContentBuilderProvider)
-        .eewFromPreset(
+    final builder = container.read(debugLiveActivityContentBuilderProvider);
+    final controller = container.read(liveActivityLocalControllerProvider);
+    Map<String, dynamic> contentState({Duration offset = Duration.zero}) =>
+        builder.eewFromPreset(
           preset: DebugEewPreset.warning,
           eventId: eventId,
-          now: DateTime.now(),
+          now: DateTime.now().add(offset),
         );
-    await container
-        .read(liveActivityLocalControllerProvider)
-        .start(kind: .eew, eventId: eventId, contentState: contentState);
+    if (watchScene == null) {
+      await controller.start(
+        kind: .eew,
+        eventId: eventId,
+        contentState: contentState(),
+      );
+    } else {
+      // Watch に届くまでの時間は 20〜90 秒とばらつく。届く前に到達までの秒数が 0 にならないよう先の時刻で開始し、
+      // host が Watch への到着を確かめてから更新する。
+      final activityId = await controller.start(
+        kind: .eew,
+        eventId: eventId,
+        contentState: contentState(offset: const Duration(minutes: 30)),
+      );
+      await channel.capture('${watchScene}_prepare');
+      await controller.update(
+        kind: .eew,
+        activityId: activityId,
+        contentState: contentState(offset: const Duration(seconds: 15)),
+      );
+      await channel.capture('${watchScene}_update');
+      await channel.capture(watchScene);
+      await controller.update(
+        kind: .eew,
+        activityId: activityId,
+        contentState: contentState(),
+      );
+    }
     await $.platform.mobile.openNotifications();
     await _allowLiveActivities();
     await _capture(scene, settle: const Duration(seconds: 3));
@@ -213,7 +265,7 @@ class StoreScreenshotScenes({
   Future<void> _allowLiveActivities() async {
     try {
       await $.platform.ios.tap(
-        const IOSSelector(label: 'Allow', elementType: .button),
+        const IOSSelector(label: '許可', elementType: .button),
         appId: 'com.apple.springboard',
         timeout: const Duration(seconds: 5),
       );

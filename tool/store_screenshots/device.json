@@ -12,5 +12,9 @@
       "eew_warning",
       "eew_warning_dedicated"
     ]
-  }
+  },
+  "blink": [
+    "eew_warning",
+    "lock_screen_live_activity"
+  ]
 }

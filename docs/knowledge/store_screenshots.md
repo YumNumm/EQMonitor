@@ -77,13 +77,24 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   - 保存領域の `PRPosterRoleLockScreen-switcher-index.json` ができるのを待ってから終了し、書き込んで再起動する。設定済みの Simulator では何もしない。
     新規の Simulator ではこのファイルができるまで起動から約 10 分かかった。できる前に書き込むと、SQLite には選択中と記録されるのに既定の壁紙が描画され、再起動しても変わらなかった。
   - 非公開の形式に依存する。失敗しても `capture.py` は警告を出して壁紙なしで撮影を続ける。
+- 通知センターの通知は、撮影の直前に host が `simctl push` で送る（`device.json` の `push`、payload は `tool/store_screenshots/push/`）。
+  - 文面と `aps` の形は backend（`packages/notification-message`）のテンプレートに合わせた。警報は専用の経路（重大な通知）と通常の経路（即時通知）の 2 通が届く仕様。
+  - 警報対象地域・報番号・時刻・予報の数値は仮の値。
+  - テストは `FirebaseMessaging.requestPermission(criticalAlert: true)` を呼び、ダイアログを許可する。
+- Apple Watch の Live Activity は `--watch-device <UDID>` と `--dart-define=STORE_SCREENSHOT_WATCH=true` を付けたときだけ撮る（`watch_live_activity.png`）。
+  - Watch は `simctl` でも Patrol でも操作できない。`tool/store_screenshots/watch_ui_tests/`（watchOS の UI テストだけの Xcode プロジェクト）が文字盤から上スワイプしてスマートスタックを開く。デジタルクラウンの回転では開かなかった。
+  - iPhone と Watch の Simulator は `simctl pair` でつなぐ。iOS 27.0 と watchOS 27.2 の組では同期のハンドシェイクが `networkFailure` で失敗し続け、Live Activity が届かなかった。iOS 27.2 と watchOS 27.2 では届いた。
+  - 届くまでの時間は開始も更新も数秒〜数分とばらつく。host は Watch のログで到着（Carousel の `received live activity element`）と更新の反映（liveactivitiesd の `Delivering activity changes for com.apple.Carousel`）を確かめてから撮る。
+    到達までの秒数が 0 にならないよう、テストは先の時刻で開始し、Watch に届いてから現在の時刻で更新する。
+  - `simctl status_bar` は watchOS では使えない（`Status bar overrides not supported on this platform`）。Watch の時刻と日付は撮影時のものが写る。CI には watchOS のランタイムとペアの作成が無く、未対応。
 - `capture.py` は開始前にアプリの `store_screenshot/` を消す。中断した実行のアプリが残っていると、古い `ready` をビルド中に撮ってしまい、テストが撮影待ちで timeout する。
 - 現在地は `device.json` の `location`。富山県高岡市太田 24 番地（国土地理院の住所検索の結果。枝番までは解決されない）を設定している。
 - 地震詳細のデバッグボタンは debug ビルドで既定表示になるため、SharedPreferences の `debug` を false にする。
-- 権限ダイアログは `$.platform.mobile.grantPermissionWhenInUse()` で許可する。iOS は端末の言語が英語のときだけ扱える（Patrol の制約）。
-  新規の Simulator は host の言語を引き継ぐため、`capture.py` は作成した Simulator を `en-US` / `en_US` に変える。`--device` で渡した Simulator の言語は変えない。
+- 撮影は日本語の端末で行う。`capture.py` は Simulator の言語が `ja-JP` でなければ変えて再起動する（`--device` で渡した Simulator も対象）。
+  Patrol の `grantPermissionWhenInUse()` は iOS では英語の端末でしか動かないため、iOS の権限ダイアログは SpringBoard のボタンを日本語のラベル（`アプリの使用中は許可` / `許可`）で押す。
+- 「強い揺れに警戒!」の塗り（`0xBE0100`）は 1 秒周期で点滅する。`device.json` の `blink` に挙げたシーンと Watch は 6 回撮り、塗りの画素が最も多い画像を残す（`sips` で BMP にして数える）。
 - ロック画面相当の画像は、Live Activity を開始して `$.platform.mobile.openNotifications()` で通知センターを開いて撮る（iOS のみ）。
-  初回は Live Activity の下に許可の確認（Allow / Don't Allow）が出るため、SpringBoard の `Allow` を押してから撮る。
+  初回は Live Activity の下に許可の確認が出るため、SpringBoard の `許可` を押してから撮る。
 - EQRP は CI で `app/assets/store_screenshot_fixtures/` へ復号してからビルドし、`rootBundle` で読む。このディレクトリは平文をコミットしない（`.gitignore`）。
   リプレイは fixture を一時ファイルへ書き出して `ReplayNotifier.open` に渡し、停止してから指定時刻へシークする。`seek` は範囲外の時刻を端へ丸めるため、EQRP の範囲外はテストを失敗させる。
 - PR では fixture が無いシーンを飛ばし、タグでは `STORE_SCREENSHOT_REQUIRE_FIXTURES=true` で失敗させる。`STORE_SCREENSHOT_SCENES` で撮るシーンを絞れる。
