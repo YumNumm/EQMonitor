@@ -37,15 +37,14 @@ class const EewForecastRegionIntensityFilterUpdater() {
     required StyleController styleController,
     required List<EewForecastRegionInfo> regionMaxIntensities,
   }) async {
-    await intensityLevels.map((intensity) {
+    for (final intensity in intensityLevels) {
       final codes = regionMaxIntensities
           .where((region) => region.intensity == intensity)
           .map((region) => region.code)
           .toList();
-      return styleController.updateFilter(
-        id: detailLayerId(intensity),
-        filter: _areaFilterBuilder.build(codes),
+      styleController.layers[detailLayerId(intensity)]?.filter = .raw(
+        _areaFilterBuilder.build(codes),
       );
-    }).wait;
+    }
   }
 }

@@ -66,6 +66,7 @@ Widget ベースのレイヤー構成。各レイヤーは `HookConsumerWidget` 
 ```
 MapLibreMap
   ├─ EarthquakeHistoryFillLayer          // 地域・市区町村の震度塗りつぶし
+  ├─ EarthquakeHistoryAreaIconLayer      // 地域・市区町村の震度アイコン
   ├─ EarthquakeHistoryDetailsEstimatedIntensityLayer  // 推計震度 (PMTiles)
   ├─ EarthquakeHistoryHypocenterErrorLayer  // 震央誤差矩形
   ├─ EarthquakeHistoryHypocenterLayer    // 震央マーカー（z順は設定で変動）
@@ -171,6 +172,27 @@ FB = フォールバック
 #### LPGM (長周期地震動) レイヤー
 
 region / city と同構成。レイヤー ID プレフィックスは `eq-history-lpgm-{lpgmIntensityName}`。
+
+### 2-4-1. 区域アイコンレイヤー (`EarthquakeHistoryAreaIconLayer`)
+
+塗りつぶした細分区域・市区町村の内部に、震度（長周期地震動階級）のアイコンを 1 区域 1 個置く。
+`showAreaIcons`（既定 `true`）で切り替える。推計震度・震度データベース表示では出さない。
+
+| 項目 | 値 |
+| --- | --- |
+| ソースレイヤー | `areaForecastLocalELabel` (`code`) / `areaInformationCityQuakeLabel` (`regioncode`) |
+| レイヤー ID | `eq-history-{jma\|lpgm}-{階級}-{region\|city}-icon`（階級ごとに 1 layer） |
+| アイコン | `intensityIconProvider` の `filled` |
+| サイズ | `areaIconSize`（既定 0.13） |
+| 挿入位置 | `BaseLayer.areaIconAnchor` の下 |
+
+表示 zoom は塗りつぶしと同じ `regionToCity` で細分区域と市区町村を切り替える。
+観測点を表示していて観測点データがある地震では、観測点アイコンが見える `stationMinZoom` 以上で区域アイコンを出さない。
+既定値（`regionToCity` = 6、`stationMinZoom` = 8）では、z6 未満に細分区域のアイコン、z6 以上 z8 未満に市区町村のアイコン、z8 以上に観測点が出る。
+区域アイコンと観測点は併存させず、zoom で切り替える。
+`regionToCity` と `stationMinZoom` は地震履歴詳細の設定シートから変更できる（3〜12、0.5 刻み）。`stationMinZoom` を `regionToCity` より大きくすると、その間の zoom に市区町村のアイコンが出る。
+保存先はデバッグモーダルと同じ `EarthquakeHistoryMapLayerParameter` なので、デバッグモーダルのリセットでこの 2 つも既定値に戻る。
+重なるアイコンは衝突判定で間引かれ、震度の大きい方が残る。
 
 ### 2-5. 観測点レイヤー (`EarthquakeHistoryStationIntensityLayer`)
 

@@ -83,6 +83,7 @@ class const BasicModalSheet({
         }),
       ),
     );
+    final lastHeight = useRef<double?>(null);
 
     return SafeArea(
       bottom: false,
@@ -99,6 +100,20 @@ class const BasicModalSheet({
             final extent? when size.height > 0 => extent / size.height,
             _ => null,
           };
+          final previousHeight = lastHeight.value;
+          lastHeight.value = size.height;
+          if (previousHeight != null &&
+              previousHeight > 0 &&
+              previousHeight != size.height &&
+              controller.hasClients) {
+            // Sheet は位置を px で保持するため、高さが変わったら同じ割合へ合わせ直す。
+            final relativeExtent = controller.offset / previousHeight;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (controller.hasClients) {
+                controller.jumpTo(relativeExtent * size.height);
+              }
+            });
+          }
           final sheet = Sheet(
             key: sheetKey,
             controller: controller,
@@ -182,17 +197,16 @@ class const BasicModalSheet({
                   ],
                 );
 
-          if (isLandscape && !expandToPane) {
-            return Align(
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                width: size.width * 0.5,
-                height: size.height,
-                child: content,
-              ),
-            );
-          }
-          return content;
+          return Align(
+            alignment: Alignment.centerRight,
+            child: SizedBox(
+              width: isLandscape && !expandToPane
+                  ? size.width * 0.5
+                  : size.width,
+              height: size.height,
+              child: content,
+            ),
+          );
         },
       ),
     );

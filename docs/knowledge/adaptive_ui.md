@@ -6,15 +6,23 @@
 ## 履歴一覧と詳細
 
 - 地震/EEW履歴はHistoryAdaptiveViewを使う。通常840dp以上で左右分割し、一覧は30%・320〜440dp。
-  狭い場合は一覧か選択中詳細だけを表示する。
+  狭い場合は一覧だけを表示し、詳細は一覧から詳細ルートをpushする。
 - 一覧の要素を破棄せず選択・scroll・filterを保持する。詳細はeventIdでkeyを付け、
-  同一eventの幅変更では保持、別eventでは再作成する。詳細ルート直接表示も維持する。
+  分割中の同一eventの幅変更では保持、別eventでは再作成する。詳細ルート直接表示も維持する。
+  pushした詳細は幅を広げても全画面のままで、分割ペインへは移らない。折りたたみ端末ではヒンジを避けない。
 - 戻るボタンはHistoryDetailScope.showBackButtonOf(context)で判断する。
   詳細内MediaQueryはペイン幅なので端末全体の分割判定へ使わない。
 - onCloseは狭い画面の選択解除にも必要で、存在だけで分割状態を判断しない。
 - 分割中のloading/error AppBarもautomaticallyImplyLeading:falseとする。
   明示ボタンを消すだけでは親Navigatorが戻るボタンを補完する。
 - 直接開いた詳細ルートはNavigatorの戻る操作を使う。
+- 地震/EEW履歴の一覧は、分割中だけページ内で選択する。分割していない場合は
+  EarthquakeHistoryDetailsRoute / EewDetailsByEventIdRoute(useSheet:true)をpushする。
+  ページ内の差し替えはPopScope(canPop:false)となり、`popGestureEnabled`がfalseを返してiOSのスワイプバックが無効になる。
+  一覧側もHistoryDetailScopeで包み、各ページが選択時にHistoryDetailScope.isSplitOf(context)で判断する。
+- 分割中に選択してから幅を狭めた場合は、HistoryAdaptiveViewのonCollapseDetailで選択を解除し、同じeventの詳細ルートをpushする。
+  詳細は作り直すため、地図位置やシートの状態は引き継がない。履歴ページが最前面のルートでない間と、アプリがhidden/pausedの間は呼ばない。
+- EEW詳細の地図上シートと最新報の初期選択はuseSheetで決め、onCloseの有無で判断しない。
 - 電文一覧のVXSE62は地域の`lpgmIntensity`を使い、長周期地震動階級の降順で専用アイコンと地域名を表示する。階級が欠けた地域を震度で代用しない。前報との差分注記も長周期地震動階級で比較する。
 
 ## 折りたたみとペイン内制約
@@ -28,6 +36,8 @@
 - HistoryPaneは一覧/詳細に別PrimaryScrollControllerを与える。loading ListViewも対象。
   MediaQueryサイズ/余白は各ペイン、keyboard縮小は外側Scaffoldが担当する。
 - 地図上詳細シートはBasicModalSheet(expandToPane:true)で、横長ペインをさらに半幅にしない。
+- BasicModalSheetは縦長・横長で同じWidget構成を返し、幅だけを変える。構成を切り替えるとSheetと子の状態（高さ・scroll・展開状態）が回転やリサイズで失われる。
+- Sheetは位置をpxで保持する。BasicModalSheetは高さが変わったとき、変更前の高さに対する割合を保つ位置へ移動する。
 - `BasicModalSheet.initialPositionOverlay` はSheetと同じSafeArea・ペイン制約内で、初期高さの直上かつSheetの背面に固定する。SheetControllerの実際の移動量から透明度を計算し、透明度が0になったときは入力と読み上げも抑止する。
 - EEW各報シートは最新報から表示し、event選択変更/詳細closeで履歴再生を止める。
   選択は震度色を塗り替えず輪郭とSemanticsで伝える。

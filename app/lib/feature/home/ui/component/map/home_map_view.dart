@@ -4,6 +4,8 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_control_panel_expanded_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_exit_notice_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_status_card.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -16,7 +18,9 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_inte
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_warning_regions_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_focus_bounds_debug_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_label_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_user_location_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/modal/home_map_label_debug_modal.dart';
@@ -104,7 +108,6 @@ class const _MapContent({required final String styleString})
         child: _MapLibreMapHost(
           key: ValueKey(mapKey),
           mapOptions: mapOptions,
-          showLocation: showLocation,
           children: [
             Consumer(
               builder: (context, ref, _) {
@@ -141,9 +144,12 @@ class const _MapContent({required final String styleString})
             Consumer(
               builder: (context, ref, _) => EewHypocenterLayer(
                 eews: ref.watch(eewAliveTelegramProvider) ?? [],
+                enableBlink: true,
               ),
             ),
             const HomeMapLabelLayer(),
+            const HomeMapFocusBoundsDebugLayer(),
+            if (showLocation) const HomeMapUserLocationLayer(),
             const SafeArea(child: _MapHeader()),
           ],
         ),
@@ -159,7 +165,6 @@ class const _MapContent({required final String styleString})
 /// [HomeMapCameraState] が保持する [MapController] を確実にクリアできる。
 class const _MapLibreMapHost({
   required final MapOptions mapOptions,
-  required final bool showLocation,
   required final List<Widget> children,
   super.key,
 }) extends HookConsumerWidget {
@@ -196,17 +201,14 @@ class const _MapLibreMapHost({
                 controller: controller,
                 viewportSize: constraints.biggest,
               );
-          if (showLocation) {
-            await controller.enableLocation();
-          }
         },
-        onEvent: (event) {
+        onCameraMoveStart: (event) {
           MapLibreEventProvider.maybeOf(context)?.emit(event);
-          if (event is MapEventStartMoveCamera &&
-              event.reason == CameraChangeReason.apiGesture) {
+          if (event.reason == CameraChangeReason.gesture) {
             ref
                 .read(homeMapCameraStateProvider.notifier)
                 .handleUserMapGesture();
+            ref.read(replayControlPanelExpandedProvider.notifier).collapse();
           }
         },
         children: children,
@@ -218,6 +220,15 @@ class const _MapLibreMapHost({
 class const _MapHeader() extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(replayExitNoticeProvider, (_, notice) {
+      if (notice == null) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(notice.message)));
+      ref.read(replayExitNoticeProvider.notifier).clear();
+    });
     final isReplay = ref.watch(isReplayModeProvider);
     final useKmoni =
         (ref.watch(

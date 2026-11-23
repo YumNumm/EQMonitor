@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'dart:io';
 
 import 'package:eqmonitor/feature/notification/data/action/test_notification_send_action.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/ui/component/test_live_activity_panel.dart';
 import 'package:eqmonitor/feature/notification/ui/component/test_notification_kind_buttons.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -47,6 +50,9 @@ class const TestNotificationPage({super.key}) extends HookConsumerWidget {
                     pendingKind: pendingKind.value,
                     onPressed: (kind) async {
                       pendingKind.value = kind;
+                      if (!kind.isCritical) {
+                        unawaited(HapticFeedback.lightImpact());
+                      }
                       try {
                         await ref
                             .read(testNotificationSendActionProvider)

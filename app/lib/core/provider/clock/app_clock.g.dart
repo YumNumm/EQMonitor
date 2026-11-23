@@ -14,7 +14,7 @@ part of 'app_clock.dart';
 ///
 /// 状態として現在の [TimeMode] を保持し、`now` でモードに応じた「現在時刻」を返す。
 /// - ベース時刻は NTP 補正済み時刻（`Ntp.now`）を優先し、未同期時は `clock` にフォールバックする。
-/// - 強震モニタ・EEW・揺れ検知はこのクロックを参照することで、通常/タイムシフト/リプレイの
+/// - 強震モニタ・EEW・揺れ検知はこのクロックを参照することで、通常/リプレイの
 ///   いずれのモードでも整合した時刻基準で動作する。
 
 @ProviderFor(AppClock)
@@ -24,14 +24,14 @@ final appClockProvider = AppClockProvider._();
 ///
 /// 状態として現在の [TimeMode] を保持し、`now` でモードに応じた「現在時刻」を返す。
 /// - ベース時刻は NTP 補正済み時刻（`Ntp.now`）を優先し、未同期時は `clock` にフォールバックする。
-/// - 強震モニタ・EEW・揺れ検知はこのクロックを参照することで、通常/タイムシフト/リプレイの
+/// - 強震モニタ・EEW・揺れ検知はこのクロックを参照することで、通常/リプレイの
 ///   いずれのモードでも整合した時刻基準で動作する。
 final class AppClockProvider extends $NotifierProvider<AppClock, TimeMode> {
   /// アプリ全体の現在時刻を提供する統一クロック。
   ///
   /// 状態として現在の [TimeMode] を保持し、`now` でモードに応じた「現在時刻」を返す。
   /// - ベース時刻は NTP 補正済み時刻（`Ntp.now`）を優先し、未同期時は `clock` にフォールバックする。
-  /// - 強震モニタ・EEW・揺れ検知はこのクロックを参照することで、通常/タイムシフト/リプレイの
+  /// - 強震モニタ・EEW・揺れ検知はこのクロックを参照することで、通常/リプレイの
   ///   いずれのモードでも整合した時刻基準で動作する。
   AppClockProvider._()
     : super(
@@ -60,13 +60,13 @@ final class AppClockProvider extends $NotifierProvider<AppClock, TimeMode> {
   }
 }
 
-String _$appClockHash() => r'536a369e738eab1b6c59746690632806448b6f44';
+String _$appClockHash() => r'a7eb89468d6a80f02d2a4092a4ec7093d3ab8be3';
 
 /// アプリ全体の現在時刻を提供する統一クロック。
 ///
 /// 状態として現在の [TimeMode] を保持し、`now` でモードに応じた「現在時刻」を返す。
 /// - ベース時刻は NTP 補正済み時刻（`Ntp.now`）を優先し、未同期時は `clock` にフォールバックする。
-/// - 強震モニタ・EEW・揺れ検知はこのクロックを参照することで、通常/タイムシフト/リプレイの
+/// - 強震モニタ・EEW・揺れ検知はこのクロックを参照することで、通常/リプレイの
 ///   いずれのモードでも整合した時刻基準で動作する。
 
 abstract class _$AppClock extends $Notifier<TimeMode> {

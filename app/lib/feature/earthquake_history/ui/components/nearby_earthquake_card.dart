@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
@@ -219,7 +220,10 @@ class const _NearbyEarthquakeError({required final VoidCallback onRetry})
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
-          M3ETextButton(onPressed: onRetry, child: const Text('再試行')),
+          M3ETextButton(
+            onPressed: () => HapticUtil.light(onRetry),
+            child: const Text('再試行'),
+          ),
         ],
       ),
     );

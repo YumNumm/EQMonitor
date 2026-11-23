@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -99,7 +100,7 @@ class const InfoNotificationTile({
         value: value,
         onChanged: (v) async => onChanged(value: v),
       ),
-      onTap: () async => onChanged(value: !value),
+      onTap: () => HapticUtil.selection(() => onChanged(value: !value)),
     );
   }
 }

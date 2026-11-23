@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
+import 'package:flutter/painting.dart';
 import 'package:maplibre/maplibre.dart';
 
 final class const RegionMapLayers() {
@@ -20,15 +21,16 @@ final class const RegionMapLayers() {
   };
 
   List<StyleLayer> build({
-    required String color,
+    required Color color,
     required bool hasEpicenter,
   }) => [
     if (hasEpicenter)
-      const FillStyleLayer(
+      FillStyleLayer(
         id: epicenterHit,
         sourceId: source,
         sourceLayerId: 'areaEpicenter',
-        paint: {'fill-color': '#808080', 'fill-opacity': 0.04},
+        color: const .literal(Color(0xFF808080)),
+        opacity: const .literal(0.04),
       ),
     for (final entry in layers.entries)
       if (entry.key != .epicenter || hasEpicenter) ...[
@@ -36,15 +38,17 @@ final class const RegionMapLayers() {
           id: 'region-selection-${entry.key.name}-fill',
           sourceId: entry.key == .prefecture ? prefectureSource : source,
           sourceLayerId: entry.value.$1,
-          filter: hiddenFilter,
-          paint: {'fill-color': color, 'fill-opacity': 0.25},
+          filter: const .raw(hiddenFilter),
+          color: .literal(color),
+          opacity: const .literal(0.25),
         ),
         LineStyleLayer(
           id: 'region-selection-${entry.key.name}-line',
           sourceId: entry.key == .prefecture ? prefectureSource : source,
           sourceLayerId: entry.value.$1,
-          filter: hiddenFilter,
-          paint: {'line-color': color, 'line-width': 2.5},
+          filter: const .raw(hiddenFilter),
+          color: .literal(color),
+          width: const .literal(2.5),
         ),
       ],
   ];
@@ -64,8 +68,8 @@ final class const RegionMapLayers() {
       sourceId: kind == .prefecture ? prefectureSource : source,
       sourceLayerId: sourceLayer,
       filter: codes.isEmpty
-          ? hiddenFilter
-          : [
+          ? const .raw(hiddenFilter)
+          : .raw([
               'in',
               ['get', property],
               [
@@ -74,7 +78,7 @@ final class const RegionMapLayers() {
                     ? codes.map(int.parse).toList()
                     : codes.toList(),
               ],
-            ],
+            ]),
     );
   }
 }

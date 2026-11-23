@@ -1,4 +1,3 @@
-import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_correlation_eew_factory.dart';
@@ -16,10 +15,6 @@ part 'shake_detection_provider.g.dart';
 @Riverpod(keepAlive: true)
 List<ShakeDetectionEvent> shakeDetection(Ref ref) {
   if (!ref.watch(isDeviceShakeDetectionEnabledProvider)) {
-    return const [];
-  }
-  // リプレイ再生中は、現在発生している揺れを再生中の時刻基準に混在させない。
-  if (!ref.watch(isRealtimeModeProvider)) {
     return const [];
   }
   final frame = ref.watch(deviceShakeDetectionProvider);

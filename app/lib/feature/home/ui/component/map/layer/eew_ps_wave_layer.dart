@@ -85,7 +85,7 @@ class const _EewPsWaveLayerBody({required final List<EewTelegramItem> eews})
 
     final isInitialized = useRef(false);
     final initFuture = useRef<Future<void>?>(null);
-    // 破棄開始後は毎フレームの更新(updateGeoJsonSource)を実行しないためのガード。
+    // 破棄開始後は毎フレームの更新(updateGeoJsonData)を実行しないためのガード。
     // enqueue にすべての更新を積むとチェーンが肥大化するため、更新自体は
     // enqueue を経由させず、このフラグで破棄後の実行のみを止める。
     final disposed = useRef(false);
@@ -102,54 +102,55 @@ class const _EewPsWaveLayerBody({required final List<EewTelegramItem> eews})
       disposed.value = false;
       initFuture.value = enqueue(() async {
         await (
-          styleController.addSource(
-            GeoJsonSource(
+          styleController.sources.add(
+            GeoJsonSource.data(
               id: EewPsWaveLayer.sourceId.pWave,
-              data: jsonEncode({
-                'type': 'FeatureCollection',
-                'features': <Map<String, dynamic>>[],
-              }),
+              data: .text(
+                jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': <Map<String, dynamic>>[],
+                }),
+              ),
             ),
           ),
-          styleController.addSource(
-            GeoJsonSource(
+          styleController.sources.add(
+            GeoJsonSource.data(
               id: EewPsWaveLayer.sourceId.sWave,
-              data: jsonEncode({
-                'type': 'FeatureCollection',
-                'features': <Map<String, dynamic>>[],
-              }),
+              data: .text(
+                jsonEncode({
+                  'type': 'FeatureCollection',
+                  'features': <Map<String, dynamic>>[],
+                }),
+              ),
             ),
           ),
         ).wait;
 
         await (
-          styleController.addLayer(
+          styleController.layers.add(
             LineStyleLayer(
               id: EewPsWaveLayer.layerId.pWaveLine,
               sourceId: EewPsWaveLayer.sourceId.pWave,
-              paint: const {'line-color': '#0000FF', 'line-width': 1},
+              color: const .literal(Color(0xFF0000FF)),
+              width: const .literal(1),
             ),
             belowLayerId: BaseLayer.waveLineAnchor.name,
           ),
-          styleController.addLayer(
+          styleController.layers.add(
             LineStyleLayer(
               id: EewPsWaveLayer.layerId.sWaveLine,
               sourceId: EewPsWaveLayer.sourceId.sWave,
-              paint: const {
-                'line-color': ['get', 'lineColor'],
-                'line-width': 2,
-              },
+              color: const .raw(['get', 'lineColor']),
+              width: const .literal(2),
             ),
             belowLayerId: BaseLayer.waveLineAnchor.name,
           ),
-          styleController.addLayer(
+          styleController.layers.add(
             FillStyleLayer(
               id: EewPsWaveLayer.layerId.sWaveFill,
               sourceId: EewPsWaveLayer.sourceId.sWave,
-              paint: const {
-                'fill-color': ['get', 'fillColor'],
-                'fill-opacity': 0.2,
-              },
+              color: const .raw(['get', 'fillColor']),
+              opacity: const .literal(0.2),
             ),
             belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
           ),
@@ -243,7 +244,9 @@ class const _EewPsWaveLayerBody({required final List<EewTelegramItem> eews})
           }
           final now = ref.read(appClockProvider.notifier).now();
           // 設定が有効なら、強震モニタ画像の取得対象時刻に合わせる。
-          final kyoshinMonitorOffset = alignToKyoshinMonitor
+          // リプレイの画像は再生位置の時刻のものを表示するため、公開遅延を引かない。
+          final kyoshinMonitorOffset =
+              alignToKyoshinMonitor && !ref.read(isReplayModeProvider)
               ? ref.read(kyoshinMonitorImageDelayProvider)
               : null;
           final baseTime = kyoshinMonitorOffset == null

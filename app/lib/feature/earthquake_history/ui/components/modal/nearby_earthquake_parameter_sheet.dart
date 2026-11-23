@@ -85,6 +85,7 @@ class const NearbyEarthquakeParameterSheet({
               ),
               decoration: M3EButtonDecoration.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
+                haptic: .light,
               ),
               child: const Text('適用'),
             ),

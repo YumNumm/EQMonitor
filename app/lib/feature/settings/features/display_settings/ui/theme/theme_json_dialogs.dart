@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -60,7 +63,8 @@ class const ThemeImportExportSection({super.key}) extends HookConsumerWidget {
                       (mode) => CheckboxListTile.adaptive(
                         value: state.value.contains(mode),
                         title: Text(mode.name),
-                        onChanged: (checked) {
+                        onChanged: (checked) async {
+                          unawaited(HapticFeedback.selectionClick());
                           final next = {...state.value};
                           if (checked ?? false) {
                             next.add(mode);
@@ -81,7 +85,9 @@ class const ThemeImportExportSection({super.key}) extends HookConsumerWidget {
                 M3EFilledButton(
                   onPressed: state.value.isEmpty
                       ? null
-                      : () => Navigator.of(dialogContext).pop(state.value),
+                      : () => HapticUtil.light(
+                          () => Navigator.of(dialogContext).pop(state.value),
+                        ),
                   child: const Text('適用'),
                 ),
               ],
@@ -140,11 +146,13 @@ class const ThemeImportExportSection({super.key}) extends HookConsumerWidget {
         runSpacing: 8,
         children: [
           M3EFilledButton.tonal(
-            onPressed: () => exportMode(ThemeBrightnessMode.light),
+            onPressed: () =>
+                HapticUtil.light(() => exportMode(ThemeBrightnessMode.light)),
             child: const Text('ライトをエクスポート'),
           ),
           M3EFilledButton.tonal(
-            onPressed: () => exportMode(ThemeBrightnessMode.dark),
+            onPressed: () =>
+                HapticUtil.light(() => exportMode(ThemeBrightnessMode.dark)),
             child: const Text('ダークをエクスポート'),
           ),
           M3EFilledButton.tonal(

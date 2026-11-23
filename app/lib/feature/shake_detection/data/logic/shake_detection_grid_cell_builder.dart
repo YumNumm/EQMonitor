@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,13 +12,51 @@ ShakeDetectionGridCellBuilder shakeDetectionGridCellBuilder(Ref ref) =>
 
 class const ShakeDetectionGridCell({
   required final double minLat,
+  required final double maxLat,
   required final double minLng,
+  required final double maxLng,
   required final ShakeDetectionLevel level,
 }) {
-  static const step = 0.25;
+  /// 経度方向のセル幅（度）。
+  ///
+  /// 緯度方向はメルカトル投影上で同じ長さになるよう区切るため、
+  /// 地図上では緯度によらず正方形になる。
+  static const step = 0.5;
 
-  double get maxLat => minLat + step;
-  double get maxLng => minLng + step;
+  static const _mercatorMaxLatitude = 85.05112878;
+
+  factory at({
+    required int latIndex,
+    required int lngIndex,
+    required ShakeDetectionLevel level,
+  }) => ShakeDetectionGridCell(
+    minLat: latitudeOfIndex(latIndex),
+    maxLat: latitudeOfIndex(latIndex + 1),
+    minLng: longitudeOfIndex(lngIndex),
+    maxLng: longitudeOfIndex(lngIndex + 1),
+    level: level,
+  );
+
+  static int lngIndexOf(double longitude) => (longitude / step).floor();
+
+  static int latIndexOf(double latitude) {
+    final radians =
+        latitude.clamp(-_mercatorMaxLatitude, _mercatorMaxLatitude) *
+        math.pi /
+        180;
+    final mercatorDegrees =
+        math.log(math.tan(math.pi / 4 + radians / 2)) * 180 / math.pi;
+    return (mercatorDegrees / step).floor();
+  }
+
+  static double longitudeOfIndex(int index) => index * step;
+
+  static double latitudeOfIndex(int index) {
+    final mercatorRadians = index * step * math.pi / 180;
+    return (2 * math.atan(math.exp(mercatorRadians)) - math.pi / 2) *
+        180 /
+        math.pi;
+  }
 
   /// MapLibre の line-sort-key（大きいほど上）
   int get sortKey => level.index;
@@ -31,7 +71,7 @@ class const ShakeDetectionGridCell({
   }
 }
 
-/// 観測点を 0.25° グリッドに集約し、セルごとの最大レベルを求める
+/// 観測点をグリッドに集約し、セルごとの最大レベルを求める
 class ShakeDetectionGridCellBuilder {
   /// 検知エンジンの `ShakeEventLevel.fromIntensity` と同じ閾値
   ShakeDetectionLevel levelFromIntensity(num intensity) => switch (intensity) {
@@ -62,8 +102,8 @@ class ShakeDetectionGridCellBuilder {
     for (final point in points) {
       final lat = point.latitude;
       final lng = point.longitude;
-      final latIndex = (lat / ShakeDetectionGridCell.step).floor();
-      final lngIndex = (lng / ShakeDetectionGridCell.step).floor();
+      final latIndex = ShakeDetectionGridCell.latIndexOf(lat);
+      final lngIndex = ShakeDetectionGridCell.lngIndexOf(lng);
       final level = switch (point.intensity) {
         final intensity? => levelFromIntensity(intensity),
         null => ShakeDetectionLevel.weaker,
@@ -77,9 +117,9 @@ class ShakeDetectionGridCellBuilder {
 
     final cells = [
       for (final entry in maxByCell.entries)
-        ShakeDetectionGridCell(
-          minLat: entry.key.$1 * ShakeDetectionGridCell.step,
-          minLng: entry.key.$2 * ShakeDetectionGridCell.step,
+        ShakeDetectionGridCell.at(
+          latIndex: entry.key.$1,
+          lngIndex: entry.key.$2,
           level: entry.value,
         ),
     ];

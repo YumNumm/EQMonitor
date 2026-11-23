@@ -47,6 +47,22 @@ EQMonitor の `.github/workflows/upload-asset-pack.yaml` は dispatch を受け�
 - iOS native extension 用の縮小 JMA テーブルも必要な場合は
   `tool/asset_pack/stage_from_r2.sh --target all` を使う。
 
+### 未リリースの Pack を同梱する
+
+リリース前の Pack を配布ビルドに同梱したい場合は、backend の `preview-asset-pack.yaml` で
+draft Release の ZIP を `https://assets.eqmonitor.app/v1/assets-preview` へ公開する。
+署名鍵は本番と同じで、本番の `v1/assets/manifest.json` は変更されない。
+
+EQMonitor の repository variable `ASSET_PACK_BASE_URL` にこの URL を設定すると、
+`deploy-app.yaml` の iOS / Android のステージングがプレビューの Pack を取得する。
+変数を削除すると本番の配布元に戻る。
+
+- 変数を設定している間は、`develop` への push とベータ用 tag を含むすべての Deploy App のビルドが対象になる。
+- PR の analyze / test は変数を参照せず、常に本番の Pack を使う。
+- インストール済みのアプリは本番の manifest だけを見るため、プレビューの Pack が更新として案内されることはない。
+- プレビューを同梱したアプリは、同じ版番号の Pack が後から正式に公開されても更新を案内しない。
+  draft を作り直すと同じ版番号で中身が変わるため、正式公開前に draft を更新した場合は差が残る。
+
 同梱 Pack はアプリの更新でのみ置き換わり、R2 更新を適用・削除しても残る。
 ローカル staging、同梱ディレクトリ、実ファイル内容の検証は [Asset Pack の知見](knowledge/asset_pack.md) を参照する。
 

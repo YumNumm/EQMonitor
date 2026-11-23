@@ -176,6 +176,11 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
                   Uint8List.fromList(value),
             ];
 
+      // 画像の取得中にリプレイが始まった場合、共有している解析用 Isolate の
+      // 検知の履歴をライブの時刻で作り直さない。
+      if (ref.read(isReplayModeProvider)) {
+        return null;
+      }
       final workerSw = Stopwatch()..start();
       final workerResult = await Timeline.timeSync(
         'kmoni.workerAnalyze',
@@ -229,7 +234,8 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         },
       );
       workerSw.stop();
-      if (workerResult == null) {
+      // 解析中にリプレイが始まった場合、ライブの結果を再生中の検知へ混ぜない。
+      if (workerResult == null || ref.read(isReplayModeProvider)) {
         return null;
       }
 
@@ -292,7 +298,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       );
     });
 
-    if (!ref.mounted) {
+    if (!ref.mounted || ref.read(isReplayModeProvider)) {
       return;
     }
     switch (result) {

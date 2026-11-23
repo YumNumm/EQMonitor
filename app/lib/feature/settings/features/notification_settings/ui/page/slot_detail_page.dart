@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
@@ -262,7 +263,7 @@ class const _NotificationConditionCard({
           ListTile(
             title: const Text('有効'),
             trailing: AppSwitch(value: enabled, onChanged: onEnabledChanged),
-            onTap: () => onEnabledChanged(!enabled),
+            onTap: () => HapticUtil.selection(() => onEnabledChanged(!enabled)),
           ),
           const Divider(height: 1),
           ListTile(
@@ -339,7 +340,7 @@ class const _WarningSettingsCard({
           ListTile(
             title: const Text('有効'),
             trailing: AppSwitch(value: enabled, onChanged: onChanged),
-            onTap: () => onChanged(!enabled),
+            onTap: () => HapticUtil.selection(() => onChanged(!enabled)),
           ),
           // 割り込みレベルは iOS の通知契約の設定。Android の重要度は
           // Notification Channel 側で管理するため、OS の設定へ委ねる。

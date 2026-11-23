@@ -6,6 +6,9 @@ import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.d
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment_selector.dart';
@@ -23,6 +26,8 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/estimat
 import 'package:eqmonitor/feature/earthquake_history/ui/components/nearby_earthquake_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_event_notes.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_hypocenter_information_card.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/components/earthquake_replay_button.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_creation_entry_button.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -49,8 +54,9 @@ class const EarthquakeHistoryDetailsPage({
         ),
         body: ErrorCard(
           error: error,
-          onReload: () async =>
-              ref.refresh(earthquakeHistoryDetailsProvider(eventId)),
+          onReload: () => HapticUtil.light(
+            () => ref.refresh(earthquakeHistoryDetailsProvider(eventId)),
+          ),
         ),
       ),
       AsyncValue(:final value?) => _LoadedContent(
@@ -91,7 +97,9 @@ class const _LoadedContent({
 }) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasEstimated = earthquake.estimatedIntensityTileUrl != null;
+    final hasEstimated =
+        earthquake.estimatedIntensityTileUrl != null ||
+        earthquake.estimatedIntensityDemTileUrl != null;
     final hasLpgm = earthquake.intensity?.maxLpgmIntensity != null;
 
     final catalog = earthquake.catalog;
@@ -168,6 +176,18 @@ class const _LoadedContent({
                 displayMode: showingDb
                     ? IntensityDisplayMode.jma
                     : displayMode.value,
+                showsEstimatedIntensityScale:
+                    earthquake.estimatedIntensityDemTileUrl != null &&
+                    ref.watch(
+                      earthquakeHistoryConfigProvider.select(
+                        (config) =>
+                            config
+                                .value
+                                ?.details
+                                .estimatedIntensityDemDisplayMode ==
+                            EstimatedIntensityDemDisplayMode.tenth,
+                      ),
+                    ),
                 shindoDbTree: showingDb
                     ? ref
                           .watch(
@@ -232,6 +252,11 @@ class const _LoadedContent({
                         source: effectiveSource,
                         showDatabaseBadge: isDbOnly,
                       ),
+                      ReplayCreationEntryButton(
+                        originTime: earthquake.originTime,
+                        label: earthquake.hypocenter?.name ?? '地震',
+                        isExpanded: true,
+                      ),
                       NearbyEarthquakeCard(earthquake: earthquake),
                       if (telegramCommentLines.isNotEmpty ||
                           earthquake.dataSources.isNotEmpty)
@@ -266,6 +291,7 @@ class const _LoadedContent({
                             ),
                           ),
                         ),
+                      EarthquakeReplayButton(earthquake: earthquake),
                       if (hasXml)
                         _TelegramListButton(eventId: earthquake.eventId),
                     ],

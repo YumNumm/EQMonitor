@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -43,7 +44,7 @@ class const AppWebViewBody({
                   textAlign: .center,
                 ),
                 M3EFilledButton.tonal(
-                  onPressed: onRetry,
+                  onPressed: () => HapticUtil.light(onRetry),
                   child: const Text('再読み込み'),
                 ),
               ],

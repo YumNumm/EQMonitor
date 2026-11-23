@@ -83,48 +83,54 @@ resolve_asc() {
 }
 
 resolve_base_sha_for_ios() {
-	local asc app_id locale lookback builds_json build_numbers
+	local asc builds_json builds err_file
 	asc="$(resolve_asc)"
-	app_id="$ASC_APP_ID"
-	locale="$TESTFLIGHT_LOCALE"
-	lookback="$LOOKBACK"
 
 	if ! builds_json="$(
 		"$asc" builds list \
-			--app "$app_id" \
+			--app "$ASC_APP_ID" \
 			--platform IOS \
 			--sort -uploadedDate \
-			--limit "$lookback" \
+			--limit "$LOOKBACK" \
 			--output json
 	)"; then
 		die "App Store Connect のビルド一覧を取得できませんでした。"
 	fi
 
-	build_numbers="$(printf '%s' "$builds_json" | grep -Eo '"version":"[0-9]+"' | cut -d'"' -f4 || true)"
+	builds="$(printf '%s' "$builds_json" | jq -r '.data[] | "\(.id) \(.attributes.version // "?")"')" ||
+		die "App Store Connect のビルド一覧を解析できませんでした。"
 
-	for build_number in $build_numbers; do
+	err_file="$(mktemp)"
+	# asc の --build-number は同じ番号のビルドが複数あると一意に決まらず失敗するため、ID で引く
+	while read -r build_id build_number; do
+		[ -n "$build_id" ] || continue
 		local notes_json candidate
 		if ! notes_json="$(
 			"$asc" builds test-notes list \
-				--app "$app_id" \
-				--build-number "$build_number" \
-				--platform IOS \
-				--locale "$locale" \
-				--output json 2>/dev/null
+				--build-id "$build_id" \
+				--locale "$TESTFLIGHT_LOCALE" \
+				--output json 2>"$err_file"
 		)"; then
+			log "ビルド $build_number の test-notes を取得できませんでした: $(tr '\n' ' ' <"$err_file")"
 			continue
 		fi
-		candidate="$(printf '%s' "$notes_json" | grep -Eo 'rev: [0-9a-f]{40}' | tail -1 | cut -d' ' -f2 || true)"
+		candidate="$(
+			printf '%s' "$notes_json" |
+				jq -r '.data[]?.attributes.whatsNew // empty' |
+				grep -Eo 'rev: [0-9a-f]{40}' | tail -1 | cut -d' ' -f2 || true
+		)"
 		[ -n "$candidate" ] || continue
 		if ! git -C "$REPO_ROOT" cat-file -e "$candidate^{commit}" 2>/dev/null; then
 			log "ビルド $build_number の rev ($candidate) は手元に存在しないため読み飛ばします"
 			continue
 		fi
 		log "ビルド $build_number を前回の配信とみなします (rev: $candidate)"
+		rm -f "$err_file"
 		echo "$candidate"
 		return 0
-	done
+	done <<<"$builds"
 
+	rm -f "$err_file"
 	echo ""
 }
 

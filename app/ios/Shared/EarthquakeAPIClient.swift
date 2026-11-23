@@ -47,6 +47,62 @@ enum APIError: Error, LocalizedError {
     }
 }
 
+// MARK: - User-Agent
+
+// API のエッジは Flutter 本体と同じ形式の User-Agent だけを通す。
+// URLSession 既定値は拡張ごとに実行ファイル名が変わり、AppIntentExtension は 403 になる。
+enum APIUserAgent {
+    static let current = make(
+        bundle: hostAppBundle() ?? .main,
+        processName: ProcessInfo.processInfo.processName
+    )
+
+    static func make(bundle: Bundle, processName: String) -> String {
+        let version = normalizedVersion(
+            bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        )
+        let build = normalizedBuild(bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String)
+        let os = ProcessInfo.processInfo.operatingSystemVersion
+        let osVersion = os.patchVersion == 0
+            ? "\(os.majorVersion).\(os.minorVersion)"
+            : "\(os.majorVersion).\(os.minorVersion).\(os.patchVersion)"
+        return "net.yumnumm.eqmonitor/\(version)+\(build) "
+            + "(+https://github.com/YumNumm/EQMonitor) "
+            + "(\(machine()); iOS \(osVersion); \(processName))"
+    }
+
+    // 拡張自身の MARKETING_VERSION は 1.0 のままなので、収容アプリの版を使う。
+    private static func hostAppBundle() -> Bundle? {
+        let url = Bundle.main.bundleURL
+        guard url.pathExtension == "appex" else { return nil }
+        return Bundle(url: url.deletingLastPathComponent().deletingLastPathComponent())
+    }
+
+    static func normalizedVersion(_ raw: String?) -> String {
+        let parts = (raw ?? "").split(separator: ".", omittingEmptySubsequences: false)
+        guard (1...3).contains(parts.count), parts.allSatisfy(isDecimal) else { return "0.0.0" }
+        return (parts.map(String.init) + Array(repeating: "0", count: 3 - parts.count))
+            .joined(separator: ".")
+    }
+
+    static func normalizedBuild(_ raw: String?) -> String {
+        guard let raw, isDecimal(Substring(raw)) else { return "0" }
+        return raw
+    }
+
+    private static func isDecimal(_ value: Substring) -> Bool {
+        !value.isEmpty && value.allSatisfy { $0.isASCII && $0.isNumber }
+    }
+
+    private static func machine() -> String {
+        var info = utsname()
+        uname(&info)
+        return withUnsafePointer(to: &info.machine) {
+            $0.withMemoryRebound(to: CChar.self, capacity: Int(_SYS_NAMELEN)) { String(cString: $0) }
+        }
+    }
+}
+
 // MARK: - API Service
 
 class EarthquakeAPIService {
@@ -63,6 +119,7 @@ class EarthquakeAPIService {
     // 拡張の実行時間は限られるため、URLSession 既定の 60 秒を待たずに失敗させる
     static let defaultTransport: URLSessionTransport = {
         let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = ["User-Agent": APIUserAgent.current]
         configuration.timeoutIntervalForRequest = 10
         configuration.timeoutIntervalForResource = 20
         return URLSessionTransport(

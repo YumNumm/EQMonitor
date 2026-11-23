@@ -90,7 +90,7 @@ class StoreScreenshotScenes({
       );
     }
     final replay = container.read(replayProvider.notifier);
-    if (container.read(replayProvider)?.fileName != fixture) {
+    if (container.read(replayProvider)?.source.title != fixture) {
       final data = await rootBundle.load(
         '$storeScreenshotFixtureDirectory/$fixture',
       );

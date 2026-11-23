@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intens
 import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_intensity_icon_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/station_icon_image_expression.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/station_label_layer_builder.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon_data.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:material_ui/material_ui.dart';
@@ -23,17 +24,20 @@ class const EarthquakeHistoryShindoDbStationLayer({
   required final ShindoDbIntensityTree tree,
   required final EarthquakeHistoryMapLayerParameter parameter,
   final StationDisplayMode stationDisplayMode = StationDisplayMode.auto,
+  final bool showStationLabel = false,
   final String? belowLayerId,
   super.key,
 }) extends HookConsumerWidget {
   static const sourceId = 'eq-history-shindo-db-station';
   static const iconLayerId = 'eq-history-shindo-db-station-icon';
+  static const labelLayerId = 'eq-history-shindo-db-station-label';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final iconData = ref.watch(intensityIconProvider).value;
     final dbIconData = ref.watch(shindoDbIntensityIconProvider).value;
+    final iconPixelRatio = MediaQuery.devicePixelRatioOf(context);
     final enqueue = useMapOperationQueue();
     final lifecycleToken = useRef<Object?>(null);
     final initialization = useRef<Future<void>?>(null);
@@ -64,10 +68,10 @@ class const EarthquakeHistoryShindoDbStationLayer({
         if (lifecycleToken.value != token) {
           return;
         }
-        await styleController.addSource(
-          const GeoJsonSource(
+        await styleController.sources.add(
+          const GeoJsonSource.data(
             id: sourceId,
-            data: '{"type":"FeatureCollection","features":[]}',
+            data: .text('{"type":"FeatureCollection","features":[]}'),
           ),
         );
       });
@@ -81,7 +85,7 @@ class const EarthquakeHistoryShindoDbStationLayer({
           enqueue(
             () => MapStyleResourceRemover.remove(
               styleController: styleController,
-              layerIds: const [iconLayerId],
+              layerIds: const [labelLayerId, iconLayerId],
               sourceIds: const [sourceId],
             ),
           ),
@@ -117,18 +121,26 @@ class const EarthquakeHistoryShindoDbStationLayer({
               registeredIcons.value = (iconData, dbIconData);
             }
             if (isLayerInitialized.value) {
-              await styleController.removeLayer(iconLayerId);
+              await MapStyleResourceRemover.remove(
+                styleController: styleController,
+                layerIds: const [labelLayerId, iconLayerId],
+              );
             }
             if (lifecycleToken.value != token) {
               return;
             }
-            await styleController.addLayer(
-              EarthquakeHistoryShindoDbStationLayerBuilder.build(
-                parameter: parameter,
-                stationDisplayMode: stationDisplayMode,
-              ),
-              belowLayerId: belowLayerId,
-            );
+            for (final layer
+                in EarthquakeHistoryShindoDbStationLayerBuilder.buildStyleLayers(
+                  parameter: parameter,
+                  stationDisplayMode: stationDisplayMode,
+                  showStationLabel: showStationLabel,
+                  iconPixelRatio: iconPixelRatio,
+                )) {
+              await styleController.layers.add(
+                layer,
+                belowLayerId: belowLayerId,
+              );
+            }
             isLayerInitialized.value = true;
           }),
         );
@@ -139,6 +151,8 @@ class const EarthquakeHistoryShindoDbStationLayer({
         belowLayerId,
         parameter,
         stationDisplayMode,
+        showStationLabel,
+        iconPixelRatio,
         iconData,
         dbIconData,
       ],
@@ -168,32 +182,53 @@ class const EarthquakeHistoryShindoDbStationLayer({
 }
 
 class const EarthquakeHistoryShindoDbStationLayerBuilder._() {
-  static SymbolStyleLayer build({
+  static List<StyleLayer> buildStyleLayers({
     required EarthquakeHistoryMapLayerParameter parameter,
     required StationDisplayMode stationDisplayMode,
+    required bool showStationLabel,
+    required double iconPixelRatio,
+  }) => [
+    if (showStationLabel)
+      const StationLabelLayerBuilder().build(
+        id: EarthquakeHistoryShindoDbStationLayer.labelLayerId,
+        sourceId: EarthquakeHistoryShindoDbStationLayer.sourceId,
+        parameter: parameter,
+        iconPixelRatio: iconPixelRatio,
+      ),
+    buildIconLayer(
+      parameter: parameter,
+      stationDisplayMode: stationDisplayMode,
+      showStationLabel: showStationLabel,
+    ),
+  ];
+
+  static SymbolStyleLayer buildIconLayer({
+    required EarthquakeHistoryMapLayerParameter parameter,
+    required StationDisplayMode stationDisplayMode,
+    required bool showStationLabel,
   }) => SymbolStyleLayer(
     id: EarthquakeHistoryShindoDbStationLayer.iconLayerId,
     sourceId: EarthquakeHistoryShindoDbStationLayer.sourceId,
-    layout: {
-      'icon-image': const StationIconImageExpressionBuilder().build(
+    iconImage: .raw(
+      const StationIconImageExpressionBuilder().build(
         stationDisplayMode: stationDisplayMode,
         stationTextZoom: parameter.stationTextZoom,
       ),
-      'icon-allow-overlap': true,
-      'icon-ignore-placement': true,
-      'symbol-sort-key': ['get', 'sortKey'],
-      'icon-size': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        3,
-        parameter.stationIconSizeMin,
-        7,
-        parameter.stationIconSizeMid,
-        20,
-        parameter.stationIconSizeMax,
-      ],
-    },
+    ),
+    iconAllowOverlap: const .literal(true),
+    iconIgnorePlacement: .literal(!showStationLabel),
+    sortKey: const .raw(['get', 'sortKey']),
+    iconSize: .raw([
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      3,
+      parameter.stationIconSizeMin,
+      7,
+      parameter.stationIconSizeMid,
+      20,
+      parameter.stationIconSizeMax,
+    ]),
   );
 }
 

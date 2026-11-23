@@ -94,8 +94,12 @@ class const EarthquakeHistoryEstimatedIntensityStyle() {
     if (isDisposed()) {
       return;
     }
-    await styleController.addSource(
-      VectorSource(id: sourceId, url: 'pmtiles://$tileUrl', volatile: true),
+    await styleController.sources.add(
+      VectorSource.url(
+        id: sourceId,
+        url: 'pmtiles://$tileUrl',
+        volatile: true,
+      ),
     );
     if (isDisposed()) {
       return;
@@ -110,22 +114,21 @@ class const EarthquakeHistoryEstimatedIntensityStyle() {
             id: fillLayerId,
             sourceId: sourceId,
             sourceLayerId: 'seismic_intensity',
-            paint: {'fill-opacity': 1, 'fill-color': color},
+            opacity: const .literal(1),
+            color: .raw(color),
           ),
           belowLayerId: BaseLayer.areaForecastLocalELine.name,
-          aboveLayerId: null,
-          atIndex: null,
         ),
         (
           layer: LineStyleLayer(
             id: lineLayerId,
             sourceId: sourceId,
             sourceLayerId: 'seismic_intensity',
-            paint: {'line-opacity': 1, 'line-color': color, 'line-width': 0.5},
+            opacity: const .literal(1),
+            color: .raw(color),
+            width: const .literal(0.5),
           ),
           belowLayerId: BaseLayer.areaForecastLocalELine.name,
-          aboveLayerId: null,
-          atIndex: null,
         ),
       ],
     );

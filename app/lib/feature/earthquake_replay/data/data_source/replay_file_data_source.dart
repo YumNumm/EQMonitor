@@ -29,6 +29,19 @@ class const ReplayFileDataSource(final MethodChannel _channel) {
     return Uri.file(path);
   }
 
+  // file_picker は選んだファイルを一時領域へ複製する。取り込み後に残すと、その分の容量を使い続ける。
+  Future<void> clearPickedFiles() async {
+    try {
+      await FilePicker.clearTemporaryFiles();
+    } on Exception catch (error, stackTrace) {
+      talker.warning(
+        '[Replay] failed to clear picked files',
+        error,
+        stackTrace,
+      );
+    }
+  }
+
   Future<ReplayFileDocument> read({required Uri source}) async {
     try {
       return switch (source.scheme) {
@@ -49,10 +62,19 @@ class const ReplayFileDataSource(final MethodChannel _channel) {
     final bytes = await file.readAsBytes();
     // iOS は「ファイルで開く」で受け取った書類を Documents/Inbox へ複製して渡す。
     // 読み込み後に残しても再利用されないため削除する。
-    if (Platform.isIOS && source.pathSegments.contains('Inbox')) {
+    if (Platform.isIOS && isInbox(source: source)) {
       await file.delete();
     }
     return (bytes: bytes, name: source.pathSegments.last);
+  }
+
+  // 保存先のフォルダ名は利用者が決められるため、Documents 直下の Inbox だけを対象にする。
+  bool isInbox({required Uri source}) {
+    final segments = source.pathSegments;
+    final index = segments.length - 2;
+    return index >= 1 &&
+        segments[index] == 'Inbox' &&
+        segments[index - 1] == 'Documents';
   }
 
   Future<ReplayFileDocument> readContentUri({required Uri source}) async {

@@ -25,26 +25,30 @@ void main() {
       expect(builder.build(points: const []), isEmpty);
     });
 
-    test('0.25度グリッドに観測点を集約し最大レベルでセルを返す', () {
+    test('地図上で正方形になる0.5度幅のグリッドに観測点を集約し最大レベルでセルを返す', () {
       final cells = builder.build(
         points: [
           _point(lat: 35.1, lng: 139.1, intensity: 1),
-          _point(lat: 35.2, lng: 139.2, intensity: 5),
-          _point(lat: 35.4, lng: 139.4, intensity: -2),
+          _point(lat: 35.4, lng: 139.4, intensity: 5),
+          _point(lat: 35.6, lng: 139.6, intensity: -2),
         ],
       );
 
       expect(cells, hasLength(2));
 
       final strongCell = cells.singleWhere(
-        (cell) => cell.minLat == 35.0 && cell.minLng == 139.0,
+        (cell) => cell.minLng == 139.0,
       );
       expect(strongCell.level, ShakeDetectionLevel.strong);
+      expect(strongCell.maxLng, 139.5);
+      expect(strongCell.minLat, closeTo(35.078, 1e-3));
+      expect(strongCell.maxLat, closeTo(35.4861, 1e-3));
 
       final weakerCell = cells.singleWhere(
-        (cell) => cell.minLat == 35.25 && cell.minLng == 139.25,
+        (cell) => cell.minLng == 139.5,
       );
       expect(weakerCell.level, ShakeDetectionLevel.weaker);
+      expect(weakerCell.minLat, closeTo(35.4861, 1e-3));
     });
 
     test('intensity が null の観測点は Weaker として扱う', () {
@@ -57,22 +61,22 @@ void main() {
     test('同一セル内は最大レベルを採用する', () {
       final cells = builder.build(
         points: [
-          _point(lat: 35.05, lng: 139.05, intensity: -2),
-          _point(lat: 35.1, lng: 139.1, intensity: 6),
-          _point(lat: 35.15, lng: 139.15, intensity: 1),
+          _point(lat: 35.1, lng: 139.05, intensity: -2),
+          _point(lat: 35.2, lng: 139.1, intensity: 6),
+          _point(lat: 35.3, lng: 139.15, intensity: 1),
         ],
       );
 
       expect(cells, hasLength(1));
       expect(cells.single.level, ShakeDetectionLevel.stronger);
-      expect(cells.single.minLat, 35.0);
+      expect(cells.single.minLat, closeTo(35.078, 1e-3));
       expect(cells.single.minLng, 139.0);
     });
 
     test('セルはレベル昇順（高レベルが末尾）で返す', () {
       final cells = builder.build(
         points: [
-          _point(lat: 35.4, lng: 139.4, intensity: 6),
+          _point(lat: 37.4, lng: 139.4, intensity: 6),
           _point(lat: 35.1, lng: 139.1, intensity: -2),
           _point(lat: 36.1, lng: 140.1, intensity: 3),
         ],

@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -122,6 +124,7 @@ class const _CurrentLocationUnavailable({required final VoidCallback onRetry})
         actions: [
           M3EFilledButton.tonal(
             onPressed: () async {
+              unawaited(HapticFeedback.lightImpact());
               await Geolocator.requestPermission();
               await refreshPermission();
               onRetry();
@@ -150,10 +153,10 @@ class const _CurrentLocationUnavailable({required final VoidCallback onRetry})
         message: '現在地から地震情報を取得できませんでした。電波状況などをご確認のうえ再試行してください。',
         actions: [
           M3EOutlinedButton.icon(
-            onPressed: () {
+            onPressed: () => HapticUtil.light(() {
               onRetry();
               unawaited(Future.microtask(refreshPermission));
-            },
+            }),
             icon: const Icon(Icons.refresh),
             label: const Text('再試行'),
           ),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/location/data/jma_map_isolate.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
@@ -82,14 +83,14 @@ class const RegionSelectionMap({
           children: [
             const Text('地図を読み込めませんでした。一覧からも選択できます。'),
             M3ETextButton(
-              onPressed: () {
+              onPressed: () => HapticUtil.light(() {
                 ref.invalidate(prefectureBoundaryGeoJsonProvider);
                 ref.invalidate(mapConfigurationProvider);
                 ref.invalidate(regionMapMetadataProvider);
                 if (worker?.hasError ?? false) {
                   ref.invalidate(jmaMapIsolateProvider);
                 }
-              },
+              }),
               child: const Text('再試行'),
             ),
           ],
@@ -161,8 +162,8 @@ class const RegionSelectionMap({
             onStyleLoaded: (_) {
               styleLoaded.value = true;
             },
-            onEvent: (event) {
-              if (event is! MapEventClick || !ready.value) {
+            onClick: (event) {
+              if (!ready.value) {
                 return;
               }
               final map = controller.value;
@@ -240,7 +241,7 @@ class const RegionSelectionMap({
                     if (layerError.value) ...[
                       const Text('地図を読み込めませんでした。一覧からも選択できます。'),
                       M3ETextButton(
-                        onPressed: () => retry.value++,
+                        onPressed: () => HapticUtil.light(() => retry.value++),
                         child: const Text('再試行'),
                       ),
                     ] else ...[

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/subscription/data/repository/subscription_server_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -100,7 +101,7 @@ class const SubscriptionSyncBanner({
                         style: .text,
                         onPressed: recovering || subscription.isLoading
                             ? null
-                            : () async {
+                            : () => HapticUtil.light(() async {
                                 if (requiresAuth) {
                                   await ref
                                       .read(paywallFlowProvider)
@@ -113,7 +114,7 @@ class const SubscriptionSyncBanner({
                                       .read(paywallFlowProvider)
                                       .synchronize(ref, context);
                                 }
-                              },
+                              }),
                         child: Text(requiresAuth ? 'デバイス登録を再試行' : '購入情報を同期'),
                       ),
                   ],

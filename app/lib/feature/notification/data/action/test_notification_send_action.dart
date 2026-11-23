@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_error.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
@@ -41,7 +42,9 @@ class const TestNotificationSendAction() {
               child: const Text('キャンセル'),
             ),
             M3EFilledButton(
-              onPressed: () => Navigator.of(dialogContext).pop(true),
+              onPressed: () => HapticUtil.light(
+                () => Navigator.of(dialogContext).pop(true),
+              ),
               child: const Text('送信'),
             ),
           ],

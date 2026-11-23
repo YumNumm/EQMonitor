@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/api/http_cached_api_client_provider.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/core/realtime/realtime_fallback_polling_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
@@ -19,7 +21,12 @@ part 'earthquake_history_notifier.g.dart';
 
 @riverpod
 class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
+  static const fallbackPollingInterval = Duration(seconds: 10);
+
   final List<_NotifierRealtimeMutation> _mutations = [];
+  List<EarthquakePartial>? _lastRevalidatedItems;
+  int? _lastRevalidatedSequence;
+  var _isRevalidating = false;
   EarthquakeHistoryRepository? _repository;
   var _mutationSequence = 0;
   var _hasCompletedInitialLoad = false;
@@ -47,8 +54,18 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         const Duration(minutes: 5),
         (_) => ref.invalidateSelf(),
       );
+      final fallbackPollingTimer = Timer.periodic(
+        fallbackPollingInterval,
+        (_) async {
+          if (!ref.read(isRealtimeFallbackPollingActiveProvider)) {
+            return;
+          }
+          await _revalidateLatest();
+        },
+      );
       ref
         ..onDispose(refetchTimer.cancel)
+        ..onDispose(fallbackPollingTimer.cancel)
         ..listen(appLifecycleProvider, (_, next) async {
           if (next == AppLifecycleState.resumed) {
             await _revalidateLatest();
@@ -67,12 +84,42 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   }
 
   Future<void> _revalidateLatest() async {
+    if (_isRevalidating) {
+      return;
+    }
+    _isRevalidating = true;
     talker.debug('revalidateLatest');
     final startedAt = _mutationSequence;
-    final latest = await _fetch(parameter: parameter, limit: 10, cursor: null);
-    final reconciled = _reconcileMutations(latest, afterSequence: startedAt);
-    if (reconciled.items.isNotEmpty) {
-      _upsertItems(reconciled.items);
+    try {
+      final latest = await _fetch(
+        parameter: parameter,
+        limit: 10,
+        cursor: null,
+        client: await ref.read(httpCachedApiClientProvider.future),
+      );
+      if (!ref.mounted) {
+        return;
+      }
+      // 前回の再取得から REST も Realtime も変化がなければ、一覧を更新しない。
+      final isUnchanged =
+          _lastRevalidatedSequence == _mutationSequence &&
+          const ListEquality<EarthquakePartial>().equals(
+            _lastRevalidatedItems,
+            latest.items,
+          );
+      _lastRevalidatedItems = latest.items;
+      _lastRevalidatedSequence = _mutationSequence;
+      if (isUnchanged) {
+        return;
+      }
+      final reconciled = _reconcileMutations(latest, afterSequence: startedAt);
+      if (reconciled.items.isNotEmpty) {
+        _upsertItems(reconciled.items);
+      }
+    } on Exception catch (e, st) {
+      talker.handle(e, st, 'revalidateLatest failed');
+    } finally {
+      _isRevalidating = false;
     }
   }
 
@@ -80,6 +127,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     required EarthquakeHistoryParameter parameter,
     required int limit,
     required String? cursor,
+    api.ApiClient? client,
   }) async {
     final repository = await ref.read(
       earthquakeHistoryRepositoryProvider.future,
@@ -88,6 +136,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
 
     return switch (parameter) {
       EarthquakeHistoryParameterAll() => repository.fetchEarthquakeList(
+        client: client,
         limit: limit,
         cursor: cursor,
         magnitudeGte: parameter.magnitudeGte,

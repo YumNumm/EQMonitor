@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
@@ -48,11 +49,27 @@ List<ShakeDetectionEvent> shakeDetectionActive(Ref ref) {
 /// 地図・カードに表示する揺れ検知イベント。
 ///
 /// EEW と結合したイベントは EEW の表示に任せるため含めない。
+/// デバッグ設定で有効にした場合のみ、結合したイベントも含める。
 @Riverpod(keepAlive: true)
-List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) => [
-  for (final event in ref.watch(shakeDetectionActiveProvider))
-    if (event.correlatedEewEventId == null) event,
-];
+List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) {
+  final events = ref.watch(shakeDetectionActiveProvider);
+  final showsCorrelated =
+      ref.watch(
+        homeConfigurationProvider.select(
+          (configuration) =>
+              configuration.value?.debugOverlay.shakeDetectionDuringEew ??
+              false,
+        ),
+      ) &&
+      ref.watch(isDebugMenuAvailableProvider);
+  if (showsCorrelated) {
+    return events;
+  }
+  return [
+    for (final event in events)
+      if (event.correlatedEewEventId == null) event,
+  ];
+}
 
 /// 地図の自動フォーカスの対象にする揺れ検知イベント。
 ///

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/current_location_permission_action.dart';
@@ -58,8 +59,11 @@ class const CurrentLocationPermissionWarningCard({super.key})
             M3EFilledButton(
               onPressed: pending
                   ? null
-                  : () async =>
-                        const CurrentLocationPermissionAction().request(ref),
+                  : () => HapticUtil.light(
+                      () => const CurrentLocationPermissionAction().request(
+                        ref,
+                      ),
+                    ),
               child: const Text('位置情報を許可する'),
             ),
           ],

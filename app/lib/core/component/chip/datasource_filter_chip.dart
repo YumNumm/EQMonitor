@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -34,7 +35,9 @@ class const DatasourceFilterChip({
               style: const TextStyle(fontWeight: .bold),
             )
           : const Text('データソース'),
-      onDeleted: isActive ? () => onChanged?.call(null) : null,
+      onDeleted: isActive
+          ? () => HapticUtil.light(() => onChanged?.call(null))
+          : null,
       selected: isActive,
       selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
@@ -85,7 +88,9 @@ class const _DatasourceFilterModal({final EarthquakeDataSource? current})
                 trailing: current == ds
                     ? Icon(Icons.check, color: designSystem.colorTheme.primary)
                     : null,
-                onTap: () => Navigator.of(context).pop((value: ds)),
+                onTap: () => HapticUtil.selection(
+                  () => Navigator.of(context).pop((value: ds)),
+                ),
               ),
             ListTile(
               title: const Text('すべて'),
@@ -93,9 +98,11 @@ class const _DatasourceFilterModal({final EarthquakeDataSource? current})
               trailing: current == null
                   ? Icon(Icons.check, color: designSystem.colorTheme.primary)
                   : null,
-              onTap: () =>
-                  Navigator.of(context)
-                      .pop((value: null as EarthquakeDataSource?)),
+              onTap: () => HapticUtil.selection(
+                () =>
+                    Navigator.of(context)
+                        .pop((value: null as EarthquakeDataSource?)),
+              ),
             ),
             const SizedBox(height: 8),
           ],

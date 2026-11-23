@@ -130,7 +130,9 @@ class const EewCard({
       alignment: Alignment.center,
       children: [
         if (index case final index?)
-          _WatermarkText(text: index, color: colors.watermark),
+          Positioned.fill(
+            child: _WatermarkText(text: index, color: colors.watermark),
+          ),
         _EewMainCard(
           eew: eew,
           colors: colors,
@@ -148,7 +150,12 @@ class const EewCard({
               .shouldShow(eew: eew),
         ),
         if (eew.status != TelegramStatus.normal)
-          _WatermarkText(text: eew.status.name, color: colors.watermark),
+          Positioned.fill(
+            child: _WatermarkText(
+              text: eew.status.name,
+              color: colors.watermark,
+            ),
+          ),
       ],
     );
   }

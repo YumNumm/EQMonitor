@@ -526,13 +526,25 @@ mixin $HomeMapLayerRoute on GoRouteData {
 
 mixin $EewDetailsByEventIdRoute on GoRouteData {
   static EewDetailsByEventIdRoute _fromState(GoRouterState state) =>
-      EewDetailsByEventIdRoute(eventId: state.pathParameters['eventId']!);
+      EewDetailsByEventIdRoute(
+        eventId: state.pathParameters['eventId']!,
+        useSheet:
+            _$convertMapValue(
+              'use-sheet',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+      );
 
   EewDetailsByEventIdRoute get _self => this as EewDetailsByEventIdRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/eew-details-by-event-id/${Uri.encodeComponent(_self.eventId)}',
+    queryParams: {
+      if (_self.useSheet != false) 'use-sheet': _self.useSheet.toString(),
+    },
   );
 
   @override
@@ -547,6 +559,26 @@ mixin $EewDetailsByEventIdRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
+}
+
+bool _$boolConverter(String value) {
+  switch (value) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      throw UnsupportedError('Cannot convert "$value" into a bool.');
+  }
 }
 
 RouteBase get $talkerRoute => GoRouteData.$route(
@@ -734,6 +766,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugJmaMapRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'estimated-intensity-dem',
+          hasOverriddenOnExit: false,
+          factory: $DebugEstimatedIntensityDemRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'playground',
           hasOverriddenOnExit: false,
           factory: $PlaygroundRoute._fromState,
@@ -792,6 +829,16 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'http-cache',
           hasOverriddenOnExit: false,
           factory: $DebugHttpCacheRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'replay-creation',
+          hasOverriddenOnExit: false,
+          factory: $DebugReplayCreationRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'replay-library',
+          hasOverriddenOnExit: false,
+          factory: $DebugReplayLibraryRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'intensity-icon',
@@ -1452,6 +1499,28 @@ mixin $DebugJmaMapRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugEstimatedIntensityDemRoute on GoRouteData {
+  static DebugEstimatedIntensityDemRoute _fromState(GoRouterState state) =>
+      const DebugEstimatedIntensityDemRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/estimated-intensity-dem');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $PlaygroundRoute on GoRouteData {
   static PlaygroundRoute _fromState(GoRouterState state) =>
       const PlaygroundRoute();
@@ -1694,6 +1763,65 @@ mixin $DebugHttpCacheRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/http-cache');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugReplayCreationRoute on GoRouteData {
+  static DebugReplayCreationRoute _fromState(GoRouterState state) =>
+      DebugReplayCreationRoute(
+        startTimeMs: _$convertMapValue(
+          'start-time-ms',
+          state.uri.queryParameters,
+          int.tryParse,
+        ),
+        name: state.uri.queryParameters['name'],
+      );
+
+  DebugReplayCreationRoute get _self => this as DebugReplayCreationRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/debug/replay-creation',
+    queryParams: {
+      if (_self.startTimeMs != null)
+        'start-time-ms': _self.startTimeMs!.toString(),
+      if (_self.name != null) 'name': _self.name,
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugReplayLibraryRoute on GoRouteData {
+  static DebugReplayLibraryRoute _fromState(GoRouterState state) =>
+      const DebugReplayLibraryRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/replay-library');
 
   @override
   void go(BuildContext context) => context.go(location);

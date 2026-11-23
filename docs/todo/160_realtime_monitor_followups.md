@@ -13,11 +13,31 @@
 - 修正版配布後に本番の `/v2/realtime/ticket` の401件数と再送間隔を確認する。
   旧バージョンからの大量再送はアプリの修正だけでは即時に止まらない。
 
+## 700: background 復帰時の接続維持と未接続中の REST 取得
+
+対象: `app/lib/core/realtime/`、`app/lib/feature/eew/data/eew.dart`、`app/lib/feature/earthquake_history/data/notifier/`。
+仕様は [EEW・リアルタイム更新の契約](../knowledge/eew_realtime.md) を参照する。
+
+- 実機未検証: iOS / Android で background から復帰したとき、接続が生きていれば heartbeat の pong を受けて
+  同じ接続で受信を続けること。接続が切れていれば5秒以内に再接続し、接続完了まで EEW が1秒周期で取得されること。
+  確認中の最大5秒間は `WsPhase.connected` のままで、未接続中の REST 取得は動かない。
+- 実機未検証: Android で process が動き続けている background 中に接続が切れたとき、無受信監視から
+  確認を経て再接続すること。iOS で suspend 中に止まっていた timer が復帰時にどの順で満了するか。
+- 実機未検証: 復帰時の NTP と `latest.json` の測り直し。端末の時刻を background 中に変更した場合、
+  測り直しが終わるまで（約1〜2秒）強震モニタは以前の見積もりで取得する。
+- 実機未検証: 機内モードやサーバー停止で未接続のとき、前面では EEW が1秒、地震履歴が10秒周期で取得され、background では止まること。
+- 未検証: `/v2/eew/latest` と `/v2/earthquake` が `ETag` を返し、`If-None-Match` に304で応答すること。
+  返さない場合は毎回全文を取得する。1秒周期の通信量とサーバー負荷を本番で確認する。
+- 未接続中は Dio のログが毎秒出力される。ネットワークはあるが API に届かない場合は、失敗のログも毎秒残る。
+  ログの量が問題になる場合は、該当リクエストの出力を抑える。
+- チケット取得が401のまま接続できない端末は、前面表示中ずっと EEW を1秒周期で取得する。
+  WebSocket の障害時は前面の全端末が同時に REST へ切り替わるため、本番の負荷を確認する。
+
 ## 160: 揺れ検知の公開テスト再有効化
 
 - 実機未検証: 揺れ検知が無効な配布ビルドで、Admin ロールかつデバッグモード有効の端末から通知地域・最小レベルを保存できること。再起動時の条件維持、Android の前面・背面通知、権限取得失敗からの再試行、非 Admin・デバッグ無効時の変更抑止も確認する。
 - 対象: `.github/workflows/deploy-app.yaml`、`app/lib/core/model/environment.dart`、`app/lib/feature/shake_detection/`。
-- iOS external / Android external の `IS_SHAKE_DETECTION_ENABLED=false` を解除し、ホームgrid/card、timeshift自動復帰、`/settings/notification/shake` を確認する。
+- iOS external / Android external の `IS_SHAKE_DETECTION_ENABLED=false` を解除し、ホームgrid/card、`/settings/notification/shake` を確認する。
 - このflagはclient表示/購読だけを止める。無効ビルドで既登録のserver pushも止める必要があるなら、server抑止または登録設定削除の仕様を決めて配信テストを追加する。
 - 完了条件: 配布trackごとの表示/pushの挙動が仕様と一致する。削除済みの揺れ検知履歴が必要なら、RESTを持つ履歴として別途設計する。
 
@@ -41,10 +61,12 @@
   地図のデバッグ表示（マップレイヤー設定の「デバッグ」）の配置・可読性。
 - 表示種別が震度以外・地下のときは検知しない。検知用に地上の震度画像を別途取得するかを決める。
 - レベル境界は公開版の値（4.5 / 2.5 / 0.5 / -1）。サーバーが送る通知のレベルと食い違う場合の扱いを決める。
-- リプレイ再生では検知しない。再生画像を同じエンジンへ流すかを決める。
 - 揺れ検知のサーバー配信（`shake_detection` の WebSocket 配信、`/v2/shake-detection/active`）は backend とアプリの Dart 側から撤去済み。
   Swift の EQMonitorAPI（`app/ios/Packages/EQMonitorAPI`）は再生成しておらず、`openapi.json` と生成済みの型に揺れ検知の配信用の定義が残る。
   macOS で `Scripts` の手順に沿って再生成する。
+- 実機未検証: 異常値として除外中の観測点が地図に描かれないこと、直近 10 フレームに実測があり最新フレームが欠測の観測点が
+  灰色の枠線だけで描かれること（枠表示の設定が「表示しない」でも描く）。iOS / Android の両方で `circle-opacity` と
+  `circle-stroke-width` の式が例外にならないことも確認する。
 
 ## 150: EQRP リプレイ再生の実機確認と公開
 
@@ -53,9 +75,27 @@
 - 実機未検証: iOS で Files・AirDrop・メール添付から `.eqrp` を開けること（起動中・コールドスタートの両方）。`Documents/Inbox` の複製が読み込み後に削除されること。
 - 実機未検証: Android のファイルアプリから開けること。パスに拡張子を含まない provider（ダウンロードの `msf:` など）は intent-filter に一致しない。必要なら共有（`ACTION_SEND`）からの受け取りを検討する。
 - 実機未検証: 再生中の観測点・EEW の波面と到達カウントダウン・コントロールシートの操作、終了後にライブ表示へ戻ること。
-- 導線はデバッグメニューと OS の「ファイルで開く」のみ。設定画面の導線は、Pro 限定の EQRP 作成機能と合わせて公開する。作成時の時刻の規約は [リプレイ再生](../knowledge/earthquake_replay.md) に従う。
+- 実機未検証: 端末内の揺れ検知を有効にして再生し、検知の表示・EEW との結合・地図の自動フォーカスが再生時刻に沿って動くこと。シークと終了で検知が残らないこと。
+- EQRP の導線はデバッグメニューと OS の「ファイルで開く」のみ。EQRP の作成はデバッグメニューにだけある。設定画面の導線は、Pro 限定の EQRP 作成機能と合わせて公開する。作成時の時刻の規約は [リプレイ再生](../knowledge/earthquake_replay.md) に従う。
+- 実機未検証: 「保存済みのリプレイ」で、ファイルの追加、フォルダの作成・名前と場所の変更・削除、ファイルの名前とフォルダの変更、複数選択での移動と削除、再生ができること。日本語や空白を含む名前でも再生でき、エクスポートが admin デバイスだけに出ること（iPad の共有シートの位置を含む）。
+- 実機未検証: 端末の容量表示（`packages/native_plugin`）。iOS は同じ `NSURL` の呼び出しを macOS で実行して確認済み。Android の JNIgen による `StatFs` 呼び出しは、R8 を有効にした release ビルドを含めて未実行。
+- 実機未検証: 地震履歴の詳細と緊急地震速報の履歴に「リプレイファイルを作成」が出て、開始時刻と名前が入った作成画面が開くこと。緊急地震速報の履歴で、地図の右上のボタンが縦画面・横画面・シート表示のどれでもほかの表示と重ならないこと。
+- 実機未検証: デバッグメニューの「リプレイファイルを作成」で、名前とフォルダを指定した作成と中止ができること。EEW を含む期間で 1003 が格納され再生されること（EEW API の取得は未確認。フレームの時刻に発表時刻を使う点は、バックエンドの `tools/eqrp` と揃っているか未確認）。
 - KyoshinEewViewerIngen（YumNumm fork）の `EqMonitorEventMessage` は 1003 の JSON を camelCase の EventMessage として読み、アプリの契約（EEW API の `EewItemWithRelations`）と異なる。KEVi と同じファイルを共有する場合は形式を揃える。
 - 完了条件: 上記の実機確認が済み、公開範囲（Pro 限定か）と設定画面の導線が決まっている。
+
+## 150: 強震モニタ過去画像の再生の実機確認
+
+対象: `app/lib/feature/earthquake_replay/`、`app/lib/feature/earthquake_history/ui/earthquake_history_details_page.dart`。
+
+- 実機未検証: 発生から3時間以内の地震の詳細画面に「強震モニタで再生」が表示され、ホームで観測点・EEW・発生時刻の目印が再生時刻に沿って動くこと。分割表示の詳細ペインからも開始できること。
+- 実機未検証: 再生中カードの展開・折りたたみの動き、狭い画面での操作パネルの幅、アニメーションを減らす設定での即時切り替え、読み上げ。
+- 実機未検証: 再生中に EEW が発表されたとき、リアルタイムへ戻って通知が出ること。WebSocket 切断中の10秒ごとの確認も含む。
+- 未検証: 本番 API が返す `originTimePrecision`。気象庁の電文の発生時刻は分単位のため、分単位では区間を1分延ばしている。秒単位で返る場合は延長が不要になる。
+- 未検証: 過去画像の削除が別の日も同じ規則（毎時、その時点の3時間前まで）で走ること。2026-11-23 の1日分だけ計測した。3時間を下回る日があれば、導線を出す範囲（`ReplayKyoshinArchiveWindowResolver.retention`）を短くする。
+- 未検証: 中身の小さい画像（約2.6KB、通常は約6KB）が 200 で返った時刻の解析結果。
+- 公開範囲は「強震モニタの再生は全利用者、EEW の重ね合わせは Pro」の既定案で実装した。Pro 限定にする場合は導線側で制御する。
+- 再生終了後は元の詳細画面へ戻らず、ホームに留まる。
 
 ## 150: WebSocket固定heartbeatの実機確認
 

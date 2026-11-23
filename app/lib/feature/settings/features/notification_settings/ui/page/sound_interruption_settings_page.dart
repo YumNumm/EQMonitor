@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
@@ -231,7 +232,9 @@ class const _SoundInterruptionCard({
               value: collapseNotification,
               onChanged: (value) async => onCollapseChanged(value: value),
             ),
-            onTap: () async => onCollapseChanged(value: !collapseNotification),
+            onTap: () => HapticUtil.selection(
+              () => onCollapseChanged(value: !collapseNotification),
+            ),
           ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/util/map/replace_map_style_layers.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_expression.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
+import 'package:flutter/painting.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// 市区町村別最大震度マップの fill/line レイヤーを組み立てる。
@@ -13,13 +14,12 @@ import 'package:maplibre/maplibre.dart';
 ///
 /// 塗りと輪郭線をメソッドごとに分けているのは、更新契機が全く違うため。
 /// 塗りは全国 ~1900 市区町村分の `match` 式を持つので入れ替えが重く、震度
-/// データか配色が変わったときだけ作り直したい。輪郭線はタップごとに変わるが
-/// 1 フィーチャだけで軽い。両者を 1 つの `useEffect` にまとめると、タップの
-/// たびに塗りまで破棄・再追加してしまう。
+/// データか配色が変わったときだけ作り直したい。輪郭線は style・配色ごとに
+/// 1 度だけ追加し、タップでは [selectedCityFilter] で filter だけ差し替える。
 ///
-/// 相対順序はアンカーと追加順で決まる: 塗りは細分区域の境界線の**下**、
-/// 選択枠はスタイルの最前面に追加する。どちらを先に追加しても塗りは境界線の
-/// 下に留まり、選択枠は他レイヤーに埋もれない。
+/// 相対順序は style が持つアンカーで決まる: 塗りは細分区域の境界線の**下**、
+/// 選択枠は [BaseLayer.markerBackgroundAnchor] の下に追加する。どちらを先に
+/// 追加しても塗りは境界線の下に留まり、選択枠は境界線に埋もれない。
 class const IntensityFillLayerBuilder() {
   static const sourceId = 'eqmonitor_map';
   static const citySourceLayerId = 'areaInformationCityQuake';
@@ -65,8 +65,8 @@ class const IntensityFillLayerBuilder() {
           id: cityFillLayerId,
           sourceId: sourceId,
           sourceLayerId: citySourceLayerId,
-          paint: {
-            'fill-color': IntensityMatchExpressionBuilder.build(
+          color: .raw(
+            IntensityMatchExpressionBuilder.build(
               cityMaxIntensities
                   .map(
                     (entry) => (
@@ -78,79 +78,71 @@ class const IntensityFillLayerBuilder() {
               colorModel,
               propertyKey: 'regioncode',
             ),
-            'fill-opacity': cityFillOpacity,
-          },
+          ),
+          opacity: const .literal(cityFillOpacity),
         ),
       ),
     ];
   }
 
-  /// 選択中の市区町村の輪郭線。
+  /// 選択中の市区町村の輪郭線（ハロー・本線）。
   ///
-  /// [selectedCityCode] が null なら空リストを返す（未選択）。
-  /// ハローと本線の 2 枚を最前面に置き、塗りや細分区域境界に埋もれないようにする。
+  /// [selectedCityCode] が null でもレイヤーは返し、filter で非表示にする。
   List<MapStyleLayerEntry> buildSelectedCityLine({
     required String? selectedCityCode,
-    required String lineColor,
-    required String haloColor,
+    required Color lineColor,
+    required Color haloColor,
   }) {
-    if (selectedCityCode == null) {
-      return const [];
-    }
-
-    final filter = <Object>[
-      '==',
-      <Object>['get', 'regioncode'],
-      selectedCityCode,
-    ];
-    const layout = <String, Object>{
-      'line-cap': 'round',
-      'line-join': 'round',
-    };
+    final filter = Expression<bool>.raw(selectedCityFilter(selectedCityCode));
 
     return [
-      (
-        layer: LineStyleLayer(
+      belowMarkerBackground(
+        LineStyleLayer(
           id: selectedCityHaloLayerId,
           sourceId: sourceId,
           sourceLayerId: citySourceLayerId,
           filter: filter,
-          layout: layout,
-          paint: {
-            'line-color': haloColor,
-            'line-width': selectedCityHaloWidth,
-            'line-opacity': 0.9,
-          },
+          cap: const .literal(.round),
+          join: const .literal(.round),
+          color: .literal(haloColor),
+          width: const .literal(selectedCityHaloWidth),
+          opacity: const .literal(0.9),
         ),
-        belowLayerId: null,
-        aboveLayerId: null,
-        atIndex: null,
       ),
-      (
-        layer: LineStyleLayer(
+      belowMarkerBackground(
+        LineStyleLayer(
           id: selectedCityLineLayerId,
           sourceId: sourceId,
           sourceLayerId: citySourceLayerId,
           filter: filter,
-          layout: layout,
-          paint: {
-            'line-color': lineColor,
-            'line-width': selectedCityLineWidth,
-            'line-opacity': 1,
-          },
+          cap: const .literal(.round),
+          join: const .literal(.round),
+          color: .literal(lineColor),
+          width: const .literal(selectedCityLineWidth),
+          opacity: const .literal(1),
         ),
-        belowLayerId: null,
-        aboveLayerId: null,
-        atIndex: null,
       ),
     ];
   }
+
+  /// 未選択の非表示に `['==', 1, 0]` を使うと iOS で例外になるため、空集合への所属判定にする。
+  List<Object> selectedCityFilter(String? selectedCityCode) => [
+    'in',
+    ['get', 'regioncode'],
+    [
+      'literal',
+      [?selectedCityCode],
+    ],
+  ];
+
+  MapStyleLayerEntry belowMarkerBackground(StyleLayer layer) => (
+    layer: layer,
+    belowLayerId: BaseLayer.markerBackgroundAnchor.name,
+  );
 
   /// 細分区域の境界線より下に挿入する。
   MapStyleLayerEntry belowRegionLine(StyleLayer layer) => (
     layer: layer,
     belowLayerId: BaseLayer.areaForecastLocalELine.name,
-    aboveLayerId: null,
-    atIndex: null,
   );
 }

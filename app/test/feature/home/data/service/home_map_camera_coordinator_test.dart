@@ -12,6 +12,7 @@ import 'package:maplibre/maplibre.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../map/data/service/camera_update_matcher.dart';
 import '../../../map/data/service/map_automatic_focus_controller_test.mocks.dart';
 
 final _now = DateTime.utc(2025, 1, 1, 12);
@@ -61,16 +62,13 @@ void stubCameraAnimations({
 }) {
   when(
     controller.animateCamera(
-      center: anyNamed('center'),
-      zoom: anyNamed('zoom'),
-      bearing: anyNamed('bearing'),
-      pitch: anyNamed('pitch'),
-      nativeDuration: anyNamed('nativeDuration'),
-      webSpeed: anyNamed('webSpeed'),
-      webMaxDuration: anyNamed('webMaxDuration'),
-      padding: anyNamed('padding'),
+      any,
+      animation: anyNamed('animation'),
     ),
-  ).thenAnswer((_) => animate());
+  ).thenAnswer((_) async {
+    await animate();
+    return CameraAnimationResult.completed;
+  });
 }
 
 void main() {
@@ -92,15 +90,20 @@ void main() {
       final center =
           verify(
                 controller.animateCamera(
-                  center: captureAnyNamed('center'),
-                  zoom: anyNamed('zoom'),
-                  bearing: 0,
-                  pitch: 0,
-                  nativeDuration: const Duration(milliseconds: 500),
+                  captureThat(
+                    isCameraPositionUpdate(
+                      bearing: 0,
+                      pitch: 0,
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+                  animation: const CameraAnimation.fly(
+                    duration: Duration(milliseconds: 500),
+                  ),
                 ),
               ).captured.single
-              as Geographic;
-      expect(center.lon, closeTo(136, 0.0001));
+              as CameraUpdatePosition;
+      expect(center.center?.lon, closeTo(136, 0.0001));
       verifyNoMoreInteractions(controller);
     });
 
@@ -142,12 +145,16 @@ void main() {
       expect(result, isTrue);
       verify(
         controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: 0,
-          pitch: 0,
-          nativeDuration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(4),
+          argThat(
+            isCameraPositionUpdate(
+              bearing: 0,
+              pitch: 0,
+              padding: const EdgeInsets.all(4),
+            ),
+          ),
+          animation: const CameraAnimation.fly(
+            duration: Duration(milliseconds: 200),
+          ),
         ),
       ).called(1);
       verifyNoMoreInteractions(controller);
@@ -179,11 +186,16 @@ void main() {
       expect(result, isFalse);
       verify(
         controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: 0,
-          pitch: 0,
-          nativeDuration: const Duration(milliseconds: 500),
+          argThat(
+            isCameraPositionUpdate(
+              bearing: 0,
+              pitch: 0,
+              padding: EdgeInsets.zero,
+            ),
+          ),
+          animation: const CameraAnimation.fly(
+            duration: Duration(milliseconds: 500),
+          ),
         ),
       ).called(1);
       verifyNoMoreInteractions(controller);
@@ -230,11 +242,16 @@ void main() {
       expect(await focus, isNull);
       verify(
         controller.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: 0,
-          pitch: 0,
-          nativeDuration: const Duration(milliseconds: 500),
+          argThat(
+            isCameraPositionUpdate(
+              bearing: 0,
+              pitch: 0,
+              padding: EdgeInsets.zero,
+            ),
+          ),
+          animation: const CameraAnimation.fly(
+            duration: Duration(milliseconds: 500),
+          ),
         ),
       ).called(1);
       verifyNoMoreInteractions(controller);
@@ -255,7 +272,7 @@ void main() {
         animate: () => newAnimation.future,
       );
       final shakes = [
-        _sampleShake(minLat: 20, maxLat: 46, minLng: 120, maxLng: 154),
+        _sampleShake(minLat: 30, maxLat: 40, minLng: 120, maxLng: 154),
       ];
 
       final oldFocus = coordinator.setController(
@@ -269,14 +286,19 @@ void main() {
       final oldZoom =
           verify(
                 oldController.animateCamera(
-                  center: anyNamed('center'),
-                  zoom: captureAnyNamed('zoom'),
-                  bearing: 0,
-                  pitch: 0,
-                  nativeDuration: const Duration(milliseconds: 500),
+                  captureThat(
+                    isCameraPositionUpdate(
+                      bearing: 0,
+                      pitch: 0,
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+                  animation: const CameraAnimation.fly(
+                    duration: Duration(milliseconds: 500),
+                  ),
                 ),
               ).captured.single
-              as double;
+              as CameraUpdatePosition;
 
       final newFocus = coordinator.setController(
         controller: newController,
@@ -289,15 +311,20 @@ void main() {
       final newZoom =
           verify(
                 newController.animateCamera(
-                  center: anyNamed('center'),
-                  zoom: captureAnyNamed('zoom'),
-                  bearing: 0,
-                  pitch: 0,
-                  nativeDuration: const Duration(milliseconds: 500),
+                  captureThat(
+                    isCameraPositionUpdate(
+                      bearing: 0,
+                      pitch: 0,
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+                  animation: const CameraAnimation.fly(
+                    duration: Duration(milliseconds: 500),
+                  ),
                 ),
               ).captured.single
-              as double;
-      expect(newZoom, greaterThan(oldZoom));
+              as CameraUpdatePosition;
+      expect(newZoom.zoom, greaterThan(oldZoom.zoom ?? double.infinity));
 
       newAnimation.complete();
       expect(await newFocus, isFalse);
@@ -350,18 +377,12 @@ void main() {
       expect(await returnHome, isTrue);
       final centers = verify(
         controller.animateCamera(
-          center: captureAnyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
+          captureAny,
+          animation: anyNamed('animation'),
         ),
       ).captured;
-      expect((centers.first as Geographic).lon, 139.5);
-      expect((centers.last as Geographic).lon, 137);
+      expect((centers.first as CameraUpdatePosition).center?.lon, 139.5);
+      expect((centers.last as CameraUpdatePosition).center?.lon, 137);
     });
 
     test('realtime fit中の明示Home復帰を最後に適用する', () async {
@@ -405,18 +426,69 @@ void main() {
       expect(await returnHome, isTrue);
       final centers = verify(
         controller.animateCamera(
-          center: captureAnyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: anyNamed('bearing'),
-          pitch: anyNamed('pitch'),
-          nativeDuration: anyNamed('nativeDuration'),
-          webSpeed: anyNamed('webSpeed'),
-          webMaxDuration: anyNamed('webMaxDuration'),
-          padding: anyNamed('padding'),
+          captureAny,
+          animation: anyNamed('animation'),
         ),
       ).captured;
-      expect((centers.first as Geographic).lon, 139.5);
-      expect((centers.last as Geographic).lon, 137);
+      expect((centers.first as CameraUpdatePosition).center?.lon, 139.5);
+      expect((centers.last as CameraUpdatePosition).center?.lon, 137);
+    });
+
+    test('同じ範囲へのrealtime focusはカメラを動かし直さない', () async {
+      final coordinator = HomeMapCameraCoordinator();
+      final controller = MockMapController();
+      var cameraCallCount = 0;
+      stubCameraAnimations(
+        controller: controller,
+        animate: () {
+          cameraCallCount += 1;
+          return Future<void>.value();
+        },
+      );
+      final home = Future.value(const HomeConfigurationModel());
+
+      expect(
+        await coordinator.setController(
+          controller: controller,
+          viewportSize: const Size(375, 667),
+          home: home,
+          eews: const [],
+          shakes: [_sampleShake()],
+        ),
+        isFalse,
+      );
+      expect(cameraCallCount, 1);
+
+      expect(
+        await coordinator.handleRealtimeTransition(
+          home: home,
+          eews: const [],
+          shakes: [_sampleShake(minLat: 33.1, maxLng: 131.9)],
+        ),
+        isFalse,
+      );
+      expect(cameraCallCount, 1);
+
+      expect(
+        await coordinator.handleRealtimeTransition(
+          home: home,
+          eews: const [],
+          shakes: [_sampleShake(maxLat: 37)],
+        ),
+        isFalse,
+      );
+      expect(cameraCallCount, 2);
+
+      coordinator.cancelAutomaticFocus();
+      expect(
+        await coordinator.handleRealtimeTransition(
+          home: home,
+          eews: const [],
+          shakes: [_sampleShake(maxLat: 37)],
+        ),
+        isFalse,
+      );
+      expect(cameraCallCount, 3);
     });
 
     test('target消滅とcontroller切替が重なっても新controllerをHomeへ戻す', () async {
@@ -452,7 +524,7 @@ void main() {
       );
       final oldRealtime = coordinator.handleRealtimeTransition(
         home: Future.value(const HomeConfigurationModel()),
-        eews: [_sampleEew(eventId: '20250101120001')],
+        eews: [_sampleEew(eventId: '20250101120001', latitude: 37.5)],
         shakes: const [],
       );
       await Future<void>.delayed(Duration.zero);
@@ -477,16 +549,20 @@ void main() {
       final newHomeCenter =
           verify(
                 newController.animateCamera(
-                  center: captureAnyNamed('center'),
-                  zoom: anyNamed('zoom'),
-                  bearing: 0,
-                  pitch: 0,
-                  nativeDuration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.all(4),
+                  captureThat(
+                    isCameraPositionUpdate(
+                      bearing: 0,
+                      pitch: 0,
+                      padding: const EdgeInsets.all(4),
+                    ),
+                  ),
+                  animation: const CameraAnimation.fly(
+                    duration: Duration(milliseconds: 200),
+                  ),
                 ),
               ).captured.single
-              as Geographic;
-      expect(newHomeCenter.lon, 137);
+              as CameraUpdatePosition;
+      expect(newHomeCenter.center?.lon, 137);
 
       newHomeAnimation.complete();
       expect(await newHome, isTrue);
@@ -495,11 +571,16 @@ void main() {
       expect(await oldHome, isNull);
       verify(
         oldController.animateCamera(
-          center: anyNamed('center'),
-          zoom: anyNamed('zoom'),
-          bearing: 0,
-          pitch: 0,
-          nativeDuration: const Duration(milliseconds: 500),
+          argThat(
+            isCameraPositionUpdate(
+              bearing: 0,
+              pitch: 0,
+              padding: EdgeInsets.zero,
+            ),
+          ),
+          animation: const CameraAnimation.fly(
+            duration: Duration(milliseconds: 500),
+          ),
         ),
       ).called(2);
       verifyNoMoreInteractions(oldController);

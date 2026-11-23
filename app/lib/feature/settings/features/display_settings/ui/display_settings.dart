@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/screen_behavior_settings_section.dart';
 import 'package:flutter/foundation.dart';
@@ -57,8 +58,9 @@ class const _ThemeSelector() extends ConsumerWidget {
           : Brightness.dark;
       return Expanded(
         child: GestureDetector(
-          onTap: () async =>
-              ref.read(themeModeProvider.notifier).setThemeMode(mode),
+          onTap: () => HapticUtil.selection(
+            () => ref.read(themeModeProvider.notifier).setThemeMode(mode),
+          ),
           child: Column(
             children: [
               SizedBox(
@@ -90,8 +92,9 @@ class const _ThemeSelector() extends ConsumerWidget {
                 // ignore: deprecated_member_use
                 groupValue: state,
                 // ignore: deprecated_member_use
-                onChanged: (value) async =>
-                    ref.read(themeModeProvider.notifier).setThemeMode(mode),
+                onChanged: (value) => HapticUtil.selection(
+                  () => ref.read(themeModeProvider.notifier).setThemeMode(mode),
+                ),
               ),
             ],
           ),
@@ -144,15 +147,18 @@ class const _ThemeSelector() extends ConsumerWidget {
                         : ThemeMode.dark,
                   ),
             ),
-            onTap: () async => ref
-                .read(themeModeProvider.notifier)
-                .setThemeMode(
-                  state != ThemeMode.system
-                      ? ThemeMode.system
-                      : PlatformDispatcher.instance.platformBrightness == .light
-                      ? ThemeMode.light
-                      : ThemeMode.dark,
-                ),
+            onTap: () => HapticUtil.selection(
+              () => ref
+                  .read(themeModeProvider.notifier)
+                  .setThemeMode(
+                    state != ThemeMode.system
+                        ? ThemeMode.system
+                        : PlatformDispatcher.instance.platformBrightness ==
+                              .light
+                        ? ThemeMode.light
+                        : ThemeMode.dark,
+                  ),
+            ),
           ),
         ],
       ),

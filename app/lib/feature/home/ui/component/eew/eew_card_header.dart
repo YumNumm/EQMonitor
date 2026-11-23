@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/decoration/warning_stripe_decoration.da
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/eew_card_intensity_badge.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card_text_style.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -105,7 +106,7 @@ class const EewCardHeader({
                     ),
                   ),
                   if (!eew.isCanceled)
-                    _EewMaxIntensityLabel(intensity: maxIntensity),
+                    _EewMaxIntensityBadge(intensity: maxIntensity),
                 ],
               ),
             ),
@@ -116,74 +117,30 @@ class const EewCardHeader({
   }
 }
 
-/// 現在地の色付きバッジと混同させないため、全国の最大震度は塗らずに `MAX` を添える。
-class const _EewMaxIntensityLabel({required final JmaIntensity intensity})
+class const _EewMaxIntensityBadge({required final JmaIntensity intensity})
     extends StatelessWidget {
-  static const _size = 32.0;
-
   @override
   Widget build(BuildContext context) {
-    final numberStyle = EewCardCodeTextStyle(
-      size: _size,
-      weight: .w800,
-      color: Colors.white,
-    );
-    final maxLabel = Text(
-      'MAX',
-      style: EewCardCodeTextStyle(
-        size: _size * 0.28,
-        weight: .w800,
-        color: Colors.white,
-      ),
-    );
-    final suffix = intensity.suffix;
-
     return Semantics(
       label: intensity == JmaIntensity.unknown
           ? '最大予想震度 未発表'
           : '最大予想震度 ${intensity.label}',
       excludeSemantics: true,
-      child: suffix.isEmpty
-          // 数字の行は高さ40pt。MAXを上へ積むぶんはヘッダーの上下の余白へ逃がし、ヘッダーの高さを変えない。
-          ? Align(
-              heightFactor: 1.25 / (0.28 * 1.25 + 1.25 - 0.12),
-              child: Column(
-                mainAxisSize: .min,
-                children: [
-                  maxLabel,
-                  Align(
-                    alignment: .bottomCenter,
-                    heightFactor: 1 - 0.12 / 1.25,
-                    child: Text(intensity.mainText, style: numberStyle),
-                  ),
-                ],
-              ),
-            )
-          : Row(
-              mainAxisSize: .min,
-              crossAxisAlignment: .end,
-              children: [
-                Text(intensity.mainText, style: numberStyle),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: _size * 0.12),
-                  child: Column(
-                    mainAxisSize: .min,
-                    crossAxisAlignment: .start,
-                    children: [
-                      maxLabel,
-                      Text(
-                        suffix,
-                        style: EewCardFlexTextStyle(
-                          size: _size * 0.45,
-                          weight: .w800,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      child: Column(
+        mainAxisSize: .min,
+        spacing: 1,
+        children: [
+          Text(
+            'MAX',
+            style: EewCardCodeTextStyle(
+              size: 9,
+              weight: .w800,
+              color: Colors.white,
+            ).copyWith(height: 1),
+          ),
+          EewCardIntensityBadge(intensity: intensity, size: 36),
+        ],
+      ),
     );
   }
 }

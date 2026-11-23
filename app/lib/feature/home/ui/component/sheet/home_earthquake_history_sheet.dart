@@ -71,7 +71,6 @@ class const HomeEarthquakeHistorySheet({super.key}) extends HookConsumerWidget {
               action: HomeScopeSelector(
                 scope: scope,
                 onScopeChanged: (newScope) async {
-                  await HapticFeedback.lightImpact();
                   if (newScope == .custom && home.common.parameter == null) {
                     await openRegionPicker();
                   } else {
@@ -116,6 +115,7 @@ class const HomeEarthquakeHistorySheet({super.key}) extends HookConsumerWidget {
                         error: error,
                         showLoadingOverlayOnReload: false,
                         onReload: () async {
+                          unawaited(HapticFeedback.lightImpact());
                           ref.invalidate(
                             homeEarthquakeHistoryParameterProvider,
                             asReload: true,
@@ -133,22 +133,22 @@ class const HomeEarthquakeHistorySheet({super.key}) extends HookConsumerWidget {
               loading: () => const SizedBox.shrink(),
               error: (error, _) => ErrorCard(
                 error: error,
-                onReload: () async => ref.invalidate(
-                  homeEarthquakeHistoryParameterProvider,
-                  asReload: true,
-                ),
+                onReload: () async {
+                  unawaited(HapticFeedback.lightImpact());
+                  ref.invalidate(
+                    homeEarthquakeHistoryParameterProvider,
+                    asReload: true,
+                  );
+                },
               ),
             ),
-            Align(
-              alignment: .centerEnd,
-              child: M3ETextButton(
-                onPressed: paramAsync.value == null
-                    ? null
-                    : () async =>
-                          EarthquakeHistoryRoute($extra: paramAsync.value)
-                              .push<void>(context),
-                child: Text('さらに表示'),
-              ),
+            HomeSheetCardFooter(
+              label: '地震履歴をすべて表示',
+              onPressed: paramAsync.value == null
+                  ? null
+                  : () async => EarthquakeHistoryRoute(
+                      $extra: paramAsync.value,
+                    ).push<void>(context),
             ),
           ],
         );
@@ -166,8 +166,10 @@ class const HomeEarthquakeHistorySheet({super.key}) extends HookConsumerWidget {
           const HomeSheetCardHeader(title: '最近の地震'),
           ErrorCard(
             error: error,
-            onReload: () async =>
-                ref.invalidate(homeConfigurationProvider, asReload: true),
+            onReload: () async {
+              unawaited(HapticFeedback.lightImpact());
+              ref.invalidate(homeConfigurationProvider, asReload: true);
+            },
           ),
         ],
       ),

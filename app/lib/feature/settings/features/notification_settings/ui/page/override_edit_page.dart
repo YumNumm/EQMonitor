@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/core/component/dismissible/confirmed_dismissible_list.dart';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -443,11 +444,13 @@ class const _OverrideFormDialog({
           child: const Text('キャンセル'),
         ),
         M3EFilledButton(
-          onPressed: () => Navigator.of(context).pop(
-            NotificationOverride(
-              minJmaIntensity: selectedIntensity.value,
-              sound: selectedSound.value,
-              interruptionLevel: selectedInterruptionLevel.value,
+          onPressed: () => HapticUtil.light(
+            () => Navigator.of(context).pop(
+              NotificationOverride(
+                minJmaIntensity: selectedIntensity.value,
+                sound: selectedSound.value,
+                interruptionLevel: selectedInterruptionLevel.value,
+              ),
             ),
           ),
           child: Text(isEditing ? '保存' : '追加'),

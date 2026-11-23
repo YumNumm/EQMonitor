@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dart';
@@ -11,7 +12,6 @@ import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -65,16 +65,15 @@ class const HomeFeedSheet({super.key}) extends ConsumerWidget {
                   ),
           AsyncError<FeedNotifierState>(:final error) => ErrorCard(
             error: error,
-            onReload: () async => ref.invalidate(feedProvider, asReload: true),
+            onReload: () => HapticUtil.light(
+              () => ref.invalidate(feedProvider, asReload: true),
+            ),
           ),
           _ => const _HomeFeedSkeleton(),
         },
-        Align(
-          alignment: .centerEnd,
-          child: M3ETextButton(
-            onPressed: () async => const FeedRoute().push<void>(context),
-            child: Text('さらに表示'),
-          ),
+        HomeSheetCardFooter(
+          label: 'お知らせをすべて表示',
+          onPressed: () async => const FeedRoute().push<void>(context),
         ),
       ],
     );
@@ -209,9 +208,11 @@ class const _UnreadFeedBanner({required final FeedItem item})
                 ),
               ),
               IconButton(
-                onPressed: () async => ref
-                    .read(feedLastReadProvider.notifier)
-                    .markRead(item.publishedAt),
+                onPressed: () => HapticUtil.light(
+                  () => ref
+                      .read(feedLastReadProvider.notifier)
+                      .markRead(item.publishedAt),
+                ),
                 icon: const Icon(Icons.close, color: Colors.white, size: 20),
                 visualDensity: VisualDensity.compact,
                 tooltip: '既読にする',

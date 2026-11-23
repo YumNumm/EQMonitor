@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:material_ui/material_ui.dart';
@@ -46,7 +47,7 @@ class const EarthquakeSortChips({
                   ],
                 ],
               ),
-              onSelected: (_) => onChanged(value),
+              onSelected: (_) => HapticUtil.selection(() => onChanged(value)),
               visualDensity: VisualDensity.compact,
               materialTapTargetSize: .shrinkWrap,
             ),

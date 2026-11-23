@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
-import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_fill_layer_action.dart';
@@ -21,8 +20,9 @@ import 'package:maplibre/maplibre.dart';
 ///
 /// 塗りと選択中の輪郭線は別々の `useEffect` で管理する。塗りは全国 ~1900
 /// 市区町村分の `match` 式を持つので入れ替えが重く、市区町村をタップするたびに
-/// 作り直すと塗りが消えたように見える。相対順序はアンカー（細分区域の境界線の
-/// 下 / 上）で決まるので、effect を分けても順序は入れ替わらない。
+/// 作り直すと塗りが消えたように見える。輪郭線も style・配色ごとに 1 度だけ
+/// 追加し、選択の変更は filter の更新で反映する。相対順序は style が持つ
+/// アンカーで決まるので、effect を分けても順序は入れ替わらない。
 class const IntensityFillLayer({
   required final List<CityMaxIntensityEntry>? items,
   super.key,
@@ -58,6 +58,11 @@ class const IntensityFillLayer({
       lastItems.value = items;
       itemsRevision.value++;
     }
+    // flutter_hooks は依存変化時に新しい effect を先に実行し、古い cleanup を
+    // 後から呼ぶ。後発の effect が同じ ID を置き換え済みなら cleanup は削除しない。
+    final fillGeneration = useRef<Object?>(null);
+    final lineGeneration = useRef<Object?>(null);
+
     // effect の依存には入れず、実行時に最新値を読むための参照。
     final latestItems = useRef(items);
     latestItems.value = items;
@@ -85,7 +90,13 @@ class const IntensityFillLayer({
           ),
         );
 
+        final generation = Object();
+        fillGeneration.value = generation;
+
         return () {
+          if (!identical(fillGeneration.value, generation)) {
+            return;
+          }
           unawaited(
             enqueue(
               () => action.removeAll(
@@ -99,6 +110,9 @@ class const IntensityFillLayer({
       [styleController, itemsRevision.value, colorModel, enqueue, action],
     );
 
+    final latestSelectedCityCode = useRef(selectedCityCode);
+    latestSelectedCityCode.value = selectedCityCode;
+
     useEffect(
       () {
         final controller = styleController;
@@ -106,23 +120,32 @@ class const IntensityFillLayer({
           return null;
         }
 
-        final layers = builder.buildSelectedCityLine(
-          selectedCityCode: selectedCityCode,
-          lineColor: colorScheme.primary.toHexStringRGB(),
-          haloColor: isDarkMode ? '#000000' : '#FFFFFF',
-        );
+        final lineColor = colorScheme.primary.withValues(alpha: 1);
+        final haloColor = isDarkMode
+            ? const Color(0xFF000000)
+            : const Color(0xFFFFFFFF);
 
         unawaited(
           enqueue(
             () => action.replace(
               styleController: controller,
               layerIds: IntensityFillLayerBuilder.selectedCityLineLayerIds,
-              layers: layers,
+              layers: builder.buildSelectedCityLine(
+                selectedCityCode: latestSelectedCityCode.value,
+                lineColor: lineColor,
+                haloColor: haloColor,
+              ),
             ),
           ),
         );
 
+        final generation = Object();
+        lineGeneration.value = generation;
+
         return () {
+          if (!identical(lineGeneration.value, generation)) {
+            return;
+          }
           unawaited(
             enqueue(
               () => action.removeAll(
@@ -133,14 +156,28 @@ class const IntensityFillLayer({
           );
         };
       },
-      [
-        styleController,
-        selectedCityCode,
-        colorScheme.primary,
-        isDarkMode,
-        enqueue,
-        action,
-      ],
+      [styleController, colorScheme.primary, isDarkMode, enqueue, action],
+    );
+
+    useEffect(
+      () {
+        final controller = styleController;
+        if (controller == null) {
+          return null;
+        }
+
+        unawaited(
+          enqueue(
+            () => action.updateFilter(
+              styleController: controller,
+              layerIds: IntensityFillLayerBuilder.selectedCityLineLayerIds,
+              filter: builder.selectedCityFilter(latestSelectedCityCode.value),
+            ),
+          ),
+        );
+        return null;
+      },
+      [styleController, selectedCityCode, enqueue, action],
     );
 
     return const SizedBox.shrink();

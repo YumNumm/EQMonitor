@@ -13,6 +13,13 @@
 - TimeSyncは初回の`latest.json`1件で即公開し、約230ms間隔の連続測定で位相を散らして詰める。
   `latest_time`は1秒粒度の切り捨てなので、平均ではなく最小遅延（最大shift）を採用する。
   確定後の定期測定は見積もりを動かさず、矛盾の検出時だけ測り直す。
+  background（hidden/paused/detached）からの復帰時にも同じ測定を1回行う。
+  測り直しの間は直前の見積もりを使い続け、連続測定が終わってから差し替える。
+- 画像取得・較正・定期測定は background では行わない。初回の測定が成功するまでの
+  5秒間隔の再試行は background でも止めていない。
+- NTP は `paused` を経た復帰時にも測り直す。成功するまで、また失敗した場合は前回の
+  offset を使い続ける。取得対象時刻は `clock.now() + shift` に等しく NTP offset は
+  打ち消し合うため、NTP と `latest.json` の測定が別々に終わっても対象時刻は飛ばない。
 - 確定後はKyoshinMonitorDelayCalibrationが表示用とは別に画像を数回取得し、
   公開の境目を二分探索して補正量へ反映し、5分ごとにやり直す。実機での収束時間・404頻度は未検証。
 - 遅延を短くするのは較正だけ。表示用の取得成功で詰めると境目を割って毎回フレームを落とす。
@@ -32,7 +39,8 @@
 ## 時計の確認済み事実と残件
 
 - `app/lib/core/provider/clock/app_clock.dart`のnowはclock.nowにNTP offsetを加え、
-  realtime/time-shift/replayで共通の基準を返す。
+  realtime/replayで共通の基準を返す。realtimeNowはモードに依らず実時刻を返す。
+- 過去画像を取得できる範囲と、それを使った再生は[リプレイ再生](earthquake_replay.md)を参照する。
 - `app/lib/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart`は
   発行時にappClockから公開遅延を引く。scheduleの秒境界も同じappClockで数える。
   端末時計で数えるとNTP offsetの小数部だけ発火が遅れる。較正の送信時刻も同じ時計に揃える。

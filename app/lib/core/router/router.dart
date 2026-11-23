@@ -19,6 +19,8 @@ import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_activity_page
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/page/earthquake_history_search_page.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_creation_page.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_library_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_open_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
@@ -47,6 +49,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_de
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_list_tile_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/estimated_intensity_dem/debug_estimated_intensity_dem_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
@@ -387,6 +390,9 @@ class const TalkerRoute()
           path: 'shake-detection-engine',
         ),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
+        TypedGoRoute<DebugEstimatedIntensityDemRoute>(
+          path: 'estimated-intensity-dem',
+        ),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
         TypedGoRoute<DebugWebSocketRoute>(path: 'websocket'),
         TypedGoRoute<DebugNotificationDeliveryLogRoute>(
@@ -403,6 +409,8 @@ class const TalkerRoute()
         TypedGoRoute<DebugSharedPreferencesRoute>(path: 'shared-preferences'),
         TypedGoRoute<DebugSecureStorageRoute>(path: 'secure-storage'),
         TypedGoRoute<DebugHttpCacheRoute>(path: 'http-cache'),
+        TypedGoRoute<DebugReplayCreationRoute>(path: 'replay-creation'),
+        TypedGoRoute<DebugReplayLibraryRoute>(path: 'replay-library'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
         TypedGoRoute<DebugTelemetryRoute>(path: 'telemetry'),
       ],
@@ -602,12 +610,13 @@ class const AboutThisAppRoute()
       const AboutThisAppPage();
 }
 
-class const EewDetailsByEventIdRoute({required final String eventId})
-    extends GoRouteData
-    with $EewDetailsByEventIdRoute, MaterialPageMixin {
+class const EewDetailsByEventIdRoute({
+  required final String eventId,
+  final bool useSheet = false,
+}) extends GoRouteData with $EewDetailsByEventIdRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return EewDetailsByEventIdPage(eventId: eventId);
+    return EewDetailsByEventIdPage(eventId: eventId, useSheet: useSheet);
   }
 }
 
@@ -680,6 +689,15 @@ class const DebugShakeDetectionEngineRoute()
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugShakeDetectionEnginePage();
+  }
+}
+
+class const DebugEstimatedIntensityDemRoute()
+    extends GoRouteData
+    with $DebugEstimatedIntensityDemRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugEstimatedIntensityDemPage();
   }
 }
 
@@ -806,6 +824,31 @@ class const DebugHttpCacheRoute()
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugHttpCachePage();
+  }
+}
+
+class const DebugReplayCreationRoute({
+  final int? startTimeMs,
+  final String? name,
+}) extends GoRouteData with $DebugReplayCreationRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final startTimeMs = this.startTimeMs;
+    return ReplayCreationPage(
+      initialStartTime: startTimeMs == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(startTimeMs, isUtc: true),
+      initialName: name,
+    );
+  }
+}
+
+class const DebugReplayLibraryRoute()
+    extends GoRouteData
+    with $DebugReplayLibraryRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ReplayLibraryPage();
   }
 }
 

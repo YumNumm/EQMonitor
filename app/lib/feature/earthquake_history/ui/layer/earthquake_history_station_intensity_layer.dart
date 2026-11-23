@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/station_icon_image_expression.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/station_label_layer_builder.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon_data.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:material_ui/material_ui.dart';
@@ -40,6 +41,7 @@ class const EarthquakeHistoryStationIntensityLayer({
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(activeColorSetProvider).intensity;
     final iconData = ref.watch(intensityIconProvider).value;
+    final iconPixelRatio = MediaQuery.devicePixelRatioOf(context);
     final enqueue = useMapOperationQueue();
     final layerBuilder = useMemoized(
       EarthquakeHistoryStationIntensityLayerBuilder.new,
@@ -61,6 +63,8 @@ class const EarthquakeHistoryStationIntensityLayer({
     latestStationDisplayMode.value = stationDisplayMode;
     final latestShowStationLabel = useRef(showStationLabel);
     latestShowStationLabel.value = showStationLabel;
+    final latestIconPixelRatio = useRef(iconPixelRatio);
+    latestIconPixelRatio.value = iconPixelRatio;
     final latestIconData = useRef(iconData);
     latestIconData.value = iconData;
     // カメラ移動でも再buildされるため、観測データに変更がない間は再利用する。
@@ -86,10 +90,10 @@ class const EarthquakeHistoryStationIntensityLayer({
         if (lifecycleToken.value != token) {
           return;
         }
-        await styleController.addSource(
-          const GeoJsonSource(
+        await styleController.sources.add(
+          const GeoJsonSource.data(
             id: EarthquakeHistoryStationIntensityLayerBuilder.sourceId,
-            data: '{"type":"FeatureCollection","features":[]}',
+            data: .text('{"type":"FeatureCollection","features":[]}'),
           ),
         );
         final cachedIconData = latestIconData.value;
@@ -105,8 +109,9 @@ class const EarthquakeHistoryStationIntensityLayer({
           stationDisplayMode: latestStationDisplayMode.value,
           showStationLabel: latestShowStationLabel.value,
           hasIcon: latestIconData.value != null,
+          iconPixelRatio: latestIconPixelRatio.value,
         )) {
-          await styleController.addLayer(
+          await styleController.layers.add(
             layer,
             belowLayerId: latestBelowLayerId.value,
           );
@@ -117,6 +122,7 @@ class const EarthquakeHistoryStationIntensityLayer({
           stationDisplayMode: latestStationDisplayMode.value,
           showStationLabel: latestShowStationLabel.value,
           hasIcon: latestIconData.value != null,
+          iconPixelRatio: latestIconPixelRatio.value,
         );
       });
 
@@ -178,6 +184,7 @@ class const EarthquakeHistoryStationIntensityLayer({
           stationDisplayMode: stationDisplayMode,
           showStationLabel: showStationLabel,
           hasIcon: iconData != null,
+          iconPixelRatio: iconPixelRatio,
         );
         unawaited(
           enqueue(() async {
@@ -201,8 +208,12 @@ class const EarthquakeHistoryStationIntensityLayer({
               stationDisplayMode: stationDisplayMode,
               showStationLabel: showStationLabel,
               hasIcon: iconData != null,
+              iconPixelRatio: iconPixelRatio,
             )) {
-              await styleController.addLayer(layer, belowLayerId: belowLayerId);
+              await styleController.layers.add(
+                layer,
+                belowLayerId: belowLayerId,
+              );
             }
             latestLayerConfiguration.value = configuration;
           }),
@@ -216,6 +227,7 @@ class const EarthquakeHistoryStationIntensityLayer({
         stationDisplayMode,
         showStationLabel,
         iconData,
+        iconPixelRatio,
       ],
     );
 
@@ -360,66 +372,57 @@ class const EarthquakeHistoryStationIntensityLayerBuilder() {
     required StationDisplayMode stationDisplayMode,
     required bool showStationLabel,
     required bool hasIcon,
+    required double iconPixelRatio,
   }) => [
+    if (showStationLabel)
+      buildLabelLayer(parameter: parameter, iconPixelRatio: iconPixelRatio),
     if (hasIcon)
       buildIconLayer(
         parameter: parameter,
         stationDisplayMode: stationDisplayMode,
+        showStationLabel: showStationLabel,
       ),
-    if (showStationLabel) buildLabelLayer(parameter: parameter),
   ];
 
   SymbolStyleLayer buildIconLayer({
     required EarthquakeHistoryMapLayerParameter parameter,
     required StationDisplayMode stationDisplayMode,
+    required bool showStationLabel,
   }) {
     return SymbolStyleLayer(
       id: iconLayerId,
       sourceId: sourceId,
       minZoom: parameter.stationMinZoom,
-      layout: {
-        'icon-image': const StationIconImageExpressionBuilder().build(
+      iconImage: .raw(
+        const StationIconImageExpressionBuilder().build(
           stationDisplayMode: stationDisplayMode,
           stationTextZoom: parameter.stationTextZoom,
         ),
-        'icon-allow-overlap': true,
-        'icon-ignore-placement': true,
-        'symbol-sort-key': ['get', 'sortKey'],
-        'icon-size': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          3,
-          parameter.stationIconSizeMin,
-          7,
-          parameter.stationIconSizeMid,
-          20,
-          parameter.stationIconSizeMax,
-        ],
-      },
+      ),
+      iconAllowOverlap: const .literal(true),
+      iconIgnorePlacement: .literal(!showStationLabel),
+      sortKey: const .raw(['get', 'sortKey']),
+      iconSize: .raw([
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        3,
+        parameter.stationIconSizeMin,
+        7,
+        parameter.stationIconSizeMid,
+        20,
+        parameter.stationIconSizeMax,
+      ]),
     );
   }
 
   SymbolStyleLayer buildLabelLayer({
     required EarthquakeHistoryMapLayerParameter parameter,
-  }) {
-    return SymbolStyleLayer(
-      id: labelLayerId,
-      sourceId: sourceId,
-      minZoom: parameter.stationLabelMinZoom,
-      layout: {
-        'text-field': ['get', 'name'],
-        'text-size': 10,
-        'text-offset': [0, 1.2],
-        'text-anchor': 'top',
-        'text-allow-overlap': false,
-        'text-ignore-placement': true,
-      },
-      paint: {
-        'text-color': '#ffffff',
-        'text-halo-color': '#000000',
-        'text-halo-width': 1,
-      },
-    );
-  }
+    required double iconPixelRatio,
+  }) => const StationLabelLayerBuilder().build(
+    id: labelLayerId,
+    sourceId: sourceId,
+    parameter: parameter,
+    iconPixelRatio: iconPixelRatio,
+  );
 }

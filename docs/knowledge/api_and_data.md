@@ -13,6 +13,14 @@
 - `dioProvider` / `apiClientProvider` は自前 backend 専用。interceptor が端末 ID を全リクエストへ付けるため、絶対 URL で他ホストへ使うと端末 ID が送られる。外部ホスト（強震モニタ、地震活動 GeoJSON、震源アーカイブ、Asset Pack の配布元）は `NativeDioFactory` で専用の Dio を作る。2026-11-17 時点で、`dioProvider` を直接使うのは地震活動 manifest とテレメトリ送信で、どちらも自前 API のパス。
 - `dart:io` を直接使う地図・推定震度アーカイブ取得、SDK の内部通信、Dart CLI の Dio はこのアプリ用 factory を通らない。端末での通信規格・認証・fallback・タイムアウト確認は [ビルド・配布の課題](../todo/950_build_and_release.md) に記録する。
 
+## 自前 API へ送る User-Agent
+
+- `*.v2.api.eqmonitor.app` はエッジで User-Agent の形式を照合し、不一致・欠落を 403（`x-eqmonitor-edge-policy` ヘッダー付き）にする。許可形式の正本は backend の `tools/cloudflare-api-guard/README.md`。
+- Dart から自前 API へ向ける Dio には `apiUserAgentProvider` の値を必ず付ける。`NativeDioFactory` だけで組み立てると Cronet / CFNetwork の既定値が送られる。
+- product token は `ApiUserAgentBuilder.productToken` に固定する。`.dev` などの suffix 付き applicationId は許可形式に一致しない。
+- iOS 拡張は `APIUserAgent.current`（`app/ios/Shared/EarthquakeAPIClient.swift`）を使う。URLSession 既定値は実行ファイル名で始まり、`WidgetExtension` 以外は拒否される。
+- WebSocket は `package:web_socket` が任意ヘッダーを受け付けないため `Dart/x.y (dart:io)` のまま接続する。エッジ側が `websocket.v2.api.eqmonitor.app` の `/v2/realtime/ws` に限って許可している。
+
 ## HTTP cache は明示的に選ぶ
 
 - 通常の `apiClientProvider` / `dioProvider` に HTTP cache は付けない。cache-first が必要な非 paging GET だけ `CachedNotifier` と `httpCachedApiClientProvider` を使用する。
