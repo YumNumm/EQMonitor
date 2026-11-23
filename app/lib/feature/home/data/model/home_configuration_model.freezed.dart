@@ -292,7 +292,7 @@ as ShakeDetectionLevel,
 /// @nodoc
 mixin _$HomeDebugOverlaySettings {
 
- bool get shakeDetection; bool get kyoshinMonitor; bool get eew;
+ bool get shakeDetection; bool get kyoshinMonitor; bool get eew; bool get focusBounds; bool get shakeDetectionDuringEew;
 /// Create a copy of HomeDebugOverlaySettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -305,16 +305,16 @@ $HomeDebugOverlaySettingsCopyWith<HomeDebugOverlaySettings> get copyWith => _$Ho
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeDebugOverlaySettings&&(identical(other.shakeDetection, shakeDetection) || other.shakeDetection == shakeDetection)&&(identical(other.kyoshinMonitor, kyoshinMonitor) || other.kyoshinMonitor == kyoshinMonitor)&&(identical(other.eew, eew) || other.eew == eew));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeDebugOverlaySettings&&(identical(other.shakeDetection, shakeDetection) || other.shakeDetection == shakeDetection)&&(identical(other.kyoshinMonitor, kyoshinMonitor) || other.kyoshinMonitor == kyoshinMonitor)&&(identical(other.eew, eew) || other.eew == eew)&&(identical(other.focusBounds, focusBounds) || other.focusBounds == focusBounds)&&(identical(other.shakeDetectionDuringEew, shakeDetectionDuringEew) || other.shakeDetectionDuringEew == shakeDetectionDuringEew));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,shakeDetection,kyoshinMonitor,eew);
+int get hashCode => Object.hash(runtimeType,shakeDetection,kyoshinMonitor,eew,focusBounds,shakeDetectionDuringEew);
 
 @override
 String toString() {
-  return 'HomeDebugOverlaySettings(shakeDetection: $shakeDetection, kyoshinMonitor: $kyoshinMonitor, eew: $eew)';
+  return 'HomeDebugOverlaySettings(shakeDetection: $shakeDetection, kyoshinMonitor: $kyoshinMonitor, eew: $eew, focusBounds: $focusBounds, shakeDetectionDuringEew: $shakeDetectionDuringEew)';
 }
 
 
@@ -325,7 +325,7 @@ abstract mixin class $HomeDebugOverlaySettingsCopyWith<$Res>  {
   factory $HomeDebugOverlaySettingsCopyWith(HomeDebugOverlaySettings value, $Res Function(HomeDebugOverlaySettings) _then) = _$HomeDebugOverlaySettingsCopyWithImpl;
 @useResult
 $Res call({
- bool shakeDetection, bool kyoshinMonitor, bool eew
+ bool shakeDetection, bool kyoshinMonitor, bool eew, bool focusBounds, bool shakeDetectionDuringEew
 });
 
 
@@ -342,11 +342,13 @@ class _$HomeDebugOverlaySettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeDebugOverlaySettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? shakeDetection = null,Object? kyoshinMonitor = null,Object? eew = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? shakeDetection = null,Object? kyoshinMonitor = null,Object? eew = null,Object? focusBounds = null,Object? shakeDetectionDuringEew = null,}) {
   return _then(HomeDebugOverlaySettings(
 shakeDetection: null == shakeDetection ? _self.shakeDetection : shakeDetection // ignore: cast_nullable_to_non_nullable
 as bool,kyoshinMonitor: null == kyoshinMonitor ? _self.kyoshinMonitor : kyoshinMonitor // ignore: cast_nullable_to_non_nullable
 as bool,eew: null == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
+as bool,focusBounds: null == focusBounds ? _self.focusBounds : focusBounds // ignore: cast_nullable_to_non_nullable
+as bool,shakeDetectionDuringEew: null == shakeDetectionDuringEew ? _self.shakeDetectionDuringEew : shakeDetectionDuringEew // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -432,10 +434,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool shakeDetection,  bool kyoshinMonitor,  bool eew)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool shakeDetection,  bool kyoshinMonitor,  bool eew,  bool focusBounds,  bool shakeDetectionDuringEew)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeDebugOverlaySettings() when $default != null:
-return $default(_that.shakeDetection,_that.kyoshinMonitor,_that.eew);case _:
+return $default(_that.shakeDetection,_that.kyoshinMonitor,_that.eew,_that.focusBounds,_that.shakeDetectionDuringEew);case _:
   return orElse();
 
 }
@@ -453,10 +455,10 @@ return $default(_that.shakeDetection,_that.kyoshinMonitor,_that.eew);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool shakeDetection,  bool kyoshinMonitor,  bool eew)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool shakeDetection,  bool kyoshinMonitor,  bool eew,  bool focusBounds,  bool shakeDetectionDuringEew)  $default,) {final _that = this;
 switch (_that) {
 case _HomeDebugOverlaySettings():
-return $default(_that.shakeDetection,_that.kyoshinMonitor,_that.eew);case _:
+return $default(_that.shakeDetection,_that.kyoshinMonitor,_that.eew,_that.focusBounds,_that.shakeDetectionDuringEew);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -473,10 +475,10 @@ return $default(_that.shakeDetection,_that.kyoshinMonitor,_that.eew);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool shakeDetection,  bool kyoshinMonitor,  bool eew)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool shakeDetection,  bool kyoshinMonitor,  bool eew,  bool focusBounds,  bool shakeDetectionDuringEew)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeDebugOverlaySettings() when $default != null:
-return $default(_that.shakeDetection,_that.kyoshinMonitor,_that.eew);case _:
+return $default(_that.shakeDetection,_that.kyoshinMonitor,_that.eew,_that.focusBounds,_that.shakeDetectionDuringEew);case _:
   return null;
 
 }
@@ -488,12 +490,14 @@ return $default(_that.shakeDetection,_that.kyoshinMonitor,_that.eew);case _:
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _HomeDebugOverlaySettings implements HomeDebugOverlaySettings {
-  const _HomeDebugOverlaySettings({this.shakeDetection = false, this.kyoshinMonitor = false, this.eew = false});
+  const _HomeDebugOverlaySettings({this.shakeDetection = false, this.kyoshinMonitor = false, this.eew = false, this.focusBounds = false, this.shakeDetectionDuringEew = false});
   factory _HomeDebugOverlaySettings.fromJson(Map<String, dynamic> json) => _$HomeDebugOverlaySettingsFromJson(json);
 
 @override@JsonKey() final  bool shakeDetection;
 @override@JsonKey() final  bool kyoshinMonitor;
 @override@JsonKey() final  bool eew;
+@override@JsonKey() final  bool focusBounds;
+@override@JsonKey() final  bool shakeDetectionDuringEew;
 
 /// Create a copy of HomeDebugOverlaySettings
 /// with the given fields replaced by the non-null parameter values.
@@ -508,16 +512,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeDebugOverlaySettings&&(identical(other.shakeDetection, shakeDetection) || other.shakeDetection == shakeDetection)&&(identical(other.kyoshinMonitor, kyoshinMonitor) || other.kyoshinMonitor == kyoshinMonitor)&&(identical(other.eew, eew) || other.eew == eew));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeDebugOverlaySettings&&(identical(other.shakeDetection, shakeDetection) || other.shakeDetection == shakeDetection)&&(identical(other.kyoshinMonitor, kyoshinMonitor) || other.kyoshinMonitor == kyoshinMonitor)&&(identical(other.eew, eew) || other.eew == eew)&&(identical(other.focusBounds, focusBounds) || other.focusBounds == focusBounds)&&(identical(other.shakeDetectionDuringEew, shakeDetectionDuringEew) || other.shakeDetectionDuringEew == shakeDetectionDuringEew));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,shakeDetection,kyoshinMonitor,eew);
+int get hashCode => Object.hash(runtimeType,shakeDetection,kyoshinMonitor,eew,focusBounds,shakeDetectionDuringEew);
 
 @override
 String toString() {
-  return 'HomeDebugOverlaySettings(shakeDetection: $shakeDetection, kyoshinMonitor: $kyoshinMonitor, eew: $eew)';
+  return 'HomeDebugOverlaySettings(shakeDetection: $shakeDetection, kyoshinMonitor: $kyoshinMonitor, eew: $eew, focusBounds: $focusBounds, shakeDetectionDuringEew: $shakeDetectionDuringEew)';
 }
 
 
@@ -528,7 +532,7 @@ abstract mixin class _$HomeDebugOverlaySettingsCopyWith<$Res> implements $HomeDe
   factory _$HomeDebugOverlaySettingsCopyWith(_HomeDebugOverlaySettings value, $Res Function(_HomeDebugOverlaySettings) _then) = __$HomeDebugOverlaySettingsCopyWithImpl;
 @override @useResult
 $Res call({
- bool shakeDetection, bool kyoshinMonitor, bool eew
+ bool shakeDetection, bool kyoshinMonitor, bool eew, bool focusBounds, bool shakeDetectionDuringEew
 });
 
 
@@ -545,11 +549,13 @@ class __$HomeDebugOverlaySettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeDebugOverlaySettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? shakeDetection = null,Object? kyoshinMonitor = null,Object? eew = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? shakeDetection = null,Object? kyoshinMonitor = null,Object? eew = null,Object? focusBounds = null,Object? shakeDetectionDuringEew = null,}) {
   return _then(_HomeDebugOverlaySettings(
 shakeDetection: null == shakeDetection ? _self.shakeDetection : shakeDetection // ignore: cast_nullable_to_non_nullable
 as bool,kyoshinMonitor: null == kyoshinMonitor ? _self.kyoshinMonitor : kyoshinMonitor // ignore: cast_nullable_to_non_nullable
 as bool,eew: null == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
+as bool,focusBounds: null == focusBounds ? _self.focusBounds : focusBounds // ignore: cast_nullable_to_non_nullable
+as bool,shakeDetectionDuringEew: null == shakeDetectionDuringEew ? _self.shakeDetectionDuringEew : shakeDetectionDuringEew // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
