@@ -296,6 +296,7 @@ class const _MapContent({
                   earthquake: earthquake,
                   parameter: parameter,
                   showingLpgmIntensity: showingLpgmIntensity,
+                  showStationLabel: true,
                 ),
             ],
             hypocenterLayer,

@@ -27,6 +27,7 @@ void main() {
           stationDisplayMode: StationDisplayMode.auto,
           showStationLabel: false,
           hasIcon: true,
+          iconPixelRatio: 3,
         );
 
     expect(layers, hasLength(1));
