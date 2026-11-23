@@ -38,15 +38,15 @@ class Ntp extends _$Ntp {
       syncMutation.run(ref, (trx) => _sync());
     });
 
-    final config = await ref.watch(ntpConfigProvider.future);
-
-    final timer = Timer.periodic(config.interval, (_) async {
-      syncMutation.run(ref, (trx) => _sync());
-    });
-    ref.onDispose(timer.cancel);
     _isSyncing = true;
     final Result<Duration, NtpException> result;
     try {
+      final config = await ref.watch(ntpConfigProvider.future);
+
+      final timer = Timer.periodic(config.interval, (_) async {
+        syncMutation.run(ref, (trx) => _sync());
+      });
+      ref.onDispose(timer.cancel);
       result = await _resolveOffset(config);
     } finally {
       if (ref.mounted) {

@@ -93,6 +93,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
     // heartbeat の pong だけで解除する。
     void probe(WebSocket socket) {
       resumeProbe?.cancel();
+      silenceWatchdog?.cancel();
       try {
         socket.sendText(heartbeatMessage);
       } on WebSocketConnectionClosed {

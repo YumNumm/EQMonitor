@@ -34,7 +34,7 @@ final class NtpProvider extends $AsyncNotifierProvider<Ntp, NtpState> {
   Ntp create() => Ntp();
 }
 
-String _$ntpHash() => r'2f6d3549970e6aa2b5502d42cd9442ad2eaaf344';
+String _$ntpHash() => r'25ce2f5f209aa1b08c3c2953f03aac57127fce65';
 
 abstract class _$Ntp extends $AsyncNotifier<NtpState> {
   FutureOr<NtpState> build();
