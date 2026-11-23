@@ -32,7 +32,10 @@
 ## 700: Apple Watch Ultra 4 の Live Activity
 
 - [x] Watch の Simulator のスマートスタックで Live Activity を撮る（`--watch-device`、手元の iOS 27.2 / watchOS 27.2 で確認）。
-- [ ] 03 通知ページに Apple Watch Ultra 4 のフレームと画面の配置を追加する（Figma にも端末フレームの fixture にも Watch が無い）。
+- [x] 03 通知ページに Apple Watch Ultra 4 のフレームと画面の配置を追加する（配置は `layout.json` の `devices` に手で書いた仮のもの）。
+- [ ] Watch のバンドを黒のミラネーゼループにする。Apple の配布物に無いため、素材の入手元を決める。
+- [ ] Watch の文字盤をアナログにする。
+- [ ] Liquid Glass を最も不透明な設定にして撮る。
 - [ ] `capture-ios` で watchOS のランタイムの用意とペアの作成を行い、CI でも撮れるようにする。
 - [ ] Watch の時刻・日付を固定する。「強い揺れに警戒!」の塗りは点滅するため、撮影の瞬間によって有無が変わる（iPhone 側も同じ）。
 

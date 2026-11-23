@@ -11,7 +11,7 @@
       "scene": "eew_warning",
       "background": "backgrounds/01_eew.png",
       "device": {
-        "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+        "bezel": "bezel_iphone_18_pro_black_portrait.png",
         "bezelRect": {
           "x": 125.04,
           "y": 632.71,
@@ -33,7 +33,7 @@
       "scene": "earthquake_detail",
       "background": "backgrounds/02_earthquake_detail.png",
       "device": {
-        "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+        "bezel": "bezel_iphone_18_pro_black_portrait.png",
         "bezelRect": {
           "x": 125.04,
           "y": 632.71,
@@ -51,7 +51,7 @@
       "devices": [
         {
           "scene": "earthquake_history_list",
-          "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+          "bezel": "bezel_iphone_18_pro_black_portrait.png",
           "bezelRect": {
             "x": 60,
             "y": 640,
@@ -68,7 +68,7 @@
         },
         {
           "scene": "earthquake_detail",
-          "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+          "bezel": "bezel_iphone_18_pro_black_portrait.png",
           "bezelRect": {
             "x": 459.63,
             "y": 1161.01,
@@ -91,7 +91,7 @@
       "scene": "lock_screen_live_activity",
       "background": "backgrounds/03_notification.png",
       "device": {
-        "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+        "bezel": "bezel_iphone_18_pro_black_portrait.png",
         "bezelRect": {
           "x": 125.04,
           "y": 632.71,
@@ -105,7 +105,43 @@
           "height": 2021.94
         },
         "screenCornerRadius": 130.0
-      }
+      },
+      "devices": [
+        {
+          "scene": "lock_screen_live_activity",
+          "bezel": "bezel_iphone_18_pro_black_portrait.png",
+          "bezelRect": {
+            "x": 40,
+            "y": 640,
+            "width": 895.29,
+            "height": 1830.39
+          },
+          "screenRect": {
+            "x": 87.27,
+            "y": 685.83,
+            "width": 799.8,
+            "height": 1738.87
+          },
+          "screenCornerRadius": 111.8
+        },
+        {
+          "scene": "watch_live_activity",
+          "bezel": "bezel_apple_watch_ultra_4_black_ocean_band_translucent_black.png",
+          "bezelRect": {
+            "x": 712.0,
+            "y": 1910.0,
+            "width": 558.0,
+            "height": 846.0
+          },
+          "screenRect": {
+            "x": 801.1,
+            "y": 2101.7,
+            "width": 379.8,
+            "height": 462.6
+          },
+          "screenCornerRadius": 90.0
+        }
+      ]
     },
     {
       "id": "04_kyoshin_monitor",
@@ -113,7 +149,7 @@
       "scene": "kyoshin_monitor",
       "background": "backgrounds/04_kyoshin_monitor.png",
       "device": {
-        "bezel": "bezel_iphone_18_pro_glacier_portrait.png",
+        "bezel": "bezel_iphone_18_pro_black_portrait.png",
         "bezelRect": {
           "x": 125.04,
           "y": 632.71,

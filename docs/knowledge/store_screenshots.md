@@ -30,7 +30,9 @@ mise exec -- tool/store_screenshots/decrypt_fixtures.sh build/store_screenshots/
 
 | fixture 名 | 用途 |
 | --- | --- |
-| `bezel_iphone_18_pro_glacier_portrait.png` | 合成の端末フレーム。`figma_extract.py --bezel-out` で取得する |
+| `bezel_iphone_18_pro_black_portrait.png` | 合成の iPhone のフレーム（黒）。Apple Design Resources の `Bezel-iPhone-18.dmg` の `PNG/iPhone 18 Pro/iPhone 18 Pro - Black - Portrait.png` |
+| `bezel_apple_watch_ultra_4_black_ocean_band_translucent_black.png` | 合成の Apple Watch のフレーム。`Bezel-Apple-Watch-Ultra-4-2026.dmg` の `PNG/AW Ultra 4 - Black + Ocean Band Translucent Black.png`（620×940、画面は 99,213 から 422×514） |
+| `bezel_iphone_18_pro_glacier_portrait.png` | Figma のデザインが使っているフレーム。`figma_extract.py --bezel-out` で取得する。合成では使っていない |
 | `noto_peninsula_2024.eqrp` | 能登半島地震のリプレイ（`eew_warning` / `kyoshin_monitor`） |
 | `wallpaper_lock_screen.jpg` | ロック画面の壁紙（2576×1717 の横長）。`capture.py --wallpaper` が `set_ios_wallpaper.sh` で Simulator に設定する |
 
@@ -108,6 +110,9 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   - Patrol の `xcodebuild build-for-testing` は generic な Simulator 向けに全アーキテクチャをビルドする。`maplibre_native_ffi` は `ios-simulator-x64` の配布物が無くビルドフックが失敗するため、x86_64 を外す。
   - Patrol は `FLUTTER_BUILD_NUMBER` を xcodebuild に渡さない。`Generated.xcconfig` を読まない `FcmServiceExtension` の `CFBundleVersion` が空になり、Simulator へのインストールが `Invalid placeholder attributes` で失敗するため、値を補う。
 - `STORE_SCREENSHOT_SCENES` にカンマ区切りで複数のシーンを渡すと、`--dart-define` がカンマで分割されて先頭のシーンしか撮られない（2026-11-23 に手元で確認）。
+- Apple の配布物（2026-11 時点）の Watch Ultra 4 は、黒のケースにアルパインループ・オーシャンバンド・トレイルループの 3 種で、ミラネーゼループは無い。ディスクイメージは開くときに使用許諾への同意を求める。
+- 黒の iPhone 18 Pro のフレームは Figma のグレイシャーと同じ寸法（1350×2760、画面の穴も同じ）で、`layout.json` の `bezel` を差し替えるだけで使える。`figma_extract.py` を再実行すると `device.bezel` がグレイシャーに戻る。
+- 03 は iPhone（元の 86%）を左、Apple Watch（素材の 90%）を右下の手前に置いている。Figma にこの配置は無い。
 - ページに複数の端末を置くときは `layout.json` の `devices` に手で書く（後ろの要素ほど手前）。`figma_extract.py` は `device` だけを更新し、`devices` は残す。
   02 は履歴一覧（震度 4 以上、`earthquake_history_list`）を奥、地震詳細（`20260823020050`）を手前に、元の 74% の大きさで斜めに重ねている。Figma にこの配置は無い。
 - Patrol の iOS 実行には `RunnerUITests` ターゲット（`app/ios/RunnerUITests/RunnerUITests.m`、`FlutterGeneratedPluginSwiftPackage` をリンク、`User Script Sandboxing = NO`、スキームで並列実行なし）が必要。
