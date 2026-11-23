@@ -160,6 +160,15 @@ class const EarthquakeHistoryDebugModal({super.key}) extends ConsumerWidget {
                 (v) => notifier.save(value.copyWith(cityFillOpacity: v)),
               ),
 
+              _header(context, '区域アイコンサイズ'),
+              _slider(
+                'サイズ',
+                value.areaIconSize,
+                0,
+                0.5,
+                (v) => notifier.save(value.copyWith(areaIconSize: v)),
+              ),
+
               _header(context, '観測点アイコンサイズ'),
               _slider(
                 '最小 (z3)',

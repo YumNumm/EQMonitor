@@ -171,6 +171,7 @@ class MapStyleUtil({
         _anchor(BaseLayer.regionOverlayAnchor),
         _anchor(BaseLayer.foregroundOverlayAnchor),
         _anchor(BaseLayer.markerBackgroundAnchor),
+        _anchor(BaseLayer.areaIconAnchor),
         _anchor(BaseLayer.waveLineAnchor),
         _anchor(BaseLayer.markerLowerAnchor),
         _anchor(BaseLayer.markerUpperAnchor),
@@ -211,6 +212,9 @@ enum BaseLayer {
 
   /// マーカーの背面に置く線（震源誤差範囲・区域の線）の上限。
   markerBackgroundAnchor,
+
+  /// 細分区域・市区町村の震度アイコンの上限。
+  areaIconAnchor,
 
   /// P/S 波の線の上限。
   waveLineAnchor,

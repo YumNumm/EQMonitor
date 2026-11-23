@@ -2,6 +2,20 @@
 
 実機での可視出力と性能は未検証。
 
+## 800: 区域アイコンの配信と実機確認
+
+- 対象: `app/lib/feature/earthquake_history/ui/layer/earthquake_history_area_icon_layer.dart`、backend `tools/base-map-pmtiles/label_points.py`。
+- 点層 `areaForecastLocalELabel` / `areaInformationCityQuakeLabel` を含む Asset Pack は未配信。配信して同梱 Pack を更新するまで、アイコンは描画されない。
+- 2026-11-23 に iOS Simulator で、ローカル生成の `all.pmtiles` を同梱した検証用画面（固定の震度データ）を表示した。細分区域・市区町村のアイコン描画、zoom による切替、観測点表示中の非表示、点層のない現行 Pack で例外が出ないことを確認した。実データ・実機・Android は未検証。
+- 同じ検証で、Pack を差し替えた直後の初回起動だけ、地図を操作するまで市区町村のアイコンが出なかった（3 回中 1 回）。原因は未特定。再現条件を調べる。
+- 隣接する区域のアイコンが重なると、大きい震度から順に配置した残りが隠れる。震度 4 の隣の震度 3 が隠れ、離れた震度 1 が残る場合がある。許容するか決める。
+- 残りの確認: 新しい Pack で、全国表示に細分区域のアイコンが出ること、`regionToCity` と `stationMinZoom` で切り替わること、長周期表示・設定の切替・テーマ変更後の表示を iOS/Android で確認する。
+- 設定シートの「市区町村に切り替える縮尺」「観測点に切り替える縮尺」は analyze と既存テストのみで、実機での操作は未確認。`stationMinZoom` の既定値を 6 から 8 に上げたため、未変更のユーザーは z6〜8 で観測点の代わりに市区町村のアイコンを見る。この見え方も実機で未確認。
+- `areaIconSize` の既定値 0.13 と衝突時の間引き具合は未調整。デバッグシートで実機の見え方に合わせる。
+- 離島・飛び地は 1 区域 1 点（最大のポリゴン）。天草・芦北、五島、十島村、檜山地方、上島町などの位置を地図で確認し、必要なら backend の `LABEL_PART_HINTS` へ追加する。
+- 完了条件: 上記を実機で確認し、震度データベース表示・市区町村別最大震度・EEW 予報区域へ展開するかを決める。
+- `packages/jma_map/bin/jma_map.dart` の `polylabel2D` は精度が既定の 1.0（度）で、`app/assets/jma_map.pb` の点の大半が bbox の隅にある。精度を指定して再生成する。
+
 ## 800: 地震履歴の観測点キャッシュの実機性能確認
 
 - Android の profile/release で、観測点の多い地震詳細を移動・拡大縮小し、通常震度・長周期・震度DBの表示とフレーム時間を確認する。GeoJSON の再生成抑止による実機での改善幅は未計測。
