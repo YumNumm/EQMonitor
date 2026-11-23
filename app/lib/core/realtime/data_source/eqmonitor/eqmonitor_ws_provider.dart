@@ -39,7 +39,9 @@ Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
 ///
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
 /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
-/// アプリ resume 時はバックオフをリセットして即座に再接続する。
+/// background 中も接続は閉じない。background からの復帰時は、受信が
+/// [silenceTimeout] 以上途絶えていれば即座に再接続し、そうでなければ接続を
+/// 維持したまま heartbeat を送って [resumeProbeTimeout] 以内の応答を確認する。
 /// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
 /// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
 /// ジッタを入れて再接続する。
@@ -51,12 +53,14 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
   /// 送信しただけでは更新せず、30 秒間受信できなければ再接続する。
   static const silenceTimeout = Duration(seconds: 30);
   static const heartbeatInterval = Duration(seconds: 15);
+  static const resumeProbeTimeout = Duration(seconds: 5);
 
   // Durable Objects の自動応答は文字列全体に一致するため、順序・空白も固定。
   // RTT probe の連番 pingId と分離し、固定 pong を RTT に計上しない。
   static const heartbeatMessage = '{"type":"ping","pingId":"heartbeat"}';
 
   var _retryDelaySeconds = 1;
+  var _wasPaused = false;
   final _random = math.Random();
 
   /// これは状態ではなくイベント列なので、同じ値でも必ず通知する。
@@ -72,9 +76,56 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
 
   @override
   Stream<WebSocketEvent> build() async* {
+    WebSocket? openSocket;
+    var isWaitingRetry = false;
+    // iOS は suspend 中に Dart の timer が進まないため、経過は壁時計で測る。
+    final startedAt = DateTime.now();
+    var lastFrameAt = startedAt;
+
+    Timer? silenceWatchdog;
+    Timer? heartbeatTimer;
+    ref.onDispose(() {
+      silenceWatchdog?.cancel();
+      heartbeatTimer?.cancel();
+    });
+    void armSilenceWatchdog([Duration timeout = silenceTimeout]) {
+      silenceWatchdog?.cancel();
+      silenceWatchdog = Timer(timeout, () {
+        talker.warning(
+          'EQMonitor WebSocket: no frame received for '
+          '${timeout.inSeconds}s, reconnecting',
+        );
+        _reconnect();
+      });
+    }
+
     ref.listen(appLifecycleProvider, (_, next) {
-      if (next == AppLifecycleState.resumed) {
-        _retryDelaySeconds = 1;
+      if (next == AppLifecycleState.paused) {
+        _wasPaused = true;
+        return;
+      }
+      if (next != AppLifecycleState.resumed || !_wasPaused) {
+        return;
+      }
+      _wasPaused = false;
+      final now = DateTime.now();
+      final socket = openSocket;
+      if (socket == null) {
+        if (isWaitingRetry || now.difference(startedAt) >= resumeProbeTimeout) {
+          _retryDelaySeconds = 1;
+          _reconnect();
+        }
+        return;
+      }
+      if (now.difference(lastFrameAt) >= silenceTimeout) {
+        talker.info('EQMonitor WebSocket: stale after resume, reconnecting');
+        _reconnect();
+        return;
+      }
+      try {
+        socket.sendText(heartbeatMessage);
+        armSilenceWatchdog(resumeProbeTimeout);
+      } on WebSocketConnectionClosed {
         _reconnect();
       }
     });
@@ -109,27 +160,15 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       });
     });
 
-    Timer? silenceWatchdog;
-    Timer? heartbeatTimer;
-    ref.onDispose(() {
-      silenceWatchdog?.cancel();
-      heartbeatTimer?.cancel();
-    });
-    void armSilenceWatchdog() {
-      silenceWatchdog?.cancel();
-      silenceWatchdog = Timer(silenceTimeout, () {
-        talker.warning(
-          'EQMonitor WebSocket: no frame received for '
-          '${silenceTimeout.inSeconds}s, reconnecting',
-        );
-        _reconnect();
-      });
-    }
-
+    var didConnect = false;
+    var didReceiveClose = false;
     try {
       final websocket = await ref.watch(eqmonitorWebSocketProvider.future);
       const heartbeatResponder = WsHeartbeatResponder();
       _retryDelaySeconds = 1;
+      didConnect = true;
+      openSocket = websocket;
+      lastFrameAt = DateTime.now();
       armSilenceWatchdog();
       websocket.sendText(heartbeatMessage);
       heartbeatTimer = Timer.periodic(heartbeatInterval, (timer) {
@@ -142,12 +181,17 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       });
 
       await for (final event in websocket.events) {
+        lastFrameAt = DateTime.now();
         armSilenceWatchdog();
         if (event case TextDataReceived(:final text)) {
           final response = heartbeatResponder.buildResponse(text);
           if (response != null) {
             websocket.sendText(response);
           }
+        }
+        if (event is CloseReceived) {
+          didReceiveClose = true;
+          openSocket = null;
         }
         yield event;
         if (event case CloseReceived(:final code, :final reason)) {
@@ -160,9 +204,11 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
     } on Exception catch (e) {
       talker.error('EQMonitor WebSocket: connection failed', e);
     } finally {
+      openSocket = null;
       silenceWatchdog?.cancel();
       heartbeatTimer?.cancel();
     }
+    isWaitingRetry = true;
 
     // 失敗回数のべき乗は整数オーバーフローで 0 になるため、待ち時間自体を制限する。
     final delaySeconds = _retryDelaySeconds;
@@ -173,6 +219,11 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
 
     final timer = Timer(Duration(seconds: delaySeconds), _reconnect);
     ref.onDispose(timer.cancel);
+
+    // close frame なしで終わった接続も、下流が切断として扱えるようにする。
+    if (didConnect && !didReceiveClose) {
+      yield CloseReceived(1006, 'connection lost');
+    }
   }
 
   void _reconnect() {

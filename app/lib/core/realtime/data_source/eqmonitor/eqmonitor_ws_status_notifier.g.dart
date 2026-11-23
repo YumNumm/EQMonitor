@@ -46,7 +46,7 @@ final class EqMonitorWsStatusProvider
   }
 }
 
-String _$eqMonitorWsStatusHash() => r'e3023c38b55cc361dc06534c31fa325d2fbf61a0';
+String _$eqMonitorWsStatusHash() => r'8f48ea15afa0644b02ffed99aced2284fba5d3fb';
 
 /// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する
 
