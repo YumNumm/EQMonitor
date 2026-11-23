@@ -61,3 +61,27 @@ String homeKyoshinMonitorObservationGeoJson(Ref ref) {
     return raw;
   }
 }
+
+/// 観測点名ラベル用の GeoJSON
+///
+/// 観測値を含めず、表示中の観測点の集合が変わらない限り同じ文字列を返す。
+/// 毎秒の観測値更新でラベルが再配置されるのを避ける。
+@riverpod
+String homeKyoshinMonitorStationLabelGeoJson(Ref ref) {
+  final raw = ref.watch(homeKyoshinMonitorObservationGeoJsonProvider);
+  final decoded = jsonDecode(raw) as Map<String, dynamic>;
+  final features = <Map<String, dynamic>>[];
+  for (final feature in decoded['features'] as List<dynamic>) {
+    if (feature case {
+      'geometry': final Object geometry,
+      'properties': {'name': final String name},
+    }) {
+      features.add({
+        'type': 'Feature',
+        'geometry': geometry,
+        'properties': {'name': name},
+      });
+    }
+  }
+  return jsonEncode({'type': 'FeatureCollection', 'features': features});
+}

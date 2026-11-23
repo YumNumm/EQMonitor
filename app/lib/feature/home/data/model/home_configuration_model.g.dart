@@ -182,6 +182,10 @@ _HomeKyoshinMonitorSettings _$HomeKyoshinMonitorSettingsFromJson(
         'show_intensity_icon',
         (v) => v as bool? ?? false,
       ),
+      showStationName: $checkedConvert(
+        'show_station_name',
+        (v) => v as bool? ?? false,
+      ),
     );
     return val;
   },
@@ -189,6 +193,7 @@ _HomeKyoshinMonitorSettings _$HomeKyoshinMonitorSettingsFromJson(
     'minRealtimeShindo': 'min_realtime_shindo',
     'markerSize': 'marker_size',
     'showIntensityIcon': 'show_intensity_icon',
+    'showStationName': 'show_station_name',
   },
 );
 
@@ -198,6 +203,7 @@ Map<String, dynamic> _$HomeKyoshinMonitorSettingsToJson(
   'min_realtime_shindo': instance.minRealtimeShindo,
   'marker_size': _$HomeKmoniMarkerSizeEnumMap[instance.markerSize]!,
   'show_intensity_icon': instance.showIntensityIcon,
+  'show_station_name': instance.showStationName,
 };
 
 const _$HomeKmoniMarkerSizeEnumMap = {
