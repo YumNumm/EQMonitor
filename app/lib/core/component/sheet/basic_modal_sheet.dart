@@ -65,7 +65,9 @@ class const BasicModalSheet({
               .dy;
           final extent =
               controller.offset + targetBottom + spacing.md - sheetBottom;
-          moveTo(extent.clamp(0, sheetBox.size.height));
+          moveTo(
+            extent.clamp(initialExtentRef.value, sheetBox.size.height),
+          );
         },
         release: () => WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!context.mounted) {

@@ -63,6 +63,13 @@ void main() {
       closeTo(600 - spacing, 1),
     );
 
+    targetHeight.value = 10;
+    await tester.pumpAndSettle();
+    expect(
+      tester.getTopLeft(find.byKey(const Key('target'))).dy,
+      closeTo(initialTop, 1),
+    );
+
     targetHeight.value = null;
     await tester.pumpAndSettle();
     expect(sheetTop(tester), closeTo(initialTop, 1));
