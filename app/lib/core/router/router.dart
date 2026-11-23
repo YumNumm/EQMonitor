@@ -48,6 +48,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_de
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_list_tile_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/estimated_intensity_dem/debug_estimated_intensity_dem_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
@@ -388,6 +389,9 @@ class const TalkerRoute()
           path: 'shake-detection-engine',
         ),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
+        TypedGoRoute<DebugEstimatedIntensityDemRoute>(
+          path: 'estimated-intensity-dem',
+        ),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
         TypedGoRoute<DebugWebSocketRoute>(path: 'websocket'),
         TypedGoRoute<DebugNotificationDeliveryLogRoute>(
@@ -683,6 +687,15 @@ class const DebugShakeDetectionEngineRoute()
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugShakeDetectionEnginePage();
+  }
+}
+
+class const DebugEstimatedIntensityDemRoute()
+    extends GoRouteData
+    with $DebugEstimatedIntensityDemRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugEstimatedIntensityDemPage();
   }
 }
 
