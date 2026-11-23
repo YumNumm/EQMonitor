@@ -43,6 +43,12 @@
 - Android の profile/release で、観測点の多い地震詳細を移動・拡大縮小し、通常震度・長周期・震度DBの表示とフレーム時間を確認する。GeoJSON の再生成抑止による実機での改善幅は未計測。
 - 観測データ・配色・表示種別の変更と地図の再作成で最新データが表示されることを確認する。
 
+## 790: 推計震度の色分け選択と強震モニタ配色の実機確認
+
+- 対象: `app/lib/feature/earthquake_history/ui/components/estimated_intensity_display_settings.dart`、`earthquake_history_map_legend.dart`、`earthquake_history_details_estimated_intensity_dem_layer.dart`。
+- 推計震度カードの「色分け」（震度階級・グラデーション・強震モニタ）と「観測点を重ねて表示」は、analyze・既存テスト・Widget の画像出力で確認した。地図の `color-relief` へ強震モニタ配色が反映されること、凡例の色と地図の色が一致することは iOS/Android とも未確認。
+- 強震モニタ配色の凡例は計測震度 3.5〜7.0 を切り出し、目盛りは 4〜7。範囲と向き（横）を実機の見え方で決める。
+
 ## 790: 強震モニタ観測点の震度アイコンの実機確認
 
 - マップレイヤーのデバッグ欄で「強震モニタの震度アイコン」を有効にし（既定は無効）、リアルタイム震度 0.0 以上の観測点が震度アイコンに切り替わり、0.0 未満と震度以外のデータ種別では従来の円のまま表示されることを iOS/Android で確認する。filter と `icon-image` の `step` 式の native 変換は未検証で、例外が出る場合は解析 isolate で画像 ID を property に書き出す方式へ切り替える。
