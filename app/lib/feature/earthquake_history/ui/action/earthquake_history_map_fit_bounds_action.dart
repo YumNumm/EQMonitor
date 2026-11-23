@@ -3,6 +3,8 @@ import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_hypocenter_point.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_camera.dart';
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -16,7 +18,7 @@ EarthquakeHistoryMapFitBoundsAction earthquakeHistoryMapFitBoundsAction(
 ) => const EarthquakeHistoryMapFitBoundsAction();
 
 class const EarthquakeHistoryMapFitBoundsAction() {
-  Future<void> handle({
+  Future<MapCameraBounds?> handle({
     required WidgetRef ref,
     required MapController controller,
     required Earthquake earthquake,
@@ -31,28 +33,28 @@ class const EarthquakeHistoryMapFitBoundsAction() {
         )
         ? (await ref.read(jmaMapProvider.future)).areaForecastLocalE
         : null;
-    final points = calculator
-        .calculate(
-          earthquake: earthquake,
-          regionMap: regionMap,
-          hypocenterPoints: hypocenterPoints,
-          dbTree: dbTree,
-        )
-        .map(
-          (point) => Geographic(
-            lon: point.longitude,
-            lat: point.latitude,
-          ),
-        )
-        .toList();
-    if (points.isEmpty) {
-      return;
+    final bounds = const EarthquakeHistoryMapCamera().boundsOf(
+      calculator.calculate(
+        earthquake: earthquake,
+        regionMap: regionMap,
+        hypocenterPoints: hypocenterPoints,
+        dbTree: dbTree,
+      ),
+    );
+    if (bounds == null) {
+      return null;
     }
     await controller.animateCamera(
       CameraUpdate.bounds(
-        GeoBox.from(points),
+        GeoBox(
+          west: bounds.west,
+          south: bounds.south,
+          east: bounds.east,
+          north: bounds.north,
+        ),
         padding: const EdgeInsets.all(48),
       ),
     );
+    return bounds;
   }
 }

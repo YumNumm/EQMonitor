@@ -18,6 +18,7 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_inte
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_warning_regions_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_focus_bounds_debug_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_label_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_user_location_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
@@ -147,6 +148,7 @@ class const _MapContent({required final String styleString})
               ),
             ),
             const HomeMapLabelLayer(),
+            const HomeMapFocusBoundsDebugLayer(),
             if (showLocation) const HomeMapUserLocationLayer(),
             const SafeArea(child: _MapHeader()),
           ],
