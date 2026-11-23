@@ -15,6 +15,10 @@
 - 分割中のloading/error AppBarもautomaticallyImplyLeading:falseとする。
   明示ボタンを消すだけでは親Navigatorが戻るボタンを補完する。
 - 直接開いた詳細ルートはNavigatorの戻る操作を使う。
+- 地震履歴の一覧は、分割中だけページ内で選択する。分割していない場合はEarthquakeHistoryDetailsRouteをpushする。
+  ページ内の差し替えはPopScope(canPop:false)となり、`popGestureEnabled`がfalseを返してiOSのスワイプバックが無効になる。
+  一覧側もHistoryDetailScopeで包み、EarthquakeHistoryPageが選択時にHistoryDetailScope.isSplitOf(context)で判断する。
+- 分割中に選択してから幅を狭めた場合は、同じ詳細をページ内に表示し続ける。この状態とEEW履歴の狭い画面ではスワイプバックできない。
 - 電文一覧のVXSE62は地域の`lpgmIntensity`を使い、長周期地震動階級の降順で専用アイコンと地域名を表示する。階級が欠けた地域を震度で代用しない。前報との差分注記も長周期地震動階級で比較する。
 
 ## 折りたたみとペイン内制約

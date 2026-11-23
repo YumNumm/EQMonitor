@@ -72,7 +72,10 @@ class const HistoryAdaptiveView({
                             child: HistoryPane(
                               bounds: listBounds ?? available,
                               viewport: size,
-                              child: list,
+                              child: HistoryDetailScope(
+                                isSplit: isSplit,
+                                child: list,
+                              ),
                             ),
                           ),
                         ),
