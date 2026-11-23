@@ -58,6 +58,8 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 - 地震詳細が `ErrorCard` になった場合は「詳細」を開いて `failure-<scene>.png` として撮り、要求先と応答をテストの失敗理由に出す。
   ホームのお知らせ欄にも `ErrorCard` が出るため、`EarthquakeHistoryDetailsPage` の配下だけを見る。
 - テスト名の表示は 2 つあり、両方を消す。Patrol のラベルは `patrol test --no-label`、`LiveTestWidgetsFlutterBinding` が画面上端に描くものは `setLabel('')`。
+- 地震詳細は推計震度分布がある地震だと既定でそれを表示する。観測点を見せるため、`EarthquakeIntensityCard.onDisplayModeChanged` を呼んで「各地の震度」に切り替える（切り替えの状態はページ内の `useState` にしか無い）。
+- 現在地は `device.json` の `location`。富山県高岡市太田 24 番地（国土地理院の住所検索の結果。枝番までは解決されない）を設定している。
 - 地震詳細のデバッグボタンは debug ビルドで既定表示になるため、SharedPreferences の `debug` を false にする。
 - 権限ダイアログは `$.platform.mobile.grantPermissionWhenInUse()` で許可する。iOS は端末の言語が英語のときだけ扱える（Patrol の制約）。
   新規の Simulator は host の言語を引き継ぐため、`capture.py` は作成した Simulator を `en-US` / `en_US` に変える。`--device` で渡した Simulator の言語は変えない。
@@ -96,6 +98,7 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   - 同じ Mac で `STORE_SCREENSHOT_REQUIRE_FIXTURES=true` の全 4 シーンが完了した（テスト 76 秒、撮影は 1 シーン 0.7〜0.9 秒）。
   - `eew_warning`（16:11:08）は警報 第30報・M7.4・最大震度 7 の EEW カードと推定震度の塗り、`kyoshin_monitor`（16:10:21）は警報 第10報・M6.2・最大震度 6強 の EEW カードと観測点が表示された。
     どちらもボトムシートは最小の高さ（EEW カードの上部が見える状態）で、Figma との照合は未実施。
+  - 観測点の表示への切り替え後も全 4 シーンが完了し、`earthquake_detail` に観測点のアイコンが表示された。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
 - 未検証: CI でのリプレイのシーンと通知センターの撮影、端末フレームの fixture（未投入）。残件は [TODO](../todo/850_store_screenshots.md)。

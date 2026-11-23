@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_status_card.dart';
@@ -113,6 +114,12 @@ class StoreScreenshotScenes({
       await _capture('failure-$scene', settle: const Duration(seconds: 2));
       fail('earthquake $eventId failed to load: ${_describe(error)}');
     }
+    // 推計震度分布がある地震は既定でそれを表示する。切り替えの状態はページ内にしか無い。
+    $.tester
+        .widget<EarthquakeIntensityCard>(
+          find.byType(EarthquakeIntensityCard, skipOffstage: false),
+        )
+        .onDisplayModeChanged(.jma);
     // 震度の塗りはタイル単位で描かれ、10 秒では画面下側が欠けた。
     await _capture(scene, settle: const Duration(seconds: 30));
   }
