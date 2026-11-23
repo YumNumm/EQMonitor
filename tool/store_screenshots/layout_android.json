@@ -1,0 +1,112 @@
+{
+  "canvas": {
+    "width": 1290,
+    "height": 2560
+  },
+  "pages": [
+    {
+      "id": "01_eew",
+      "background": "backgrounds/01_eew.png",
+      "devices": [
+        {
+          "scene": "eew_warning",
+          "bezel": "pixel_11_pro_black.png",
+          "bezelRect": {
+            "x": 202.46,
+            "y": 640,
+            "width": 885.08,
+            "height": 1880
+          },
+          "screenRect": {
+            "x": 235.78,
+            "y": 673.32,
+            "width": 812.7,
+            "height": 1813.33
+          },
+          "screenCornerRadius": 73.14
+        }
+      ],
+      "backgroundCrop": {
+        "x": 0,
+        "y": 0,
+        "width": 1290,
+        "height": 2560
+      }
+    },
+    {
+      "id": "02_earthquake_detail",
+      "background": "backgrounds/02_earthquake_detail.png",
+      "devices": [
+        {
+          "scene": "earthquake_history_list",
+          "bezel": "pixel_11_pro_black.png",
+          "bezelRect": {
+            "x": 60,
+            "y": 640,
+            "width": 753.26,
+            "height": 1600
+          },
+          "screenRect": {
+            "x": 88.36,
+            "y": 668.36,
+            "width": 691.66,
+            "height": 1543.26
+          },
+          "screenCornerRadius": 62.25
+        },
+        {
+          "scene": "earthquake_detail",
+          "bezel": "pixel_11_pro_black.png",
+          "bezelRect": {
+            "x": 476.74,
+            "y": 920,
+            "width": 753.26,
+            "height": 1600
+          },
+          "screenRect": {
+            "x": 505.1,
+            "y": 948.36,
+            "width": 691.66,
+            "height": 1543.26
+          },
+          "screenCornerRadius": 62.25
+        }
+      ],
+      "backgroundCrop": {
+        "x": 0,
+        "y": 0,
+        "width": 1290,
+        "height": 2560
+      }
+    },
+    {
+      "id": "03_kyoshin_monitor",
+      "background": "backgrounds/04_kyoshin_monitor.png",
+      "devices": [
+        {
+          "scene": "kyoshin_monitor",
+          "bezel": "pixel_11_pro_black.png",
+          "bezelRect": {
+            "x": 202.46,
+            "y": 640,
+            "width": 885.08,
+            "height": 1880
+          },
+          "screenRect": {
+            "x": 235.78,
+            "y": 673.32,
+            "width": 812.7,
+            "height": 1813.33
+          },
+          "screenCornerRadius": 73.14
+        }
+      ],
+      "backgroundCrop": {
+        "x": 0,
+        "y": 0,
+        "width": 1290,
+        "height": 2560
+      }
+    }
+  ]
+}

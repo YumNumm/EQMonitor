@@ -17,6 +17,7 @@ const _requireFixtures = bool.fromEnvironment(
 );
 const _sceneFilter = String.fromEnvironment('STORE_SCREENSHOT_SCENES');
 const _captureWatch = bool.fromEnvironment('STORE_SCREENSHOT_WATCH');
+const _foldPosture = String.fromEnvironment('STORE_SCREENSHOT_FOLD_POSTURE');
 
 // 第30報（16:11:08）で警報の対象になり、揺れの到達まで時間が残る地域（千葉県北西部、千葉市役所）。
 const _chiba = (latitude: 35.6073, longitude: 140.1063);
@@ -71,6 +72,15 @@ void main() {
           channel: channel,
         );
         await scenes.waitForHome();
+        if (_foldPosture.isNotEmpty) {
+          // iPhone Duo は閉じると外側、開くと内側の画面にアプリが出る。Patrol 4.11.0 では実験的な API。
+          // ignore: experimental_member_use
+          await $.platform.ios.setFoldPosture(
+            // ignore: experimental_member_use
+            FoldPosture.values.byName(_foldPosture),
+          );
+          await scenes.waitForHome();
+        }
         await scenes.grantPermissionDialogs();
         await scenes.allowLocation();
         if (Platform.isIOS) {
@@ -78,7 +88,8 @@ void main() {
         }
 
         bool wanted(String scene) =>
-            _sceneFilter.isEmpty || _sceneFilter.split(',').contains(scene);
+            _sceneFilter.isEmpty ||
+            _sceneFilter.split(RegExp('[,+]')).contains(scene);
 
         final hasNoto = await scenes.hasFixture(_notoFixture);
         if (!hasNoto && _requireFixtures) {
@@ -103,7 +114,10 @@ void main() {
           );
         }
         if (wanted('earthquake_history_list')) {
-          await scenes.earthquakeHistoryList(scene: 'earthquake_history_list');
+          await scenes.earthquakeHistoryList(
+            scene: 'earthquake_history_list',
+            detailEventId: _detailEventId,
+          );
         }
         if (wanted('earthquake_detail')) {
           await scenes.earthquakeDetail(

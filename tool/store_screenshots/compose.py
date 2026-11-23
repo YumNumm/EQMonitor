@@ -48,6 +48,18 @@ def place_screen(canvas: Image.Image, screenshot: Image.Image, device: dict) -> 
     canvas.alpha_composite(screen, position)
 
 
+def bezel_file(fixtures: Path, name: str) -> Path:
+    # ライセンス上公開できない端末画像は暗号化した fixture、自前で描いた枠は frames/ に置く。
+    return fixtures / name if (fixtures / name).is_file() else TOOL_DIR / "frames" / name
+
+
+def load_background(page: dict, layout_dir: Path) -> Image.Image:
+    background = Image.open(layout_dir / page["background"]).convert("RGBA")
+    if crop := page.get("backgroundCrop"):
+        background = background.crop((crop["x"], crop["y"], crop["x"] + crop["width"], crop["y"] + crop["height"]))
+    return background
+
+
 def page_devices(page: dict) -> list[dict]:
     # devices は手で書いた配置で、Figma から抽出する device より優先する。後ろの要素ほど手前に描く。
     return page.get("devices") or [{**page["device"], "scene": page["scene"]}]
@@ -56,14 +68,14 @@ def page_devices(page: dict) -> list[dict]:
 def compose_page(
     page: dict, canvas_size: tuple[int, int], screenshots: Path, layout_dir: Path, fixtures: Path
 ) -> Image.Image:
-    background = Image.open(layout_dir / page["background"]).convert("RGBA")
+    background = load_background(page, layout_dir)
     if background.size != canvas_size:
         raise ComposeError(f"{page['background']} is {background.size}, expected {canvas_size}")
     for device in page_devices(page):
         with Image.open(screenshots / f"{device['scene']}.png") as screenshot:
             place_screen(background, screenshot, device)
         position, size = box(device["bezelRect"])
-        bezel = Image.open(fixtures / device["bezel"]).convert("RGBA").resize(size, Image.LANCZOS)
+        bezel = Image.open(bezel_file(fixtures, device["bezel"])).convert("RGBA").resize(size, Image.LANCZOS)
         background.alpha_composite(bezel, position)
     return background.convert("RGB")
 
@@ -71,7 +83,7 @@ def compose_page(
 def missing_inputs(page: dict, screenshots: Path, fixtures: Path) -> list[Path]:
     required = []
     for device in page_devices(page):
-        required += [screenshots / f"{device['scene']}.png", fixtures / device["bezel"]]
+        required += [screenshots / f"{device['scene']}.png", bezel_file(fixtures, device["bezel"])]
     return [path for path in dict.fromkeys(required) if not path.is_file()]
 
 

@@ -53,6 +53,55 @@ mise exec -- tool/store_screenshots/decrypt_fixtures.sh build/store_screenshots/
 FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py --bezel-out build/store_screenshots/figma
 ```
 
+## iPhone Duo と Android
+
+Figma のデザインは iPhone の縦長（1290×2796）しか無い。別の縦横比は、既存の背景と自前で描いた枠から作る。
+
+- `derive_background.py`: 既存の背景から線形グラデーションを最小二乗で推定し、白い見出し・ロゴを (画素 - 地) / (白 - 地) で抜き出して新しい寸法に置き直す。
+  同じ寸法で作り直すと元との平均差は約 2%。見出しの大きさは元の幅に対する比率（`--text-scale` で調整）。
+- `generate_frame.py`: 画面の寸法から黒い端末の枠を描く（画面は透明、カメラの穴とボタンは任意）。生成物は `frames/` に置き、`compose.py` は fixture に無い枠を `frames/` から読む。
+  Apple Design Resources に `Bezel-iPhone-Duo.dmg` があるが、取得していない（ダウンロードと使用許諾への同意が必要）。
+- `layout_*.json` の `backgroundCrop` で背景の一部を切り出せる。
+
+### iPhone Duo
+
+- [App Store Connect の仕様](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications)（2026-11-24 確認）:
+  外側 1398×2034 / 2034×1398、内側 2007×2853 / 2853×2007。2027 年 4 月から iOS 27.1 SDK 以降を使うアプリで必須。
+- Simulator は `iPhone Duo` を iOS 27.2 の専用ランタイム（`com.apple.CoreSimulator.SimRuntime.iOS-27-2-iPhone19-4`）で作る。GitHub の xcode-27 ランナーにも入っている。
+  画面は `primary`（外側、1398×2034）と `primary-1`（内側）。内側は `UI Orientation: Landscape Left` で起動し、`simctl io --display=primary-1 screenshot` は 2853×2007 になる。アプリも横向きで描かれる。
+- テストに `--dart-define=STORE_SCREENSHOT_FOLD_POSTURE=open|closed` を渡すと、`$.platform.ios.setFoldPosture` で開閉する（Patrol 4.11.0 では実験的。`patrol test` の host サーバー経由）。
+  `capture.py --ios-display primary-1`（開いた状態）/ `primary`（閉じた状態）で撮る画面を選ぶ。
+- 内側（横向き）では通知センターを開く操作が効かず、重大な通知のバナーが残ったまま撮れた。内側は通知のページを外した 3 枚にしている。
+- 内側では地震履歴が一覧と詳細の 2 画面になる。`earthquake_history_list` のシーンは、詳細が空欄の表示（`一覧から表示する情報を選択してください`）を見つけたら、地震詳細と同じ地震を一覧から選んでから撮る。
+- `STORE_SCREENSHOT_SCENES` は `--dart-define` でカンマが区切りとして扱われるため、`+` でも区切れる（`eew_warning+kyoshin_monitor`）。
+
+```sh
+mise exec -- python3 tool/store_screenshots/capture.py --platform ios --device <duo-udid> --ios-display primary-1 --output build/store_screenshots/duo-open -- \
+  <iOS と同じ引数> --dart-define=STORE_SCREENSHOT_FOLD_POSTURE=open
+mise exec -- uv run tool/store_screenshots/compose.py --layout tool/store_screenshots/layout_duo_inner.json \
+  --screenshots build/store_screenshots/duo-open --fixtures <復号先> --output build/store_screenshots/composed-duo-inner
+```
+
+### Android（Pixel 11 Pro）
+
+- Pixel 11 Pro は 1280×2856・495 ppi（[Google Store](https://store.google.com/product/pixel_11_pro_specs)）。
+  手元の SDK（cmdline-tools 23.0）と Android Studio 2026.2 の端末定義には Pixel 10 Pro までしか無いため、同じ画面仕様の `pixel_10_pro` から AVD `EQMonitor_Store_Screenshot_Pixel_11_Pro` を作った（API 37 の `google_apis_playstore`）。
+  Android Studio の端末画像（`device-art-resources`）も Pixel 9 までのため、枠は `frames/pixel_11_pro_black.png` を描いた。
+- Play Store 付きのイメージは root が無く、エミュレーターの `-change-locale ja-JP` は `su` が無く失敗する。アプリが Noto Sans JP を同梱しているため、日本語の字形は端末の言語に依らない。
+- Google Play は長辺が短辺の 2 倍以下。`layout_android.json` は iOS の背景の上側 1290×2560 を切り出したキャンバスに置く。通知のページは無い（Live Activity が iOS のみ）。
+- 位置情報を要求すると、Google Play 開発者サービスの「位置情報の精度」への同意を求めるダイアログ（`No thanks` / `Turn on`）が画面に重なる。テストは同意せずに `No thanks` を押して閉じる。
+- Patrol の Android の `setMockLocation` は呼ぶたびに GPS のテスト用プロバイダーを作り直す。2 回目以降の位置は Google Play 開発者サービスの位置情報に届かず、
+  logcat に `FusedLocation: location delivery blocked - too close` が出た（購読を作り直しても同じ）。現在地の違うシーンは別の `patrol test` に分けて撮る。
+
+```sh
+for scenes in "eew_warning+earthquake_history_list+earthquake_detail" "kyoshin_monitor"; do
+  mise exec -- python3 tool/store_screenshots/capture.py --platform android --device emulator-5560 \
+    --output build/store_screenshots/android -- <Android の引数> --dart-define=STORE_SCREENSHOT_SCENES=$scenes
+done
+mise exec -- uv run tool/store_screenshots/compose.py --layout tool/store_screenshots/layout_android.json \
+  --screenshots build/store_screenshots/android --fixtures <復号先> --output build/store_screenshots/composed-android
+```
+
 ## 撮影のプロトコル
 
 - Patrol の `takeNativeScreenshot` は iOS では何もしない（patrol 4.11.0 の docs）。通知センターやステータスバーを含めて撮るため、撮影は host 側で行う。

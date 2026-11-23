@@ -53,9 +53,22 @@ class StoreScreenshotScenes({
       )) {
         await $.platform.mobile.grantPermissionWhenInUse();
       }
+      await _declineAndroidLocationAccuracy();
       return;
     }
     while (await _tapIosAllowButton()) {}
+  }
+
+  // Google Play 開発者サービスの「位置情報の精度」への同意を求めるダイアログ。同意はせずに閉じる。
+  Future<void> _declineAndroidLocationAccuracy() async {
+    try {
+      await $.platform.android.tap(
+        const AndroidSelector(text: 'No thanks'),
+        timeout: const Duration(seconds: 2),
+      );
+    } on PatrolActionException {
+      return;
+    }
   }
 
   Future<bool> _tapIosAllowButton() async {
@@ -162,7 +175,10 @@ class StoreScreenshotScenes({
     await _capture(scene, settle: const Duration(seconds: 8));
   }
 
-  Future<void> earthquakeHistoryList({required String scene}) async {
+  Future<void> earthquakeHistoryList({
+    required String scene,
+    required String detailEventId,
+  }) async {
     if (container.read(replayProvider) != null) {
       container.read(replayProvider.notifier).exit();
     }
@@ -177,8 +193,44 @@ class StoreScreenshotScenes({
         .ignore();
     await $(EarthquakeHistoryListTile)
         .waitUntilVisible(timeout: const Duration(minutes: 2));
-    await _capture(scene, settle: const Duration(seconds: 5));
+    // iPhone Duo の内側のように広い画面では一覧と詳細が並ぶ。詳細を空欄のまま撮らないよう、
+    // 地震詳細のシーンと同じ地震を一覧から選ぶ。
+    if (!$('一覧から表示する情報を選択してください').exists) {
+      await _capture(scene, settle: const Duration(seconds: 5));
+      return;
+    }
+    final tile = $(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is EarthquakeHistoryListTile &&
+            widget.item.earthquake.eventId == detailEventId,
+      ),
+    );
+    await tile.scrollTo(
+      view: find
+          .ancestor(
+            of: find.byType(EarthquakeHistoryListTile).first,
+            matching: find.byType(Scrollable),
+          )
+          .first,
+      maxScrolls: 80,
+    );
+    await tile.tap();
+    await _waitUntil(
+      () => $(ValueKey(detailEventId)).exists,
+      timeout: const Duration(minutes: 2),
+      description: 'earthquake $detailEventId',
+    );
+    _showObservedIntensity();
+    await _capture(scene, settle: const Duration(seconds: 30));
   }
+
+  // 推計震度分布がある地震は既定でそれを表示する。切り替えの状態はページ内にしか無い。
+  void _showObservedIntensity() => $.tester
+      .widget<EarthquakeIntensityCard>(
+        find.byType(EarthquakeIntensityCard, skipOffstage: false),
+      )
+      .onDisplayModeChanged(.jma);
 
   Future<void> earthquakeDetail({
     required String scene,
@@ -204,12 +256,7 @@ class StoreScreenshotScenes({
       await _capture('failure-$scene', settle: const Duration(seconds: 2));
       fail('earthquake $eventId failed to load: ${_describe(error)}');
     }
-    // 推計震度分布がある地震は既定でそれを表示する。切り替えの状態はページ内にしか無い。
-    $.tester
-        .widget<EarthquakeIntensityCard>(
-          find.byType(EarthquakeIntensityCard, skipOffstage: false),
-        )
-        .onDisplayModeChanged(.jma);
+    _showObservedIntensity();
     // 震度の塗りはタイル単位で描かれ、10 秒では画面下側が欠けた。
     await _capture(scene, settle: const Duration(seconds: 30));
   }
@@ -268,6 +315,10 @@ class StoreScreenshotScenes({
   Future<void> _capture(String scene, {required Duration settle}) async {
     await grantPermissionDialogs();
     await Future<void>.delayed(settle);
+    // 位置情報を要求したあと、遅れて出ることがある。
+    if (Platform.isAndroid) {
+      await _declineAndroidLocationAccuracy();
+    }
     await $.pump();
     await channel.capture(scene);
   }

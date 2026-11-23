@@ -103,6 +103,15 @@ class ComposeTest(unittest.TestCase):
         self.assertEqual(image.getpixel((120, 250)), (0, 0, 255))
         self.assertEqual(image.getpixel((65, 250)), BEZEL)
 
+    def test_crops_background_to_canvas(self) -> None:
+        layout = json.loads(self.layout.read_text())
+        layout["canvas"] = {"width": 200, "height": 360}
+        layout["pages"][0]["backgroundCrop"] = {"x": 0, "y": 0, "width": 200, "height": 360}
+        self.layout.write_text(json.dumps(layout))
+        Image.new("RGB", (500, 1100), SCREEN).save(self.root / "screens" / "eew_warning.png")
+        [path] = self.compose()
+        self.assertEqual(Image.open(path).size, (200, 360))
+
     def test_rejects_unknown_page_id(self) -> None:
         with self.assertRaisesRegex(ComposeError, "unknown page ids: 99_missing"):
             self.compose({"99_missing"})

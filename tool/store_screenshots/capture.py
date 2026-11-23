@@ -36,12 +36,18 @@ def run(*args: str, capture: bool = False) -> str:
 
 class IosSimulator:
     def __init__(
-        self, udid: str, bundle_id: str, wallpaper: Path | None = None, watch_udid: str | None = None
+        self,
+        udid: str,
+        bundle_id: str,
+        wallpaper: Path | None = None,
+        watch_udid: str | None = None,
+        display: str | None = None,
     ) -> None:
         self.udid = udid
         self.bundle_id = bundle_id
         self.wallpaper = wallpaper
         self.watch_udid = watch_udid
+        self.display = display
         self.container: Path | None = None
 
     @property
@@ -150,7 +156,8 @@ class IosSimulator:
         run("xcrun", "simctl", "io", self.watch_udid, "screenshot", "--type=png", str(destination))
 
     def screenshot(self, destination: Path) -> None:
-        run("xcrun", "simctl", "io", self.udid, "screenshot", "--type=png", str(destination))
+        display = [f"--display={self.display}"] if self.display else []
+        run("xcrun", "simctl", "io", self.udid, "screenshot", "--type=png", *display, str(destination))
 
 
 class AndroidEmulator:
@@ -342,6 +349,10 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--config", type=Path, default=TOOL_DIR / "device.json")
     parser.add_argument("--device", help="simulator UDID or adb serial (default: create an iOS simulator / ANDROID_SERIAL)")
     parser.add_argument("--wallpaper", type=Path, help="image to set as the iOS simulator wallpaper (skipped when the file is missing)")
+    parser.add_argument(
+        "--ios-display",
+        help="simctl screen to capture, e.g. primary-1 for the inner display of iPhone Duo (see simctl io <udid> enumerate)",
+    )
     parser.add_argument("--watch-device", help="paired watch simulator UDID; captures the Live Activity in its Smart Stack")
     parser.add_argument("--ios-device-type", action="append", default=[], help="preferred iOS device type, in order")
     parser.add_argument("patrol_args", nargs=argparse.REMAINDER)
@@ -356,6 +367,7 @@ def main(argv: list[str]) -> int:
             config["applicationId"],
             args.wallpaper if args.wallpaper and args.wallpaper.is_file() else None,
             args.watch_device,
+            args.ios_display,
         )
     else:
         serial = args.device or os.environ.get("ANDROID_SERIAL", "emulator-5554")

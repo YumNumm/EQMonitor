@@ -39,9 +39,19 @@
 - [ ] `capture-ios` で watchOS のランタイムの用意とペアの作成を行い、CI でも撮れるようにする。
 - Watch の時刻・日付は固定できない（`simctl status_bar` が watchOS 非対応）。撮影時のものが写る。点滅と到達までの秒数は固定済み。
 
+## 650: iPhone Duo
+
+- [x] 外側・内側の画面で撮り、背景と枠を作って合成する（`layout_duo_outer.json` / `layout_duo_inner.json`、2026-11-24 に手元で生成）。
+- [ ] App Store Connect に iPhone Duo のスクリーンショットを登録する。2027 年 4 月から iOS 27.1 SDK 以降で必須。
+- [ ] 内側（横向き）で通知センターを撮る。`openNotifications()` と `closeHeadsUpNotification()` が横向きで効かなかった。
+- [ ] 枠を Apple Design Resources の `Bezel-iPhone-Duo.dmg` に差し替えるか決める（使用許諾への同意が必要）。
+- [ ] Figma に Duo 用のフレームを作るか決める。現在は既存の背景から `derive_background.py` で作っている。
+- [ ] `capture-ios` に Duo の撮影を足す。
+
 ## 600: Android とストアへの反映
 
-- [ ] Google Play 用のデザイン（長辺が短辺の 2 倍以下）を Figma に作り、Android の合成を追加する。
+- [x] Google Play 用の合成（長辺が短辺の 2 倍以下、1290×2560）を追加する。Figma のデザインは無く、iOS の背景の上側を切り出している。
+- [ ] CI の Android の撮影を Pixel 11 Pro 相当（1280×2856）にする。現在は `pixel_6` / API 35。runner の cmdline-tools 16.0 に `pixel_10_pro` があるかは未確認。
 - [ ] App Store Connect / Google Play へのアップロードを自動化するか決める。現在は artifact の生成まで。
   2026-11-24 に iOS 3.1.0・日本語の iPhone 6.7 / 6.5 / 5.5 インチの各 4 枚を、手元で合成した画像（通知＋Apple Watch、履歴一覧＋詳細を含む版）へ App Store Connect API で手動で差し替えた。iPad は古いまま。
   6.5 インチは 1242×2688 へ縮小、5.5 インチは高さ 2208 へ縮小して左右に背景の端の色を延ばした（1242×2208）。この変換は `compose.py` には入っていない。
