@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_detail_model.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:eqmonitor/feature/telegram_list/data/notifier/telegram_details_notifier.dart';
@@ -101,13 +102,15 @@ class const TelegramListByEventIdPage({
                   scrollController: scrollController,
                   details: asyncDetails.value ?? const {},
                   error: error,
-                  onReload: () async =>
-                      ref.refresh(telegramListByEventIdProvider(eventId)),
+                  onReload: () => HapticUtil.light(
+                    () => ref.refresh(telegramListByEventIdProvider(eventId)),
+                  ),
                 ),
                 AsyncError(:final error) => ErrorCard(
                   error: error,
-                  onReload: () async =>
-                      ref.refresh(telegramListByEventIdProvider(eventId)),
+                  onReload: () => HapticUtil.light(
+                    () => ref.refresh(telegramListByEventIdProvider(eventId)),
+                  ),
                 ),
                 _ => const _TelegramListSkeleton(),
               },

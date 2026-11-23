@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/test_live_activity_notifier.dart';
 import 'package:eqmonitor/feature/notification/ui/action/test_live_activity_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_preset.dart';
@@ -61,7 +62,9 @@ class const TestLiveActivityPanel({super.key}) extends HookConsumerWidget {
           TextButton(
             onPressed: busy
                 ? null
-                : () => ref.invalidate(testLiveActivityProvider),
+                : () => HapticUtil.light(
+                    () => ref.invalidate(testLiveActivityProvider),
+                  ),
             child: const Text('再確認'),
           ),
         ] else if (status.hasValue) ...[
@@ -84,7 +87,9 @@ class const TestLiveActivityPanel({super.key}) extends HookConsumerWidget {
                   selected: preset.value == entry.key,
                   onSelected: busy || !supported
                       ? null
-                      : (_) => preset.value = entry.key,
+                      : (_) => HapticUtil.selection(
+                          () => preset.value = entry.key,
+                        ),
                 ),
             ],
           ),
@@ -98,10 +103,12 @@ class const TestLiveActivityPanel({super.key}) extends HookConsumerWidget {
                 label: Text(active ? 'テスト表示を更新' : 'テスト表示を開始'),
                 onPressed: busy || !supported
                     ? null
-                    : () => action.run(
-                        ref: ref,
-                        context: context,
-                        preset: preset.value,
+                    : () => HapticUtil.light(
+                        () => action.run(
+                          ref: ref,
+                          context: context,
+                          preset: preset.value,
+                        ),
                       ),
               ),
               OutlinedButton.icon(
@@ -115,7 +122,9 @@ class const TestLiveActivityPanel({super.key}) extends HookConsumerWidget {
                 ),
                 onPressed: busy || !active
                     ? null
-                    : () => action.run(ref: ref, context: context),
+                    : () => HapticUtil.light(
+                        () => action.run(ref: ref, context: context),
+                      ),
               ),
             ],
           ),

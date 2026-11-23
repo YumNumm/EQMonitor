@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/component/layout/history_adaptive_view.dart';
 import 'package:eqmonitor/core/component/layout/history_selection.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew_history/data/flow/show_eew_history_notice_flow.dart';
@@ -95,8 +96,9 @@ class const _EewHistoryContent() extends HookConsumerWidget {
             loading: () => const _Skeleton(),
             error: (error, _) => ErrorCard(
               error: error,
-              onReload: () async =>
-                  ref.refresh(eewListDataSourceProvider(parameter.value)),
+              onReload: () => HapticUtil.light(
+                () => ref.refresh(eewListDataSourceProvider(parameter.value)),
+              ),
             ),
             data: (dataSource) => _PagingBody(
               dataSource: dataSource,
@@ -180,7 +182,7 @@ class const _PagingBody({
               ),
               errorBuilder: (context, error, stackTrace) => ErrorCard(
                 error: error,
-                onReload: () async => dataSource.refresh(),
+                onReload: () => HapticUtil.light(dataSource.refresh),
               ),
               emptyWidget: const Center(
                 child: Padding(

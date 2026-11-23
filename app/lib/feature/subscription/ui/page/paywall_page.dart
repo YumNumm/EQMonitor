@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/model/pro_benefit.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
@@ -57,7 +58,9 @@ class const PaywallPage({super.key}) extends ConsumerWidget {
         isSubscriptionAvailable: isSubscriptionAvailable,
         onRetry: isBusy
             ? null
-            : () => ref.invalidate(monthlySubscriptionPackageProvider),
+            : () => HapticUtil.light(
+                () => ref.invalidate(monthlySubscriptionPackageProvider),
+              ),
         onPurchase: isBusy || !canPurchase || package == null
             ? null
             : () async => flow.purchaseMonthly(ref, context, package: package),
@@ -97,7 +100,9 @@ class const PaywallPage({super.key}) extends ConsumerWidget {
                     style: .text,
                     onPressed: isBusy || !isSubscriptionAvailable
                         ? null
-                        : () async => flow.restorePurchases(ref, context),
+                        : () => HapticUtil.light(
+                            () => flow.restorePurchases(ref, context),
+                          ),
                     child: const Text('購入を復元する'),
                   ),
                   SizedBox(height: spacing.sm),
@@ -281,6 +286,7 @@ class const _PurchaseBar({
               M3EButton(
                 style: .filled,
                 decoration: .new(
+                  haptic: .medium,
                   padding: EdgeInsets.symmetric(
                     horizontal: spacing.lg,
                     vertical: spacing.lg,

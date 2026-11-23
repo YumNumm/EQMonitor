@@ -228,7 +228,10 @@ class const _DeviceProvisioningFailureCard({
           SizedBox(height: designSystem.spacing.sm),
           Align(
             alignment: .centerRight,
-            child: M3ETextButton(onPressed: onRetry, child: const Text('再試行')),
+            child: M3ETextButton(
+              onPressed: () => HapticUtil.light(onRetry),
+              child: const Text('再試行'),
+            ),
           ),
         ],
       ),
@@ -260,10 +263,10 @@ class DeviceRegistrationErrorDialogAction {
             child: const Text('閉じる'),
           ),
           M3ETextButton(
-            onPressed: () {
+            onPressed: () => HapticUtil.light(() {
               Navigator.of(context).pop();
               onRetry();
-            },
+            }),
             child: const Text('再試行'),
           ),
           M3ETextButton(

@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_by_source_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
@@ -32,8 +33,9 @@ class const FeedDetailsPage({required final String telegramHash, super.key})
                   const Center(child: AccessibleCircularProgressIndicator()),
               error: (error, _) => ErrorCard(
                 error: error,
-                onReload: () async =>
-                    ref.invalidate(feedBySourceProvider(telegramHash)),
+                onReload: () => HapticUtil.light(
+                  () => ref.invalidate(feedBySourceProvider(telegramHash)),
+                ),
               ),
               data: (item) => FeedDetailsBody(item: item),
             ),

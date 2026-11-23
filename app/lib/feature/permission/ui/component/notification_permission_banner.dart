@@ -1,11 +1,11 @@
-import 'dart:async';
-
 import 'package:app_settings/app_settings.dart';
 import 'package:eqmonitor/core/component/banner/app_banner.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/permission/data/repository/permission_repository.dart';
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -31,6 +31,7 @@ class const NotificationPermissionBanner({super.key}) extends ConsumerWidget {
       backgroundColor: colorTheme.primaryContainer,
       foregroundColor: colorTheme.onPrimaryContainer,
       onTap: () async {
+        await HapticFeedback.lightImpact();
         final ok = await ref
             .read(permissionRepositoryProvider)
             .requestNotificationPermission();
@@ -39,8 +40,8 @@ class const NotificationPermissionBanner({super.key}) extends ConsumerWidget {
           await AppSettings.openAppSettings(type: AppSettingsType.notification);
         }
       },
-      onDismiss: () => unawaited(
-        ref
+      onDismiss: () => HapticUtil.light(
+        () => ref
             .read(notificationPermissionBannerDismissedProvider.notifier)
             .dismiss(),
       ),

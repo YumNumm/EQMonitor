@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/eew/data/notifier/eew_warning_overlay_notifier
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_banner.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_fullscreen.dart';
 import 'package:eqmonitor/feature/eew/ui/controller/eew_warning_overlay_back_dispatcher_controller.dart';
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -75,6 +76,7 @@ class const EewWarningOverlayHost({
             displayModel: displayModel,
             onExpand: notifier.expand,
             onClose: () async {
+              await HapticFeedback.lightImpact();
               await notifier.close();
             },
           ),

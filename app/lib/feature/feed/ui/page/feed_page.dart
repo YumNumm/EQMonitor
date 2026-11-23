@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_data_source.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
@@ -46,7 +47,8 @@ class const FeedPage({super.key}) extends HookConsumerWidget {
             const Center(child: AccessibleCircularProgressIndicator()),
         error: (error, _) => ErrorCard(
           error: error,
-          onReload: () async => ref.invalidate(feedDataSourceProvider),
+          onReload: () =>
+              HapticUtil.light(() => ref.invalidate(feedDataSourceProvider)),
         ),
         data: (dataSource) => _PagingBody(dataSource: dataSource),
       ),
@@ -81,7 +83,7 @@ class const _PagingBody({required final FeedDataSource dataSource})
             ),
             errorBuilder: (context, error, stackTrace) => ErrorCard(
               error: error,
-              onReload: () async => dataSource.refresh(),
+              onReload: () => HapticUtil.light(dataSource.refresh),
             ),
             emptyWidget: const Center(
               child: Padding(
