@@ -1,8 +1,10 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_layer_parameter_notifier.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -42,8 +44,9 @@ class const EarthquakeHistoryDetailsSettingsSheet({
             ? switch (config) {
                 AsyncError(:final error) => ErrorCard(
                   error: error,
-                  onReload: () =>
-                      ref.refresh(earthquakeHistoryConfigProvider.future),
+                  onReload: () => HapticUtil.light(
+                    () => ref.refresh(earthquakeHistoryConfigProvider.future),
+                  ),
                 ),
                 _ => const Center(child: AccessibleCircularProgressIndicator()),
               }
@@ -56,6 +59,7 @@ class const EarthquakeHistoryDetailsSettingsSheet({
                     onChanged: busy || showingDb
                         ? null
                         : (value) async {
+                            await HapticFeedback.selectionClick();
                             await EarthquakeHistoryConfigNotifier
                                 .saveDetailsMutation
                                 .run(
@@ -80,6 +84,7 @@ class const EarthquakeHistoryDetailsSettingsSheet({
                     onChanged: busy || showingDb
                         ? null
                         : (value) async {
+                            await HapticFeedback.selectionClick();
                             await EarthquakeHistoryConfigNotifier
                                 .saveDetailsMutation
                                 .run(
@@ -129,6 +134,7 @@ class const EarthquakeHistoryDetailsSettingsSheet({
                     onChanged: busy
                         ? null
                         : (value) async {
+                            await HapticFeedback.selectionClick();
                             await EarthquakeHistoryConfigNotifier
                                 .saveDetailsMutation
                                 .run(
@@ -158,6 +164,7 @@ class const EarthquakeHistoryDetailsSettingsSheet({
                                 !details.showStationsOnEstimatedIntensity)
                         ? null
                         : (value) async {
+                            await HapticFeedback.selectionClick();
                             await EarthquakeHistoryConfigNotifier
                                 .saveDetailsMutation
                                 .run(

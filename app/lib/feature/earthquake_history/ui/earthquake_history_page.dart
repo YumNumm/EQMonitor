@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/component/layout/history_adaptive_view.dart';
 import 'package:eqmonitor/core/component/layout/history_detail_scope.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
@@ -101,17 +102,19 @@ class const _SliverListBody({
         loading: () => const EarthquakeHistorySkeleton(),
         error: (error, _) => ErrorCard(
           error: error,
-          onReload: () async {
+          onReload: () => HapticUtil.light(() async {
             ref.invalidate(earthquakeHistoryConfigProvider);
             await ref.read(earthquakeHistoryConfigProvider.future);
-          },
+          }),
         ),
         data: (config) => dataSourceAsync.when(
           loading: () => const EarthquakeHistorySkeleton(),
           error: (error, _) => ErrorCard(
             error: error,
-            onReload: () async => ref.refresh(
-              earthquakeHistoryDataSourceProvider(parameter.value),
+            onReload: () => HapticUtil.light(
+              () => ref.refresh(
+                earthquakeHistoryDataSourceProvider(parameter.value),
+              ),
             ),
           ),
           data: (dataSource) => _PagingBody(
