@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/layout/history_adaptive_view.dart';
+import 'package:eqmonitor/core/component/layout/history_detail_scope.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
@@ -29,6 +34,18 @@ class const EarthquakeHistoryPage({
     return Scaffold(
       body: HistoryAdaptiveView(
         onCloseDetail: () => selectedEventId.value = null,
+        onCollapseDetail: () {
+          final collapsed = selectedEventId.value;
+          if (collapsed == null || !context.mounted) {
+            return;
+          }
+          selectedEventId.value = null;
+          unawaited(
+            EarthquakeHistoryDetailsRoute(
+              eventId: collapsed,
+            ).push<void>(context),
+          );
+        },
         list: _SliverListBody(
           initialParameter: initialParameter,
           selectedEventId: eventId,
@@ -85,23 +102,35 @@ class const _SliverListBody({
         loading: () => const EarthquakeHistorySkeleton(),
         error: (error, _) => ErrorCard(
           error: error,
-          onReload: () async {
+          onReload: () => HapticUtil.light(() async {
             ref.invalidate(earthquakeHistoryConfigProvider);
             await ref.read(earthquakeHistoryConfigProvider.future);
-          },
+          }),
         ),
         data: (config) => dataSourceAsync.when(
           loading: () => const EarthquakeHistorySkeleton(),
           error: (error, _) => ErrorCard(
             error: error,
-            onReload: () async => ref.refresh(
-              earthquakeHistoryDataSourceProvider(parameter.value),
+            onReload: () => HapticUtil.light(
+              () => ref.refresh(
+                earthquakeHistoryDataSourceProvider(parameter.value),
+              ),
             ),
           ),
           data: (dataSource) => _PagingBody(
             dataSource: dataSource,
             selectedEventId: selectedEventId,
-            onSelect: onSelect,
+            onSelect: (eventId) {
+              if (HistoryDetailScope.isSplitOf(context)) {
+                onSelect(eventId);
+                return;
+              }
+              unawaited(
+                EarthquakeHistoryDetailsRoute(
+                  eventId: eventId,
+                ).push<void>(context),
+              );
+            },
             parameter: parameter,
             config: config.list,
             onParameterChanged: (result) => parameter.value = result,

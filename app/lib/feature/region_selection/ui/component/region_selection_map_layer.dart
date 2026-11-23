@@ -27,16 +27,32 @@ class const RegionSelectionMapLayer({
     final readyCallback = useRef(onReady)..value = onReady;
     final errorCallback = useRef(onError)..value = onError;
     const builder = RegionMapLayers();
+    // flutter_hooks は依存変化時に新しい effect を先に実行し、古い cleanup を
+    // 後から呼ぶ。後発の effect が置き換える場合、cleanup は削除しない。
+    final activeGeneration = useRef<Object?>(null);
     useEffect(
       () {
         if (style == null) {
           return null;
         }
         var mounted = true;
+        final generation = Object();
+        activeGeneration.value = generation;
         final layers = builder.build(color: color, hasEpicenter: hasEpicenter);
+        final replacedLayerIds = builder
+            .build(color: color, hasEpicenter: true)
+            .map((layer) => layer.id)
+            .toList();
         unawaited(
           enqueue(() async {
             try {
+              if (!mounted) {
+                return;
+              }
+              for (final id in replacedLayerIds.reversed) {
+                await style.layers.remove(id);
+              }
+              await style.sources.remove(RegionMapLayers.prefectureSource);
               await style.sources.add(
                 GeoJsonSource.data(
                   id: RegionMapLayers.prefectureSource,
@@ -69,6 +85,9 @@ class const RegionSelectionMapLayer({
         );
         return () {
           mounted = false;
+          if (!identical(activeGeneration.value, generation)) {
+            return;
+          }
           unawaited(
             enqueue(() async {
               for (final layer in layers.reversed) {

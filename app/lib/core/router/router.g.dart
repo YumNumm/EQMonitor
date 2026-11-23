@@ -526,13 +526,25 @@ mixin $HomeMapLayerRoute on GoRouteData {
 
 mixin $EewDetailsByEventIdRoute on GoRouteData {
   static EewDetailsByEventIdRoute _fromState(GoRouterState state) =>
-      EewDetailsByEventIdRoute(eventId: state.pathParameters['eventId']!);
+      EewDetailsByEventIdRoute(
+        eventId: state.pathParameters['eventId']!,
+        useSheet:
+            _$convertMapValue(
+              'use-sheet',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+      );
 
   EewDetailsByEventIdRoute get _self => this as EewDetailsByEventIdRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/eew-details-by-event-id/${Uri.encodeComponent(_self.eventId)}',
+    queryParams: {
+      if (_self.useSheet != false) 'use-sheet': _self.useSheet.toString(),
+    },
   );
 
   @override
@@ -547,6 +559,26 @@ mixin $EewDetailsByEventIdRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
+}
+
+bool _$boolConverter(String value) {
+  switch (value) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      throw UnsupportedError('Cannot convert "$value" into a bool.');
+  }
 }
 
 RouteBase get $talkerRoute => GoRouteData.$route(
@@ -732,6 +764,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'jma-map',
           hasOverriddenOnExit: false,
           factory: $DebugJmaMapRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'estimated-intensity-dem',
+          hasOverriddenOnExit: false,
+          factory: $DebugEstimatedIntensityDemRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'playground',
@@ -1462,6 +1499,28 @@ mixin $DebugJmaMapRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugEstimatedIntensityDemRoute on GoRouteData {
+  static DebugEstimatedIntensityDemRoute _fromState(GoRouterState state) =>
+      const DebugEstimatedIntensityDemRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/estimated-intensity-dem');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $PlaygroundRoute on GoRouteData {
   static PlaygroundRoute _fromState(GoRouterState state) =>
       const PlaygroundRoute();
@@ -1819,15 +1878,6 @@ mixin $DebugTelemetryRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
-}
-
-T? _$convertMapValue<T>(
-  String key,
-  Map<String, String> map,
-  T? Function(String) converter,
-) {
-  final value = map[key];
-  return value == null ? null : converter(value);
 }
 
 RouteBase get $feedRoute => GoRouteData.$route(

@@ -11,4 +11,15 @@ final class const MapCameraBounds({
   required final double south,
   required final double east,
   required final double north,
-});
+}) {
+  @override
+  bool operator ==(Object other) =>
+      other is MapCameraBounds &&
+      other.west == west &&
+      other.south == south &&
+      other.east == east &&
+      other.north == north;
+
+  @override
+  int get hashCode => Object.hash(west, south, east, north);
+}

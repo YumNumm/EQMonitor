@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_history_map_action.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_history_page_action.dart';
@@ -17,7 +18,6 @@ import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_hist
 import 'package:eqmonitor/feature/intensity_history/ui/components/region_floating_panel.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_history_map_layers.dart';
 import 'package:eqmonitor/feature/location/data/jma_map_isolate.dart';
-import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
@@ -44,26 +44,28 @@ class const IntensityHistoryPage({
     final jmaMap = initialPrefectureCode == null || initialCityCode == null
         ? null
         : ref.watch(jmaMapProvider);
-    return switch ((ref.watch(mapConfigurationProvider), jmaMap)) {
-      (
-        AsyncData(value: MapConfiguration(:final styleString?)),
-        null || AsyncData() || AsyncError(),
-      ) =>
+    final mapConfiguration = ref.watch(mapConfigurationProvider);
+    return switch ((
+      mapConfiguration.valueOrPrevious?.styleString,
+      mapConfiguration,
+      jmaMap,
+    )) {
+      (final styleString?, _, final jmaMap)
+          when jmaMap == null || jmaMap.hasValue || jmaMap.hasError =>
         _MapContent(
           styleString: styleString,
           initialPrefectureCode: initialPrefectureCode,
           initialCityCode: initialCityCode,
-          initialCityMap: switch (jmaMap) {
-            AsyncData(:final value) => value[JmaMapType.areaInformationCity],
-            _ => null,
-          },
+          initialCityMap:
+              jmaMap?.valueOrPrevious?[JmaMapType.areaInformationCity],
         ),
-      (AsyncError(:final error), _) => Scaffold(
+      (null, AsyncError(:final error), _) => Scaffold(
         appBar: AppBar(title: const Text('市区町村別 最大震度')),
         body: Center(
           child: ErrorCard(
             error: error,
-            onReload: () => action.retryMapConfiguration(ref),
+            onReload: () =>
+                HapticUtil.light(() => action.retryMapConfiguration(ref)),
             showLoadingOverlayOnReload: false,
           ),
         ),

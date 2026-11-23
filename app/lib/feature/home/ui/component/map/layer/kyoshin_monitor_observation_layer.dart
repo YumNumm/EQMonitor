@@ -76,6 +76,11 @@ class const _KyoshinMonitorObservationLayerBody() extends HookConsumerWidget {
         ? ref.watch(intensityIconProvider).value
         : null;
     final hasIcon = iconData != null;
+    final showStationName = ref.watch(
+      homeConfigurationProvider.select(
+        (a) => a.value?.kyoshinMonitor.showStationName ?? false,
+      ),
+    );
 
     final isLayerInitialized = useRef(false);
     final registeredIconData = useRef<IntensityIconData?>(null);
@@ -229,6 +234,86 @@ class const _KyoshinMonitorObservationLayerBody() extends HookConsumerWidget {
       return subscription.close;
     }, [styleController]);
 
+    // 枠線や EEW の状態で観測点レイヤーを作り直してもラベルを再配置させないよう、
+    // ラベルは独立した effect で管理する。
+    useEffect(() {
+      final token = lifecycleToken.value;
+      final initialized = initialization.value;
+      if (styleController == null ||
+          token == null ||
+          initialized == null ||
+          !showStationName) {
+        return null;
+      }
+      const builder = KyoshinMonitorObservationLayerBuilder();
+      var isActive = true;
+      bool isDisposed() => !isActive || lifecycleToken.value != token;
+      unawaited(
+        enqueue(() async {
+          await initialized;
+          if (isDisposed()) {
+            return;
+          }
+          await builder.addLabelImages(styleController);
+          await styleController.sources.add(
+            GeoJsonSource.data(
+              id: KyoshinMonitorObservationLayerBuilder.labelSourceId,
+              data: .text(
+                ref.read(homeKyoshinMonitorStationLabelGeoJsonProvider),
+              ),
+            ),
+          );
+          for (final layer in builder.buildLabelStyleLayers(
+            radiusScaleFactor: radiusScaleFactor,
+          )) {
+            await styleController.layers.add(
+              layer,
+              belowLayerId: BaseLayer.foregroundOverlayAnchor.name,
+            );
+          }
+        }),
+      );
+      final subscription = ref.listenManual(
+        homeKyoshinMonitorStationLabelGeoJsonProvider,
+        (_, next) {
+          unawaited(
+            enqueue(() async {
+              await initialized;
+              if (isDisposed()) {
+                return;
+              }
+              await styleController.sources.updateGeoJsonData(
+                KyoshinMonitorObservationLayerBuilder.labelSourceId,
+                .text(next),
+              );
+            }),
+          );
+        },
+      );
+      return () {
+        isActive = false;
+        subscription.close();
+        unawaited(
+          enqueue(
+            () => MapStyleResourceRemover.remove(
+              styleController: styleController,
+              layerIds: const [
+                KyoshinMonitorObservationLayerBuilder.labelCollisionLayerId,
+                KyoshinMonitorObservationLayerBuilder.labelLayerId,
+              ],
+              sourceIds: const [
+                KyoshinMonitorObservationLayerBuilder.labelSourceId,
+              ],
+              imageIds: const [
+                KyoshinMonitorObservationLayerBuilder.labelBackgroundImageId,
+                KyoshinMonitorObservationLayerBuilder.labelCollisionImageId,
+              ],
+            ),
+          ),
+        );
+      };
+    }, [styleController, showStationName, radiusScaleFactor]);
+
     return const SizedBox.shrink();
   }
 }
@@ -250,6 +335,110 @@ class const KyoshinMonitorObservationLayerBuilder() {
     (6.0, JmaIntensity.sixUpper),
     (6.5, JmaIntensity.seven),
   ];
+
+  static const labelSourceId = 'kyoshin-monitor-station-labels';
+  static const labelLayerId = 'kyoshin-monitor-station-labels';
+  static const labelCollisionLayerId =
+      'kyoshin-monitor-station-label-collisions';
+  static const labelBackgroundImageId =
+      'kyoshin-monitor-station-label-background';
+  static const labelCollisionImageId =
+      'kyoshin-monitor-station-label-collision';
+  static const labelMinZoom = 7.0;
+  static const _labelTextSize = 10.0;
+  static const _labelPaddingX = 4.0;
+  static const _labelPaddingY = 1.0;
+  static const _labelGap = 3.0;
+  static const _labelCollisionPadding = 1.0;
+  static const _labelBackgroundSize = 12.0;
+  static const _labelCollisionImageSize = 2.0;
+  static const _circleRadiusAtMinZoom = 1.0;
+  static const _circleRadiusAtMaxZoom = 10.0;
+
+  Future<void> addLabelImages(StyleController styleController) async {
+    await styleController.addImageFromCanvas(
+      id: labelBackgroundImageId,
+      width: _labelBackgroundSize,
+      height: _labelBackgroundSize,
+      painter: (canvas) => canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          const Rect.fromLTWH(0, 0, _labelBackgroundSize, _labelBackgroundSize),
+          const Radius.circular(3),
+        ),
+        Paint()..color = const Color(0xE6202020),
+      ),
+      options: const StyleImageOptions(
+        stretchX: [(4, 8)],
+        stretchY: [(4, 8)],
+      ),
+    );
+    await styleController.addImageFromCanvas(
+      id: labelCollisionImageId,
+      width: _labelCollisionImageSize,
+      height: _labelCollisionImageSize,
+      painter: (_) {},
+    );
+  }
+
+  // 配置は上のレイヤーから行われる。circle は衝突判定に入らないため、
+  // 観測点と同じ大きさの透明な画像をラベルより上に置き、他の観測点を避けさせる。
+  List<StyleLayer> buildLabelStyleLayers({required double radiusScaleFactor}) {
+    double radialOffset(double radius) =>
+        (radius * radiusScaleFactor + _labelGap + _labelPaddingX) /
+        _labelTextSize;
+    double collisionIconSize(double radius) =>
+        radius * radiusScaleFactor * 2 / _labelCollisionImageSize;
+    return [
+      SymbolStyleLayer(
+        id: labelLayerId,
+        sourceId: labelSourceId,
+        minZoom: labelMinZoom,
+        textField: const .raw(['get', 'name']),
+        textFont: const .literal(['Noto Sans CJK JP Regular']),
+        textSize: const .literal(_labelTextSize),
+        textVariableAnchor: const .literal([.left, .right, .top, .bottom]),
+        textRadialOffset: .raw([
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          radialOffset(_circleRadiusAtMinZoom),
+          10,
+          radialOffset(_circleRadiusAtMaxZoom),
+        ]),
+        textJustify: const .literal(.auto),
+        textMaxWidth: const .literal(30),
+        textColor: const .literal(Color(0xFFFFFFFF)),
+        textPadding: const .literal(_labelCollisionPadding),
+        iconPadding: const .literal([_labelCollisionPadding]),
+        iconImage: const .literal(labelBackgroundImageId),
+        iconTextFit: const .literal(.both),
+        iconTextFitPadding: const .literal([
+          _labelPaddingY,
+          _labelPaddingX,
+          _labelPaddingY,
+          _labelPaddingX,
+        ]),
+      ),
+      SymbolStyleLayer(
+        id: labelCollisionLayerId,
+        sourceId: labelSourceId,
+        minZoom: labelMinZoom,
+        iconImage: const .literal(labelCollisionImageId),
+        iconAllowOverlap: const .literal(true),
+        iconPadding: const .literal([0]),
+        iconSize: .raw([
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          collisionIconSize(_circleRadiusAtMinZoom),
+          10,
+          collisionIconSize(_circleRadiusAtMaxZoom),
+        ]),
+      ),
+    ];
+  }
 
   List<StyleLayer> buildStyleLayers({
     required double radiusScaleFactor,
@@ -357,9 +546,9 @@ class const KyoshinMonitorObservationLayerBuilder() {
         ['linear'],
         ['zoom'],
         3,
-        1 * radiusScaleFactor,
+        _circleRadiusAtMinZoom * radiusScaleFactor,
         10,
-        10 * radiusScaleFactor,
+        _circleRadiusAtMaxZoom * radiusScaleFactor,
       ]),
       color: const .raw([
         'coalesce',

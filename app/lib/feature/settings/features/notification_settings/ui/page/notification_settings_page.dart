@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:flutter/services.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
@@ -193,7 +197,7 @@ class const _MasterNotificationControl({
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(shape.pill),
-          onTap: () => onChanged(!value),
+          onTap: () => HapticUtil.selection(() => onChanged(!value)),
           child: Ink(
             padding: EdgeInsets.symmetric(
               horizontal: spacing.lg,
@@ -262,10 +266,10 @@ class const _CustomNotificationSettingsPage() extends ConsumerWidget {
               children: [
                 const Text('通知設定の利用条件を確認できませんでした'),
                 M3EFilledButton(
-                  onPressed: () {
+                  onPressed: () => HapticUtil.light(() {
                     ref.invalidate(startProvider);
                     ref.invalidate(subscriptionProvider);
-                  },
+                  }),
                   child: const Text('再試行'),
                 ),
               ],
@@ -448,7 +452,7 @@ class const _InlineSwitchTile({
         value: value,
         onChanged: (value) async => onChanged(value: value),
       ),
-      onTap: () async => onChanged(value: !value),
+      onTap: () => HapticUtil.selection(() => onChanged(value: !value)),
     );
   }
 }
@@ -581,7 +585,9 @@ class const _SlotListSection({required final int maxRegions})
                   ),
                 ),
                 M3ETextButton(
-                  onPressed: () => ref.invalidate(notificationSlotsProvider),
+                  onPressed: () => HapticUtil.light(
+                    () => ref.invalidate(notificationSlotsProvider),
+                  ),
                   child: const Text('再試行'),
                 ),
               ],
@@ -617,6 +623,7 @@ class const _SlotListSection({required final int maxRegions})
             padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
             child: M3EFilledButton.tonalIcon(
               onPressed: () async {
+                unawaited(HapticFeedback.lightImpact());
                 await NotificationSlotsNotifier.putNationwideMutation.run(ref, (
                   tsx,
                 ) async {

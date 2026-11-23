@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -27,7 +28,8 @@ class const _RegionDeleteConfirmDialog({required final String name})
           child: const Text('キャンセル'),
         ),
         M3ETextButton(
-          onPressed: () => Navigator.of(context).pop(true),
+          onPressed: () =>
+              HapticUtil.medium(() => Navigator.of(context).pop(true)),
           child: Text('削除', style: TextStyle(color: colorTheme.error)),
         ),
       ],

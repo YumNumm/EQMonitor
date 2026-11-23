@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_display_mode.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_config_model.freezed.dart';
@@ -57,7 +58,11 @@ abstract class EarthquakeHistoryDetailsConfig
     with _$EarthquakeHistoryDetailsConfig {
   const factory({
     @Default(true) bool showStations,
+    @Default(true) bool showAreaIcons,
     @Default(false) bool showStationsOnEstimatedIntensity,
+    @Default(EstimatedIntensityDemDisplayMode.intensityClass)
+    @JsonKey(unknownEnumValue: EstimatedIntensityDemDisplayMode.intensityClass)
+    EstimatedIntensityDemDisplayMode estimatedIntensityDemDisplayMode,
     @Default(true) bool hypocenterAboveStations,
 
     /// 観測点アイコンの表示モード

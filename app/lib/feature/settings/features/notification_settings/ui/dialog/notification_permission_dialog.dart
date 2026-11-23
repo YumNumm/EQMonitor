@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/model/notification_permission_kind.dart';
@@ -62,6 +63,7 @@ class const NotificationPermissionDialogAction() {
         builder: (_) => _NotificationPermissionDialog(
           missing: missing,
           primaryActionLabel: openSettings ? '設定を開く' : '許可する',
+          requestsPermission: !openSettings,
         ),
       );
       if (confirmed != true || !context.mounted) {
@@ -136,6 +138,7 @@ class const NotificationPermissionDialogAction() {
 class const _NotificationPermissionDialog({
   required final List<NotificationPermissionKind> missing,
   required final String primaryActionLabel,
+  required final bool requestsPermission,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -167,7 +170,9 @@ class const _NotificationPermissionDialog({
           child: const Text('あとで'),
         ),
         M3EFilledButton(
-          onPressed: () => Navigator.of(context).pop(true),
+          onPressed: requestsPermission
+              ? () => HapticUtil.light(() => Navigator.of(context).pop(true))
+              : () => Navigator.of(context).pop(true),
           child: Text(primaryActionLabel),
         ),
       ],

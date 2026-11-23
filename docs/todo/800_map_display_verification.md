@@ -2,6 +2,42 @@
 
 実機での可視出力と性能は未検証。
 
+## 800: タイル境界の直線の実機確認
+
+- iOS シミュレータでタイル境界の両側に出ていた直線は、`maplibre_native_ffi` を fork のビルドへ override して解消した。経緯は [MapLibre の知見](../knowledge/maplibre.md) の「PMTiles と native 障害の切り分け」を参照。
+- iOS 実機と Android で、ズーム 10・熊本付近（北緯 32.8 / 東経 130.7）と九州の広域表示に直線が出ないことを確認する。実機は upstream のビルドのままで、コード上は該当しないが未検証。
+
+## 800: 区域アイコンの配信と実機確認
+
+- 対象: `app/lib/feature/earthquake_history/ui/layer/earthquake_history_area_icon_layer.dart`、backend `tools/base-map-pmtiles/label_points.py`。
+- 点層 `areaForecastLocalELabel` / `areaInformationCityQuakeLabel` を含む Asset Pack は未配信。配信して同梱 Pack を更新するまで、アイコンは描画されない。
+- 2026-11-23 に iOS Simulator で、ローカル生成の `all.pmtiles` を同梱した検証用画面（固定の震度データ）を表示した。細分区域・市区町村のアイコン描画、zoom による切替、観測点表示中の非表示、点層のない現行 Pack で例外が出ないことを確認した。実データ・実機・Android は未検証。
+- 同じ検証で、Pack を差し替えた直後の初回起動だけ、地図を操作するまで市区町村のアイコンが出なかった（3 回中 1 回）。原因は未特定。再現条件を調べる。
+- 隣接する区域のアイコンが重なると、大きい震度から順に配置した残りが隠れる。震度 4 の隣の震度 3 が隠れ、離れた震度 1 が残る場合がある。許容するか決める。
+- 残りの確認: 新しい Pack で、全国表示に細分区域のアイコンが出ること、`regionToCity` と `stationMinZoom` で切り替わること、長周期表示・設定の切替・テーマ変更後の表示を iOS/Android で確認する。
+- 設定シートの「市区町村に切り替える縮尺」「観測点に切り替える縮尺」は analyze と既存テストのみで、実機での操作は未確認。`stationMinZoom` の既定値を 6 から 8 に上げたため、未変更のユーザーは z6〜8 で観測点の代わりに市区町村のアイコンを見る。この見え方も実機で未確認。
+- `areaIconSize` の既定値 0.13 と衝突時の間引き具合は未調整。デバッグシートで実機の見え方に合わせる。
+- 離島・飛び地は 1 区域 1 点（最大のポリゴン）。天草・芦北、五島、十島村、檜山地方、上島町などの位置を地図で確認し、必要なら backend の `LABEL_PART_HINTS` へ追加する。
+- 完了条件: 上記を実機で確認し、震度データベース表示・市区町村別最大震度・EEW 予報区域へ展開するかを決める。
+- `packages/jma_map/bin/jma_map.dart` の `polylabel2D` は精度が既定の 1.0（度）で、`app/assets/jma_map.pb` の点の大半が bbox の隅にある。精度を指定して再生成する。
+
+## 800: テーマ切替・リサイズ時の地図の作り直し
+
+- ホーム、EEW 詳細、地震履歴詳細、震央分布、地域選択は、テーマ切替で `mapConfigurationProvider` が再読込されるたびに `MapLibreMap` を作り直し、カメラが初期位置へ戻る。ホームは `ValueKey(constraints.biggest)` により、表示領域の大きさが変わるたびにも作り直す。市区町村別最大震度と表示範囲選択は style の差し替えへ移行済み（2026-11-23、iOS Simulator で確認）。
+- 残りの画面を移行する前に、次のレイヤーを style の差し替えへ対応させる。いずれもコードの読解による指摘で、実機での再現は未確認。
+  - 新しい `StyleController` へ直接切り替わると、古い cleanup が共有の `disposed` / `isInitialized` を後から書き換え、以後の更新が止まる: `eew_ps_wave_layer.dart`、`eew_estimated_intensity_layer.dart`、`eew_warning_regions_layer.dart`、`eew_hypocenter_layer.dart`、`shake_detection_layer.dart`、`eew_simulation_ps_wave_layer.dart`。
+  - 送信済み GeoJSON のキャッシュを新しい `StyleController` で破棄しない: `eew_ps_wave_layer.dart`、`shake_detection_layer.dart`。
+  - cleanup が世代を確認せず固定 ID を削除する: `eew_forecast_region_layer.dart`（配色・明暗）、`earthquake_history_area_icon_layer.dart`（アイコン画像・設定）、`earthquake_history_details_estimated_intensity_layer.dart`（配色・タイル URL）。
+- 次の 2 つは style の差し替えと無関係に、現行の構成でも layer が消える可能性がある。再現を確認する。
+  - `hypocenter_pmtiles_layer.dart`: 配色モードの切替、経過時間表示の 10 分ごとの更新、アーカイブ選択の変更。
+  - `kyoshin_monitor_observation_layer.dart` の観測点名ラベル: 観測点サイズの変更。
+- `intensity_icon_provider.dart` と `shindo_db_intensity_icon_provider.dart` は OS の明暗（`brightnessProvider`）を監視する。アプリの明暗を固定していても、OS の切替でアイコンを再生成する。
+- 観測点アイコンは生成時の端末ピクセル比で描画する。ピクセル比の異なる画面へ移動すると、アイコンの大きさと観測点名ラベルの位置がずれる。
+- 地域選択は地図を作り直すが、テーマ切替後に「地図を読み込めませんでした」と表示される不具合は `region_selection_map_layer.dart` の cleanup で修正した（2026-11-23、iOS Simulator で確認）。
+- 地域選択で都道府県を選んで拡大すると、塗りと輪郭にタイル境界の筋が出る（テーマ切替の有無によらない）。原因は未調査。
+- 市区町村別最大震度の塗りは、style の差し替え後の再表示を実データで未確認（検証環境で API が 403 を返したため）。選択枠は両方向の切替で残ることを確認した。
+- BasicModalSheet の回転は iPhone のシミュレータで確認した。iPad のウィンドウサイズ変更とキーボード表示時の位置は未確認。
+
 ## 800: 地震履歴の観測点キャッシュの実機性能確認
 
 - Android の profile/release で、観測点の多い地震詳細を移動・拡大縮小し、通常震度・長周期・震度DBの表示とフレーム時間を確認する。GeoJSON の再生成抑止による実機での改善幅は未計測。

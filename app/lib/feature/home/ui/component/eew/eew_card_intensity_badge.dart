@@ -7,7 +7,6 @@ import 'package:material_ui/material_ui.dart';
 class const EewCardIntensityBadge({
   required final JmaIntensity intensity,
   required final double size,
-  final Color? outlineColor,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,6 @@ class const EewCardIntensityBadge({
         .fromJmaIntensity(intensity);
     final foreground = colorEntry.resolvedForeground;
     final suffix = intensity.suffix;
-    final outlineColor = this.outlineColor;
 
     return ConstrainedBox(
       constraints: BoxConstraints(minWidth: size, minHeight: size),
@@ -23,9 +21,6 @@ class const EewCardIntensityBadge({
         decoration: BoxDecoration(
           color: colorEntry.background,
           borderRadius: BorderRadius.circular(size * 0.2),
-          border: outlineColor == null
-              ? null
-              : Border.all(color: outlineColor, width: 1.5),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: size * 0.08),

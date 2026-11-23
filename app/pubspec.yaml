@@ -28,6 +28,11 @@ dependency_overrides:
       url: https://github.com/YumNumm/flutter-maplibre.git
       ref: e1bc773
       path: packages/maplibre_native
+  maplibre_native_ffi:
+    git:
+      url: https://github.com/YumNumm/maplibre-native-ffi.git
+      ref: bd595f2
+      path: bindings/dart
   maplibre_platform_interface:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git

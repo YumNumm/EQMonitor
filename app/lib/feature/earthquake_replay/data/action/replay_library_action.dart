@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/debug/data/model/debug_access_level.dart';
 import 'package:eqmonitor/feature/debug/data/provider/debug_access_level_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_library_browser.dart';
@@ -219,7 +220,8 @@ class const ReplayLibraryAction() {
             child: const Text('キャンセル'),
           ),
           M3EFilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () =>
+                HapticUtil.medium(() => Navigator.of(context).pop(true)),
             child: const Text('削除'),
           ),
         ],

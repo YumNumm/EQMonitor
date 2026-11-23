@@ -31,6 +31,8 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthqu
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_content.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_area_icon_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_dem_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_error_layer.dart';
@@ -47,7 +49,10 @@ import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
+import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
 import 'package:eqmonitor/feature/map/data/model/map_camera_bounds_fit_result.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_focus_bounds_debug_provider.dart';
+import 'package:eqmonitor/feature/map/ui/map_focus_bounds_debug_layer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -145,6 +150,10 @@ class const _MapContent({
       debugPreference: ref.watch(debugProvider),
     );
     final mapController = useState<MapController?>(null);
+    final isFocusBoundsDebugEnabled = ref.watch(
+      isMapFocusBoundsDebugEnabledProvider,
+    );
+    final fittedBounds = useState<MapCameraBounds?>(null);
 
     ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (
       _,
@@ -187,6 +196,7 @@ class const _MapContent({
         : null;
 
     final tileUrl = earthquake.estimatedIntensityTileUrl;
+    final demTileUrl = earthquake.estimatedIntensityDemTileUrl;
     final showingLpgmIntensity = displayMode == IntensityDisplayMode.lpgm;
     final showEstimated = displayMode == IntensityDisplayMode.estimated;
     final showStations = showEstimated
@@ -203,10 +213,16 @@ class const _MapContent({
     final (:maxZoom, :movements) = const HomeMapOptionsBuilder().sharedOptions(
       mapSettings,
     );
-    if (regionMap case final map?) {
-      final fit = mapCamera.initialRegionCamera(
+    final initialBounds = switch (regionMap) {
+      final map? => mapCamera.initialRegionBounds(
         earthquake: earthquake,
         regionMap: map,
+      ),
+      null => null,
+    };
+    if (regionMap != null) {
+      final fit = mapCamera.initialRegionCamera(
+        bounds: initialBounds,
         viewportSize: viewportSize,
         maxZoom: maxZoom,
       );
@@ -268,9 +284,16 @@ class const _MapContent({
                   belowLayerId: stationAnchor,
                   tree: dbTree,
                   parameter: parameter,
+                  showStationLabel: true,
                 ),
             ] else ...[
-              if (showEstimated && tileUrl != null)
+              if (showEstimated && demTileUrl != null)
+                EarthquakeHistoryDetailsEstimatedIntensityDemLayer(
+                  key: const ValueKey('estimated-dem'),
+                  tileUrl: demTileUrl,
+                  displayMode: details.estimatedIntensityDemDisplayMode,
+                )
+              else if (showEstimated && tileUrl != null)
                 EarthquakeHistoryDetailsEstimatedIntensityLayer(
                   key: const ValueKey('estimated'),
                   tileUrl: tileUrl,
@@ -282,6 +305,16 @@ class const _MapContent({
                   parameter: parameter,
                   showingLpgmIntensity: showingLpgmIntensity,
                 ),
+                if (details.showAreaIcons)
+                  EarthquakeHistoryAreaIconLayer(
+                    key: const ValueKey('area-icon'),
+                    earthquake: earthquake,
+                    parameter: parameter,
+                    stationMinZoom: showStations
+                        ? parameter.stationMinZoom
+                        : null,
+                    showingLpgmIntensity: showingLpgmIntensity,
+                  ),
                 EarthquakeHistoryHypocenterErrorLayer(
                   key: const ValueKey('hypocenter-error'),
                   belowLayerId: BaseLayer.markerBackgroundAnchor.name,
@@ -300,6 +333,11 @@ class const _MapContent({
                 ),
             ],
             hypocenterLayer,
+            if (isFocusBoundsDebugEnabled)
+              MapFocusBoundsDebugLayer(
+                key: const ValueKey('focus-bounds-debug'),
+                bounds: fittedBounds.value ?? initialBounds,
+              ),
           ],
         ),
 
@@ -315,7 +353,7 @@ class const _MapContent({
                 if (controller == null) {
                   return;
                 }
-                await ref
+                final bounds = await ref
                     .read(earthquakeHistoryMapFitBoundsActionProvider)
                     .handle(
                       ref: ref,
@@ -324,6 +362,9 @@ class const _MapContent({
                       hypocenterPoints: hypocenterPoints,
                       dbTree: dbTree,
                     );
+                if (bounds != null && context.mounted) {
+                  fittedBounds.value = bounds;
+                }
               },
               onDebugTap: isDebugger
                   ? () async {

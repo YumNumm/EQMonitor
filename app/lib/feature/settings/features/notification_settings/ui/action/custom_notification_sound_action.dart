@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/custom_notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound_failure.dart';
@@ -221,7 +222,8 @@ class const CustomNotificationSoundAction() {
             child: const Text('キャンセル'),
           ),
           M3EFilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () =>
+                HapticUtil.medium(() => Navigator.of(context).pop(true)),
             child: const Text('削除'),
           ),
         ],

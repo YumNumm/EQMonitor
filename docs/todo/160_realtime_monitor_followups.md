@@ -18,8 +18,13 @@
 対象: `app/lib/core/realtime/`、`app/lib/feature/eew/data/eew.dart`、`app/lib/feature/earthquake_history/data/notifier/`。
 仕様は [EEW・リアルタイム更新の契約](../knowledge/eew_realtime.md) を参照する。
 
-- 実機未検証: iOS / Android で数秒〜30秒未満の background から復帰したとき、再接続せず同じ接続で受信を続けること。
-- 実機未検証: 30秒以上の background から復帰したとき、即座に再接続し、接続完了まで EEW が1秒周期で取得されること。
+- 実機未検証: iOS / Android で background から復帰したとき、接続が生きていれば heartbeat の pong を受けて
+  同じ接続で受信を続けること。接続が切れていれば5秒以内に再接続し、接続完了まで EEW が1秒周期で取得されること。
+  確認中の最大5秒間は `WsPhase.connected` のままで、未接続中の REST 取得は動かない。
+- 実機未検証: Android で process が動き続けている background 中に接続が切れたとき、無受信監視から
+  確認を経て再接続すること。iOS で suspend 中に止まっていた timer が復帰時にどの順で満了するか。
+- 実機未検証: 復帰時の NTP と `latest.json` の測り直し。端末の時刻を background 中に変更した場合、
+  測り直しが終わるまで（約1〜2秒）強震モニタは以前の見積もりで取得する。
 - 実機未検証: 機内モードやサーバー停止で未接続のとき、前面では EEW が1秒、地震履歴が10秒周期で取得され、background では止まること。
 - 未検証: `/v2/eew/latest` と `/v2/earthquake` が `ETag` を返し、`If-None-Match` に304で応答すること。
   返さない場合は毎回全文を取得する。1秒周期の通信量とサーバー負荷を本番で確認する。

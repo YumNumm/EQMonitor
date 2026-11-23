@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_activity_binner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_activity_summary_builder.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_bin.dart';
@@ -35,9 +36,11 @@ class const EarthquakeActivityPage({
         actions: [
           IconButton(
             tooltip: '再読み込み',
-            onPressed: () => ref
-                .read(earthquakeActivityProvider(query.value).notifier)
-                .refresh(),
+            onPressed: () => HapticUtil.light(
+              () => ref
+                  .read(earthquakeActivityProvider(query.value).notifier)
+                  .refresh(),
+            ),
             icon: const Icon(Icons.refresh),
           ),
         ],
@@ -121,8 +124,9 @@ class const EarthquakeActivityPage({
             children: [
               const Text('周辺の地震活動を取得できませんでした'),
               M3EFilledButton(
-                onPressed: () =>
-                    ref.invalidate(earthquakeActivityProvider(query.value)),
+                onPressed: () => HapticUtil.light(
+                  () => ref.invalidate(earthquakeActivityProvider(query.value)),
+                ),
                 child: const Text('再試行'),
               ),
             ],
@@ -152,26 +156,32 @@ class const _ActivityControls({
           M3EOutlinedButton(
             onPressed: query.beforeDays >= 30
                 ? null
-                : () => onQueryChanged(
-                    query.copyWith(beforeDays: query.beforeDays + 1),
+                : () => HapticUtil.light(
+                    () => onQueryChanged(
+                      query.copyWith(beforeDays: query.beforeDays + 1),
+                    ),
                   ),
             child: const Text('前日を表示'),
           ),
           M3EOutlinedButton(
             onPressed: query.afterDays >= 365
                 ? null
-                : () => onQueryChanged(
-                    query.copyWith(afterDays: query.afterDays + 1),
+                : () => HapticUtil.light(
+                    () => onQueryChanged(
+                      query.copyWith(afterDays: query.afterDays + 1),
+                    ),
                   ),
             child: const Text('翌日を表示'),
           ),
           M3ETextButton(
-            onPressed: () => onQueryChanged(
-              query.copyWith(
-                beforeDays: 1,
-                afterDays: 7,
-                radiusKm: 25,
-                depthOffsetKm: query.depth == null ? null : 20,
+            onPressed: () => HapticUtil.light(
+              () => onQueryChanged(
+                query.copyWith(
+                  beforeDays: 1,
+                  afterDays: 7,
+                  radiusKm: 25,
+                  depthOffsetKm: query.depth == null ? null : 20,
+                ),
               ),
             ),
             child: const Text('初期値に戻す'),

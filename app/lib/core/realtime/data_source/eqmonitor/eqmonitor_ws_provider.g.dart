@@ -54,9 +54,8 @@ String _$eqmonitorWebSocketHash() =>
 ///
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
 /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
-/// background 中も接続は閉じない。background からの復帰時は、受信が
-/// [silenceTimeout] 以上途絶えていれば即座に再接続し、そうでなければ接続を
-/// 維持したまま heartbeat を送って [resumeProbeTimeout] 以内の応答を確認する。
+/// background 中も接続は閉じない。background からの復帰時は接続を維持したまま
+/// heartbeat を送り、[resumeProbeTimeout] 以内に pong が返らなければ再接続する。
 /// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
 /// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
 /// ジッタを入れて再接続する。
@@ -68,9 +67,8 @@ final eqmonitorWsEventStreamProvider = EqmonitorWsEventStreamProvider._();
 ///
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
 /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
-/// background 中も接続は閉じない。background からの復帰時は、受信が
-/// [silenceTimeout] 以上途絶えていれば即座に再接続し、そうでなければ接続を
-/// 維持したまま heartbeat を送って [resumeProbeTimeout] 以内の応答を確認する。
+/// background 中も接続は閉じない。background からの復帰時は接続を維持したまま
+/// heartbeat を送り、[resumeProbeTimeout] 以内に pong が返らなければ再接続する。
 /// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
 /// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
 /// ジッタを入れて再接続する。
@@ -80,9 +78,8 @@ final class EqmonitorWsEventStreamProvider
   ///
   /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
   /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
-  /// background 中も接続は閉じない。background からの復帰時は、受信が
-  /// [silenceTimeout] 以上途絶えていれば即座に再接続し、そうでなければ接続を
-  /// 維持したまま heartbeat を送って [resumeProbeTimeout] 以内の応答を確認する。
+  /// background 中も接続は閉じない。background からの復帰時は接続を維持したまま
+  /// heartbeat を送り、[resumeProbeTimeout] 以内に pong が返らなければ再接続する。
   /// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
   /// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
   /// ジッタを入れて再接続する。
@@ -106,15 +103,14 @@ final class EqmonitorWsEventStreamProvider
 }
 
 String _$eqmonitorWsEventStreamHash() =>
-    r'5e2f6109bbfdb1e6d5ac6a85cd912e0a372c609c';
+    r'495c658c1a34fc955e7fe1e3be3593f020d9fe16';
 
 /// WebSocket イベントストリーム。
 ///
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
 /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
-/// background 中も接続は閉じない。background からの復帰時は、受信が
-/// [silenceTimeout] 以上途絶えていれば即座に再接続し、そうでなければ接続を
-/// 維持したまま heartbeat を送って [resumeProbeTimeout] 以内の応答を確認する。
+/// background 中も接続は閉じない。background からの復帰時は接続を維持したまま
+/// heartbeat を送り、[resumeProbeTimeout] 以内に pong が返らなければ再接続する。
 /// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
 /// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
 /// ジッタを入れて再接続する。

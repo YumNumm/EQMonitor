@@ -417,6 +417,13 @@ class const _AppearanceSection({required final bool isAdmin})
           onTap: () async => const DebugJmaMapRoute().push<void>(context),
         ),
         _DebugTile(
+          title: '推計震度 DEM',
+          subtitle: 'ローカルの Terrain-RGB PMTiles を表示',
+          icon: Icons.terrain,
+          onTap: () async =>
+              const DebugEstimatedIntensityDemRoute().push<void>(context),
+        ),
+        _DebugTile(
           title: '震度アイコン確認',
           subtitle: '全震度・全タイプのアイコンをプレビュー',
           icon: Icons.format_list_numbered,

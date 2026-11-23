@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
@@ -140,12 +141,12 @@ class const SeismicityPage({super.key}) extends HookConsumerWidget {
             ),
             tooltip: '矩形選択',
             isSelected: isSelecting.value,
-            onPressed: () {
+            onPressed: () => HapticUtil.selection(() {
               isSelecting.value = !isSelecting.value;
               if (!isSelecting.value) {
                 selectedBounds.value = null;
               }
-            },
+            }),
           ),
         ],
       ),
@@ -255,8 +256,10 @@ class const SeismicityPage({super.key}) extends HookConsumerWidget {
                             .join('、'),
                         onReload: analysisRequest == null
                             ? null
-                            : () async => ref.invalidate(
-                                hypocenterAnalysisProvider(analysisRequest),
+                            : () => HapticUtil.light(
+                                () => ref.invalidate(
+                                  hypocenterAnalysisProvider(analysisRequest),
+                                ),
                               ),
                       ),
                     ),
@@ -386,13 +389,13 @@ class const _MapBody({
                       }).join('、')}',
                     ),
                     M3ETextButton.icon(
-                      onPressed: () {
+                      onPressed: () => HapticUtil.light(() {
                         for (final failure in archiveFailures) {
                           ref.invalidate(
                             hypocenterArchiveAvailableProvider(failure.archive),
                           );
                         }
-                      },
+                      }),
                       icon: const Icon(Icons.refresh, size: 18),
                       label: const Text('再試行'),
                     ),
@@ -409,8 +412,9 @@ class const _MapBody({
               child: ErrorCard(
                 error: error,
                 title: '震源期間一覧を更新できませんでした',
-                onReload: () async =>
-                    ref.invalidate(hypocenterManifestProvider),
+                onReload: () => HapticUtil.light(
+                  () => ref.invalidate(hypocenterManifestProvider),
+                ),
               ),
             ),
         if (datasetAsync case AsyncData(:final value))

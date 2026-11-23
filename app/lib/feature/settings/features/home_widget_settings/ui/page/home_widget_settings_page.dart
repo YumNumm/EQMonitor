@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
@@ -99,7 +100,9 @@ class const _WidgetRegionSection({
           ListTile(
             leading: const Icon(Icons.delete_outline),
             title: const Text('選択を解除'),
-            onTap: () async => ref.read(widgetRegionProvider.notifier).clear(),
+            onTap: () => HapticUtil.light(
+              () => ref.read(widgetRegionProvider.notifier).clear(),
+            ),
           ),
       ],
     );

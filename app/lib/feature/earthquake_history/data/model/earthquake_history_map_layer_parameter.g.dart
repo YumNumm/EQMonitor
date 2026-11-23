@@ -21,7 +21,7 @@ _$EarthquakeHistoryMapLayerParameterFromJson(Map<String, dynamic> json) =>
           ),
           stationMinZoom: $checkedConvert(
             'station_min_zoom',
-            (v) => (v as num?)?.toDouble() ?? 6,
+            (v) => (v as num?)?.toDouble() ?? 8,
           ),
           stationLabelMinZoom: $checkedConvert(
             'station_label_min_zoom',
@@ -63,6 +63,10 @@ _$EarthquakeHistoryMapLayerParameterFromJson(Map<String, dynamic> json) =>
             'station_icon_size_max',
             (v) => (v as num?)?.toDouble() ?? 0.5,
           ),
+          areaIconSize: $checkedConvert(
+            'area_icon_size',
+            (v) => (v as num?)?.toDouble() ?? 0.13,
+          ),
           hypocenterIconSizeMin: $checkedConvert(
             'hypocenter_icon_size_min',
             (v) => (v as num?)?.toDouble() ?? 0.15,
@@ -91,6 +95,7 @@ _$EarthquakeHistoryMapLayerParameterFromJson(Map<String, dynamic> json) =>
         'stationIconSizeMin': 'station_icon_size_min',
         'stationIconSizeMid': 'station_icon_size_mid',
         'stationIconSizeMax': 'station_icon_size_max',
+        'areaIconSize': 'area_icon_size',
         'hypocenterIconSizeMin': 'hypocenter_icon_size_min',
         'hypocenterIconSizeMax': 'hypocenter_icon_size_max',
         'hypocenterFadeOpacity': 'hypocenter_fade_opacity',
@@ -112,6 +117,7 @@ Map<String, dynamic> _$EarthquakeHistoryMapLayerParameterToJson(
   'station_icon_size_min': instance.stationIconSizeMin,
   'station_icon_size_mid': instance.stationIconSizeMid,
   'station_icon_size_max': instance.stationIconSizeMax,
+  'area_icon_size': instance.areaIconSize,
   'hypocenter_icon_size_min': instance.hypocenterIconSizeMin,
   'hypocenter_icon_size_max': instance.hypocenterIconSizeMax,
   'hypocenter_fade_opacity': instance.hypocenterFadeOpacity,

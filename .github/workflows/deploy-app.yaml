@@ -42,11 +42,10 @@ permissions:
   contents: read
 
 concurrency:
-  # Serialize branch, tag and manual deployments without cancelling releases.
-  # Keep this separate from the Google Play jobs' shared edit lock.
-  group: eqmonitor-app-deploy
+  # Per-run group: builds overlap across runs and wait-for-deploy-turn orders the
+  # deployments. Keep this separate from the Google Play jobs' shared edit lock.
+  group: eqmonitor-app-deploy-${{ github.run_id }}
   cancel-in-progress: false
-  queue: max
 
 env:
   FIREBASE_ANALYTICS_WITHOUT_ADID: "true"
@@ -90,6 +89,28 @@ jobs:
           INPUT_ANDROID_TRACK: ${{ inputs.android_track || 'internal' }}
         run: scripts/ci/resolve_deploy_app_policy.sh >> "$GITHUB_OUTPUT"
 
+  wait-for-deploy-turn:
+    name: Wait for older deployments
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    # A timeout drops this run's deployment, so stay close to the 6-hour job cap.
+    timeout-minutes: 350
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Wait until no older Deploy App run is active
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_NUMBER: ${{ github.run_number }}
+        run: scripts/ci/wait_for_deploy_turn.sh
+
   validate-source-run:
     name: Validate existing binaries
     if: ${{ inputs.source_run_id != '' }}
@@ -118,7 +139,9 @@ jobs:
 
   generate-release-note-ios:
     name: Generate Release Note (iOS)
-    needs: define-matrix
+    needs:
+      - define-matrix
+      - wait-for-deploy-turn
     if: ${{ needs.define-matrix.outputs.deploy-ios && inputs.source_run_id == '' }}
     runs-on: ubuntu-24.04
     permissions:
@@ -186,7 +209,9 @@ jobs:
       group: eqmonitor-google-play-edit
       cancel-in-progress: false
       queue: max
-    needs: define-matrix
+    needs:
+      - define-matrix
+      - wait-for-deploy-turn
     if: ${{ needs.define-matrix.outputs.deploy-android && inputs.source_run_id == '' }}
     runs-on: ubuntu-24.04
     permissions:
@@ -335,6 +360,10 @@ jobs:
       # Bundle the signed R2 pack as the immutable default and refresh the
       # slim table used by AppIntent/Widget native targets.
       - name: Stage signed Asset Pack from R2 for iOS
+        env:
+          # Unset in normal operation; set to the preview prefix to bundle an
+          # unreleased pack. See docs/asset-pack-cd.md.
+          ASSET_PACK_BASE_URL: ${{ vars.ASSET_PACK_BASE_URL }}
         run: tool/asset_pack/stage_from_r2.sh --target all
 
       - name: Extract environment variables
@@ -499,8 +528,10 @@ jobs:
       - define-matrix
       - generate-release-note-ios
       - validate-source-run
+      - wait-for-deploy-turn
     if: >-
       ${{ !cancelled() && needs.define-matrix.result == 'success' &&
+          needs.wait-for-deploy-turn.result == 'success' &&
           needs.define-matrix.outputs.deploy-ios == 'true' &&
           ((inputs.source_run_id == '' && needs.build-ios.result == 'success' &&
             needs.generate-release-note-ios.result == 'success') ||
@@ -819,6 +850,10 @@ jobs:
       # The same signed R2 pack is embedded in the base AAB as the immutable
       # fallback used before, or if, a downloaded update cannot be validated.
       - name: Stage signed Asset Pack from R2 for Android
+        env:
+          # Unset in normal operation; set to the preview prefix to bundle an
+          # unreleased pack. See docs/asset-pack-cd.md.
+          ASSET_PACK_BASE_URL: ${{ vars.ASSET_PACK_BASE_URL }}
         run: tool/asset_pack/stage_from_r2.sh --target bundled
 
       - name: Extract keystore
@@ -991,8 +1026,10 @@ jobs:
       - define-matrix
       - generate-release-note-android
       - validate-source-run
+      - wait-for-deploy-turn
     if: >-
       ${{ !cancelled() && needs.define-matrix.result == 'success' &&
+          needs.wait-for-deploy-turn.result == 'success' &&
           needs.define-matrix.outputs.deploy-android == 'true' &&
           ((inputs.source_run_id == '' && needs.build-android.result == 'success' &&
             needs.generate-release-note-android.result == 'success') ||

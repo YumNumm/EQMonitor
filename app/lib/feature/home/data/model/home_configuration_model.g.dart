@@ -83,12 +83,19 @@ _HomeDebugOverlaySettings _$HomeDebugOverlaySettingsFromJson(
         (v) => v as bool? ?? false,
       ),
       eew: $checkedConvert('eew', (v) => v as bool? ?? false),
+      focusBounds: $checkedConvert('focus_bounds', (v) => v as bool? ?? false),
+      shakeDetectionDuringEew: $checkedConvert(
+        'shake_detection_during_eew',
+        (v) => v as bool? ?? false,
+      ),
     );
     return val;
   },
   fieldKeyMap: const {
     'shakeDetection': 'shake_detection',
     'kyoshinMonitor': 'kyoshin_monitor',
+    'focusBounds': 'focus_bounds',
+    'shakeDetectionDuringEew': 'shake_detection_during_eew',
   },
 );
 
@@ -98,6 +105,8 @@ Map<String, dynamic> _$HomeDebugOverlaySettingsToJson(
   'shake_detection': instance.shakeDetection,
   'kyoshin_monitor': instance.kyoshinMonitor,
   'eew': instance.eew,
+  'focus_bounds': instance.focusBounds,
+  'shake_detection_during_eew': instance.shakeDetectionDuringEew,
 };
 
 _HomeEewSettings _$HomeEewSettingsFromJson(Map<String, dynamic> json) =>
@@ -182,6 +191,10 @@ _HomeKyoshinMonitorSettings _$HomeKyoshinMonitorSettingsFromJson(
         'show_intensity_icon',
         (v) => v as bool? ?? false,
       ),
+      showStationName: $checkedConvert(
+        'show_station_name',
+        (v) => v as bool? ?? false,
+      ),
     );
     return val;
   },
@@ -189,6 +202,7 @@ _HomeKyoshinMonitorSettings _$HomeKyoshinMonitorSettingsFromJson(
     'minRealtimeShindo': 'min_realtime_shindo',
     'markerSize': 'marker_size',
     'showIntensityIcon': 'show_intensity_icon',
+    'showStationName': 'show_station_name',
   },
 );
 
@@ -198,6 +212,7 @@ Map<String, dynamic> _$HomeKyoshinMonitorSettingsToJson(
   'min_realtime_shindo': instance.minRealtimeShindo,
   'marker_size': _$HomeKmoniMarkerSizeEnumMap[instance.markerSize]!,
   'show_intensity_icon': instance.showIntensityIcon,
+  'show_station_name': instance.showStationName,
 };
 
 const _$HomeKmoniMarkerSizeEnumMap = {

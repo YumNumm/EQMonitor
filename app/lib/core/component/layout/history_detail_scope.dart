@@ -12,6 +12,10 @@ class const HistoryDetailScope({
               ?.isSplit ??
           false);
 
+  static bool isSplitOf(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<HistoryDetailScope>()?.isSplit ??
+      false;
+
   @override
   bool updateShouldNotify(HistoryDetailScope oldWidget) =>
       isSplit != oldWidget.isSplit;

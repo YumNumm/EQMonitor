@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -37,8 +38,9 @@ class const ParameterLoaderWidget({super.key}) extends HookConsumerWidget {
             else
               M3EFilledButton(
                 child: const Text('再取得'),
-                onPressed: () async =>
-                    ref.invalidate(jmaParameterProvider, asReload: true),
+                onPressed: () => HapticUtil.light(
+                  () => ref.invalidate(jmaParameterProvider, asReload: true),
+                ),
               ),
           ],
         ),

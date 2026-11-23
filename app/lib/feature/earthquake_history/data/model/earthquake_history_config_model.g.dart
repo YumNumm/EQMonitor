@@ -107,9 +107,23 @@ _EarthquakeHistoryDetailsConfig _$EarthquakeHistoryDetailsConfigFromJson(
   ($checkedConvert) {
     final val = _EarthquakeHistoryDetailsConfig(
       showStations: $checkedConvert('show_stations', (v) => v as bool? ?? true),
+      showAreaIcons: $checkedConvert(
+        'show_area_icons',
+        (v) => v as bool? ?? true,
+      ),
       showStationsOnEstimatedIntensity: $checkedConvert(
         'show_stations_on_estimated_intensity',
         (v) => v as bool? ?? false,
+      ),
+      estimatedIntensityDemDisplayMode: $checkedConvert(
+        'estimated_intensity_dem_display_mode',
+        (v) =>
+            $enumDecodeNullable(
+              _$EstimatedIntensityDemDisplayModeEnumMap,
+              v,
+              unknownValue: EstimatedIntensityDemDisplayMode.intensityClass,
+            ) ??
+            EstimatedIntensityDemDisplayMode.intensityClass,
       ),
       hypocenterAboveStations: $checkedConvert(
         'hypocenter_above_stations',
@@ -126,7 +140,9 @@ _EarthquakeHistoryDetailsConfig _$EarthquakeHistoryDetailsConfigFromJson(
   },
   fieldKeyMap: const {
     'showStations': 'show_stations',
+    'showAreaIcons': 'show_area_icons',
     'showStationsOnEstimatedIntensity': 'show_stations_on_estimated_intensity',
+    'estimatedIntensityDemDisplayMode': 'estimated_intensity_dem_display_mode',
     'hypocenterAboveStations': 'hypocenter_above_stations',
     'stationDisplayMode': 'station_display_mode',
   },
@@ -136,11 +152,20 @@ Map<String, dynamic> _$EarthquakeHistoryDetailsConfigToJson(
   _EarthquakeHistoryDetailsConfig instance,
 ) => <String, dynamic>{
   'show_stations': instance.showStations,
+  'show_area_icons': instance.showAreaIcons,
   'show_stations_on_estimated_intensity':
       instance.showStationsOnEstimatedIntensity,
+  'estimated_intensity_dem_display_mode':
+      _$EstimatedIntensityDemDisplayModeEnumMap[instance
+          .estimatedIntensityDemDisplayMode]!,
   'hypocenter_above_stations': instance.hypocenterAboveStations,
   'station_display_mode':
       _$StationDisplayModeEnumMap[instance.stationDisplayMode]!,
+};
+
+const _$EstimatedIntensityDemDisplayModeEnumMap = {
+  EstimatedIntensityDemDisplayMode.intensityClass: 'intensityClass',
+  EstimatedIntensityDemDisplayMode.tenth: 'tenth',
 };
 
 const _$StationDisplayModeEnumMap = {

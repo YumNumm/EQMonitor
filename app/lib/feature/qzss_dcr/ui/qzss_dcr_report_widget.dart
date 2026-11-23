@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/expansion/expandable_section.dart';
 import 'package:dart_azarashi/dart_azarashi.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/qzss_dcr/data/provider/qzss_serial_port_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -97,9 +98,9 @@ class const QzssDcrReportWidget({super.key}) extends HookConsumerWidget {
                 IconButton(
                   icon: const Icon(Icons.clear),
                   tooltip: 'クリア',
-                  onPressed: () {
-                    ref.read(latestQzssDcReportProvider.notifier).clear();
-                  },
+                  onPressed: () => HapticUtil.light(
+                    () => ref.read(latestQzssDcReportProvider.notifier).clear(),
+                  ),
                 ),
               ],
             ),

@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
@@ -114,7 +115,8 @@ class const _ActiveSection({required final SubscriptionStatusActive status})
         M3ETextButton(
           onPressed: isRestoring
               ? null
-              : () async => flow.restorePurchases(ref, context),
+              : () =>
+                    HapticUtil.light(() => flow.restorePurchases(ref, context)),
           child: const Text('購入を復元'),
         ),
       ],
@@ -175,7 +177,8 @@ class const _InactiveSection() extends ConsumerWidget {
         M3ETextButton(
           onPressed: isRestoring || !isSubscriptionAvailable
               ? null
-              : () async => flow.restorePurchases(ref, context),
+              : () =>
+                    HapticUtil.light(() => flow.restorePurchases(ref, context)),
           child: const Text('購入を復元'),
         ),
       ],

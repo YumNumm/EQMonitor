@@ -72,6 +72,7 @@ String _$shakeDetectionActiveHash() =>
 /// 地図・カードに表示する揺れ検知イベント。
 ///
 /// EEW と結合したイベントは EEW の表示に任せるため含めない。
+/// デバッグ設定で有効にした場合のみ、結合したイベントも含める。
 
 @ProviderFor(shakeDetectionVisible)
 final shakeDetectionVisibleProvider = ShakeDetectionVisibleProvider._();
@@ -79,6 +80,7 @@ final shakeDetectionVisibleProvider = ShakeDetectionVisibleProvider._();
 /// 地図・カードに表示する揺れ検知イベント。
 ///
 /// EEW と結合したイベントは EEW の表示に任せるため含めない。
+/// デバッグ設定で有効にした場合のみ、結合したイベントも含める。
 
 final class ShakeDetectionVisibleProvider
     extends
@@ -91,6 +93,7 @@ final class ShakeDetectionVisibleProvider
   /// 地図・カードに表示する揺れ検知イベント。
   ///
   /// EEW と結合したイベントは EEW の表示に任せるため含めない。
+  /// デバッグ設定で有効にした場合のみ、結合したイベントも含める。
   ShakeDetectionVisibleProvider._()
     : super(
         from: null,
@@ -126,7 +129,7 @@ final class ShakeDetectionVisibleProvider
 }
 
 String _$shakeDetectionVisibleHash() =>
-    r'6c07d1ce73d8015403bf3e63fdff139ab43ae7f4';
+    r'902537183eb970cc5a4b52a27afcb3054b4fd50d';
 
 /// 地図の自動フォーカスの対象にする揺れ検知イベント。
 ///

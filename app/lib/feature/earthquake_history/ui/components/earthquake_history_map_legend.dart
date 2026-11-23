@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/estimated_intensity_scale_color_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
@@ -21,6 +22,7 @@ class const EarthquakeHistoryMapLegend({
   required final EarthquakeIntensity? intensity,
   final IntensityDisplayMode displayMode = IntensityDisplayMode.jma,
   final ShindoDbIntensityTree? shindoDbTree,
+  final bool showsEstimatedIntensityScale = false,
   super.key,
 }) extends StatelessWidget {
   @override
@@ -32,8 +34,35 @@ class const EarthquakeHistoryMapLegend({
     return switch (displayMode) {
       .jma => _JmaLegend(intensity: intensity),
       .lpgm => _LpgmLegend(intensity: intensity),
+      .estimated when showsEstimatedIntensityScale =>
+        const _EstimatedIntensityScaleLegend(),
       .estimated => const _JmaLegend(estimated: true),
     };
+  }
+}
+
+class const _EstimatedIntensityScaleLegend() extends StatelessWidget {
+  static const stepTenths = 5;
+
+  @override
+  Widget build(BuildContext context) {
+    const resolver = EstimatedIntensityScaleColorResolver();
+    final first = EstimatedIntensityScaleColorResolver.anchors.first.$1;
+    final last = EstimatedIntensityScaleColorResolver.anchors.last.$1;
+    return _AnimatedLegend(
+      label: '計測震度',
+      entries: [
+        for (var tenths = last; tenths >= first; tenths -= stepTenths)
+          (
+            label: (tenths / 10).toStringAsFixed(1),
+            borderRadius: BorderRadius.circular(_legendIconSize / 4),
+            icon: SizedBox.square(
+              dimension: _legendIconSize,
+              child: ColoredBox(color: resolver.resolve(tenths: tenths)),
+            ),
+          ),
+      ],
+    );
   }
 }
 

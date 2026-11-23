@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_manifest.dart';
 import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_update_notifier.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_update_installer.dart';
@@ -172,7 +173,8 @@ class const _AssetPackConsentDialog({
           child: const Text('あとで'),
         ),
         M3EFilledButton.icon(
-          onPressed: () => Navigator.of(context).pop(true),
+          onPressed: () =>
+              HapticUtil.light(() => Navigator.of(context).pop(true)),
           icon: const Icon(Icons.download_rounded),
           label: const Text('ダウンロード'),
         ),
@@ -252,8 +254,8 @@ class const _AssetPackErrorCard({required final String message})
       trailing: IconButton(
         tooltip: '再試行',
         icon: const Icon(Icons.refresh_rounded),
-        onPressed: () => unawaited(
-          AssetPackUpdateNotifier.checkMutation.run(
+        onPressed: () => HapticUtil.light(
+          () => AssetPackUpdateNotifier.checkMutation.run(
             ref,
             (transaction) =>
                 transaction.get(assetPackUpdateProvider.notifier).check(),

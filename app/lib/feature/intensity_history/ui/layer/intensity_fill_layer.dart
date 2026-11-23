@@ -58,6 +58,11 @@ class const IntensityFillLayer({
       lastItems.value = items;
       itemsRevision.value++;
     }
+    // flutter_hooks は依存変化時に新しい effect を先に実行し、古い cleanup を
+    // 後から呼ぶ。後発の effect が同じ ID を置き換え済みなら cleanup は削除しない。
+    final fillGeneration = useRef<Object?>(null);
+    final lineGeneration = useRef<Object?>(null);
+
     // effect の依存には入れず、実行時に最新値を読むための参照。
     final latestItems = useRef(items);
     latestItems.value = items;
@@ -85,7 +90,13 @@ class const IntensityFillLayer({
           ),
         );
 
+        final generation = Object();
+        fillGeneration.value = generation;
+
         return () {
+          if (!identical(fillGeneration.value, generation)) {
+            return;
+          }
           unawaited(
             enqueue(
               () => action.removeAll(
@@ -128,7 +139,13 @@ class const IntensityFillLayer({
           ),
         );
 
+        final generation = Object();
+        lineGeneration.value = generation;
+
         return () {
+          if (!identical(lineGeneration.value, generation)) {
+            return;
+          }
           unawaited(
             enqueue(
               () => action.removeAll(

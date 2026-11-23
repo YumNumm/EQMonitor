@@ -138,12 +138,7 @@ class const _EewMaxIntensityBadge({required final JmaIntensity intensity})
               color: Colors.white,
             ).copyWith(height: 1),
           ),
-          // 赤いヘッダーの上では6強・6弱の塗りが地色に沈むため、白い枠で縁取る。
-          EewCardIntensityBadge(
-            intensity: intensity,
-            size: 36,
-            outlineColor: Colors.white,
-          ),
+          EewCardIntensityBadge(intensity: intensity, size: 36),
         ],
       ),
     );

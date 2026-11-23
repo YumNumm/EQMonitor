@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/location/data/notifier/current_device_location_notifier.dart';
@@ -52,7 +53,8 @@ class const ShakeDetectionSettingsPage({super.key}) extends ConsumerWidget {
           ? Center(
               child: settings.hasError
                   ? M3EFilledButton(
-                      onPressed: () => action.reload(ref),
+                      onPressed: () =>
+                          HapticUtil.light(() => action.reload(ref)),
                       child: const Text('設定の読み込みを再試行'),
                     )
                   : const AccessibleCircularProgressIndicator(),
@@ -89,8 +91,11 @@ class const ShakeDetectionSettingsPage({super.key}) extends ConsumerWidget {
                       subtitle: const Text(
                         'バックグラウンドでも現在地を更新できるよう、位置情報の権限を確認してください。',
                       ),
-                      onTap: () =>
-                          const CurrentLocationPermissionAction().request(ref),
+                      onTap: () => HapticUtil.light(
+                        () => const CurrentLocationPermissionAction().request(
+                          ref,
+                        ),
+                      ),
                     ),
                 ],
                 for (final entry in state.entries)
@@ -141,20 +146,22 @@ class const ShakeDetectionSettingsPage({super.key}) extends ConsumerWidget {
                           busy ||
                               state.entries.any((e) => e.targetType == target)
                           ? null
-                          : () => enableFlow.save(
-                              ref: ref,
-                              context: context,
-                              previous: state.entries,
-                              next: [
-                                ...state.entries,
-                                ShakeDetectionEntry(
-                                  id: '',
-                                  targetType: target,
-                                  regionCode: null,
-                                  enabled: true,
-                                  minLevel: ShakeDetectionLevel.medium,
-                                ),
-                              ],
+                          : () => HapticUtil.light(
+                              () => enableFlow.save(
+                                ref: ref,
+                                context: context,
+                                previous: state.entries,
+                                next: [
+                                  ...state.entries,
+                                  ShakeDetectionEntry(
+                                    id: '',
+                                    targetType: target,
+                                    regionCode: null,
+                                    enabled: true,
+                                    minLevel: ShakeDetectionLevel.medium,
+                                  ),
+                                ],
+                              ),
                             ),
                       child: Text(
                         target == ShakeDetectionTargetType.currentLocation
@@ -222,8 +229,9 @@ class const ShakeDetectionSettingsPage({super.key}) extends ConsumerWidget {
                   ListTile(
                     title: const Text('地域一覧を読み込めませんでした'),
                     trailing: M3ETextButton(
-                      onPressed: () =>
-                          ref.invalidate(shakeDetectionRegionsProvider),
+                      onPressed: () => HapticUtil.light(
+                        () => ref.invalidate(shakeDetectionRegionsProvider),
+                      ),
                       child: const Text('再試行'),
                     ),
                   ),
@@ -259,7 +267,9 @@ class const _CurrentLocationStatus() extends ConsumerWidget {
       trailing: M3ETextButton(
         onPressed: location.isLoading
             ? null
-            : () => const ShakeDetectionSettingsAction().refreshLocation(ref),
+            : () => HapticUtil.light(
+                () => const ShakeDetectionSettingsAction().refreshLocation(ref),
+              ),
         child: const Text('現在地を更新'),
       ),
     );
@@ -281,7 +291,9 @@ class const _ShakeEntryCard({
         SwitchListTile(
           title: Text(name),
           value: entry.enabled,
-          onChanged: busy ? null : onEnabled,
+          onChanged: busy
+              ? null
+              : (value) => HapticUtil.selection(() => onEnabled(value)),
         ),
         ListTile(
           title: ShakeDetectionNotificationMinLevelDropdown(
@@ -291,7 +303,7 @@ class const _ShakeEntryCard({
           ),
           trailing: IconButton(
             tooltip: '削除',
-            onPressed: busy ? null : onDelete,
+            onPressed: busy ? null : () => HapticUtil.medium(onDelete),
             icon: const Icon(Icons.delete_outline),
           ),
         ),

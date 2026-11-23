@@ -3,12 +3,14 @@ import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/action/replay_creation_action.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_creation_range_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_file_path_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_creation_request.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_creation_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_creation_selectable_range_provider.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -103,6 +105,9 @@ class const ReplayCreationPage({
                         value.round() * minute,
                         isUtc: true,
                       ),
+            onChangeEnd: isCreating
+                ? null
+                : (_) => HapticFeedback.selectionClick(),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: spacing.lg),
@@ -115,7 +120,9 @@ class const ReplayCreationPage({
                     selected: option == duration.value,
                     onSelected: isCreating
                         ? null
-                        : (_) => duration.value = option,
+                        : (_) => HapticUtil.selection(
+                            () => duration.value = option,
+                          ),
                   ),
               ],
             ),
@@ -130,9 +137,11 @@ class const ReplayCreationPage({
               value: imageKinds.value.contains(kind),
               onChanged: isCreating
                   ? null
-                  : (value) => imageKinds.value = value ?? false
-                        ? {...imageKinds.value, kind}
-                        : imageKinds.value.difference({kind}),
+                  : (value) => HapticUtil.selection(
+                      () => imageKinds.value = value ?? false
+                          ? {...imageKinds.value, kind}
+                          : imageKinds.value.difference({kind}),
+                    ),
             ),
           AppSwitchListTile(
             title: '緊急地震速報',
@@ -190,16 +199,18 @@ class const ReplayCreationPage({
                 : FilledButton.icon(
                     onPressed: imageKinds.value.isEmpty
                         ? null
-                        : () async => ref
-                              .read(replayCreationActionProvider)
-                              .create(
-                                ref,
-                                context,
-                                request: request.copyWith(
-                                  name: name.text,
-                                  directory: directory.text,
+                        : () => HapticUtil.light(
+                            () => ref
+                                .read(replayCreationActionProvider)
+                                .create(
+                                  ref,
+                                  context,
+                                  request: request.copyWith(
+                                    name: name.text,
+                                    directory: directory.text,
+                                  ),
                                 ),
-                              ),
+                          ),
                     icon: const Icon(Icons.save_alt_rounded),
                     label: const Text('作成してアプリ内に保存'),
                   ),
@@ -262,7 +273,9 @@ class const _CreationProgress({
         ),
         SizedBox(height: spacing.sm),
         OutlinedButton(
-          onPressed: () => ref.read(replayCreationProvider.notifier).cancel(),
+          onPressed: () => HapticUtil.light(
+            () => ref.read(replayCreationProvider.notifier).cancel(),
+          ),
           child: const Text('中止'),
         ),
       ],

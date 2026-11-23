@@ -48,6 +48,8 @@ abstract class Earthquake with _$Earthquake {
     String? estimatedIntensityTile,
     @JsonKey(includeIfNull: false,name: 'estimated_intensity_tile_archive')
     EstimatedIntensityTileArchive? estimatedIntensityTileArchive,
+    @JsonKey(includeIfNull: false,name: 'estimated_intensity_dem_archive')
+    EstimatedIntensityTileArchive? estimatedIntensityDemArchive,
     @JsonKey(includeIfNull: false)
     Catalog? catalog,
   }) = _Earthquake;

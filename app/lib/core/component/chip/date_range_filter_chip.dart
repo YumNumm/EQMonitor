@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
@@ -50,7 +51,9 @@ class const DateRangeFilterChip({
           : Text(range.toRangeString),
       onDeleted: range.isAllSelected
           ? null
-          : () => onChanged?.call(initialMin, initialMax),
+          : () => HapticUtil.light(
+              () => onChanged?.call(initialMin, initialMax),
+            ),
       selected: !range.isAllSelected,
       selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );

@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/layout/history_detail_scope.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/component/layout/history_adaptive_view.dart';
 import 'package:eqmonitor/core/component/layout/history_selection.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew_history/data/flow/show_eew_history_notice_flow.dart';
@@ -65,20 +70,35 @@ class const _EewHistoryContent() extends HookConsumerWidget {
     return Scaffold(
       body: HistoryAdaptiveView(
         onCloseDetail: () => selectEvent(null),
+        onCollapseDetail: () {
+          final collapsed = selectedEventId.value;
+          if (collapsed == null || !context.mounted) {
+            return;
+          }
+          selectedEventId.value = null;
+          unawaited(
+            EewDetailsByEventIdRoute(
+              eventId: collapsed,
+              useSheet: true,
+            ).push<void>(context),
+          );
+        },
         detail: eventId == null
             ? null
             : EewDetailsByEventIdPage(
                 key: ValueKey(eventId),
                 eventId: eventId,
                 onClose: () => selectEvent(null),
+                useSheet: true,
               ),
         list: Material(
           child: dataSourceAsync.when(
             loading: () => const _Skeleton(),
             error: (error, _) => ErrorCard(
               error: error,
-              onReload: () async =>
-                  ref.refresh(eewListDataSourceProvider(parameter.value)),
+              onReload: () => HapticUtil.light(
+                () => ref.refresh(eewListDataSourceProvider(parameter.value)),
+              ),
             ),
             data: (dataSource) => _PagingBody(
               dataSource: dataSource,
@@ -103,6 +123,18 @@ class const _PagingBody({
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final ValueChanged<String> select = (eventId) {
+      if (HistoryDetailScope.isSplitOf(context)) {
+        onSelect(eventId);
+        return;
+      }
+      unawaited(
+        EewDetailsByEventIdRoute(
+          eventId: eventId,
+          useSheet: true,
+        ).push<void>(context),
+      );
+    };
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -119,7 +151,7 @@ class const _PagingBody({
           slivers: [
             PinnedActiveEewSection(
               selectedEventId: selectedEventId,
-              onSelect: onSelect,
+              onSelect: select,
             ),
             SliverGroupedPagingList<String?, String, EewTelegramItem>(
               dataSource: dataSource,
@@ -133,7 +165,7 @@ class const _PagingBody({
                     child: EewHistoryListTile(
                       item: item,
                       visualDensity: VisualDensity.compact,
-                      onTap: () => onSelect(item.eventId),
+                      onTap: () => select(item.eventId),
                     ),
                   ),
                   Divider(
@@ -150,7 +182,7 @@ class const _PagingBody({
               ),
               errorBuilder: (context, error, stackTrace) => ErrorCard(
                 error: error,
-                onReload: () async => dataSource.refresh(),
+                onReload: () => HapticUtil.light(dataSource.refresh),
               ),
               emptyWidget: const Center(
                 child: Padding(
