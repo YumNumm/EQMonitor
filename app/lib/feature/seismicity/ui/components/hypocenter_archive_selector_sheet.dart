@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_id.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_partition.dart';
@@ -50,13 +51,13 @@ class const HypocenterArchiveSelectorSheet({
                         FilterChip(
                           label: Text(archive.id.jstLabel),
                           selected: draft.value.contains(archive.id),
-                          onSelected: (enabled) {
+                          onSelected: (enabled) => HapticUtil.selection(() {
                             final next = {...draft.value};
                             enabled
                                 ? next.add(archive.id)
                                 : next.remove(archive.id);
                             draft.value = next;
-                          },
+                          }),
                         ),
                     ],
                   ),
@@ -70,13 +71,13 @@ class const HypocenterArchiveSelectorSheet({
                         FilterChip(
                           label: Text(archive.id.jstLabel),
                           selected: draft.value.contains(archive.id),
-                          onSelected: (enabled) {
+                          onSelected: (enabled) => HapticUtil.selection(() {
                             final next = {...draft.value};
                             enabled
                                 ? next.add(archive.id)
                                 : next.remove(archive.id);
                             draft.value = next;
-                          },
+                          }),
                         ),
                     ],
                   ),
@@ -86,10 +87,10 @@ class const HypocenterArchiveSelectorSheet({
             M3EFilledButton(
               onPressed: draft.value.isEmpty
                   ? null
-                  : () {
+                  : () => HapticUtil.light(() {
                       onApply(draft.value);
                       Navigator.of(context).pop();
-                    },
+                    }),
               child: const Text('適用'),
             ),
           ],

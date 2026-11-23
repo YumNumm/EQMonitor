@@ -73,7 +73,8 @@ class const _PermissionsStepPage({
             suffixMessage: error is TimeoutException
                 ? '端末から権限の確認結果が返りませんでした。再試行してください。'
                 : null,
-            onReload: () async => ref.invalidate(permissionProvider),
+            onReload: () =>
+                HapticUtil.light(() => ref.invalidate(permissionProvider)),
             showLoadingOverlayOnReload: false,
           ),
         ],
@@ -231,11 +232,15 @@ class const _PermissionActionCard({
           ]
         : [
             M3ETextButton(
-              onPressed: isSkipped || !isEnabled ? null : onSkip,
+              onPressed: isSkipped || !isEnabled
+                  ? null
+                  : () => HapticUtil.light(onSkip),
               child: Text(isSkipped ? 'スキップしました' : 'スキップ'),
             ),
             M3EFilledButton(
-              onPressed: isSkipped || !isEnabled ? null : onAllow,
+              onPressed: isSkipped || !isEnabled
+                  ? null
+                  : () => HapticUtil.light(onAllow),
               child: const Text('許可する'),
             ),
           ];

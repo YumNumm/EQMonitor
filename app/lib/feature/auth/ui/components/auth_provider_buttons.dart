@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -23,13 +24,17 @@ class const AuthProviderButtons({
           Text('Nativeサインイン', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 12),
           M3EFilledButton.icon(
-            onPressed: googleEnabled ? onGooglePressed : null,
+            onPressed: googleEnabled
+                ? () => HapticUtil.light(onGooglePressed)
+                : null,
             icon: const Icon(Icons.login),
             label: const Text('Googleでサインイン'),
           ),
           const SizedBox(height: 8),
           M3EFilledButton.tonalIcon(
-            onPressed: appleEnabled ? onApplePressed : null,
+            onPressed: appleEnabled
+                ? () => HapticUtil.light(onApplePressed)
+                : null,
             icon: const Icon(Icons.apple),
             label: const Text('Appleでサインイン'),
           ),
@@ -42,14 +47,16 @@ class const AuthProviderButtons({
           ],
           const SizedBox(height: 8),
           M3EOutlinedButton.icon(
-            onPressed: passkeySignInEnabled ? onPasskeySignInPressed : null,
+            onPressed: passkeySignInEnabled
+                ? () => HapticUtil.light(onPasskeySignInPressed)
+                : null,
             icon: const Icon(Icons.key),
             label: const Text('Passkeyでサインイン'),
           ),
           const SizedBox(height: 8),
           M3EOutlinedButton.icon(
             onPressed: passkeyRegistrationEnabled
-                ? onPasskeyRegistrationPressed
+                ? () => HapticUtil.light(onPasskeyRegistrationPressed)
                 : null,
             icon: const Icon(Icons.add_moderator_outlined),
             label: const Text('Passkeyを登録'),

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound_inspection.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/prepared_notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/custom_notification_sounds_notifier.dart';
@@ -58,17 +59,21 @@ class const CustomNotificationSoundImportPage({
                 M3ETextButton(
                   onPressed: busy || previewBusy
                       ? null
-                      : () => action.preview(
-                          ref,
-                          context,
-                          preparedId: prepared.id,
+                      : () => HapticUtil.light(
+                          () => action.preview(
+                            ref,
+                            context,
+                            preparedId: prepared.id,
+                          ),
                         ),
                   child: const Text('試聴'),
                 ),
                 M3ETextButton(
                   onPressed: busy || previewBusy
                       ? null
-                      : () => action.preview(ref, context),
+                      : () => HapticUtil.light(
+                          () => action.preview(ref, context),
+                        ),
                   child: const Text('停止'),
                 ),
               ],
@@ -77,11 +82,13 @@ class const CustomNotificationSoundImportPage({
             M3EFilledButton(
               onPressed: busy || name.text.trim().isEmpty
                   ? null
-                  : () => action.commit(
-                      ref,
-                      context,
-                      preparedId: prepared.id,
-                      displayName: name.text,
+                  : () => HapticUtil.light(
+                      () => action.commit(
+                        ref,
+                        context,
+                        preparedId: prepared.id,
+                        displayName: name.text,
+                      ),
                     ),
               child: Text(busy ? '保存中…' : '追加'),
             ),

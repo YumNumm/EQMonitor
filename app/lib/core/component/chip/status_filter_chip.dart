@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -42,7 +46,9 @@ class const StatusFilterChip({
                   : currentStatuses.map((s) => s.label).join(', '),
               style: const TextStyle(fontWeight: .bold),
             ),
-      onDeleted: isDefault ? null : () => onChanged?.call(initialStatuses),
+      onDeleted: isDefault
+          ? null
+          : () => HapticUtil.light(() => onChanged?.call(initialStatuses)),
       selected: !isDefault,
       selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
@@ -98,7 +104,8 @@ class const _StatusFilterModal({final List<TelegramStatus>? currentStatuses})
                 enabled:
                     !(selectedStatuses.value.contains(status) &&
                         selectedStatuses.value.length == 1),
-                onChanged: (checked) {
+                onChanged: (checked) async {
+                  unawaited(HapticFeedback.selectionClick());
                   final newSet = Set<TelegramStatus>.from(
                     selectedStatuses.value,
                   );
@@ -123,9 +130,11 @@ class const _StatusFilterModal({final List<TelegramStatus>? currentStatuses})
                   child: const Text('キャンセル'),
                 ),
                 M3ETextButton(
-                  onPressed: () =>
-                      Navigator.of(context)
-                          .pop(selectedStatuses.value.toList()),
+                  onPressed: () => HapticUtil.light(
+                    () =>
+                        Navigator.of(context)
+                            .pop(selectedStatuses.value.toList()),
+                  ),
                   child: const Text('完了'),
                 ),
               ],

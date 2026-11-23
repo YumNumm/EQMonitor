@@ -117,6 +117,7 @@ class const EewWarningOverlayFullscreen({
                                   decoration: M3EButtonDecoration.styleFrom(
                                     backgroundColor: colorScheme.error,
                                     foregroundColor: colorScheme.onError,
+                                    haptic: .light,
                                   ),
                                   icon: const Icon(Icons.close),
                                   label: const Text('閉じる'),

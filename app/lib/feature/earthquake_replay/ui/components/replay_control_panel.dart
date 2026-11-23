@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_duration_formatter.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_origin_track_shape.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -39,7 +43,9 @@ class const ReplayControlPanel({required final ReplayState state, super.key})
           ),
           SizedBox(height: spacing.sm),
           FilledButton.tonalIcon(
-            onPressed: () => ref.read(replayProvider.notifier).exit(),
+            onPressed: () => HapticUtil.light(
+              () => ref.read(replayProvider.notifier).exit(),
+            ),
             icon: const Icon(Icons.stop_rounded),
             label: const Text('再生を終了して現在の情報に戻る'),
           ),
@@ -117,6 +123,7 @@ class const _ReplayTimeline({required final ReplayState state})
             onChanged: canSeek ? (value) => dragValue.value = value : null,
             onChangeEnd: canSeek
                 ? (value) async {
+                    unawaited(HapticFeedback.selectionClick());
                     dragValue.value = null;
                     await ref
                         .read(replayProvider.notifier)
@@ -134,8 +141,11 @@ class const _ReplayTimeline({required final ReplayState state})
                   : FittedBox(
                       fit: .scaleDown,
                       child: TextButton.icon(
-                        onPressed: () async =>
-                            ref.read(replayProvider.notifier).seek(originTime),
+                        onPressed: () => HapticUtil.light(
+                          () => ref
+                              .read(replayProvider.notifier)
+                              .seek(originTime),
+                        ),
                         style: TextButton.styleFrom(
                           foregroundColor: colorTheme.error,
                           visualDensity: .compact,
@@ -171,13 +181,13 @@ class const _ReplayTransportControls({required final bool isPlaying})
         IconButton(
           tooltip: '10秒戻る',
           iconSize: 28,
-          onPressed: () async => notifier.seekBy(-_skip),
+          onPressed: () => HapticUtil.light(() => notifier.seekBy(-_skip)),
           icon: const Icon(Icons.replay_10_rounded),
         ),
         IconButton.filled(
           tooltip: isPlaying ? '一時停止' : '再生',
           iconSize: 32,
-          onPressed: () async => notifier.togglePlayPause(),
+          onPressed: () => HapticUtil.light(notifier.togglePlayPause),
           icon: Icon(
             isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
           ),
@@ -185,7 +195,7 @@ class const _ReplayTransportControls({required final bool isPlaying})
         IconButton(
           tooltip: '10秒進む',
           iconSize: 28,
-          onPressed: () async => notifier.seekBy(_skip),
+          onPressed: () => HapticUtil.light(() => notifier.seekBy(_skip)),
           icon: const Icon(Icons.forward_10_rounded),
         ),
       ],
@@ -211,8 +221,10 @@ class const _ReplaySpeedSelector({
           ),
       ],
       selected: {speed},
-      onSelectionChanged: (selection) =>
-          ref.read(replayProvider.notifier).setPlaybackSpeed(selection.first),
+      onSelectionChanged: (selection) => HapticUtil.selection(
+        () =>
+            ref.read(replayProvider.notifier).setPlaybackSpeed(selection.first),
+      ),
     );
   }
 }

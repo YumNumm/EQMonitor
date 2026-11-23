@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dart';
@@ -64,7 +65,9 @@ class const HomeFeedSheet({super.key}) extends ConsumerWidget {
                   ),
           AsyncError<FeedNotifierState>(:final error) => ErrorCard(
             error: error,
-            onReload: () async => ref.invalidate(feedProvider, asReload: true),
+            onReload: () => HapticUtil.light(
+              () => ref.invalidate(feedProvider, asReload: true),
+            ),
           ),
           _ => const _HomeFeedSkeleton(),
         },
@@ -205,9 +208,11 @@ class const _UnreadFeedBanner({required final FeedItem item})
                 ),
               ),
               IconButton(
-                onPressed: () async => ref
-                    .read(feedLastReadProvider.notifier)
-                    .markRead(item.publishedAt),
+                onPressed: () => HapticUtil.light(
+                  () => ref
+                      .read(feedLastReadProvider.notifier)
+                      .markRead(item.publishedAt),
+                ),
                 icon: const Icon(Icons.close, color: Colors.white, size: 20),
                 visualDensity: VisualDensity.compact,
                 tooltip: '既読にする',

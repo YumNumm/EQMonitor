@@ -5,22 +5,26 @@ import 'package:flutter/services.dart';
 /// ハプティックフィードバックを伴って [fn] を実行するためのユーティリティ。
 class const HapticUtil._() {
   static Future<void> light(FutureOr<void> Function() fn) async {
-    await HapticFeedback.lightImpact();
+    final feedback = HapticFeedback.lightImpact();
     await fn();
+    await feedback;
   }
 
   static Future<void> medium(FutureOr<void> Function() fn) async {
-    await HapticFeedback.mediumImpact();
+    final feedback = HapticFeedback.mediumImpact();
     await fn();
+    await feedback;
   }
 
   static Future<void> heavy(FutureOr<void> Function() fn) async {
-    await HapticFeedback.heavyImpact();
+    final feedback = HapticFeedback.heavyImpact();
     await fn();
+    await feedback;
   }
 
   static Future<void> selection(FutureOr<void> Function() fn) async {
-    await HapticFeedback.selectionClick();
+    final feedback = HapticFeedback.selectionClick();
     await fn();
+    await feedback;
   }
 }

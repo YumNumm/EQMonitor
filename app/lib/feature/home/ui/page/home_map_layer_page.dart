@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -17,6 +18,7 @@ import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -188,9 +190,9 @@ class const _SettingsSection({
       child: Column(
         children: [
           InkWell(
-            onTap: () {
+            onTap: () => HapticUtil.selection(() {
               isExpanded.value = !isExpanded.value;
-            },
+            }),
             child: Padding(
               padding: EdgeInsets.fromLTRB(
                 spacing.xl,
@@ -279,6 +281,7 @@ class const _SettingSwitchTile({
         },
       ),
       onTap: () async {
+        unawaited(HapticFeedback.selectionClick());
         await onChanged(!value);
       },
     );
@@ -403,6 +406,7 @@ class const _SettingSegmentedField<T>({
           SizedBox(height: spacing.md),
           M3EToggleButtonGroup(
             type: M3EButtonGroupType.connected,
+            haptic: .light,
             actions: segments
                 .map(
                   (segment) => M3EToggleButtonGroupAction(
@@ -636,6 +640,7 @@ class const _LocationPermissionTile() extends HookConsumerWidget {
           subtitle: '現在地関連の機能を使うには、まず権限を許可してください。',
           actionLabel: '位置情報の使用を許可する',
           onPressed: () async {
+            unawaited(HapticFeedback.lightImpact());
             await ref
                 .read(locationTrackingModeProvider.notifier)
                 .requestPermission();

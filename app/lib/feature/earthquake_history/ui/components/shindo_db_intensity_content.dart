@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/expand_trailing_icon_builder.dart';
@@ -107,7 +108,11 @@ class const _ShindoDbIntensityLevelSection({
                   child: const Icon(Icons.expand_more),
                 )
               : null,
-          onTap: canExpand ? () => isExpanded.value = !isExpanded.value : null,
+          onTap: canExpand
+              ? () => HapticUtil.selection(
+                  () => isExpanded.value = !isExpanded.value,
+                )
+              : null,
         ),
         if (isExpanded.value)
           Padding(
@@ -167,7 +172,11 @@ class const _ShindoDbPrefectureTile({
             style: const TextStyle(fontWeight: .bold),
           ),
           trailing: trailing,
-          onTap: hasCities ? () => isExpanded.value = !isExpanded.value : null,
+          onTap: hasCities
+              ? () => HapticUtil.selection(
+                  () => isExpanded.value = !isExpanded.value,
+                )
+              : null,
         ),
         if (isExpanded.value)
           Padding(
@@ -205,7 +214,9 @@ class const _ShindoDbCityTile({required final ShindoDbCityNode city})
           title: Text(city.city.name.ja),
           trailing: trailing,
           onTap: hasStations
-              ? () => isExpanded.value = !isExpanded.value
+              ? () => HapticUtil.selection(
+                  () => isExpanded.value = !isExpanded.value,
+                )
               : null,
         ),
         if (isExpanded.value)
@@ -240,7 +251,9 @@ class const _ShindoDbUnresolvedTile({
             style: TextStyle(fontWeight: .bold),
           ),
           trailing: trailing,
-          onTap: () => isExpanded.value = !isExpanded.value,
+          onTap: () => HapticUtil.selection(
+            () => isExpanded.value = !isExpanded.value,
+          ),
         ),
         if (isExpanded.value)
           _ShindoDbStationChips(stations: stations)

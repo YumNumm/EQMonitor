@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/changelog/data/model/changelog_entry_model.dart';
 import 'package:eqmonitor/feature/changelog/data/model/changelog_section_model.dart';
 import 'package:eqmonitor/feature/changelog/data/notifier/changelog_notifier.dart';
@@ -35,7 +36,8 @@ class const ChangelogPage({super.key}) extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               M3EFilledButton.tonal(
-                onPressed: () => ref.invalidate(changelogProvider),
+                onPressed: () =>
+                    HapticUtil.light(() => ref.invalidate(changelogProvider)),
                 child: const Text('再試行'),
               ),
             ],

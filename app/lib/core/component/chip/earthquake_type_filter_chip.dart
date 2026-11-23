@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -35,7 +36,9 @@ class const EarthquakeTypeFilterChip({
               earthquakeType.displayLabel,
               style: const TextStyle(fontWeight: .bold),
             ),
-      onDeleted: isDefault ? null : () => onChanged?.call(null),
+      onDeleted: isDefault
+          ? null
+          : () => HapticUtil.light(() => onChanged?.call(null)),
       selected: !isDefault,
       selectedColor: context.designSystem.colorTheme.secondaryContainer,
     );
@@ -85,7 +88,9 @@ class const _EarthquakeTypeFilterModal({final EarthquakeType? currentType})
                 trailing: currentType == type
                     ? Icon(Icons.check, color: designSystem.colorTheme.primary)
                     : null,
-                onTap: () => Navigator.of(context).pop((value: type)),
+                onTap: () => HapticUtil.selection(
+                  () => Navigator.of(context).pop((value: type)),
+                ),
               ),
             ),
             ListTile(
@@ -94,8 +99,10 @@ class const _EarthquakeTypeFilterModal({final EarthquakeType? currentType})
               trailing: currentType == null
                   ? Icon(Icons.check, color: designSystem.colorTheme.primary)
                   : null,
-              onTap: () =>
-                  Navigator.of(context).pop((value: null as EarthquakeType?)),
+              onTap: () => HapticUtil.selection(
+                () =>
+                    Navigator.of(context).pop((value: null as EarthquakeType?)),
+              ),
             ),
             const SizedBox(height: 8),
           ],

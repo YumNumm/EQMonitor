@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/home/data/flow/save_home_map_bounds_flow.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -71,13 +72,15 @@ class const _Body({
           if (controller == null) {
             return;
           }
-          await ref
-              .read(saveHomeMapBoundsFlowProvider)
-              .save(
-                context: context,
-                ref: ref,
-                controller: controller,
-              );
+          await HapticUtil.light(
+            () => ref
+                .read(saveHomeMapBoundsFlowProvider)
+                .save(
+                  context: context,
+                  ref: ref,
+                  controller: controller,
+                ),
+          );
         },
         icon: const Icon(Icons.save),
         label: 'この範囲を保存',
