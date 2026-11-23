@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
-import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/core/util/map/replace_map_style_layers.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/logic/estimated_intensity_scale_color_resolver.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/estimated_intensity_dem_color_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_display_mode.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_palette.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,6 +18,7 @@ import 'package:material_ui/material_ui.dart';
 class const EarthquakeHistoryDetailsEstimatedIntensityDemLayer({
   required final String tileUrl,
   required final EstimatedIntensityDemDisplayMode displayMode,
+  required final EstimatedIntensityDemPalette palette,
   super.key,
 }) extends HookConsumerWidget {
   @override
@@ -26,13 +28,18 @@ class const EarthquakeHistoryDetailsEstimatedIntensityDemLayer({
     final colors = ref.watch(
       activeColorSetProvider.select((colorSet) => colorSet.estimatedIntensity),
     );
+    final kyoshinColorMap = ref.watch(kyoshinColorMapProvider);
     const style = EarthquakeHistoryEstimatedIntensityDemStyle();
     final color = useMemoized(
       () => style.colorExpression(
-        displayMode: displayMode,
-        colors: colors,
+        resolver: EstimatedIntensityDemColorResolver(
+          displayMode: displayMode,
+          palette: palette,
+          classColors: colors,
+          kyoshinColorMap: kyoshinColorMap,
+        ),
       ),
-      [displayMode, colors],
+      [displayMode, palette, colors, kyoshinColorMap],
     );
     final colorRef = useRef(color)..value = color;
     final layerRef = useRef<ColorReliefStyleLayer?>(null);
@@ -85,8 +92,6 @@ class const EarthquakeHistoryEstimatedIntensityDemStyle() {
   static const layerId = 'earthquake-history-estimated-intensity-dem-color';
   static const tileSize = 512;
   static const maxZoom = 10.0;
-  static const minIntensityTenths = 35;
-  static const maxIntensityTenths = 70;
   static const transparent = 'rgba(0, 0, 0, 0)';
 
   static const boundaryEpsilon = 0.001;
@@ -94,22 +99,16 @@ class const EarthquakeHistoryEstimatedIntensityDemStyle() {
   // MapLibre Native の color-relief は DEM を線形補間で読み、nearest を指定できない。
   // 値の境界の両側に stop を置き、補間で生じる中間値が隣の色へにじむ幅を抑える。
   List<Object> colorExpression({
-    required EstimatedIntensityDemDisplayMode displayMode,
-    required EstimatedIntensityColors colors,
+    required EstimatedIntensityDemColorResolver resolver,
   }) {
     final stops = <Object>[-10000, transparent];
     var previous = transparent;
     for (
-      var tenths = minIntensityTenths;
-      tenths <= maxIntensityTenths;
+      var tenths = EstimatedIntensityDemColorResolver.minTenths;
+      tenths <= EstimatedIntensityDemColorResolver.maxTenths;
       tenths++
     ) {
-      final color = switch (displayMode) {
-        .intensityClass => classColor(tenths: tenths, colors: colors),
-        .tenth => const EstimatedIntensityScaleColorResolver().resolve(
-          tenths: tenths,
-        ),
-      }.toHexStringRGB();
+      final color = resolver.resolve(tenths: tenths).toHexStringRGB();
       if (color == previous) {
         continue;
       }
@@ -128,18 +127,6 @@ class const EarthquakeHistoryEstimatedIntensityDemStyle() {
       ...stops,
     ];
   }
-
-  Color classColor({
-    required int tenths,
-    required EstimatedIntensityColors colors,
-  }) => switch (tenths) {
-    < 45 => colors.four,
-    < 50 => colors.fiveLower,
-    < 55 => colors.fiveUpper,
-    < 60 => colors.sixLower,
-    < 65 => colors.sixUpper,
-    _ => colors.seven,
-  }.background;
 
   Future<ColorReliefStyleLayer?> replace({
     required StyleController styleController,

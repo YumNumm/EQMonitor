@@ -125,6 +125,16 @@ _EarthquakeHistoryDetailsConfig _$EarthquakeHistoryDetailsConfigFromJson(
             ) ??
             EstimatedIntensityDemDisplayMode.intensityClass,
       ),
+      estimatedIntensityDemPalette: $checkedConvert(
+        'estimated_intensity_dem_palette',
+        (v) =>
+            $enumDecodeNullable(
+              _$EstimatedIntensityDemPaletteEnumMap,
+              v,
+              unknownValue: EstimatedIntensityDemPalette.intensityGradient,
+            ) ??
+            EstimatedIntensityDemPalette.intensityGradient,
+      ),
       hypocenterAboveStations: $checkedConvert(
         'hypocenter_above_stations',
         (v) => v as bool? ?? true,
@@ -143,6 +153,7 @@ _EarthquakeHistoryDetailsConfig _$EarthquakeHistoryDetailsConfigFromJson(
     'showAreaIcons': 'show_area_icons',
     'showStationsOnEstimatedIntensity': 'show_stations_on_estimated_intensity',
     'estimatedIntensityDemDisplayMode': 'estimated_intensity_dem_display_mode',
+    'estimatedIntensityDemPalette': 'estimated_intensity_dem_palette',
     'hypocenterAboveStations': 'hypocenter_above_stations',
     'stationDisplayMode': 'station_display_mode',
   },
@@ -158,6 +169,9 @@ Map<String, dynamic> _$EarthquakeHistoryDetailsConfigToJson(
   'estimated_intensity_dem_display_mode':
       _$EstimatedIntensityDemDisplayModeEnumMap[instance
           .estimatedIntensityDemDisplayMode]!,
+  'estimated_intensity_dem_palette':
+      _$EstimatedIntensityDemPaletteEnumMap[instance
+          .estimatedIntensityDemPalette]!,
   'hypocenter_above_stations': instance.hypocenterAboveStations,
   'station_display_mode':
       _$StationDisplayModeEnumMap[instance.stationDisplayMode]!,
@@ -166,6 +180,11 @@ Map<String, dynamic> _$EarthquakeHistoryDetailsConfigToJson(
 const _$EstimatedIntensityDemDisplayModeEnumMap = {
   EstimatedIntensityDemDisplayMode.intensityClass: 'intensityClass',
   EstimatedIntensityDemDisplayMode.tenth: 'tenth',
+};
+
+const _$EstimatedIntensityDemPaletteEnumMap = {
+  EstimatedIntensityDemPalette.intensityGradient: 'intensityGradient',
+  EstimatedIntensityDemPalette.kyoshinMonitor: 'kyoshinMonitor',
 };
 
 const _$StationDisplayModeEnumMap = {

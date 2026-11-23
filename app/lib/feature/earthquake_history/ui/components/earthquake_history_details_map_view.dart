@@ -292,6 +292,7 @@ class const _MapContent({
                   key: const ValueKey('estimated-dem'),
                   tileUrl: demTileUrl,
                   displayMode: details.estimatedIntensityDemDisplayMode,
+                  palette: details.estimatedIntensityDemPalette,
                 )
               else if (showEstimated && tileUrl != null)
                 EarthquakeHistoryDetailsEstimatedIntensityLayer(
