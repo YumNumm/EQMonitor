@@ -269,6 +269,7 @@ class const _MapContent({
                   belowLayerId: stationAnchor,
                   tree: dbTree,
                   parameter: parameter,
+                  showStationLabel: true,
                 ),
             ] else ...[
               if (showEstimated && tileUrl != null)

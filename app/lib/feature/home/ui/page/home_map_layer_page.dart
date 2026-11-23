@@ -110,6 +110,7 @@ class const HomeMapLayerPage({super.key}) extends ConsumerWidget {
                       _KyoshinShowScaleTile(),
                       _KyoshinMinShindoTile(),
                       _KyoshinMarkerSizeTile(),
+                      _KyoshinStationNameTile(),
                     ],
                   ),
                   SizedBox(height: spacing.lg),
@@ -989,6 +990,32 @@ class const _KyoshinMarkerSizeTile() extends ConsumerWidget {
               .get(homeConfigurationProvider.notifier)
               .updateKyoshinMonitor(
                 homeConfig.kyoshinMonitor.copyWith(markerSize: next.first),
+              ),
+        );
+      },
+    );
+  }
+}
+
+class const _KyoshinStationNameTile() extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final homeConfig = ref.watch(homeConfigurationProvider).value;
+    final kmoniConfig = ref.watch(kyoshinMonitorSettingsProvider).value;
+    if (homeConfig == null || kmoniConfig == null || !kmoniConfig.useKmoni) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: '観測点名',
+      subtitle: '地図を拡大したとき、強震モニタの観測点の横に観測点名を表示します。',
+      value: homeConfig.kyoshinMonitor.showStationName,
+      onChanged: (next) async {
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateKyoshinMonitor(
+                homeConfig.kyoshinMonitor.copyWith(showStationName: next),
               ),
         );
       },
