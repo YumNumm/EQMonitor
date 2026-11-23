@@ -65,6 +65,10 @@
   - 待機 job が timeout（350分）または失敗した run は配信しない。後続 run はその run の完了後に進む。
   - 古い run の「Re-run failed jobs」は成功済みの待機 job を再実行しないため、順序保証の対象外になる。
   - 連続 merge 時は iOS ビルドが macOS runner の同時実行枠を占め、`deploy-ios` の開始が遅れうる。
+  - 待機中の job も同時実行枠を1つ使う。待機 run 数がアカウントの上限に達すると、先頭 run の配信 job が
+    runner を得られず停止する。
+  - workflow 直下の `concurrency` は jactionlint の `concurrency-limits` を満たすための run 単位 group で、
+    run 間の直列化はしない。
 - 手動実行の `source_run_id` に完了済み `Deploy App` run ID を指定すると、再ビルドせず
   元のバイナリと配布ノートを再利用する。元runのビルド成功・artifact有効期限・versionを検査する。
   iOS は署名済みIPA内のversion/build numberに一致する ASC buildを選び、Android はAABのSHA-256を照合して
