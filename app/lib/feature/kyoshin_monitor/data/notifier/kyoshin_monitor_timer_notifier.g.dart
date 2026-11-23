@@ -16,8 +16,9 @@ part of 'kyoshin_monitor_timer_notifier.dart';
 /// 2. 続けて位相をずらした測定を数回行い、1 秒粒度の切り捨て誤差を詰める。
 ///    確定したら `settledAt` を立て、画像取得による較正
 ///    (`KyoshinMonitorDelayCalibration`) へ引き継ぐ。
-/// 3. 以後の定期測定は見積もりを動かさず、矛盾の検出だけに使う。
-///    矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は最初から測り直す。
+/// 3. 以後の定期測定と background からの復帰時の測定は見積もりを動かさず、
+///    矛盾の検出だけに使う。矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は
+///    測り直し、確定するまでは直前の見積もりを使い続ける。
 
 @ProviderFor(KyoshinMonitorTimerNotifier)
 final kyoshinMonitorTimerProvider = KyoshinMonitorTimerNotifierProvider._();
@@ -28,8 +29,9 @@ final kyoshinMonitorTimerProvider = KyoshinMonitorTimerNotifierProvider._();
 /// 2. 続けて位相をずらした測定を数回行い、1 秒粒度の切り捨て誤差を詰める。
 ///    確定したら `settledAt` を立て、画像取得による較正
 ///    (`KyoshinMonitorDelayCalibration`) へ引き継ぐ。
-/// 3. 以後の定期測定は見積もりを動かさず、矛盾の検出だけに使う。
-///    矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は最初から測り直す。
+/// 3. 以後の定期測定と background からの復帰時の測定は見積もりを動かさず、
+///    矛盾の検出だけに使う。矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は
+///    測り直し、確定するまでは直前の見積もりを使い続ける。
 final class KyoshinMonitorTimerNotifierProvider
     extends
         $StreamNotifierProvider<
@@ -42,8 +44,9 @@ final class KyoshinMonitorTimerNotifierProvider
   /// 2. 続けて位相をずらした測定を数回行い、1 秒粒度の切り捨て誤差を詰める。
   ///    確定したら `settledAt` を立て、画像取得による較正
   ///    (`KyoshinMonitorDelayCalibration`) へ引き継ぐ。
-  /// 3. 以後の定期測定は見積もりを動かさず、矛盾の検出だけに使う。
-  ///    矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は最初から測り直す。
+  /// 3. 以後の定期測定と background からの復帰時の測定は見積もりを動かさず、
+  ///    矛盾の検出だけに使う。矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は
+  ///    測り直し、確定するまでは直前の見積もりを使い続ける。
   KyoshinMonitorTimerNotifierProvider._()
     : super(
         from: null,
@@ -64,7 +67,7 @@ final class KyoshinMonitorTimerNotifierProvider
 }
 
 String _$kyoshinMonitorTimerNotifierHash() =>
-    r'37d86861d875f569181d0e9c16ed795de93970ad';
+    r'2e233bc81089086c0144f135a6a462c1e750ed5d';
 
 /// `latest.json` でサーバ時刻と端末時計のずれを測る時刻同期エンジン。
 ///
@@ -72,8 +75,9 @@ String _$kyoshinMonitorTimerNotifierHash() =>
 /// 2. 続けて位相をずらした測定を数回行い、1 秒粒度の切り捨て誤差を詰める。
 ///    確定したら `settledAt` を立て、画像取得による較正
 ///    (`KyoshinMonitorDelayCalibration`) へ引き継ぐ。
-/// 3. 以後の定期測定は見積もりを動かさず、矛盾の検出だけに使う。
-///    矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は最初から測り直す。
+/// 3. 以後の定期測定と background からの復帰時の測定は見積もりを動かさず、
+///    矛盾の検出だけに使う。矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は
+///    測り直し、確定するまでは直前の見積もりを使い続ける。
 
 abstract class _$KyoshinMonitorTimerNotifier
     extends $StreamNotifier<KyoshinMonitorTimerState> {

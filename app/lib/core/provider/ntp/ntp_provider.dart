@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:clock/clock.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_config_model.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_config_provider.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_state.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ntp/ntp.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,8 +16,23 @@ part 'ntp_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class Ntp extends _$Ntp {
+  var _wasPaused = false;
+  var _isSyncing = false;
+
   @override
   Future<NtpState> build() async {
+    ref.listen(appLifecycleProvider, (_, next) {
+      if (next == AppLifecycleState.paused) {
+        _wasPaused = true;
+        return;
+      }
+      if (next != AppLifecycleState.resumed || !_wasPaused) {
+        return;
+      }
+      _wasPaused = false;
+      syncMutation.run(ref, (trx) => _sync());
+    });
+
     final config = await ref.watch(ntpConfigProvider.future);
 
     final timer = Timer.periodic(config.interval, (_) async {
@@ -33,15 +50,23 @@ class Ntp extends _$Ntp {
   static final syncMutation = Mutation<void>();
 
   Future<void> _sync() async {
-    final config = await ref.read(ntpConfigProvider.future);
-    final offset = await _resolveOffset(config);
-
-    state = AsyncData(
-      NtpState(
-        offset: offset.unwrap(),
-        updatedAt: clock.now(),
-      ),
-    );
+    if (_isSyncing) {
+      return;
+    }
+    _isSyncing = true;
+    try {
+      final config = await ref.read(ntpConfigProvider.future);
+      final result = await _resolveOffset(config);
+      if (!ref.mounted) {
+        return;
+      }
+      // 失敗した場合は前回の offset を使い続ける。
+      if (result case Success(:final value)) {
+        state = AsyncData(NtpState(offset: value, updatedAt: clock.now()));
+      }
+    } finally {
+      _isSyncing = false;
+    }
   }
 
   /// 設定されたサーバを順に試し、最初に成功した offset を返す

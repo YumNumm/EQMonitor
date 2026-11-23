@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -39,9 +40,8 @@ Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
 ///
 /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
 /// 接続失敗・切断時に指数バックオフ（1s→最大60s）で再接続する。
-/// background 中も接続は閉じない。background からの復帰時は、受信が
-/// [silenceTimeout] 以上途絶えていれば即座に再接続し、そうでなければ接続を
-/// 維持したまま heartbeat を送って [resumeProbeTimeout] 以内の応答を確認する。
+/// background 中も接続は閉じない。background からの復帰時は接続を維持したまま
+/// heartbeat を送り、[resumeProbeTimeout] 以内に pong が返らなければ再接続する。
 /// ネットワークの変化 (オフライン→オンライン、Wi-Fi↔モバイル回線) でも
 /// バックオフをリセットし、全端末が同時に接続しないよう 1〜2 秒の
 /// ジッタを入れて再接続する。
@@ -80,20 +80,46 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
     var isWaitingRetry = false;
     // iOS は suspend 中に Dart の timer が進まないため、経過は壁時計で測る。
     final startedAt = DateTime.now();
-    var lastFrameAt = startedAt;
 
     Timer? silenceWatchdog;
     Timer? heartbeatTimer;
+    Timer? resumeProbe;
     ref.onDispose(() {
       silenceWatchdog?.cancel();
       heartbeatTimer?.cancel();
+      resumeProbe?.cancel();
     });
-    void armSilenceWatchdog([Duration timeout = silenceTimeout]) {
+    // suspend 中に溜まった frame は接続が今も生きている証拠にならないため、
+    // heartbeat の pong だけで解除する。
+    void probe(WebSocket socket) {
+      resumeProbe?.cancel();
+      try {
+        socket.sendText(heartbeatMessage);
+      } on WebSocketConnectionClosed {
+        _reconnect();
+        return;
+      }
+      resumeProbe = Timer(resumeProbeTimeout, () {
+        talker.warning(
+          'EQMonitor WebSocket: no pong received for '
+          '${resumeProbeTimeout.inSeconds}s after resume, reconnecting',
+        );
+        _reconnect();
+      });
+    }
+
+    void armSilenceWatchdog() {
       silenceWatchdog?.cancel();
-      silenceWatchdog = Timer(timeout, () {
+      silenceWatchdog = Timer(silenceTimeout, () {
+        final socket = openSocket;
+        // suspend で止まっていた timer が復帰の通知より先に満了することがある。
+        if (_wasPaused && socket != null) {
+          probe(socket);
+          return;
+        }
         talker.warning(
           'EQMonitor WebSocket: no frame received for '
-          '${timeout.inSeconds}s, reconnecting',
+          '${silenceTimeout.inSeconds}s, reconnecting',
         );
         _reconnect();
       });
@@ -108,26 +134,16 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
         return;
       }
       _wasPaused = false;
-      final now = DateTime.now();
       final socket = openSocket;
       if (socket == null) {
-        if (isWaitingRetry || now.difference(startedAt) >= resumeProbeTimeout) {
+        if (isWaitingRetry ||
+            DateTime.now().difference(startedAt) >= resumeProbeTimeout) {
           _retryDelaySeconds = 1;
           _reconnect();
         }
         return;
       }
-      if (now.difference(lastFrameAt) >= silenceTimeout) {
-        talker.info('EQMonitor WebSocket: stale after resume, reconnecting');
-        _reconnect();
-        return;
-      }
-      try {
-        socket.sendText(heartbeatMessage);
-        armSilenceWatchdog(resumeProbeTimeout);
-      } on WebSocketConnectionClosed {
-        _reconnect();
-      }
+      probe(socket);
     });
 
     Timer? connectivityReconnectTimer;
@@ -168,7 +184,6 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       _retryDelaySeconds = 1;
       didConnect = true;
       openSocket = websocket;
-      lastFrameAt = DateTime.now();
       armSilenceWatchdog();
       websocket.sendText(heartbeatMessage);
       heartbeatTimer = Timer.periodic(heartbeatInterval, (timer) {
@@ -181,9 +196,12 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       });
 
       await for (final event in websocket.events) {
-        lastFrameAt = DateTime.now();
         armSilenceWatchdog();
         if (event case TextDataReceived(:final text)) {
+          if (resumeProbe != null && _isHeartbeatPong(text)) {
+            resumeProbe?.cancel();
+            resumeProbe = null;
+          }
           final response = heartbeatResponder.buildResponse(text);
           if (response != null) {
             websocket.sendText(response);
@@ -207,6 +225,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       openSocket = null;
       silenceWatchdog?.cancel();
       heartbeatTimer?.cancel();
+      resumeProbe?.cancel();
     }
     isWaitingRetry = true;
 
@@ -223,6 +242,17 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
     // close frame なしで終わった接続も、下流が切断として扱えるようにする。
     if (didConnect && !didReceiveClose) {
       yield CloseReceived(1006, 'connection lost');
+    }
+  }
+
+  static bool _isHeartbeatPong(String text) {
+    try {
+      final json = jsonDecode(text);
+      return json is Map<String, dynamic> &&
+          json['type'] == 'pong' &&
+          json['pingId'] == 'heartbeat';
+    } on FormatException {
+      return false;
     }
   }
 

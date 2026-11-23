@@ -38,8 +38,9 @@ const _burstSampleGap = Duration(milliseconds: 230);
 /// 2. 続けて位相をずらした測定を数回行い、1 秒粒度の切り捨て誤差を詰める。
 ///    確定したら `settledAt` を立て、画像取得による較正
 ///    (`KyoshinMonitorDelayCalibration`) へ引き継ぐ。
-/// 3. 以後の定期測定は見積もりを動かさず、矛盾の検出だけに使う。
-///    矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は最初から測り直す。
+/// 3. 以後の定期測定と background からの復帰時の測定は見積もりを動かさず、
+///    矛盾の検出だけに使う。矛盾した場合 (端末時計の変更・サーバ側の遅延変動) は
+///    測り直し、確定するまでは直前の見積もりを使い続ける。
 @riverpod
 class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
   @override
@@ -144,16 +145,38 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
       }),
     );
 
-    // 3. 定期測定は矛盾の検出だけに使う。
-    var isResyncing = false;
-    Timer? resyncTimer;
-    resyncTimer = Timer.periodic(resyncInterval, (_) async {
-      if (disposed || controller.isClosed || isResyncing || !isSettled) {
+    // 確定するまで直前の見積もりを使い続けるため、測り終えてから差し替える。
+    Future<void> remeasure(KyoshinMonitorTimeSample first) async {
+      final samples = [first];
+      for (var i = 1; i < _burstSampleCount; i++) {
+        await Future<void>.delayed(_burstSampleGap);
+        if (disposed || controller.isClosed) {
+          return;
+        }
+        final sample = await sampleOnce();
+        if (disposed || controller.isClosed) {
+          return;
+        }
+        if (sample != null) {
+          samples.add(sample);
+        }
+      }
+      ref.read(kyoshinMonitorTimeSyncSamplesProvider.notifier).clear();
+      KyoshinMonitorTimerState? next;
+      for (final sample in samples) {
+        next = accept(sample);
+      }
+      if (next == null) {
         return;
       }
-      if (KyoshinMonitorBackground.isBackground(
-        ref.read(appLifecycleProvider),
-      )) {
+      current = next.copyWith(settledAt: clock.now());
+      controller.add(current);
+    }
+
+    // 3. 定期測定と復帰時の測定は矛盾の検出だけに使う。
+    var isResyncing = false;
+    Future<void> verify() async {
+      if (disposed || controller.isClosed || isResyncing || !isSettled) {
         return;
       }
       isResyncing = true;
@@ -178,12 +201,34 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
             'sample=${sampleShift.inMilliseconds}ms, resyncing',
           ),
         );
-        ref.invalidateSelf();
+        await remeasure(sample);
       } finally {
         isResyncing = false;
       }
+    }
+
+    final resyncTimer = Timer.periodic(resyncInterval, (_) {
+      if (KyoshinMonitorBackground.isBackground(
+        ref.read(appLifecycleProvider),
+      )) {
+        return;
+      }
+      unawaited(verify());
     });
-    ref.onDispose(() => resyncTimer?.cancel());
+    ref.onDispose(resyncTimer.cancel);
+
+    var wasBackground = false;
+    ref.listen(appLifecycleProvider, (_, next) {
+      if (KyoshinMonitorBackground.isBackground(next)) {
+        wasBackground = true;
+        return;
+      }
+      if (next != AppLifecycleState.resumed || !wasBackground) {
+        return;
+      }
+      wasBackground = false;
+      unawaited(verify());
+    });
 
     yield* controller.stream;
   }
