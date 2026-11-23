@@ -63,6 +63,12 @@ _EarthquakePartial _$EarthquakePartialFromJson(
             ? null
             : EstimatedIntensityTileArchive.fromJson(v as Map<String, dynamic>),
       ),
+      estimatedIntensityDemArchive: $checkedConvert(
+        'estimated_intensity_dem_archive',
+        (v) => v == null
+            ? null
+            : EstimatedIntensityTileArchive.fromJson(v as Map<String, dynamic>),
+      ),
       intensity: $checkedConvert(
         'intensity',
         (v) => v == null
@@ -81,6 +87,7 @@ _EarthquakePartial _$EarthquakePartialFromJson(
     'arrivalTime': 'arrival_time',
     'estimatedIntensityTile': 'estimated_intensity_tile',
     'estimatedIntensityTileArchive': 'estimated_intensity_tile_archive',
+    'estimatedIntensityDemArchive': 'estimated_intensity_dem_archive',
   },
 );
 
@@ -98,6 +105,7 @@ Map<String, dynamic> _$EarthquakePartialToJson(
   'hypocenter': ?instance.hypocenter,
   'estimated_intensity_tile': ?instance.estimatedIntensityTile,
   'estimated_intensity_tile_archive': ?instance.estimatedIntensityTileArchive,
+  'estimated_intensity_dem_archive': ?instance.estimatedIntensityDemArchive,
   'intensity': ?instance.intensity,
 };
 

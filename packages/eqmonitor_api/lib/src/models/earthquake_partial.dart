@@ -46,6 +46,8 @@ abstract class EarthquakePartial with _$EarthquakePartial {
     String? estimatedIntensityTile,
     @JsonKey(includeIfNull: false,name: 'estimated_intensity_tile_archive')
     EstimatedIntensityTileArchive? estimatedIntensityTileArchive,
+    @JsonKey(includeIfNull: false,name: 'estimated_intensity_dem_archive')
+    EstimatedIntensityTileArchive? estimatedIntensityDemArchive,
     @JsonKey(includeIfNull: false)
     IntensityPartial? intensity,
   }) = _EarthquakePartial;
