@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -58,6 +57,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
   // Durable Objects の自動応答は文字列全体に一致するため、順序・空白も固定。
   // RTT probe の連番 pingId と分離し、固定 pong を RTT に計上しない。
   static const heartbeatMessage = '{"type":"ping","pingId":"heartbeat"}';
+  static const heartbeatPong = WsHeartbeatPongMatcher(pingId: 'heartbeat');
 
   var _retryDelaySeconds = 1;
   var _wasPaused = false;
@@ -199,7 +199,7 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
       await for (final event in websocket.events) {
         armSilenceWatchdog();
         if (event case TextDataReceived(:final text)) {
-          if (resumeProbe != null && _isHeartbeatPong(text)) {
+          if (resumeProbe != null && heartbeatPong.matches(text)) {
             resumeProbe?.cancel();
             resumeProbe = null;
           }
@@ -243,17 +243,6 @@ class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
     // close frame なしで終わった接続も、下流が切断として扱えるようにする。
     if (didConnect && !didReceiveClose) {
       yield CloseReceived(1006, 'connection lost');
-    }
-  }
-
-  static bool _isHeartbeatPong(String text) {
-    try {
-      final json = jsonDecode(text);
-      return json is Map<String, dynamic> &&
-          json['type'] == 'pong' &&
-          json['pingId'] == 'heartbeat';
-    } on FormatException {
-      return false;
     }
   }
 
