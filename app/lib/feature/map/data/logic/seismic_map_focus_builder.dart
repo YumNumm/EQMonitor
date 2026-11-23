@@ -15,6 +15,12 @@ const seismicMapFocusMargin = 0.1;
 /// 震源の周辺だけでなく、揺れが広がる範囲まで一度に見渡せる広さにしている。
 const seismicMapFocusMinimumRadiusKm = 150.0;
 
+/// 揺れ検知を含むフォーカス範囲を外側へ広げて揃える格子の間隔(度)。
+///
+/// 揺れ検知の範囲は検知点が増えるたびに少しずつ広がるため、そのまま使うと
+/// カメラが毎回動く。格子に揃えて、範囲が格子をまたいだ時だけ動かす。
+const seismicMapFocusShakeGridDegrees = 2.0;
+
 const _kilometersPerLatitudeDegree = 111.32;
 
 /// 高緯度で経度方向の換算が発散するのを防ぐための cos(緯度) の下限。
@@ -29,8 +35,46 @@ class const SeismicMapFocusBuilder() {
     required List<ShakeDetectionEvent> shakes,
   }) {
     final targets = realtimeTargetCoordinates(eews: eews, shakes: shakes);
-    return boundsForTargets(targets: targets, fallbackBounds: fallbackBounds);
+    if (targets.isEmpty) {
+      return fallbackBounds;
+    }
+    return boundsForRealtimeTargets(targets: targets, shakes: shakes);
   }
+
+  MapCameraBounds boundsForRealtimeTargets({
+    required List<SeismicMapGeoCoordinate> targets,
+    required List<ShakeDetectionEvent> shakes,
+  }) {
+    final hasShakeTarget = shakes.any(
+      (shake) => shakeTargetCoordinates(shake).isNotEmpty,
+    );
+    if (!hasShakeTarget) {
+      return expandedBounds(targets: targets);
+    }
+    // 格子に揃える分が余白になる。余白を足してから揃えると、格子上の辺が1格子ぶん余計に広がる。
+    return snapOutward(
+      bounds: expandedBounds(targets: targets, margin: 0),
+      degrees: seismicMapFocusShakeGridDegrees,
+    );
+  }
+
+  static MapCameraBounds snapOutward({
+    required MapCameraBounds bounds,
+    required double degrees,
+  }) => MapCameraBounds(
+    west: ((bounds.west / degrees).floor() * degrees)
+        .clamp(-180, 180)
+        .toDouble(),
+    south: ((bounds.south / degrees).floor() * degrees)
+        .clamp(-90, 90)
+        .toDouble(),
+    east: ((bounds.east / degrees).ceil() * degrees)
+        .clamp(-180, 180)
+        .toDouble(),
+    north: ((bounds.north / degrees).ceil() * degrees)
+        .clamp(-90, 90)
+        .toDouble(),
+  );
 
   List<SeismicMapGeoCoordinate> realtimeTargetCoordinates({
     required List<EewTelegramItem> eews,
@@ -96,6 +140,13 @@ class const SeismicMapFocusBuilder() {
     if (targets.isEmpty) {
       return fallbackBounds;
     }
+    return expandedBounds(targets: targets);
+  }
+
+  static MapCameraBounds expandedBounds({
+    required List<SeismicMapGeoCoordinate> targets,
+    double margin = seismicMapFocusMargin,
+  }) {
     final first = targets.first;
     final minLat = targets.fold(
       first.latitude,
@@ -114,10 +165,10 @@ class const SeismicMapFocusBuilder() {
       (value, point) => point.longitude > value ? point.longitude : value,
     );
     return expandToMinimumRadius(
-      west: minLng - seismicMapFocusMargin,
-      east: maxLng + seismicMapFocusMargin,
-      south: minLat - seismicMapFocusMargin,
-      north: maxLat + seismicMapFocusMargin,
+      west: minLng - margin,
+      east: maxLng + margin,
+      south: minLat - margin,
+      north: maxLat + margin,
     );
   }
 

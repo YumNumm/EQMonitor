@@ -272,7 +272,7 @@ void main() {
         animate: () => newAnimation.future,
       );
       final shakes = [
-        _sampleShake(minLat: 20, maxLat: 46, minLng: 120, maxLng: 154),
+        _sampleShake(minLat: 30, maxLat: 40, minLng: 120, maxLng: 154),
       ];
 
       final oldFocus = coordinator.setController(
@@ -434,6 +434,63 @@ void main() {
       expect((centers.last as CameraUpdatePosition).center?.lon, 137);
     });
 
+    test('同じ範囲へのrealtime focusはカメラを動かし直さない', () async {
+      final coordinator = HomeMapCameraCoordinator();
+      final controller = MockMapController();
+      var cameraCallCount = 0;
+      stubCameraAnimations(
+        controller: controller,
+        animate: () {
+          cameraCallCount += 1;
+          return Future<void>.value();
+        },
+      );
+      final home = Future.value(const HomeConfigurationModel());
+
+      expect(
+        await coordinator.setController(
+          controller: controller,
+          viewportSize: const Size(375, 667),
+          home: home,
+          eews: const [],
+          shakes: [_sampleShake()],
+        ),
+        isFalse,
+      );
+      expect(cameraCallCount, 1);
+
+      expect(
+        await coordinator.handleRealtimeTransition(
+          home: home,
+          eews: const [],
+          shakes: [_sampleShake(minLat: 33.1, maxLng: 131.9)],
+        ),
+        isFalse,
+      );
+      expect(cameraCallCount, 1);
+
+      expect(
+        await coordinator.handleRealtimeTransition(
+          home: home,
+          eews: const [],
+          shakes: [_sampleShake(maxLat: 37)],
+        ),
+        isFalse,
+      );
+      expect(cameraCallCount, 2);
+
+      coordinator.cancelAutomaticFocus();
+      expect(
+        await coordinator.handleRealtimeTransition(
+          home: home,
+          eews: const [],
+          shakes: [_sampleShake(maxLat: 37)],
+        ),
+        isFalse,
+      );
+      expect(cameraCallCount, 3);
+    });
+
     test('target消滅とcontroller切替が重なっても新controllerをHomeへ戻す', () async {
       final coordinator = HomeMapCameraCoordinator();
       final oldController = MockMapController();
@@ -467,7 +524,7 @@ void main() {
       );
       final oldRealtime = coordinator.handleRealtimeTransition(
         home: Future.value(const HomeConfigurationModel()),
-        eews: [_sampleEew(eventId: '20250101120001')],
+        eews: [_sampleEew(eventId: '20250101120001', latitude: 37.5)],
         shakes: const [],
       );
       await Future<void>.delayed(Duration.zero);

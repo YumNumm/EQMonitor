@@ -123,6 +123,8 @@ abstract class HomeDebugOverlaySettings with _$HomeDebugOverlaySettings {
     @Default(false) bool shakeDetection,
     @Default(false) bool kyoshinMonitor,
     @Default(false) bool eew,
+    @Default(false) bool focusBounds,
+    @Default(false) bool shakeDetectionDuringEew,
   }) = _HomeDebugOverlaySettings;
 
   factory fromJson(Map<String, dynamic> json) =>

@@ -135,6 +135,8 @@ class const HomeMapLayerPage({super.key}) extends ConsumerWidget {
                         _DebugOverlayShakeDetectionTile(),
                         _DebugOverlayKyoshinMonitorTile(),
                         _DebugOverlayEewTile(),
+                        _DebugFocusBoundsTile(),
+                        _DebugShakeDetectionDuringEewTile(),
                         _DebugKyoshinIntensityIconTile(),
                       ],
                     ),
@@ -1382,6 +1384,56 @@ class const _DebugKyoshinIntensityIconTile() extends ConsumerWidget {
               .get(homeConfigurationProvider.notifier)
               .updateKyoshinMonitor(
                 cfg.kyoshinMonitor.copyWith(showIntensityIcon: next),
+              ),
+        );
+      },
+    );
+  }
+}
+
+class const _DebugFocusBoundsTile() extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: 'フォーカス範囲',
+      subtitle: '自動フォーカスや全体表示で合わせる範囲を、赤の点線で表示します。地震履歴の詳細にも表示します。',
+      value: cfg.debugOverlay.focusBounds,
+      onChanged: (next) async {
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateDebugOverlay(
+                cfg.debugOverlay.copyWith(focusBounds: next),
+              ),
+        );
+      },
+    );
+  }
+}
+
+class const _DebugShakeDetectionDuringEewTile() extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: 'EEW 中も揺れ検知を表示',
+      subtitle: 'EEW と結合した揺れ検知も、地図とカードに表示します。',
+      value: cfg.debugOverlay.shakeDetectionDuringEew,
+      onChanged: (next) async {
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateDebugOverlay(
+                cfg.debugOverlay.copyWith(shakeDetectionDuringEew: next),
               ),
         );
       },

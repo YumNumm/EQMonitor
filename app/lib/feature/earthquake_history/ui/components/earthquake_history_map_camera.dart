@@ -22,30 +22,44 @@ const double kEarthquakeHistoryMapFocusZoom = 8;
 /// 地震履歴詳細マップのカメラ位置（中心・ズーム・フォーカス座標）を算出する。
 class const EarthquakeHistoryMapCamera() {
   MapCameraBoundsFitResult initialRegionCamera({
-    required Earthquake earthquake,
-    required JmaMap_JmaMapData regionMap,
+    required MapCameraBounds? bounds,
     required Size viewportSize,
     required double maxZoom,
   }) {
-    final points = const EarthquakeHistoryMapBoundsCalculator()
-        .regionBoundsPoints(earthquake: earthquake, regionMap: regionMap);
-    if (points.isEmpty) {
+    if (bounds == null) {
       return const MapCameraBoundsFitInvalid(
         reason: MapCameraBoundsFitInvalidReason.invalidBounds,
       );
     }
     return const MapCameraBoundsFitter().fit(
-      bounds: MapCameraBounds(
-        west: points.map((point) => point.longitude).reduce(math.min),
-        south: points.map((point) => point.latitude).reduce(math.min),
-        east: points.map((point) => point.longitude).reduce(math.max),
-        north: points.map((point) => point.latitude).reduce(math.max),
-      ),
+      bounds: bounds,
       viewportLogicalSize: viewportSize,
       devicePixelRatio: 1,
       padding: const EdgeInsets.all(48),
       minZoom: 0,
       maxZoom: math.min(10, maxZoom),
+    );
+  }
+
+  MapCameraBounds? initialRegionBounds({
+    required Earthquake earthquake,
+    required JmaMap_JmaMapData regionMap,
+  }) => boundsOf(
+    const EarthquakeHistoryMapBoundsCalculator().regionBoundsPoints(
+      earthquake: earthquake,
+      regionMap: regionMap,
+    ),
+  );
+
+  MapCameraBounds? boundsOf(List<EarthquakeHistoryMapPoint> points) {
+    if (points.isEmpty) {
+      return null;
+    }
+    return MapCameraBounds(
+      west: points.map((point) => point.longitude).reduce(math.min),
+      south: points.map((point) => point.latitude).reduce(math.min),
+      east: points.map((point) => point.longitude).reduce(math.max),
+      north: points.map((point) => point.latitude).reduce(math.max),
     );
   }
 
