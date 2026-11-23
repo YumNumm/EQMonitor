@@ -18,6 +18,9 @@
 - 本番と beta の release-please ジョブは同一 GitHub App installation の REST 制限を共有する。
   並列実行すると commit backfill の API 呼び出しが重なり rate limit や 5xx になりやすいため、
   `.github/workflows/release-please.yaml` では beta 完了後に本番を走らせる（2026-11-22 確認）。
+- commit backfill 中の GitHub App REST 制限や一時的 5xx で `release-please failed:`（本文空）
+  になることがある。`.github/actions/release-please-with-retry` が 45 秒・90 秒の間隔で
+  最大 3 回まで再実行する（2026-11-23 確認）。
 - component はPRブランチ衝突の防止に必要。両configで `include-component-in-tag: false` を維持する。
 - 両PRが `app/pubspec.yaml` を更新する。原則 beta を繰り返し、本番は最後にmergeする。
   Release PR ブランチは再生成されるため直接編集せず、設定変更は `develop` へ入れる。

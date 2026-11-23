@@ -1,0 +1,118 @@
+name: Release Please with retry
+description: >-
+  Run googleapis/release-please-action with short waits between attempts
+  when commit backfill hits GitHub App REST rate limits or transient errors.
+inputs:
+  token:
+    description: GitHub token for release-please
+    required: true
+  config-file:
+    description: release-please config path
+    required: true
+  manifest-file:
+    description: release-please manifest path
+    required: true
+outputs:
+  release_created:
+    description: Whether a GitHub release was created
+    value: ${{ steps.result.outputs.release_created }}
+  tag_name:
+    description: The created tag name
+    value: ${{ steps.result.outputs.tag_name }}
+  releases_created:
+    description: Whether releases were created
+    value: ${{ steps.result.outputs.releases_created }}
+  paths_released:
+    description: Paths released
+    value: ${{ steps.result.outputs.paths_released }}
+  sha:
+    description: Release commit SHA
+    value: ${{ steps.result.outputs.sha }}
+  prs_created:
+    description: Whether pull requests were created
+    value: ${{ steps.result.outputs.prs_created }}
+  pr:
+    description: Pull request number
+    value: ${{ steps.result.outputs.pr }}
+  skip:
+    description: Whether release was skipped
+    value: ${{ steps.result.outputs.skip }}
+runs:
+  using: composite
+  steps:
+    - id: release_attempt_1
+      uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+      continue-on-error: true
+      with:
+        token: ${{ inputs.token }}
+        config-file: ${{ inputs.config-file }}
+        manifest-file: ${{ inputs.manifest-file }}
+
+    - name: Wait before release-please retry
+      if: steps.release_attempt_1.outcome == 'failure'
+      shell: bash
+      run: sleep 45
+
+    - id: release_attempt_2
+      if: steps.release_attempt_1.outcome == 'failure'
+      uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+      continue-on-error: true
+      with:
+        token: ${{ inputs.token }}
+        config-file: ${{ inputs.config-file }}
+        manifest-file: ${{ inputs.manifest-file }}
+
+    - name: Wait before second release-please retry
+      if: >-
+        steps.release_attempt_1.outcome == 'failure' &&
+        steps.release_attempt_2.outcome == 'failure'
+      shell: bash
+      run: sleep 90
+
+    - id: release_attempt_3
+      if: >-
+        steps.release_attempt_1.outcome == 'failure' &&
+        steps.release_attempt_2.outcome == 'failure'
+      uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+      continue-on-error: true
+      with:
+        token: ${{ inputs.token }}
+        config-file: ${{ inputs.config-file }}
+        manifest-file: ${{ inputs.manifest-file }}
+
+    - id: result
+      name: Resolve release-please result
+      shell: bash
+      run: |
+        set -euo pipefail
+        if [ "${{ steps.release_attempt_1.outcome }}" = "success" ]; then
+          echo "release_created=${{ steps.release_attempt_1.outputs.release_created }}" >> "$GITHUB_OUTPUT"
+          echo "tag_name=${{ steps.release_attempt_1.outputs.tag_name }}" >> "$GITHUB_OUTPUT"
+          echo "releases_created=${{ steps.release_attempt_1.outputs.releases_created }}" >> "$GITHUB_OUTPUT"
+          echo "paths_released=${{ steps.release_attempt_1.outputs.paths_released }}" >> "$GITHUB_OUTPUT"
+          echo "sha=${{ steps.release_attempt_1.outputs.sha }}" >> "$GITHUB_OUTPUT"
+          echo "prs_created=${{ steps.release_attempt_1.outputs.prs_created }}" >> "$GITHUB_OUTPUT"
+          echo "pr=${{ steps.release_attempt_1.outputs.pr }}" >> "$GITHUB_OUTPUT"
+          echo "skip=${{ steps.release_attempt_1.outputs.skip }}" >> "$GITHUB_OUTPUT"
+        elif [ "${{ steps.release_attempt_2.outcome }}" = "success" ]; then
+          echo "release_created=${{ steps.release_attempt_2.outputs.release_created }}" >> "$GITHUB_OUTPUT"
+          echo "tag_name=${{ steps.release_attempt_2.outputs.tag_name }}" >> "$GITHUB_OUTPUT"
+          echo "releases_created=${{ steps.release_attempt_2.outputs.releases_created }}" >> "$GITHUB_OUTPUT"
+          echo "paths_released=${{ steps.release_attempt_2.outputs.paths_released }}" >> "$GITHUB_OUTPUT"
+          echo "sha=${{ steps.release_attempt_2.outputs.sha }}" >> "$GITHUB_OUTPUT"
+          echo "prs_created=${{ steps.release_attempt_2.outputs.prs_created }}" >> "$GITHUB_OUTPUT"
+          echo "pr=${{ steps.release_attempt_2.outputs.pr }}" >> "$GITHUB_OUTPUT"
+          echo "skip=${{ steps.release_attempt_2.outputs.skip }}" >> "$GITHUB_OUTPUT"
+        elif [ "${{ steps.release_attempt_3.outcome }}" = "success" ]; then
+          echo "release_created=${{ steps.release_attempt_3.outputs.release_created }}" >> "$GITHUB_OUTPUT"
+          echo "tag_name=${{ steps.release_attempt_3.outputs.tag_name }}" >> "$GITHUB_OUTPUT"
+          echo "releases_created=${{ steps.release_attempt_3.outputs.releases_created }}" >> "$GITHUB_OUTPUT"
+          echo "paths_released=${{ steps.release_attempt_3.outputs.paths_released }}" >> "$GITHUB_OUTPUT"
+          echo "sha=${{ steps.release_attempt_3.outputs.sha }}" >> "$GITHUB_OUTPUT"
+          echo "prs_created=${{ steps.release_attempt_3.outputs.prs_created }}" >> "$GITHUB_OUTPUT"
+          echo "pr=${{ steps.release_attempt_3.outputs.pr }}" >> "$GITHUB_OUTPUT"
+          echo "skip=${{ steps.release_attempt_3.outputs.skip }}" >> "$GITHUB_OUTPUT"
+        else
+          echo "release-please failed after 3 attempts"
+          exit 1
+        fi
