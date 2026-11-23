@@ -14,6 +14,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_sort_chips.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -128,6 +129,7 @@ class const _CityDetailModal({
                     child: ErrorCard(
                       error: error,
                       onReload: () async {
+                        await HapticFeedback.lightImpact();
                         ref.invalidate(earthquakeHistoryProvider(parameter));
                       },
                     ),
@@ -193,6 +195,7 @@ class const _AreaEarthquakeListSliverGroup({
                 onPressed: isAppending
                     ? null
                     : () async {
+                        await HapticFeedback.lightImpact();
                         activeCursor.value = nextToken;
                         try {
                           await ref

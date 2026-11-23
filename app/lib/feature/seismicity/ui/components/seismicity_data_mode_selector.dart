@@ -10,6 +10,7 @@ class const SeismicityDataModeSelector({
   @override
   Widget build(BuildContext context) => M3EToggleButtonGroup(
     type: M3EButtonGroupType.connected,
+    haptic: .light,
     actions: const [
       M3EToggleButtonGroupAction(label: Text('全震源')),
       M3EToggleButtonGroupAction(label: Text('有感地震')),

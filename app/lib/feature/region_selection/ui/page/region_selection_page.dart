@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_hierarchy.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_option_label.dart';
@@ -9,6 +10,7 @@ import 'package:eqmonitor/feature/region_selection/data/model/region_selection_r
 import 'package:eqmonitor/feature/region_selection/data/provider/region_catalog_provider.dart';
 import 'package:eqmonitor/feature/region_selection/ui/component/region_hierarchy_list.dart';
 import 'package:eqmonitor/feature/region_selection/ui/component/region_selection_map.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -42,12 +44,12 @@ class const RegionSelectionPage({
             children: [
               const Text('地域情報を読み込めませんでした'),
               M3ETextButton(
-                onPressed: () {
+                onPressed: () => HapticUtil.light(() {
                   ref.invalidate(parameterSetProvider);
                   ref.invalidate(
                     regionCatalogProvider(notification: request.notification),
                   );
-                },
+                }),
                 child: const Text('再試行'),
               ),
             ],
@@ -172,20 +174,20 @@ class const _RegionSelectionContent({
           actions: [
             if (multiple && selected.isNotEmpty)
               M3ETextButton(
-                onPressed: () {
+                onPressed: () => HapticUtil.light(() {
                   selection.value = const [];
-                },
+                }),
                 child: const Text('すべて解除'),
               ),
             if (!multiple &&
                 request.allowEmpty &&
                 request.initialSelection.isNotEmpty)
               M3ETextButton(
-                onPressed: () => confirm(const []),
+                onPressed: () => HapticUtil.light(() => confirm(const [])),
                 child: const Text('指定を解除'),
               ),
             M3ETextButton.icon(
-              onPressed: () {
+              onPressed: () => HapticUtil.selection(() {
                 showMap.value = !showMap.value;
                 if (showMap.value) {
                   kind.value ??=
@@ -198,7 +200,7 @@ class const _RegionSelectionContent({
                   controller.clear();
                   FocusScope.of(context).unfocus();
                 }
-              },
+              }),
               icon: Icon(showMap.value ? Icons.list : Icons.map_outlined),
               label: Text(showMap.value ? '一覧' : '地図'),
             ),
@@ -206,7 +208,7 @@ class const _RegionSelectionContent({
         ),
         floatingActionButton: hasConfirmButton
             ? FloatingActionButton.extended(
-                onPressed: () => confirm(selected),
+                onPressed: () => HapticUtil.light(() => confirm(selected)),
                 icon: const Icon(Icons.check),
                 label: Text(
                   multiple && selected.isNotEmpty
@@ -232,7 +234,7 @@ class const _RegionSelectionContent({
                   trailing: [
                     if (controller.text.isNotEmpty)
                       IconButton(
-                        onPressed: controller.clear,
+                        onPressed: () => HapticUtil.light(controller.clear),
                         tooltip: '検索語を消去',
                         icon: const Icon(Icons.clear),
                       ),
@@ -265,19 +267,19 @@ class const _RegionSelectionContent({
                         ChoiceChip(
                           label: const Text('すべて'),
                           selected: kind.value == null,
-                          onSelected: (_) {
+                          onSelected: (_) => HapticUtil.selection(() {
                             kind.value = null;
                             parent.value = null;
-                          },
+                          }),
                         ),
                       for (final value in request.kinds)
                         ChoiceChip(
                           label: Text(value.label),
                           selected: kind.value == value,
-                          onSelected: (_) {
+                          onSelected: (_) => HapticUtil.selection(() {
                             kind.value = value;
                             parent.value = null;
-                          },
+                          }),
                         ),
                     ],
                   ),
@@ -291,9 +293,9 @@ class const _RegionSelectionContent({
                       avatar: const Icon(Icons.filter_alt_outlined, size: 18),
                       label: Text('${scope.name}の地域'),
                       deleteButtonTooltipMessage: '絞り込みを解除',
-                      onDeleted: () {
+                      onDeleted: () => HapticUtil.selection(() {
                         parent.value = null;
-                      },
+                      }),
                     ),
                   ),
                 ),
@@ -306,7 +308,7 @@ class const _RegionSelectionContent({
                         selected: selected,
                         parent: mapScope,
                         bottomInset: actionInset,
-                        onSelected: (option) {
+                        onSelected: (option) async {
                           if (unavailable.contains(option.identity)) {
                             ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()
@@ -319,6 +321,7 @@ class const _RegionSelectionContent({
                               );
                             return;
                           }
+                          await HapticFeedback.selectionClick();
                           selection.value = reducer.select(
                             selected: reducer.restore(
                               selected: selection.value,
@@ -348,7 +351,8 @@ class const _RegionSelectionContent({
                         onRegionSelected: (value) {
                           browseRegion.value = value;
                         },
-                        onOptionSelected: select,
+                        onOptionSelected: (option) =>
+                            HapticUtil.selection(() => select(option)),
                       )
                     : items.isEmpty
                     ? Center(
@@ -358,12 +362,12 @@ class const _RegionSelectionContent({
                             const Text('該当する地域がありません'),
                             if (hasKindFilter || parent.value != null)
                               M3ETextButton(
-                                onPressed: () {
+                                onPressed: () => HapticUtil.light(() {
                                   if (request.kinds.length > 1) {
                                     kind.value = null;
                                   }
                                   parent.value = null;
-                                },
+                                }),
                                 child: const Text('絞り込みを解除して探す'),
                               ),
                           ],
@@ -410,7 +414,8 @@ class const _RegionSelectionContent({
                                         '・${request.unavailableLabel}'
                                   : const RegionOptionLabel().subtitle(item),
                             ),
-                            onTap: () => select(item),
+                            onTap: () =>
+                                HapticUtil.selection(() => select(item)),
                             trailing: !canBrowse
                                 ? (!multiple && (isSelected || isUnavailable)
                                       ? const Icon(Icons.check)

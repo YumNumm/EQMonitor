@@ -11,6 +11,7 @@ class const SeismicitySpanSelector({
   Widget build(BuildContext context) {
     return M3EToggleButtonGroup(
       type: M3EButtonGroupType.connected,
+      haptic: .light,
       actions: const [
         M3EToggleButtonGroupAction(label: Text('1ヶ月')),
         M3EToggleButtonGroupAction(label: Text('3ヶ月')),
