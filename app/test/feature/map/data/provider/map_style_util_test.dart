@@ -33,7 +33,7 @@ void main() {
         (layer) => (layer['id'] as String).endsWith('Anchor'),
       );
 
-      expect(anchors, hasLength(7));
+      expect(anchors, hasLength(8));
       for (final anchor in anchors) {
         expect(anchor['type'], 'background');
         expect(anchor['paint'], {'background-opacity': 0});
@@ -51,6 +51,7 @@ void main() {
           BaseLayer.regionOverlayAnchor,
           BaseLayer.foregroundOverlayAnchor,
           BaseLayer.markerBackgroundAnchor,
+          BaseLayer.areaIconAnchor,
           BaseLayer.waveLineAnchor,
           BaseLayer.markerLowerAnchor,
           BaseLayer.markerUpperAnchor,
