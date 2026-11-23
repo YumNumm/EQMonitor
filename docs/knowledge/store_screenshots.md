@@ -93,6 +93,12 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   - Android は渡さない。debug ビルドは `versionNameSuffix` で `.d` が付き、`x.y.z` を渡すと `3.1.0.d` で拒否される。`3.1.0-beta.4.d` は通る。
 - ステータスバーは iOS が `simctl status_bar override`、Android が demo mode で 9:41 に固定する。
   Android の demo mode は起動直後に送ると反映されないことがあるため撮影ごとに送り直す。`network -e mobile hide` を送ると反映されなくなったため送らない。
+- `capture.py` は iOS の `patrol test` に `XCODE_XCCONFIG_FILE=tool/store_screenshots/ios_simulator.xcconfig` を渡す。
+  - Patrol の `xcodebuild build-for-testing` は generic な Simulator 向けに全アーキテクチャをビルドする。`maplibre_native_ffi` は `ios-simulator-x64` の配布物が無くビルドフックが失敗するため、x86_64 を外す。
+  - Patrol は `FLUTTER_BUILD_NUMBER` を xcodebuild に渡さない。`Generated.xcconfig` を読まない `FcmServiceExtension` の `CFBundleVersion` が空になり、Simulator へのインストールが `Invalid placeholder attributes` で失敗するため、値を補う。
+- `STORE_SCREENSHOT_SCENES` にカンマ区切りで複数のシーンを渡すと、`--dart-define` がカンマで分割されて先頭のシーンしか撮られない（2026-11-23 に手元で確認）。
+- ページに複数の端末を置くときは `layout.json` の `devices` に手で書く（後ろの要素ほど手前）。`figma_extract.py` は `device` だけを更新し、`devices` は残す。
+  02 は履歴一覧（震度 4 以上、`earthquake_history_list`）を奥、地震詳細（`20260823020050`）を手前に、元の 74% の大きさで斜めに重ねている。Figma にこの配置は無い。
 - Patrol の iOS 実行には `RunnerUITests` ターゲット（`app/ios/RunnerUITests/RunnerUITests.m`、`FlutterGeneratedPluginSwiftPackage` をリンク、`User Script Sandboxing = NO`、スキームで並列実行なし）が必要。
   Android は `MainActivityTest.java` と `PatrolJUnitRunner`・Test Orchestrator を使う。
 

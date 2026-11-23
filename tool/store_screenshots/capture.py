@@ -164,7 +164,10 @@ def capture(device: IosSimulator | AndroidEmulator, config: dict, patrol_args: l
     output.mkdir(parents=True, exist_ok=True)
     command = ["patrol", "test", "--target", PATROL_TARGET, "--device", device.patrol_device, "--no-label", *patrol_args]
     print(f"running: {' '.join(command)}", flush=True)
-    patrol = subprocess.Popen(command, cwd=APP_DIR)
+    environment = dict(os.environ)
+    if isinstance(device, IosSimulator):
+        environment["XCODE_XCCONFIG_FILE"] = str(TOOL_DIR / "ios_simulator.xcconfig")
+    patrol = subprocess.Popen(command, cwd=APP_DIR, env=environment)
     captured: set[str] = set()
     try:
         while patrol.poll() is None:

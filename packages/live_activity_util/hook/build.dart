@@ -299,7 +299,16 @@ Future<void> main(List<String> args) => build(
       ],
     );
 
-    await generator.generate();
+    // ffigen は Command Line Tools の libclang を先に探す。SDK と版が合わないと stdarg.h などの組み込みヘッダを解決できない。
+    final developerDir = (await Process.run('xcode-select', [
+      '-p',
+    ])).stdout.toString().trim();
+    final xcodeLibclang = File(
+      '$developerDir/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib',
+    );
+    await generator.generate(
+      libclangDylib: xcodeLibclang.existsSync() ? xcodeLibclang.uri : null,
+    );
     logger.info('Generated Dart bindings: ${ffiOutputDartFile.toFilePath()}');
 
     // Step 3: Compile Objective-C glue code
