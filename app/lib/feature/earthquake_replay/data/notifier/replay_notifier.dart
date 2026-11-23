@@ -22,6 +22,8 @@ import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_start_exce
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_exit_notice_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_file_repository.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_kyoshin_archive_frame.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_kyoshin_archive_frame_loader.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_kyoshin_archive_repository.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
@@ -32,6 +34,8 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/notifier/device_shake_detection.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_tuning_provider.dart';
+import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
+import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' show EewItemWithRelations;
 import 'package:riverpod/experimental/mutation.dart';
@@ -118,9 +122,18 @@ class ReplayNotifier extends _$ReplayNotifier {
     final repository = await ref.read(
       replayKyoshinArchiveRepositoryProvider.future,
     );
-    final monitorSource =
-        ref.read(kyoshinMonitorSettingsProvider).value?.monitorSource ??
-        KyoshinMonitorSource.lmoni;
+    // 起動直後は設定と購読状態の読み込みが済んでいないことがある。
+    final settings =
+        await Result.capture<KyoshinMonitorSettingsModel, Exception>(
+          () => ref.read(kyoshinMonitorSettingsProvider.future),
+        );
+    await Result.capture<SubscriptionStatus, Exception>(
+      () => ref.read(subscriptionProvider.future),
+    );
+    final monitorSource = switch (settings) {
+      Success(:final value) => value.monitorSource,
+      Failure() => KyoshinMonitorSource.lmoni,
+    };
     repository.clear();
     // 過去画像は1時間ごとにまとめて削除されるため、範囲内でも先頭が残っているとは限らない。
     switch (await repository.fetchShindoImage(
@@ -160,6 +173,8 @@ class ReplayNotifier extends _$ReplayNotifier {
   }
 
   Future<void> start({required ReplaySource source}) async {
+    // 読み込みや取得を待つ間に発表された EEW を、再生の開始で隠さない。
+    _throwIfLiveEewAlive();
     _stopPlaybackTimer();
     _generation++;
     _anchor = null;
@@ -465,63 +480,38 @@ class ReplayNotifier extends _$ReplayNotifier {
       return;
     }
     _appliedArchiveImageTime = observedAt;
-    final repository = await ref.read(
-      replayKyoshinArchiveRepositoryProvider.future,
+    final loader = await ref.read(
+      replayKyoshinArchiveFrameLoaderProvider.future,
     );
-    final result = await repository.fetchShindoImage(
+    final frame = await loader.load(
       source: source.monitorSource,
-      time: observedAt,
-    );
-    if (!ref.mounted || generation != _generation) {
-      return;
-    }
-    if (result case Failure(:final exception, :final stackTrace)) {
-      talker.warning(
-        '[Replay] kmoni archive frame unavailable: $observedAt',
-        exception,
-        stackTrace,
-      );
-    }
-    final image = result.unwrapOr(null);
-    if (image == null) {
-      final isExpired =
-          result is Success &&
-          ref
-              .read(replayKyoshinArchiveWindowResolverProvider)
-              .isExpired(
-                frameTime: observedAt,
-                now: ref.read(appClockProvider.notifier).realtimeNow(),
-              );
-      if (isExpired) {
-        exit(notice: .archiveExpired);
-        return;
-      }
-      // 取得できなかった時刻に、直前の時刻の観測点を残さない。
-      ref.read(deviceShakeDetectionProvider.notifier).clear();
-      ref
-          .read(kyoshinMonitorProvider.notifier)
-          .setReplay(geoJson: null, targetTime: observedAt);
-      return;
-    }
-    final baselineImages = <DateTime, Uint8List>{};
-    for (final baselineTime in _shakeBaselineTimes(observedAt: observedAt)) {
-      final baseline = await repository.fetchShindoImage(
-        source: source.monitorSource,
-        time: baselineTime,
-      );
-      if (baseline case Success(:final value?)) {
-        baselineImages[baselineTime] = value;
-      }
-    }
-    if (!ref.mounted || generation != _generation) {
-      return;
-    }
-    await _applyKyoshinImage(
-      image: image,
       observedAt: observedAt,
-      baselineImages: baselineImages,
-      generation: generation,
+      baselineTimes: _shakeBaselineTimes(observedAt: observedAt),
+      now: ref.read(appClockProvider.notifier).realtimeNow(),
     );
+    if (!ref.mounted || generation != _generation) {
+      return;
+    }
+    switch (frame) {
+      case ReplayKyoshinArchiveFramePurged():
+        exit(notice: .archiveExpired);
+      case ReplayKyoshinArchiveFrameUnavailable():
+        // 取得できなかった時刻に、直前の時刻の観測点を残さない。
+        ref.read(deviceShakeDetectionProvider.notifier).clear();
+        ref
+            .read(kyoshinMonitorProvider.notifier)
+            .setReplay(geoJson: null, targetTime: observedAt);
+      case ReplayKyoshinArchiveFrameAvailable(
+        :final image,
+        :final baselineImages,
+      ):
+        await _applyKyoshinImage(
+          image: image,
+          observedAt: observedAt,
+          baselineImages: baselineImages,
+          generation: generation,
+        );
+    }
   }
 
   List<DateTime> _shakeBaselineTimes({required DateTime observedAt}) => ref
