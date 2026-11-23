@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_layer_parameter_notifier.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -142,6 +143,37 @@ class const EarthquakeHistoryDetailsSettingsSheet({
                                         details.copyWith(
                                           showStationsOnEstimatedIntensity:
                                               value,
+                                        ),
+                                      ),
+                                );
+                          },
+                  ),
+                  SwitchListTile.adaptive(
+                    title: const Text('推計震度を 0.1 単位で表示'),
+                    subtitle: const Text('震度階級ごとの色分けの代わりに、計測震度を細かく色分けします'),
+                    value:
+                        details.estimatedIntensityDemDisplayMode ==
+                        EstimatedIntensityDemDisplayMode.tenth,
+                    onChanged: busy
+                        ? null
+                        : (value) async {
+                            await EarthquakeHistoryConfigNotifier
+                                .saveDetailsMutation
+                                .run(
+                                  ref,
+                                  (tsx) => tsx
+                                      .get(
+                                        earthquakeHistoryConfigProvider
+                                            .notifier,
+                                      )
+                                      .saveDetails(
+                                        details.copyWith(
+                                          estimatedIntensityDemDisplayMode:
+                                              value
+                                              ? EstimatedIntensityDemDisplayMode
+                                                    .tenth
+                                              : EstimatedIntensityDemDisplayMode
+                                                    .intensityClass,
                                         ),
                                       ),
                                 );

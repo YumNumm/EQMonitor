@@ -92,7 +92,9 @@ class const _LoadedContent({
 }) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasEstimated = earthquake.estimatedIntensityTileUrl != null;
+    final hasEstimated =
+        earthquake.estimatedIntensityTileUrl != null ||
+        earthquake.estimatedIntensityDemTileUrl != null;
     final hasLpgm = earthquake.intensity?.maxLpgmIntensity != null;
 
     final catalog = earthquake.catalog;

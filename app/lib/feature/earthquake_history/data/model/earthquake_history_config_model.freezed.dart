@@ -599,7 +599,7 @@ as String?,
 /// @nodoc
 mixin _$EarthquakeHistoryDetailsConfig {
 
- bool get showStations; bool get showAreaIcons; bool get showStationsOnEstimatedIntensity; bool get hypocenterAboveStations;/// 観測点アイコンの表示モード
+ bool get showStations; bool get showAreaIcons; bool get showStationsOnEstimatedIntensity;@JsonKey(unknownEnumValue: EstimatedIntensityDemDisplayMode.intensityClass) EstimatedIntensityDemDisplayMode get estimatedIntensityDemDisplayMode; bool get hypocenterAboveStations;/// 観測点アイコンの表示モード
  StationDisplayMode get stationDisplayMode;
 /// Create a copy of EarthquakeHistoryDetailsConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -613,16 +613,16 @@ $EarthquakeHistoryDetailsConfigCopyWith<EarthquakeHistoryDetailsConfig> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryDetailsConfig&&(identical(other.showStations, showStations) || other.showStations == showStations)&&(identical(other.showAreaIcons, showAreaIcons) || other.showAreaIcons == showAreaIcons)&&(identical(other.showStationsOnEstimatedIntensity, showStationsOnEstimatedIntensity) || other.showStationsOnEstimatedIntensity == showStationsOnEstimatedIntensity)&&(identical(other.hypocenterAboveStations, hypocenterAboveStations) || other.hypocenterAboveStations == hypocenterAboveStations)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryDetailsConfig&&(identical(other.showStations, showStations) || other.showStations == showStations)&&(identical(other.showAreaIcons, showAreaIcons) || other.showAreaIcons == showAreaIcons)&&(identical(other.showStationsOnEstimatedIntensity, showStationsOnEstimatedIntensity) || other.showStationsOnEstimatedIntensity == showStationsOnEstimatedIntensity)&&(identical(other.estimatedIntensityDemDisplayMode, estimatedIntensityDemDisplayMode) || other.estimatedIntensityDemDisplayMode == estimatedIntensityDemDisplayMode)&&(identical(other.hypocenterAboveStations, hypocenterAboveStations) || other.hypocenterAboveStations == hypocenterAboveStations)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,showStations,showAreaIcons,showStationsOnEstimatedIntensity,hypocenterAboveStations,stationDisplayMode);
+int get hashCode => Object.hash(runtimeType,showStations,showAreaIcons,showStationsOnEstimatedIntensity,estimatedIntensityDemDisplayMode,hypocenterAboveStations,stationDisplayMode);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryDetailsConfig(showStations: $showStations, showAreaIcons: $showAreaIcons, showStationsOnEstimatedIntensity: $showStationsOnEstimatedIntensity, hypocenterAboveStations: $hypocenterAboveStations, stationDisplayMode: $stationDisplayMode)';
+  return 'EarthquakeHistoryDetailsConfig(showStations: $showStations, showAreaIcons: $showAreaIcons, showStationsOnEstimatedIntensity: $showStationsOnEstimatedIntensity, estimatedIntensityDemDisplayMode: $estimatedIntensityDemDisplayMode, hypocenterAboveStations: $hypocenterAboveStations, stationDisplayMode: $stationDisplayMode)';
 }
 
 
@@ -633,7 +633,7 @@ abstract mixin class $EarthquakeHistoryDetailsConfigCopyWith<$Res>  {
   factory $EarthquakeHistoryDetailsConfigCopyWith(EarthquakeHistoryDetailsConfig value, $Res Function(EarthquakeHistoryDetailsConfig) _then) = _$EarthquakeHistoryDetailsConfigCopyWithImpl;
 @useResult
 $Res call({
- bool showStations, bool showAreaIcons, bool showStationsOnEstimatedIntensity, bool hypocenterAboveStations, StationDisplayMode stationDisplayMode
+ bool showStations, bool showAreaIcons, bool showStationsOnEstimatedIntensity,@JsonKey(unknownEnumValue: EstimatedIntensityDemDisplayMode.intensityClass) EstimatedIntensityDemDisplayMode estimatedIntensityDemDisplayMode, bool hypocenterAboveStations, StationDisplayMode stationDisplayMode
 });
 
 
@@ -650,12 +650,13 @@ class _$EarthquakeHistoryDetailsConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryDetailsConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? showStations = null,Object? showAreaIcons = null,Object? showStationsOnEstimatedIntensity = null,Object? hypocenterAboveStations = null,Object? stationDisplayMode = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? showStations = null,Object? showAreaIcons = null,Object? showStationsOnEstimatedIntensity = null,Object? estimatedIntensityDemDisplayMode = null,Object? hypocenterAboveStations = null,Object? stationDisplayMode = null,}) {
   return _then(EarthquakeHistoryDetailsConfig(
 showStations: null == showStations ? _self.showStations : showStations // ignore: cast_nullable_to_non_nullable
 as bool,showAreaIcons: null == showAreaIcons ? _self.showAreaIcons : showAreaIcons // ignore: cast_nullable_to_non_nullable
 as bool,showStationsOnEstimatedIntensity: null == showStationsOnEstimatedIntensity ? _self.showStationsOnEstimatedIntensity : showStationsOnEstimatedIntensity // ignore: cast_nullable_to_non_nullable
-as bool,hypocenterAboveStations: null == hypocenterAboveStations ? _self.hypocenterAboveStations : hypocenterAboveStations // ignore: cast_nullable_to_non_nullable
+as bool,estimatedIntensityDemDisplayMode: null == estimatedIntensityDemDisplayMode ? _self.estimatedIntensityDemDisplayMode : estimatedIntensityDemDisplayMode // ignore: cast_nullable_to_non_nullable
+as EstimatedIntensityDemDisplayMode,hypocenterAboveStations: null == hypocenterAboveStations ? _self.hypocenterAboveStations : hypocenterAboveStations // ignore: cast_nullable_to_non_nullable
 as bool,stationDisplayMode: null == stationDisplayMode ? _self.stationDisplayMode : stationDisplayMode // ignore: cast_nullable_to_non_nullable
 as StationDisplayMode,
   ));
@@ -742,10 +743,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showStations,  bool showAreaIcons,  bool showStationsOnEstimatedIntensity,  bool hypocenterAboveStations,  StationDisplayMode stationDisplayMode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showStations,  bool showAreaIcons,  bool showStationsOnEstimatedIntensity, @JsonKey(unknownEnumValue: EstimatedIntensityDemDisplayMode.intensityClass)  EstimatedIntensityDemDisplayMode estimatedIntensityDemDisplayMode,  bool hypocenterAboveStations,  StationDisplayMode stationDisplayMode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryDetailsConfig() when $default != null:
-return $default(_that.showStations,_that.showAreaIcons,_that.showStationsOnEstimatedIntensity,_that.hypocenterAboveStations,_that.stationDisplayMode);case _:
+return $default(_that.showStations,_that.showAreaIcons,_that.showStationsOnEstimatedIntensity,_that.estimatedIntensityDemDisplayMode,_that.hypocenterAboveStations,_that.stationDisplayMode);case _:
   return orElse();
 
 }
@@ -763,10 +764,10 @@ return $default(_that.showStations,_that.showAreaIcons,_that.showStationsOnEstim
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showStations,  bool showAreaIcons,  bool showStationsOnEstimatedIntensity,  bool hypocenterAboveStations,  StationDisplayMode stationDisplayMode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showStations,  bool showAreaIcons,  bool showStationsOnEstimatedIntensity, @JsonKey(unknownEnumValue: EstimatedIntensityDemDisplayMode.intensityClass)  EstimatedIntensityDemDisplayMode estimatedIntensityDemDisplayMode,  bool hypocenterAboveStations,  StationDisplayMode stationDisplayMode)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryDetailsConfig():
-return $default(_that.showStations,_that.showAreaIcons,_that.showStationsOnEstimatedIntensity,_that.hypocenterAboveStations,_that.stationDisplayMode);case _:
+return $default(_that.showStations,_that.showAreaIcons,_that.showStationsOnEstimatedIntensity,_that.estimatedIntensityDemDisplayMode,_that.hypocenterAboveStations,_that.stationDisplayMode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -783,10 +784,10 @@ return $default(_that.showStations,_that.showAreaIcons,_that.showStationsOnEstim
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showStations,  bool showAreaIcons,  bool showStationsOnEstimatedIntensity,  bool hypocenterAboveStations,  StationDisplayMode stationDisplayMode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showStations,  bool showAreaIcons,  bool showStationsOnEstimatedIntensity, @JsonKey(unknownEnumValue: EstimatedIntensityDemDisplayMode.intensityClass)  EstimatedIntensityDemDisplayMode estimatedIntensityDemDisplayMode,  bool hypocenterAboveStations,  StationDisplayMode stationDisplayMode)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryDetailsConfig() when $default != null:
-return $default(_that.showStations,_that.showAreaIcons,_that.showStationsOnEstimatedIntensity,_that.hypocenterAboveStations,_that.stationDisplayMode);case _:
+return $default(_that.showStations,_that.showAreaIcons,_that.showStationsOnEstimatedIntensity,_that.estimatedIntensityDemDisplayMode,_that.hypocenterAboveStations,_that.stationDisplayMode);case _:
   return null;
 
 }
@@ -798,12 +799,13 @@ return $default(_that.showStations,_that.showAreaIcons,_that.showStationsOnEstim
 @JsonSerializable()
 
 class _EarthquakeHistoryDetailsConfig implements EarthquakeHistoryDetailsConfig {
-  const _EarthquakeHistoryDetailsConfig({this.showStations = true, this.showAreaIcons = true, this.showStationsOnEstimatedIntensity = false, this.hypocenterAboveStations = true, this.stationDisplayMode = StationDisplayMode.auto});
+  const _EarthquakeHistoryDetailsConfig({this.showStations = true, this.showAreaIcons = true, this.showStationsOnEstimatedIntensity = false, @JsonKey(unknownEnumValue: EstimatedIntensityDemDisplayMode.intensityClass) this.estimatedIntensityDemDisplayMode = EstimatedIntensityDemDisplayMode.intensityClass, this.hypocenterAboveStations = true, this.stationDisplayMode = StationDisplayMode.auto});
   factory _EarthquakeHistoryDetailsConfig.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryDetailsConfigFromJson(json);
 
 @override@JsonKey() final  bool showStations;
 @override@JsonKey() final  bool showAreaIcons;
 @override@JsonKey() final  bool showStationsOnEstimatedIntensity;
+@override@JsonKey(unknownEnumValue: EstimatedIntensityDemDisplayMode.intensityClass) final  EstimatedIntensityDemDisplayMode estimatedIntensityDemDisplayMode;
 @override@JsonKey() final  bool hypocenterAboveStations;
 /// 観測点アイコンの表示モード
 @override@JsonKey() final  StationDisplayMode stationDisplayMode;
@@ -821,16 +823,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryDetailsConfig&&(identical(other.showStations, showStations) || other.showStations == showStations)&&(identical(other.showAreaIcons, showAreaIcons) || other.showAreaIcons == showAreaIcons)&&(identical(other.showStationsOnEstimatedIntensity, showStationsOnEstimatedIntensity) || other.showStationsOnEstimatedIntensity == showStationsOnEstimatedIntensity)&&(identical(other.hypocenterAboveStations, hypocenterAboveStations) || other.hypocenterAboveStations == hypocenterAboveStations)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryDetailsConfig&&(identical(other.showStations, showStations) || other.showStations == showStations)&&(identical(other.showAreaIcons, showAreaIcons) || other.showAreaIcons == showAreaIcons)&&(identical(other.showStationsOnEstimatedIntensity, showStationsOnEstimatedIntensity) || other.showStationsOnEstimatedIntensity == showStationsOnEstimatedIntensity)&&(identical(other.estimatedIntensityDemDisplayMode, estimatedIntensityDemDisplayMode) || other.estimatedIntensityDemDisplayMode == estimatedIntensityDemDisplayMode)&&(identical(other.hypocenterAboveStations, hypocenterAboveStations) || other.hypocenterAboveStations == hypocenterAboveStations)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,showStations,showAreaIcons,showStationsOnEstimatedIntensity,hypocenterAboveStations,stationDisplayMode);
+int get hashCode => Object.hash(runtimeType,showStations,showAreaIcons,showStationsOnEstimatedIntensity,estimatedIntensityDemDisplayMode,hypocenterAboveStations,stationDisplayMode);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryDetailsConfig(showStations: $showStations, showAreaIcons: $showAreaIcons, showStationsOnEstimatedIntensity: $showStationsOnEstimatedIntensity, hypocenterAboveStations: $hypocenterAboveStations, stationDisplayMode: $stationDisplayMode)';
+  return 'EarthquakeHistoryDetailsConfig(showStations: $showStations, showAreaIcons: $showAreaIcons, showStationsOnEstimatedIntensity: $showStationsOnEstimatedIntensity, estimatedIntensityDemDisplayMode: $estimatedIntensityDemDisplayMode, hypocenterAboveStations: $hypocenterAboveStations, stationDisplayMode: $stationDisplayMode)';
 }
 
 
@@ -841,7 +843,7 @@ abstract mixin class _$EarthquakeHistoryDetailsConfigCopyWith<$Res> implements $
   factory _$EarthquakeHistoryDetailsConfigCopyWith(_EarthquakeHistoryDetailsConfig value, $Res Function(_EarthquakeHistoryDetailsConfig) _then) = __$EarthquakeHistoryDetailsConfigCopyWithImpl;
 @override @useResult
 $Res call({
- bool showStations, bool showAreaIcons, bool showStationsOnEstimatedIntensity, bool hypocenterAboveStations, StationDisplayMode stationDisplayMode
+ bool showStations, bool showAreaIcons, bool showStationsOnEstimatedIntensity,@JsonKey(unknownEnumValue: EstimatedIntensityDemDisplayMode.intensityClass) EstimatedIntensityDemDisplayMode estimatedIntensityDemDisplayMode, bool hypocenterAboveStations, StationDisplayMode stationDisplayMode
 });
 
 
@@ -858,12 +860,13 @@ class __$EarthquakeHistoryDetailsConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryDetailsConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? showStations = null,Object? showAreaIcons = null,Object? showStationsOnEstimatedIntensity = null,Object? hypocenterAboveStations = null,Object? stationDisplayMode = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? showStations = null,Object? showAreaIcons = null,Object? showStationsOnEstimatedIntensity = null,Object? estimatedIntensityDemDisplayMode = null,Object? hypocenterAboveStations = null,Object? stationDisplayMode = null,}) {
   return _then(_EarthquakeHistoryDetailsConfig(
 showStations: null == showStations ? _self.showStations : showStations // ignore: cast_nullable_to_non_nullable
 as bool,showAreaIcons: null == showAreaIcons ? _self.showAreaIcons : showAreaIcons // ignore: cast_nullable_to_non_nullable
 as bool,showStationsOnEstimatedIntensity: null == showStationsOnEstimatedIntensity ? _self.showStationsOnEstimatedIntensity : showStationsOnEstimatedIntensity // ignore: cast_nullable_to_non_nullable
-as bool,hypocenterAboveStations: null == hypocenterAboveStations ? _self.hypocenterAboveStations : hypocenterAboveStations // ignore: cast_nullable_to_non_nullable
+as bool,estimatedIntensityDemDisplayMode: null == estimatedIntensityDemDisplayMode ? _self.estimatedIntensityDemDisplayMode : estimatedIntensityDemDisplayMode // ignore: cast_nullable_to_non_nullable
+as EstimatedIntensityDemDisplayMode,hypocenterAboveStations: null == hypocenterAboveStations ? _self.hypocenterAboveStations : hypocenterAboveStations // ignore: cast_nullable_to_non_nullable
 as bool,stationDisplayMode: null == stationDisplayMode ? _self.stationDisplayMode : stationDisplayMode // ignore: cast_nullable_to_non_nullable
 as StationDisplayMode,
   ));
