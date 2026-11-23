@@ -96,10 +96,14 @@ class const _SheetBody() extends ConsumerWidget {
             for (final (index, eew) in state.reversed.indexed)
               Padding(
                 padding: EdgeInsets.only(bottom: spacing.md),
-                child: HomeEewCard(
-                  eew: eew,
-                  index: (state.length > 1) ? '${index + 1}' : null,
-                ),
+                child: index == 0
+                    ? SheetFitTarget(
+                        child: HomeEewCard(
+                          eew: eew,
+                          index: (state.length > 1) ? '1' : null,
+                        ),
+                      )
+                    : HomeEewCard(eew: eew, index: '${index + 1}'),
               ),
             if (isInMaintenance) MaintenanceBanner(),
             ReleaseHighlightCard(
