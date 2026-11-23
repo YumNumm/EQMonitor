@@ -20,6 +20,7 @@ import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -219,6 +220,7 @@ class const SettingsPage({super.key}) extends ConsumerWidget {
                         leading: const Icon(Icons.delete_outline),
                         onTap: () async {
                           final messenger = ScaffoldMessenger.of(context);
+                          await HapticFeedback.mediumImpact();
                           final store = await ref.read(
                             httpCacheStoreProvider.future,
                           );

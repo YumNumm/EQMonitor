@@ -1,5 +1,7 @@
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 class const EarthquakeHistoryListConfigView({
@@ -18,8 +20,10 @@ class const EarthquakeHistoryListConfigView({
             onChanged: (value) async =>
                 onChanged(config.copyWith(isFillBackground: value)),
           ),
-          onTap: () async => onChanged(
-            config.copyWith(isFillBackground: !config.isFillBackground),
+          onTap: () => HapticUtil.selection(
+            () => onChanged(
+              config.copyWith(isFillBackground: !config.isFillBackground),
+            ),
           ),
         ),
         const ListTile(title: Text('日付見出し')),
@@ -29,6 +33,7 @@ class const EarthquakeHistoryListConfigView({
             if (value == null) {
               return;
             }
+            await HapticFeedback.selectionClick();
             await onChanged(config.copyWith(dateHeaderDisplayMode: value));
           },
           child: const Column(

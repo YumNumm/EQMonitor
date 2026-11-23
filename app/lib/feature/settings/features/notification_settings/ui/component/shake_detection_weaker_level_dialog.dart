@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -27,7 +28,8 @@ class const _ShakeDetectionWeakerLevelDialog() extends StatelessWidget {
         child: const Text('キャンセル'),
       ),
       M3EFilledButton(
-        onPressed: () => Navigator.of(context).pop(true),
+        onPressed: () =>
+            HapticUtil.light(() => Navigator.of(context).pop(true)),
         child: const Text('設定する'),
       ),
     ],

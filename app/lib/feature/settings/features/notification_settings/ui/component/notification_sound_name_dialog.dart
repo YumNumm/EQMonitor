@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -25,7 +26,9 @@ class const NotificationSoundNameDialog({
         M3EFilledButton(
           onPressed: value.text.trim().isEmpty
               ? null
-              : () => Navigator.of(context).pop(value.text.trim()),
+              : () => HapticUtil.light(
+                  () => Navigator.of(context).pop(value.text.trim()),
+                ),
           child: const Text('保存'),
         ),
       ],

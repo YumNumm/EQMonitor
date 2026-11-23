@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_notice.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -47,7 +48,8 @@ class const ShakeDetectionNoticeDialog({
             controlAffinity: .leading,
             title: const Text('上記の注意事項を確認し、同意します'),
             value: isAgreed.value,
-            onChanged: (value) => isAgreed.value = value ?? false,
+            onChanged: (value) =>
+                HapticUtil.selection(() => isAgreed.value = value ?? false),
           ),
         ],
       ),
@@ -58,7 +60,7 @@ class const ShakeDetectionNoticeDialog({
         ),
         M3EFilledButton(
           onPressed: isAgreed.value
-              ? () => Navigator.of(context).pop(true)
+              ? () => HapticUtil.light(() => Navigator.of(context).pop(true))
               : null,
           child: const Text('同意して有効にする'),
         ),

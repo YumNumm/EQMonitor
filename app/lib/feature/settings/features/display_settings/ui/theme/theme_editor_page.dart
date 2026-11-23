@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/theme/model/intensity_field_def.dart';
 import 'package:eqmonitor/core/theme/model/intensity_text_color.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_field_def.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/data/notifier/theme_editor_controller.dart';
 // flutter_colorpicker が Flutter Material の祖先を要求するため。
 // ignore: deprecated_member_use
@@ -179,6 +180,7 @@ class const _IntensityFieldTile({
                 const Text('文字色: '),
                 M3EToggleButtonGroup(
                   type: M3EButtonGroupType.connected,
+                  haptic: .light,
                   key: ValueKey('intensity-fg-mode-$keySuffix'),
                   actions: const [
                     M3EToggleButtonGroupAction(label: Text('自動')),
@@ -284,7 +286,8 @@ class const _ColorPickerDialog({required final Color initial})
           child: const Text('キャンセル'),
         ),
         M3EFilledButton(
-          onPressed: () => Navigator.of(context).pop(current.value),
+          onPressed: () =>
+              HapticUtil.light(() => Navigator.of(context).pop(current.value)),
           child: const Text('適用'),
         ),
       ],
