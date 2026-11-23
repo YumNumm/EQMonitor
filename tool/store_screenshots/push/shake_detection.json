@@ -1,0 +1,21 @@
+{
+  "aps": {
+    "alert": {
+      "title": "石川県能登で強い揺れを検知",
+      "body": "16:10:12頃、石川県で強い揺れを検知しました"
+    },
+    "sound": "default",
+    "badge": 0,
+    "mutable-content": 1,
+    "content-available": 1,
+    "thread-id": "store-screenshot-shake",
+    "relevance-score": 1,
+    "interruption-level": "active"
+  },
+  "eventId": "store-screenshot-shake",
+  "type": "SHAKE_DETECTION",
+  "level": "Strong",
+  "createdAt": "2024-01-01T07:10:12.000Z",
+  "isLevelUp": "false",
+  "pointCount": "12"
+}

@@ -5,5 +5,12 @@
   "location": {
     "latitude": 36.815006,
     "longitude": 137.03363
+  },
+  "push": {
+    "lock_screen_live_activity": [
+      "eew_forecast",
+      "eew_warning",
+      "eew_warning_dedicated"
+    ]
   }
 }

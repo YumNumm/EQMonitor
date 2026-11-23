@@ -1,0 +1,18 @@
+{
+  "aps": {
+    "alert": {
+      "title": "🚨緊急地震速報(警報) 強い揺れに警戒! 石川県能登地方で地震",
+      "body": "[警報対象地域]: 石川 富山 新潟"
+    },
+    "sound": "eew_warning",
+    "badge": 0,
+    "mutable-content": 1,
+    "content-available": 1,
+    "thread-id": "eew_warning:20240101161010",
+    "relevance-score": 1,
+    "interruption-level": "critical"
+  },
+  "eventId": "20240101161010",
+  "type": "EEW_WARNING",
+  "serialNo": "1"
+}

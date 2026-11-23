@@ -1,0 +1,19 @@
+{
+  "aps": {
+    "alert": {
+      "title": "⚠️緊急地震速報(予報) ",
+      "body": "予想最大震度 4\n石川県能登地方で地震発生\n第1報 M4.8 深さ10km\n16:06:08発生"
+    },
+    "sound": "default",
+    "badge": 0,
+    "mutable-content": 1,
+    "content-available": 1,
+    "thread-id": "EEW:20240101160608",
+    "relevance-score": 1,
+    "interruption-level": "time-sensitive"
+  },
+  "eventId": "20240101160608",
+  "type": "EEW",
+  "serialNo": "1",
+  "maxIntensity": "4"
+}

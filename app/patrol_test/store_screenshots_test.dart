@@ -69,6 +69,9 @@ void main() {
         await scenes.waitForHome();
         await scenes.grantPermissionDialogs();
         await scenes.allowLocation();
+        if (Platform.isIOS) {
+          await scenes.allowNotifications();
+        }
 
         bool wanted(String scene) =>
             _sceneFilter.isEmpty || _sceneFilter.split(',').contains(scene);

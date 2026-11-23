@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/controller/live_activity_local_controller.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_preset.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/repository/debug_live_activity_content_builder.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -61,6 +62,22 @@ class StoreScreenshotScenes({
     while (!isAnswered) {
       if (stopwatch.elapsed > const Duration(minutes: 3)) {
         fail('timed out waiting for the location permission dialog');
+      }
+      await grantPermissionDialogs();
+    }
+    await request;
+  }
+
+  // 撮影時に host が simctl push で送る通知を表示するため、通知と重大な通知を許可する。
+  Future<void> allowNotifications() async {
+    var isAnswered = false;
+    final request = FirebaseMessaging.instance
+        .requestPermission(criticalAlert: true)
+        .whenComplete(() => isAnswered = true);
+    final stopwatch = Stopwatch()..start();
+    while (!isAnswered) {
+      if (stopwatch.elapsed > const Duration(minutes: 3)) {
+        fail('timed out waiting for the notification permission dialog');
       }
       await grantPermissionDialogs();
     }

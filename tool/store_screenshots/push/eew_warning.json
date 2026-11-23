@@ -1,0 +1,19 @@
+{
+  "aps": {
+    "alert": {
+      "title": "🚨緊急地震速報(警報) 石川県で地震　北陸で強い揺れ",
+      "body": "予想最大震度 6強\n現在地(富山県西部)で予想震度 5弱\n石川県で地震　北陸で強い揺れ\n第32報 M7.6 深さ10km\n16:10:08発生"
+    },
+    "sound": "default",
+    "badge": 0,
+    "mutable-content": 1,
+    "content-available": 1,
+    "thread-id": "EEW:20240101161010",
+    "relevance-score": 1,
+    "interruption-level": "time-sensitive"
+  },
+  "eventId": "20240101161010",
+  "type": "EEW",
+  "serialNo": "32",
+  "maxIntensity": "6+"
+}

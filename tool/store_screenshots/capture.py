@@ -15,6 +15,8 @@ APP_DIR = TOOL_DIR.parent.parent / "app"
 PATROL_TARGET = "patrol_test/store_screenshots_test.dart"
 SESSION_DIR = "store_screenshot"
 POLL_SECONDS = 1
+# 続けて送ると到着順が入れ替わることがある。バナーが出きるのも待つ。
+PUSH_INTERVAL_SECONDS = 1.5
 
 
 class CaptureError(RuntimeError):
@@ -85,6 +87,9 @@ class IosSimulator:
         (root / relative).parent.mkdir(parents=True, exist_ok=True)
         (root / relative).touch()
 
+    def push(self, payload: Path) -> None:
+        run("xcrun", "simctl", "push", self.udid, self.bundle_id, str(payload))
+
     def screenshot(self, destination: Path) -> None:
         run("xcrun", "simctl", "io", self.udid, "screenshot", "--type=png", str(destination))
 
@@ -145,6 +150,9 @@ class AndroidEmulator:
         if result.returncode != 0:
             raise CaptureError(f"could not write {path}: {result.stderr}")
 
+    def push(self, payload: Path) -> None:
+        raise CaptureError("push notifications are only supported on the iOS simulator")
+
     def screenshot(self, destination: Path) -> None:
         # 起動直後や SystemUI の再起動で demo mode が外れるため、撮影ごとに適用し直す。
         self.apply_demo_mode()
@@ -175,6 +183,10 @@ def capture(device: IosSimulator | AndroidEmulator, config: dict, patrol_args: l
                 started = time.monotonic()
                 print(f"ready: {scene}", flush=True)
                 destination = output / f"{scene}.png"
+                pushes = config.get("push", {}).get(scene, [])
+                for name in pushes:
+                    device.push(TOOL_DIR / "push" / f"{name}.json")
+                    time.sleep(PUSH_INTERVAL_SECONDS)
                 device.screenshot(destination)
                 device.write_marker(f"captured/{scene}")
                 captured.add(scene)
