@@ -92,6 +92,38 @@ class const EarthquakeHistoryMapLayerModeResolver() {
     ];
   }
 
+  /// 観測点アイコンが見える zoom（[stationMinZoom] 以上）では区域アイコンを
+  /// 出さない。同じ場所に区域と観測点の震度が重なって読めなくなるため。
+  ({double min, double max})? regionIconZoomRange({
+    required EarthquakeHistoryMapLayerMode mode,
+    required double regionToCity,
+    required double? stationMinZoom,
+  }) {
+    if (!showsRegionFill(mode)) {
+      return null;
+    }
+    final upper = min(
+      mode == .auto ? effectiveRegionToCityZoom(regionToCity) : maxLayerZoom,
+      stationMinZoom ?? maxLayerZoom,
+    );
+    return upper > 0 ? (min: 0, max: upper) : null;
+  }
+
+  ({double min, double max})? cityIconZoomRange({
+    required EarthquakeHistoryMapLayerMode mode,
+    required double regionToCity,
+    required double? stationMinZoom,
+  }) {
+    if (!showsCityFill(mode)) {
+      return null;
+    }
+    final lower = mode == .auto ? effectiveRegionToCityZoom(regionToCity) : 0.0;
+    final upper = stationMinZoom ?? maxLayerZoom;
+    return lower < upper ? (min: lower, max: upper) : null;
+  }
+
+  static const maxLayerZoom = 24.0;
+
   bool showsRegionFill(EarthquakeHistoryMapLayerMode mode) =>
       mode == .auto || mode == .region;
 
