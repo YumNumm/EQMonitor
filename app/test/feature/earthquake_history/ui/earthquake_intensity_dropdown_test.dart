@@ -1,12 +1,15 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/estimated_intensity_notice_content.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 class const _LayerHarness({
@@ -16,43 +19,52 @@ class const _LayerHarness({
   @override
   Widget build(BuildContext context) {
     final mode = useState(IntensityDisplayMode.jma);
-    return MaterialApp(
-      theme: ThemeData.light().copyWith(
-        extensions: [DesignSystemThemeExtension.light()],
-      ),
-      home: Scaffold(
-        body: MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(textScale),
+    return ProviderScope(
+      overrides: [
+        earthquakeHistoryConfigProvider.overrideWithBuild(
+          (_, _) => const EarthquakeHistoryConfig(
+            list: EarthquakeHistoryListConfig(),
           ),
-          child: ListView(
-            children: [
-              EarthquakeIntensityCard(
-                item: const Earthquake(
-                  eventId: 'test-event',
-                  status: .normal,
-                  originTime: null,
-                  originTimePrecision: .second,
-                  arrivalTime: null,
-                  dataSources: [.jmaDisasterInformationXml],
-                  telegramTypes: [],
-                  hypocenter: null,
-                  intensity: EarthquakeIntensity(
-                    maxIntensity: .three,
-                    maxLpgmIntensity: .one,
-                    regions: {},
-                    intensityTree: {},
-                    lpgmIntensityTree: {},
+        ),
+      ],
+      child: MaterialApp(
+        theme: ThemeData.light().copyWith(
+          extensions: [DesignSystemThemeExtension.light()],
+        ),
+        home: Scaffold(
+          body: MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(textScale),
+            ),
+            child: ListView(
+              children: [
+                EarthquakeIntensityCard(
+                  item: const Earthquake(
+                    eventId: 'test-event',
+                    status: .normal,
+                    originTime: null,
+                    originTimePrecision: .second,
+                    arrivalTime: null,
+                    dataSources: [.jmaDisasterInformationXml],
+                    telegramTypes: [],
+                    hypocenter: null,
+                    intensity: EarthquakeIntensity(
+                      maxIntensity: .three,
+                      maxLpgmIntensity: .one,
+                      regions: {},
+                      intensityTree: {},
+                      lpgmIntensityTree: {},
+                    ),
+                    estimatedIntensityTileUrl: null,
                   ),
-                  estimatedIntensityTileUrl: null,
+                  displayMode: mode.value,
+                  onDisplayModeChanged: (value) => mode.value = value,
+                  availableModes: availableModes,
+                  source: .jmaDisasterInformationXml,
+                  showDatabaseBadge: false,
                 ),
-                displayMode: mode.value,
-                onDisplayModeChanged: (value) => mode.value = value,
-                availableModes: availableModes,
-                source: .jmaDisasterInformationXml,
-                showDatabaseBadge: false,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
