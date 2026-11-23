@@ -61,10 +61,14 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 - 地震詳細は推計震度分布がある地震だと既定でそれを表示する。観測点を見せるため、`EarthquakeIntensityCard.onDisplayModeChanged` を呼んで「各地の震度」に切り替える（切り替えの状態はページ内の `useState` にしか無い）。
 - EEW カードの「現在地」の予想震度・到達までの時間・警報の強調は、位置情報が取れるときだけ出る。テストは `Geolocator.requestPermission()` を呼んでダイアログを許可する。
 - ホームのシートは、利用者が動かしていない間、1 つ目の EEW カードの下端に高さを合わせる（`SheetFitTarget`）。撮影のためのシート操作は不要。
+  初期位置（画面の 2 割）より低くはしない。カードが消えると初期位置へ戻り、「動かした」状態も解除する。
+- 現在地が高岡市太田のとき、能登半島地震のリプレイには「現在地への警報の強調・予想震度・到達までの秒数」が同時に出る時刻が無い。
+  16:10:21〜16:10:40 は震度 4 で到達まで 12〜0 秒（強調なし）、16:10:45（第21報、5弱）以降は強調ありで「すぐに到達」になる。
 - 壁紙は `set_ios_wallpaper.sh` が PosterBoard の保存領域へ直接書き込む（iOS のみ）。
   - 標準の `com.apple.WallpaperKit.CollectionsPoster` に、種類が `Still` の `.wallpaper` バンドルを持つ設定を足し、SQLite（`PBFPosterExtensionDataStoreSQLiteDatabase.sqlite3`）で選択中にする。
   - 識別子は標準の壁紙と重ならない値（`99001`）にする。標準の識別子を流用した試行では標準の壁紙が描画された。
-  - 保存領域は初回起動で作られるため、起動を待ってから終了し、書き込んで再起動する。設定済みの Simulator では何もしない。
+  - 保存領域の `PRPosterRoleLockScreen-switcher-index.json` ができるのを待ってから終了し、書き込んで再起動する。設定済みの Simulator では何もしない。
+    新規の Simulator ではこのファイルができるまで起動から約 10 分かかった。できる前に書き込むと、SQLite には選択中と記録されるのに既定の壁紙が描画され、再起動しても変わらなかった。
   - 非公開の形式に依存する。失敗しても `capture.py` は警告を出して壁紙なしで撮影を続ける。
 - `capture.py` は開始前にアプリの `store_screenshot/` を消す。中断した実行のアプリが残っていると、古い `ready` をビルド中に撮ってしまい、テストが撮影待ちで timeout する。
 - 現在地は `device.json` の `location`。富山県高岡市太田 24 番地（国土地理院の住所検索の結果。枝番までは解決されない）を設定している。
@@ -107,7 +111,7 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   - `eew_warning`（16:11:08）は警報 第30報・M7.4・最大震度 7 の EEW カードと推定震度の塗り、`kyoshin_monitor`（16:10:21）は警報 第10報・M6.2・最大震度 6強 の EEW カードと観測点が表示された。
     どちらもボトムシートは最小の高さ（EEW カードの上部が見える状態）で、Figma との照合は未実施。
   - 観測点の表示への切り替え後も全 4 シーンが完了し、`earthquake_detail` に観測点のアイコンが表示された。
-  - 壁紙を設定した通知センター、現在地の予想震度と到達までの時間（`kyoshin_monitor` は震度 4・12.0 秒、`eew_warning` は震度 6弱・「すぐに到達」・「強い揺れに警戒!」）、カード全体が見えるシートの高さを確認した。
+  - 使用済みの Simulator と新規の Simulator の両方で、壁紙を設定した通知センター、現在地の予想震度と到達までの時間（`kyoshin_monitor` は震度 4・12.0 秒、`eew_warning` は震度 6弱・「すぐに到達」・「強い揺れに警戒!」）、カード全体が見えるシートの高さを確認した。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
 - 未検証: CI（iOS 27.2 のランタイム）での壁紙の設定・リプレイのシーン・通知センターの撮影、端末フレームの fixture（未投入）。残件は [TODO](../todo/850_store_screenshots.md)。

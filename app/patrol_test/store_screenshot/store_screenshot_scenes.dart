@@ -50,8 +50,18 @@ class StoreScreenshotScenes({
 
   // EEW カードの現在地の予想震度と到達までの時間は、位置情報が取れるときだけ出る。
   Future<void> allowLocation() async {
-    final request = Geolocator.requestPermission();
-    await grantPermissionDialogs();
+    var isAnswered = false;
+    final request = Geolocator.requestPermission().whenComplete(
+      () => isAnswered = true,
+    );
+    // 高負荷の runner ではダイアログが出るまで時間がかかる。出る前に待ちへ入ると終わらない。
+    final stopwatch = Stopwatch()..start();
+    while (!isAnswered) {
+      if (stopwatch.elapsed > const Duration(minutes: 3)) {
+        fail('timed out waiting for the location permission dialog');
+      }
+      await grantPermissionDialogs();
+    }
     await request;
   }
 

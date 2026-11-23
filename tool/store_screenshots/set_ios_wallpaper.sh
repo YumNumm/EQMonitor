@@ -22,9 +22,10 @@ trap 'rm -rf "$TMP"' EXIT
 xcrun simctl bootstatus "$UDID" -b >/dev/null
 STORE=""
 ready=false
-for _ in $(seq 1 60); do
+# 新規の Simulator では switcher-index.json ができるまで起動から約 10 分かかった。できる前に書き込むと、選択中と記録されても描画されなかった。
+for _ in $(seq 1 600); do
   STORE="$(ls -d "$STORE_ROOT"/*/ 2>/dev/null | head -1 || true)"
-  if [ -n "$STORE" ] && ls -d "$STORE"Extensions/com.apple.WallpaperKit.CollectionsPoster/descriptors/*/versions/*/contents >/dev/null 2>&1 \
+  if [ -n "$STORE" ] && [ -s "${STORE}PRPosterRoleLockScreen-switcher-index.json" ] && ls -d "$STORE"Extensions/com.apple.WallpaperKit.CollectionsPoster/descriptors/*/versions/*/contents >/dev/null 2>&1 \
      && [ -n "$(sqlite3 "$STORE/PBFPosterExtensionDataStoreSQLiteDatabase.sqlite3" "select posterUUID from posterAttributes where roleId='PRPosterRoleLockScreen' and attributeIdentifier='SELECTED'" 2>/dev/null)" ]; then
     ready=true
     break
