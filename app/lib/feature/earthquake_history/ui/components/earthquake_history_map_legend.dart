@@ -1,18 +1,24 @@
 import 'dart:ui' show lerpDouble;
 
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/estimated_intensity_dem_color_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/estimated_intensity_scale_color_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_palette.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -22,7 +28,7 @@ class const EarthquakeHistoryMapLegend({
   required final EarthquakeIntensity? intensity,
   final IntensityDisplayMode displayMode = IntensityDisplayMode.jma,
   final ShindoDbIntensityTree? shindoDbTree,
-  final bool showsEstimatedIntensityScale = false,
+  final EstimatedIntensityDemPalette? estimatedIntensityScalePalette,
   super.key,
 }) extends StatelessWidget {
   @override
@@ -31,12 +37,14 @@ class const EarthquakeHistoryMapLegend({
     if (tree != null) {
       return _ShindoDbLegend(tree: tree);
     }
-    return switch (displayMode) {
-      .jma => _JmaLegend(intensity: intensity),
-      .lpgm => _LpgmLegend(intensity: intensity),
-      .estimated when showsEstimatedIntensityScale =>
+    return switch ((displayMode, estimatedIntensityScalePalette)) {
+      (.jma, _) => _JmaLegend(intensity: intensity),
+      (.lpgm, _) => _LpgmLegend(intensity: intensity),
+      (.estimated, .intensityGradient) =>
         const _EstimatedIntensityScaleLegend(),
-      .estimated => const _JmaLegend(estimated: true),
+      (.estimated, .kyoshinMonitor) =>
+        const _EstimatedIntensityKyoshinScaleLegend(),
+      (.estimated, null) => const _JmaLegend(estimated: true),
     };
   }
 }
@@ -64,6 +72,160 @@ class const _EstimatedIntensityScaleLegend() extends StatelessWidget {
       ],
     );
   }
+}
+
+class const _EstimatedIntensityKyoshinScaleLegend() extends ConsumerWidget {
+  static const _barWidth = 144.0;
+  static const _barHeight = 8.0;
+  static const _tickTenths = [40, 50, 60, 70];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final designSystem = context.designSystem;
+    final colorTheme = designSystem.colorTheme;
+    final spacing = designSystem.spacing;
+    final colors = EstimatedIntensityDemColorResolver(
+      displayMode: .tenth,
+      palette: .kyoshinMonitor,
+      classColors: colorTheme.estimatedIntensity,
+      kyoshinColorMap: ref.watch(kyoshinColorMapProvider),
+    ).scaleColors();
+    final titleStyle = designSystem.typography.monoSmall.copyWith(
+      textBaseline: .alphabetic,
+      fontWeight: .w700,
+      fontFamily: FontFamily.googleSansCode,
+      fontFamilyFallback: [FontFamily.notoSansJP],
+    );
+    final labelStyle = designSystem.typography.monoSmall.copyWith(
+      textBaseline: .alphabetic,
+      fontSize: 10,
+      fontFamily: FontFamily.googleSansCode,
+      fontFamilyFallback: [FontFamily.notoSansJP],
+      color: colorTheme.onSurface,
+    );
+    final textScaler = MediaQuery.textScalerOf(context);
+    final labelPainter = TextPainter(
+      text: TextSpan(text: '0', style: labelStyle),
+      textDirection: .ltr,
+      textScaler: textScaler,
+    )..layout();
+    final labelSize = labelPainter.size;
+    labelPainter.dispose();
+
+    return Semantics(
+      label: '計測震度の凡例、強震モニタの配色、3.5から7.0',
+      child: ExcludeSemantics(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.sm,
+            vertical: spacing.md,
+          ),
+          decoration: BoxDecoration(
+            color: colorTheme.surfaceContainerHigh.withValues(alpha: 0.9),
+            borderRadius: BorderRadius.circular(designSystem.shape.md),
+            border: Border.all(color: colorTheme.outlineVariant),
+          ),
+          child: Column(
+            crossAxisAlignment: .start,
+            mainAxisSize: .min,
+            children: [
+              Text('計測震度', style: titleStyle),
+              SizedBox(height: spacing.sm),
+              CustomPaint(
+                size: Size(
+                  _barWidth + labelSize.width,
+                  _barHeight +
+                      _KyoshinScaleLegendPainter.labelOffset +
+                      labelSize.height,
+                ),
+                painter: _KyoshinScaleLegendPainter(
+                  colors: colors,
+                  barRect: Rect.fromLTWH(
+                    labelSize.width / 2,
+                    0,
+                    _barWidth,
+                    _barHeight,
+                  ),
+                  tickTenths: _tickTenths,
+                  labelStyle: labelStyle,
+                  tickColor: colorTheme.onSurface,
+                  textScaler: textScaler,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class const _KyoshinScaleLegendPainter({
+  required final List<Color> colors,
+  required final Rect barRect,
+  required final List<int> tickTenths,
+  required final TextStyle labelStyle,
+  required final Color tickColor,
+  required final TextScaler textScaler,
+}) extends CustomPainter {
+  static const labelOffset = 6.0;
+  static const tickLength = 4.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final segmentWidth = barRect.width / colors.length;
+    for (final (index, color) in colors.indexed) {
+      canvas.drawRect(
+        Rect.fromLTRB(
+          barRect.left + index * segmentWidth,
+          barRect.top,
+          barRect.left + (index + 1) * segmentWidth,
+          barRect.bottom,
+        ),
+        Paint()
+          ..color = color
+          ..isAntiAlias = false,
+      );
+    }
+
+    final tickPaint = Paint()
+      ..color = tickColor
+      ..strokeWidth = 1.0
+      ..style = .stroke;
+    final textPainter = TextPainter(
+      textDirection: .ltr,
+      textAlign: .center,
+      textScaler: textScaler,
+    );
+    for (final tenths in tickTenths) {
+      final x =
+          barRect.left +
+          (tenths - EstimatedIntensityDemColorResolver.minTenths + 0.5) *
+              segmentWidth;
+      canvas.drawLine(
+        Offset(x, barRect.bottom),
+        Offset(x, barRect.bottom + tickLength),
+        tickPaint,
+      );
+      textPainter
+        ..text = TextSpan(text: '${tenths ~/ 10}', style: labelStyle)
+        ..layout()
+        ..paint(
+          canvas,
+          Offset(x - textPainter.width / 2, barRect.bottom + labelOffset),
+        );
+    }
+    textPainter.dispose();
+  }
+
+  @override
+  bool shouldRepaint(covariant _KyoshinScaleLegendPainter oldDelegate) =>
+      !const ListEquality<Color>().equals(colors, oldDelegate.colors) ||
+      barRect != oldDelegate.barRect ||
+      tickTenths != oldDelegate.tickTenths ||
+      labelStyle != oldDelegate.labelStyle ||
+      tickColor != oldDelegate.tickColor ||
+      textScaler != oldDelegate.textScaler;
 }
 
 class const _JmaLegend({

@@ -1,6 +1,7 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_display_mode.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_palette.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_config_model.freezed.dart';
@@ -63,6 +64,9 @@ abstract class EarthquakeHistoryDetailsConfig
     @Default(EstimatedIntensityDemDisplayMode.intensityClass)
     @JsonKey(unknownEnumValue: EstimatedIntensityDemDisplayMode.intensityClass)
     EstimatedIntensityDemDisplayMode estimatedIntensityDemDisplayMode,
+    @Default(EstimatedIntensityDemPalette.intensityGradient)
+    @JsonKey(unknownEnumValue: EstimatedIntensityDemPalette.intensityGradient)
+    EstimatedIntensityDemPalette estimatedIntensityDemPalette,
     @Default(true) bool hypocenterAboveStations,
 
     /// 観測点アイコンの表示モード

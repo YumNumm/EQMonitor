@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_display_mode.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_palette.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_dem_layer.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
@@ -40,6 +41,7 @@ class const DebugEstimatedIntensityDemPage({super.key})
     final displayMode = useState(
       EstimatedIntensityDemDisplayMode.intensityClass,
     );
+    final palette = useState(EstimatedIntensityDemPalette.intensityGradient);
     final selectedPath = useState<String?>(null);
     final files = archives.data ?? const <File>[];
     final path = selectedPath.value ?? files.firstOrNull?.path;
@@ -66,6 +68,21 @@ class const DebugEstimatedIntensityDemPage({super.key})
                       selected: {displayMode.value},
                       onSelectionChanged: (selection) =>
                           displayMode.value = selection.first,
+                    ),
+                    SegmentedButton<EstimatedIntensityDemPalette>(
+                      segments: const [
+                        ButtonSegment(
+                          value: .intensityGradient,
+                          label: Text('震度'),
+                        ),
+                        ButtonSegment(
+                          value: .kyoshinMonitor,
+                          label: Text('Kmoni'),
+                        ),
+                      ],
+                      selected: {palette.value},
+                      onSelectionChanged: (selection) =>
+                          palette.value = selection.first,
                     ),
                     Expanded(
                       child: DropdownButton<String>(
@@ -104,6 +121,7 @@ class const DebugEstimatedIntensityDemPage({super.key})
                         EarthquakeHistoryDetailsEstimatedIntensityDemLayer(
                           tileUrl: Uri.file(path).toString(),
                           displayMode: displayMode.value,
+                          palette: palette.value,
                         ),
                     ],
                   ),

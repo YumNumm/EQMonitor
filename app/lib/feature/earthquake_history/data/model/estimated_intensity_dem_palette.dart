@@ -1,0 +1,4 @@
+enum EstimatedIntensityDemPalette {
+  intensityGradient,
+  kyoshinMonitor,
+}

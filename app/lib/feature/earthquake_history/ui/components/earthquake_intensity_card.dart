@@ -6,6 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_intensity_tree_provider.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/estimated_intensity_display_settings.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/estimated_intensity_notice_content.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_content.dart';
@@ -126,9 +127,21 @@ class const EarthquakeIntensityCard({
           switch (displayMode) {
             .jma => JmaIntensityContent(item: item),
             .lpgm => LpgmIntensityContent(item: item),
-            .estimated => const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-              child: EstimatedIntensityNoticeContent(),
+            .estimated => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              child: Column(
+                crossAxisAlignment: .start,
+                spacing: 12,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: EstimatedIntensityDisplaySettings(
+                      hasDemArchive: item.estimatedIntensityDemTileUrl != null,
+                    ),
+                  ),
+                  const EstimatedIntensityNoticeContent(),
+                ],
+              ),
             ),
           },
         ],
