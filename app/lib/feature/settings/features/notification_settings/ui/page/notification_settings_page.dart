@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:dio/dio.dart';
@@ -621,7 +623,7 @@ class const _SlotListSection({required final int maxRegions})
             padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
             child: M3EFilledButton.tonalIcon(
               onPressed: () async {
-                await HapticFeedback.lightImpact();
+                unawaited(HapticFeedback.lightImpact());
                 await NotificationSlotsNotifier.putNationwideMutation.run(ref, (
                   tsx,
                 ) async {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
@@ -33,7 +35,7 @@ class const EarthquakeHistoryListConfigView({
             if (value == null) {
               return;
             }
-            await HapticFeedback.selectionClick();
+            unawaited(HapticFeedback.selectionClick());
             await onChanged(config.copyWith(dateHeaderDisplayMode: value));
           },
           child: const Column(

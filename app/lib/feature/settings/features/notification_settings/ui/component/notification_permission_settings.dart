@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -117,7 +119,7 @@ class const NotificationPermissionSettings({super.key}) extends ConsumerWidget {
             showContact: false,
             showLoadingOverlayOnReload: false,
             onReload: () async {
-              await HapticFeedback.lightImpact();
+              unawaited(HapticFeedback.lightImpact());
               ref.invalidate(osNotificationPermissionProvider);
             },
           ),

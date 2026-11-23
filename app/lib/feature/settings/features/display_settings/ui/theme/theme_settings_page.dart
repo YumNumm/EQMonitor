@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
@@ -72,7 +74,7 @@ class const _ModeSection({required final ThemeBrightnessMode mode})
               if (preset == null) {
                 return;
               }
-              await HapticFeedback.selectionClick();
+              unawaited(HapticFeedback.selectionClick());
               await ref
                   .read(appThemeProvider.notifier)
                   .setThemeForMode(mode, preset);

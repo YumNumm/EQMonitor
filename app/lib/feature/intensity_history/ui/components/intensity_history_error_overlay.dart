@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -111,7 +113,7 @@ class const IntensityHistoryErrorOverlay({super.key}) extends ConsumerWidget {
                     children: [
                       M3ETextButton(
                         onPressed: () async {
-                          await HapticFeedback.lightImpact();
+                          unawaited(HapticFeedback.lightImpact());
                           await action.retry(ref);
                         },
                         child: const Text('再試行'),

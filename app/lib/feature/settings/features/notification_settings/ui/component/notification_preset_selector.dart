@@ -77,6 +77,10 @@ class const NotificationPresetSelector({
         return;
       }
 
+      if (preset == selectedPreset) {
+        onChanged(preset);
+        return;
+      }
       HapticUtil.selection(() => onChanged(preset));
     }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
@@ -121,7 +123,7 @@ class const _ReplayTimeline({required final ReplayState state})
             onChanged: canSeek ? (value) => dragValue.value = value : null,
             onChangeEnd: canSeek
                 ? (value) async {
-                    await HapticFeedback.selectionClick();
+                    unawaited(HapticFeedback.selectionClick());
                     dragValue.value = null;
                     await ref
                         .read(replayProvider.notifier)

@@ -220,7 +220,7 @@ class const SettingsPage({super.key}) extends ConsumerWidget {
                         leading: const Icon(Icons.delete_outline),
                         onTap: () async {
                           final messenger = ScaffoldMessenger.of(context);
-                          await HapticFeedback.mediumImpact();
+                          unawaited(HapticFeedback.mediumImpact());
                           final store = await ref.read(
                             httpCacheStoreProvider.future,
                           );

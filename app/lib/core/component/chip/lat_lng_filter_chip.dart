@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:flutter/services.dart';
@@ -231,7 +233,7 @@ class const _LatLngFilterModal({
                     ActionChip(
                       label: const Text('クリア'),
                       onPressed: () async {
-                        await HapticFeedback.lightImpact();
+                        unawaited(HapticFeedback.lightImpact());
                         latGte.value = null;
                         latLte.value = null;
                         lngGte.value = null;

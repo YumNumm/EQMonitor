@@ -280,7 +280,7 @@ class const _SettingSwitchTile({
         },
       ),
       onTap: () async {
-        await HapticFeedback.selectionClick();
+        unawaited(HapticFeedback.selectionClick());
         await onChanged(!value);
       },
     );
@@ -639,7 +639,7 @@ class const _LocationPermissionTile() extends HookConsumerWidget {
           subtitle: '現在地関連の機能を使うには、まず権限を許可してください。',
           actionLabel: '位置情報の使用を許可する',
           onPressed: () async {
-            await HapticFeedback.lightImpact();
+            unawaited(HapticFeedback.lightImpact());
             await ref
                 .read(locationTrackingModeProvider.notifier)
                 .requestPermission();

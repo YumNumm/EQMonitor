@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
@@ -62,7 +64,7 @@ class const ThemeImportExportSection({super.key}) extends HookConsumerWidget {
                         value: state.value.contains(mode),
                         title: Text(mode.name),
                         onChanged: (checked) async {
-                          await HapticFeedback.selectionClick();
+                          unawaited(HapticFeedback.selectionClick());
                           final next = {...state.value};
                           if (checked ?? false) {
                             next.add(mode);

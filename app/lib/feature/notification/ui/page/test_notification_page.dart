@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:io';
 
 import 'package:eqmonitor/feature/notification/data/action/test_notification_send_action.dart';
@@ -49,7 +51,7 @@ class const TestNotificationPage({super.key}) extends HookConsumerWidget {
                     onPressed: (kind) async {
                       pendingKind.value = kind;
                       if (!kind.isCritical) {
-                        await HapticFeedback.lightImpact();
+                        unawaited(HapticFeedback.lightImpact());
                       }
                       try {
                         await ref

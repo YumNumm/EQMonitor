@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
@@ -129,7 +131,7 @@ class const _CityDetailModal({
                     child: ErrorCard(
                       error: error,
                       onReload: () async {
-                        await HapticFeedback.lightImpact();
+                        unawaited(HapticFeedback.lightImpact());
                         ref.invalidate(earthquakeHistoryProvider(parameter));
                       },
                     ),
@@ -195,7 +197,7 @@ class const _AreaEarthquakeListSliverGroup({
                 onPressed: isAppending
                     ? null
                     : () async {
-                        await HapticFeedback.lightImpact();
+                        unawaited(HapticFeedback.lightImpact());
                         activeCursor.value = nextToken;
                         try {
                           await ref

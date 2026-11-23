@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
@@ -113,7 +115,7 @@ class const _TelegramTypeFilterModal({
                     !(selected.value.contains(type) &&
                         selected.value.length == 1),
                 onChanged: (checked) async {
-                  await HapticFeedback.selectionClick();
+                  unawaited(HapticFeedback.selectionClick());
                   final newSet = Set<EarthquakeTelegramType>.from(
                     selected.value,
                   );

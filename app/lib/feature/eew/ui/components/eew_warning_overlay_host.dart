@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_warning_overlay_render_policy.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_state.dart';
@@ -76,7 +78,7 @@ class const EewWarningOverlayHost({
             displayModel: displayModel,
             onExpand: notifier.expand,
             onClose: () async {
-              await HapticFeedback.lightImpact();
+              unawaited(HapticFeedback.lightImpact());
               await notifier.close();
             },
           ),

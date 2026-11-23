@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
@@ -103,7 +105,7 @@ class const _StatusFilterModal({final List<TelegramStatus>? currentStatuses})
                     !(selectedStatuses.value.contains(status) &&
                         selectedStatuses.value.length == 1),
                 onChanged: (checked) async {
-                  await HapticFeedback.selectionClick();
+                  unawaited(HapticFeedback.selectionClick());
                   final newSet = Set<TelegramStatus>.from(
                     selectedStatuses.value,
                   );

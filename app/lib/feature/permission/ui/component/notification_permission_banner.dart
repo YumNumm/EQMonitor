@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:eqmonitor/core/component/banner/app_banner.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -31,7 +33,7 @@ class const NotificationPermissionBanner({super.key}) extends ConsumerWidget {
       backgroundColor: colorTheme.primaryContainer,
       foregroundColor: colorTheme.onPrimaryContainer,
       onTap: () async {
-        await HapticFeedback.lightImpact();
+        unawaited(HapticFeedback.lightImpact());
         final ok = await ref
             .read(permissionRepositoryProvider)
             .requestNotificationPermission();

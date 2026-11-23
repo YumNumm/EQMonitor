@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
@@ -321,7 +323,7 @@ class const _RegionSelectionContent({
                               );
                             return;
                           }
-                          await HapticFeedback.selectionClick();
+                          unawaited(HapticFeedback.selectionClick());
                           selection.value = reducer.select(
                             selected: reducer.restore(
                               selected: selection.value,

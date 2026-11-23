@@ -115,7 +115,7 @@ class const HomeEarthquakeHistorySheet({super.key}) extends HookConsumerWidget {
                         error: error,
                         showLoadingOverlayOnReload: false,
                         onReload: () async {
-                          await HapticFeedback.lightImpact();
+                          unawaited(HapticFeedback.lightImpact());
                           ref.invalidate(
                             homeEarthquakeHistoryParameterProvider,
                             asReload: true,
@@ -134,7 +134,7 @@ class const HomeEarthquakeHistorySheet({super.key}) extends HookConsumerWidget {
               error: (error, _) => ErrorCard(
                 error: error,
                 onReload: () async {
-                  await HapticFeedback.lightImpact();
+                  unawaited(HapticFeedback.lightImpact());
                   ref.invalidate(
                     homeEarthquakeHistoryParameterProvider,
                     asReload: true,
@@ -167,7 +167,7 @@ class const HomeEarthquakeHistorySheet({super.key}) extends HookConsumerWidget {
           ErrorCard(
             error: error,
             onReload: () async {
-              await HapticFeedback.lightImpact();
+              unawaited(HapticFeedback.lightImpact());
               ref.invalidate(homeConfigurationProvider, asReload: true);
             },
           ),

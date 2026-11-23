@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
@@ -59,7 +61,7 @@ class const EarthquakeHistoryDetailsSettingsSheet({
                     onChanged: busy || showingDb
                         ? null
                         : (value) async {
-                            await HapticFeedback.selectionClick();
+                            unawaited(HapticFeedback.selectionClick());
                             await EarthquakeHistoryConfigNotifier
                                 .saveDetailsMutation
                                 .run(
@@ -84,7 +86,7 @@ class const EarthquakeHistoryDetailsSettingsSheet({
                     onChanged: busy || showingDb
                         ? null
                         : (value) async {
-                            await HapticFeedback.selectionClick();
+                            unawaited(HapticFeedback.selectionClick());
                             await EarthquakeHistoryConfigNotifier
                                 .saveDetailsMutation
                                 .run(
@@ -134,7 +136,7 @@ class const EarthquakeHistoryDetailsSettingsSheet({
                     onChanged: busy
                         ? null
                         : (value) async {
-                            await HapticFeedback.selectionClick();
+                            unawaited(HapticFeedback.selectionClick());
                             await EarthquakeHistoryConfigNotifier
                                 .saveDetailsMutation
                                 .run(
@@ -164,7 +166,7 @@ class const EarthquakeHistoryDetailsSettingsSheet({
                                 !details.showStationsOnEstimatedIntensity)
                         ? null
                         : (value) async {
-                            await HapticFeedback.selectionClick();
+                            unawaited(HapticFeedback.selectionClick());
                             await EarthquakeHistoryConfigNotifier
                                 .saveDetailsMutation
                                 .run(

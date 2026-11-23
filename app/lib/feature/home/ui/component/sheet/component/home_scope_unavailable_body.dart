@@ -124,7 +124,7 @@ class const _CurrentLocationUnavailable({required final VoidCallback onRetry})
         actions: [
           M3EFilledButton.tonal(
             onPressed: () async {
-              await HapticFeedback.lightImpact();
+              unawaited(HapticFeedback.lightImpact());
               await Geolocator.requestPermission();
               await refreshPermission();
               onRetry();
