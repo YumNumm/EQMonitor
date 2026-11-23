@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/component/banner/app_banner.dart';
 import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
 import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
@@ -180,9 +179,11 @@ class const _LocationPermissionBanner() extends ConsumerWidget {
       foregroundColor: colorTheme.onPrimaryContainer,
       onTap: isPending
           ? null
-          : () async => const CurrentLocationPermissionAction().request(ref),
-      onDismiss: () => unawaited(
-        ref.read(locationPermissionBannerDismissedProvider.notifier).dismiss(),
+          : () => HapticUtil.light(
+              () => const CurrentLocationPermissionAction().request(ref),
+            ),
+      onDismiss: () => HapticUtil.light(
+        ref.read(locationPermissionBannerDismissedProvider.notifier).dismiss,
       ),
     );
   }

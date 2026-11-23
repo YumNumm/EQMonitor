@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_history_map_action.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_history_page_action.dart';
@@ -63,7 +64,8 @@ class const IntensityHistoryPage({
         body: Center(
           child: ErrorCard(
             error: error,
-            onReload: () => action.retryMapConfiguration(ref),
+            onReload: () =>
+                HapticUtil.light(() => action.retryMapConfiguration(ref)),
             showLoadingOverlayOnReload: false,
           ),
         ),

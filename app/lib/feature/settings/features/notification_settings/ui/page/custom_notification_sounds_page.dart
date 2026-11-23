@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/custom_notification_sounds_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_sound_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/action/custom_notification_sound_action.dart';
@@ -46,8 +47,9 @@ class const CustomNotificationSoundsPage({super.key})
             if (catalog.hasError) ...[
               const Text('追加した通知音を読み込めません。時間をおいて再試行してください'),
               M3ETextButton(
-                onPressed: () =>
-                    ref.invalidate(customNotificationSoundsProvider),
+                onPressed: () => HapticUtil.light(
+                  () => ref.invalidate(customNotificationSoundsProvider),
+                ),
                 child: const Text('再試行'),
               ),
             ],
@@ -75,17 +77,21 @@ class const CustomNotificationSoundsPage({super.key})
                             M3ETextButton(
                               onPressed: busy || !sound.isAvailable
                                   ? null
-                                  : () => action.preview(
-                                      ref,
-                                      context,
-                                      id: sound.id,
+                                  : () => HapticUtil.light(
+                                      () => action.preview(
+                                        ref,
+                                        context,
+                                        id: sound.id,
+                                      ),
                                     ),
                               child: const Text('試聴'),
                             ),
                             M3ETextButton(
                               onPressed: busy
                                   ? null
-                                  : () => action.preview(ref, context),
+                                  : () => HapticUtil.light(
+                                      () => action.preview(ref, context),
+                                    ),
                               child: const Text('停止'),
                             ),
                             M3ETextButton(

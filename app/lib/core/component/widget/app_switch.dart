@@ -1,5 +1,6 @@
 import 'package:cue/cue.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -192,7 +193,9 @@ class const AppSwitchListTile({
     ];
 
     return ListTile(
-      onTap: onChanged == null ? null : () => onChanged?.call(!value),
+      onTap: onChanged == null
+          ? null
+          : () => HapticUtil.selection(() => onChanged?.call(!value)),
       contentPadding: contentPadding,
       shape: shape,
       tileColor: tileColor,

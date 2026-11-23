@@ -56,6 +56,19 @@
 
 - `develop` push はその時点の `app/pubspec.yaml` を配布する。未マージのRelease PRのバージョンは使わないため、新しいバージョンの配布前にRelease PRを取り込む。Release PleaseはApp Store側の承認済みバージョンを自動照合しない。
 - Android オープンテストは `android_track=beta`。`external` は独自のクローズドテスト。
+- `Deploy App` のビルドは run 間で並列に走る。配布ノート生成と配信は `wait-for-deploy-turn` job
+  （`scripts/ci/wait_for_deploy_turn.sh`）が、run number の小さい未完了 run がなくなるまで待たせるため、
+  配信は run number 順になる。配布ノートはストア上の直近ビルドの `rev:` を起点にするので、
+  この待機を外すと複数 run が同じ起点を使う。
+  - 待機 job は run 一覧 API を1回ずつ polling する。`GITHUB_TOKEN` の上限を配信 job と共有するため、
+    先行 run が多いほど間隔を広げる（最大300秒）。取得失敗時は通過させず再試行する。
+  - 待機 job が timeout（350分）または失敗した run は配信しない。後続 run はその run の完了後に進む。
+  - 古い run の「Re-run failed jobs」は成功済みの待機 job を再実行しないため、順序保証の対象外になる。
+  - 連続 merge 時は iOS ビルドが macOS runner の同時実行枠を占め、`deploy-ios` の開始が遅れうる。
+  - 待機中の job も同時実行枠を1つ使う。待機 run 数がアカウントの上限に達すると、先頭 run の配信 job が
+    runner を得られず停止する。
+  - workflow 直下の `concurrency` は jactionlint の `concurrency-limits` を満たすための run 単位 group で、
+    run 間の直列化はしない。
 - 手動実行の `source_run_id` に完了済み `Deploy App` run ID を指定すると、再ビルドせず
   元のバイナリと配布ノートを再利用する。元runのビルド成功・artifact有効期限・versionを検査する。
   iOS は署名済みIPA内のversion/build numberに一致する ASC buildを選び、Android はAABのSHA-256を照合して

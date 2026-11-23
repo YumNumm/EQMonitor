@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
@@ -27,6 +28,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 class const EewDetailsByEventIdPage({
   required final String eventId,
   final VoidCallback? onClose,
+  final bool useSheet = false,
   super.key,
 }) extends StatelessWidget {
   @override
@@ -37,7 +39,11 @@ class const EewDetailsByEventIdPage({
     child: ProviderScope(
       key: ValueKey(eventId),
       overrides: [eewSimulationProvider.overrideWith(EewSimulation.new)],
-      child: _EewDetailsByEventIdContent(eventId: eventId, onClose: onClose),
+      child: _EewDetailsByEventIdContent(
+        eventId: eventId,
+        onClose: onClose,
+        useSheet: useSheet,
+      ),
     ),
   );
 }
@@ -45,6 +51,7 @@ class const EewDetailsByEventIdPage({
 class const _EewDetailsByEventIdContent({
   required final String eventId,
   final VoidCallback? onClose,
+  required final bool useSheet,
 }) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,7 +89,7 @@ class const _EewDetailsByEventIdContent({
                     ? Icons.pause
                     : Icons.play_arrow,
               ),
-              onPressed: () {
+              onPressed: () => HapticUtil.light(() {
                 if (simulation.isComplete) {
                   ref
                       .read(eewSimulationProvider.notifier)
@@ -92,11 +99,13 @@ class const _EewDetailsByEventIdContent({
                 } else {
                   ref.read(eewSimulationProvider.notifier).resume();
                 }
-              },
+              }),
             ),
             IconButton(
               icon: const Icon(Icons.stop),
-              onPressed: () => ref.read(eewSimulationProvider.notifier).stop(),
+              onPressed: () => HapticUtil.light(
+                () => ref.read(eewSimulationProvider.notifier).stop(),
+              ),
             ),
           ] else
             _DisplayModeSelector(
@@ -123,7 +132,7 @@ class const _EewDetailsByEventIdContent({
 
           final idx =
               selectedIndex.value ??
-              (onClose != null ? displayedEews.length - 1 : null);
+              (useSheet ? displayedEews.length - 1 : null);
           final selectedEew =
               (idx != null && idx >= 0 && idx < displayedEews.length)
               ? displayedEews[idx]
@@ -158,15 +167,17 @@ class const _EewDetailsByEventIdContent({
             children: [
               if (sortedEews.length > 1)
                 _SimulationStartBanner(
-                  onStart: () => ref
-                      .read(eewSimulationProvider.notifier)
-                      .start(sortedEews),
+                  onStart: () => HapticUtil.light(
+                    () => ref
+                        .read(eewSimulationProvider.notifier)
+                        .start(sortedEews),
+                  ),
                 ),
               Expanded(
                 child: _ResponsiveLayout(
                   eews: displayedEews,
                   selectedIndex: idx,
-                  useSheet: onClose != null,
+                  useSheet: useSheet,
                   onSelect: (index) => selectedIndex.value = index,
                   selectedEew: selectedEew,
                   displayMode: displayMode.value,
@@ -180,7 +191,9 @@ class const _EewDetailsByEventIdContent({
         loading: () => const _EewDetailsByEventIdSkeleton(),
         error: (error, stack) => ErrorCard(
           error: error,
-          onReload: () async => ref.refresh(eewsByEventIdProvider(eventId)),
+          onReload: () => HapticUtil.light(
+            () => ref.refresh(eewsByEventIdProvider(eventId)),
+          ),
         ),
       ),
     );
@@ -274,6 +287,7 @@ class const _DisplayModeSelector({
   Widget build(BuildContext context) {
     return M3EToggleButtonGroup(
       type: M3EButtonGroupType.connected,
+      haptic: .light,
       actions: const [
         M3EToggleButtonGroupAction(icon: Icon(Icons.layers), label: Text('震度')),
         M3EToggleButtonGroupAction(

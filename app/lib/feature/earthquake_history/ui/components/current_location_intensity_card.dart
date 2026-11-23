@@ -241,6 +241,7 @@ class const _CoarseLocationNotice({
               padding: EdgeInsets.zero,
               minimumSize: Size.zero,
               tapTargetSize: .shrinkWrap,
+              haptic: .light,
             ),
             onPressed: () async {
               await const TemporaryPreciseLocationRequester().request();

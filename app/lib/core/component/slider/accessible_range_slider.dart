@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -22,6 +23,9 @@ class const AccessibleRangeSlider({
           child: M3ERangeSlider(
             value: value,
             onChanged: onChanged,
+            onChangeEnd: enabled
+                ? (_) => HapticFeedback.selectionClick()
+                : null,
             min: min,
             max: max,
             divisions: divisions,

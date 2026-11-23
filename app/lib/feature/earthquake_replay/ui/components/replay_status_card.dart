@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_control_panel_expanded_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_control_panel.dart';
@@ -87,9 +88,11 @@ class const ReplayStatusCard({super.key}) extends HookConsumerWidget {
                 : '過去の地震を再生中。タップすると再生を操作できます',
             excludeSemantics: true,
             child: InkWell(
-              onTap: () => ref
-                  .read(replayControlPanelExpandedProvider.notifier)
-                  .toggle(),
+              onTap: () => HapticUtil.selection(
+                () => ref
+                    .read(replayControlPanelExpandedProvider.notifier)
+                    .toggle(),
+              ),
               borderRadius: borderRadius,
               child: Padding(
                 padding: EdgeInsets.symmetric(

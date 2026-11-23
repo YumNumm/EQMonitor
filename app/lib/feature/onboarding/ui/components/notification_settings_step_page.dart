@@ -169,7 +169,6 @@ class const _NewUserNotificationSettingsStepPage({
                 if (selectedPreset.value == preset) {
                   return;
                 }
-                unawaited(HapticFeedback.lightImpact());
                 selectedPreset.value = preset;
                 hasSaveError.value = false;
               },

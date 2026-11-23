@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/core/component/chip/beta_chip.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
@@ -92,7 +93,9 @@ class const _ShakeDetectionCondition({required final NotificationSlot slot})
           ? ListTile(
               title: const Text('揺れ検知の設定を読み込めませんでした'),
               trailing: M3ETextButton(
-                onPressed: () => ref.invalidate(shakeDetectionSettingsProvider),
+                onPressed: () => HapticUtil.light(
+                  () => ref.invalidate(shakeDetectionSettingsProvider),
+                ),
                 child: const Text('再試行'),
               ),
             )
@@ -136,11 +139,13 @@ class const _ShakeDetectionCondition({required final NotificationSlot slot})
                     enabled: next,
                   ),
           ),
-          onTap: () => enableFlow.setSlotEnabled(
-            ref: ref,
-            context: context,
-            slot: slot,
-            enabled: !enabled,
+          onTap: () => HapticUtil.selection(
+            () => enableFlow.setSlotEnabled(
+              ref: ref,
+              context: context,
+              slot: slot,
+              enabled: !enabled,
+            ),
           ),
         ),
         const Divider(height: 1),

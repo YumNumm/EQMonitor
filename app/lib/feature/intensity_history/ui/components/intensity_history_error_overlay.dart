@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -59,7 +63,7 @@ class const IntensityHistoryErrorOverlay({super.key}) extends ConsumerWidget {
               error: error,
               stackTrace: stackTrace,
               title: '震度情報を取得できません',
-              onReload: () => action.retry(ref),
+              onReload: () => HapticUtil.light(() => action.retry(ref)),
               showContact: false,
               showLoadingOverlayOnReload: false,
             ),
@@ -109,6 +113,7 @@ class const IntensityHistoryErrorOverlay({super.key}) extends ConsumerWidget {
                     children: [
                       M3ETextButton(
                         onPressed: () async {
+                          unawaited(HapticFeedback.lightImpact());
                           await action.retry(ref);
                         },
                         child: const Text('再試行'),

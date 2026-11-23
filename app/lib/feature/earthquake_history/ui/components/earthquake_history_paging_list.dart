@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/layout/history_selection.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
@@ -47,8 +48,10 @@ class const EarthquakeHistoryPagingList({
           itemCount: 2,
           scrollable: false,
         ),
-        errorBuilder: (context, error, stackTrace) =>
-            ErrorCard(error: error, onReload: () async => dataSource.refresh()),
+        errorBuilder: (context, error, stackTrace) => ErrorCard(
+          error: error,
+          onReload: () => HapticUtil.light(dataSource.refresh),
+        ),
         emptyWidget: const EarthquakeHistoryNotFound(),
       );
     }
@@ -83,8 +86,10 @@ class const EarthquakeHistoryPagingList({
         itemCount: 2,
         scrollable: false,
       ),
-      errorBuilder: (context, error, stackTrace) =>
-          ErrorCard(error: error, onReload: () async => dataSource.refresh()),
+      errorBuilder: (context, error, stackTrace) => ErrorCard(
+        error: error,
+        onReload: () => HapticUtil.light(dataSource.refresh),
+      ),
       emptyWidget: const EarthquakeHistoryNotFound(),
     );
   }

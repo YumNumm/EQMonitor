@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/banner/app_banner.dart';
 import 'package:eqmonitor/core/component/chip/beta_chip.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/release_highlight/data/flow/release_highlight_flow.dart';
 import 'package:eqmonitor/feature/release_highlight/data/model/release_highlight.dart';
 import 'package:eqmonitor/feature/release_highlight/data/provider/visible_release_highlight_provider.dart';
@@ -47,7 +48,9 @@ class const _CompactCard({required final ReleaseHighlight highlight})
         highlight: highlight,
       ),
       trailing: highlight.isBeta ? const BetaChip() : null,
-      onDismiss: () async => const ReleaseHighlightFlow().dismiss(ref: ref),
+      onDismiss: () => HapticUtil.light(
+        () => const ReleaseHighlightFlow().dismiss(ref: ref),
+      ),
     );
   }
 }
@@ -83,7 +86,9 @@ class const _ExpandedCard({
           ),
         ),
         IconButton(
-          onPressed: () async => const ReleaseHighlightFlow().dismiss(ref: ref),
+          onPressed: () => HapticUtil.light(
+            () => const ReleaseHighlightFlow().dismiss(ref: ref),
+          ),
           icon: Icon(Icons.close_rounded, color: foreground, size: 20),
           visualDensity: VisualDensity.compact,
           tooltip: '閉じる',

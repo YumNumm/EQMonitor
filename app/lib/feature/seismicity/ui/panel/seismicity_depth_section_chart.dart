@@ -30,6 +30,7 @@ class const SeismicityDepthSectionChart({
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: M3EToggleButtonGroup(
             type: M3EButtonGroupType.connected,
+            haptic: .light,
             actions: const [
               M3EToggleButtonGroupAction(label: Text('緯度方向')),
               M3EToggleButtonGroupAction(label: Text('経度方向')),

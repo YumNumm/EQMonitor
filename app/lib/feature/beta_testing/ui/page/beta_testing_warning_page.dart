@@ -204,6 +204,7 @@ class const _AgreementBottom({
                     vertical: designSystem.spacing.lg,
                   ),
                   borderRadius: designSystem.shape.button,
+                  haptic: .medium,
                 ),
                 child: Text(
                   '同意して利用する',

@@ -107,6 +107,10 @@ _EarthquakeHistoryDetailsConfig _$EarthquakeHistoryDetailsConfigFromJson(
   ($checkedConvert) {
     final val = _EarthquakeHistoryDetailsConfig(
       showStations: $checkedConvert('show_stations', (v) => v as bool? ?? true),
+      showAreaIcons: $checkedConvert(
+        'show_area_icons',
+        (v) => v as bool? ?? true,
+      ),
       showStationsOnEstimatedIntensity: $checkedConvert(
         'show_stations_on_estimated_intensity',
         (v) => v as bool? ?? false,
@@ -126,6 +130,7 @@ _EarthquakeHistoryDetailsConfig _$EarthquakeHistoryDetailsConfigFromJson(
   },
   fieldKeyMap: const {
     'showStations': 'show_stations',
+    'showAreaIcons': 'show_area_icons',
     'showStationsOnEstimatedIntensity': 'show_stations_on_estimated_intensity',
     'hypocenterAboveStations': 'hypocenter_above_stations',
     'stationDisplayMode': 'station_display_mode',
@@ -136,6 +141,7 @@ Map<String, dynamic> _$EarthquakeHistoryDetailsConfigToJson(
   _EarthquakeHistoryDetailsConfig instance,
 ) => <String, dynamic>{
   'show_stations': instance.showStations,
+  'show_area_icons': instance.showAreaIcons,
   'show_stations_on_estimated_intensity':
       instance.showStationsOnEstimatedIntensity,
   'hypocenter_above_stations': instance.hypocenterAboveStations,

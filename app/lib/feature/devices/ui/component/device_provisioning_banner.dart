@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/banner/app_banner.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
@@ -90,7 +91,7 @@ class const _DeviceProvisioningBannerContent({
         foregroundColor: colorTheme.onErrorContainer,
         message: lastError.userMessage,
         trailing: M3EFilledButton.tonal(
-          onPressed: onRetry,
+          onPressed: () => HapticUtil.light(onRetry),
           child: const Text('再試行'),
         ),
       ),
@@ -105,7 +106,7 @@ class const _DeviceProvisioningBannerContent({
         foregroundColor: colorTheme.onErrorContainer,
         message: '通知の初期設定が完了していません',
         trailing: M3EFilledButton.tonal(
-          onPressed: onRetry,
+          onPressed: () => HapticUtil.light(onRetry),
           child: const Text('再試行'),
         ),
       ),

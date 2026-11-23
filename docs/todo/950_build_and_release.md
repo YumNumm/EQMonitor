@@ -26,6 +26,12 @@
 - app の `gradle.properties` / `gradle.ci.properties` は Cronet の namespace 重複を `android.uniquePackageNames=false` で暫定回避する。[upstream issue #1932](https://github.com/dart-lang/http/issues/1932) の解消後に両方から削除し、release Manifest 統合と AAB ビルドを確認する。AGP 10 ではこの無効化設定が使えなくなるため、更新前に解消する。
 - 完了条件: app release AAB の内容検査が成功し、legacy opt-out が不要になること。
 
+## 900: Deploy App の並列ビルドと配信順の実run確認
+
+- `wait-for-deploy-turn` job は実リポジトリの run 一覧に対するローカル実行でのみ確認済み。workflow としては未実行。
+- 完了条件: merge 後の `develop` push で、待機 job の通過後に配布ノート生成と配信が始まること。連続 merge 時にビルドが並列に走り、配信が run number 順になること。
+- 待機中の job は同時実行枠を1つずつ使う。待機 run 数がアカウントの同時実行上限に達すると先頭 run の配信 job が runner を得られず、待機 job の timeout まで止まる。上限値を確認し、必要なら待機数の上限を設ける。
+
 ## 900: Google Play versionCode
 
 - `.github/workflows/deploy-app.yaml` は Android の `BUILD_NUMBER` に `github.run_number` を渡し、未定義 `LATEST_BUILD_NUMBER` の死んだ計算も残る。以前の1050/1051重複失敗を現在も必ず失敗すると断定せず、Play の現在最大値を取得する。

@@ -69,6 +69,13 @@ mise exec -- tool/asset_pack/stage_from_r2.sh --target all
 - GDAL 3.8.4の `COORDINATE_PRECISION=7` によるGeometryCollection化は独立した欠落原因。
   `areaForecastLocalE=530`（兵庫県北部）、`areaForecastLocalEew=9280`（兵庫）の存在も確認する。
   tippecanoe固定だけでこの問題まで解決済みとはしない。
+- 区域アイコン用の点層 `areaForecastLocalELabel` / `areaInformationCityQuakeLabel` は、
+  backend `tools/base-map-pmtiles/label_points.py` が塗りと同じGeoJSONから1区域1点で生成する。
+  点は最大のポリゴンの内部に置く。小笠原だけは最大の島が硫黄島のため父島を指定している。
+  コードが空の地物（国後島・択捉島・色丹島、埋立地、無人の岩礁）には点がない。
+  点層はtippecanoeの既定で低zoomが間引かれるため `--drop-rate=1` を使い、
+  実tileをdecodeして全zoomのdistinctコード（確認時188 / 1894）を照合する。
+  `jma_map.pb` の `polylabel` は精度指定の誤りで大半がbboxの隅にあり、表示位置には使えない。
 - 生成ツールはCI/localで揃える。最新配信物にbackend修正が含まれるかは未確認。
   旧版への単純rollbackを完了扱いにせず、地物被覆と日本の二重描画も検証する。
 

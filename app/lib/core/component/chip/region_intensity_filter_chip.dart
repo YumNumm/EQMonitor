@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_region_selection.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/region_intensity_result.dart';
@@ -33,7 +34,9 @@ class const RegionIntensityFilterChip({
     return RawChip(
       selected: code != null,
       label: Text(code == null ? '地域' : '${regionName ?? code}$range'),
-      onDeleted: code == null ? null : () => onChanged?.call(null),
+      onDeleted: code == null
+          ? null
+          : () => HapticUtil.light(() => onChanged?.call(null)),
       onSelected: (_) async {
         final result = await RegionSelectionRoute(
           $extra: RegionSelectionRequest(
