@@ -32,7 +32,7 @@ mise exec -- tool/store_screenshots/decrypt_fixtures.sh build/store_screenshots/
 | --- | --- |
 | `bezel_iphone_18_pro_glacier_portrait.png` | 合成の端末フレーム。`figma_extract.py --bezel-out` で取得する |
 | `noto_peninsula_2024.eqrp` | 能登半島地震のリプレイ（`eew_warning` / `kyoshin_monitor`） |
-| `wallpaper_lock_screen.jpg` | ロック画面の壁紙（2576×1717 の横長）。Simulator で設定すると黒く描画されたため未使用（「制約」を参照） |
+| `wallpaper_lock_screen.jpg` | ロック画面の壁紙（2576×1717 の横長）。`capture.py --wallpaper` が `set_ios_wallpaper.sh` で Simulator に設定する |
 
 ## Figma からの抽出
 
@@ -59,6 +59,14 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   ホームのお知らせ欄にも `ErrorCard` が出るため、`EarthquakeHistoryDetailsPage` の配下だけを見る。
 - テスト名の表示は 2 つあり、両方を消す。Patrol のラベルは `patrol test --no-label`、`LiveTestWidgetsFlutterBinding` が画面上端に描くものは `setLabel('')`。
 - 地震詳細は推計震度分布がある地震だと既定でそれを表示する。観測点を見せるため、`EarthquakeIntensityCard.onDisplayModeChanged` を呼んで「各地の震度」に切り替える（切り替えの状態はページ内の `useState` にしか無い）。
+- EEW カードの「現在地」の予想震度・到達までの時間・警報の強調は、位置情報が取れるときだけ出る。テストは `Geolocator.requestPermission()` を呼んでダイアログを許可する。
+- ホームのシートは、利用者が動かしていない間、1 つ目の EEW カードの下端に高さを合わせる（`SheetFitTarget`）。撮影のためのシート操作は不要。
+- 壁紙は `set_ios_wallpaper.sh` が PosterBoard の保存領域へ直接書き込む（iOS のみ）。
+  - 標準の `com.apple.WallpaperKit.CollectionsPoster` に、種類が `Still` の `.wallpaper` バンドルを持つ設定を足し、SQLite（`PBFPosterExtensionDataStoreSQLiteDatabase.sqlite3`）で選択中にする。
+  - 識別子は標準の壁紙と重ならない値（`99001`）にする。標準の識別子を流用した試行では標準の壁紙が描画された。
+  - 保存領域は初回起動で作られるため、起動を待ってから終了し、書き込んで再起動する。設定済みの Simulator では何もしない。
+  - 非公開の形式に依存する。失敗しても `capture.py` は警告を出して壁紙なしで撮影を続ける。
+- `capture.py` は開始前にアプリの `store_screenshot/` を消す。中断した実行のアプリが残っていると、古い `ready` をビルド中に撮ってしまい、テストが撮影待ちで timeout する。
 - 現在地は `device.json` の `location`。富山県高岡市太田 24 番地（国土地理院の住所検索の結果。枝番までは解決されない）を設定している。
 - 地震詳細のデバッグボタンは debug ビルドで既定表示になるため、SharedPreferences の `debug` を false にする。
 - 権限ダイアログは `$.platform.mobile.grantPermissionWhenInUse()` で許可する。iOS は端末の言語が英語のときだけ扱える（Patrol の制約）。
@@ -99,14 +107,15 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
   - `eew_warning`（16:11:08）は警報 第30報・M7.4・最大震度 7 の EEW カードと推定震度の塗り、`kyoshin_monitor`（16:10:21）は警報 第10報・M6.2・最大震度 6強 の EEW カードと観測点が表示された。
     どちらもボトムシートは最小の高さ（EEW カードの上部が見える状態）で、Figma との照合は未実施。
   - 観測点の表示への切り替え後も全 4 シーンが完了し、`earthquake_detail` に観測点のアイコンが表示された。
+  - 壁紙を設定した通知センター、現在地の予想震度と到達までの時間（`kyoshin_monitor` は震度 4・12.0 秒、`eew_warning` は震度 6弱・「すぐに到達」・「強い揺れに警戒!」）、カード全体が見えるシートの高さを確認した。
 - ローカルで確認済み: fixture の暗号化・復号・鍵交換（`test_fixture_crypto.sh`）、合成（`test_compose.py`）、
   シーン設定（`test_capture.py`）、Dart の静的解析、workflow の jactionlint / zizmor / ghalint / pinact。
-- 未検証: CI でのリプレイのシーンと通知センターの撮影、端末フレームの fixture（未投入）。残件は [TODO](../todo/850_store_screenshots.md)。
+- 未検証: CI（iOS 27.2 のランタイム）での壁紙の設定・リプレイのシーン・通知センターの撮影、端末フレームの fixture（未投入）。残件は [TODO](../todo/850_store_screenshots.md)。
 
 ## 制約
 
 - simctl には壁紙の設定とロックの操作が無い（Xcode 27 の `simctl help` で確認）。`prefs:root=Wallpaper` も Simulator では開けない。
-- 写真を壁紙にする操作は Patrol のネイティブ操作で最後まで通るが、試した範囲では壁紙が黒く描画された（2026-11-23、iPhone 18 Pro / iOS 27.0 の Simulator、`wallpaper_lock_screen.jpg` の 1 枚）。原因は特定できていない。
+- 写真アプリからの壁紙の設定は使わない。操作は Patrol のネイティブ操作で最後まで通るが、試した範囲では壁紙が黒く描画された（2026-11-23、iPhone 18 Pro / iOS 27.0 の Simulator、`wallpaper_lock_screen.jpg` の 1 枚）。原因は特定できていない。
   - 手順: `simctl addmedia` → 写真アプリで写真を開く → `Share` → `Use as Wallpaper` → `Add` → `Set as Wallpaper Pair`（いずれも `appId: com.apple.mobileslideshow`）。
     写真アプリの初回は `Continue` と通知の許可（SpringBoard の alert）が出る。
   - PosterBoard のデータには切り抜いた画像（`output.layerStack/portrait-layer_background.HEIC`、792×1717）が正しく作られる。

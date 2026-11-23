@@ -25,8 +25,8 @@
 - [ ] Patrol の `openNotifications()` で開いた通知センターに Live Activity が表示され、host 側の `simctl io screenshot` で撮れることを CI で確認する（手元の Mac では確認済み）。
 - [ ] 通知センターの日付が英語（`Sat Jan 1`）になる。Patrol の操作に英語の端末が必要なため、日本語表示にする手段を決める。
 - [ ] 通知センターに Dynamic Island が写る回と写らない回がある。どちらに揃えるか決めて固定する。
-- [ ] 壁紙の設定手段を決める。写真アプリからの設定は操作できるが、iOS 27.0 の Simulator では黒く描画された（知見の「制約」、原因は未特定）。
-  候補: 合成時に通知センターの画像の背景を壁紙に差し替える、実機で撮る、Simulator の PosterBoard のデータを直接置き換える。
+- [x] 壁紙の設定手段を決める。PosterBoard の保存領域へ直接書き込む（`set_ios_wallpaper.sh`）。手元の iOS 27.0 で通知センターに表示された。
+- [ ] CI の iOS 27.2 のランタイムで壁紙が設定されるか確認する。保存領域の形式が違えば警告だけが出て既定の壁紙になる。
 - 完了条件: 03 通知ページが壁紙付きの通知センターと Live Activity で合成される。
 
 ## 700: Apple Watch Ultra 4 の Live Activity

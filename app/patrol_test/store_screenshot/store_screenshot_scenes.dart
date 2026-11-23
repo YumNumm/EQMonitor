@@ -14,6 +14,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/d
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart' as p;
@@ -45,6 +46,13 @@ class StoreScreenshotScenes({
     )) {
       await $.platform.mobile.grantPermissionWhenInUse();
     }
+  }
+
+  // EEW カードの現在地の予想震度と到達までの時間は、位置情報が取れるときだけ出る。
+  Future<void> allowLocation() async {
+    final request = Geolocator.requestPermission();
+    await grantPermissionDialogs();
+    await request;
   }
 
   Future<bool> hasFixture(String name) async {

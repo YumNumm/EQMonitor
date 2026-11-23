@@ -144,6 +144,7 @@ jobs:
           python3 tool/store_screenshots/capture.py \
             --platform ios \
             --output "$RUNNER_TEMP/store-screenshots-ios-raw" \
+            --wallpaper "$RUNNER_TEMP/store-screenshot-fixtures/wallpaper_lock_screen.jpg" \
             -- $PATROL_ARGS
 
       - name: Upload raw screenshots

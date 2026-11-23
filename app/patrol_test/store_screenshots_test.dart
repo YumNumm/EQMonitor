@@ -63,6 +63,7 @@ void main() {
         );
         await scenes.waitForHome();
         await scenes.grantPermissionDialogs();
+        await scenes.allowLocation();
 
         bool wanted(String scene) =>
             _sceneFilter.isEmpty || _sceneFilter.split(',').contains(scene);

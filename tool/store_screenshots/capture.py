@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -26,9 +27,10 @@ def run(*args: str, capture: bool = False) -> str:
 
 
 class IosSimulator:
-    def __init__(self, udid: str, bundle_id: str) -> None:
+    def __init__(self, udid: str, bundle_id: str, wallpaper: Path | None = None) -> None:
         self.udid = udid
         self.bundle_id = bundle_id
+        self.wallpaper = wallpaper
         self.container: Path | None = None
 
     @property
@@ -37,6 +39,12 @@ class IosSimulator:
 
     def prepare(self, config: dict) -> None:
         run("xcrun", "simctl", "bootstatus", self.udid, "-b")
+        if self.wallpaper is not None:
+            # 非公開の保存形式に依存するため、ランタイムが変わると失敗しうる。壁紙なしで撮影を続ける。
+            result = subprocess.run([str(TOOL_DIR / "set_ios_wallpaper.sh"), self.udid, str(self.wallpaper)], check=False)
+            if result.returncode != 0:
+                print("warning: could not set the wallpaper", flush=True)
+            run("xcrun", "simctl", "bootstatus", self.udid, "-b")
         run("xcrun", "simctl", "ui", self.udid, "appearance", config["appearance"])
         run(
             "xcrun", "simctl", "status_bar", self.udid, "override",
@@ -57,6 +65,12 @@ class IosSimulator:
             )
             self.container = Path(result.stdout.strip()) if result.returncode == 0 else None
         return self.container / "Documents" / SESSION_DIR if self.container else None
+
+    def clear_markers(self) -> None:
+        root = self.session_root()
+        if root is not None and root.is_dir():
+            shutil.rmtree(root)
+        self.container = None
 
     def list_markers(self, directory: str) -> set[str]:
         root = self.session_root()
@@ -116,6 +130,9 @@ class AndroidEmulator:
         ):
             self.adb("shell", "am", "broadcast", "-a", "com.android.systemui.demo", *extras)
 
+    def clear_markers(self) -> None:
+        self.app_shell(f"rm -rf app_flutter/{SESSION_DIR}")
+
     def list_markers(self, directory: str) -> set[str]:
         result = self.app_shell(f"ls app_flutter/{SESSION_DIR}/{directory}")
         if result.returncode != 0:
@@ -142,6 +159,8 @@ def pending_scenes(ready: set[str], captured: set[str]) -> list[str]:
 
 def capture(device: IosSimulator | AndroidEmulator, config: dict, patrol_args: list[str], output: Path) -> None:
     device.prepare(config)
+    # 中断した前回の実行でアプリが残っていると、古い ready をビルド中に撮ってしまう。
+    device.clear_markers()
     output.mkdir(parents=True, exist_ok=True)
     command = ["patrol", "test", "--target", PATROL_TARGET, "--device", device.patrol_device, "--no-label", *patrol_args]
     print(f"running: {' '.join(command)}", flush=True)
@@ -218,6 +237,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--config", type=Path, default=TOOL_DIR / "device.json")
     parser.add_argument("--device", help="simulator UDID or adb serial (default: create an iOS simulator / ANDROID_SERIAL)")
+    parser.add_argument("--wallpaper", type=Path, help="image to set as the iOS simulator wallpaper (skipped when the file is missing)")
     parser.add_argument("--ios-device-type", action="append", default=[], help="preferred iOS device type, in order")
     parser.add_argument("patrol_args", nargs=argparse.REMAINDER)
     args = parser.parse_args(argv)
@@ -226,7 +246,9 @@ def main(argv: list[str]) -> int:
     config = json.loads(args.config.read_text())
     if args.platform == "ios":
         udid = args.device or create_ios_simulator(args.ios_device_type or ["iPhone 18 Pro", "iPhone 17 Pro"])
-        device: IosSimulator | AndroidEmulator = IosSimulator(udid, config["applicationId"])
+        device: IosSimulator | AndroidEmulator = IosSimulator(
+            udid, config["applicationId"], args.wallpaper if args.wallpaper and args.wallpaper.is_file() else None
+        )
     else:
         serial = args.device or os.environ.get("ANDROID_SERIAL", "emulator-5554")
         device = AndroidEmulator(serial, config["applicationId"])
