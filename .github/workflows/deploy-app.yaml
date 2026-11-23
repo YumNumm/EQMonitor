@@ -360,6 +360,10 @@ jobs:
       # Bundle the signed R2 pack as the immutable default and refresh the
       # slim table used by AppIntent/Widget native targets.
       - name: Stage signed Asset Pack from R2 for iOS
+        env:
+          # Unset in normal operation; set to the preview prefix to bundle an
+          # unreleased pack. See docs/asset-pack-cd.md.
+          ASSET_PACK_BASE_URL: ${{ vars.ASSET_PACK_BASE_URL }}
         run: tool/asset_pack/stage_from_r2.sh --target all
 
       - name: Extract environment variables
@@ -846,6 +850,10 @@ jobs:
       # The same signed R2 pack is embedded in the base AAB as the immutable
       # fallback used before, or if, a downloaded update cannot be validated.
       - name: Stage signed Asset Pack from R2 for Android
+        env:
+          # Unset in normal operation; set to the preview prefix to bundle an
+          # unreleased pack. See docs/asset-pack-cd.md.
+          ASSET_PACK_BASE_URL: ${{ vars.ASSET_PACK_BASE_URL }}
         run: tool/asset_pack/stage_from_r2.sh --target bundled
 
       - name: Extract keystore
