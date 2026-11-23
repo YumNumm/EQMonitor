@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/layout/history_detail_scope.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/component/layout/history_adaptive_view.dart';
 import 'package:eqmonitor/core/component/layout/history_selection.dart';
@@ -65,12 +69,26 @@ class const _EewHistoryContent() extends HookConsumerWidget {
     return Scaffold(
       body: HistoryAdaptiveView(
         onCloseDetail: () => selectEvent(null),
+        onCollapseDetail: () {
+          final collapsed = selectedEventId.value;
+          if (collapsed == null || !context.mounted) {
+            return;
+          }
+          selectedEventId.value = null;
+          unawaited(
+            EewDetailsByEventIdRoute(
+              eventId: collapsed,
+              useSheet: true,
+            ).push<void>(context),
+          );
+        },
         detail: eventId == null
             ? null
             : EewDetailsByEventIdPage(
                 key: ValueKey(eventId),
                 eventId: eventId,
                 onClose: () => selectEvent(null),
+                useSheet: true,
               ),
         list: Material(
           child: dataSourceAsync.when(
@@ -103,6 +121,18 @@ class const _PagingBody({
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final ValueChanged<String> select = (eventId) {
+      if (HistoryDetailScope.isSplitOf(context)) {
+        onSelect(eventId);
+        return;
+      }
+      unawaited(
+        EewDetailsByEventIdRoute(
+          eventId: eventId,
+          useSheet: true,
+        ).push<void>(context),
+      );
+    };
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -119,7 +149,7 @@ class const _PagingBody({
           slivers: [
             PinnedActiveEewSection(
               selectedEventId: selectedEventId,
-              onSelect: onSelect,
+              onSelect: select,
             ),
             SliverGroupedPagingList<String?, String, EewTelegramItem>(
               dataSource: dataSource,
@@ -133,7 +163,7 @@ class const _PagingBody({
                     child: EewHistoryListTile(
                       item: item,
                       visualDensity: VisualDensity.compact,
-                      onTap: () => onSelect(item.eventId),
+                      onTap: () => select(item.eventId),
                     ),
                   ),
                   Divider(

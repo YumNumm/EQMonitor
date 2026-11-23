@@ -11,6 +11,7 @@ class const HistoryAdaptiveView({
   required final Widget list,
   required final Widget? detail,
   required final VoidCallback onCloseDetail,
+  final VoidCallback? onCollapseDetail,
   super.key,
 }) extends HookWidget {
   @override
@@ -19,6 +20,7 @@ class const HistoryAdaptiveView({
     final measurement = useState<PaneViewportMeasurement?>(null);
     final avoidBounds = DisplayFeatureSubScreen.avoidBounds(media).toList();
     final hasDetail = detail != null;
+    final isCurrentRoute = ModalRoute.isCurrentOf(context) ?? true;
 
     return PopScope(
       canPop: !hasDetail,
@@ -55,6 +57,14 @@ class const HistoryAdaptiveView({
             final detailBounds = layout.detail;
             final isSplit = listBounds != null;
             final waiting = avoidBounds.isNotEmpty && !isMeasured;
+            final collapse = onCollapseDetail;
+            if (collapse != null &&
+                hasDetail &&
+                !isSplit &&
+                !waiting &&
+                isCurrentRoute) {
+              WidgetsBinding.instance.addPostFrameCallback((_) => collapse());
+            }
             return IgnorePointer(
               ignoring: waiting,
               child: Opacity(

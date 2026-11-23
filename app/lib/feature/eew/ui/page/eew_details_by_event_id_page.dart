@@ -27,6 +27,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 class const EewDetailsByEventIdPage({
   required final String eventId,
   final VoidCallback? onClose,
+  final bool useSheet = false,
   super.key,
 }) extends StatelessWidget {
   @override
@@ -37,7 +38,11 @@ class const EewDetailsByEventIdPage({
     child: ProviderScope(
       key: ValueKey(eventId),
       overrides: [eewSimulationProvider.overrideWith(EewSimulation.new)],
-      child: _EewDetailsByEventIdContent(eventId: eventId, onClose: onClose),
+      child: _EewDetailsByEventIdContent(
+        eventId: eventId,
+        onClose: onClose,
+        useSheet: useSheet,
+      ),
     ),
   );
 }
@@ -45,6 +50,7 @@ class const EewDetailsByEventIdPage({
 class const _EewDetailsByEventIdContent({
   required final String eventId,
   final VoidCallback? onClose,
+  required final bool useSheet,
 }) extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -123,7 +129,7 @@ class const _EewDetailsByEventIdContent({
 
           final idx =
               selectedIndex.value ??
-              (onClose != null ? displayedEews.length - 1 : null);
+              (useSheet ? displayedEews.length - 1 : null);
           final selectedEew =
               (idx != null && idx >= 0 && idx < displayedEews.length)
               ? displayedEews[idx]
@@ -166,7 +172,7 @@ class const _EewDetailsByEventIdContent({
                 child: _ResponsiveLayout(
                   eews: displayedEews,
                   selectedIndex: idx,
-                  useSheet: onClose != null,
+                  useSheet: useSheet,
                   onSelect: (index) => selectedIndex.value = index,
                   selectedEew: selectedEew,
                   displayMode: displayMode.value,

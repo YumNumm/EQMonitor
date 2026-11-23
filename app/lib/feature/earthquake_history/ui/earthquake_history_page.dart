@@ -33,6 +33,18 @@ class const EarthquakeHistoryPage({
     return Scaffold(
       body: HistoryAdaptiveView(
         onCloseDetail: () => selectedEventId.value = null,
+        onCollapseDetail: () {
+          final collapsed = selectedEventId.value;
+          if (collapsed == null || !context.mounted) {
+            return;
+          }
+          selectedEventId.value = null;
+          unawaited(
+            EarthquakeHistoryDetailsRoute(
+              eventId: collapsed,
+            ).push<void>(context),
+          );
+        },
         list: _SliverListBody(
           initialParameter: initialParameter,
           selectedEventId: eventId,
