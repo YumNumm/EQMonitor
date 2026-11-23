@@ -102,3 +102,61 @@ final class HomeKyoshinMonitorObservationGeoJsonProvider
 
 String _$homeKyoshinMonitorObservationGeoJsonHash() =>
     r'fd88ec3165df2fafb00ade8ec5e65760da4ef6c3';
+
+/// 観測点名ラベル用の GeoJSON
+///
+/// 観測値を含めず、表示中の観測点の集合が変わらない限り同じ文字列を返す。
+/// 毎秒の観測値更新でラベルが再配置されるのを避ける。
+
+@ProviderFor(homeKyoshinMonitorStationLabelGeoJson)
+final homeKyoshinMonitorStationLabelGeoJsonProvider =
+    HomeKyoshinMonitorStationLabelGeoJsonProvider._();
+
+/// 観測点名ラベル用の GeoJSON
+///
+/// 観測値を含めず、表示中の観測点の集合が変わらない限り同じ文字列を返す。
+/// 毎秒の観測値更新でラベルが再配置されるのを避ける。
+
+final class HomeKyoshinMonitorStationLabelGeoJsonProvider
+    extends $FunctionalProvider<String, String, String>
+    with $Provider<String> {
+  /// 観測点名ラベル用の GeoJSON
+  ///
+  /// 観測値を含めず、表示中の観測点の集合が変わらない限り同じ文字列を返す。
+  /// 毎秒の観測値更新でラベルが再配置されるのを避ける。
+  HomeKyoshinMonitorStationLabelGeoJsonProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'homeKyoshinMonitorStationLabelGeoJsonProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$homeKyoshinMonitorStationLabelGeoJsonHash();
+
+  @$internal
+  @override
+  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String create(Ref ref) {
+    return homeKyoshinMonitorStationLabelGeoJson(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$homeKyoshinMonitorStationLabelGeoJsonHash() =>
+    r'2c48abe7a68675d2b29254d3e4fc368d69921e31';
