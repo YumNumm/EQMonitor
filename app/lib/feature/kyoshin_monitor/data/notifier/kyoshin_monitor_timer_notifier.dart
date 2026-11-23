@@ -122,6 +122,7 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
 
     // 2. 位相をずらした連続測定で見積もりを詰める。
     var isSettled = false;
+    Future<void> Function()? verifyAfterSettled;
     unawaited(
       Future<void>(() async {
         for (var i = 1; i < _burstSampleCount; i++) {
@@ -142,6 +143,7 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
         current = current.copyWith(settledAt: clock.now());
         isSettled = true;
         controller.add(current);
+        unawaited(verifyAfterSettled?.call());
       }),
     );
 
@@ -227,6 +229,10 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
         return;
       }
       wasBackground = false;
+      if (!isSettled) {
+        verifyAfterSettled = verify;
+        return;
+      }
       unawaited(verify());
     });
 

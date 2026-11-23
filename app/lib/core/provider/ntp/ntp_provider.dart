@@ -18,6 +18,7 @@ part 'ntp_provider.g.dart';
 class Ntp extends _$Ntp {
   var _wasPaused = false;
   var _isSyncing = false;
+  var _isResumeSyncPending = false;
 
   @override
   Future<NtpState> build() async {
@@ -30,6 +31,10 @@ class Ntp extends _$Ntp {
         return;
       }
       _wasPaused = false;
+      if (_isSyncing) {
+        _isResumeSyncPending = true;
+        return;
+      }
       syncMutation.run(ref, (trx) => _sync());
     });
 
@@ -39,7 +44,20 @@ class Ntp extends _$Ntp {
       syncMutation.run(ref, (trx) => _sync());
     });
     ref.onDispose(timer.cancel);
-    final result = await _resolveOffset(config);
+    _isSyncing = true;
+    final Result<Duration, NtpException> result;
+    try {
+      result = await _resolveOffset(config);
+    } finally {
+      if (ref.mounted) {
+        _isSyncing = false;
+        if (_isResumeSyncPending) {
+          unawaited(
+            Future.microtask(() => syncMutation.run(ref, (trx) => _sync())),
+          );
+        }
+      }
+    }
     final offset = result.unwrap();
     return NtpState(
       offset: offset,
@@ -55,15 +73,18 @@ class Ntp extends _$Ntp {
     }
     _isSyncing = true;
     try {
-      final config = await ref.read(ntpConfigProvider.future);
-      final result = await _resolveOffset(config);
-      if (!ref.mounted) {
-        return;
-      }
-      // 失敗した場合は前回の offset を使い続ける。
-      if (result case Success(:final value)) {
-        state = AsyncData(NtpState(offset: value, updatedAt: clock.now()));
-      }
+      do {
+        _isResumeSyncPending = false;
+        final config = await ref.read(ntpConfigProvider.future);
+        final result = await _resolveOffset(config);
+        if (!ref.mounted) {
+          return;
+        }
+        // 失敗した場合は前回の offset を使い続ける。
+        if (result case Success(:final value)) {
+          state = AsyncData(NtpState(offset: value, updatedAt: clock.now()));
+        }
+      } while (_isResumeSyncPending);
     } finally {
       _isSyncing = false;
     }
