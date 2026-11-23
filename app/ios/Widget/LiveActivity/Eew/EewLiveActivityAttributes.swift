@@ -31,6 +31,9 @@ struct EewContentState: Codable, Hashable {
     let isLevel: Bool?
     let isOnePoint: Bool?
     let location: LocationInfo?
+    /// ストア画像の撮影用。到達までの残り秒数をこの値で止め、警戒文の点滅も塗ったままにする。
+    /// サーバーは送らない。iPhone・Apple Watch・CarPlay で同じ表示を撮るために使う。
+    var fixedRemainingSeconds: Double? = nil
 
     var isLocalTest: Bool { eventId == "eqmonitor-local-test-eew" }
 

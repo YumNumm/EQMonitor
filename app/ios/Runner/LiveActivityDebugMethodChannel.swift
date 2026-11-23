@@ -322,6 +322,7 @@ final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
             let isLevel: Bool?
             let isOnePoint: Bool?
             let location: DebugLiveActivityLocationInfo?
+            let fixedRemainingSeconds: Double?
         }
 
         var id = UUID()
