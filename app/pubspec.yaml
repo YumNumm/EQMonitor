@@ -124,6 +124,8 @@ dependencies:
   live_activity_util:
     path: ../packages/live_activity_util
   maplibre: ^0.4.0
+  native_plugin:
+    path: ../packages/native_plugin
   ntp: ^2.0.0
   objective_c: ^9.2.2
   package_info_plus: ^10.1.0

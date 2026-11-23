@@ -12,18 +12,30 @@ ReplayFileRepository replayFileRepository(Ref ref) =>
     ReplayFileRepository(dataSource: ref.watch(replayFileDataSourceProvider));
 
 typedef LoadedReplayFile = ({ReplayFile file, String name});
+typedef LoadedReplayDocument = ({
+  ReplayFile file,
+  String name,
+  Uint8List bytes,
+});
 
 class const ReplayFileRepository({
   required final ReplayFileDataSource dataSource,
 }) {
   Future<Uri?> pick() => dataSource.pick();
 
+  Future<void> clearPickedFiles() => dataSource.clearPickedFiles();
+
   Future<LoadedReplayFile> load({required Uri source}) async {
+    final document = await loadDocument(source: source);
+    return (file: document.file, name: document.name);
+  }
+
+  Future<LoadedReplayDocument> loadDocument({required Uri source}) async {
     final document = await dataSource.read(source: source);
     final parser = ReplayDataParser();
     try {
       final file = await compute(parser.parse, document.bytes);
-      return (file: file, name: document.name);
+      return (file: file, name: document.name, bytes: document.bytes);
     } on Object catch (error, stackTrace) {
       talker.error(
         '[Replay] failed to parse ${document.name}',

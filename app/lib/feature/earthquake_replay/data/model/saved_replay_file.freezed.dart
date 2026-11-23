@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SavedReplayFile {
 
- String get path; String get name; int get sizeBytes; DateTime get modifiedAt;
+ String get path; String get name; String get directory; int get sizeBytes; DateTime get modifiedAt;
 /// Create a copy of SavedReplayFile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $SavedReplayFileCopyWith<SavedReplayFile> get copyWith => _$SavedReplayFileCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SavedReplayFile&&(identical(other.path, path) || other.path == path)&&(identical(other.name, name) || other.name == name)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.modifiedAt, modifiedAt) || other.modifiedAt == modifiedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SavedReplayFile&&(identical(other.path, path) || other.path == path)&&(identical(other.name, name) || other.name == name)&&(identical(other.directory, directory) || other.directory == directory)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.modifiedAt, modifiedAt) || other.modifiedAt == modifiedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,path,name,sizeBytes,modifiedAt);
+int get hashCode => Object.hash(runtimeType,path,name,directory,sizeBytes,modifiedAt);
 
 @override
 String toString() {
-  return 'SavedReplayFile(path: $path, name: $name, sizeBytes: $sizeBytes, modifiedAt: $modifiedAt)';
+  return 'SavedReplayFile(path: $path, name: $name, directory: $directory, sizeBytes: $sizeBytes, modifiedAt: $modifiedAt)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $SavedReplayFileCopyWith<$Res>  {
   factory $SavedReplayFileCopyWith(SavedReplayFile value, $Res Function(SavedReplayFile) _then) = _$SavedReplayFileCopyWithImpl;
 @useResult
 $Res call({
- String path, String name, int sizeBytes, DateTime modifiedAt
+ String path, String name, String directory, int sizeBytes, DateTime modifiedAt
 });
 
 
@@ -63,10 +63,11 @@ class _$SavedReplayFileCopyWithImpl<$Res>
 
 /// Create a copy of SavedReplayFile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? path = null,Object? name = null,Object? sizeBytes = null,Object? modifiedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? path = null,Object? name = null,Object? directory = null,Object? sizeBytes = null,Object? modifiedAt = null,}) {
   return _then(SavedReplayFile(
 path: null == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,directory: null == directory ? _self.directory : directory // ignore: cast_nullable_to_non_nullable
 as String,sizeBytes: null == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
 as int,modifiedAt: null == modifiedAt ? _self.modifiedAt : modifiedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String path,  String name,  int sizeBytes,  DateTime modifiedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String path,  String name,  String directory,  int sizeBytes,  DateTime modifiedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SavedReplayFile() when $default != null:
-return $default(_that.path,_that.name,_that.sizeBytes,_that.modifiedAt);case _:
+return $default(_that.path,_that.name,_that.directory,_that.sizeBytes,_that.modifiedAt);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.path,_that.name,_that.sizeBytes,_that.modifiedAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String path,  String name,  int sizeBytes,  DateTime modifiedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String path,  String name,  String directory,  int sizeBytes,  DateTime modifiedAt)  $default,) {final _that = this;
 switch (_that) {
 case _SavedReplayFile():
-return $default(_that.path,_that.name,_that.sizeBytes,_that.modifiedAt);case _:
+return $default(_that.path,_that.name,_that.directory,_that.sizeBytes,_that.modifiedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.path,_that.name,_that.sizeBytes,_that.modifiedAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String path,  String name,  int sizeBytes,  DateTime modifiedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String path,  String name,  String directory,  int sizeBytes,  DateTime modifiedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _SavedReplayFile() when $default != null:
-return $default(_that.path,_that.name,_that.sizeBytes,_that.modifiedAt);case _:
+return $default(_that.path,_that.name,_that.directory,_that.sizeBytes,_that.modifiedAt);case _:
   return null;
 
 }
@@ -210,11 +211,12 @@ return $default(_that.path,_that.name,_that.sizeBytes,_that.modifiedAt);case _:
 
 
 class _SavedReplayFile extends SavedReplayFile {
-  const _SavedReplayFile({required this.path, required this.name, required this.sizeBytes, required this.modifiedAt}): super._();
+  const _SavedReplayFile({required this.path, required this.name, required this.directory, required this.sizeBytes, required this.modifiedAt}): super._();
   
 
 @override final  String path;
 @override final  String name;
+@override final  String directory;
 @override final  int sizeBytes;
 @override final  DateTime modifiedAt;
 
@@ -228,16 +230,16 @@ _$SavedReplayFileCopyWith<_SavedReplayFile> get copyWith => __$SavedReplayFileCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavedReplayFile&&(identical(other.path, path) || other.path == path)&&(identical(other.name, name) || other.name == name)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.modifiedAt, modifiedAt) || other.modifiedAt == modifiedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavedReplayFile&&(identical(other.path, path) || other.path == path)&&(identical(other.name, name) || other.name == name)&&(identical(other.directory, directory) || other.directory == directory)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.modifiedAt, modifiedAt) || other.modifiedAt == modifiedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,path,name,sizeBytes,modifiedAt);
+int get hashCode => Object.hash(runtimeType,path,name,directory,sizeBytes,modifiedAt);
 
 @override
 String toString() {
-  return 'SavedReplayFile(path: $path, name: $name, sizeBytes: $sizeBytes, modifiedAt: $modifiedAt)';
+  return 'SavedReplayFile(path: $path, name: $name, directory: $directory, sizeBytes: $sizeBytes, modifiedAt: $modifiedAt)';
 }
 
 
@@ -248,7 +250,7 @@ abstract mixin class _$SavedReplayFileCopyWith<$Res> implements $SavedReplayFile
   factory _$SavedReplayFileCopyWith(_SavedReplayFile value, $Res Function(_SavedReplayFile) _then) = __$SavedReplayFileCopyWithImpl;
 @override @useResult
 $Res call({
- String path, String name, int sizeBytes, DateTime modifiedAt
+ String path, String name, String directory, int sizeBytes, DateTime modifiedAt
 });
 
 
@@ -265,10 +267,11 @@ class __$SavedReplayFileCopyWithImpl<$Res>
 
 /// Create a copy of SavedReplayFile
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? path = null,Object? name = null,Object? sizeBytes = null,Object? modifiedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? path = null,Object? name = null,Object? directory = null,Object? sizeBytes = null,Object? modifiedAt = null,}) {
   return _then(_SavedReplayFile(
 path: null == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,directory: null == directory ? _self.directory : directory // ignore: cast_nullable_to_non_nullable
 as String,sizeBytes: null == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
 as int,modifiedAt: null == modifiedAt ? _self.modifiedAt : modifiedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,

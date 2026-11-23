@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'saved_replay_files_notifier.dart';
+part of 'replay_library_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -11,49 +11,51 @@ part of 'saved_replay_files_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(SavedReplayFiles)
-final savedReplayFilesProvider = SavedReplayFilesProvider._();
+@ProviderFor(ReplayLibraryNotifier)
+final replayLibraryProvider = ReplayLibraryNotifierProvider._();
 
-final class SavedReplayFilesProvider
-    extends $AsyncNotifierProvider<SavedReplayFiles, List<SavedReplayFile>> {
-  SavedReplayFilesProvider._()
+final class ReplayLibraryNotifierProvider
+    extends
+        $AsyncNotifierProvider<ReplayLibraryNotifier, ReplayLibraryContents> {
+  ReplayLibraryNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'savedReplayFilesProvider',
+        name: r'replayLibraryProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$savedReplayFilesHash();
+  String debugGetCreateSourceHash() => _$replayLibraryNotifierHash();
 
   @$internal
   @override
-  SavedReplayFiles create() => SavedReplayFiles();
+  ReplayLibraryNotifier create() => ReplayLibraryNotifier();
 }
 
-String _$savedReplayFilesHash() => r'6da16168e7b9be6892cb2fd30204fa409cdf49c2';
+String _$replayLibraryNotifierHash() =>
+    r'a8c37dd9574dea269f426be90dc2438a37c9a044';
 
-abstract class _$SavedReplayFiles
-    extends $AsyncNotifier<List<SavedReplayFile>> {
-  FutureOr<List<SavedReplayFile>> build();
+abstract class _$ReplayLibraryNotifier
+    extends $AsyncNotifier<ReplayLibraryContents> {
+  FutureOr<ReplayLibraryContents> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
     final ref =
         this.ref
-            as $Ref<AsyncValue<List<SavedReplayFile>>, List<SavedReplayFile>>;
+            as $Ref<AsyncValue<ReplayLibraryContents>, ReplayLibraryContents>;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<List<SavedReplayFile>>,
-                List<SavedReplayFile>
+                AsyncValue<ReplayLibraryContents>,
+                ReplayLibraryContents
               >,
-              AsyncValue<List<SavedReplayFile>>,
+              AsyncValue<ReplayLibraryContents>,
               Object?,
               Object?
             >;

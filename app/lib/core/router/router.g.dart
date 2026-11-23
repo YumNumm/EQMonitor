@@ -836,6 +836,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugReplayCreationRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'replay-library',
+          hasOverriddenOnExit: false,
+          factory: $DebugReplayLibraryRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'intensity-icon',
           hasOverriddenOnExit: false,
           factory: $DebugIntensityIconRoute._fromState,
@@ -1775,11 +1780,48 @@ mixin $DebugHttpCacheRoute on GoRouteData {
 
 mixin $DebugReplayCreationRoute on GoRouteData {
   static DebugReplayCreationRoute _fromState(GoRouterState state) =>
-      const DebugReplayCreationRoute();
+      DebugReplayCreationRoute(
+        startTimeMs: _$convertMapValue(
+          'start-time-ms',
+          state.uri.queryParameters,
+          int.tryParse,
+        ),
+        name: state.uri.queryParameters['name'],
+      );
+
+  DebugReplayCreationRoute get _self => this as DebugReplayCreationRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/debug/replay-creation',
+    queryParams: {
+      if (_self.startTimeMs != null)
+        'start-time-ms': _self.startTimeMs!.toString(),
+      if (_self.name != null) 'name': _self.name,
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugReplayLibraryRoute on GoRouteData {
+  static DebugReplayLibraryRoute _fromState(GoRouterState state) =>
+      const DebugReplayLibraryRoute();
 
   @override
   String get location =>
-      GoRouteData.$location('/settings/debug/replay-creation');
+      GoRouteData.$location('/settings/debug/replay-library');
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -16,7 +16,6 @@ import 'package:eqmonitor/feature/debug/data/provider/debug_access_level_provide
 import 'package:eqmonitor/feature/devices/data/notifier/device_role_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
-import 'package:eqmonitor/feature/earthquake_replay/data/action/replay_open_action.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_eew_estimation_debug_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/home_eew_estimation_debug_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
@@ -177,7 +176,7 @@ class const _ReplaySection() extends ConsumerWidget {
               SizedBox(height: spacing.xs),
               Text(
                 '過去の強震モニタと緊急地震速報をホームで再生します。'
-                '作成したファイルはアプリ内に保存され、作成画面の一覧から再生できます。',
+                'ファイルはアプリ内に年/月のフォルダで保存され、保存済みの一覧から再生できます。',
                 style: designSystem.typography.bodySmall.copyWith(
                   color: colorScheme.onPrimaryContainer,
                 ),
@@ -194,11 +193,10 @@ class const _ReplaySection() extends ConsumerWidget {
                     label: const Text('リプレイファイルを作成'),
                   ),
                   FilledButton.tonalIcon(
-                    onPressed: () async => ref
-                        .read(replayOpenActionProvider)
-                        .pickAndOpen(ref, context),
+                    onPressed: () async =>
+                        const DebugReplayLibraryRoute().push<void>(context),
                     icon: const Icon(Icons.folder_open_rounded),
-                    label: const Text('ファイルを読み込んで再生'),
+                    label: const Text('保存済みから再生・ファイルを追加'),
                   ),
                 ],
               ),

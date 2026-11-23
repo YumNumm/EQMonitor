@@ -1,6 +1,6 @@
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_creation_request.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/saved_replay_file.dart';
-import 'package:eqmonitor/feature/earthquake_replay/data/notifier/saved_replay_files_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_library_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_creation_repository.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_request_provider.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -34,7 +34,7 @@ class ReplayCreationNotifier extends _$ReplayCreationNotifier {
         isCancelled: () => _isCancelRequested || !ref.mounted,
       );
       if (ref.mounted) {
-        ref.invalidate(savedReplayFilesProvider);
+        ref.invalidate(replayLibraryProvider);
       }
       return file;
     } finally {

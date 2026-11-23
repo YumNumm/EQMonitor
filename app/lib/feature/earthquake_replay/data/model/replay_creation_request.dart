@@ -22,6 +22,8 @@ abstract class const ReplayCreationRequest._() with _$ReplayCreationRequest {
     required Set<ReplayCreationImageKind> imageKinds,
     required bool includeEew,
     required bool includePreRoll,
+    @Default('') String name,
+    @Default('') String directory,
   }) = _ReplayCreationRequest;
 
   DateTime get endTime => startTime.add(duration);
