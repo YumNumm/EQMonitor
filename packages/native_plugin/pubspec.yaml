@@ -1,0 +1,26 @@
+name: native_plugin
+description: Platform APIs called directly from Dart through FFIgen and JNIgen bindings.
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.15.0-154.0.dev
+  flutter: ^3.51.0-1.0.pre-176
+
+resolution: workspace
+
+dependencies:
+  ffi: ^2.1.5
+  freezed_annotation: ^3.0.0
+  jni: ^1.2.1
+  objective_c: ^9.2.2
+
+dev_dependencies:
+  build_runner: ^2.4.15
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  ffigen: ^23.0.0
+  freezed: ^4.0.0-dev.3
+  jnigen: ^0.17.0
+  test: ^1.29.0
