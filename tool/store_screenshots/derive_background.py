@@ -14,6 +14,9 @@ from PIL import Image
 # Figma のデザインは iPhone の縦長の画面向けしか無い。iPhone Duo などの別の縦横比には、
 # 既存の背景からグラデーションを推定し、白い見出しとロゴだけを抜き出して置き直す。
 TEXT_THRESHOLD = 12
+# Figma の背景は 3 色のグラデーションで、線形の推定とは左上の隅で白の割合にして最大 0.03 ずれる。
+# これを見出しとして拾うと、切り出す範囲が隅まで広がり、置き直した見出しが中央から外れる。
+TEXT_ALPHA_FLOOR = 0.05
 
 
 def fit_gradient(pixels: np.ndarray) -> np.ndarray:
@@ -36,28 +39,33 @@ def render_gradient(coefficients: np.ndarray, width: int, height: int) -> np.nda
     return np.clip(basis @ coefficients, 0, 255)
 
 
-def extract_text(pixels: np.ndarray, gradient: np.ndarray) -> tuple[Image.Image, int]:
+def extract_text(pixels: np.ndarray, gradient: np.ndarray) -> tuple[Image.Image, tuple[int, int, int, int]]:
     # 見出しとロゴは白一色。各画素の白の割合を (画素 - 地) / (白 - 地) で求める。
     alpha = ((pixels - gradient) / np.maximum(255 - gradient, 1)).max(axis=-1)
     alpha = np.clip(alpha, 0, 1)
-    alpha[alpha < 0.02] = 0
+    alpha[alpha < TEXT_ALPHA_FLOOR] = 0
     layer = np.zeros((*alpha.shape, 4), dtype=np.uint8)
     layer[..., :3] = 255
     layer[..., 3] = np.round(alpha * 255).astype(np.uint8)
     image = Image.fromarray(layer, "RGBA")
     box = image.getbbox()
-    return image.crop(box), box[1]
+    return image.crop(box), box
+
+
+def text_left(box: tuple[int, int, int, int], source_width: int, scale: float, width: float) -> float:
+    # Figma の見出しは文字の送り幅で中央揃えしており、「 などで字面は中央からずれる。そのずれも拡大して保つ。
+    return width / 2 + (box[0] - source_width / 2) * scale
 
 
 def derive(source: Path, width: int, height: int, text_scale: float) -> Image.Image:
     pixels = np.asarray(Image.open(source).convert("RGB"), dtype=np.float64)
     coefficients = fit_gradient(pixels)
-    text, top = extract_text(pixels, render_gradient(coefficients, pixels.shape[1], pixels.shape[0]))
+    text, box = extract_text(pixels, render_gradient(coefficients, pixels.shape[1], pixels.shape[0]))
     background = Image.fromarray(render_gradient(coefficients, width, height).round().astype(np.uint8), "RGB").convert("RGBA")
     # 元の幅に対する比率を保ち、見出しの大きさと上端の余白を揃える。
     scale = width / pixels.shape[1] * text_scale
     text = text.resize((round(text.width * scale), round(text.height * scale)), Image.LANCZOS)
-    background.alpha_composite(text, (round((width - text.width) / 2), round(top * scale)))
+    background.alpha_composite(text, (round(text_left(box, pixels.shape[1], scale, width)), round(box[1] * scale)))
     return background.convert("RGB")
 
 

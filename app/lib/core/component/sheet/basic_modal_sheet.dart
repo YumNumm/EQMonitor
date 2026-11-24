@@ -230,51 +230,35 @@ class const BasicModalSheetScope({
 class const SheetFitTarget({
   required final Widget child,
   super.key,
-}) extends StatefulWidget {
+}) extends HookWidget {
   @override
-  State<SheetFitTarget> createState() => _SheetFitTargetState();
-}
+  Widget build(BuildContext context) {
+    final scope = useRef<BasicModalSheetScope?>(null);
+    scope.value = BasicModalSheetScope.maybeOf(context);
 
-class _SheetFitTargetState extends State<SheetFitTarget> {
-  BasicModalSheetScope? _scope;
+    void scheduleFit() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!context.mounted) {
+          return;
+        }
+        final box = context.findRenderObject();
+        if (box is RenderBox && box.hasSize) {
+          scope.value?.fit(box);
+        }
+      });
+    }
 
-  @override
-  void initState() {
-    super.initState();
-    _scheduleFit();
+    useEffect(() {
+      scheduleFit();
+      return () => scope.value?.release();
+    }, const []);
+
+    return NotificationListener<SizeChangedLayoutNotification>(
+      onNotification: (_) {
+        scheduleFit();
+        return true;
+      },
+      child: SizeChangedLayoutNotifier(child: child),
+    );
   }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _scope = BasicModalSheetScope.maybeOf(context);
-  }
-
-  @override
-  void dispose() {
-    _scope?.release();
-    super.dispose();
-  }
-
-  void _scheduleFit() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) {
-        return;
-      }
-      final box = context.findRenderObject();
-      if (box is RenderBox && box.hasSize) {
-        _scope?.fit(box);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) =>
-      NotificationListener<SizeChangedLayoutNotification>(
-        onNotification: (_) {
-          _scheduleFit();
-          return true;
-        },
-        child: SizeChangedLayoutNotifier(child: widget.child),
-      );
 }
