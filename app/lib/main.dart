@@ -112,9 +112,9 @@ Future<void> main() async {
   }
 }
 
-/// アプリの起動シーケンス本体。`main()` から一度だけ呼ばれる。
+/// アプリの起動シーケンス本体。各エントリポイントの `main()` から一度だけ呼ばれる。
 class const AppBootstrap._() {
-  static Future<void> run() async {
+  static Future<ProviderContainer> run() async {
     final profiler = StartupProfiler();
     final buildConfig = BuildConfig.fromEnvironment();
     final isTelemetryEnabled = !kIsWeb && !buildConfig.isProduction;
@@ -375,5 +375,6 @@ class const AppBootstrap._() {
     if (!kIsWeb && Platform.isIOS) {
       container.listen(appGroupSettingsWriterProvider, (_, _) {});
     }
+    return container;
   }
 }

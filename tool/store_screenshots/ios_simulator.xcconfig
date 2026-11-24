@@ -1,0 +1,4 @@
+// maplibre_native_ffi は ios-simulator-x64 の配布物を持たない。Patrol は generic な Simulator 向けに全アーキテクチャをビルドするため、x86_64 を外す。
+EXCLUDED_ARCHS[sdk=iphonesimulator*] = i386 x86_64
+// Patrol の xcodebuild は flutter build と違って FLUTTER_BUILD_NUMBER を渡さない。Generated.xcconfig を読まない拡張（FcmServiceExtension）は CFBundleVersion が空になり、Simulator へのインストールが Invalid placeholder attributes で失敗する。
+FLUTTER_BUILD_NUMBER = 1

@@ -58,6 +58,20 @@ extension View {
     }
 }
 
+// MARK: - 撮影用の固定表示
+
+private struct FixedArrivalCountdownKey: EnvironmentKey {
+    static let defaultValue: Double? = nil
+}
+
+extension EnvironmentValues {
+    /// nil でなければ、到達カウントダウンをこの秒数で止め、点滅を塗ったままにする。
+    var fixedArrivalCountdown: Double? {
+        get { self[FixedArrivalCountdownKey.self] }
+        set { self[FixedArrivalCountdownKey.self] = newValue }
+    }
+}
+
 // MARK: - 主要動到達カウントダウン
 
 @available(iOS 16.1, *)
@@ -71,10 +85,18 @@ struct ArrivalCountdownText: View {
     var showsTenths = true
 
     @Environment(\.isLuminanceReduced) private var isLuminanceReduced
+    @Environment(\.fixedArrivalCountdown) private var fixedArrivalCountdown
 
     var body: some View {
+        if let fixedArrivalCountdown {
+            // フォントの置き換えで `0:16.3` が `16.3秒` になる
+            Text(String(format: "0:%04.1f", min(max(fixedArrivalCountdown, 0), 59.9)))
+                .font(AppFonts.countdown(size: size))
+                .lineLimit(1)
+                .multilineTextAlignment(alignment)
+                .foregroundColor(color)
         // 常時表示では描き直しが間引かれ、0.1 秒の桁が止まって見えるため秒単位にする
-        if #available(iOS 18.0, *), showsTenths, !isLuminanceReduced {
+        } else if #available(iOS 18.0, *), showsTenths, !isLuminanceReduced {
             Text(tenthsPlaceholder)
                 .font(AppFonts.countdown(size: size))
                 .hidden()
@@ -208,9 +230,10 @@ struct BlinkBlock: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.isLuminanceReduced) private var isLuminanceReduced
+    @Environment(\.fixedArrivalCountdown) private var fixedArrivalCountdown
 
     var body: some View {
-        if reduceMotion || isLuminanceReduced {
+        if reduceMotion || isLuminanceReduced || fixedArrivalCountdown != nil {
             // 点滅を止める設定・常時表示では塗りっぱなしにする
             Rectangle()
         } else {

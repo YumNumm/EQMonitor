@@ -150,6 +150,8 @@
 		C29940000000000000000002 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
 		C29940000000000000000003 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
 		C17940000000000000000006 /* OpenEarthquakeHistoryIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */; };
+		00B2DA1188815DAEE6A69AFA /* RunnerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6EECEB3357F3317DDA68B2 /* RunnerUITests.m */; };
+		D58E2A09D3D1431AD732AFE4 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 86F51336112BB835D84FC823 /* FlutterGeneratedPluginSwiftPackage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,6 +182,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 85E6094D2BFF792C00C21983;
 			remoteInfo = FcmServiceExtension;
+		};
+		6B3527D24A804C2D12071AE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
+			remoteInfo = Runner;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -331,6 +340,8 @@
 		A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeIntentExecutionTests.swift"; sourceTree = SOURCE_ROOT; };
 		C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenEarthquakeHistoryIntent.swift; sourceTree = "<group>"; };
 		C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenEarthquakeHistoryIntentTests.swift; sourceTree = "<group>"; };
+		3E6EECEB3357F3317DDA68B2 /* RunnerUITests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RunnerUITests.m; sourceTree = "<group>"; };
+		46FC30C03BCC1B1CA100155D /* RunnerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -462,6 +473,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C2909027E33F500F132BBE8D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D58E2A09D3D1431AD732AFE4 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -580,6 +599,7 @@
 				350740DFB98F1F20FD8318FB /* Fonts */,
 				F8BCF7FBC6A9336C62FA711E /* Parameters */,
 				27724A23304DC4E300666426 /* Recovered References */,
+				490DC2F0253ACCB168BF48EF /* RunnerUITests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -593,6 +613,7 @@
 				3993800175F9E9F9140BCEE0 /* WidgetModelsTests.xctest */,
 				27145E043039D29C00C3DBAF /* EQMonitorPreview.app */,
 				27145F013039E00000C3DBAF /* EQMonitorPreviewWidget.appex */,
+				46FC30C03BCC1B1CA100155D /* RunnerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -653,6 +674,15 @@
 				9CBCF4697AA1879785D2E137 /* jma_code_table.json */,
 			);
 			name = Parameters;
+			sourceTree = "<group>";
+		};
+		490DC2F0253ACCB168BF48EF /* RunnerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3E6EECEB3357F3317DDA68B2 /* RunnerUITests.m */,
+			);
+			name = RunnerUITests;
+			path = RunnerUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -823,6 +853,29 @@
 			productReference = 3993800175F9E9F9140BCEE0 /* WidgetModelsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		A99FB04AB7B42EFBA3E72F3A /* RunnerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D43A1A222EE5F9361FD42082 /* Build configuration list for PBXNativeTarget "RunnerUITests" */;
+			buildPhases = (
+				B3AF6E2509D9D0451AABE9F4 /* xcode_backend build */,
+				053842DDB92D8C009097CF26 /* Sources */,
+				C2909027E33F500F132BBE8D /* Frameworks */,
+				F782B41021C372634A515D1D /* Resources */,
+				A1024C45810E69214FA918C2 /* xcode_backend embed_and_thin */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AE81BFCC13825944119F202F /* PBXTargetDependency */,
+			);
+			name = RunnerUITests;
+			packageProductDependencies = (
+				86F51336112BB835D84FC823 /* FlutterGeneratedPluginSwiftPackage */,
+			);
+			productName = RunnerUITests;
+			productReference = 46FC30C03BCC1B1CA100155D /* RunnerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -879,6 +932,7 @@
 				9BC9C1EC695652E993BA1D37 /* WidgetModelsTests */,
 				27145E033039D29C00C3DBAF /* EQMonitorPreview */,
 				27145F053039E00000C3DBAF /* EQMonitorPreviewWidget */,
+				A99FB04AB7B42EFBA3E72F3A /* RunnerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -952,6 +1006,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F782B41021C372634A515D1D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -1000,6 +1061,42 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"${SRCROOT}/scripts/patch_purchases_paywall_color.sh\" \"${SRCROOT}/../build/ios/SourcePackages/checkouts/purchases-ios-spm/Sources/Paywalls/PaywallColor.swift\"\n";
+		};
+		A1024C45810E69214FA918C2 /* xcode_backend embed_and_thin */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "xcode_backend embed_and_thin";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin\n";
+		};
+		B3AF6E2509D9D0451AABE9F4 /* xcode_backend build */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "xcode_backend build";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1157,6 +1254,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		053842DDB92D8C009097CF26 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00B2DA1188815DAEE6A69AFA /* RunnerUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1179,6 +1284,12 @@
 			isa = PBXTargetDependency;
 			target = 85E6094D2BFF792C00C21983 /* FcmServiceExtension */;
 			targetProxy = 85E609532BFF792C00C21983 /* PBXContainerItemProxy */;
+		};
+		AE81BFCC13825944119F202F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Runner;
+			target = 97C146ED1CF9000F007C117D /* Runner */;
+			targetProxy = 6B3527D24A804C2D12071AE6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2198,6 +2309,69 @@
 			};
 			name = Release;
 		};
+		4EF69C3716C0D63A39BD3C25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CPL7H8SHVM;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.yumnumm.eqmonitor$(APP_ID_SUFFIX).RunnerUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Runner;
+			};
+			name = Debug;
+		};
+		A9E556BE221B81A4E49770F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CPL7H8SHVM;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.yumnumm.eqmonitor$(APP_ID_SUFFIX).RunnerUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Runner;
+			};
+			name = Release;
+		};
+		CFAADACC7D9FF06E8C15091C /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CPL7H8SHVM;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.yumnumm.eqmonitor$(APP_ID_SUFFIX).RunnerUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Runner;
+			};
+			name = Profile;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2281,6 +2455,16 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		D43A1A222EE5F9361FD42082 /* Build configuration list for PBXNativeTarget "RunnerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EF69C3716C0D63A39BD3C25 /* Debug */,
+				A9E556BE221B81A4E49770F5 /* Release */,
+				CFAADACC7D9FF06E8C15091C /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -2359,6 +2543,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "Packages/EQMonitorAPI" */;
 			productName = EQMonitorAPI;
+		};
+		86F51336112BB835D84FC823 /* FlutterGeneratedPluginSwiftPackage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlutterGeneratedPluginSwiftPackage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

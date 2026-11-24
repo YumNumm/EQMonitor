@@ -1,0 +1,77 @@
+{
+  "canvas": {
+    "width": 2853,
+    "height": 2007
+  },
+  "pages": [
+    {
+      "id": "01_eew",
+      "background": "backgrounds/duo_inner/01_eew.png",
+      "devices": [
+        {
+          "scene": "eew_warning",
+          "bezel": "iphone_duo_inner_landscape_black.png",
+          "bezelRect": {
+            "x": 498.75,
+            "y": 600,
+            "width": 1855.51,
+            "height": 1347
+          },
+          "screenRect": {
+            "x": 569.05,
+            "y": 670.31,
+            "width": 1714.86,
+            "height": 1206.35
+          },
+          "screenCornerRadius": 154.34
+        }
+      ]
+    },
+    {
+      "id": "02_earthquake_history",
+      "background": "backgrounds/duo_inner/02_earthquake_detail.png",
+      "devices": [
+        {
+          "scene": "earthquake_history_list",
+          "bezel": "iphone_duo_inner_landscape_black.png",
+          "bezelRect": {
+            "x": 402.32,
+            "y": 460,
+            "width": 2048.36,
+            "height": 1487
+          },
+          "screenRect": {
+            "x": 479.94,
+            "y": 537.61,
+            "width": 1893.09,
+            "height": 1331.73
+          },
+          "screenCornerRadius": 170.38
+        }
+      ]
+    },
+    {
+      "id": "03_kyoshin_monitor",
+      "background": "backgrounds/duo_inner/04_kyoshin_monitor.png",
+      "devices": [
+        {
+          "scene": "kyoshin_monitor",
+          "bezel": "iphone_duo_inner_landscape_black.png",
+          "bezelRect": {
+            "x": 402.32,
+            "y": 460,
+            "width": 2048.36,
+            "height": 1487
+          },
+          "screenRect": {
+            "x": 479.94,
+            "y": 537.61,
+            "width": 1893.09,
+            "height": 1331.73
+          },
+          "screenCornerRadius": 170.38
+        }
+      ]
+    }
+  ]
+}

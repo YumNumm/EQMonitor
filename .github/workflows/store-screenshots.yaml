@@ -1,0 +1,373 @@
+name: Store Screenshots
+
+on:
+  push:
+    tags:
+      - "v*"
+      - "!v*-beta.*"
+  pull_request:
+    paths:
+      - .github/workflows/store-screenshots.yaml
+      - app/patrol_test/**
+      - app/ios/RunnerUITests/**
+      - tool/store_screenshots/**
+  workflow_dispatch:
+    inputs:
+      scenes:
+        description: "Comma separated scene names in app/patrol_test/store_screenshots_test.dart (default: all)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: store-screenshots-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  XCODE_VERSION: "27.2"
+  FIREBASE_ANALYTICS_WITHOUT_ADID: "true"
+  # Pull requests verify the pipeline before every fixture exists; tag runs stay strict.
+  ALLOW_MISSING_FIXTURES: ${{ github.event_name == 'pull_request' }}
+  PYTHONUNBUFFERED: "1"
+  PATROL_CLI_VERSION: "4.9.0"
+  SCENES: ${{ inputs.scenes || '' }}
+
+jobs:
+  capture-ios:
+    name: Capture (iOS Simulator)
+    # SearchEarthquakesIntent uses the iOS 27 system.searchInApp schema.
+    runs-on: xcode-27
+    # SPM の取得だけで約 20 分かかり、RunnerUITests のビルドと撮影を足すと 60 分を超えうる。
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Extract SOPS Age Key File
+        env:
+          AGE_KEY: ${{ secrets.AGE_KEY }}
+        run: printf '%s\n' "$AGE_KEY" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: cp mise.local.toml.example mise.local.toml
+
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
+        with:
+          cache: false
+          install_args: "flutter age"
+
+      - name: Precache Flutter iOS artifacts
+        run: flutter precache --ios
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
+      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Enable Swift Package Manager
+        run: flutter config --enable-swift-package-manager
+
+      - name: Resolve dependencies
+        working-directory: app
+        run: flutter pub get --enforce-lockfile
+
+      - name: Stage signed Asset Pack from R2 for iOS
+        run: tool/asset_pack/stage_from_r2.sh --target all
+
+      - name: Extract environment variables
+        run: echo "$DART_DEFINE_PRODUCTION" | base64 -d > environment/.env.prod
+
+      - name: Decrypt fixtures
+        run: |
+          args=()
+          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
+            args+=(--allow-empty)
+          fi
+          tool/store_screenshots/decrypt_fixtures.sh "${args[@]}" "$RUNNER_TEMP/store-screenshot-fixtures"
+          if [[ -f "$RUNNER_TEMP/store-screenshot-fixtures/noto_peninsula_2024.eqrp" ]]; then
+            cp "$RUNNER_TEMP/store-screenshot-fixtures/noto_peninsula_2024.eqrp" app/assets/store_screenshot_fixtures/
+          fi
+
+      - name: Install Patrol CLI
+        run: |
+          flutter pub global activate patrol_cli "$PATROL_CLI_VERSION"
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+
+      - name: Prepare Patrol arguments
+        id: patrol-args
+        run: |
+          if [[ -n "$SCENES" && ! "$SCENES" =~ ^[a-z0-9_,]+$ ]]; then
+            echo "::error::scenes must be comma separated scene names"
+            exit 1
+          fi
+          require=true
+          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
+            require=false
+          fi
+          # deploy-app.yaml と同じく x.y.z を渡す。prerelease のままだと iOS で 3.1.0.4 になり、
+          # API の Cloudflare Snippets が User-Agent の形式違いで 403 を返す。
+          build_name=$(sed -n 's/^version: *\([^ #]*\).*/\1/p' app/pubspec.yaml)
+          build_name=${build_name%%-*}
+          build_name=${build_name%%+*}
+          if ! [[ "$build_name" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::unexpected build-name '${build_name}' derived from app/pubspec.yaml"
+            exit 1
+          fi
+          args="--build-name=$build_name --build-number=$GITHUB_RUN_NUMBER"
+          args="$args --dart-define-from-file=../environment/.env.prod --dart-define=IS_PRODUCTION=true"
+          args="$args --dart-define=STORE_SCREENSHOT_REQUIRE_FIXTURES=$require"
+          args="$args --dart-define=STORE_SCREENSHOT_SCENES=$SCENES"
+          echo "args=$args" >> "$GITHUB_OUTPUT"
+
+      - name: Capture scenes
+        env:
+          PATROL_ARGS: ${{ steps.patrol-args.outputs.args }}
+        run: |
+          # shellcheck disable=SC2086
+          python3 tool/store_screenshots/capture.py \
+            --platform ios \
+            --output "$RUNNER_TEMP/store-screenshots-ios-raw" \
+            --wallpaper "$RUNNER_TEMP/store-screenshot-fixtures/wallpaper_lock_screen.jpg" \
+            -- $PATROL_ARGS
+
+      - name: Upload raw screenshots
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: store-screenshots-ios-raw
+          path: ${{ runner.temp }}/store-screenshots-ios-raw
+          if-no-files-found: warn
+
+  capture-android:
+    name: Capture (Android Emulator)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Extract SOPS Age Key File
+        env:
+          AGE_KEY: ${{ secrets.AGE_KEY }}
+        run: printf '%s\n' "$AGE_KEY" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: cp mise.local.toml.example mise.local.toml
+
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
+        with:
+          cache: false
+          install_args: "flutter java age"
+
+      - name: Precache Flutter Android artifacts
+        run: flutter precache --android
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
+      - name: Accept Android License
+        run: yes | flutter doctor --android-licenses
+
+      # package:jni は flutter.ndkVersion (28.2) を参照する。Gradle の自動取得は
+      # ネットワーク不調で ZipException になりやすいので、先に sdkmanager で入れる。
+      - name: Install Android NDK for package:jni
+        env:
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+        run: |
+          set -euo pipefail
+          ndk_pkg="ndk;28.2.13676358"
+          sdkmanager_bin="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager"
+          if [[ ! -x "${sdkmanager_bin}" ]]; then
+            sdkmanager_bin="$(command -v sdkmanager)"
+          fi
+          for attempt in 1 2 3; do
+            rm -rf "${ANDROID_SDK_ROOT}/ndk/28.2.13676358"
+            rm -rf "${ANDROID_SDK_ROOT}/.temp"
+            # sdkmanager が先に終了すると yes が SIGPIPE になり pipefail 下では失敗扱いになる。
+            set +o pipefail
+            yes | "${sdkmanager_bin}" --install "${ndk_pkg}"
+            set -o pipefail
+            if [[ -d "${ANDROID_SDK_ROOT}/ndk/28.2.13676358" ]]; then
+              exit 0
+            fi
+            echo "::warning::NDK install attempt ${attempt} failed; retrying..."
+            sleep 15
+          done
+          echo "::error::Failed to install ${ndk_pkg} after 3 attempts"
+          exit 1
+
+      - name: Resolve dependencies
+        working-directory: app
+        run: flutter pub get --enforce-lockfile
+
+      - name: Stage signed Asset Pack from R2 for Android
+        run: tool/asset_pack/stage_from_r2.sh --target bundled
+
+      - name: Extract environment variables
+        run: echo "$DART_DEFINE_PRODUCTION" | base64 -d > environment/.env.prod
+
+      - name: Copy gradle.properties
+        working-directory: app/android
+        run: cp gradle.ci.properties gradle.properties
+
+      - name: Decrypt fixtures
+        run: |
+          args=()
+          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
+            args+=(--allow-empty)
+          fi
+          tool/store_screenshots/decrypt_fixtures.sh "${args[@]}" "$RUNNER_TEMP/store-screenshot-fixtures"
+          if [[ -f "$RUNNER_TEMP/store-screenshot-fixtures/noto_peninsula_2024.eqrp" ]]; then
+            cp "$RUNNER_TEMP/store-screenshot-fixtures/noto_peninsula_2024.eqrp" app/assets/store_screenshot_fixtures/
+          fi
+
+      - name: Install Patrol CLI
+        run: |
+          flutter pub global activate patrol_cli "$PATROL_CLI_VERSION"
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+
+      - name: Prepare Patrol arguments
+        id: patrol-args
+        run: |
+          if [[ -n "$SCENES" && ! "$SCENES" =~ ^[a-z0-9_,]+$ ]]; then
+            echo "::error::scenes must be comma separated scene names"
+            exit 1
+          fi
+          require=true
+          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
+            require=false
+          fi
+          # debug の versionNameSuffix（.d）が付くため、x.y.z ではなく prerelease のまま渡す。
+          # 3.1.0.d は API の User-Agent の許可形式に合わず、3.1.0-beta.4.d は合う。
+          args="--dart-define-from-file=../environment/.env.prod --dart-define=IS_PRODUCTION=true"
+          args="$args --dart-define=STORE_SCREENSHOT_REQUIRE_FIXTURES=$require"
+          args="$args --dart-define=STORE_SCREENSHOT_SCENES=$SCENES"
+          echo "args=$args" >> "$GITHUB_OUTPUT"
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      # The action runs each script line separately, so the capture stays on one line.
+      - name: Capture scenes
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        env:
+          PATROL_ARGS: ${{ steps.patrol-args.outputs.args }}
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: python3 tool/store_screenshots/capture.py --platform android --output "$RUNNER_TEMP/store-screenshots-android-raw" -- $PATROL_ARGS
+
+      - name: Upload raw screenshots
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: store-screenshots-android-raw
+          path: ${{ runner.temp }}/store-screenshots-android-raw
+          if-no-files-found: warn
+
+  compose-ios:
+    name: Compose (App Store)
+    needs: capture-ios
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Extract SOPS Age Key File
+        env:
+          AGE_KEY: ${{ secrets.AGE_KEY }}
+        run: printf '%s\n' "$AGE_KEY" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: cp mise.local.toml.example mise.local.toml
+
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
+        with:
+          cache: false
+          install_args: "uv age"
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
+      - name: Download raw screenshots
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: store-screenshots-ios-raw
+          path: ${{ runner.temp }}/store-screenshots-ios-raw
+
+      - name: Decrypt fixtures
+        run: |
+          args=()
+          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
+            args+=(--allow-empty)
+          fi
+          tool/store_screenshots/decrypt_fixtures.sh "${args[@]}" "$RUNNER_TEMP/store-screenshot-fixtures"
+
+      - name: Compose
+        run: |
+          args=()
+          if [[ "$ALLOW_MISSING_FIXTURES" == true ]]; then
+            args+=(--skip-missing)
+          fi
+          uv run tool/store_screenshots/compose.py \
+            --screenshots "$RUNNER_TEMP/store-screenshots-ios-raw" \
+            --fixtures "$RUNNER_TEMP/store-screenshot-fixtures" \
+            --output "$RUNNER_TEMP/store-screenshots-ios" \
+            "${args[@]}"
+
+      - name: Upload composed screenshots
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: store-screenshots-ios
+          path: ${{ runner.temp }}/store-screenshots-ios
+          if-no-files-found: ${{ env.ALLOW_MISSING_FIXTURES == 'true' && 'warn' || 'error' }}

@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_control_panel_expanded_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
@@ -111,11 +110,7 @@ class const ReplayStatusCard({super.key}) extends HookConsumerWidget {
                     ),
                     const SizedBox(width: 4),
                     Flexible(
-                      child: Text(
-                        '過去の地震を再生中 '
-                        '${state.currentTime.formatWithTz(DateTimeFormat.hourMinuteSecond)}',
-                        style: textStyle,
-                      ),
+                      child: Text('過去の地震を再生中', style: textStyle),
                     ),
                     const SizedBox(width: 2),
                     Icon(

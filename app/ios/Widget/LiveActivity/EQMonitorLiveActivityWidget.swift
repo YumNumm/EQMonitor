@@ -14,6 +14,7 @@ struct EewLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
         let configuration = ActivityConfiguration(for: EewLiveActivityAttributes.self) { context in
             EewActivityContentView(state: context.state)
+                .environment(\.fixedArrivalCountdown, context.state.fixedRemainingSeconds)
                 .liveActivityFixedTypeSize()
                 .activityBackgroundTint(EewAlertStyle.surfaceColor(for: context.state.display))
                 .activitySystemActionForegroundColor(.white)

@@ -14,6 +14,7 @@
 | HTTP・JSON・端末移行 | [API とデータ](api_and_data.md)。cache は opt-in、JSON の構造と値検証は分離、移行は durable workflow で再開可能にする。 |
 | iOS / Android build | [ネイティブビルド](native_build_release.md)。SDK・署名・R8 と実機確認を分け、build 成功だけで表示や配布の完了としない。 |
 | CI・beta・Release Please | [配布と CI](delivery_ci.md)。設定・script を正本とし、タグ生成からストア処理まで段階ごとに確認する。 |
+| ストア画像 | [自動生成](store_screenshots.md)。撮影はアプリ内の制御と host の撮影をファイルで同期し、ライセンス上公開できない fixture は age で暗号化する。 |
 | Asset Pack | [同梱・更新・内容検証](asset_pack.md) / [R2 配布手順](../asset-pack-cd.md)。署名済み R2 配信と Flutter assets を使う。Apple 配信の Asset Pack 運用は廃止済み。 |
 | APNs・認証 | [Push と認証](push_and_auth.md)。APNs 環境・token の種類・OS 権限・アプリ session を混同しない。 |
 

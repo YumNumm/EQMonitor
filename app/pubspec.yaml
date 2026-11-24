@@ -203,6 +203,7 @@ dev_dependencies:
   maplibre_platform_interface: any
   plugin_platform_interface: any
   xml: any
+  patrol: ^4.11.0
 flutter_gen:
   output: lib/core/gen/ # Optional (default: lib/gen/)
   line_length: 80
@@ -213,6 +214,7 @@ flutter_gen:
     # 参照は BundledAssetPackRepository が AssetManifest 経由で行う。
     exclude:
       - assets/platform/**
+      - assets/store_screenshot_fixtures/**
 
   integrations:
     image: true
@@ -236,6 +238,7 @@ flutter:
     - assets/platform/
     - assets/platform/map/
     - assets/platform/parameters/
+    - assets/store_screenshot_fixtures/
 
   fonts:
     - family: NotoSansJP
@@ -254,3 +257,12 @@ flutter:
         - asset: assets/fonts/GoogleSansCode/GoogleSansCode[MONO,wght].ttf
         - asset: assets/fonts/GoogleSansCode/GoogleSansCode-Italic[MONO,wght].ttf
           style: italic
+
+patrol:
+  app_name: EQMonitor
+  test_directory: patrol_test
+  android:
+    package_name: net.yumnumm.eqmonitor
+    app_name: EQMonitor (Debug)
+  ios:
+    bundle_id: net.yumnumm.eqmonitor

@@ -68,10 +68,14 @@ class const _SheetBody() extends ConsumerWidget {
                 padding: EdgeInsets.only(
                   bottom: index == state.length - 1 ? spacing.md : spacing.sm,
                 ),
-                child: HomeEewCard(
-                  eew: eew,
-                  index: (state.length > 1) ? '${index + 1}' : null,
-                ),
+                child: index == 0
+                    ? SheetFitTarget(
+                        child: HomeEewCard(
+                          eew: eew,
+                          index: (state.length > 1) ? '1' : null,
+                        ),
+                      )
+                    : HomeEewCard(eew: eew, index: '${index + 1}'),
               ),
             for (final event in shakeEvents)
               Padding(

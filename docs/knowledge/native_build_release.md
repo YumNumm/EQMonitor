@@ -29,14 +29,15 @@ APNs・認証は [push_and_auth.md](push_and_auth.md) を参照する。
   package 解決とビルドに同じ環境変数を渡す。SwiftPM の `Package.resolved` には
   Firebase の manifest が宣言する広告計測 package が残るため、リンク対象と区別する。
 - `.github/workflows/deploy-app.yaml` の build-ios は `runs-on: xcode-27`、
-  `XCODE_VERSION: "27.0"` / `XCODE_BUILD_VERSION: "27A266a"` に固定する。
-  選択後に Xcode の版・ビルド番号と iOS SDK `27.0` を検査し、不一致なら archive 前に停止する。
+  `XCODE_VERSION: "27.2"` / `XCODE_BUILD_VERSION: "27B52"` に固定する。
+  選択後に Xcode の版・ビルド番号と iOS SDK `27.2` を検査し、不一致なら archive 前に停止する。
 - `setup-xcode` の `latest` はベータ版も選ぶため、ストア配布には使用しない。
-  `27.0` の指定は runner に導入済みの正式版を選ぶ。SDKをダウンロードする指定ではない。
+  `27.2` の指定は runner に導入済みの正式版を選ぶ。SDKをダウンロードする指定ではない。
   更新時は Xcode の版・ビルド番号・SDK の期待値を同時に変更する。
 - 2026-09-30 に [Apple のリリース一覧](https://developer.apple.com/jp/news/releases/)と
   [GitHub のランナー一覧](https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md)で
-  Xcode 27.0 正式版 `27A266a` を確認した。配布時は `xcodebuild -version` と
+  Xcode 27.0 正式版 `27A266a` を確認した。2026-11-24 に同じ 2 か所で Xcode 27.2 正式版 `27B52`（2026-10-29 公開）を確認し、iOS SDK 27.2 へ上げた。
+  runner の image `20261104.0337.1` には 27.2 / 27.1（既定）/ 27.0 があり、iOS 27.2 の Simulator に iPhone Duo を含む。配布時は `xcodebuild -version` と
   `xcrun --sdk iphoneos --show-sdk-version` の実ログでも確認する。
 - `@available` / `#available` は実行OSの制約であり、旧SDKにないAPI・マクロをコンパイル可能にはしない。
   Swift の Native Assets hook も CI と同じ SDK で検証する。
