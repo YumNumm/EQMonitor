@@ -74,7 +74,7 @@ extension MinMaxDateTime on (DateTime?, DateTime?) {
   String get toRangeString {
     // 何も指定していない時
     if (isAllSelected) {
-      return '全て';
+      return 'すべて';
     }
     final effectiveMin = min ?? DateRangeFilterChip.initialMin;
     final effectiveMax = max ?? DateRangeFilterChip.initialMax;
@@ -91,7 +91,7 @@ extension MinMaxDateTime on (DateTime?, DateTime?) {
       return '${DateRangeFilterChip.format.format(effectiveMax)} 以前';
     }
     // それ以外
-    return '${DateRangeFilterChip.format.format(effectiveMin)} ~ '
+    return '${DateRangeFilterChip.format.format(effectiveMin)}〜'
         '${DateRangeFilterChip.format.format(effectiveMax)}';
   }
 }

@@ -42,7 +42,7 @@ class const StatusFilterChip({
           ? const Text('ステータス')
           : Text(
               currentStatuses.length == TelegramStatus.values.length
-                  ? '全て'
+                  ? 'すべて'
                   : currentStatuses.map((s) => s.label).join(', '),
               style: const TextStyle(fontWeight: .bold),
             ),

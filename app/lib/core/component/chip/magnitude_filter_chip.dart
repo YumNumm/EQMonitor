@@ -106,7 +106,7 @@ class const _MagnitudeFilterModal({
                 min.value = (state.start * 10).floorToDouble() / 10;
                 max.value = (state.end * 10).floorToDouble() / 10;
               },
-              label: 'M${min.value} ～ M${max.value}',
+              label: 'M${min.value}〜M${max.value}',
               divisions:
                   (MagnitudeFilterChip.initialMax -
                           MagnitudeFilterChip.initialMin)
@@ -160,7 +160,7 @@ extension _MinMaxdouble on (double?, double?) {
   String get toRangeString {
     // 何も指定していない時
     if (isAllSelected) {
-      return '全て';
+      return 'すべて';
     }
     // どちらも同じの時
     if (min == max) {
@@ -174,6 +174,6 @@ extension _MinMaxdouble on (double?, double?) {
     if (isMinSelected) {
       return 'M$max 以下';
     }
-    return 'M$min ~ M$max';
+    return 'M$min〜M$max';
   }
 }

@@ -110,7 +110,7 @@ class const _DepthFilterModal({
                 max.value =
                     (state.end.toInt() / 10).roundToDouble().toInt() * 10;
               },
-              label: '${min.value}km ～ ${max.value}km',
+              label: '${min.value}km〜${max.value}km',
               divisions: (initialMax - initialMin) ~/ 10,
             ),
             const SizedBox(height: 16),
@@ -158,7 +158,7 @@ extension _MinMaxint on (int?, int?) {
   String get toRangeString {
     // 何も指定していない時
     if (isAllSelected) {
-      return '全て';
+      return 'すべて';
     }
     // どちらも同じの時
     if (min == max) {
@@ -172,6 +172,6 @@ extension _MinMaxint on (int?, int?) {
     if (isMinSelected) {
       return '${max}km 以下';
     }
-    return '${min}km ~ ${max}km';
+    return '${min}km〜${max}km';
   }
 }

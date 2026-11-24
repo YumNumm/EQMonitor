@@ -115,11 +115,11 @@ class const _DatasourceFilterModal({final EarthquakeDataSource? current})
 extension on EarthquakeDataSource {
   String get label => switch (this) {
     EarthquakeDataSource.jmaIntensityDatabase => '震度データベース',
-    EarthquakeDataSource.jmaDisasterInformationXml => '防災情報XML',
+    EarthquakeDataSource.jmaDisasterInformationXml => '防災情報 XML',
   };
 
   String get description => switch (this) {
-    EarthquakeDataSource.jmaIntensityDatabase => 'JMA 震度データベースの地震情報',
-    EarthquakeDataSource.jmaDisasterInformationXml => 'JMA 防災情報XMLの地震情報',
+    EarthquakeDataSource.jmaIntensityDatabase => '気象庁震度データベースの地震情報',
+    EarthquakeDataSource.jmaDisasterInformationXml => '気象庁防災情報 XML の地震情報',
   };
 }
