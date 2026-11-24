@@ -21,7 +21,7 @@ class const KyoshinMonitorAboutPage({super.key}) extends HookConsumerWidget {
               spacing: 8,
               children: [
                 Text(
-                  '強震モニタは、防災科学技術研究所が運用する、全国を網羅する強震観測網(K-NET、KiK-net)のデータをリアルタイムに表示するシステムです。\n'
+                  '強震モニタは、防災科学技術研究所が運用する、全国を網羅する強震観測網（K-NET、KiK-net）のデータをリアルタイムに表示するシステムです。\n'
                   '日本全国の観測点の揺れの状況を青から赤までの色で表示します。',
                   style: textTheme.bodyMedium,
                 ),
@@ -29,11 +29,11 @@ class const KyoshinMonitorAboutPage({super.key}) extends HookConsumerWidget {
                 _InfoCard(
                   items: const [
                     _InfoItem(
-                      title: 'K-NET(地表)',
+                      title: 'K-NET（地表）',
                       description: '全国約1,000ヶ所に設置された地表の強震計による観測網です。',
                     ),
                     _InfoItem(
-                      title: 'KiK-net(地中)',
+                      title: 'KiK-net（地中）',
                       description:
                           '全国約700ヶ所に設置された地中の強震計による観測網です。地表と地中の両方で観測を行います。',
                     ),
@@ -54,7 +54,7 @@ class const KyoshinMonitorAboutPage({super.key}) extends HookConsumerWidget {
                     _InfoItem(
                       title: '本アプリと防災科研の関係',
                       description:
-                          '本アプリケーション(EQMonitor)は、防災科学技術研究所が提供する強震モニタのデータを利用していますが、防災科学技術研究所が公式に提供するアプリケーションではありません。\n'
+                          '本アプリケーション（EQMonitor）は、防災科学技術研究所が提供する強震モニタのデータを利用していますが、防災科学技術研究所が公式に提供するアプリケーションではありません。\n'
                           '防災科研に不具合や意見を送信することは迷惑になりますのでお控えください。',
                     ),
                     _InfoItem(
