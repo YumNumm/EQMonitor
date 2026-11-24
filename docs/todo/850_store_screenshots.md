@@ -53,7 +53,7 @@
 - [x] iPad 13 インチの 3 枚を App Store Connect に登録する（2026-11-24、12.9 インチの枠にも縮小版を登録）。
 - [ ] iPad と Duo の内側で通知センターを撮る。重大な通知のバナーが閉じず、通知センターも開かなかった。
 - [ ] iPad のステータスバーの日付を固定する（`--time` に ISO の日時を渡すと日付も変わるが、iPhone のロック画面の日付にも影響しうる）。
-- [ ] プロダクトページのヘッダと検索結果の画像（`creative_assets.py`）を App Store Connect に登録する。Figma のデザインは無い。
+- [ ] プロダクトページのヘッダと検索結果の画像（`creative_assets.py`）を App Store Connect に登録する。Figma のデザインは無く、生成した画像を Figma の `Store Screenshot（生成済み）` に貼ってある。16:9 の共通版は作らない。
 
 ## 600: Android とストアへの反映
 

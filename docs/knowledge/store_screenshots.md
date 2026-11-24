@@ -62,6 +62,8 @@ Figma のデザインは iPhone の縦長（1290×2796）しか無い。別の�
 - `generate_frame.py`: 画面の寸法から黒い端末の枠を描く（画面は透明、カメラの穴とボタンは任意）。生成物は `frames/` に置き、`compose.py` は fixture に無い枠を `frames/` から読む。
   Apple Design Resources に `Bezel-iPhone-Duo.dmg` があるが、取得していない（ダウンロードと使用許諾への同意が必要）。
 - `layout_*.json` の `backgroundCrop` で背景の一部を切り出せる。
+- 生成した画像（プロダクトページ、Duo、iPad、Android）は Figma の Section `Store Screenshot（生成済み）`（`2149:447`、`iOS Store Screenshot` の右）に原寸の 1/2 の枠で貼ってある（2026-11-24）。
+  見比べるための写しで、合成の入力ではない。画像を作り直したときは手で貼り直す。
 
 ### iPhone Duo
 
@@ -98,8 +100,8 @@ mise exec -- uv run tool/store_screenshots/compose.py --layout tool/store_screen
 
 - [App Store Connect の仕様](https://developer.apple.com/help/app-store-connect/reference/app-information/creative-assets-specifications)（2026-11-24 確認）:
   ヘッダ 21:9 3840×1646（PNG、見せたいものを収める領域は x 1097, y 493 から 1646×661）、検索結果 3:2 1920×1280〜3840×2560（領域は 3840×2560 のとき x 836, y 765 から 2168×1030）、
-  両方に使える 16:9 5244×2950（PNG、領域は x 1921, y 660 から 1402×962）。透過は使えない。
-- `creative_assets.py` が 3 種を作る。ロゴと見出しを 01 の背景から抜き出して領域の中央に置き、左右に iPhone（EEW・強震モニタ）と Apple Watch を置く。
+  両方に使える 16:9 5244×2950（PNG、領域は x 1921, y 660 から 1402×962）もあるが作っていない。透過は使えない。
+- `creative_assets.py` がヘッダと検索結果の 2 種を作る。ロゴと見出しを 01 の背景から抜き出して領域の中央に置き、左右に iPhone（EEW・強震モニタ）と Apple Watch を置く。
   見出しと端末は見やすさを優先して領域より大きくしているため、端末の画面の向きによっては端が切れる。登録時のプレビューで確かめる。
 
 ### Android（Pixel 11 Pro）

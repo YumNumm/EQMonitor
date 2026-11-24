@@ -26,7 +26,6 @@ TOOL_DIR = Path(__file__).resolve().parent
 PLACEMENTS = {
     "header": {"size": (3840, 1646), "safe": (1097, 493, 1646, 661), "phone": 0.88, "text": 0.62},
     "search_results": {"size": (3840, 2560), "safe": (836, 765, 2168, 1030), "phone": 0.88, "text": 0.36},
-    "universal": {"size": (5244, 2950), "safe": (1921, 660, 1402, 962), "phone": 0.8, "text": 0.38},
 }
 MARGIN = 0.02
 
