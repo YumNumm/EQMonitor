@@ -70,17 +70,21 @@ class ReplayDataParser {
       extDecoder: ReplayTimestampDecoder(),
     );
     final replayData = deserializer.decode() as List<dynamic>;
-    if (replayData.isEmpty) {
-      throw const FormatException(
-        'Replay data must contain at least one frame',
-      );
-    }
     for (final data in replayData) {
       if (data is List<dynamic>) {
+        final type = data.firstOrNull;
+        if (type is int && !ReplayDataType.values.any((e) => e.value == type)) {
+          continue;
+        }
         result.add(ReplayData.fromMsgPack(data));
       } else {
         throw Exception('Invalid replay data: ${data.runtimeType}');
       }
+    }
+    if (result.isEmpty) {
+      throw const FormatException(
+        'Replay data must contain at least one frame',
+      );
     }
     return result;
   }
