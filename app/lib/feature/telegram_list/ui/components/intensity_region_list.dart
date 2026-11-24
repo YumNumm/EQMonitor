@@ -150,7 +150,7 @@ class const _RegionChip({required final IntensityRegionDiffEntry entry})
           children: [
             TextSpan(text: entry.name, style: boldStyle),
             TextSpan(
-              text: '(追加)',
+              text: '（追加）',
               style: boldStyle.copyWith(color: Colors.blue.shade700),
             ),
           ],
@@ -161,7 +161,7 @@ class const _RegionChip({required final IntensityRegionDiffEntry entry})
           children: [
             TextSpan(text: entry.name, style: boldStyle),
             TextSpan(
-              text: '(震度${entry.previousIntensity?.label ?? ""}↑)',
+              text: '（震度${entry.previousIntensity?.label ?? ""}↑）',
               style: boldStyle.copyWith(color: Colors.orange.shade800),
             ),
           ],
@@ -172,7 +172,7 @@ class const _RegionChip({required final IntensityRegionDiffEntry entry})
           children: [
             TextSpan(text: entry.name, style: boldStyle),
             TextSpan(
-              text: '(震度${entry.previousIntensity?.label ?? ""}↓)',
+              text: '（震度${entry.previousIntensity?.label ?? ""}↓）',
               style: boldStyle.copyWith(color: Colors.orange.shade800),
             ),
           ],

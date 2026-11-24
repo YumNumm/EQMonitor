@@ -216,7 +216,7 @@ class const _DepthRow({required final EarthquakeCatalogHypocenter hypocenter})
                 ),
               if (hypocenter.depthIsFree)
                 Text(
-                  '(深さフリー)',
+                  '（深さフリー）',
                   style: textTheme.bodySmall?.copyWith(
                     color: context.designSystem.colorTheme.onSurfaceVariant,
                     fontFamily: FontFamily.notoSansJP,

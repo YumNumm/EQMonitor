@@ -119,7 +119,7 @@ class const _EewDetailsByEventIdContent({
         data: (eews) {
           if (eews.isEmpty) {
             return const AppEmptyState(
-              message: 'EEW情報はありません',
+              message: 'EEW 情報はありません',
               icon: Icons.warning_amber_outlined,
             );
           }

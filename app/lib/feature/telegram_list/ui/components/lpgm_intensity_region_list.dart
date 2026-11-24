@@ -84,10 +84,10 @@ class const _LpgmRegionChip({
     final previous = previousIntensity;
     final annotation = switch (previous) {
       _ when !hasPrevious || previous == intensity => '',
-      null => '(追加)',
+      null => '（追加）',
       _ when intensity.orderIndex > previous.orderIndex =>
-        '(階級${previous.label}↑)',
-      _ => '(階級${previous.label}↓)',
+        '（階級${previous.label}↑）',
+      _ => '（階級${previous.label}↓）',
     };
     final style = Theme.of(context).textTheme.bodySmall;
     return Text(

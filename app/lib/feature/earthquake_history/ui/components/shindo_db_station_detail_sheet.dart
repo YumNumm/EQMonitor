@@ -338,7 +338,7 @@ class const _RelatedLinksCard() extends StatelessWidget {
       url: 'https://www.data.jma.go.jp/svd/eqdb/index.html',
     ),
     (
-      title: '震度データについて(地震月報カタログ編)',
+      title: '震度データについて（地震月報カタログ編）',
       url: 'https://www.data.jma.go.jp/eqev/data/bulletin/shindo.html',
     ),
   ];

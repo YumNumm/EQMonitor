@@ -30,13 +30,13 @@ class const EstimatedIntensityNoticeContent({super.key})
         _BulletText(
           '大きな震度の面的な広がり具合やその形状に着目することが重要です。'
           '地震発生直後に応急対応すべき優先箇所の判別や'
-          '避難ルート・避難場所の選定等に活用頂けます。',
+          '避難ルート・避難場所の選定等に活用いただけます。',
           style: theme.textTheme.bodyMedium,
         ),
         const SizedBox(height: 12),
         Text(
-          'EQMonitorでは、推計震度分布図(250mメッシュ)を'
-          'サーバで処理し掲載しています。',
+          'EQMonitor では、推計震度分布図（250m メッシュ）を'
+          'サーバーで処理し掲載しています。',
           style: theme.textTheme.bodySmall?.copyWith(
             color: context.designSystem.colorTheme.onSurfaceVariant,
           ),

@@ -63,7 +63,7 @@ enum ShindoDbIntensityClass {
   };
 
   String get sectionTitle => switch (this) {
-    .unknownFelt => '震度不明(有感)',
+    .unknownFelt => '震度不明（有感）',
     .conspicuous => '顕著地震',
     .semiConspicuous => 'やや顕著地震',
     .semiLocal => '小局発地震',
@@ -76,12 +76,12 @@ enum ShindoDbIntensityClass {
   /// 歴史的階級の説明。数値階級は null
   String? get historicalDescription => switch (this) {
     .unknownFelt => '有感であったが震度は不明',
-    .conspicuous => '最大有感距離300km以上の地震 (歴史的分類)',
-    .semiConspicuous => '最大有感距離200km以上300km未満の地震 (歴史的分類)',
-    .semiLocal => '最大有感距離100km以上200km未満の地震 (歴史的分類)',
-    .local => '最大有感距離100km未満の地震 (歴史的分類)',
-    .felt => '有感地震 (1984年までの分類)',
-    .nearbyFelt => '付近有感 (1996年9月までの分類)',
+    .conspicuous => '最大有感距離300km 以上の地震（歴史的分類）',
+    .semiConspicuous => '最大有感距離200km 以上300km 未満の地震（歴史的分類）',
+    .semiLocal => '最大有感距離100km 以上200km 未満の地震（歴史的分類）',
+    .local => '最大有感距離100km 未満の地震（歴史的分類）',
+    .felt => '有感地震（1984年までの分類）',
+    .nearbyFelt => '付近有感（1996年9月までの分類）',
     _ => null,
   };
 

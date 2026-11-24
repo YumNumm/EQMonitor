@@ -211,8 +211,8 @@ extension on api.CatalogDeterminationFlag {
     .upperA => '自動処理震源',
     .lowerA => '自動処理参考震源',
     .n => '震源固定・不定・未計算',
-    .u => 'USGS震源',
-    .i => 'ISC震源',
+    .u => 'USGS 震源',
+    .i => 'ISC 震源',
     .h => '観測時刻が時間単位',
     .d => '観測時刻が日単位',
     .m => '観測時刻が月単位',
@@ -223,9 +223,9 @@ extension on api.CatalogHypocenterEvaluation {
   String get _label => switch (this) {
     .value1 => '深さフリー',
     .value2 => '深さ刻み',
-    .value3 => '人の判断(深さ固定等)',
-    .value4 => 'Depth phase使用',
-    .value5 => 'S-P使用',
+    .value3 => '人の判断（深さ固定等）',
+    .value4 => 'Depth phase 使用',
+    .value5 => 'S-P 使用',
     .value7 => '参考',
     .value8 => '決定不能・不採用',
   };
@@ -233,11 +233,11 @@ extension on api.CatalogHypocenterEvaluation {
 
 extension on api.CatalogMagnitudeType {
   String get _label => switch (this) {
-    .j => '坪井変位M(旧観測網)',
+    .j => '坪井変位M（旧観測網）',
     .upperD => '変位M',
-    .lowerD => '変位M(観測点少)',
+    .lowerD => '変位M（観測点少）',
     .upperV => '速度M',
-    .lowerV => '速度M(観測点少)',
+    .lowerV => '速度M（観測点少）',
     .w => 'モーメントM',
     .b => '実体波M',
     .s => '表面波M',
@@ -253,19 +253,19 @@ extension on api.CatalogDamageScale {
     .value5 => '5: 死者200人以上または全壊1万戸以上',
     .value6 => '6: 死者2千人以上または全壊10万戸以上',
     .value7 => '7: 死者2万人以上または全壊100万戸以上',
-    .x => '被害あり(程度不明)',
+    .x => '被害あり（程度不明）',
     .y => '前後の地震の被害と区別不能',
   };
 }
 
 extension on api.CatalogTsunamiScale {
   String get _label => switch (this) {
-    .value1 => '1: 波高50cm以下または被害なし',
-    .value2 => '2: 波高1m前後',
-    .value3 => '3: 波高2m前後',
-    .value4 => '4: 波高4〜6m程度',
-    .value5 => '5: 波高10〜20m程度',
-    .value6 => '6: 波高30m以上',
+    .value1 => '1: 波高50cm 以下または被害なし',
+    .value2 => '2: 波高1m 前後',
+    .value3 => '3: 波高2m 前後',
+    .value4 => '4: 波高4〜6m 程度',
+    .value5 => '5: 波高10〜20m 程度',
+    .value6 => '6: 波高30m 以上',
     .t => '津波あり',
   };
 }

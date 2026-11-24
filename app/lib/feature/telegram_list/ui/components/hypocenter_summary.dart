@@ -22,7 +22,7 @@ class const HypocenterSummary({
     final magnitudeText = quake.magnitude != null ? ' M${quake.magnitude}' : '';
     const depthFormatter = JmaDepthFormatter();
     final depthText = quake.depth != null
-        ? ' 深さ${depthFormatter.format(depth: quake.depth)}'
+        ? ' 深さ ${depthFormatter.format(depth: quake.depth)}'
         : '';
 
     final oldMagnitudeText = diff?.oldMagnitude ?? '不明';
@@ -37,7 +37,7 @@ class const HypocenterSummary({
       if (diff case final value? when value.hasMagnitudeChange())
         _DiffChip(text: 'M$oldMagnitudeText→M$newMagnitudeText'),
       if (diff case final value? when value.hasDepthChange())
-        _DiffChip(text: '深さ$oldDepthText→$newDepthText'),
+        _DiffChip(text: '深さ $oldDepthText→$newDepthText'),
       if (diff case final value? when value.hasEpicenterNameChange())
         _DiffChip(text: '$oldEpicenterNameText→$newEpicenterNameText'),
     ];

@@ -123,7 +123,7 @@ class const _EewSourceMetrics({
       eew.isLevelMethod,
       eew.isOnePointDetection,
     )) {
-      (true, _, _) => 'PLUM法',
+      (true, _, _) => 'PLUM 法',
       (_, true, _) => 'レベル法',
       (_, _, true) => '低精度',
       _ => null,
@@ -203,7 +203,7 @@ class const _EewSourceMetrics({
                   else ...[
                     TextSpan(text: '$depth', style: valueStyle),
                     TextSpan(
-                      text: depth == 700 ? 'km以上' : 'km',
+                      text: depth == 700 ? 'km 以上' : 'km',
                       style: labelStyle,
                     ),
                   ],

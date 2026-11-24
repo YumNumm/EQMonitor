@@ -131,7 +131,7 @@ class const EarthquakeHistoryDetailsSettingsSheet({
                   ),
                   SwitchListTile.adaptive(
                     title: const Text('震央アイコンを観測点の上に表示'),
-                    subtitle: const Text('重なったときに震央アイコンを手前に表示します'),
+                    subtitle: const Text('重なった時に震央アイコンを手前に表示します'),
                     value: details.hypocenterAboveStations,
                     onChanged:
                         busy ||

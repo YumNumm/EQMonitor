@@ -25,8 +25,7 @@ class const ParameterLoaderWidget({super.key}) extends HookConsumerWidget {
                     crossAxisAlignment: .start,
                     children: [
                       const Text('観測点情報の取得に失敗しました'),
-                      if (error is DioException)
-                        const Text('ネットワーク接続を確認してください'),
+                      if (error is DioException) const Text('通信状況を確認してください'),
                     ],
                   ),
                 ),

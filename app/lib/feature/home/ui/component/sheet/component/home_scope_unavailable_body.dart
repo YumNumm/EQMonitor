@@ -111,7 +111,7 @@ class const _CurrentLocationUnavailable({required final VoidCallback onRetry})
     if (currentPermission == null) {
       return const _UnavailableContainer(
         icon: Icons.location_searching_outlined,
-        message: '現在地を取得しています…',
+        message: '現在地を取得しています...',
       );
     }
 
@@ -150,7 +150,7 @@ class const _CurrentLocationUnavailable({required final VoidCallback onRetry})
       _ => _UnavailableContainer(
         // 権限はあるが位置・市区町村の解決に失敗しているケース。
         icon: Icons.gps_not_fixed_outlined,
-        message: '現在地から地震情報を取得できませんでした。電波状況などをご確認のうえ再試行してください。',
+        message: '現在地から地震情報を取得できませんでした。通信状況を確認して、もう一度お試しください。',
         actions: [
           M3EOutlinedButton.icon(
             onPressed: () => HapticUtil.light(() {

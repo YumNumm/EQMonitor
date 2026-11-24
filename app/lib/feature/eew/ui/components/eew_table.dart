@@ -110,7 +110,7 @@ enum _EewTableColumn({
     isNumeric: true,
     tooltip: '気象庁が地震を検知してから、緊急地震速報が発表されるまでの時間',
   ),
-  epicenterName(name: '震源地名', isNumeric: false),
+  epicenterName(name: '震央地名', isNumeric: false),
   epicenterLatitude(name: '緯度', isNumeric: true),
   epicenterLongitude(name: '経度', isNumeric: true),
   epicenterDepth(name: '深さ', isNumeric: true),

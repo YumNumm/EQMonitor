@@ -30,7 +30,7 @@ class const _EewList({required final List<EewTelegramItem> eews})
   Widget build(BuildContext context) {
     if (eews.isEmpty) {
       return const AppEmptyState(
-        message: 'EEW情報はありません',
+        message: 'EEW 情報はありません',
         icon: Icons.warning_amber_outlined,
       );
     }
@@ -69,7 +69,7 @@ class const _EewDetailsPageSkeleton() extends StatelessWidget {
                     const Text('震源地: 東京都'),
                     const Text('深さ: 10km'),
                     const Text('マグニチュード: 5.5'),
-                    const Text('最大予測震度: 4'),
+                    const Text('最大予想震度: 4'),
                   ],
                 ),
               ),
@@ -115,7 +115,7 @@ class const _EewCard({required final EewTelegramItem eew})
             ),
             Text('マグニチュード: ${hypocenter?.magnitude ?? "不明"}'),
             Text(
-              '最大予測震度: ${eew.forecastIntensity?.maxIntensity?.label ?? '不明'}${eew.forecastIntensity?.maxIntensityIsOver ?? false ? '程度以上' : ''}',
+              '最大予想震度: ${eew.forecastIntensity?.maxIntensity?.label ?? '不明'}${eew.forecastIntensity?.maxIntensityIsOver ?? false ? '程度以上' : ''}',
             ),
             if (eew.isWarning ?? false)
               const Chip(
