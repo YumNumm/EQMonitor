@@ -38,6 +38,10 @@
 
 正本は `scripts/ci/resolve_deploy_app_policy.sh` と `.github/workflows/deploy-app.yaml`。
 
+- `Deploy App` の iOS / Android ビルドは `flutter pub get --no-dev --enforce-lockfile` で依存を解決する。
+  Patrol（`dev_dependencies`）を release の `GeneratedPluginRegistrant` に含めると、Android の `bundleRelease` が
+  `pl.leancode.patrol` 未定義で失敗する。Store Screenshots workflow は Patrol 用に従来どおり dev 込みの `pub get` を使う。
+
 | 起点 | iOS | Android track | `IS_PRODUCTION` | `IS_BETA_DISTRIBUTION` |
 | --- | --- | --- | --- | --- |
 | `develop` push | 内部、`[external]` を含むと外部 | `internal` | true | false |
