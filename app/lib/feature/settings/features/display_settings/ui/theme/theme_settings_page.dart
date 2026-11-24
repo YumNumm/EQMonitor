@@ -31,7 +31,7 @@ class const ThemeSettingsPage({super.key}) extends StatelessWidget {
               _ModeSection(mode: ThemeBrightnessMode.light),
               SettingsSectionHeader(text: 'ダーク用テーマ'),
               _ModeSection(mode: ThemeBrightnessMode.dark),
-              SettingsSectionHeader(text: 'JSON入出力'),
+              SettingsSectionHeader(text: 'JSON 入出力'),
               ThemeImportExportSection(),
             ],
           ),

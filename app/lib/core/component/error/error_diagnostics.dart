@@ -27,7 +27,7 @@ class const ErrorDiagnosticsBuilder._() {
     if (error is DioException) {
       final statusCode = error.response?.statusCode;
       if (statusCode != null) {
-        buffer.writeln('HTTPステータス: $statusCode');
+        buffer.writeln('HTTP ステータス: $statusCode');
       }
       buffer.writeln('DioExceptionType: ${error.type.name}');
       final data = error.response?.data;
@@ -51,10 +51,10 @@ class const ErrorDiagnosticsBuilder._() {
           buffer.writeln('失敗箇所: $stage');
         }
         if (cause.details case {'nativeDomain': final String domain}) {
-          buffer.writeln('OSエラードメイン: $domain');
+          buffer.writeln('OS エラードメイン: $domain');
         }
         if (cause.details case {'nativeCode': final int code}) {
-          buffer.writeln('OSエラーコード: $code');
+          buffer.writeln('OS エラーコード: $code');
         }
       }
     }

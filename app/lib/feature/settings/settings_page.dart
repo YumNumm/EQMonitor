@@ -111,7 +111,7 @@ class const SettingsPage({super.key}) extends ConsumerWidget {
                                 Text(
                                   isPro
                                       ? 'プランを管理'
-                                      : 'Proプランに加入頂くことで、ご利用いただける機能が増えます',
+                                      : 'Pro プランに加入いただくことで、ご利用いただける機能が増えます',
                                 ),
                               ],
                             ),
@@ -182,8 +182,8 @@ class const SettingsPage({super.key}) extends ConsumerWidget {
                           const AboutThisAppRoute().push<void>(context),
                     ),
                     ListTile(
-                      title: const Text('サーバの稼働状況'),
-                      subtitle: const Text('外部Webサイトへ遷移します'),
+                      title: const Text('サーバーの稼働状況'),
+                      subtitle: const Text('外部 Web サイトへ遷移します'),
                       leading: const Icon(Icons.network_ping),
                       onTap: () => launchUrlString(
                         'https://status.eqmonitor.app/',
@@ -205,18 +205,18 @@ class const SettingsPage({super.key}) extends ConsumerWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 16),
                     children: [
                       ListTile(
-                        title: const Text('HTTPキャッシュ'),
+                        title: const Text('HTTP キャッシュ'),
                         leading: const Icon(Icons.storage_outlined),
                         subtitle: Text(
                           cacheSize.when(
                             data: const ByteSizeFormatter().format,
-                            loading: () => '計算中…',
+                            loading: () => '計算中...',
                             error: (_, _) => '取得に失敗しました',
                           ),
                         ),
                       ),
                       ListTile(
-                        title: const Text('HTTPキャッシュを削除'),
+                        title: const Text('HTTP キャッシュを削除'),
                         leading: const Icon(Icons.delete_outline),
                         onTap: () async {
                           final messenger = ScaffoldMessenger.of(context);
@@ -228,7 +228,7 @@ class const SettingsPage({super.key}) extends ConsumerWidget {
                           await store.vacuum();
                           ref.invalidate(httpCacheSizeProvider);
                           messenger.showSnackBar(
-                            const SnackBar(content: Text('HTTPキャッシュを削除しました')),
+                            const SnackBar(content: Text('HTTP キャッシュを削除しました')),
                           );
                         },
                       ),
@@ -311,7 +311,7 @@ class const _AppVersionInformation() extends HookConsumerWidget {
             text: switch (manifestAsync) {
               AsyncData(:final value) => 'Asset Pack v${value.packVersion}',
               AsyncError() => 'Asset Pack: 未取得',
-              _ => 'Asset Pack: 確認中…',
+              _ => 'Asset Pack: 確認中...',
             },
           ),
         ],

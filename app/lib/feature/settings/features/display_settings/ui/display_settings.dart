@@ -34,7 +34,7 @@ class const _Body() extends StatelessWidget {
             const _ThemeSelector(),
             ListTile(
               title: const Text('テーマ設定'),
-              subtitle: const Text('配色プリセットの選択・カスタム編集・JSON入出力'),
+              subtitle: const Text('配色プリセットの選択・カスタム編集・JSON 入出力'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async => const ThemeSettingsRoute().push<void>(context),
             ),

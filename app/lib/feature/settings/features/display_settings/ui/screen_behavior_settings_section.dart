@@ -51,7 +51,7 @@ class const ScreenBehaviorSettingsSection({super.key}) extends ConsumerWidget {
         if (ref.watch(supportsLockScreenDisplayProvider))
           AppSwitchListTile(
             title: 'ロック画面上に表示',
-            subtitle: '端末のロック中もアプリ画面を表示し、表示時に画面を点灯します',
+            subtitle: 'デバイスのロック中もアプリ画面を表示し、表示時に画面を点灯します',
             value: settings.value?.showWhenLocked ?? true,
             onChanged: busy
                 ? null

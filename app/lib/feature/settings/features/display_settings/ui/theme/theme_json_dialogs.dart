@@ -24,7 +24,7 @@ class const ThemeImportExportSection({super.key}) extends HookConsumerWidget {
       final json = ref.read(appThemeProvider.notifier).exportToJson(theme);
       await Clipboard.setData(ClipboardData(text: json));
       messenger.showSnackBar(
-        const SnackBar(content: Text('JSONをクリップボードにコピーしました')),
+        const SnackBar(content: Text('JSON をクリップボードにコピーしました')),
       );
     }
 
@@ -109,11 +109,11 @@ class const ThemeImportExportSection({super.key}) extends HookConsumerWidget {
       final text = await showAdaptiveDialog<String>(
         context: context,
         builder: (dialogContext) => AlertDialog.adaptive(
-          title: const Text('JSONをインポート'),
+          title: const Text('JSON をインポート'),
           content: TextField(
             controller: controller,
             maxLines: 8,
-            decoration: const InputDecoration(hintText: 'テーマJSONを貼り付け'),
+            decoration: const InputDecoration(hintText: 'テーマ JSON を貼り付け'),
           ),
           actions: [
             M3ETextButton(
@@ -157,7 +157,7 @@ class const ThemeImportExportSection({super.key}) extends HookConsumerWidget {
           ),
           M3EFilledButton.tonal(
             onPressed: showImportDialog,
-            child: const Text('JSONをインポート'),
+            child: const Text('JSON をインポート'),
           ),
         ],
       ),

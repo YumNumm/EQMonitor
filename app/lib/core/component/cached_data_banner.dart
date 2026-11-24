@@ -44,7 +44,7 @@ class const CachedDataBanner({
             color: colorScheme.onSurfaceVariant,
           ),
         ),
-        message: 'キャッシュ表示中・更新を確認しています…',
+        message: 'キャッシュ表示中・更新を確認しています...',
         backgroundColor: colorScheme.surfaceContainerHighest,
         foregroundColor: colorScheme.onSurfaceVariant,
       );
@@ -87,7 +87,7 @@ class const RevalidatingBanner({
                       color: colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  message: 'キャッシュ表示中・更新を確認しています…',
+                  message: 'キャッシュ表示中・更新を確認しています...',
                   backgroundColor: colorScheme.surfaceContainerHighest,
                   foregroundColor: colorScheme.onSurfaceVariant,
                 )

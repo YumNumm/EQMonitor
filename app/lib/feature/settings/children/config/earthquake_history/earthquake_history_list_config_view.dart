@@ -45,7 +45,7 @@ class const EarthquakeHistoryListConfigView({
                 value: DateHeaderDisplayMode.always,
               ),
               RadioListTile<DateHeaderDisplayMode>.adaptive(
-                title: Text('発生時刻順のときのみ'),
+                title: Text('発生時刻順の時のみ'),
                 value: DateHeaderDisplayMode.onlyWhenDateSort,
               ),
               RadioListTile<DateHeaderDisplayMode>.adaptive(

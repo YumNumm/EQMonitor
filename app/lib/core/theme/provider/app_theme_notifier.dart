@@ -86,7 +86,7 @@ class AppThemeNotifier extends _$AppThemeNotifier {
     try {
       final decoded = jsonDecode(rawJson);
       if (decoded is! Map<String, dynamic>) {
-        return const Failure(AppThemeImportException('JSONの形式が不正です'));
+        return const Failure(AppThemeImportException('JSON の形式が不正です'));
       }
       final theme = AppTheme.fromJson(decoded);
       if (theme.version != 1) {
@@ -103,9 +103,9 @@ class AppThemeNotifier extends _$AppThemeNotifier {
       }
       return Success(theme);
     } on FormatException catch (_) {
-      return const Failure(AppThemeImportException('JSONの解析に失敗しました'));
+      return const Failure(AppThemeImportException('JSON の解析に失敗しました'));
     } on Object catch (_) {
-      return const Failure(AppThemeImportException('テーマJSONの内容が不正です'));
+      return const Failure(AppThemeImportException('テーマ JSON の内容が不正です'));
     }
   }
 

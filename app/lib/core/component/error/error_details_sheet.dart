@@ -55,7 +55,7 @@ class const _ErrorDetailsSheet({
     final summary = ref.read(errorMessageBuilderProvider).build(error: error);
     final deviceId = switch (ref.watch(deviceIdProvider)) {
       AsyncData(:final value) => value,
-      _ => '(取得中)',
+      _ => '（取得中）',
     };
     final packageInfo = ref.watch(packageInfoProvider);
     final os = switch ((Platform.isIOS, Platform.isAndroid)) {
