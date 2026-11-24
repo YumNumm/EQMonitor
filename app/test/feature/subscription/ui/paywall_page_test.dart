@@ -65,7 +65,10 @@ void main() {
         return _package;
       },
     );
-    expect(find.text('プラン情報を取得できませんでした。通信状況を確認して再試行してください。'), findsOneWidget);
+    expect(
+      find.text('プラン情報を取得できませんでした。通信状況を確認して、もう一度お試しください。'),
+      findsOneWidget,
+    );
     expect(
       tester
           .widget<M3EButton>(find.widgetWithText(M3EButton, 'Pro にアップグレード'))

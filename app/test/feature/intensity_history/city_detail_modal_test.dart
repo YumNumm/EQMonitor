@@ -295,7 +295,7 @@ void main() {
     await tester.pump();
 
     expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
-    expect(find.text('地震一覧を読み込んでいます'), findsOneWidget);
+    expect(find.text('地震履歴を読み込んでいます'), findsOneWidget);
   });
 
   testWidgets('続きがある場合はさらに読み込むボタンを表示する', (tester) async {

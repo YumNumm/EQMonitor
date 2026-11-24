@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:riverpod/src/internals.dart' show DataKind;
 
-const _revalidatingText = 'キャッシュ表示中・更新を確認しています…';
+const _revalidatingText = 'キャッシュ表示中・更新を確認しています...';
 const _staleErrorText = '最新情報の取得に失敗しました（キャッシュ表示中）';
 
 /// CachedNotifier が裏更新中に流す「キャッシュ由来の値を保持した Loading」状態。

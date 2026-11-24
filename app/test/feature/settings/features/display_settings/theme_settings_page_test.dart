@@ -178,8 +178,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.ensureVisible(find.text('JSONをインポート'));
-    await tester.tap(find.text('JSONをインポート'));
+    await tester.ensureVisible(find.text('JSON をインポート'));
+    await tester.tap(find.text('JSON をインポート'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'not json at all');
     await tester.tap(find.text('インポート'));
@@ -207,8 +207,8 @@ void main() {
     );
     final json = const JsonEncoder().convert(imported.toJson());
 
-    await tester.ensureVisible(find.text('JSONをインポート'));
-    await tester.tap(find.text('JSONをインポート'));
+    await tester.ensureVisible(find.text('JSON をインポート'));
+    await tester.tap(find.text('JSON をインポート'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), json);
     await tester.tap(find.text('インポート'));
@@ -237,8 +237,8 @@ void main() {
     final imported = AppTheme.eqmonitorDefault().copyWith(name: 'インポートテーマ');
     final json = const JsonEncoder().convert(imported.toJson());
 
-    await tester.ensureVisible(find.text('JSONをインポート'));
-    await tester.tap(find.text('JSONをインポート'));
+    await tester.ensureVisible(find.text('JSON をインポート'));
+    await tester.tap(find.text('JSON をインポート'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), json);
     await tester.tap(find.text('インポート'));

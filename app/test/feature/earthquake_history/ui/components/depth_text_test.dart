@@ -27,10 +27,10 @@ void main() {
     expect(find.text('深さ30km'), findsOneWidget);
   });
 
-  testWidgets('over700km: "深さ" + "700km以上"', (tester) async {
+  testWidgets('over700km: "深さ" + "700km 以上"', (tester) async {
     await pumpDepthText(tester, depth: const EarthquakeDepth.over700km());
 
-    expect(find.text('深さ700km以上'), findsOneWidget);
+    expect(find.text('深さ700km 以上'), findsOneWidget);
   });
 
   testWidgets('unknown: "深さ" + "調査中"', (tester) async {
