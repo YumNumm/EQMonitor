@@ -841,6 +841,18 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugReplayLibraryRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'earthquake-archives',
+          hasOverriddenOnExit: false,
+          factory: $DebugEarthquakeArchiveListRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: ':eventId',
+              hasOverriddenOnExit: false,
+              factory: $DebugEarthquakeArchiveDetailRoute._fromState,
+            ),
+          ],
+        ),
+        GoRouteData.$route(
           path: 'intensity-icon',
           hasOverriddenOnExit: false,
           factory: $DebugIntensityIconRoute._fromState,
@@ -1822,6 +1834,56 @@ mixin $DebugReplayLibraryRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/replay-library');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugEarthquakeArchiveListRoute on GoRouteData {
+  static DebugEarthquakeArchiveListRoute _fromState(GoRouterState state) =>
+      const DebugEarthquakeArchiveListRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/earthquake-archives');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugEarthquakeArchiveDetailRoute on GoRouteData {
+  static DebugEarthquakeArchiveDetailRoute _fromState(GoRouterState state) =>
+      DebugEarthquakeArchiveDetailRoute(
+        eventId: state.pathParameters['eventId']!,
+      );
+
+  DebugEarthquakeArchiveDetailRoute get _self =>
+      this as DebugEarthquakeArchiveDetailRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/debug/earthquake-archives/${Uri.encodeComponent(_self.eventId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
