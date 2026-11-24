@@ -146,7 +146,7 @@ class const _NotificationPermissionDialog({
       scrollable: true,
       title: Text(
         missing.length == 1
-            ? '${missing.single.label}の許可が不足しています'
+            ? '${missing.single.label}権限が不足しています'
             : '通知に必要な権限が不足しています',
       ),
       content: Column(
