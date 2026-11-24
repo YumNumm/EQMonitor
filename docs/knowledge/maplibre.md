@@ -47,7 +47,7 @@
 - 階級表示と 0.1 単位表示の切り替えは `color-relief-color` の式だけを差し替える。source と layer は作り直さない。
 - MapLibre Native は `color-relief` の `resampling` を受け付けず、layer 追加が `invalidArgument` で失敗する（iOS Simulator、2026-11-23）。DEM は線形補間で読まれるため、色の境界の両側に stop を置いて中間値のにじみを抑える。データなしを -10000 に置くことで、領域の縁に低い震度の色が出ない。
 - `color-relief-color` は `['elevation']` を入力にした `interpolate` で書く。Android での表示は未確認。
-- 配色: `EstimatedIntensityDemColorResolver` が決める。階級表示はテーマの推計震度色。0.1 単位表示は `EstimatedIntensityScaleColorResolver` の震度配色グラデーションか、`KyoshinShindoColorMap.json` の強震モニタ配色を選べる。地図・凡例・カードのプレビューは同じ resolver から色を取る。
+- 配色: `EstimatedIntensityDemColorResolver` が決める。階級表示はテーマの推計震度色。0.1 単位表示は `EstimatedIntensityScaleColorResolver` がテーマの推計震度色を各階級の計測震度の中央に置いて補間したグラデーションか、`KyoshinShindoColorMap.json` の強震モニタ配色を選べる。地図・凡例・カードのプレビューは同じ resolver から色を取る。
 
 ## 座標・選択・初期カメラ
 

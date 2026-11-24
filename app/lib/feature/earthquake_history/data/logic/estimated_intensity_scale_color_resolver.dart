@@ -1,27 +1,30 @@
+import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
 import 'package:material_ui/material_ui.dart';
 
-class const EstimatedIntensityScaleColorResolver() {
-  // 各震度階級の下限に気象庁の推計震度分布図の階級色を置き、その間を補間する。
-  static const anchors = <(int, Color)>[
-    (35, Color(0xFFFAE696)),
-    (45, Color(0xFFFFE600)),
-    (50, Color(0xFFFF9900)),
-    (55, Color(0xFFFF2800)),
-    (60, Color(0xFFA50021)),
-    (65, Color(0xFFB40068)),
-    (70, Color(0xFF6E0040)),
+class const EstimatedIntensityScaleColorResolver({
+  required final EstimatedIntensityColors colors,
+}) {
+  // 各震度階級の計測震度の中央に階級色を置き、その間を補間する。
+  List<(double, Color)> get anchors => [
+    (40, colors.four.background),
+    (47.5, colors.fiveLower.background),
+    (52.5, colors.fiveUpper.background),
+    (57.5, colors.sixLower.background),
+    (62.5, colors.sixUpper.background),
+    (67.5, colors.seven.background),
   ];
 
   Color resolve({required int tenths}) {
-    if (tenths <= anchors.first.$1) {
-      return anchors.first.$2;
+    final points = anchors;
+    if (tenths <= points.first.$1) {
+      return points.first.$2;
     }
-    for (var index = 1; index < anchors.length; index++) {
-      final (upperTenths, upperColor) = anchors[index];
+    for (var index = 1; index < points.length; index++) {
+      final (upperTenths, upperColor) = points[index];
       if (tenths > upperTenths) {
         continue;
       }
-      final (lowerTenths, lowerColor) = anchors[index - 1];
+      final (lowerTenths, lowerColor) = points[index - 1];
       return Color.lerp(
             lowerColor,
             upperColor,
@@ -29,6 +32,6 @@ class const EstimatedIntensityScaleColorResolver() {
           ) ??
           upperColor;
     }
-    return anchors.last.$2;
+    return points.last.$2;
   }
 }
