@@ -355,7 +355,8 @@ jobs:
 
       - name: Resolve dependencies
         working-directory: app
-        run: flutter pub get --enforce-lockfile
+        # patrol など dev_dependencies のプラグインを release バイナリに載せない。
+        run: flutter pub get --no-dev --enforce-lockfile
 
       # Bundle the signed R2 pack as the immutable default and refresh the
       # slim table used by AppIntent/Widget native targets.
@@ -845,7 +846,9 @@ jobs:
 
       - name: Resolve dependencies
         working-directory: app
-        run: flutter pub get --enforce-lockfile
+        # patrol など dev_dependencies のプラグインを GeneratedPluginRegistrant に含めると
+        # release の Java コンパイルで pl.leancode.patrol が見つからず失敗する。
+        run: flutter pub get --no-dev --enforce-lockfile
 
       # The same signed R2 pack is embedded in the base AAB as the immutable
       # fallback used before, or if, a downloaded update cannot be validated.
