@@ -102,7 +102,7 @@ enum WidgetRegionResolver {
             let name = nonEmpty(settings.currentLocationRegionName)
             return ResolvedWidgetRegion(
                 plan: .region(code: code),
-                title: name.map { "現在地(\($0))の地震履歴" } ?? "現在地の地震履歴",
+                title: name.map { "現在地（\($0)）の地震履歴" } ?? "現在地の地震履歴",
                 compactTitle: name.map(shorten) ?? "現在地"
             )
 

@@ -8,10 +8,10 @@ import EQMonitorAPI
 struct EarthquakeSnippetIntent: SnippetIntent {
     static let title: LocalizedStringResource = "地震情報カード"
 
-    @Parameter(title: "地域ID") var regionID: String?
+    @Parameter(title: "地域 ID") var regionID: String?
     @Parameter(title: "最小震度") var minIntensity: MinIntensityOption?
     @Parameter(title: "表示件数", default: 3) var limit: Int
-    @Parameter(title: "取得結果ID") var snapshotID: String?
+    @Parameter(title: "取得結果 ID") var snapshotID: String?
 
     init() {}
     init(regionID: String?, minIntensity: MinIntensityOption?, limit: Int, snapshotID: String? = nil) {
@@ -57,10 +57,10 @@ struct EarthquakeSnippetIntent: SnippetIntent {
 struct RefreshEarthquakeSnippetIntent: AppIntent {
     static let title: LocalizedStringResource = "同じ地域のカードを更新"
     static let isDiscoverable = false
-    @Parameter(title: "地域ID") var regionID: String?
+    @Parameter(title: "地域 ID") var regionID: String?
     @Parameter(title: "最小震度") var minIntensity: MinIntensityOption?
     @Parameter(title: "表示件数", default: 3) var limit: Int
-    @Parameter(title: "取得結果ID") var snapshotID: String
+    @Parameter(title: "取得結果 ID") var snapshotID: String
 
     init() {}
     init(regionID: String?, minIntensity: MinIntensityOption?, limit: Int, snapshotID: String) {

@@ -340,7 +340,7 @@ private extension EarthquakeDisplayItem {
             parts.append(text + (time.isArrival ? "頃検知" : "頃発生"))
         }
         if !depth.isEmpty {
-            parts.append("深さ\(depth)")
+            parts.append("深さ \(depth)")
         }
         return parts.joined(separator: " ")
     }
@@ -362,7 +362,7 @@ private extension EarthquakeDisplayItem {
             parts.append(magnitude.replacingOccurrences(of: "M", with: "マグニチュード"))
         }
         if !depth.isEmpty {
-            parts.append("深さ\(depth)")
+            parts.append("深さ \(depth)")
         }
         parts.append(formattedTime)
         return parts.filter { !$0.isEmpty }.joined(separator: "、")

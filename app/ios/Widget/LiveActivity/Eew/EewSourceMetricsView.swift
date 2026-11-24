@@ -9,7 +9,7 @@ struct EewSourceMetricsView: View {
 
     var body: some View {
         if state.display.isLowAccuracyDetection {
-            Text(state.isPlum == true ? "PLUM法" : state.isLevel == true ? "レベル法" : "低精度")
+            Text(state.isPlum == true ? "PLUM 法" : state.isLevel == true ? "レベル法" : "低精度")
                 .font(.system(size: 12, weight: .bold))
                 .fixedSize()
                 .padding(.horizontal, 7)

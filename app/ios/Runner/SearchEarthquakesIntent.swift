@@ -25,7 +25,7 @@ enum EarthquakeSearchError: Error, CustomLocalizedStringResourceConvertible {
     case cannotOpen
 
     var localizedStringResource: LocalizedStringResource {
-        "検索画面を開けませんでした。EQMonitorを起動して、もう一度お試しください。"
+        "検索画面を開けませんでした。EQMonitor を起動して、もう一度お試しください。"
     }
 }
 

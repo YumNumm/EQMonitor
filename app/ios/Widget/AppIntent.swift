@@ -14,7 +14,7 @@ struct EarthquakeWidgetIntent: WidgetConfigurationIntent {
     #endif
     static var title: LocalizedStringResource { "地震履歴設定" }
     static var description: IntentDescription {
-        "表示する範囲を選択してください。「アプリで選択した地域」はEQMonitor Proで、アプリの設定画面から地域を指定できます。"
+        "表示する範囲を選択してください。「アプリで選択した地域」は EQMonitor Pro で、アプリの設定画面から地域を指定できます。"
     }
 
     @Parameter(title: "表示範囲", default: .nationwide)

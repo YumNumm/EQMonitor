@@ -50,7 +50,7 @@ struct EarthquakeDisplayItemFormatTests {
     }
 
     @Test func depthOver700() {
-        #expect(EarthquakeDisplayItem.formatDepth(.init(_type: .OVER_700)) == "700km以上")
+        #expect(EarthquakeDisplayItem.formatDepth(.init(_type: .OVER_700)) == "700km 以上")
     }
 
     @Test func depthUnknownIsEmpty() {

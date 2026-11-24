@@ -154,7 +154,7 @@ struct EewDisplay: Equatable {
     /// JMA が予想震度を発表しなくなる深さ(km)。アプリ本体の
     /// `EewDeepHypocenterIntensityNotice` と同じ基準にする。
     static let deepHypocenterDepthThreshold: Double = 150
-    static let deepHypocenterIntensityNotice = "震源の深さが150kmより深いため、予想震度は発表されていません"
+    static let deepHypocenterIntensityNotice = "震源の深さが150km より深いため、予想震度は発表されていません"
 }
 
 enum LiveActivityHeadline {

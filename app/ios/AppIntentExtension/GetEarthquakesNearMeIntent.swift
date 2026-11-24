@@ -15,7 +15,7 @@ import EQMonitorAPI
 struct GetEarthquakesNearMeIntent: AppIntent {
     static let title: LocalizedStringResource = "保存地域の地震情報を確認"
     static let description = IntentDescription(
-        "アプリに保存された地域の地震情報を表示します。GPSは取得しません。保存位置の取得時刻は不明で、現在地とは限りません。"
+        "アプリに保存された地域の地震情報を表示します。GPS は取得しません。保存位置の取得時刻は不明で、現在地とは限りません。"
     )
 
     @Parameter(title: "最小震度")
