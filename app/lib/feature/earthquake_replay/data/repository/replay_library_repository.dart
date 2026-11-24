@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:eqmonitor/feature/earthquake_replay/data/data_source/replay_device_storage_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/data_source/replay_file_storage_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_file_path_resolver.dart';
@@ -55,6 +57,19 @@ class const ReplayLibraryRepository({
     } finally {
       await files.clearPickedFiles();
     }
+  }
+
+  Future<SavedReplayFile> saveDownloaded({
+    required Uint8List bytes,
+    required String name,
+  }) async {
+    final file = await files.parse(bytes: bytes, name: name);
+    final startTime = file.header.startTime;
+    return storage.save(
+      directory: pathResolver.defaultDirectory(startTime: startTime),
+      name: importFileName(name: name, startTime: startTime),
+      bytes: bytes,
+    );
   }
 
   String importFileName({required String name, required DateTime startTime}) {
