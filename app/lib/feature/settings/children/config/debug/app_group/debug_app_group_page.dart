@@ -20,7 +20,7 @@ class const DebugAppGroupPage({super.key}) extends HookConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.sync),
-            tooltip: 'プロバイダから再同期',
+            tooltip: 'プロバイダーから再同期',
             onPressed: () => action.syncFromProvider(ref, context),
           ),
         ],
@@ -74,7 +74,7 @@ class const _Body({
           title: Text('Widget への反映について'),
           subtitle: Text(
             '変更はウィジェットの次回タイムライン更新時に反映されます。'
-            '「再同期」ボタンでアプリ側プロバイダの値を App Groups に書き直します。',
+            '「再同期」ボタンでアプリ側プロバイダーの値を App Groups に書き直します。',
           ),
           isThreeLine: true,
         ),

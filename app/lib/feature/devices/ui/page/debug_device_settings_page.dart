@@ -442,7 +442,7 @@ class const _NotificationPermissionSection() extends ConsumerWidget {
   String _authLabel(AuthorizationStatus s) => switch (s) {
     AuthorizationStatus.authorized => '許可済み',
     AuthorizationStatus.denied => '拒否',
-    AuthorizationStatus.deniedPermanently => '拒否（端末の設定から変更）',
+    AuthorizationStatus.deniedPermanently => '拒否（デバイスの設定から変更）',
     AuthorizationStatus.notDetermined => '未確認',
     AuthorizationStatus.provisional => '仮承認（サイレント通知のみ）',
   };

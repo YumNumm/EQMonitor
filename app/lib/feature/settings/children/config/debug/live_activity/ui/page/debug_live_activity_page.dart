@@ -239,8 +239,8 @@ class const _SupportabilityTile() extends ConsumerWidget {
         final supported = snapshot.data;
         final text = switch (supported) {
           null => '対応状況を確認中...',
-          true => 'この端末は Live Activity のローカル開始に対応しています',
-          false => 'この端末は Live Activity のローカル開始に非対応です（iOS 16.1+ が必要）',
+          true => 'このデバイスは Live Activity のローカル開始に対応しています',
+          false => 'このデバイスは Live Activity のローカル開始に非対応です（iOS 16.1+ が必要）',
         };
         return Padding(
           padding: const EdgeInsets.only(top: 16),

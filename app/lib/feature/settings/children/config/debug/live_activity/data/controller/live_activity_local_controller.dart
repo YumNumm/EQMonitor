@@ -19,7 +19,7 @@ LiveActivityLocalController liveActivityLocalController(Ref ref) {
 ///
 /// Push-to-Start（サーバー経由）とは別経路で、開発時の表示検証に用いる。
 abstract interface class LiveActivityLocalController {
-  /// この端末で Live Activity のローカル開始がサポートされているか。
+  /// このデバイスで Live Activity のローカル開始がサポートされているか。
   Future<bool> isSupported();
 
   /// 通知テスト画面専用の Activity のみを照会・操作する。
@@ -60,32 +60,32 @@ class const UnsupportedLiveActivityLocalController()
 
   @override
   Future<void> showTestActivity({required Map<String, dynamic> contentState}) =>
-      throw const LiveActivityLocalException('この端末ではサポートされていません');
+      throw const LiveActivityLocalException('このデバイスではサポートされていません');
 
   @override
   Future<void> endTestActivity() =>
-      throw const LiveActivityLocalException('この端末ではサポートされていません');
+      throw const LiveActivityLocalException('このデバイスではサポートされていません');
 
   @override
   Future<String> start({
     required DebugLiveActivityKind kind,
     required String eventId,
     required Map<String, dynamic> contentState,
-  }) => throw const LiveActivityLocalException('この端末ではサポートされていません');
+  }) => throw const LiveActivityLocalException('このデバイスではサポートされていません');
 
   @override
   Future<void> update({
     required DebugLiveActivityKind kind,
     required String activityId,
     required Map<String, dynamic> contentState,
-  }) => throw const LiveActivityLocalException('この端末ではサポートされていません');
+  }) => throw const LiveActivityLocalException('このデバイスではサポートされていません');
 
   @override
   Future<void> end({
     required DebugLiveActivityKind kind,
     required String activityId,
     Map<String, dynamic>? contentState,
-  }) => throw const LiveActivityLocalException('この端末ではサポートされていません');
+  }) => throw const LiveActivityLocalException('このデバイスではサポートされていません');
 }
 
 /// `net.yumnumm.eqmonitor/live_activity_debug` MethodChannel 経由の iOS 実装。

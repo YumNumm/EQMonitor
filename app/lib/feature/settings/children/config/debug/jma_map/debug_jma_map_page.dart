@@ -181,7 +181,7 @@ class const DebugJmaMapPage({super.key}) extends HookConsumerWidget {
                           M3EElevatedButton.icon(
                             onPressed: useCurrentLocation,
                             icon: const Icon(Icons.my_location),
-                            label: const Text('現在位置を使用'),
+                            label: const Text('現在地を使用'),
                           ),
                           const SizedBox(width: 8),
                           switch (currentPosition) {

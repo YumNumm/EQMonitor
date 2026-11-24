@@ -192,7 +192,7 @@ class const _Body({
         context: context,
         builder: (context) => AlertDialog.adaptive(
           title: const Text('デバイスを削除'),
-          content: const Text('この端末 ID に紐づくサーバー上のデバイスと関連データを削除します。よろしいですか？'),
+          content: const Text('このデバイス ID に紐づくサーバー上のデバイスと関連データを削除します。よろしいですか？'),
           actions: [
             M3ETextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -289,7 +289,7 @@ class const _Body({
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
       children: [
-        Text('端末 ID', style: Theme.of(context).textTheme.titleSmall),
+        Text('デバイス ID', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 8),
         SelectableText(deviceId, style: mono),
         const SizedBox(height: 8),
@@ -307,7 +307,7 @@ class const _Body({
         const SizedBox(height: 8),
         switch (device) {
           null => Text(
-            '未登録（またはこの端末 ID のレコードがありません）',
+            '未登録（またはこのデバイス ID のレコードがありません）',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: context.designSystem.colorTheme.onSurfaceVariant,
             ),

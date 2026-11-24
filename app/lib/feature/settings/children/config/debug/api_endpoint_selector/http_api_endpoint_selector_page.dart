@@ -59,12 +59,12 @@ class const HttpApiEndpointSelectorPage({super.key}) extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('サーバ選択')),
+      appBar: AppBar(title: const Text('サーバー選択')),
       body: ListView(
         children: [
           _ServerTile(
             label: 'Prod',
-            description: '本番サーバ',
+            description: '本番サーバー',
             restUrl: prodRest,
             selected: selectedPreset == _ServerPreset.prod,
             onTap: isSaving ? null : () => selectPreset(_ServerPreset.prod),
@@ -72,7 +72,7 @@ class const HttpApiEndpointSelectorPage({super.key}) extends ConsumerWidget {
           ),
           _ServerTile(
             label: 'Dev',
-            description: '開発サーバ',
+            description: '開発サーバー',
             restUrl: devRest,
             selected: selectedPreset == _ServerPreset.dev,
             onTap: isSaving ? null : () => selectPreset(_ServerPreset.dev),

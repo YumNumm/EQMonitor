@@ -22,7 +22,7 @@ class const DebugNotificationLanguageSetting({super.key})
       crossAxisAlignment: .stretch,
       children: [
         const Text('通知の言語'),
-        const Text('この端末に届く通知の言語を設定します'),
+        const Text('このデバイスに届く通知の言語を設定します'),
         const SizedBox(height: 8),
         switch (language) {
           AsyncData(:final value) when !language.isLoading =>

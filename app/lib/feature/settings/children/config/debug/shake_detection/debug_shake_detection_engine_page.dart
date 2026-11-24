@@ -37,7 +37,7 @@ class const DebugShakeDetectionEnginePage({super.key}) extends ConsumerWidget {
             leading: const Icon(Icons.sensors_rounded),
           ),
           SwitchListTile(
-            title: const Text('端末内で揺れを検知する'),
+            title: const Text('デバイス内で揺れを検知する'),
             subtitle: const Text(
               '強震モニタの画像から検知し、ホームの地図とカードに表示。'
               '表示する強さと自動ズームは「マップレイヤー」で変更',
@@ -49,7 +49,7 @@ class const DebugShakeDetectionEnginePage({super.key}) extends ConsumerWidget {
                     ref: ref,
                     context: context,
                     description:
-                        '端末内の揺れ検知は、試験提供している機能です。'
+                        'デバイス内の揺れ検知は、試験提供している機能です。'
                         '有効にする前に、以下の内容をご確認ください。',
                   )) {
                 return;
