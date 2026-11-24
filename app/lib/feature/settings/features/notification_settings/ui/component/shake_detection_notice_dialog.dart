@@ -25,7 +25,7 @@ class const ShakeDetectionNoticeDialog({
 
     return AlertDialog(
       scrollable: true,
-      title: const Text('揺れ検知（Beta）を有効にしますか？'),
+      title: const Text('揺れ検知（Beta）を有効にしますか?'),
       content: Column(
         mainAxisSize: .min,
         crossAxisAlignment: .start,

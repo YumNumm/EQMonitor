@@ -74,12 +74,12 @@ class const ShakeDetectionSettingsPage({super.key}) extends ConsumerWidget {
                     leading: Icon(Icons.info_outline),
                     title: Text('通知地域を設定し直してください'),
                     subtitle: Text(
-                      '以前の観測点・市区町村・都道府県の条件は停止しています。細分化地域を選んで保存してください。',
+                      '以前の観測点・市区町村・都道府県の条件は停止しています。細分化地域を選んで保存してください',
                     ),
                   ),
                 const ListTile(
                   title: Text('通知する揺れのレベル'),
-                  subtitle: Text('地域ごとに最小レベルを設定できます。現在地は移動先の細分化地域を使用します。'),
+                  subtitle: Text('地域ごとに最小レベルを設定できます。現在地は移動先の細分化地域を使用します'),
                 ),
                 if (state.entries.any(
                   (e) => e.isCurrentLocation && e.enabled,
@@ -89,7 +89,7 @@ class const ShakeDetectionSettingsPage({super.key}) extends ConsumerWidget {
                     ListTile(
                       title: const Text('位置情報の「常に許可」が必要です'),
                       subtitle: const Text(
-                        'バックグラウンドでも現在地を更新できるよう、位置情報の権限を確認してください。',
+                        'バックグラウンドでも現在地を更新できるよう、位置情報権限を確認してください',
                       ),
                       onTap: () => HapticUtil.light(
                         () => const CurrentLocationPermissionAction().request(
@@ -223,7 +223,7 @@ class const ShakeDetectionSettingsPage({super.key}) extends ConsumerWidget {
                 if (regions.isLoading)
                   const Padding(
                     padding: EdgeInsets.all(16),
-                    child: Text('地域一覧を読み込んでいます…'),
+                    child: Text('地域一覧を読み込んでいます...'),
                   ),
                 if (regions.hasError)
                   ListTile(
@@ -254,9 +254,9 @@ class const _CurrentLocationStatus() extends ConsumerWidget {
         ?.name
         .ja;
     final subtitle = location.isLoading
-        ? '現在地を確認しています…'
+        ? '現在地を確認しています...'
         : location.hasError
-        ? '現在地の取得・同期に失敗しました。位置情報と通信を確認して再試行してください。'
+        ? '現在地の取得・同期に失敗しました。位置情報と通信状況を確認して、もう一度お試しください。'
         : code == null
         ? '現在地は未取得です。地域を判定できるまで現在地の通知は届きません。'
         : '最後に同期した地域: ${name ?? code}';

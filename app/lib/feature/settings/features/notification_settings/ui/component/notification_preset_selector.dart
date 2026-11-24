@@ -271,7 +271,7 @@ class const _OnboardingPresetDescription({
             text: '通知する地域や震度を細かく設定できます',
           ),
           _PresetBulletItem(
-            text: 'EQMonitor Pro(有料プラン)ではさらに通知音や割り込みレベルを設定できます',
+            text: 'EQMonitor Pro（有料プラン）ではさらに通知音や割り込みレベルを設定できます',
           ),
         ],
       ),

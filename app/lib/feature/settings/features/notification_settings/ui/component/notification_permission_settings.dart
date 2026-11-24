@@ -109,13 +109,13 @@ class const NotificationPermissionSettings({super.key}) extends ConsumerWidget {
             ],
           ),
           loading: () => const ListTile(
-            title: Text('通知の許可'),
-            subtitle: Text('権限を確認しています…'),
+            title: Text('通知権限'),
+            subtitle: Text('権限を確認しています...'),
           ),
           error: (error, stackTrace) => ErrorCard(
             error: error,
             stackTrace: stackTrace,
-            title: '通知の権限を確認できませんでした',
+            title: '通知権限を確認できませんでした',
             showContact: false,
             showLoadingOverlayOnReload: false,
             onReload: () async {
@@ -125,11 +125,11 @@ class const NotificationPermissionSettings({super.key}) extends ConsumerWidget {
           ),
         ),
         ListTile(
-          title: const Text('端末の通知設定を開く'),
+          title: const Text('デバイスの通知設定を開く'),
           subtitle: Text(
             Theme.of(context).platform == .android
-                ? '通知の許可やチャンネルごとの音・バイブを変更できます'
-                : '通知の許可や表示方法・サウンドを変更できます',
+                ? '通知権限やチャンネルごとの音・バイブを変更できます'
+                : '通知権限や表示方法・サウンドを変更できます',
           ),
           leading: const Icon(Icons.settings_outlined),
           trailing: const Icon(Icons.open_in_new),

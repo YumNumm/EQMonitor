@@ -3,13 +3,13 @@ import 'package:dio/dio.dart';
 extension TestNotificationErrorDisplay on Exception {
   String get testNotificationMessage => switch (this) {
     DioException(response: Response(statusCode: 401)) =>
-      '端末の認証を確認して、もう一度お試しください。',
+      'デバイスの認証を確認して、もう一度お試しください。',
     DioException(response: Response(statusCode: 404)) =>
-      '通知先が登録されていません。端末の通知許可と登録状態を確認してください。',
+      '通知先が登録されていません。デバイスの通知権限と登録状態を確認してください。',
     DioException(response: Response(statusCode: 429)) =>
       '送信間隔を空けて、もう一度お試しください。',
     DioException(response: Response(statusCode: 503)) =>
-      '現在テスト通知を送信できません。しばらくしてからお試しください。',
+      '現在テスト通知を送信できません。時間をおいてもう一度お試しください。',
     DioException(
       type: DioExceptionType.connectionError ||
           DioExceptionType.connectionTimeout ||

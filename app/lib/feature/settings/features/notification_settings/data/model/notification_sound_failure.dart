@@ -18,7 +18,7 @@ extension NotificationSoundFailureMessage on NotificationSoundFailure {
     .invalidAudio => '音声を読み込めませんでした。ファイルの形式や内容を確認するか、別の音声ファイルを選択してください。',
     .conversionFailed => '通知音用の形式に変換できませんでした。別の音声ファイルでお試しください。',
     .sourceUnavailable => 'ファイルが見つかりません。ファイルをダウンロードするか、もう一度追加してください。',
-    .storageFailure => '通知音を読み込み・保存できませんでした。端末の空き容量を確認して再試行してください。',
+    .storageFailure => '通知音を読み込み・保存できませんでした。デバイスの空き容量を確認して、もう一度お試しください。',
     .busy => '通知音を処理中です。完了するまでお待ちください。',
     .durationTooLong => '通知音に使える長さは30秒未満です。先頭29.9秒を使用するか確認してください。',
     .invalidName => '通知音の名前を1〜100文字で入力してください。',

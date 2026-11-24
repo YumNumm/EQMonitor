@@ -172,7 +172,7 @@ class const _Body() extends HookConsumerWidget {
         const SettingsSectionHeader(text: 'ツール'),
         const _NotificationHistoryTile(),
         const TestNotificationTile(),
-        const SettingsSectionHeader(text: '端末の通知権限'),
+        const SettingsSectionHeader(text: 'デバイスの通知権限'),
         const NotificationPermissionSettings(),
       ],
     );
@@ -347,7 +347,7 @@ class const _ShakeDetectionReconfigurationNotice() extends ConsumerWidget {
       leading: Icon(Icons.info_outline),
       title: Text('揺れ検知の通知条件を設定し直してください'),
       subtitle: Text(
-        '以前の観測点・市区町村・都道府県の条件は停止しています。通知地域ごとに揺れ検知を設定してください。',
+        '以前の観測点・市区町村・都道府県の条件は停止しています。通知地域ごとに揺れ検知を設定してください',
       ),
     );
   }
@@ -410,7 +410,7 @@ class const _CustomSettingsSection({
             const Divider(height: 1),
             LockedSettingTile(
               title: '震度別の音設定',
-              subtitle: isPro ? '震度ごとに音と割り込みを変更できます' : 'Proで利用できます',
+              subtitle: isPro ? '震度ごとに音と割り込みを変更できます' : 'Pro で利用できます',
               locked: !isPro,
               onTap: isPro
                   ? () => Navigator.of(context).push<void>(
@@ -424,7 +424,7 @@ class const _CustomSettingsSection({
           const Divider(height: 1),
           LockedSettingTile(
             title: '低精度の緊急地震速報',
-            subtitle: '100gal超えのレベル法, 1点検知の低精度の緊急地震速報(予報)',
+            subtitle: '100gal 超えのレベル法, 1点検知の低精度の緊急地震速報(予報)',
             locked: !isPro,
             onTap: () {
               ScaffoldMessenger.of(context)
@@ -668,7 +668,7 @@ class const _SlotListSection({required final int maxRegions})
             child: Text(
               isPro
                   ? '登録できる地域数の上限に達しています'
-                  : '登録できる地域数の上限に達しています。Proプランで上限を増やせます',
+                  : '登録できる地域数の上限に達しています。Pro プランで上限を増やせます',
               style: designSystem.typography.bodySmall.copyWith(
                 color: colorTheme.onSurfaceVariant,
               ),
@@ -772,7 +772,7 @@ class const _GeneralNotificationSettingsSection() extends ConsumerWidget {
         children: [
           InfoNotificationTile(
             title: '北海道・三陸沖後発地震注意情報',
-            subtitleText: '北海道の根室沖から東北地方の三陸沖の巨大地震の想定震源域やその周辺でMw7.0以上の地震が発生し、大規模地震の発生可能性が平常時より相対的に高まっている際に「北海道・三陸沖後発地震注意情報」を発表 ',
+            subtitleText: '北海道の根室沖から東北地方の三陸沖の巨大地震の想定震源域やその周辺で Mw7.0以上の地震が発生し、大規模地震の発生可能性が平常時より相対的に高まっている際に「北海道・三陸沖後発地震注意情報」を発表 ',
             value: settings.vyse60Enabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
@@ -795,7 +795,7 @@ class const _GeneralNotificationSettingsSection() extends ConsumerWidget {
             ],
           ),
           InfoNotificationTile(
-            title: '南海トラフ地震関連解説情報(定例外)',
+            title: '南海トラフ地震関連解説情報（定例外）',
             subtitleText: '南海トラフ沿いで異常な現象が観測され、その現象が南海トラフ沿いの大規模な地震と関連するかどうか調査を開始・解説・終了した場合等に発表 ',
             value: settings.nankaiExtraordinaryEnabled,
             onChanged: ({required value}) async {
@@ -806,7 +806,7 @@ class const _GeneralNotificationSettingsSection() extends ConsumerWidget {
                         .updateSettings(nankaiExtraordinaryEnabled: value);
                   });
             },
-            bottomSheetTitle: '南海トラフ地震関連解説情報(定例外)',
+            bottomSheetTitle: '南海トラフ地震関連解説情報（定例外）',
             bottomSheetLinks: const [
               InfoLink(
                 title: '「南海トラフ地震に関連する情報」について',
@@ -819,7 +819,7 @@ class const _GeneralNotificationSettingsSection() extends ConsumerWidget {
             ],
           ),
           InfoNotificationTile(
-            title: '南海トラフ地震関連解説情報(定例)',
+            title: '南海トラフ地震関連解説情報（定例）',
             subtitleText: '「南海トラフ沿いの地震に関する評価検討会」の定例会合における調査結果を発表 ',
             value: settings.nankaiRegularEnabled,
             onChanged: ({required value}) async {
@@ -830,7 +830,7 @@ class const _GeneralNotificationSettingsSection() extends ConsumerWidget {
                         .updateSettings(nankaiRegularEnabled: value);
                   });
             },
-            bottomSheetTitle: '南海トラフ地震関連解説情報(定例)',
+            bottomSheetTitle: '南海トラフ地震関連解説情報（定例）',
             bottomSheetLinks: const [
               InfoLink(
                 title: '「南海トラフ地震に関連する情報」について',
@@ -844,7 +844,7 @@ class const _GeneralNotificationSettingsSection() extends ConsumerWidget {
           ),
           InfoNotificationTile(
             title: '地震・津波に関するお知らせ',
-            subtitleText: '気象庁が発表する「地震・津波に関するお知らせ」(VZSE40)を通知します。試験・訓練配信のお知らせや、市町村の震度データの入電停止などの情報が含まれます。',
+            subtitleText: '気象庁が発表する「地震・津波に関するお知らせ」（VZSE40）を通知します。試験・訓練配信のお知らせや、市町村の震度データの入電停止などの情報が含まれます。',
             value: settings.earthquakeNoticeEnabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
@@ -865,7 +865,7 @@ class const _GeneralNotificationSettingsSection() extends ConsumerWidget {
           ListTile(
             enabled: false,
             title: const Text('津波通知'),
-            subtitle: const Text('現在実装中です。今後のアップデートで利用可能になります。'),
+            subtitle: const Text('現在実装中です。今後のアップデートで利用可能になります'),
             trailing: Row(
               mainAxisSize: .min,
               children: [

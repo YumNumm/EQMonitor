@@ -8,7 +8,7 @@ class const TestNotificationTile({super.key}) extends StatelessWidget {
   Widget build(BuildContext context) => ListTile(
     title: const Text('テスト通知を送信'),
     subtitle: Text(
-      Platform.isIOS ? 'プッシュ通知とLive Activityを確認できます' : 'プッシュ通知を確認できます',
+      Platform.isIOS ? 'プッシュ通知と Live Activity を確認できます' : 'プッシュ通知を確認できます',
     ),
     leading: const Icon(Icons.send_outlined),
     trailing: const Icon(Icons.chevron_right),

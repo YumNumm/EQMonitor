@@ -43,7 +43,7 @@ class const _ShakeDetectionNotificationDetailSheet() extends StatelessWidget {
           Text('揺れ検知の通知について', style: textTheme.headlineSmall),
           SizedBox(height: spacing.md),
           Text(
-            '強震モニタの観測点で揺れを検知したときに、プッシュ通知でお知らせする機能です。'
+            '強震モニタの観測点で揺れを検知した時に、プッシュ通知でお知らせする機能です。'
             '緊急地震速報や地震情報の発表を待たずに、揺れが観測されたことを知ることができます。',
             style: bodyStyle,
           ),

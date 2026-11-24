@@ -1,7 +1,7 @@
 enum NotificationSound(final String apiValue, final String displayName) {
   defaultSound('default', 'デフォルト'),
-  eewWarning('eew_warning', 'EEW警報音'),
-  eewForecast('eew_forecast', 'EEW予報音'),
+  eewWarning('eew_warning', 'EEW 警報音'),
+  eewForecast('eew_forecast', 'EEW 予報音'),
   earthquake('earthquake', '地震情報音');
 
   static NotificationSound fromApiValue(String value) =>

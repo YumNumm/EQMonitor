@@ -215,7 +215,7 @@ class const CustomNotificationSoundAction() {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('通知音を削除'),
-        content: Text('「${sound.displayName}」を削除しますか？'),
+        content: Text('「${sound.displayName}」を削除しますか?'),
         actions: [
           M3ETextButton(
             onPressed: () => Navigator.of(context).pop(false),

@@ -90,7 +90,7 @@ class const CustomNotificationSoundImportPage({
                         displayName: name.text,
                       ),
                     ),
-              child: Text(busy ? '保存中…' : '追加'),
+              child: Text(busy ? '保存中...' : '追加'),
             ),
             const SizedBox(height: 16),
             const Text('追加後、通知音の選択欄から選んでください'),
