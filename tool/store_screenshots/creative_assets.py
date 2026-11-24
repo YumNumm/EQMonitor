@@ -21,12 +21,14 @@ TOOL_DIR = Path(__file__).resolve().parent
 
 # App Store の「ヘッダと検索結果」の画像。寸法と、見せたいものを収める領域（art safe area）は
 # https://developer.apple.com/help/app-store-connect/reference/app-information/creative-assets-specifications （2026-11-24 確認）。
-# 見出しは safe area に、端末は外側の領域に置く。外側は端末の画面の向きによって切れる。
+# 見出しは safe area の中央に、端末は左右に置く。端末と見出しは safe area より大きくしており、
+# 端末の画面の向きによっては端が切れる。phone は端末の高さ、text は見出しの高さの上限（どちらもキャンバスの高さに対する比）。
 PLACEMENTS = {
-    "header": {"size": (3840, 1646), "safe": (1097, 493, 1646, 661)},
-    "search_results": {"size": (3840, 2560), "safe": (836, 765, 2168, 1030)},
-    "universal": {"size": (5244, 2950), "safe": (1921, 660, 1402, 962)},
+    "header": {"size": (3840, 1646), "safe": (1097, 493, 1646, 661), "phone": 0.88, "text": 0.62},
+    "search_results": {"size": (3840, 2560), "safe": (836, 765, 2168, 1030), "phone": 0.88, "text": 0.36},
+    "universal": {"size": (5244, 2950), "safe": (1921, 660, 1402, 962), "phone": 0.8, "text": 0.38},
 }
+MARGIN = 0.02
 
 IPHONE = {
     "bezel": "bezel_iphone_18_pro_black_portrait.png",
@@ -70,23 +72,25 @@ def render(placement: str, screenshots: Path, fixtures: Path, source: Path) -> I
     text, _ = extract_text(pixels, render_gradient(coefficients, pixels.shape[1], pixels.shape[0]))
     canvas = Image.fromarray(render_gradient(coefficients, width, height).round().astype(np.uint8), "RGB").convert("RGBA")
 
-    # 見出しは safe area の 9 割に収め、中央に置く。
-    scale = min(safe_w * 0.9 / text.width, safe_h * 0.9 / text.height)
-    text = text.resize((round(text.width * scale), round(text.height * scale)), Image.LANCZOS)
-    canvas.alpha_composite(text, (round(safe_x + (safe_w - text.width) / 2), round(safe_y + (safe_h - text.height) / 2)))
-
-    # 端末は safe area の左右に置く。左に EEW、右に強震モニタ、右下の手前に Apple Watch。
-    phone_height = min(height * 0.86, (safe_x * 0.86) / IPHONE["frame"][0] * IPHONE["frame"][1])
+    spec = PLACEMENTS[placement]
+    margin = width * MARGIN
+    phone_height = height * spec["phone"]
     phone_width = IPHONE["frame"][0] * phone_height / IPHONE["frame"][1]
     top = (height - phone_height) / 2
-    left = device_box(IPHONE, (safe_x - phone_width) / 2, top, phone_height)
-    right_x = safe_x + safe_w + (width - safe_x - safe_w - phone_width) / 2
+    left = device_box(IPHONE, margin, top, phone_height)
+    right_x = width - margin - phone_width
     right = device_box(IPHONE, right_x, top, phone_height)
     watch_height = phone_height * 0.42
     watch_width = WATCH["frame"][0] * watch_height / WATCH["frame"][1]
-    # 外側の領域が狭いと Watch が右端からはみ出すため、キャンバスに収める。
-    watch_x = min(right_x + phone_width * 0.62, width * 0.985 - watch_width)
-    watch = device_box(WATCH, watch_x, top + phone_height - watch_height * 0.92, watch_height)
+    watch = device_box(WATCH, width * 0.995 - watch_width, top + phone_height - watch_height * 0.92, watch_height)
+
+    # 見出しは左右の端末の間に収まる最大の大きさにし、safe area の中心に置く。
+    available = right_x - (margin + phone_width) - 2 * margin
+    scale = min(available * 0.92 / text.width, height * spec["text"] / text.height)
+    text = text.resize((round(text.width * scale), round(text.height * scale)), Image.LANCZOS)
+    center_y = safe_y + safe_h / 2
+    canvas.alpha_composite(text, (round((width - text.width) / 2), round(center_y - text.height / 2)))
+
     draw_device(canvas, left, screenshots / "eew_warning.png", fixtures)
     draw_device(canvas, right, screenshots / "kyoshin_monitor.png", fixtures)
     if (screenshots / "watch_live_activity.png").is_file():
