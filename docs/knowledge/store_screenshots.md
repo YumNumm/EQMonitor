@@ -71,6 +71,8 @@ Figma のデザインは iPhone の縦長（1290×2796）しか無い。別の�
   画面は `primary`（外側、1398×2034）と `primary-1`（内側）。内側は `UI Orientation: Landscape Left` で起動し、`simctl io --display=primary-1 screenshot` は 2853×2007 になる。アプリも横向きで描かれる。
 - テストに `--dart-define=STORE_SCREENSHOT_FOLD_POSTURE=open|closed` を渡すと、`$.platform.ios.setFoldPosture` で開閉する（Patrol 4.11.0 では実験的。`patrol test` の host サーバー経由）。
   `capture.py --ios-display primary-1`（開いた状態）/ `primary`（閉じた状態）で撮る画面を選ぶ。
+- App Store Connect の表示種別は `APP_IPHONE_DUO` の 1 つで、外側と内側の寸法を同じセットに混ぜて入れる（2026-11-24 に外側 4 枚・内側 3 枚を登録し、どれも `COMPLETE` になった）。
+  公式ドキュメントの `ScreenshotDisplayType` の一覧には載っていない。存在しない値で `appScreenshotSets` を作ろうとしたときのエラーに、受け付ける値の一覧が出る。
 - 内側（横向き）では通知センターを開く操作が効かず、重大な通知のバナーが残ったまま撮れた。内側は通知のページを外した 3 枚にしている。
 - 内側では地震履歴が一覧と詳細の 2 画面になる。`earthquake_history_list` のシーンは、一覧の幅が画面の 7 割以下なら、地震詳細と同じ地震を一覧から選んでから撮る。
   空欄の案内（`一覧から表示する情報を選択してください`）は Patrol の文字の検索で見つからなかった。一覧を送るときは、絞り込みのチップの横の Scrollable を避けて縦の Scrollable を指定する。

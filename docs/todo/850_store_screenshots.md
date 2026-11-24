@@ -42,7 +42,7 @@
 ## 650: iPhone Duo
 
 - [x] 外側・内側の画面で撮り、背景と枠を作って合成する（`layout_duo_outer.json` / `layout_duo_inner.json`、2026-11-24 に手元で生成）。
-- [ ] App Store Connect に iPhone Duo のスクリーンショットを登録する。2027 年 4 月から iOS 27.1 SDK 以降で必須。
+- [x] App Store Connect に iPhone Duo のスクリーンショットを登録する（2026-11-24、iOS 3.1.0・日本語、外側 4 枚・内側 3 枚）。2027 年 4 月から iOS 27.1 SDK 以降で必須。
 - [ ] 内側（横向き）で通知センターを撮る。`openNotifications()` と `closeHeadsUpNotification()` が横向きで効かなかった。
 - [ ] 枠を Apple Design Resources の `Bezel-iPhone-Duo.dmg` に差し替えるか決める（使用許諾への同意が必要）。
 - [ ] Figma に Duo 用のフレームを作るか決める。現在は既存の背景から `derive_background.py` で作っている。
@@ -51,6 +51,7 @@
 ## 600: Android とストアへの反映
 
 - [x] Google Play 用の合成（長辺が短辺の 2 倍以下、1290×2560）を追加する。Figma のデザインは無く、iOS の背景の上側を切り出している。
+- [ ] Google Play の電話のスクリーンショットを差し替える（合成は済み、未登録）。手元には Google Play の API の認証情報が無く、デプロイ用のサービスアカウントは GitHub Actions の Workload Identity からしか使っていない。
 - [ ] CI の Android の撮影を Pixel 11 Pro 相当（1280×2856）にする。現在は `pixel_6` / API 35。runner の cmdline-tools 16.0 に `pixel_10_pro` があるかは未確認。
 - [ ] App Store Connect / Google Play へのアップロードを自動化するか決める。現在は artifact の生成まで。
   2026-11-24 に iOS 3.1.0・日本語の iPhone 6.7 / 6.5 / 5.5 インチの各 4 枚を、手元で合成した画像（通知＋Apple Watch、履歴一覧＋詳細を含む版）へ App Store Connect API で手動で差し替えた。iPad は古いまま。
