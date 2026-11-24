@@ -1,4 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
+import 'package:eqmonitor/core/theme/model/intensity_color_entry.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/estimated_intensity_dem_color_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
@@ -110,59 +114,160 @@ class const _ColoringPicker({
       spacing: spacing.xs,
       children: [
         Text(
-          '色分け',
+          '震度配色',
           style: designSystem.typography.labelMedium.copyWith(
             color: designSystem.colorTheme.onSurfaceVariant,
           ),
         ),
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: .stretch,
-            spacing: spacing.sm,
-            children: [
-              for (final option in options)
-                Expanded(
-                  child: _ColoringTile(
-                    title: option.title,
-                    caption: option.caption,
+        Column(
+          crossAxisAlignment: .stretch,
+          spacing: spacing.sm,
+          children: [
+            for (final option in options)
+              _ColoringTile(
+                title: option.title,
+                caption: option.caption,
+                preview: switch (option.displayMode) {
+                  .intensityClass => _ClassPreview(colors: classColors),
+                  .tenth => _ScalePreview(
                     colors: EstimatedIntensityDemColorResolver(
                       displayMode: option.displayMode,
                       palette: option.palette,
                       classColors: classColors,
                       kyoshinColorMap: kyoshinColorMap,
                     ).scaleColors(),
-                    selected:
-                        details.estimatedIntensityDemDisplayMode ==
-                            option.displayMode &&
-                        details.estimatedIntensityDemPalette == option.palette,
-                    onTap: enabled
-                        ? () => HapticUtil.selection(
-                            () => EarthquakeHistoryConfigNotifier
-                                .saveDetailsMutation
-                                .run(
-                                  ref,
-                                  (tsx) => tsx
-                                      .get(
-                                        earthquakeHistoryConfigProvider
-                                            .notifier,
-                                      )
-                                      .saveDetails(
-                                        details.copyWith(
-                                          estimatedIntensityDemDisplayMode:
-                                              option.displayMode,
-                                          estimatedIntensityDemPalette:
-                                              option.palette,
-                                        ),
-                                      ),
-                                ),
-                          )
-                        : null,
                   ),
-                ),
-            ],
-          ),
+                },
+                selected:
+                    details.estimatedIntensityDemDisplayMode ==
+                        option.displayMode &&
+                    details.estimatedIntensityDemPalette == option.palette,
+                onTap: enabled
+                    ? () => HapticUtil.selection(
+                        () => EarthquakeHistoryConfigNotifier
+                            .saveDetailsMutation
+                            .run(
+                              ref,
+                              (tsx) => tsx
+                                  .get(
+                                    earthquakeHistoryConfigProvider.notifier,
+                                  )
+                                  .saveDetails(
+                                    details.copyWith(
+                                      estimatedIntensityDemDisplayMode:
+                                          option.displayMode,
+                                      estimatedIntensityDemPalette:
+                                          option.palette,
+                                    ),
+                                  ),
+                            ),
+                      )
+                    : null,
+              ),
+          ],
         ),
       ],
+    );
+  }
+}
+
+const _previewHeight = 28.0;
+
+class const _ScalePreview({required final List<Color> colors})
+    extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          for (final color in colors) ...[color, color],
+        ],
+        stops: [
+          for (var index = 0; index < colors.length; index++) ...[
+            index / colors.length,
+            (index + 1) / colors.length,
+          ],
+        ],
+      ),
+    ),
+  );
+}
+
+class const _ClassPreview({required final EstimatedIntensityColors colors})
+    extends StatelessWidget {
+  static const _levels = <JmaIntensity>[
+    .four,
+    .fiveLower,
+    .fiveUpper,
+    .sixLower,
+    .sixUpper,
+    .seven,
+  ];
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final fontSize = (constraints.maxWidth / _levels.length * 0.55).clamp(
+        6.0,
+        16.0,
+      );
+      return Row(
+        children: [
+          for (final level in _levels)
+            Expanded(
+              child: _ClassPreviewCell(
+                intensity: level,
+                entry: colors.fromJmaIntensity(level),
+                fontSize: fontSize,
+              ),
+            ),
+        ],
+      );
+    },
+  );
+}
+
+class const _ClassPreviewCell({
+  required final JmaIntensity intensity,
+  required final IntensityColorEntry entry,
+  required final double fontSize,
+}) extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final foreground = entry.resolvedForeground;
+    return ColoredBox(
+      color: entry.background,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 3),
+        child: FittedBox(
+          fit: .scaleDown,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: intensity.mainText,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: .bold,
+                    fontFamily: FontFamily.googleSansCode,
+                  ),
+                ),
+                TextSpan(
+                  text: intensity.suffix,
+                  style: TextStyle(
+                    fontSize: fontSize * 0.6,
+                    fontWeight: .bold,
+                    fontFamily: FontFamily.googleSansCode,
+                    fontFamilyFallback: const [FontFamily.notoSansJP],
+                  ),
+                ),
+              ],
+              style: TextStyle(color: foreground, height: 1),
+            ),
+            textScaler: TextScaler.noScaling,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -170,12 +275,10 @@ class const _ColoringPicker({
 class const _ColoringTile({
   required final String title,
   required final String caption,
-  required final List<Color> colors,
+  required final Widget preview,
   required final bool selected,
   required final VoidCallback? onTap,
 }) extends StatelessWidget {
-  static const _previewHeight = 20.0;
-
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -203,49 +306,39 @@ class const _ColoringTile({
           onTap: onTap,
           child: Padding(
             padding: EdgeInsets.all(spacing.sm),
-            child: Column(
-              crossAxisAlignment: .start,
+            child: Row(
+              spacing: spacing.md,
               children: [
-                SizedBox(
-                  height: _previewHeight,
-                  width: double.infinity,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(spacing.xs),
-                      gradient: LinearGradient(
-                        colors: [
-                          for (final color in colors) ...[color, color],
-                        ],
-                        stops: [
-                          for (
-                            var index = 0;
-                            index < colors.length;
-                            index++
-                          ) ...[
-                            index / colors.length,
-                            (index + 1) / colors.length,
-                          ],
-                        ],
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    children: [
+                      Text(
+                        title,
+                        style: typography.labelMedium.copyWith(
+                          fontWeight: .bold,
+                          color: selected
+                              ? colorTheme.onSecondaryContainer
+                              : colorTheme.onSurface,
+                        ),
                       ),
-                    ),
+                      Text(
+                        caption,
+                        style: typography.labelSmall.copyWith(
+                          color: selected
+                              ? colorTheme.onSecondaryContainer
+                              : colorTheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: spacing.sm),
-                Text(
-                  title,
-                  style: typography.labelMedium.copyWith(
-                    fontWeight: .bold,
-                    color: selected
-                        ? colorTheme.onSecondaryContainer
-                        : colorTheme.onSurface,
-                  ),
-                ),
-                Text(
-                  caption,
-                  style: typography.labelSmall.copyWith(
-                    color: selected
-                        ? colorTheme.onSecondaryContainer
-                        : colorTheme.onSurfaceVariant,
+                Expanded(
+                  flex: 3,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(spacing.xs),
+                    child: SizedBox(height: _previewHeight, child: preview),
                   ),
                 ),
               ],

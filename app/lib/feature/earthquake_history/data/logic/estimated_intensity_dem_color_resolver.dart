@@ -25,14 +25,17 @@ class const EstimatedIntensityDemColorResolver({
       < 65 => classColors.sixUpper,
       _ => classColors.seven,
     }.background,
-    (.tenth, .intensityGradient) =>
-      const EstimatedIntensityScaleColorResolver().resolve(tenths: tenths),
+    (.tenth, .intensityGradient) => EstimatedIntensityScaleColorResolver(
+      colors: classColors,
+    ).resolve(tenths: tenths),
     (.tenth, .kyoshinMonitor) =>
       minBy(
             kyoshinColorMap,
             (entry) => ((entry.intensity * 10).round() - tenths).abs(),
           )?.color ??
-          const EstimatedIntensityScaleColorResolver().resolve(tenths: tenths),
+          EstimatedIntensityScaleColorResolver(
+            colors: classColors,
+          ).resolve(tenths: tenths),
   };
 
   List<Color> scaleColors() => [

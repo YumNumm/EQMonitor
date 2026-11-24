@@ -9,7 +9,6 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/estimated_intensity_dem_color_resolver.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/logic/estimated_intensity_scale_color_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_dem_palette.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
@@ -40,41 +39,17 @@ class const EarthquakeHistoryMapLegend({
     return switch ((displayMode, estimatedIntensityScalePalette)) {
       (.jma, _) => _JmaLegend(intensity: intensity),
       (.lpgm, _) => _LpgmLegend(intensity: intensity),
-      (.estimated, .intensityGradient) =>
-        const _EstimatedIntensityScaleLegend(),
-      (.estimated, .kyoshinMonitor) =>
-        const _EstimatedIntensityKyoshinScaleLegend(),
+      (.estimated, final palette?) => _EstimatedIntensityScaleBarLegend(
+        palette: palette,
+      ),
       (.estimated, null) => const _JmaLegend(estimated: true),
     };
   }
 }
 
-class const _EstimatedIntensityScaleLegend() extends StatelessWidget {
-  static const stepTenths = 5;
-
-  @override
-  Widget build(BuildContext context) {
-    const resolver = EstimatedIntensityScaleColorResolver();
-    final first = EstimatedIntensityScaleColorResolver.anchors.first.$1;
-    final last = EstimatedIntensityScaleColorResolver.anchors.last.$1;
-    return _AnimatedLegend(
-      label: '計測震度',
-      entries: [
-        for (var tenths = last; tenths >= first; tenths -= stepTenths)
-          (
-            label: (tenths / 10).toStringAsFixed(1),
-            borderRadius: BorderRadius.circular(_legendIconSize / 4),
-            icon: SizedBox.square(
-              dimension: _legendIconSize,
-              child: ColoredBox(color: resolver.resolve(tenths: tenths)),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class const _EstimatedIntensityKyoshinScaleLegend() extends ConsumerWidget {
+class const _EstimatedIntensityScaleBarLegend({
+  required final EstimatedIntensityDemPalette palette,
+}) extends ConsumerWidget {
   static const _barWidth = 144.0;
   static const _barHeight = 8.0;
   static const _tickTenths = [40, 50, 60, 70];
@@ -86,7 +61,7 @@ class const _EstimatedIntensityKyoshinScaleLegend() extends ConsumerWidget {
     final spacing = designSystem.spacing;
     final colors = EstimatedIntensityDemColorResolver(
       displayMode: .tenth,
-      palette: .kyoshinMonitor,
+      palette: palette,
       classColors: colorTheme.estimatedIntensity,
       kyoshinColorMap: ref.watch(kyoshinColorMapProvider),
     ).scaleColors();
@@ -113,7 +88,11 @@ class const _EstimatedIntensityKyoshinScaleLegend() extends ConsumerWidget {
     labelPainter.dispose();
 
     return Semantics(
-      label: '計測震度の凡例、強震モニタの配色、3.5から7.0',
+      label:
+          '計測震度の凡例、${switch (palette) {
+            .intensityGradient => '震度配色のグラデーション',
+            .kyoshinMonitor => '強震モニタの配色',
+          }}、3.5から7.0',
       child: ExcludeSemantics(
         child: Container(
           padding: EdgeInsets.symmetric(
@@ -135,10 +114,10 @@ class const _EstimatedIntensityKyoshinScaleLegend() extends ConsumerWidget {
                 size: Size(
                   _barWidth + labelSize.width,
                   _barHeight +
-                      _KyoshinScaleLegendPainter.labelOffset +
+                      _ScaleBarLegendPainter.labelOffset +
                       labelSize.height,
                 ),
-                painter: _KyoshinScaleLegendPainter(
+                painter: _ScaleBarLegendPainter(
                   colors: colors,
                   barRect: Rect.fromLTWH(
                     labelSize.width / 2,
@@ -160,7 +139,7 @@ class const _EstimatedIntensityKyoshinScaleLegend() extends ConsumerWidget {
   }
 }
 
-class const _KyoshinScaleLegendPainter({
+class const _ScaleBarLegendPainter({
   required final List<Color> colors,
   required final Rect barRect,
   required final List<int> tickTenths,
@@ -219,7 +198,7 @@ class const _KyoshinScaleLegendPainter({
   }
 
   @override
-  bool shouldRepaint(covariant _KyoshinScaleLegendPainter oldDelegate) =>
+  bool shouldRepaint(covariant _ScaleBarLegendPainter oldDelegate) =>
       !const ListEquality<Color>().equals(colors, oldDelegate.colors) ||
       barRect != oldDelegate.barRect ||
       tickTenths != oldDelegate.tickTenths ||
