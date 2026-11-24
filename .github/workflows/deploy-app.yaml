@@ -355,7 +355,6 @@ jobs:
 
       - name: Resolve dependencies
         working-directory: app
-        # patrol など dev_dependencies のプラグインを release バイナリに載せない。
         run: flutter pub get --no-dev --enforce-lockfile
 
       # Bundle the signed R2 pack as the immutable default and refresh the
