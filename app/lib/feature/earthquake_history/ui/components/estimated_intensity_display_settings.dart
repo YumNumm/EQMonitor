@@ -114,7 +114,7 @@ class const _ColoringPicker({
       spacing: spacing.xs,
       children: [
         Text(
-          '色分け',
+          '震度配色',
           style: designSystem.typography.labelMedium.copyWith(
             color: designSystem.colorTheme.onSurfaceVariant,
           ),
