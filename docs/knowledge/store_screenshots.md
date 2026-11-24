@@ -58,12 +58,16 @@ FIGMA_TOKEN=<token> mise exec -- uv run tool/store_screenshots/figma_extract.py 
 Figma のデザインは iPhone の縦長（1290×2796）しか無い。別の縦横比は、既存の背景と自前で描いた枠から作る。
 
 - `derive_background.py`: 既存の背景から線形グラデーションを最小二乗で推定し、白い見出し・ロゴを (画素 - 地) / (白 - 地) で抜き出して新しい寸法に置き直す。
-  同じ寸法で作り直すと元との平均差は約 2%。見出しの大きさは元の幅に対する比率（`--text-scale` で調整）。
+  同じ寸法で作り直すと元との平均差は 0.1/255 未満。見出しの大きさは元の幅に対する比率（`--text-scale` で調整）。
+  横位置は元の中心からのずれ（「 で始まる見出しは字面が右に寄る）を拡大して保つ。
+  元の背景は 3 色のグラデーションで、線形の推定とは左上の隅で白の割合にして最大 0.03 ずれる。抜き出しの下限（`TEXT_ALPHA_FLOOR`）を 0.05 にして、このずれを見出しとして拾わないようにしている。
+  2026-11-24 までの下限 0.02 では切り出す範囲が隅まで広がり、Duo と iPad の見出しが 45〜118px 右にずれていた（ヘッダ・検索結果には薄い縞が出ていた）。
 - `generate_frame.py`: 画面の寸法から黒い端末の枠を描く（画面は透明、カメラの穴とボタンは任意）。生成物は `frames/` に置き、`compose.py` は fixture に無い枠を `frames/` から読む。
   Apple Design Resources に `Bezel-iPhone-Duo.dmg` があるが、取得していない（ダウンロードと使用許諾への同意が必要）。
 - `layout_*.json` の `backgroundCrop` で背景の一部を切り出せる。
-- 生成した画像（プロダクトページ、Duo、iPad、Android）は Figma の Section `Store Screenshot（生成済み）`（`2149:447`、`iOS Store Screenshot` の右）に原寸の 1/2 の枠で貼ってある（2026-11-24）。
-  見比べるための写しで、合成の入力ではない。画像を作り直したときは手で貼り直す。
+- 生成した画像（プロダクトページ、Duo、iPad、Android）は Figma の Section `Store Screenshot`（`2149:447`、`iOS Store Screenshot` の右）に、合成と同じ配置のレイヤーで原寸の 1/2 の枠に組んである（2026-11-24）。
+  背景のグラデーションと見出し（ロゴを含む）は元デザインの frame から複製して拡大縮小し、画面と端末は画像のレイヤー。黒の iPhone 18 Pro と Apple Watch の端末画像（暗号化している fixture）もこのファイルに置いた。
+  Figma の書き出しと PNG を半分の大きさで比べ、見出しの位置が 1px 以内、全体のずれが無いことを確かめた。合成の入力ではないため、配置を変えたら Figma MCP で組み直す。
 
 ### iPhone Duo
 
@@ -101,8 +105,10 @@ mise exec -- uv run tool/store_screenshots/compose.py --layout tool/store_screen
 - [App Store Connect の仕様](https://developer.apple.com/help/app-store-connect/reference/app-information/creative-assets-specifications)（2026-11-24 確認）:
   ヘッダ 21:9 3840×1646（PNG、見せたいものを収める領域は x 1097, y 493 から 1646×661）、検索結果 3:2 1920×1280〜3840×2560（領域は 3840×2560 のとき x 836, y 765 から 2168×1030）、
   両方に使える 16:9 5244×2950（PNG、領域は x 1921, y 660 から 1402×962）もあるが作っていない。透過は使えない。
-- `creative_assets.py` がヘッダと検索結果の 2 種を作る。ロゴと見出しを 01 の背景から抜き出して領域の中央に置き、左右に iPhone（EEW・強震モニタ）と Apple Watch を置く。
-  見出しと端末は見やすさを優先して領域より大きくしているため、端末の画面の向きによっては端が切れる。登録時のプレビューで確かめる。
+- `creative_assets.py` がヘッダと検索結果の 2 種を作る。入力は iPhone の `eew_warning`・`kyoshin_monitor`・`earthquake_detail`・`lock_screen_live_activity`（と任意の `watch_live_activity`）。
+  iPhone は左から地震詳細・EEW・ロック画面・強震モニタの 4 台で、外側の 2 台（詳細・強震モニタ）を奥の上、内側の 2 台を手前の下に置き、右下の手前に Apple Watch を置く。奥の端末は半分ほど手前に隠れる。
+  ロゴと見出しは 01 の背景から抜き出し、ヘッダでは手前の 2 台の間で領域の中央、検索結果では手前の端末より上（奥の 2 台の間）に置く。
+  検索結果の見出しは領域の外にあり、端末も領域より大きいため、画面の向きによっては端が切れる。登録時のプレビューで確かめる。
 
 ### Android（Pixel 11 Pro）
 

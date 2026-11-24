@@ -45,7 +45,7 @@
 - [x] App Store Connect に iPhone Duo のスクリーンショットを登録する（2026-11-24、iOS 3.1.0・日本語、外側 4 枚・内側 3 枚）。2027 年 4 月から iOS 27.1 SDK 以降で必須。
 - [ ] 内側（横向き）で通知センターを撮る。`openNotifications()` と `closeHeadsUpNotification()` が横向きで効かなかった。
 - [ ] 枠を Apple Design Resources の `Bezel-iPhone-Duo.dmg` に差し替えるか決める（使用許諾への同意が必要）。
-- [ ] Figma に Duo 用のフレームを作るか決める。現在は既存の背景から `derive_background.py` で作っている。
+- [ ] Figma に組んだ Duo のレイヤー（`Store Screenshot`）を合成の元にするか決める。現在の合成は既存の背景から `derive_background.py` で作り、Figma は合成に合わせて組んだ写し。
 - [ ] `capture-ios` に Duo の撮影を足す。
 
 ## 640: iPad とプロダクトページの画像
@@ -53,7 +53,8 @@
 - [x] iPad 13 インチの 3 枚を App Store Connect に登録する（2026-11-24、12.9 インチの枠にも縮小版を登録）。
 - [ ] iPad と Duo の内側で通知センターを撮る。重大な通知のバナーが閉じず、通知センターも開かなかった。
 - [ ] iPad のステータスバーの日付を固定する（`--time` に ISO の日時を渡すと日付も変わるが、iPhone のロック画面の日付にも影響しうる）。
-- [ ] プロダクトページのヘッダと検索結果の画像（`creative_assets.py`）を App Store Connect に登録する。Figma のデザインは無く、生成した画像を Figma の `Store Screenshot（生成済み）` に貼ってある。16:9 の共通版は作らない。
+- [ ] プロダクトページのヘッダと検索結果の画像（`creative_assets.py`）を App Store Connect に登録する。元のデザインは無く、合成と同じ配置のレイヤーを Figma の `Store Screenshot` に組んである。16:9 の共通版は作らない。
+- [ ] 見出しのずれを直した Duo（外側 4 枚・内側 3 枚）と iPad（13 インチ・12.9 インチ各 3 枚）を App Store Connect に登録し直す。2026-11-24 に登録した画像は見出しが 45〜118px 右にずれている。
 
 ## 600: Android とストアへの反映
 
