@@ -77,6 +77,10 @@ class ReplayDataParser {
     }
     for (final data in replayData) {
       if (data is List<dynamic>) {
+        final type = data.firstOrNull;
+        if (type is int && !ReplayDataType.values.any((e) => e.value == type)) {
+          continue;
+        }
         result.add(ReplayData.fromMsgPack(data));
       } else {
         throw Exception('Invalid replay data: ${data.runtimeType}');
