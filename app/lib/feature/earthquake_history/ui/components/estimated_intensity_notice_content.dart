@@ -30,7 +30,7 @@ class const EstimatedIntensityNoticeContent({super.key})
         _BulletText(
           '大きな震度の面的な広がり具合やその形状に着目することが重要です。'
           '地震発生直後に応急対応すべき優先箇所の判別や'
-          '避難ルート・避難場所の選定等に活用いただけます。',
+          '避難ルート・避難場所の選定等に活用頂けます。',
           style: theme.textTheme.bodyMedium,
         ),
         const SizedBox(height: 12),

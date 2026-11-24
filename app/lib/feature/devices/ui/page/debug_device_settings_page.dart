@@ -387,7 +387,7 @@ class const _NotificationPermissionSection() extends ConsumerWidget {
     final colorTheme = context.designSystem.colorTheme;
 
     return _SectionCard(
-      title: '通知許可状態（OS）',
+      title: '通知権限状態（OS）',
       trailing: IconButton(
         tooltip: '再取得',
         icon: const Icon(Icons.refresh),

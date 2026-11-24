@@ -18,7 +18,7 @@ class ErrorMessageBuilder {
           {'error': final String errorMsg} => errorMsg,
           {'code': final String code, 'details': final String details} =>
             '$code: $details',
-          _ => '時間をおいてもう一度お試しください。',
+          _ => '時間をおいてもう一度お試しください',
         };
         final statusCode = response.statusCode;
         if (statusCode != null) {
@@ -52,7 +52,7 @@ class ErrorMessageBuilder {
       };
     }
     return 'エラーが発生しました\n'
-        '時間をおいてもう一度お試しください。\n'
+        '時間をおいてもう一度お試しください\n'
         '\n($error)';
   }
 }

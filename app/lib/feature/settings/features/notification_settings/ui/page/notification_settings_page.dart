@@ -772,7 +772,7 @@ class const _GeneralNotificationSettingsSection() extends ConsumerWidget {
         children: [
           InfoNotificationTile(
             title: '北海道・三陸沖後発地震注意情報',
-            subtitleText: '北海道の根室沖から東北地方の三陸沖の巨大地震の想定震源域やその周辺で Mw7.0以上の地震が発生し、大規模地震の発生可能性が平常時より相対的に高まっている際に「北海道・三陸沖後発地震注意情報」を発表 ',
+            subtitleText: '北海道の根室沖から東北地方の三陸沖の巨大地震の想定震源域やその周辺でMw7.0以上の地震が発生し、大規模地震の発生可能性が平常時より相対的に高まっている際に「北海道・三陸沖後発地震注意情報」を発表 ',
             value: settings.vyse60Enabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation

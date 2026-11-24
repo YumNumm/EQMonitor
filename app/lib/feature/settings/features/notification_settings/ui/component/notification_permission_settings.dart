@@ -157,7 +157,7 @@ class const _PermissionTile({
         : '未許可';
     final action = ref.read(notificationPermissionDialogActionProvider);
     return ListTile(
-      title: Text('${kind.label}の許可'),
+      title: Text('${kind.label}権限'),
       subtitle: Text(statusLabel),
       leading: Icon(
         granted ? Icons.check_circle_outline : Icons.notifications_off_outlined,
