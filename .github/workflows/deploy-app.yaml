@@ -845,8 +845,6 @@ jobs:
 
       - name: Resolve dependencies
         working-directory: app
-        # patrol など dev_dependencies のプラグインを GeneratedPluginRegistrant に含めると
-        # release の Java コンパイルで pl.leancode.patrol が見つからず失敗する。
         run: flutter pub get --no-dev --enforce-lockfile
 
       # The same signed R2 pack is embedded in the base AAB as the immutable
