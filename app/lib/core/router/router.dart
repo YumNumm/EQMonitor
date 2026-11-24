@@ -19,6 +19,8 @@ import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_activity_page
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/page/earthquake_history_search_page.dart';
+import 'package:eqmonitor/feature/earthquake_archive/ui/page/earthquake_archive_detail_page.dart';
+import 'package:eqmonitor/feature/earthquake_archive/ui/page/earthquake_archive_list_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_creation_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_library_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_open_page.dart';
@@ -411,6 +413,12 @@ class const TalkerRoute()
         TypedGoRoute<DebugHttpCacheRoute>(path: 'http-cache'),
         TypedGoRoute<DebugReplayCreationRoute>(path: 'replay-creation'),
         TypedGoRoute<DebugReplayLibraryRoute>(path: 'replay-library'),
+        TypedGoRoute<DebugEarthquakeArchiveListRoute>(
+          path: 'earthquake-archives',
+          routes: [
+            TypedGoRoute<DebugEarthquakeArchiveDetailRoute>(path: ':eventId'),
+          ],
+        ),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
         TypedGoRoute<DebugTelemetryRoute>(path: 'telemetry'),
       ],
@@ -849,6 +857,24 @@ class const DebugReplayLibraryRoute()
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const ReplayLibraryPage();
+  }
+}
+
+class const DebugEarthquakeArchiveListRoute()
+    extends GoRouteData
+    with $DebugEarthquakeArchiveListRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const EarthquakeArchiveListPage();
+  }
+}
+
+class const DebugEarthquakeArchiveDetailRoute({required final String eventId})
+    extends GoRouteData
+    with $DebugEarthquakeArchiveDetailRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return EarthquakeArchiveDetailPage(eventId: eventId);
   }
 }
 

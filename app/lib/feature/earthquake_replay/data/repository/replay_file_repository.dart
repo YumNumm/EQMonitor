@@ -32,16 +32,19 @@ class const ReplayFileRepository({
 
   Future<LoadedReplayDocument> loadDocument({required Uri source}) async {
     final document = await dataSource.read(source: source);
+    final file = await parse(bytes: document.bytes, name: document.name);
+    return (file: file, name: document.name, bytes: document.bytes);
+  }
+
+  Future<ReplayFile> parse({
+    required Uint8List bytes,
+    required String name,
+  }) async {
     final parser = ReplayDataParser();
     try {
-      final file = await compute(parser.parse, document.bytes);
-      return (file: file, name: document.name, bytes: document.bytes);
+      return await compute(parser.parse, bytes);
     } on Object catch (error, stackTrace) {
-      talker.error(
-        '[Replay] failed to parse ${document.name}',
-        error,
-        stackTrace,
-      );
+      talker.error('[Replay] failed to parse $name', error, stackTrace);
       throw const ReplayFileException(.invalidFormat);
     }
   }

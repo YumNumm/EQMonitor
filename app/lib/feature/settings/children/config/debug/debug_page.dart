@@ -198,6 +198,14 @@ class const _ReplaySection() extends ConsumerWidget {
                     icon: const Icon(Icons.folder_open_rounded),
                     label: const Text('保存済みから再生・ファイルを追加'),
                   ),
+                  FilledButton.tonalIcon(
+                    onPressed: () async =>
+                        const DebugEarthquakeArchiveListRoute().push<void>(
+                          context,
+                        ),
+                    icon: const Icon(Icons.cloud_download_rounded),
+                    label: const Text('地震アーカイブから取得'),
+                  ),
                 ],
               ),
             ],

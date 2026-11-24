@@ -73,6 +73,14 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 - 緊急地震速報の履歴の「シミュレーション再生」は、同じ地図の右上のボタンにまとめている。
 - 作成画面で名前とフォルダを指定できる。空欄の場合、名前は `eqmonitor_<開始時刻>_<秒数>s.eqrp`、フォルダは開始時刻（JST）の `年/月`（例: `2026/11`）にする。
 
+## 地震アーカイブからの取得
+
+- デバッグメニューのリプレイのカードにある「地震アーカイブから取得」（`EarthquakeArchiveListPage`）で、バックエンドが毎時作る地震ごとの EQRP を一覧・取得する。仕様はバックエンドの `docs/earthquake-archive.md`。
+- API は admin 専用（`/v2/admin/earthquake-archives`）。デバイスの役割ではなく Better Auth のユーザーの `role` で判定するため、admin のアカウントでログインしている必要がある。
+- 呼び出しは `UserApiGateway`（Better Auth の JWT を付け、401 なら 1 回だけ取り直す）を使う。ファイルは `getBytes` で `/file` から取る。保存先は外から開けないため、API が中継する。
+- 取得したファイルは EQRP として読めた場合だけ、ヘッダの開始時刻の `年/月` に保存する（`ReplayLibraryRepository.saveDownloaded`）。「保存して再生」はそのまま `/replay/open` へ進む。
+- 一覧と詳細には、フレームの種類ごとの件数・容量・時刻の範囲を出す。1004（地震情報）と 1005（K-NET/KiK-net 波形）は再生では読み飛ばす。
+
 ## 保存と管理
 
 - 保存先はアプリの `Documents/replay/`。iOS は `UIFileSharingEnabled` を設定していないため Files アプリからは見えない。`Documents/Inbox` は読み込み後に削除する対象のため使わない。
