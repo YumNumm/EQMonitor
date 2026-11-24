@@ -213,7 +213,7 @@ class const ReplayLibraryAction() {
       context: context,
       builder: (context) => AlertDialog.adaptive(
         title: const Text('削除'),
-        content: Text('$targetを削除しますか？'),
+        content: Text('$targetを削除しますか?'),
         actions: [
           M3ETextButton(
             onPressed: () => Navigator.of(context).pop(false),

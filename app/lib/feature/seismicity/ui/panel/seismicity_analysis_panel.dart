@@ -30,7 +30,7 @@ class const SeismicityAnalysisPanel({
           ),
           const TabBar(
             tabs: [
-              Tab(text: 'M-T図'),
+              Tab(text: 'M-T 図'),
               Tab(text: '積算/ヒストグラム'),
               Tab(text: '深さ断面'),
             ],

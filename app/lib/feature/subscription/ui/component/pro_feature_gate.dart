@@ -19,7 +19,7 @@ class const ProFeatureGate({
     final prompt = Card.outlined(
       child: LockedSettingTile(
         title: title,
-        subtitle: 'EQMonitor Proにアップグレードして利用できます',
+        subtitle: 'EQMonitor Pro にアップグレードして利用できます',
         locked: true,
         onTap: () => const ProUpgradeDialogAction().show(context),
       ),

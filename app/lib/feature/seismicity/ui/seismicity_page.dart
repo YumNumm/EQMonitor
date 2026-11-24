@@ -92,7 +92,7 @@ class const SeismicityPage({super.key}) extends HookConsumerWidget {
               exception: error is HypocenterApiException
                   ? error
                   : const HypocenterApiException(
-                      message: 'PMTilesを確認できませんでした',
+                      message: 'PMTiles を確認できませんでした',
                     ),
             ),
           );

@@ -147,8 +147,8 @@ class const _WaitingBanner({
       backgroundColor: colorTheme.tertiaryContainer,
       foregroundColor: colorTheme.onTertiaryContainer,
       message: seconds > 0
-          ? '${error.userMessage}。$seconds 秒後に再試行します…'
-          : '${error.userMessage}。再試行しています…',
+          ? '${error.userMessage}。$seconds 秒後に再試行します...'
+          : '${error.userMessage}。再試行しています...',
     );
   }
 }

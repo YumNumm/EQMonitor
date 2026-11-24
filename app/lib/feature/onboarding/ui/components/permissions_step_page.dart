@@ -71,7 +71,7 @@ class const _PermissionsStepPage({
             error: error,
             stackTrace: stackTrace,
             suffixMessage: error is TimeoutException
-                ? '端末から権限の確認結果が返りませんでした。再試行してください。'
+                ? 'デバイスから権限の確認結果が返りませんでした。もう一度お試しください。'
                 : null,
             onReload: () =>
                 HapticUtil.light(() => ref.invalidate(permissionProvider)),
@@ -106,7 +106,7 @@ class const _PermissionsStepPage({
                   SizedBox(height: designSystem.spacing.md),
                   _PermissionActionCard(
                     title: '重大な通知を許可',
-                    description: '現在地を警報地域とする緊急地震速報(警報)が発表されたときに、おやすみモードやマナーモードを無視して強制的に通知を配信します。',
+                    description: '現在地を警報地域とする緊急地震速報(警報)が発表された時に、おやすみモードやマナーモードを無視して強制的に通知を配信します。',
                     isGranted: state.isCriticalAlertGranted,
                     isSkipped: isCriticalAlertSkipped.value,
                     isEnabled: !isProcessing && state.isNotificationGranted,
@@ -129,12 +129,12 @@ class const _PermissionsStepPage({
                     color: designSystem.colorTheme.onSurfaceVariant,
                   ),
                   children: [
-                    const TextSpan(text: '端末の位置情報を利用して、適した通知をお知らせします。\n'),
+                    const TextSpan(text: 'デバイスの位置情報を利用して、適した通知をお知らせします。\n'),
                     WidgetSpan(
                       alignment: .baseline,
                       baseline: .alphabetic,
                       child: _InlineTextLink(
-                        label: 'EQMonitorにおける位置情報の扱い方',
+                        label: 'EQMonitor における位置情報の扱い方',
                         onTap: () => openWebView(title: '位置情報の扱い方'),
                       ),
                     ),

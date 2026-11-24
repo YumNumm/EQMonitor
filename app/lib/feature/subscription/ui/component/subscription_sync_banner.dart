@@ -49,8 +49,8 @@ class const SubscriptionSyncBanner({
         '購入情報を反映しています。しばらくお待ちください...',
       SubscriptionSyncPhase.pending => '購入情報の反映に時間がかかっています。',
       SubscriptionSyncPhase.authenticationRequired =>
-        'デバイスの認証を確認できません。デバイス登録を確認して再試行してください。',
-      _ => '購入情報を確認できませんでした。通信状況を確認して再試行してください。',
+        'デバイスの認証を確認できません。デバイス登録を確認して、もう一度お試しください。',
+      _ => '購入情報を確認できませんでした。通信状況を確認して、もう一度お試しください。',
     };
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;

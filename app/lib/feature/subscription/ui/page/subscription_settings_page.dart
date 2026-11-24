@@ -35,7 +35,9 @@ class const SubscriptionSettingsPage({super.key}) extends ConsumerWidget {
               error: (error, _) => Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
-                  child: const Text('購読情報を取得できませんでした。通信状況を確認して再試行してください。'),
+                  child: const Text(
+                    'サブスクリプション情報を取得できませんでした。通信状況を確認して、もう一度お試しください。',
+                  ),
                 ),
               ),
               data: (status) => switch (status) {

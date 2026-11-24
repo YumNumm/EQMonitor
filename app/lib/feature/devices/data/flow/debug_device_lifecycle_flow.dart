@@ -121,7 +121,7 @@ class DebugDeviceLifecycleFlow({
           '${messages.kindLabel(kind)} の再送信を開始しました',
         PushTokenForceResyncResult.tokenAbsent => 'トークン未取得のため再送信できません',
         PushTokenForceResyncResult.notApplicable =>
-          '${messages.kindLabel(kind)} はこの端末では非対応です',
+          '${messages.kindLabel(kind)} はこのデバイスでは非対応です',
       };
       messenger.showSnackBar(SnackBar(content: Text(message)));
     } on Object catch (error) {
