@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/data/network/native_dio_factory.dart';
@@ -10,6 +11,7 @@ import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/auth_session_notifier.dart';
 import 'package:eqmonitor/feature/auth/data/provider/user_jwt_provider.dart';
+import 'package:eqmonitor/feature/auth/data/repository/user_bytes_request_executor.dart';
 import 'package:eqmonitor/feature/auth/data/repository/user_json_request_executor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -41,6 +43,8 @@ abstract interface class UserApiGateway {
     required String path,
     Map<String, dynamic>? queryParameters,
   });
+
+  Future<Result<Uint8List, AuthFailure>> getBytes({required String path});
 }
 
 final class const UserApiClient({
@@ -62,11 +66,34 @@ final class const UserApiClient({
     queryParameters: queryParameters,
   );
 
+  @override
+  Future<Result<Uint8List, AuthFailure>> getBytes({required String path}) =>
+      authorized(
+        request: (jwt) => const UserBytesRequestExecutor().perform(
+          dio: _dio,
+          path: path,
+          jwt: jwt,
+        ),
+      );
+
   Future<Result<Map<String, dynamic>, AuthFailure>> requestJson({
     required String method,
     required String path,
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? data,
+  }) => authorized(
+    request: (jwt) => const UserJsonRequestExecutor().perform(
+      dio: _dio,
+      method: method,
+      path: path,
+      jwt: jwt,
+      queryParameters: queryParameters,
+      data: data,
+    ),
+  );
+
+  Future<Result<T, AuthFailure>> authorized<T>({
+    required Future<Result<T, AuthFailure>> Function(String jwt) request,
   }) async {
     final initialJwt = await _jwtProvider.getValidJwt();
     if (initialJwt case Failure(:final exception, :final stackTrace)) {
@@ -75,14 +102,7 @@ final class const UserApiClient({
       }
       return Failure(exception, stackTrace);
     }
-    final first = await const UserJsonRequestExecutor().perform(
-      dio: _dio,
-      method: method,
-      path: path,
-      jwt: initialJwt.unwrap(),
-      queryParameters: queryParameters,
-      data: data,
-    );
+    final first = await request(initialJwt.unwrap());
     if (first case Failure(:final exception)
         when exception.kind == AuthFailureKind.unauthorized) {
       final refreshedJwt = await _jwtProvider.getValidJwt(forceRefresh: true);
@@ -95,14 +115,7 @@ final class const UserApiClient({
         }
         return Failure(exception, stackTrace);
       }
-      final retry = await const UserJsonRequestExecutor().perform(
-        dio: _dio,
-        method: method,
-        path: path,
-        jwt: refreshedJwt.unwrap(),
-        queryParameters: queryParameters,
-        data: data,
-      );
+      final retry = await request(refreshedJwt.unwrap());
       if (retry case Failure(:final exception)
           when exception.kind == AuthFailureKind.unauthorized) {
         await _invalidateSession();

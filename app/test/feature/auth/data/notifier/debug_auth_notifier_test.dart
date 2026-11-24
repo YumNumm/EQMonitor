@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
@@ -720,4 +721,8 @@ final class ControlledUserApiGateway({
     required String path,
     Map<String, dynamic>? queryParameters,
   }) => action();
+
+  @override
+  Future<Result<Uint8List, AuthFailure>> getBytes({required String path}) =>
+      throw UnimplementedError();
 }
