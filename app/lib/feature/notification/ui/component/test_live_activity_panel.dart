@@ -52,13 +52,13 @@ class const TestLiveActivityPanel({super.key}) extends HookConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('ライブアクティビティ', style: Theme.of(context).textTheme.titleMedium),
+        Text('Live Activity', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        const Text('緊急地震速報のテスト表示を、この端末のロック画面やDynamic Islandで確認できます。'),
+        const Text('緊急地震速報のテスト表示を、このデバイスのロック画面や Dynamic Island で確認できます。'),
         const SizedBox(height: 12),
         if (status.isLoading) const LinearProgressIndicator(),
         if (status.hasError) ...[
-          const Text('ライブアクティビティの状態を確認できませんでした。'),
+          const Text('Live Activity の状態を確認できませんでした。'),
           TextButton(
             onPressed: busy
                 ? null
@@ -69,7 +69,9 @@ class const TestLiveActivityPanel({super.key}) extends HookConsumerWidget {
           ),
         ] else if (status.hasValue) ...[
           if (!supported)
-            const Text('この端末ではライブアクティビティを利用できません。iOSの対応状況と設定を確認してください。'),
+            const Text(
+              'このデバイスでは Live Activity を利用できません。iOS の対応状況と設定を確認してください。',
+            ),
           if (active) const Text('テストを表示中です'),
           const SizedBox(height: 12),
           Wrap(

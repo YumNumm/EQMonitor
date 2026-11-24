@@ -28,7 +28,7 @@ const notificationChannels = <AndroidNotificationChannel>[
   ),
   AndroidNotificationChannel(
     'eew_low_accuracy_v2',
-    '1点検知・レベル法の低精度EEW',
+    '1点検知・レベル法の低精度 EEW',
     groupId: 'eew',
   ),
   AndroidNotificationChannel(

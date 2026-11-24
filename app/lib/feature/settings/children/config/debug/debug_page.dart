@@ -287,7 +287,7 @@ class const _RealtimeMonitorSection() extends ConsumerWidget {
         ),
         _DebugTile(
           title: '揺れ検知エンジン',
-          subtitle: '端末内検知の有効化・履歴の作り直し・検知パラメータの変更',
+          subtitle: 'デバイス内検知の有効化・履歴の作り直し・検知パラメータの変更',
           icon: Icons.tune_rounded,
           onTap: () async =>
               const DebugShakeDetectionEngineRoute().push<void>(context),
@@ -480,9 +480,9 @@ class const _NetworkSection() extends ConsumerWidget {
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        const _DebugSectionHeader(title: '通信・サーバ'),
+        const _DebugSectionHeader(title: '通信・サーバー'),
         _DebugTile(
-          title: 'サーバ選択',
+          title: 'サーバー選択',
           icon: Icons.dns,
           onTap: () async =>
               const HttpApiEndpointSelectorRoute().push<void>(context),

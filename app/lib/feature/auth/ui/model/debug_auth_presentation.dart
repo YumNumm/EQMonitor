@@ -11,7 +11,7 @@ final class const DebugAuthFailurePresentation() {
     AuthFailureKind.configuration => 'Native認証の設定が完了していません。',
     AuthFailureKind.environmentMismatch => 'ビルドと接続先APIの環境が一致しません。',
     AuthFailureKind.sessionRequired => '先にサインインしてください。',
-    AuthFailureKind.passkeyUnsupported => 'この端末ではPasskeyを利用できません。',
+    AuthFailureKind.passkeyUnsupported => 'このデバイスではPasskeyを利用できません。',
     AuthFailureKind.passkeyDomainAssociation => 'Passkeyのドメイン関連付けを確認してください。',
     AuthFailureKind.passkeyCredentialUnavailable => '利用できるPasskeyがありません。',
     AuthFailureKind.unauthorized => 'セッションが無効です。再度サインインしてください。',
@@ -20,7 +20,7 @@ final class const DebugAuthFailurePresentation() {
     AuthFailureKind.timeout => '認証処理がタイムアウトしました。',
     AuthFailureKind.network => 'ネットワーク接続を確認してください。',
     AuthFailureKind.invalidResponse => '認証サーバーの応答を確認できませんでした。',
-    AuthFailureKind.storage => '端末内のセッション保存に失敗しました。',
+    AuthFailureKind.storage => 'デバイス内のセッション保存に失敗しました。',
     AuthFailureKind.unknown => '認証処理に失敗しました。',
   };
 }

@@ -216,7 +216,7 @@ class const _LoadedContent({
                                   SegmentItem(
                                     value: EarthquakeDataSource
                                         .jmaDisasterInformationXml,
-                                    label: '防災情報XML',
+                                    label: '防災情報 XML',
                                   ),
                                   SegmentItem(
                                     value: EarthquakeDataSource
@@ -278,7 +278,7 @@ class const _LoadedContent({
                                   TextSpan(
                                     text:
                                         'データソース: ${earthquake.dataSources.map((e) => switch (e) {
-                                          EarthquakeDataSource.jmaDisasterInformationXml => '気象庁防災情報XML',
+                                          EarthquakeDataSource.jmaDisasterInformationXml => '気象庁防災情報 XML',
                                           EarthquakeDataSource.jmaIntensityDatabase => '気象庁震度データベース',
                                         }).join(', ')}',
                                   ),

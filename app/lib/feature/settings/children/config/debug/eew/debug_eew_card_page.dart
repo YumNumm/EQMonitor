@@ -487,7 +487,7 @@ class const DebugEewCardPage({super.key}) extends HookConsumerWidget {
             ),
           ),
           _ParamSection(
-            title: 'カウントダウン・現在地予測震度',
+            title: 'カウントダウン・現在地予想震度',
             child: Column(
               crossAxisAlignment: .stretch,
               children: [
@@ -503,13 +503,13 @@ class const DebugEewCardPage({super.key}) extends HookConsumerWidget {
                   ),
                 ),
                 _BoolRow(
-                  label: '現在地の予測震度を表示',
+                  label: '現在地の予想震度を表示',
                   value: showLocalRegion.value,
                   onChanged: (v) => showLocalRegion.value = v,
                 ),
                 if (showLocalRegion.value && detectedRegionCode != null) ...[
                   _LabeledRow(
-                    label: '現在地の予測震度',
+                    label: '現在地の予想震度',
                     child: ControlledDropdown<JmaIntensity>(
                       items: JmaIntensity.values
                           .map(

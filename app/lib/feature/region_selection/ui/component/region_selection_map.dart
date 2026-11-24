@@ -110,7 +110,7 @@ class const RegionSelectionMap({
         child: Padding(
           padding: EdgeInsets.all(24),
           child: Text(
-            '震央地名を地図から選ぶにはAsset Packを更新してください。一覧からは引き続き選択できます。',
+            '震央地名を地図から選ぶには Asset Pack を更新してください。一覧からは引き続き選択できます。',
           ),
         ),
       );

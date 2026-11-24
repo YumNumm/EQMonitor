@@ -26,7 +26,7 @@ enum ShakeDetectionTunable(final String label, {final bool isInteger = false}) {
   strongerSeconds('有効時間 Stronger (秒)', isInteger: true),
   fallbackBaseline('過去フレームが無い場合の平常値'),
   backfillSeconds('履歴の作り直しに使う直近の秒数', isInteger: true),
-  correlationIntensityTolerance('EEW 結合: 予測震度を上回ってよい幅'),
+  correlationIntensityTolerance('EEW 結合: 予想震度を上回ってよい幅'),
   correlationMinMatchRatio('EEW 結合: 一致とみなす観測点の割合'),
   correlationPWaveMarginSeconds('EEW 結合: P 波到達前の猶予 (秒)', isInteger: true),
   correlationSWaveExtraSeconds('EEW 結合: S 波到達後の猶予 (秒)', isInteger: true);

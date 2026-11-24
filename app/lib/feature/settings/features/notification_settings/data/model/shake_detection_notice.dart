@@ -15,7 +15,7 @@ final class const ShakeDetectionNotice({
       title: '防災科研へのお問い合わせはご遠慮ください',
       body:
           '揺れ検知は、強震モニタを提供する国立研究開発法人防災科学技術研究所（防災科研）の'
-          'システムとは完全に別に、EQMonitorが独自に運用しています。'
+          'システムとは完全に別に、EQMonitor が独自に運用しています。'
           '防災科研は本機能の運用に関与していません。'
           '本機能に関するお問い合わせ、不具合の報告、ご意見を防災科研に送ることはおやめください。'
           'お問い合わせは、設定の「問い合わせ」からお願いします。',
@@ -41,7 +41,7 @@ final class const ShakeDetectionNotice({
           '揺れ検知のみに依存した利用はしないでください。',
     ),
     ShakeDetectionNotice(
-      title: 'Beta機能です',
+      title: 'Beta 機能です',
       body:
           '検知の基準、表示内容、仕様は予告なく変更することがあります。'
           'また、提供を一時停止または終了することがあります。',
@@ -50,7 +50,7 @@ final class const ShakeDetectionNotice({
       title: '免責',
       body:
           '本機能の利用または利用できなかったことにより生じた損害について、'
-          'EQMonitorの開発者は責任を負いかねます。',
+          'EQMonitor の開発者は責任を負いかねます。',
     ),
   ];
 }

@@ -43,7 +43,7 @@ void main() {
       (
         id: 'eew_low_accuracy_v2',
         groupId: 'eew',
-        name: '1点検知・レベル法の低精度EEW',
+        name: '1点検知・レベル法の低精度 EEW',
         importance: Importance.defaultImportance,
       ),
       (

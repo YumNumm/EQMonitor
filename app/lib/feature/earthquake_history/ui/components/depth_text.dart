@@ -14,7 +14,7 @@ class const DepthText({required final EarthquakeDepth? depth, super.key})
     final (text, trailing, isSpecial) = switch (depth) {
       EarthquakeDepthShallow() => ('ごく浅い', null, true),
       EarthquakeDepthValue(:final value) => ('$value', 'km', false),
-      EarthquakeDepthOver700km() => ('700', 'km以上', true),
+      EarthquakeDepthOver700km() => ('700', 'km 以上', true),
       EarthquakeDepthUnknown() || null => ('調査中', null, true),
     };
 

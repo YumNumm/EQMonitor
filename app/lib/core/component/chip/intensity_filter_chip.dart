@@ -131,7 +131,7 @@ class const _IntensityFilterModal({
                 min.value = indexToValue(state.start.toInt());
                 max.value = indexToValue(state.end.toInt());
               },
-              label: '震度${min.value.label} ～ 震度${max.value.label}',
+              label: '震度${min.value.label}〜震度${max.value.label}',
               divisions: _sliderValues.length - 1,
             ),
             const SizedBox(height: 16),
@@ -180,7 +180,7 @@ extension MinMaxJmaIntensity on (JmaIntensity?, JmaIntensity?) {
 
   String get toRangeString {
     if (isAllSelected) {
-      return '全て';
+      return 'すべて';
     }
     if (min == max) {
       return '震度${min?.label}';
@@ -191,6 +191,6 @@ extension MinMaxJmaIntensity on (JmaIntensity?, JmaIntensity?) {
     if (isMinSelected) {
       return '震度${max?.label} 以下';
     }
-    return '震度${min?.label} ~ 震度${max?.label}';
+    return '震度${min?.label}〜震度${max?.label}';
   }
 }

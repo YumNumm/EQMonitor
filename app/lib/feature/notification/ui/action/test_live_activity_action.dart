@@ -38,7 +38,9 @@ class const TestLiveActivityAction() {
       messenger.showSnackBar(
         SnackBar(
           content: Text(
-            preset == null ? 'テストのライブアクティビティを終了しました' : 'テストのライブアクティビティを表示しました',
+            preset == null
+                ? 'テストの Live Activity を終了しました'
+                : 'テストの Live Activity を表示しました',
           ),
         ),
       );
@@ -52,7 +54,7 @@ class const TestLiveActivityAction() {
         return;
       }
       messenger.showSnackBar(
-        const SnackBar(content: Text('ライブアクティビティの操作に失敗しました')),
+        const SnackBar(content: Text('Live Activity の操作に失敗しました')),
       );
     }
   }

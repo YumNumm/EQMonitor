@@ -45,7 +45,7 @@ class const KyoshinMonitorDataTypePage({super.key}) extends StatelessWidget {
                           title: '速度応答（0.125、0.25、0.5、1.0、2.0、4.0Hz）',
                           description: '''
 各周波数成分についての速度応答波形（減衰5%）の1秒毎の最大値を表示します。
-低い周波数（0.125 Hz側）はゆっくりとした揺れの、高い周波数（4.0 Hz側）は速い揺れの強さを示します。''',
+低い周波数（0.125 Hz 側）はゆっくりとした揺れの、高い周波数（4.0 Hz 側）は速い揺れの強さを示します。''',
                           isLast: true,
                         ),
                       ],

@@ -113,7 +113,7 @@ class PaywallFlow {
       talker.handle(error, stackTrace, 'Subscription device recovery failed');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('デバイス登録を確認できませんでした。時間をおいて再試行してください')),
+          const SnackBar(content: Text('デバイス登録を確認できませんでした。時間をおいてもう一度お試しください')),
         );
       }
     }
@@ -130,7 +130,7 @@ class PaywallFlow {
       talker.handle(error, stackTrace, 'Subscription sync failed');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('購入情報を同期できませんでした。時間をおいて再試行してください')),
+          const SnackBar(content: Text('購入情報を同期できませんでした。時間をおいてもう一度お試しください')),
         );
       }
     }

@@ -73,7 +73,7 @@ enum EQIntentError: Error, CustomLocalizedStringResourceConvertible, Equatable {
         case .proRequired:
             return "地域指定は EQMonitor Pro の機能です。アプリからご登録ください。"
         case .locationUnavailable:
-            return "保存地域が未設定または変更されています。EQMonitorで位置情報を確認し、もう一度実行してください。"
+            return "保存地域が未設定または変更されています。EQMonitor で位置情報を確認し、もう一度実行してください。"
         case .invalidRegion:
             return "対象地域を確認できません。地域を選び直してください。"
         case .invalidLimit:
@@ -81,7 +81,7 @@ enum EQIntentError: Error, CustomLocalizedStringResourceConvertible, Equatable {
         case .snapshotUnavailable:
             return "取得結果の表示期限が切れました。地震情報の確認をもう一度実行してください。"
         case .fetchFailed(let message):
-            return "\(message)。しばらくしてからもう一度お試しください。"
+            return "\(message)。時間をおいてもう一度お試しください。"
         }
     }
 }

@@ -28,7 +28,7 @@ class const HypocenterArchiveProbe({required Dio dio}) {
           RegExp(r'^bytes 0-127/\d+$').hasMatch(contentRange);
       if (response.statusCode != 206 || body == null || !hasValidRange) {
         return const Failure(
-          HypocenterApiException(message: 'PMTilesのRange応答が不正です'),
+          HypocenterApiException(message: 'PMTiles の Range 応答が不正です'),
         );
       }
       final bytes = await HypocenterPmTilesHeaderReader().read(body.stream);
@@ -39,11 +39,11 @@ class const HypocenterArchiveProbe({required Dio dio}) {
           bytes[7] == 3;
       return valid
           ? const Success(null)
-          : const Failure(HypocenterApiException(message: 'PMTilesヘッダーが不正です'));
+          : const Failure(HypocenterApiException(message: 'PMTiles ヘッダーが不正です'));
     } on DioException catch (error, stackTrace) {
       return Failure(
         HypocenterApiException(
-          message: 'PMTilesを確認できませんでした',
+          message: 'PMTiles を確認できませんでした',
           statusCode: error.response?.statusCode,
         ),
         stackTrace,

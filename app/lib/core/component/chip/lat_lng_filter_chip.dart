@@ -250,18 +250,18 @@ class const _LatLngFilterModal({
                   children: [
                     Expanded(
                       child: _CoordField(
-                        label: '緯度(南)',
+                        label: '緯度（南）',
                         value: latGte.value,
                         errorText: latGteErr,
                         onChanged: (v) => latGte.value = v,
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Text('~'),
+                    const Text('〜'),
                     const SizedBox(width: 8),
                     Expanded(
                       child: _CoordField(
-                        label: '緯度(北)',
+                        label: '緯度（北）',
                         value: latLte.value,
                         errorText: latLteErr,
                         onChanged: (v) => latLte.value = v,
@@ -277,18 +277,18 @@ class const _LatLngFilterModal({
                   children: [
                     Expanded(
                       child: _CoordField(
-                        label: '経度(西)',
+                        label: '経度（西）',
                         value: lngGte.value,
                         errorText: lngGteErr,
                         onChanged: (v) => lngGte.value = v,
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Text('~'),
+                    const Text('〜'),
                     const SizedBox(width: 8),
                     Expanded(
                       child: _CoordField(
-                        label: '経度(東)',
+                        label: '経度（東）',
                         value: lngLte.value,
                         errorText: lngLteErr,
                         onChanged: (v) => lngLte.value = v,

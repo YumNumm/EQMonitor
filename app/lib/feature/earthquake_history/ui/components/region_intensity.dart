@@ -187,8 +187,8 @@ class const _PreliminaryIntensityLevelSection({
         children: [
           Text(
             '震度${switch (intensity) {
-              .fiveUnknown => "5弱以上 未入電",
-              .sixUnknown => "6弱以上 未入電",
+              .fiveUnknown => "5弱以上未入電",
+              .sixUnknown => "6弱以上未入電",
               _ => intensity.label,
             }}',
             style: theme.textTheme.titleSmall,
@@ -237,8 +237,8 @@ class const _IntensityLevelSection({
           ),
           title: Text(
             '震度${switch (intensity) {
-              .fiveUnknown => "5弱以上 未入電",
-              .sixUnknown => "6弱以上 未入電",
+              .fiveUnknown => "5弱以上未入電",
+              .sixUnknown => "6弱以上未入電",
               _ => intensity.label,
             }}',
             style: theme.textTheme.titleSmall,

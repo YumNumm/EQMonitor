@@ -22,7 +22,7 @@ struct LatestEarthquakeSnippetControl: ControlWidget {
             }
         }
         .displayName("最新の地震を確認")
-        .description("EQMonitorを開いて地震履歴を表示します")
+        .description("EQMonitor を開いて地震履歴を表示します")
     }
 }
 

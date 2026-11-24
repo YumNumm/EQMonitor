@@ -20,7 +20,7 @@ class const _RegionDeleteConfirmDialog({required final String name})
     final colorTheme = context.designSystem.colorTheme;
 
     return AlertDialog(
-      title: Text('$nameを削除しますか？'),
+      title: Text('$nameを削除しますか?'),
       content: const Text('この地域の通知条件と震度別設定も削除されます。'),
       actions: [
         M3ETextButton(

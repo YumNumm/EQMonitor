@@ -356,7 +356,7 @@ class const _PlanPrice({
       _ => Column(
         crossAxisAlignment: .start,
         children: [
-          const Text('プラン情報を取得できませんでした。通信状況を確認して再試行してください。'),
+          const Text('プラン情報を取得できませんでした。通信状況を確認して、もう一度お試しください。'),
           M3EButton(
             style: .text,
             onPressed: onRetry,

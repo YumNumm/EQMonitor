@@ -58,7 +58,7 @@ class const AboutThisAppPage({super.key}) extends HookConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('このアプリについて')),
+      appBar: AppBar(title: const Text('このアプリケーションについて')),
       body: ListView(
         children: [
           ListTile(
@@ -136,7 +136,7 @@ class const _DeviceIdTile() extends ConsumerWidget {
         crossAxisAlignment: .start,
         children: [
           Text(
-            'デバイスID',
+            'デバイス ID',
             style: designSystem.typography.bodySmall.copyWith(
               color: designSystem.colorTheme.onSurfaceVariant,
             ),

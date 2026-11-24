@@ -214,7 +214,7 @@ class const _RegionSelectionContent({
                 icon: const Icon(Icons.check),
                 label: Text(
                   multiple && selected.isNotEmpty
-                      ? '決定(${selected.length})'
+                      ? '決定（${selected.length}）'
                       : '決定',
                 ),
               )

@@ -93,7 +93,7 @@ void main() {
       find.byType(ControlledDropdown<NotificationSoundSelection>),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('EEW警報音').last);
+    await tester.tap(find.text('EEW 警報音').last);
     await tester.pumpAndSettle();
 
     await tester.tap(find.byType(ControlledDropdown<InterruptionLevel>));

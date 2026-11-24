@@ -56,12 +56,12 @@ class const LpgmIntensityFilterChip({
       return '階級${min.label}〜${max.label}';
     }
     if (min != null) {
-      return '階級${min.label}以上';
+      return '階級${min.label} 以上';
     }
     if (max != null) {
-      return '階級${max.label}以下';
+      return '階級${max.label} 以下';
     }
-    return '全て';
+    return 'すべて';
   }
 }
 
@@ -132,7 +132,7 @@ class const _LpgmIntensityFilterModal({
                 min.value = indexToValue(state.start.toInt());
                 max.value = indexToValue(state.end.toInt());
               },
-              label: '階級${min.value.label} ～ 階級${max.value.label}',
+              label: '階級${min.value.label}〜階級${max.value.label}',
               divisions: _values.length - 1,
             ),
             const SizedBox(height: 16),

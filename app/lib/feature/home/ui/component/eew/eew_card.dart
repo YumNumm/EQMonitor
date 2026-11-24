@@ -176,9 +176,9 @@ class const _EewMainCard({
   required final bool showDeepHypocenterIntensityNotice,
 }) extends StatelessWidget {
   static const _deepHypocenterIntensityNotice =
-      '震源の深さが150kmより深いため、予想震度は発表されていません';
+      '震源の深さが150km より深いため、予想震度は発表されていません';
   static const _deepHypocenterIntensityNoticeLines =
-      '震源の深さが150kmより深いため、\n予想震度は発表されていません';
+      '震源の深さが150km より深いため、\n予想震度は発表されていません';
 
   @override
   Widget build(BuildContext context) {

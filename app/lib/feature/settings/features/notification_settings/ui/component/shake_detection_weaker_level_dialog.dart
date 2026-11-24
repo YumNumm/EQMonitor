@@ -20,7 +20,7 @@ class const _ShakeDetectionWeakerLevelDialog() extends StatelessWidget {
     content: const Text(
       '微弱な揺れは、地震以外の振動を誤って検知する可能性が高く、'
       '通知の回数も多くなります。\n\n'
-      'このレベルで通知しますか？',
+      'このレベルで通知しますか?',
     ),
     actions: [
       M3ETextButton(

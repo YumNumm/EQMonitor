@@ -58,7 +58,7 @@ SOFTWARE.''',
       '「国土数値情報（行政区域データ）」（国土交通省）（当該ページのURL）を加工して作成',
     ], 'https://nlftp.mlit.go.jp/ksj/other/agreement.html に従います');
     yield const LicenseEntryWithLineBreaks(
-      ['Natural Earth(世界地図)'],
+      ['Natural Earth（世界地図）'],
       '© 2009 - 2024. Natural Earth. All rights reserved.\n'
       'https://www.naturalearthdata.com/',
     );

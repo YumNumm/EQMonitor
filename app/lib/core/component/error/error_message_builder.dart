@@ -18,7 +18,7 @@ class ErrorMessageBuilder {
           {'error': final String errorMsg} => errorMsg,
           {'code': final String code, 'details': final String details} =>
             '$code: $details',
-          _ => '少し時間をおいて再度お試しください。',
+          _ => '時間をおいてもう一度お試しください',
         };
         final statusCode = response.statusCode;
         if (statusCode != null) {
@@ -40,19 +40,19 @@ class ErrorMessageBuilder {
         return advancedErrorMessage;
       }
       return switch (error.type) {
-        .badCertificate => 'SSL証明書が不正です',
+        .badCertificate => 'SSL 証明書が不正です',
         .badResponse => 'サーバーからのレスポンスが不正です',
         .connectionTimeout => 'サーバーとの接続がタイムアウトしました',
         .receiveTimeout => 'サーバーからのレスポンスがタイムアウトしました',
         .sendTimeout => 'サーバーへのリクエストがタイムアウトしました',
-        .connectionError => 'サーバーとの接続に失敗しました。ネットワーク接続を確認してください',
+        .connectionError => 'サーバーとの接続に失敗しました。通信状況を確認してください',
         .unknown => '不明なエラーが発生しました',
         .cancel => 'キャンセルされました',
         .transformTimeout => '変換がタイムアウトしました',
       };
     }
     return 'エラーが発生しました\n'
-        '少し時間をおいて再度お試しください。\n'
+        '時間をおいてもう一度お試しください\n'
         '\n($error)';
   }
 }

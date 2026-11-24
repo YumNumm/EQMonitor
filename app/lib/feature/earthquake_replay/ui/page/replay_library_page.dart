@@ -188,7 +188,7 @@ class const ReplayLibraryPage({super.key}) extends HookConsumerWidget {
                   ),
                   subtitle: Text(
                     directory.isEmpty
-                        ? '右上の「＋」から .eqrp ファイルを追加できます。'
+                        ? '右上の「＋」から .eqrp ファイルを追加できます'
                               '追加したファイルは開始時刻の年/月のフォルダに入ります'
                         : '右上の「＋」から、このフォルダへ .eqrp ファイルを追加できます',
                   ),
@@ -249,11 +249,11 @@ class const _StorageUsageCard({required final List<SavedReplayFile> files})
                 children: [
                   LinearProgressIndicator(
                     value: (value.usedBytes / value.totalBytes).clamp(0, 1),
-                    semanticsLabel: '端末のストレージ使用率',
+                    semanticsLabel: 'デバイスのストレージ使用率',
                   ),
                   SizedBox(height: spacing.sm),
                   Text(
-                    '端末の空き ${formatter.format(value.usableBytes)}'
+                    'デバイスの空き ${formatter.format(value.usableBytes)}'
                     '・使用中 ${formatter.format(value.usedBytes)}'
                     '／全体 ${formatter.format(value.totalBytes)}',
                     style: designSystem.typography.bodySmall,
@@ -262,7 +262,7 @@ class const _StorageUsageCard({required final List<SavedReplayFile> files})
               ),
               AsyncValue(isLoading: true) => const LinearProgressIndicator(),
               _ => Text(
-                '端末の空き容量を取得できませんでした',
+                'デバイスの空き容量を取得できませんでした',
                 style: designSystem.typography.bodySmall,
               ),
             },

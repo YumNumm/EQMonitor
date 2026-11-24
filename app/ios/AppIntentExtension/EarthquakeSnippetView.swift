@@ -85,7 +85,7 @@ private struct EarthquakeSnippetRow: View {
     private var subtitle: String {
         var parts = [item.formattedTime]
         if !item.depth.isEmpty {
-            parts.append("深さ\(item.depth)")
+            parts.append("深さ \(item.depth)")
         }
         return parts.filter { !$0.isEmpty }.joined(separator: " ")
     }

@@ -94,7 +94,7 @@ void main() {
           expect(tester.takeException(), isNull);
           expect(find.text(station.name), findsOneWidget);
 
-          final lastLink = find.text('震度データについて(地震月報カタログ編)');
+          final lastLink = find.text('震度データについて（地震月報カタログ編）');
           await tester.scrollUntilVisible(lastLink, 100);
           await tester.pumpAndSettle();
           expect(tester.takeException(), isNull);

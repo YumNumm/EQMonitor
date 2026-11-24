@@ -106,8 +106,8 @@ final class const PushTokenUnavailableException({
 }) extends DeviceProvisioningException {
   @override
   String get userMessage => switch (reason) {
-    PushTokenFailureReason.permissionDenied => '通知の許可が必要です',
-    PushTokenFailureReason.notSupported => '端末が通知をサポートしていません',
+    PushTokenFailureReason.permissionDenied => '通知権限が必要です',
+    PushTokenFailureReason.notSupported => 'デバイスが通知をサポートしていません',
     _ => 'トークンの取得に失敗しました',
   };
 

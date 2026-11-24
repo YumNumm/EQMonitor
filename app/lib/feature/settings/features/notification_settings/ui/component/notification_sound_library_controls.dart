@@ -23,7 +23,7 @@ class const NotificationSoundLibraryControls({super.key})
       children: [
         M3ETextButton(
           onPressed: busy ? null : () => action.add(ref, context),
-          child: Text(busy ? '読み込み中…' : 'ファイルから追加'),
+          child: Text(busy ? '読み込み中...' : 'ファイルから追加'),
         ),
         M3ETextButton(
           onPressed: busy ? null : () => action.manage(ref, context),

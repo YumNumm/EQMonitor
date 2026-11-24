@@ -293,7 +293,7 @@ class const _NotificationConditionCard({
             else
               LockedSettingTile(
                 title: '震度別設定',
-                subtitle: 'Proで利用できます',
+                subtitle: 'Pro で利用できます',
                 locked: true,
                 onTap: () async => const ProUpgradeDialogAction().show(context),
               ),
@@ -386,7 +386,7 @@ class const _WarningSettingsCard({
                       '重大な通知に設定すると、おやすみモードやマナーモードを無視して通知します。',
                 .currentLocation =>
                   '現在地が緊急地震速報の警報地域になった場合に通知を配信します。'
-                      '通知音や重要度は端末の通知チャンネルの設定で変更できます。',
+                      '通知音や重要度はデバイスの通知チャンネルの設定で変更できます。',
                 _ => '緊急地震速報(警報)が発表された時に通知します。',
               },
               style: designSystem.typography.bodySmall.copyWith(

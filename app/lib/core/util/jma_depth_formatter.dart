@@ -4,7 +4,7 @@ class const JmaDepthFormatter() {
       switch (depth) {
         null => unknownText,
         0 => 'ごく浅い',
-        700 => '700km以上',
+        700 => '700km 以上',
         final value => '${value}km',
       };
 }

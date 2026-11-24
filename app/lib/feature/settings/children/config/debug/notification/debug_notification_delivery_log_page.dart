@@ -99,7 +99,9 @@ class const DebugNotificationDeliveryLogPage({super.key})
         ],
       ),
       body: switch (ref.watch(deviceIdProvider)) {
-        AsyncError(:final error) => Center(child: Text('端末 ID 取得エラー: $error')),
+        AsyncError(:final error) => Center(
+          child: Text('デバイス ID 取得エラー: $error'),
+        ),
         AsyncLoading() => const Center(
           child: AccessibleCircularProgressIndicator(),
         ),

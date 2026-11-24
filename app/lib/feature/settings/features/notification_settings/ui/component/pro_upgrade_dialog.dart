@@ -16,8 +16,8 @@ class const _ProUpgradeDialog() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Proプランが必要です'),
-      content: const Text('この機能を利用するにはProプランへのアップグレードが必要です。'),
+      title: const Text('Pro プランが必要です'),
+      content: const Text('この機能を利用するには Pro プランへのアップグレードが必要です。'),
       actions: [
         M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
@@ -28,7 +28,7 @@ class const _ProUpgradeDialog() extends StatelessWidget {
             Navigator.of(context).pop();
             await const PaywallRoute().push<void>(context);
           },
-          child: const Text('Proを見る'),
+          child: const Text('Pro を見る'),
         ),
       ],
     );

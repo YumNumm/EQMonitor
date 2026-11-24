@@ -64,7 +64,7 @@ void main() {
       ) as _FakeSubscriptionNotifier;
       final addButton = regionAddButton('地域を追加（2/1）');
       expect(tester.widget<M3EFilledButton>(addButton).onPressed, isNotNull);
-      expect(find.textContaining('Proプランで上限を増やせます'), findsOneWidget);
+      expect(find.textContaining('Pro プランで上限を増やせます'), findsOneWidget);
       expect(
         tester.widget<ListTile>(find.widgetWithText(ListTile, '地域1')).enabled,
         isFalse,
@@ -221,12 +221,12 @@ void main() {
       isPro: true,
     );
 
-    final settingsEntry = find.widgetWithText(ListTile, '端末の通知設定を開く');
+    final settingsEntry = find.widgetWithText(ListTile, 'デバイスの通知設定を開く');
     expect(settingsEntry, findsOneWidget);
     expect(
       find.descendant(
         of: settingsEntry,
-        matching: find.text('通知の許可やチャンネルごとの音・バイブを変更できます'),
+        matching: find.text('通知権限やチャンネルごとの音・バイブを変更できます'),
       ),
       findsOneWidget,
     );

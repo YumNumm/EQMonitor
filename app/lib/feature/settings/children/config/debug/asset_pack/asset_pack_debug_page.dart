@@ -20,7 +20,7 @@ class const AssetPackDebugPage({super.key}) extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: '診断を再読込',
+            tooltip: '診断を再読み込み',
             onPressed: () =>
                 ref.invalidate(assetPackDiagnosticsProvider, asReload: true),
           ),

@@ -58,7 +58,7 @@ class const AssetPackUpdateCard({super.key}) extends HookConsumerWidget {
       AssetPackUpdateCompleted(:final version) => _AssetPackMessageCard(
         icon: Icons.check_circle_outline_rounded,
         title: 'Asset Pack を更新しました',
-        message: '地図データ・観測点情報をv$version に更新しました',
+        message: '地図データ・観測点情報を v$version に更新しました',
       ),
       AssetPackUpdateError(:final message, :final isUpdating) when isUpdating =>
         _AssetPackErrorCard(

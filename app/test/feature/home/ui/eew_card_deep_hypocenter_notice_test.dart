@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
-const _notice = '震源の深さが150kmより深いため、\n予想震度は発表されていません';
+const _notice = '震源の深さが150km より深いため、\n予想震度は発表されていません';
 final _now = DateTime.utc(2026, 8, 22, 12);
 
 void main() {

@@ -280,7 +280,7 @@ struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable, Codable {
             }
             return ""
         case .OVER_700:
-            return "700km以上"
+            return "700km 以上"
         case .UNKNOWN:
             return ""
         }

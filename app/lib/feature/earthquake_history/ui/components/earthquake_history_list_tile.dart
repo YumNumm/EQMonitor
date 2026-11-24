@@ -64,7 +64,7 @@ class const EarthquakeHistoryListTile({
           _ => '震源要素 調査中',
         } +
         switch (depth) {
-          EarthquakeDepthOver700km() => '深さ 700km以上',
+          EarthquakeDepthOver700km() => '深さ 700km 以上',
           EarthquakeDepthShallow() => '深さ ごく浅い',
           EarthquakeDepthUnknown() => '',
           EarthquakeDepthValue(:final value) => '深さ ${value}km',

@@ -45,7 +45,7 @@ class const CustomNotificationSoundsPage({super.key})
             if (catalog.isLoading)
               const Center(child: CircularProgressIndicator()),
             if (catalog.hasError) ...[
-              const Text('追加した通知音を読み込めません。時間をおいて再試行してください'),
+              const Text('追加した通知音を読み込めません。時間をおいてもう一度お試しください'),
               M3ETextButton(
                 onPressed: () => HapticUtil.light(
                   () => ref.invalidate(customNotificationSoundsProvider),
@@ -69,7 +69,7 @@ class const CustomNotificationSoundsPage({super.key})
                         Text(
                           sound.isAvailable
                               ? '${(sound.durationMs / 1000).toStringAsFixed(1)}秒'
-                              : 'この端末では利用できません。ファイルを追加し直してください',
+                              : 'このデバイスでは利用できません。ファイルを追加し直してください',
                         ),
                         Wrap(
                           spacing: 8,

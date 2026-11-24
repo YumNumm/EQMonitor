@@ -50,7 +50,7 @@ void main() {
     await tester.pump();
 
     expect(repository.receivedKinds, isEmpty);
-    expect(find.text('重大な通知を送信しますか？'), findsOneWidget);
+    expect(find.text('重大な通知を送信しますか?'), findsOneWidget);
     expect(find.textContaining('マナーモードの設定に関わらず音が鳴ります'), findsOneWidget);
 
     await tester.tap(find.text('キャンセル'));

@@ -8,13 +8,13 @@ final class const ApiEndpointUrl() {
         !uri.hasAuthority ||
         uri.host.isEmpty ||
         (uri.scheme != 'https' && uri.scheme != 'http')) {
-      return 'http:// または https:// で始まるURLを入力してください';
+      return 'http:// または https:// で始まる URL を入力してください';
     }
     if (uri.userInfo.isNotEmpty || uri.hasQuery || uri.hasFragment) {
       return 'ユーザー情報・クエリ・フラグメントは指定できません';
     }
     if (uri.path.isNotEmpty && uri.path != '/') {
-      return '/v2 などのパスを含めず、サーバのURLを入力してください';
+      return '/v2 などのパスを含めず、サーバーの URL を入力してください';
     }
     if (uri.port <= 0 || uri.port > 65535) {
       return 'ポート番号は1〜65535で指定してください';

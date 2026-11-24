@@ -60,7 +60,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('診断を再読込'));
+    await tester.tap(find.byTooltip('診断を再読み込み'));
     await tester.pumpAndSettle();
     expect(diagnoses, 2);
   });

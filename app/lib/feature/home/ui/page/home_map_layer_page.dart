@@ -67,7 +67,7 @@ class const HomeMapLayerPage({super.key}) extends ConsumerWidget {
                 children: [
                   const _SettingsSection(
                     title: '緊急地震速報',
-                    description: 'EEW の塗りつぶし、アニメーション、自動追従を調整します。',
+                    description: 'EEW の塗りつぶし、アニメーション、自動追従を調整します',
                     children: [
                       _EewFillModeTile(),
                       _EewPsWaveTile(),
@@ -80,7 +80,7 @@ class const HomeMapLayerPage({super.key}) extends ConsumerWidget {
                   if (isShakeDetectionEnabled) ...[
                     _SettingsSection(
                       title: '揺れ検知',
-                      description: '揺れ検知イベントの表示、アニメーション、自動追従を調整します。',
+                      description: '揺れ検知イベントの表示、アニメーション、自動追従を調整します',
                       children: const [
                         _ShakeDetectionShowTile(),
                         _ShakeDetectionAnimationModeTile(),
@@ -92,7 +92,7 @@ class const HomeMapLayerPage({super.key}) extends ConsumerWidget {
                   ],
                   _SettingsSection(
                     title: '現在地',
-                    description: '位置情報の利用許可と、地図上での表示設定です。',
+                    description: '位置情報権限と、地図上での表示設定です',
                     children: [
                       _LocationPermissionTile(),
                       _ShowLocationTile(),
@@ -101,7 +101,7 @@ class const HomeMapLayerPage({super.key}) extends ConsumerWidget {
                   SizedBox(height: spacing.lg),
                   const _SettingsSection(
                     title: '強震モニタ',
-                    description: 'リアルタイム観測点の表示条件と見た目を変更します。',
+                    description: 'リアルタイム観測点の表示条件と見た目を変更します',
                     children: [
                       _KyoshinMonitorEnabledTile(),
                       _KyoshinMonitorSourceTile(),
@@ -118,7 +118,7 @@ class const HomeMapLayerPage({super.key}) extends ConsumerWidget {
                   SizedBox(height: spacing.lg),
                   const _SettingsSection(
                     title: 'マップ',
-                    description: '地図の回転、ズーム、初期表示範囲を設定します。',
+                    description: '地図の回転、ズーム、初期表示範囲を設定します',
                     children: [
                       _MapLockBearingTile(),
                       _MapMaxZoomTile(),
@@ -130,7 +130,7 @@ class const HomeMapLayerPage({super.key}) extends ConsumerWidget {
                     SizedBox(height: spacing.lg),
                     const _SettingsSection(
                       title: 'デバッグ',
-                      description: '地図に重ねて表示する、機能ごとのデバッグ情報を切り替えます。',
+                      description: '地図に重ねて表示する、機能ごとのデバッグ情報を切り替えます',
                       children: [
                         _DebugOverlayShakeDetectionTile(),
                         _DebugOverlayKyoshinMonitorTile(),
@@ -498,7 +498,7 @@ class const _EewFillModeTile() extends ConsumerWidget {
 
     return _SettingSegmentedField<HomeEewFillMode>(
       title: '予想震度の塗りつぶし',
-      subtitle: '塗りつぶし方法を予想震度、警報地域、非表示から選びます。',
+      subtitle: '塗りつぶし方法を予想震度、警報地域、非表示から選びます',
       segments: const [
         ButtonSegment(value: HomeEewFillMode.intensity, label: Text('予想震度')),
         ButtonSegment(value: HomeEewFillMode.warning, label: Text('警報地域')),
@@ -525,8 +525,8 @@ class const _EewPsWaveTile() extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     return _SettingSwitchTile(
-      title: 'P/S波の予報円',
-      subtitle: cfg.eew.showPSWaveCircle ? '地図上に表示します。' : '地図上に表示しません。',
+      title: 'P/S 波の予報円',
+      subtitle: cfg.eew.showPSWaveCircle ? '地図上に表示します' : '地図上に表示しません',
       value: cfg.eew.showPSWaveCircle,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -548,10 +548,10 @@ class const _EewPsWaveTimeBaseTile() extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     return _SettingSwitchTile(
-      title: 'P/S波の予報円を強震モニタに合わせる',
+      title: 'P/S 波の予報円を強震モニタに合わせる',
       subtitle: cfg.eew.alignPSWaveCircleToKyoshinMonitor
-          ? '観測点の色と予報円が同期しますが、予報円はサーバの公開遅延ぶん過去になります。'
-          : 'NTPで補正した正確な現在時刻で予報円を描画します。',
+          ? '観測点の色と予報円が同期しますが、予報円はサーバーの公開遅延ぶん過去になります'
+          : 'NTP で補正した正確な現在時刻で予報円を描画します',
       value: cfg.eew.alignPSWaveCircleToKyoshinMonitor,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -577,8 +577,8 @@ class const _EewAnimationTile() extends ConsumerWidget {
     final rate = cfg.eew.animationRate;
 
     return _SettingSegmentedField<HomeEewAnimationRate>(
-      title: 'P/S波アニメーション',
-      subtitle: '更新頻度を調整して見やすさと負荷のバランスを取ります。',
+      title: 'P/S 波アニメーション',
+      subtitle: '更新頻度を調整して見やすさと負荷のバランスを取ります',
       segments: const [
         ButtonSegment(
           value: HomeEewAnimationRate.unlimited,
@@ -607,8 +607,8 @@ class const _EewAutoZoomTile() extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     return _SettingSwitchTile(
-      title: 'EEW発生時に自動ズーム',
-      subtitle: cfg.eew.autoZoom ? '発生時に自動で注視します。' : '現在のズームを維持します。',
+      title: 'EEW 発生時に自動ズーム',
+      subtitle: cfg.eew.autoZoom ? '発生時に自動で注視します' : '現在のズームを維持します',
       value: cfg.eew.autoZoom,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -638,8 +638,8 @@ class const _LocationPermissionTile() extends HookConsumerWidget {
           return const SizedBox.shrink();
         }
         return _SettingActionTile(
-          title: '位置情報の利用許可',
-          subtitle: '現在地関連の機能を使うには、まず権限を許可してください。',
+          title: '位置情報権限',
+          subtitle: '現在地関連の機能を使うには、まず権限を許可してください',
           actionLabel: '位置情報の使用を許可する',
           onPressed: () async {
             unawaited(HapticFeedback.lightImpact());
@@ -663,7 +663,7 @@ class const _ShowLocationTile() extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: '現在地を地図上に表示する',
-      subtitle: '位置追従や現在地中心の操作に利用します。',
+      subtitle: '位置追従や現在地中心の操作に利用します',
       value: cfg.common.showLocation,
       onChanged: (next) async {
         if (next) {
@@ -695,8 +695,8 @@ class const _KyoshinMonitorEnabledTile() extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final setting = ref.watch(kyoshinMonitorSettingsProvider).requireValue;
     final subtitle = setting.useKmoni
-        ? 'リアルタイム観測点を地図上に表示します。'
-        : '強震モニタを地図上に表示しません。';
+        ? 'リアルタイム観測点を地図上に表示します'
+        : '強震モニタを地図上に表示しません';
 
     return _SettingSwitchTile(
       title: '強震モニタを利用する',
@@ -722,7 +722,7 @@ class const _KyoshinMonitorSourceTile() extends ConsumerWidget {
       title: 'データソース',
       subtitle:
           '強震モニタか長周期地震動モニタを選択します。\n'
-          '長周期地震動モニタでは長周期地震動階級などの追加データ種別が利用できます。',
+          '長周期地震動モニタでは長周期地震動階級などの追加データ種別が利用できます',
       segments: const [
         ButtonSegment(value: .kmoni, label: Text('強震モニタ')),
         ButtonSegment(value: .lmoni, label: Text('長周期地震動')),
@@ -753,7 +753,7 @@ class const _KyoshinMonitorAboutTile() extends StatelessWidget {
   Widget build(BuildContext context) {
     return _SettingActionTile(
       title: '強震モニタについて',
-      subtitle: 'データの見方や観測網の説明を確認できます。',
+      subtitle: 'データの見方や観測網の説明を確認できます',
       actionLabel: '詳しく見る',
       onPressed: () async {
         await const KyoshinMonitorAboutRoute().push<void>(context);
@@ -777,7 +777,7 @@ class const _KyoshinRealtimeDataTypeTile() extends ConsumerWidget {
 
     return _SettingDropdownField<RealtimeDataType>(
       title: 'リアルタイムデータの種類',
-      subtitle: '観測点が示す値を切り替えます。',
+      subtitle: '観測点が示す値を切り替えます',
       value: setting.realtimeDataType,
       trailing: IconButton(
         onPressed: () async =>
@@ -811,7 +811,7 @@ class const _KyoshinRealtimeLayerTile() extends ConsumerWidget {
     }
     return _SettingDropdownField<RealtimeLayer>(
       title: 'リアルタイムデータのレイヤー',
-      subtitle: '観測点の深さを地表・地中から選択します。',
+      subtitle: '観測点の深さを地表・地中から選択します',
       value: setting.realtimeLayer,
       entries: const [
         DropdownMenuEntry(value: RealtimeLayer.surface, label: '地表'),
@@ -835,7 +835,7 @@ class const _KyoshinMarkerTypeTile() extends ConsumerWidget {
     }
     return _SettingDropdownField<KyoshinMonitorMarkerType>(
       title: '観測点の枠',
-      subtitle: '観測点の円の周りに補助枠を表示します。',
+      subtitle: '観測点の円の周りに補助枠を表示します',
       value: setting.kmoniMarkerType,
       entries: KyoshinMonitorMarkerType.values
           .map(
@@ -843,7 +843,7 @@ class const _KyoshinMarkerTypeTile() extends ConsumerWidget {
               value: value,
               label: switch (value) {
                 KyoshinMonitorMarkerType.always => '常に表示',
-                KyoshinMonitorMarkerType.onlyEew => 'EEW時のみ',
+                KyoshinMonitorMarkerType.onlyEew => 'EEW 時のみ',
                 KyoshinMonitorMarkerType.never => '表示しない',
               },
             ),
@@ -867,7 +867,7 @@ class const _KyoshinShowScaleTile() extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: 'スケールを表示',
-      subtitle: '地図左上の時刻表示をタップしても切り替えられます。',
+      subtitle: '地図左上の時刻表示をタップしても切り替えられます',
       value: setting.showScale,
       onChanged: (next) async {
         await ref
@@ -915,7 +915,7 @@ class const _KyoshinMinShindoTile() extends ConsumerWidget {
                     ),
                     SizedBox(height: context.designSystem.spacing.xs),
                     Text(
-                      isEnabled ? 'この値未満の観測点を地図に表示しません。' : 'すべての観測点を表示します。',
+                      isEnabled ? 'この値未満の観測点を地図に表示しません' : 'すべての観測点を表示します',
                       style: typography.bodySmall,
                     ),
                   ],
@@ -983,7 +983,7 @@ class const _KyoshinMarkerSizeTile() extends ConsumerWidget {
 
     return _SettingSegmentedField<HomeKmoniMarkerSize>(
       title: '観測点サイズ',
-      subtitle: '強震モニタの観測点アイコンの大きさを変更します。',
+      subtitle: '強震モニタの観測点アイコンの大きさを変更します',
       segments: const [
         ButtonSegment(value: HomeKmoniMarkerSize.small, label: Text('小')),
         ButtonSegment(value: HomeKmoniMarkerSize.medium, label: Text('中')),
@@ -1014,7 +1014,7 @@ class const _KyoshinStationNameTile() extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: '観測点名',
-      subtitle: '地図を拡大したとき、強震モニタの観測点の横に観測点名を表示します。',
+      subtitle: '地図を拡大した時、強震モニタの観測点の横に観測点名を表示します',
       value: homeConfig.kyoshinMonitor.showStationName,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -1039,7 +1039,7 @@ class const _MapLockBearingTile() extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: '方位ロック（常に北向き）',
-      subtitle: '地図の回転を無効にします。',
+      subtitle: '地図の回転を無効にします',
       value: cfg.map.lockBearing,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -1089,7 +1089,7 @@ class const _MapMaxZoomTile() extends ConsumerWidget {
                     ),
                     SizedBox(height: context.designSystem.spacing.xs),
                     Text(
-                      isEnabled ? '細かく拡大しすぎないよう最大値を設定します。' : 'ズーム制限をかけずに使用します。',
+                      isEnabled ? '細かく拡大しすぎないよう最大値を設定します' : 'ズーム制限をかけずに使用します',
                       style: typography.bodySmall,
                     ),
                   ],
@@ -1150,7 +1150,7 @@ class const _MapDefaultBoundsTile() extends ConsumerWidget {
 
     return _SettingSegmentedField<HomeMapDefaultBounds>(
       title: 'デフォルトの表示範囲',
-      subtitle: 'ホームを開いたときに最初に表示するエリアを選択します。',
+      subtitle: 'ホームを開いた時に最初に表示するエリアを選択します',
       segments: const [
         ButtonSegment(
           value: HomeMapDefaultBounds.mainIsland,
@@ -1182,7 +1182,7 @@ class const _MapCustomBoundsButton() extends ConsumerWidget {
 
     return _SettingActionTile(
       title: 'カスタム範囲を編集',
-      subtitle: '現在表示している地図の範囲を、ホーム画面の初期表示として保存します。',
+      subtitle: '現在表示している地図の範囲を、ホーム画面の初期表示として保存します',
       actionLabel: '地図上で範囲を選択',
       onPressed: () async {
         await HomeMapBoundsSelectorPage.open(context);
@@ -1201,8 +1201,8 @@ class const _ShakeDetectionShowTile() extends ConsumerWidget {
     return _SettingSwitchTile(
       title: '揺れ検知を地図上に表示',
       subtitle: cfg.shakeDetection.show
-          ? '検知イベントを約 0.5° のグリッドで表示します。'
-          : '揺れ検知を表示しません。',
+          ? '検知イベントを約 0.5° のグリッドで表示します'
+          : '揺れ検知を表示しません',
       value: cfg.shakeDetection.show,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -1227,7 +1227,7 @@ class const _ShakeDetectionAnimationModeTile() extends ConsumerWidget {
 
     return _SettingSegmentedField<HomeShakeDetectionAnimationMode>(
       title: 'アニメーション',
-      subtitle: '点滅・明滅・常時点灯から表示方法を選びます。',
+      subtitle: '点滅・明滅・常時点灯から表示方法を選びます',
       segments: const [
         ButtonSegment(
           value: HomeShakeDetectionAnimationMode.blink,
@@ -1267,7 +1267,7 @@ class const _ShakeDetectionMinLevelTile() extends ConsumerWidget {
 
     return _SettingDropdownField<ShakeDetectionLevel>(
       title: '表示する揺れの強さ',
-      subtitle: 'この強さに満たない揺れ検知は、地図とカードに表示しません。',
+      subtitle: 'この強さに満たない揺れ検知は、地図とカードに表示しません',
       value: cfg.shakeDetection.minLevel,
       // 二行の項目が 5 件あり、既定の高さでは最後の項目が隠れる。
       dropdownStyle: const M3EDropdownStyle(maxHeight: 420),
@@ -1299,8 +1299,8 @@ class const _ShakeDetectionAutoFocusTile() extends ConsumerWidget {
     return _SettingSwitchTile(
       title: '揺れ検知時に自動ズーム',
       subtitle: cfg.shakeDetection.autoFocus
-          ? '検知した範囲を自動で注視します。'
-          : '現在のズームを維持します。',
+          ? '検知した範囲を自動で注視します'
+          : '現在のズームを維持します',
       value: cfg.shakeDetection.autoFocus,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -1325,7 +1325,7 @@ class const _DebugOverlayShakeDetectionTile() extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: '揺れ検知',
-      subtitle: '検知の状態、イベントの時刻、EEW との結合判定を表示します。',
+      subtitle: '検知の状態、イベントの時刻、EEW との結合判定を表示します',
       value: cfg.debugOverlay.shakeDetection,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -1350,7 +1350,7 @@ class const _DebugOverlayKyoshinMonitorTile() extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: '強震モニタ',
-      subtitle: '画像の時刻と遅れ、種別、観測点数、取得時間を表示します。',
+      subtitle: '画像の時刻と遅れ、種別、観測点数、取得時間を表示します',
       value: cfg.debugOverlay.kyoshinMonitor,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -1375,7 +1375,7 @@ class const _DebugKyoshinIntensityIconTile() extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: '強震モニタの震度アイコン',
-      subtitle: 'リアルタイム震度が 0 以上の観測点を震度アイコンで表示します。',
+      subtitle: 'リアルタイム震度が 0 以上の観測点を震度アイコンで表示します',
       value: cfg.kyoshinMonitor.showIntensityIcon,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -1400,7 +1400,7 @@ class const _DebugFocusBoundsTile() extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: 'フォーカス範囲',
-      subtitle: '自動フォーカスや全体表示で合わせる範囲を、赤の点線で表示します。地震履歴の詳細にも表示します。',
+      subtitle: '自動フォーカスや全体表示で合わせる範囲を、赤の点線で表示します。地震履歴の詳細にも表示します',
       value: cfg.debugOverlay.focusBounds,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -1425,7 +1425,7 @@ class const _DebugShakeDetectionDuringEewTile() extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: 'EEW 中も揺れ検知を表示',
-      subtitle: 'EEW と結合した揺れ検知も、地図とカードに表示します。',
+      subtitle: 'EEW と結合した揺れ検知も、地図とカードに表示します',
       value: cfg.debugOverlay.shakeDetectionDuringEew,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(
@@ -1450,7 +1450,7 @@ class const _DebugOverlayEewTile() extends ConsumerWidget {
     }
     return _SettingSwitchTile(
       title: '緊急地震速報',
-      subtitle: '表示中の EEW の報番号、規模、発表・発生時刻を表示します。',
+      subtitle: '表示中の EEW の報番号、規模、発表・発生時刻を表示します',
       value: cfg.debugOverlay.eew,
       onChanged: (next) async {
         await HomeConfigurationNotifier.saveMutation.run(

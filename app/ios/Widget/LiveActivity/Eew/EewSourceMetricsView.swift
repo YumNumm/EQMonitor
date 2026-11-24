@@ -9,7 +9,7 @@ struct EewSourceMetricsView: View {
 
     var body: some View {
         if state.display.isLowAccuracyDetection {
-            Text(state.isPlum == true ? "PLUM法" : state.isLevel == true ? "レベル法" : "低精度")
+            Text(state.isPlum == true ? "PLUM 法" : state.isLevel == true ? "レベル法" : "低精度")
                 .font(.system(size: 12, weight: .bold))
                 .fixedSize()
                 .padding(.horizontal, 7)
@@ -51,7 +51,7 @@ struct SourceMetricsView: View {
             if $0 == 0 {
                 return Text("\(Text("深さ ").font(labelFont))\(Text("ごく浅い").font(AppFonts.flex(size: size, weight: .bold)))")
             } else {
-                return Text("\(Text("深さ ").font(labelFont))\(Text(String(Int($0))).font(valueFont))\(Text($0 == 700 ? "km以上" : "km").font(labelFont))")
+                return Text("\(Text("深さ ").font(labelFont))\(Text(String(Int($0))).font(valueFont))\(Text($0 == 700 ? "km 以上" : "km").font(labelFont))")
             }
         }
         Group {

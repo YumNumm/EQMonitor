@@ -35,8 +35,8 @@ class const EstimatedIntensityNoticeContent({super.key})
         ),
         const SizedBox(height: 12),
         Text(
-          'EQMonitorでは、推計震度分布図(250mメッシュ)を'
-          'サーバで処理し掲載しています。',
+          'EQMonitor では、推計震度分布図（250m メッシュ）を'
+          'サーバーで処理し掲載しています。',
           style: theme.textTheme.bodySmall?.copyWith(
             color: context.designSystem.colorTheme.onSurfaceVariant,
           ),

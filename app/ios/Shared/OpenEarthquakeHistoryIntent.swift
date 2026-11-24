@@ -30,7 +30,7 @@ struct OpenEarthquakeDetailsIntent: AppIntent {
     static let supportedModes: IntentModes = .foreground
     static let isDiscoverable = false
 
-    @Parameter(title: "地震ID")
+    @Parameter(title: "地震 ID")
     var eventID: String
 
     @Dependency var navigation: EarthquakeHistoryNavigation
@@ -53,7 +53,7 @@ struct OpenEarthquakeDetailsIntent: AppIntent {
 
 enum EarthquakeHistoryDestination: String, AppEnum {
     case earthquakeHistory
-    static let typeDisplayRepresentation: TypeDisplayRepresentation = "EQMonitorの画面"
+    static let typeDisplayRepresentation: TypeDisplayRepresentation = "EQMonitor の画面"
     static let caseDisplayRepresentations: [Self: DisplayRepresentation] = [
         .earthquakeHistory: "地震履歴",
     ]
@@ -78,9 +78,9 @@ enum EarthquakeHistoryNavigationError: Error, Equatable, CustomLocalizedStringRe
     var localizedStringResource: LocalizedStringResource {
         switch self {
         case .cannotOpen:
-            "地震履歴を開けませんでした。EQMonitorを起動して、もう一度お試しください。"
+            "地震履歴を開けませんでした。EQMonitor を起動して、もう一度お試しください。"
         case .cannotOpenDetails:
-            "地震の詳細を開けませんでした。EQMonitorを起動して、もう一度お試しください。"
+            "地震の詳細を開けませんでした。EQMonitor を起動して、もう一度お試しください。"
         }
     }
 }

@@ -50,7 +50,7 @@ void main() {
 
     await openModal(tester);
 
-    await tester.enterText(fieldByLabel('緯度(南)'), '100');
+    await tester.enterText(fieldByLabel('緯度（南）'), '100');
     await tester.pump();
 
     expect(isDoneEnabled(tester), isFalse, reason: '緯度100は-90〜90の範囲外なので完了は無効');
@@ -62,9 +62,9 @@ void main() {
 
     await openModal(tester);
 
-    await tester.enterText(fieldByLabel('緯度(南)'), '40');
+    await tester.enterText(fieldByLabel('緯度（南）'), '40');
     await tester.pump();
-    await tester.enterText(fieldByLabel('緯度(北)'), '30');
+    await tester.enterText(fieldByLabel('緯度（北）'), '30');
     await tester.pump();
 
     expect(isDoneEnabled(tester), isFalse, reason: '緯度(南)>緯度(北)は逆転なので完了は無効');
@@ -77,13 +77,13 @@ void main() {
 
     await openModal(tester);
 
-    await tester.enterText(fieldByLabel('緯度(南)'), '35.0');
+    await tester.enterText(fieldByLabel('緯度（南）'), '35.0');
     await tester.pump();
-    await tester.enterText(fieldByLabel('緯度(北)'), '40.0');
+    await tester.enterText(fieldByLabel('緯度（北）'), '40.0');
     await tester.pump();
-    await tester.enterText(fieldByLabel('経度(西)'), '135.0');
+    await tester.enterText(fieldByLabel('経度（西）'), '135.0');
     await tester.pump();
-    await tester.enterText(fieldByLabel('経度(東)'), '140.0');
+    await tester.enterText(fieldByLabel('経度（東）'), '140.0');
     await tester.pump();
 
     expect(isDoneEnabled(tester), isTrue, reason: '全フィールド正常値なので完了は有効');
@@ -111,19 +111,19 @@ void main() {
     await tester.pump();
 
     expect(
-      tester.widget<TextField>(fieldByLabel('緯度(南)')).controller?.text,
+      tester.widget<TextField>(fieldByLabel('緯度（南）')).controller?.text,
       '20.0',
     );
     expect(
-      tester.widget<TextField>(fieldByLabel('緯度(北)')).controller?.text,
+      tester.widget<TextField>(fieldByLabel('緯度（北）')).controller?.text,
       '50.0',
     );
     expect(
-      tester.widget<TextField>(fieldByLabel('経度(西)')).controller?.text,
+      tester.widget<TextField>(fieldByLabel('経度（西）')).controller?.text,
       '122.0',
     );
     expect(
-      tester.widget<TextField>(fieldByLabel('経度(東)')).controller?.text,
+      tester.widget<TextField>(fieldByLabel('経度（東）')).controller?.text,
       '154.0',
     );
   });
@@ -141,19 +141,19 @@ void main() {
     await tester.pump();
 
     expect(
-      tester.widget<TextField>(fieldByLabel('緯度(南)')).controller?.text,
+      tester.widget<TextField>(fieldByLabel('緯度（南）')).controller?.text,
       isEmpty,
     );
     expect(
-      tester.widget<TextField>(fieldByLabel('緯度(北)')).controller?.text,
+      tester.widget<TextField>(fieldByLabel('緯度（北）')).controller?.text,
       isEmpty,
     );
     expect(
-      tester.widget<TextField>(fieldByLabel('経度(西)')).controller?.text,
+      tester.widget<TextField>(fieldByLabel('経度（西）')).controller?.text,
       isEmpty,
     );
     expect(
-      tester.widget<TextField>(fieldByLabel('経度(東)')).controller?.text,
+      tester.widget<TextField>(fieldByLabel('経度（東）')).controller?.text,
       isEmpty,
     );
   });

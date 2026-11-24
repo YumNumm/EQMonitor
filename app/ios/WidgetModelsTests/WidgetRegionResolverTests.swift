@@ -42,7 +42,7 @@ struct WidgetRegionResolverTests {
             )
         )
         #expect(resolved.plan == .region(code: "276"))
-        #expect(resolved.title == "現在地(東京都23区)の地震履歴")
+        #expect(resolved.title == "現在地（東京都23区）の地震履歴")
         #expect(resolved.compactTitle == "東京都23区")
     }
 

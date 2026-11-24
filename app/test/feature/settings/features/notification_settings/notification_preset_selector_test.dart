@@ -118,9 +118,9 @@ void main() {
       await tester.tap(find.text('推奨設定'));
       await tester.pumpAndSettle();
 
-      expect(find.text('通知の許可が不足しています'), findsOneWidget);
+      expect(find.text('通知権限が不足しています'), findsOneWidget);
       expect(
-        find.text('緊急地震速報や地震情報の通知を受け取るには、通知の許可が必要です。'),
+        find.text('緊急地震速報や地震情報の通知を受け取るには、通知権限が必要です。'),
         findsOneWidget,
       );
     });

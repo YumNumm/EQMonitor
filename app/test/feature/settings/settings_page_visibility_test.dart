@@ -54,12 +54,12 @@ void main() {
     );
 
     await tester.scrollUntilVisible(
-      find.text('HTTPキャッシュ'),
+      find.text('HTTP キャッシュ'),
       300,
       scrollable: find.byType(Scrollable),
     );
 
-    expect(find.text('HTTPキャッシュ'), findsOneWidget);
+    expect(find.text('HTTP キャッシュ'), findsOneWidget);
   });
 
   testWidgets('production では HTTP キャッシュを表示しない', (tester) async {
@@ -74,7 +74,7 @@ void main() {
       scrollable: find.byType(Scrollable),
     );
 
-    expect(find.text('HTTPキャッシュ'), findsNothing);
+    expect(find.text('HTTP キャッシュ'), findsNothing);
   });
 }
 

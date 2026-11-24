@@ -15,7 +15,7 @@ class const DioExceptionText({required final DioException exception, super.key})
       .transformTimeout => '変換がタイムアウトしました',
     };
     final errorCode = exception.type.index + 12000;
-    final errorCodeText = ' (エラーコード: $errorCode)';
+    final errorCodeText = '（エラーコード: $errorCode）';
     return Text(
       text + errorCodeText,
       style: const TextStyle(fontWeight: .bold),

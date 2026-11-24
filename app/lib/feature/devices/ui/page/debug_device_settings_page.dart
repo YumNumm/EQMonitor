@@ -387,7 +387,7 @@ class const _NotificationPermissionSection() extends ConsumerWidget {
     final colorTheme = context.designSystem.colorTheme;
 
     return _SectionCard(
-      title: '通知許可状態（OS）',
+      title: '通知権限状態（OS）',
       trailing: IconButton(
         tooltip: '再取得',
         icon: const Icon(Icons.refresh),
@@ -442,7 +442,7 @@ class const _NotificationPermissionSection() extends ConsumerWidget {
   String _authLabel(AuthorizationStatus s) => switch (s) {
     AuthorizationStatus.authorized => '許可済み',
     AuthorizationStatus.denied => '拒否',
-    AuthorizationStatus.deniedPermanently => '拒否（端末の設定から変更）',
+    AuthorizationStatus.deniedPermanently => '拒否（デバイスの設定から変更）',
     AuthorizationStatus.notDetermined => '未確認',
     AuthorizationStatus.provisional => '仮承認（サイレント通知のみ）',
   };

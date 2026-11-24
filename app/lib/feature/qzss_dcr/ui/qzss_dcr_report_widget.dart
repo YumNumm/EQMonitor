@@ -37,7 +37,7 @@ class const QzssDcrReportWidget({super.key}) extends HookConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'GNSS受信機を接続し、衛星からの信号を受信してください',
+                'GNSS 受信機を接続し、衛星からの信号を受信してください',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: designSystem.colorTheme.onSurface.withValues(
                     alpha: 0.4,
@@ -115,7 +115,7 @@ class const QzssDcrReportWidget({super.key}) extends HookConsumerWidget {
             ),
             // 衛星ID
             _InfoRow(
-              label: '衛星ID',
+              label: '衛星 ID',
               value: 'QZS-${report.satelliteId}',
               icon: Icons.satellite,
             ),

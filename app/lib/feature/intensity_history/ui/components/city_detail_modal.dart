@@ -234,7 +234,7 @@ class const _InitialLoadingSliver() extends StatelessWidget {
           children: [
             AccessibleCircularProgressIndicator(),
             SizedBox(height: 12),
-            Text('地震一覧を読み込んでいます'),
+            Text('地震履歴を読み込んでいます'),
           ],
         ),
       ),

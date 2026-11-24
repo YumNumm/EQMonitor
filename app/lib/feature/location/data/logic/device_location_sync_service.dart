@@ -46,7 +46,7 @@ class const DeviceLocationSyncService({
       longitude: location.longitude,
     );
     if (payload == null) {
-      throw StateError('端末内で地域コードを解決できませんでした');
+      throw StateError('デバイス内で地域コードを解決できませんでした');
     }
 
     final previous = await stateRepository.readLastSent(scope: scope);

@@ -88,7 +88,7 @@ class const _LocationSettingCards() extends ConsumerWidget {
           crossAxisAlignment: .start,
           children: [
             Text(
-              '現在位置マーカー',
+              '現在地マーカー',
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: .bold,
               ),

@@ -80,7 +80,7 @@ class const EarthquakeActivityPage({
                     Text(
                       '中心 ${query.value.latitude.toStringAsFixed(2)}, '
                       '${query.value.longitude.toStringAsFixed(2)} / '
-                      '半径${query.value.radiusKm}km内 ${value.items.length}件',
+                      '半径${query.value.radiusKm}km 内 ${value.items.length}件',
                     ),
                   ],
                 ),
@@ -94,7 +94,7 @@ class const EarthquakeActivityPage({
             ),
             const SizedBox(height: 12),
             Text(
-              '地震一覧（${value.items.length}件）',
+              '地震履歴（${value.items.length}件）',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             for (final item in value.items)
@@ -132,7 +132,7 @@ class const EarthquakeActivityPage({
             ],
           ),
         ),
-        _ => Center(child: Text('地震履歴を取得中… $progress件')),
+        _ => Center(child: Text('地震履歴を取得中... $progress件')),
       },
     );
   }

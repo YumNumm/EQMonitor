@@ -28,8 +28,8 @@ class const RegionIntensityFilterChip({
       (null, null) => '',
       (final min?, final max?) when min == max => '（震度${min.label}）',
       (final min?, final max?) => '（震度${min.label}〜${max.label}）',
-      (final min?, null) => '（震度${min.label}以上）',
-      (null, final max?) => '（震度${max.label}以下）',
+      (final min?, null) => '（震度${min.label} 以上）',
+      (null, final max?) => '（震度${max.label} 以下）',
     };
     return RawChip(
       selected: code != null,
