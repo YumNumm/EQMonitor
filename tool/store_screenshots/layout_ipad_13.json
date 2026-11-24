@@ -1,0 +1,77 @@
+{
+  "canvas": {
+    "width": 2064,
+    "height": 2752
+  },
+  "pages": [
+    {
+      "id": "01_eew",
+      "background": "backgrounds/ipad_13/01_eew.png",
+      "devices": [
+        {
+          "scene": "eew_warning",
+          "bezel": "ipad_pro_13_black.png",
+          "bezelRect": {
+            "x": 321.01,
+            "y": 830,
+            "width": 1421.97,
+            "height": 1852
+          },
+          "screenRect": {
+            "x": 386.81,
+            "y": 895.79,
+            "width": 1290.09,
+            "height": 1720.12
+          },
+          "screenCornerRadius": 43.87
+        }
+      ]
+    },
+    {
+      "id": "03_earthquake_history",
+      "background": "backgrounds/ipad_13/02_earthquake_detail.png",
+      "devices": [
+        {
+          "scene": "earthquake_history_list",
+          "bezel": "ipad_pro_13_black.png",
+          "bezelRect": {
+            "x": 251.91,
+            "y": 650,
+            "width": 1560.18,
+            "height": 2032
+          },
+          "screenRect": {
+            "x": 324.1,
+            "y": 722.19,
+            "width": 1415.47,
+            "height": 1887.3
+          },
+          "screenCornerRadius": 48.13
+        }
+      ]
+    },
+    {
+      "id": "04_kyoshin_monitor",
+      "background": "backgrounds/ipad_13/04_kyoshin_monitor.png",
+      "devices": [
+        {
+          "scene": "kyoshin_monitor",
+          "bezel": "ipad_pro_13_black.png",
+          "bezelRect": {
+            "x": 251.91,
+            "y": 650,
+            "width": 1560.18,
+            "height": 2032
+          },
+          "screenRect": {
+            "x": 324.1,
+            "y": 722.19,
+            "width": 1415.47,
+            "height": 1887.3
+          },
+          "screenCornerRadius": 48.13
+        }
+      ]
+    }
+  ]
+}

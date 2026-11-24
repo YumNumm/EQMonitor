@@ -85,6 +85,21 @@ mise exec -- uv run tool/store_screenshots/compose.py --layout tool/store_screen
   --screenshots build/store_screenshots/duo-open --fixtures <復号先> --output build/store_screenshots/composed-duo-inner
 ```
 
+### iPad（13 インチ）
+
+- App Store Connect の iPad 13 インチの枠は 2064×2752 / 2752×2064（12.9 インチの 2048×2732 も可）。Simulator は `iPad Pro 13-inch (M5)`（iOS 27.2）で、縦向き 2064×2752 で撮る。
+- 枠は `generate_frame.py --screen 2064x2752 --no-camera --no-buttons --bezel 4.2 --radius 3.4`（`frames/ipad_pro_13_black.png`）、背景は `backgrounds/ipad_13/`、配置は `layout_ipad_13.json`。
+- 3 枚目は地震履歴の一覧と詳細が並ぶ画面（`earthquake_history_list`）を 1 台で見せる。
+- iPad では Duo の内側と同じく、重大な通知のバナーが閉じず通知センターも開かなかった（2026-11-24）。通知のページを外した 3 枚にしている。
+- iPad のステータスバーは日付も出す。`status_bar override --time 9:41` では日付は実際の日付のまま写る。
+
+### プロダクトページのヘッダと検索結果
+
+- [App Store Connect の仕様](https://developer.apple.com/help/app-store-connect/reference/app-information/creative-assets-specifications)（2026-11-24 確認）:
+  ヘッダ 21:9 3840×1646（PNG、見せたいものを収める領域は x 1097, y 493 から 1646×661）、検索結果 3:2 1920×1280〜3840×2560（領域は 3840×2560 のとき x 836, y 765 から 2168×1030）、
+  両方に使える 16:9 5244×2950（PNG、領域は x 1921, y 660 から 1402×962）。透過は使えない。
+- `creative_assets.py` が 3 種を作る。ロゴと見出しを 01 の背景から抜き出して領域の中央に置き、外側に iPhone（EEW・強震モニタ）と Apple Watch を置く。外側は端末の画面の向きによって切れる。
+
 ### Android（Pixel 11 Pro）
 
 - Pixel 11 Pro は 1280×2856・495 ppi（[Google Store](https://store.google.com/product/pixel_11_pro_specs)）。

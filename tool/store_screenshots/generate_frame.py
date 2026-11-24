@@ -24,15 +24,17 @@ def rounded(draw: ImageDraw.ImageDraw, box: tuple[float, float, float, float], r
     draw.rounded_rectangle(tuple(round(v * SUPERSAMPLING) for v in box), radius=round(radius * SUPERSAMPLING), fill=fill)
 
 
-def generate(screen_width: int, screen_height: int, camera: bool, buttons: bool) -> tuple[Image.Image, dict]:
+def generate(
+    screen_width: int, screen_height: int, camera: bool, buttons: bool, bezel_ratio: float = 3.2, radius_ratio: float = 9
+) -> tuple[Image.Image, dict]:
     unit = screen_width / 100
-    bezel = 3.2 * unit
+    bezel = bezel_ratio * unit
     body = 0.9 * unit
     button = 0.7 * unit if buttons else 0
     width = screen_width + 2 * (bezel + body) + button
     height = screen_height + 2 * (bezel + body)
     screen_x, screen_y = body + bezel, body + bezel
-    screen_radius = 9 * unit
+    screen_radius = radius_ratio * unit
     image = Image.new("RGBA", (round(width * SUPERSAMPLING), round(height * SUPERSAMPLING)), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
     right = width - button
@@ -63,10 +65,12 @@ def main() -> None:
     parser.add_argument("--screen", default="1280x2856", help="screen size in pixels (Pixel 11 Pro: 1280x2856)")
     parser.add_argument("--no-camera", action="store_true", help="omit the punch-hole camera")
     parser.add_argument("--no-buttons", action="store_true", help="omit the side buttons")
+    parser.add_argument("--bezel", type=float, default=3.2, help="bezel width in percent of the screen width")
+    parser.add_argument("--radius", type=float, default=9, help="screen corner radius in percent of the screen width")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     screen_width, screen_height = (int(value) for value in args.screen.split("x"))
-    image, layout = generate(screen_width, screen_height, not args.no_camera, not args.no_buttons)
+    image, layout = generate(screen_width, screen_height, not args.no_camera, not args.no_buttons, args.bezel, args.radius)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     image.save(args.output, optimize=True)
     print(json.dumps(layout))
