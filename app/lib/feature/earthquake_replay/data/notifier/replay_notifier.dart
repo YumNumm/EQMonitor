@@ -25,6 +25,7 @@ import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_file_
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_kyoshin_archive_frame.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_kyoshin_archive_frame_loader.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_kyoshin_archive_repository.dart';
+import 'package:eqmonitor/feature/eew/data/converter/eew_api_converter.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';

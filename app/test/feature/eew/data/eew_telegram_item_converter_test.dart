@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/eew/data/converter/eew_api_converter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
