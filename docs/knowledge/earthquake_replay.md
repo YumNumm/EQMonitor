@@ -7,7 +7,8 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 
 - KyoshinEewViewerIngen（KEVi）の `KyoshinReplayFileReader` と同じ構成。`EQRP` の magic、MessagePack のヘッダ、圧縮した `ReplayData[]` が続く。読み込みは `packages/earthquake_replay`。
 - 再生に使うのは強震モニタ画像（Union 100、`ImageType.shindo` のみ）と EEW（EQMonitor 形式の Union 1003、気象庁 XML 電文の Union 0 のうち緊急地震速報）。ほかの種類は読み飛ばす。
-- `ReplayDataType` に無い Union（バックエンドの地震アーカイブが書く 1004 の地震情報・1005 の K-NET/KiK-net 波形など）は、読み込み時に捨てる。対応前のアプリは未知の Union で読み込みに失敗する。
+- `ReplayDataType` に無い Union（バックエンドの地震アーカイブが書く 1004 の地震情報など）は、読み込み時に捨てる。対応前のアプリは未知の Union で読み込みに失敗する。
+- 1005（K-NET/KiK-net 波形）は `KyoshinWaveformReplayData` として読む。body は `[time, metadataJson, int32BE[]]` で、観測点・成分ごとに1フレーム。時刻は収録の先頭（Record Time の15秒前）。メタデータは backend の earthquake-archiver が書く camelCase の JSON で、カウント値は基線補正していない。
 - 1003 の JSON は EEW API が返す `EewItemWithRelations` をそのまま格納する。`EewItemWithRelations.fromJson` で読めないフレームはログを残して読み飛ばし、再生は止めない。
 - Union 0 は題名（`Control/Title`）が緊急地震速報（警報）・（予報）・（地震動予報）のものだけを `packages/jma_eew_xml` で読み、`JmaEewXmlConverter` でアプリ用の `EewTelegramItem` にする。読めない電文はログを残して読み飛ばす。
 - 再生開始時に `ReplayEewReportResolver` が EEW のフレームを一度だけ変換し、再生中・シーク時はフレームの位置で引いて `Eew.upsert` へ渡す。
@@ -20,7 +21,12 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 - リアルタイム震度は `packages/realtime_seismic_intensity` で求める。直近60秒・0.3秒基準で1秒ごとに確定し、`RealtimeIntensitySeries.valueAt` が再生時刻の値を返す。
   フィルタは特許第5946067号の式によるため、配布の前にライセンスの扱いを確認する（同パッケージの README）。
 - 観測点ごとの波形は `KyoshinWaveformChart` で描く。成分ごとに最大振幅で縦軸をそろえ、描画幅より多いサンプルは1ピクセルごとの最小値・最大値にまとめる。
-- 1005 のフレームの読み込みと再生への反映は未対応。残作業は TODO の「EQRP の K-NET/KiK-net 波形（1005）からのリアルタイム震度」にある。
+- EQRP の再生を始めると、`replayWaveformStationsProvider` が 1005 から観測点ごとの系列を `Isolate.run` で求める。KiK-net は強震モニタの地表と同じく地表（NS2・EW2・UD2）を使う。
+  3成分がそろわない観測点は除く。観測点ごとに組み立てて捨て、全観測点の加速度を同時にメモリへ載せない。
+- 再生時刻の値は、強震モニタ画像の観測点と同じプロパティ（color・intensity・name）の Feature にし、`kyoshinMonitorObservationGeoJson` で画像の観測点に重ねる。
+  同じ名前の画像由来の点は除く。記録の前後で値が無い時刻は画像の点を残す。色は `KyoshinShindoColorMap.json` の最も近い段階を使う。
+  名前は観測点パラメータのコードから引き、無ければコードを出す。最低リアルタイム震度のフィルタとラベルは画像の観測点と共通。
+- 再生中の操作パネルに「観測点の波形」を出し、最大値の順の一覧（`/replay/waveforms`）から観測点の波形（`/replay/waveforms/:stationCode`）を開く。カーソルは再生位置。
 
 ## 時刻
 
@@ -91,7 +97,7 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 - API（`/v2/admin/earthquake-archives`）は、`ADMIN_DEVICE_IDS` の端末のトークンでも通る。ほかの admin API と違い、アカウントへのログインは要らない。`DeviceAuthTokenInterceptor` がこのパスの GET にデバイスのトークンを付ける。
 - 一覧と詳細は生成済みの `AdminApiClient`、ファイルは `/file` を同じ Dio でバイト列として取る。保存先は外から開けないため、API が中継する。
 - 取得したファイルは EQRP として読めた場合だけ、ヘッダの開始時刻の `年/月` に保存する（`ReplayLibraryRepository.saveDownloaded`）。「保存して再生」はそのまま `/replay/open` へ進む。
-- 一覧と詳細には、フレームの種類ごとの件数・容量・時刻の範囲を出す。1004（地震情報）と 1005（K-NET/KiK-net 波形）は再生では読み飛ばす。
+- 一覧と詳細には、フレームの種類ごとの件数・容量・時刻の範囲を出す。1004（地震情報）は再生では読み飛ばす。
 
 ## 保存と管理
 
