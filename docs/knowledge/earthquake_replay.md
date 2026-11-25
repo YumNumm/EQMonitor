@@ -18,13 +18,18 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 
 - 波形は `packages/kyoshin_waveform` の `KyoshinWaveformRecord` で扱う。K-NET ASCII 形式の読み込みでは、データ先頭を `Record Time` の15秒前とし、
   記録全長の平均値を引いて gal に換算する。KiK-net の `Dir.` 1〜3 は地中（NS1・EW1・UD1）、4〜6 は地表（NS2・EW2・UD2）。
-- リアルタイム震度は `packages/realtime_seismic_intensity` で求める。直近60秒・0.3秒基準で1秒ごとに確定し、`RealtimeIntensitySeries.valueAt` が再生時刻の値を返す。
+- リアルタイム震度は `packages/realtime_seismic_intensity` で求める。直近60秒・0.3秒基準で、リプレイでは 0.1 秒ごとに確定させる（`ReplayWaveformStationCalculator.stepsPerSecond`）。`RealtimeIntensitySeries.valueAt` が再生時刻の値を返す。
   フィルタは特許第5946067号の式によるため、配布の前にライセンスの扱いを確認する（同パッケージの README）。
 - 観測点ごとの波形は `KyoshinWaveformChart` で描く。成分ごとに最大振幅で縦軸をそろえ、描画幅より多いサンプルは1ピクセルごとの最小値・最大値にまとめる。
 - EQRP の再生を始めると、`replayWaveformStationsProvider` が 1005 から観測点ごとの系列を `Isolate.run` で求める。KiK-net は強震モニタの地表と同じく地表（NS2・EW2・UD2）を使う。
   3成分がそろわない観測点は除く。観測点ごとに組み立てて捨て、全観測点の加速度を同時にメモリへ載せない。
-- 再生時刻の値は、強震モニタ画像の観測点と同じプロパティ（color・intensity・name）の Feature にし、`kyoshinMonitorObservationGeoJson` で画像の観測点に重ねる。
-  同じ名前の画像由来の点は除く。記録の前後で値が無い時刻は画像の点を残す。色は `KyoshinShindoColorMap.json` の最も近い段階を使う。
+- 再生位置は進行のたびにしか届かないため、`replayWaveformTimeProvider` が `AppClock.now()` を 0.1 秒ごとに読み、0.1 秒単位に切り捨てた時刻を配る。一時停止中は1回だけ配る。
+- 再生時刻の値は、強震モニタ画像の観測点と同じプロパティ（color・intensity・name）の Feature にし、`kyoshinMonitorObservationFeatures` で画像の観測点に重ねる。
+  値のある観測点は、同じ名前の画像由来の点を置き換える。色は `KyoshinShindoColorMap.json` の最も近い段階を使う。
+- 記録の前後で値が無い時刻は、欠測と同じ `lost` の Feature にして灰色の枠線だけで描く。同じ名前の画像由来の点がある場合は、画像の点を残す。
+- 0.1 秒ごとに作り直すため、画像の GeoJSON は画像が変わったときだけ読み（`kyoshinMonitorImageFeatures`）、最低リアルタイム震度のフィルタまで Feature のリストのまま進めて、文字列への変換は1回にする。
+- 再生中の操作パネルの「観測点を震度アイコンで表示」で、観測点レイヤーを震度アイコンの表示に切り替える（`replayIntensityIconProvider`、保存しない）。
+  デバッグメニューのホーム設定 `showIntensityIcon` と同じ表示で、震度 0 以上の点がアイコン、それ未満と `lost` の点は丸のまま。
   名前は観測点パラメータのコードから引き、無ければコードを出す。最低リアルタイム震度のフィルタとラベルは画像の観測点と共通。
 - 再生中の操作パネルに「観測点の波形」を出し、最大値の順の一覧（`/replay/waveforms`）から観測点の波形（`/replay/waveforms/:stationCode`）を開く。カーソルは再生位置。
 
