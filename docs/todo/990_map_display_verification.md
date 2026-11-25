@@ -2,13 +2,12 @@
 
 実機での可視出力と性能は未検証。
 
-## 990: Android の Impeller Vulkan で地震詳細の地図が止まる
+## 990: PowerVR GPU での地図の停止・推計震度の実機確認
 
-- 対象: `mise.toml` / `mise.lock` の Flutter 固定、地震履歴詳細の地図レイヤー（`app/lib/feature/earthquake_history/ui/layer/`）。
-- 2026-11-25、Pixel 11 Pro Fold（PowerVR、Android 17 Beta DP11）で、Flutter 3.51.0-1.0.pre-176（`22e676c57e`）の Impeller Vulkan では地震詳細の観測点・区域アイコンの画像登録が返らず、後続の塗りつぶし・観測点・推計震度が追加されなかった（4 回中 4 回）。その状態でバックグラウンドへ移すとメインスレッドが止まり ANR になる。Play 版 3.1.0 (1588) でも同じ ANR を確認した。
-- 同じ端末で Impeller の OpenGL ES 固定（debug のみ有効）と Impeller 無効は正常だった。HCPP の有無は結果を変えなかった。エミュレータは Vulkan に強制しても再現しない。
-- Flutter 3.50.1 へ戻した。3.50.1 で直るかは実機で未検証。原因が Flutter 3.51 系か MapLibre 0.4 か切り分けられていない。
-- 完了条件: 同じ端末で Flutter 3.50.1 の build を、詳細を開く → バックグラウンド → 復帰の手順で複数回確認し、全レイヤーの追加と復帰後の応答を確かめる。推計震度の表示も確認する。直らなければ、Android で Impeller を無効にするかを決める。
+- 対象: fork の `maplibre_native`（`addImage` の CPU デコード）と maplibre-native-ffi（`color-relief` のパッチ、Android OpenGL ES 版のアーカイブ）。
+- 2026-11-25、Pixel 11 Pro Fold（PowerVR CXTP、Android 17 Beta DP11）の arm64 debug build で、地震詳細の画像登録と全レイヤーの追加、バックグラウンド → 復帰（5 回）、推計震度の表示を確認した。原因は [MapLibre の知見](../knowledge/maplibre.md) を参照。
+- 残り: release / profile build と Play 版での確認、armeabi-v7a・x86_64 の実機確認、Pixel 10 での確認。Flutter のエンジン側（flutter/flutter#186573）が直ったら、CPU デコードを外すか決める。
+- Android のマニフェストに `eqmonitor://` スキームの intent-filter がなく、`adb shell am start -d eqmonitor:///...` は解決できない（Activity を明示すると届く）。意図した構成か確認する。
 
 ## 800: タイル境界の直線の実機確認
 

@@ -5,7 +5,7 @@
 
 | 分野 | 主な未完了事項 |
 | --- | --- |
-| [990: 地図](990_map_display_verification.md) | Impeller Vulkan での停止、観測点キャッシュ、描画順、市区町村・地域選択の実機確認 |
+| [990: 地図](990_map_display_verification.md) | PowerVR での停止・推計震度の実機確認、観測点キャッシュ、描画順、市区町村・地域選択の実機確認 |
 | [950: ビルド・配布](950_build_and_release.md) | CI のローカル参照、AGP、署名済み成果物、versionCode、extension の版番号 |
 | [950: 地図データ](950_map_data_pipeline.md) | manifest 契約、展開メモリ予算、推計震度の低 zoom |
 | [930: Apple 拡張](930_apple_extensions.md) | App Intents・Widget・Live Activity の契約と実機確認 |

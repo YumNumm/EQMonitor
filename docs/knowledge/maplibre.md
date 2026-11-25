@@ -46,7 +46,8 @@
 - 推計震度は API の `estimated_intensity_dem_archive` があれば raster-dem の PMTiles（計測震度を 0.1 刻みの標高として持つ Mapbox Terrain-RGB、512px、z0〜10、データなしは標高 -10000）を `color-relief` layer で描く。無い地震は従来のベクトル archive を使う。
 - 階級表示と 0.1 単位表示の切り替えは `color-relief-color` の式だけを差し替える。source と layer は作り直さない。
 - MapLibre Native は `color-relief` の `resampling` を受け付けず、layer 追加が `invalidArgument` で失敗する（iOS Simulator、2026-11-23）。DEM は線形補間で読まれるため、色の境界の両側に stop を置いて中間値のにじみを抑える。データなしを -10000 に置くことで、領域の縁に低い震度の色が出ない。
-- `color-relief-color` は `['elevation']` を入力にした `interpolate` で書く。Android での表示は未確認。
+- `color-relief-color` は `['elevation']` を入力にした `interpolate` で書く。
+- upstream の `color-relief` は DEM を linear で読み mediump でデコードするため、PowerVR GPU（Pixel 10 / 11）では何も描かれない。fork の maplibre-native-ffi のパッチ `0087-color-relief-dem-sampling.patch` で nearest・highp にしている（hillshade は元から nearest）。エミュレータは linear でも描けるので確認には使えない。
 - 配色: `EstimatedIntensityDemColorResolver` が決める。階級表示はテーマの推計震度色。0.1 単位表示は `EstimatedIntensityScaleColorResolver` がテーマの推計震度色を各階級の計測震度の中央に置いて補間したグラデーションか、`KyoshinShindoColorMap.json` の強震モニタ配色を選べる。地図・凡例・カードのプレビューは同じ resolver から色を取る。
 
 ## 座標・選択・初期カメラ
@@ -97,7 +98,8 @@
 - iOS Metal で複数 vector source の fill だけがタイル単位で欠ける場合、clip mask UBO の bind cache 再利用を疑う。[#4342](https://github.com/maplibre/maplibre-native/pull/4342) が原因・回帰テストの参照先。layer 再追加や opacity 変更を恒久対策にしない。
 - #4342 は 2026-11-22 時点で upstream 未マージ。0.3 系では `YumNumm/maplibre-native` の `ios-v6.29.0-yumnumm.2` に修正を入れて回避していたが、0.4 の `maplibre_native_ffi` は upstream のビルドを使うため、この修正は含まれないと考えられる。iOS 実機での fill 欠けの有無は未確認。
 - 0.4 の native 本体は `maplibre_native_ffi` の `hook/native_release.json` が指すビルド済みアーカイブで、build hook が sha256 を照合して取得する。`app/pubspec.yaml` で `maplibre_native_ffi` を `YumNumm/maplibre-native-ffi`（`bindings/dart`）へ override している。fork は upstream の tag `v0.202611.0`（MapLibre Native `8e144d0` に同リポジトリの `patches/` を当てたもの）から切った `yumnumm/v0.202611.0` が基点。
-- fork の差分は iOS シミュレータ（`ios-simulator-arm64`）だけ。このアーカイブは fork の release `v0.202611.0-yumnumm.1` から取得し、ほかのプラットフォームは upstream v0.202611.0 のアーカイブと sha256 のまま。fork の hook は `native_release.json` の artifact が持つ `url` を優先する。
+- fork が差し替えるアーカイブは、iOS シミュレータ（`ios-simulator-arm64`、release `v0.202611.0-yumnumm.1`）と Android の OpenGL ES 版（arm64 / arm / x64、release `v0.202611.0-yumnumm.2`）。ほかは upstream v0.202611.0 のアーカイブと sha256 のまま。fork の hook は `native_release.json` の artifact が持つ `url` を優先する。
+- Android のアーカイブは macOS で作れる。fork で `tools/deps/sync-submodules` の後、`ANDROID_HOME`（NDK `30.0.16248370` を含む SDK）と Rust 1.99.1 の Android ターゲット、`cargo-about` を用意し、`cmake --preset android-arm64-egl` → `cmake --build build/android-arm64-egl --target install` → `cpack -G TGZ` を実行する（1 ABI 約 5 分）。`hooks.user_defines.maplibre_native_ffi.local_build` に install 先を指定すると、release を作る前にアプリで試せる。
 - upstream v0.202611.0 のままだと、iOS シミュレータでタイル境界の両側（tippecanoe のバッファ幅。z8 タイルで約 ±0.027°）に line の直線が 2 本 1 組で出る。0.3 系（`MLNMapView`）では出ない。原因は `src/render/metal/metal_texture_backend.mm` が `#if !TARGET_OS_SIMULATOR` で stencil を作らないこと。シミュレータの depth は `Depth32Float_Stencil8` だが stencil attachment に設定されず、タイルの clip mask が無効になり、バッファ領域で切断されたポリゴンの辺が隣のタイルへはみ出す。
 - 同じ原因で、半透明の fill はバッファ幅の帯で二重に塗られる。line の直線と帯が同じ位置に出れば clip mask の無効を疑う。実機は別の `Stencil8` を付ける経路で、コード上は該当しない（実機での確認は未実施）。
 - fork の修正は `metal_surface_session.mm` と同じく、depth が `Depth32Float_Stencil8` のとき同じ texture を stencil attachment にも設定する。style 側の filter・layer 分割やタイル再生成で隠さない。
@@ -108,7 +110,9 @@
 ## Android で地図が止まる・ANR になるときの調べ方
 
 - 地図の操作は `MapOperationQueue` で直列に実行する。1 つの操作の Future が返らないと、後続の layer・source 追加がすべて止まり、例外もログも出ない。症状は「一部のレイヤーだけ出ない」になる。
-- Impeller Vulkan では、画像登録（`addImage` 内の `toByteData`）が返らなくなる端末がある（[TODO](../todo/990_map_display_verification.md)）。GPU が止まったままバックグラウンドへ移ると、`FlutterJNI.onSurfaceDestroyed` がメインスレッドを止め、次の起動に失敗したように見える。
+- Impeller Vulkan の `Image.toByteData` は IO スレッドで一時的な `AiksContext` を作り、その `HostBuffer` がキューのロックなしで `vkDeviceWaitIdle` を呼ぶ。PowerVR GPU ではこれが返らず、画像登録が止まる。GPU が止まったままバックグラウンドへ移ると、`FlutterJNI.onSurfaceDestroyed` がメインスレッドを止め、次の起動に失敗したように見える（flutter/flutter#186573・#197315）。fork の `maplibre_native` は Android で `addImage` の画像を `package:image` で CPU デコードして回避している。地図に渡す画像を自前で `toByteData` しない。
+- 止まっている最中のスタックは、debug build なら `adb shell run-as <package> kill -3 <pid>` で書き出し、`adb bugreport` の `FS/data/anr/trace_*` から読める。
+- `color-relief` などシェーダーの値は、生成済みヘッダー（`include/mln/shaders/gl/*.hpp`）に診断用の色を出させて実機で切り分けられる。
 - ANR のトレースは root なしでも `adb bugreport` の `FS/data/anr/` から取れる。debug build の `libflutter.so` は `app/build/app/intermediates/merged_native_libs/` に symbol 付きで残るため、NDK の `llvm-symbolizer` で frame を読める（Build ID の一致を確認する）。
 - エミュレータは既定で Impeller OpenGL ES を選び、Vulkan に強制しても実機の GPU ドライバの挙動は再現しない。`io.flutter.embedding.android.ImpellerBackend` は debug/profile だけで有効で、release では無視される。
 - 本番 API へ debug build でつなぐと、`versionNameSuffix` の `.d` で版が `3.1.0.d` になり User-Agent の照合で 403 になる。`flutter build apk --debug --build-name=3.1.0-beta.1` のように prerelease 付きの版を渡す。
