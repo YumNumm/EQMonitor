@@ -57,6 +57,8 @@ void main() {
         station.intensities.startTime,
         DateTime.utc(2024, 8, 8, 7, 44, 15),
       );
+      expect(station.intensities.interval, const Duration(milliseconds: 100));
+      expect(station.intensities.values, hasLength(710));
       expect(station.intensities.maxValue, 1.6);
     });
 
@@ -79,37 +81,37 @@ void main() {
       },
       'properties': {'name': name, 'intensity': intensity},
     };
+    Map<String, dynamic> lost(String name) => {
+      'type': 'Feature',
+      'geometry': {
+        'type': 'Point',
+        'coordinates': [133.5, 33.9],
+      },
+      'properties': {'lost': true, 'name': name},
+    };
 
-    test('波形の観測点がなければ画像の GeoJSON をそのまま返すこと', () {
-      expect(merger.merge(imageGeoJson: null, waveformFeatures: []), isNull);
-      expect(merger.merge(imageGeoJson: '{}', waveformFeatures: []), '{}');
+    test('波形の観測点がなければ画像の観測点をそのまま返すこと', () {
+      final image = [feature('新居浜', 0.7)];
+
+      expect(merger.merge(imageFeatures: image, waveformFeatures: []), image);
     });
 
-    test('同じ名前の画像の観測点を除き、波形の観測点を加えること', () {
+    test('値のある波形の観測点は、同じ名前の画像の観測点を置き換えること', () {
       final merged = merger.merge(
-        imageGeoJson: jsonEncode({
-          'type': 'FeatureCollection',
-          'features': [feature('伊予三島', 0.5), feature('新居浜', 0.7)],
-        }),
+        imageFeatures: [feature('伊予三島', 0.5), feature('新居浜', 0.7)],
         waveformFeatures: [feature('伊予三島', 1.6)],
       );
 
-      final features =
-          (jsonDecode(merged ?? '') as Map<String, dynamic>)['features']
-              as List<dynamic>;
-      expect(features, [feature('新居浜', 0.7), feature('伊予三島', 1.6)]);
+      expect(merged, [feature('新居浜', 0.7), feature('伊予三島', 1.6)]);
     });
 
-    test('画像の GeoJSON が無い場合は波形の観測点だけにすること', () {
+    test('値の無い波形の観測点は、画像の観測点が無い場合だけ枠線で加えること', () {
       final merged = merger.merge(
-        imageGeoJson: null,
-        waveformFeatures: [feature('伊予三島', 1.6)],
+        imageFeatures: [feature('伊予三島', 0.5)],
+        waveformFeatures: [lost('伊予三島'), lost('今治')],
       );
 
-      expect(
-        (jsonDecode(merged ?? '') as Map<String, dynamic>)['features'],
-        [feature('伊予三島', 1.6)],
-      );
+      expect(merged, [feature('伊予三島', 0.5), lost('今治')]);
     });
   });
 }

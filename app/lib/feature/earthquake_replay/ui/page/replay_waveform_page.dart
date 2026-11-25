@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifie
 import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_waveform_features_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_waveform_record_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_waveform_stations_provider.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_waveform_time_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/kyoshin_waveform_chart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_waveform/kyoshin_waveform.dart';
@@ -49,7 +50,9 @@ class const _WaveformBody({required final KyoshinWaveformRecord record})
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
-    final time = ref.watch(replayProvider.select((s) => s?.currentTime));
+    final time =
+        ref.watch(replayWaveformTimeProvider).value ??
+        ref.watch(replayProvider.select((s) => s?.currentTime));
     final station = ref
         .watch(replayWaveformStationsProvider)
         .value

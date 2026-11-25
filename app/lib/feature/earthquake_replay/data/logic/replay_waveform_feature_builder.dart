@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_waveform_s
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_color_map_model.dart';
 
 // 強震モニタの画像を解析した観測点と同じプロパティ（color・intensity・name）の GeoJSON Feature を作る。
+// 記録の前後で値が無い時刻は、欠測と同じく lost にして枠線だけで描かせる。
 class const ReplayWaveformFeatureBuilder({
   required final List<KyoshinColorMapModel> colorMap,
   required final Map<String, String> stationNames,
@@ -13,19 +14,23 @@ class const ReplayWaveformFeatureBuilder({
     required DateTime time,
   }) => [
     for (final station in stations)
-      if (station.intensities.valueAt(time) case final intensity?)
-        {
-          'type': 'Feature',
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [station.longitude, station.latitude],
-          },
-          'properties': {
-            'color': _colorHex(intensity),
-            'intensity': intensity,
-            'name': stationNames[station.stationCode] ?? station.stationCode,
-          },
+      {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [station.longitude, station.latitude],
         },
+        'properties': {
+          ...switch (station.intensities.valueAt(time)) {
+            final intensity? => {
+              'color': _colorHex(intensity),
+              'intensity': intensity,
+            },
+            null => {'lost': true},
+          },
+          'name': stationNames[station.stationCode] ?? station.stationCode,
+        },
+      },
   ];
 
   String _colorHex(double intensity) {
