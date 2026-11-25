@@ -183,6 +183,10 @@ dependencies:
   pmtiles_v3:
     path: ../packages/pmtiles_v3
   native_dio_adapter: ^1.8.0
+  kyoshin_waveform:
+    path: ../packages/kyoshin_waveform
+  realtime_seismic_intensity:
+    path: ../packages/realtime_seismic_intensity
 
 dev_dependencies:
   build_runner: ^2.11.1

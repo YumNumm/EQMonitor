@@ -13,6 +13,15 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 - 再生開始時に `ReplayEewReportResolver` が EEW のフレームを一度だけ変換し、再生中・シーク時はフレームの位置で引いて `Eew.upsert` へ渡す。
 - 同じ地震に複数の形式があるときは、1003 > 地震動予報（VXSE45）> 予報（VXSE44）> 警報（VXSE43）の順で 1 つの形式だけを使う。警報電文は予報電文と情報番号の系列が別で、混ぜると報の前後関係が崩れる。
 
+## K-NET/KiK-net の波形とリアルタイム震度
+
+- 波形は `packages/kyoshin_waveform` の `KyoshinWaveformRecord` で扱う。K-NET ASCII 形式の読み込みでは、データ先頭を `Record Time` の15秒前とし、
+  記録全長の平均値を引いて gal に換算する。KiK-net の `Dir.` 1〜3 は地中（NS1・EW1・UD1）、4〜6 は地表（NS2・EW2・UD2）。
+- リアルタイム震度は `packages/realtime_seismic_intensity` で求める。直近60秒・0.3秒基準で1秒ごとに確定し、`RealtimeIntensitySeries.valueAt` が再生時刻の値を返す。
+  フィルタは特許第5946067号の式によるため、配布の前にライセンスの扱いを確認する（同パッケージの README）。
+- 観測点ごとの波形は `KyoshinWaveformChart` で描く。成分ごとに最大振幅で縦軸をそろえ、描画幅より多いサンプルは1ピクセルごとの最小値・最大値にまとめる。
+- 1005 のフレームの読み込みと再生への反映は未対応。残作業は TODO の「EQRP の K-NET/KiK-net 波形（1005）からのリアルタイム震度」にある。
+
 ## 時刻
 
 - EQRP の timestamp は「JST の壁時計を UTC として格納した値」。KEVi は強震モニタ画像の JST の時刻を `DateTimeKind.Unspecified` のまま書き出し、MessagePack-CSharp は Unspecified を変換せずに格納する（`MessagePackPrimitives.TryWrite`）。

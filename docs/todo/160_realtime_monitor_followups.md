@@ -68,6 +68,18 @@
   灰色の枠線だけで描かれること（枠表示の設定が「表示しない」でも描く）。iOS / Android の両方で `circle-opacity` と
   `circle-stroke-width` の式が例外にならないことも確認する。
 
+## 160: EQRP の K-NET/KiK-net 波形（1005）からのリアルタイム震度
+
+対象: `packages/earthquake_replay/`、`packages/kyoshin_waveform/`、`packages/realtime_seismic_intensity/`、`app/lib/feature/earthquake_replay/`。
+
+- 1005 のフレームの body の形式（観測点・チャンネルの単位、波形の格納形式、時刻の規約）は backend の `packages/eqrp-format` にあり、アプリ側では未確認。
+  形式を確認してから `ReplayDataType` に 1005 を加え、`kyoshin_waveform` の `KyoshinWaveformRecord` へ変換する。
+- 読み込み時に観測点ごとのリアルタイム震度の系列を求め、再生時刻の値を観測点として地図に描く。強震モニタ画像（100）がある時刻との優先や重ね方を決める。
+  計算は観測点数に比例して重いため、解析用の Isolate で行う。
+- 観測点ごとの波形（`KyoshinWaveformChart`）を開く画面と導線を作る。再生位置をカーソルで示す。
+- リリース前の確認: 震度計算のフィルタは特許第5946067号の式による。有料プラン・広告を含むアプリでの配布に、防災科研とのライセンス契約が必要か確認する（`packages/realtime_seismic_intensity/README.md`）。
+- 完了条件: 1005 を含む EQRP を再生すると、波形のある観測点がリアルタイム震度で描かれ、観測点の波形を開ける。ライセンスの扱いが決まっている。
+
 ## 150: EQRP リプレイ再生の実機確認と公開
 
 対象: `app/lib/feature/earthquake_replay/`、`packages/earthquake_replay/`、`app/ios/Runner/Info.plist`、`app/android/app/src/main/AndroidManifest.xml`。
