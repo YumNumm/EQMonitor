@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_waveform_geo_json_merger.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_waveform_features_provider.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,7 +11,15 @@ part 'kyoshin_monitor_points_provider.g.dart';
 
 @riverpod
 String kyoshinMonitorObservationGeoJson(Ref ref) {
-  return ref.watch(kyoshinMonitorProvider.select((v) => v.value?.geoJson)) ??
+  final imageGeoJson = ref.watch(
+    kyoshinMonitorProvider.select((v) => v.value?.geoJson),
+  );
+  return ref
+          .watch(replayWaveformGeoJsonMergerProvider)
+          .merge(
+            imageGeoJson: imageGeoJson,
+            waveformFeatures: ref.watch(replayWaveformFeaturesProvider),
+          ) ??
       jsonEncode({
         'type': 'FeatureCollection',
         'features': <Map<String, dynamic>>[],

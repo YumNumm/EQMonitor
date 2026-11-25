@@ -52,7 +52,7 @@ final class KyoshinMonitorObservationGeoJsonProvider
 }
 
 String _$kyoshinMonitorObservationGeoJsonHash() =>
-    r'a445d1ab5ad7b6d0466e9fa3d41d422a62022619';
+    r'f2799807fbaf0713553b4cd407de6543db675d45';
 
 /// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の GeoJSON
 
