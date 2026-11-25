@@ -8,6 +8,7 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 - KyoshinEewViewerIngen（KEVi）の `KyoshinReplayFileReader` と同じ構成。`EQRP` の magic、MessagePack のヘッダ、圧縮した `ReplayData[]` が続く。読み込みは `packages/earthquake_replay`。
 - 再生に使うのは強震モニタ画像（Union 100、`ImageType.shindo` のみ）と EEW（EQMonitor 形式の Union 1003、気象庁 XML 電文の Union 0 のうち緊急地震速報）。ほかの種類は読み飛ばす。
 - `ReplayDataType` に無い Union（バックエンドの地震アーカイブが書く 1004 の地震情報など）は、読み込み時に捨てる。対応前のアプリは未知の Union で読み込みに失敗する。
+- 再生区間の終わりは最後のフレームの時刻。1005 を含むファイルはヘッダの終了時刻の方が遅ければそこまで再生する。強震モニタ画像の無いファイルでは最後のフレームが EEW になり、波形の記録より先に終わるため。
 - 1005（K-NET/KiK-net 波形）は `KyoshinWaveformReplayData` として読む。body は `[time, metadataJson, int32BE[]]` で、観測点・成分ごとに1フレーム。時刻は収録の先頭（Record Time の15秒前）。メタデータは backend の earthquake-archiver が書く camelCase の JSON で、カウント値は基線補正していない。
 - 1003 の JSON は EEW API が返す `EewItemWithRelations` をそのまま格納する。`EewItemWithRelations.fromJson` で読めないフレームはログを残して読み飛ばし、再生は止めない。
 - Union 0 は題名（`Control/Title`）が緊急地震速報（警報）・（予報）・（地震動予報）のものだけを `packages/jma_eew_xml` で読み、`JmaEewXmlConverter` でアプリ用の `EewTelegramItem` にする。読めない電文はログを残して読み飛ばす。
