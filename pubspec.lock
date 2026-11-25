@@ -1530,8 +1530,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre"
-      ref: e1bc773
-      resolved-ref: e1bc773075fcdbf8fb1ffff43b2a49d9e26cb1f7
+      ref: "55cc9c1"
+      resolved-ref: "55cc9c1e135b484141c492cd352eb711a67b3a87"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.4.0"
@@ -1539,8 +1539,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_native"
-      ref: e1bc773
-      resolved-ref: e1bc773075fcdbf8fb1ffff43b2a49d9e26cb1f7
+      ref: "55cc9c1"
+      resolved-ref: "55cc9c1e135b484141c492cd352eb711a67b3a87"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.4.0"
@@ -1548,8 +1548,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "bindings/dart"
-      ref: bd595f2
-      resolved-ref: bd595f25f9de235fef70199f5f1545ee147cfef0
+      ref: "8dcb0ad"
+      resolved-ref: "8dcb0ad7012d16a5f3ac492bc1c926de0bcf46f2"
       url: "https://github.com/YumNumm/maplibre-native-ffi.git"
     source: git
     version: "0.202611.0"
@@ -1557,8 +1557,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_platform_interface"
-      ref: e1bc773
-      resolved-ref: e1bc773075fcdbf8fb1ffff43b2a49d9e26cb1f7
+      ref: "55cc9c1"
+      resolved-ref: "55cc9c1e135b484141c492cd352eb711a67b3a87"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.4.0"
@@ -1566,8 +1566,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_web"
-      ref: e1bc773
-      resolved-ref: e1bc773075fcdbf8fb1ffff43b2a49d9e26cb1f7
+      ref: "55cc9c1"
+      resolved-ref: "55cc9c1e135b484141c492cd352eb711a67b3a87"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.4.0"
