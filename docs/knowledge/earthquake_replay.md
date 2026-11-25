@@ -76,8 +76,9 @@ EQRP（`.eqrp`）または強震モニタが公開している過去画像を、
 ## 地震アーカイブからの取得
 
 - デバッグメニューのリプレイのカードにある「地震アーカイブから取得」（`EarthquakeArchiveListPage`）で、バックエンドが毎時作る地震ごとの EQRP を一覧・取得する。仕様はバックエンドの `docs/earthquake-archive.md`。
-- API は admin 専用（`/v2/admin/earthquake-archives`）。デバイスの役割ではなく Better Auth のユーザーの `role` で判定するため、admin のアカウントでログインしている必要がある。
-- 呼び出しは `UserApiGateway`（Better Auth の JWT を付け、401 なら 1 回だけ取り直す）を使う。ファイルは `getBytes` で `/file` から取る。保存先は外から開けないため、API が中継する。
+- デバイスの役割が Admin（`DebugAccessLevel.full`）の端末だけに入口を出し、ルートも `DebugMenuRouteGuard` で admin 専用にしている。
+- API（`/v2/admin/earthquake-archives`）は、`ADMIN_DEVICE_IDS` の端末のトークンでも通る。ほかの admin API と違い、アカウントへのログインは要らない。`DeviceAuthTokenInterceptor` がこのパスの GET にデバイスのトークンを付ける。
+- 一覧と詳細は生成済みの `AdminApiClient`、ファイルは `/file` を同じ Dio でバイト列として取る。保存先は外から開けないため、API が中継する。
 - 取得したファイルは EQRP として読めた場合だけ、ヘッダの開始時刻の `年/月` に保存する（`ReplayLibraryRepository.saveDownloaded`）。「保存して再生」はそのまま `/replay/open` へ進む。
 - 一覧と詳細には、フレームの種類ごとの件数・容量・時刻の範囲を出す。1004（地震情報）と 1005（K-NET/KiK-net 波形）は再生では読み飛ばす。
 

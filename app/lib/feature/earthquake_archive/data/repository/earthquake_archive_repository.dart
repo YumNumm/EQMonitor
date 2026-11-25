@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/feature/auth/data/repository/user_api_client.dart';
+import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/earthquake_archive/data/model/earthquake_archive.dart';
 import 'package:eqmonitor/feature/earthquake_archive/data/model/earthquake_archive_converter.dart';
 import 'package:eqmonitor/feature/earthquake_archive/data/model/earthquake_archive_exception.dart';
@@ -15,11 +17,14 @@ part 'earthquake_archive_repository.g.dart';
 Future<EarthquakeArchiveRepository> earthquakeArchiveRepository(
   Ref ref,
 ) async => EarthquakeArchiveRepository(
-  client: await ref.watch(userApiClientProvider.future),
+  client: await ref.watch(apiClientProvider.future),
+  dio: await ref.watch(dioProvider.future),
 );
 
+// 認証は DeviceAuthTokenInterceptor がデバイスのトークンを付ける。サーバーは ADMIN_DEVICE_IDS の端末だけを通す。
 class const EarthquakeArchiveRepository({
-  required final UserApiGateway client,
+  required final api.ApiClient client,
+  required final Dio dio,
   final EarthquakeArchiveFailureMapper failureMapper =
       const EarthquakeArchiveFailureMapper(),
 }) {
@@ -28,24 +33,20 @@ class const EarthquakeArchiveRepository({
   Future<Result<EarthquakeArchivePage, EarthquakeArchiveException>> list({
     String? cursor,
   }) async {
-    final response = await client.getJson(
-      path: api.AdminApiClientUrls.getV2AdminEarthquakeArchives,
-      queryParameters: {'limit': '$pageSize', 'cursor': ?cursor},
-    );
-    if (response case Failure(:final exception, :final stackTrace)) {
-      return Failure(failureMapper.map(exception), stackTrace);
-    }
     try {
-      final page = api.AdminEarthquakeArchiveListResponse.fromJson(
-        response.unwrap(),
+      final response = await client.admin.getV2AdminEarthquakeArchives(
+        limit: pageSize,
+        cursor: cursor,
       );
       return Success(
         EarthquakeArchivePage(
-          items: [for (final item in page.items) item.toModel()],
-          nextCursor: page.nextToken,
+          items: [for (final item in response.data.items) item.toModel()],
+          nextCursor: response.data.nextToken,
         ),
       );
-    } on Object catch (_, stackTrace) {
+    } on DioException catch (error, stackTrace) {
+      return Failure(failureMapper.map(error), stackTrace);
+    } on Exception catch (_, stackTrace) {
       return Failure(const EarthquakeArchiveException(.unknown), stackTrace);
     }
   }
@@ -53,20 +54,14 @@ class const EarthquakeArchiveRepository({
   Future<Result<EarthquakeArchive, EarthquakeArchiveException>> detail({
     required String eventId,
   }) async {
-    final response = await client.getJson(
-      path: api.AdminApiClientUrls.getV2AdminEarthquakeArchivesEventId
-          .replaceFirst('{eventId}', Uri.encodeComponent(eventId)),
-    );
-    if (response case Failure(:final exception, :final stackTrace)) {
-      return Failure(failureMapper.map(exception), stackTrace);
-    }
     try {
-      return Success(
-        api.AdminEarthquakeArchiveDetailResponse.fromJson(
-          response.unwrap(),
-        ).item.toModel(),
+      final response = await client.admin.getV2AdminEarthquakeArchivesEventId(
+        eventId: eventId,
       );
-    } on Object catch (_, stackTrace) {
+      return Success(response.data.item.toModel());
+    } on DioException catch (error, stackTrace) {
+      return Failure(failureMapper.map(error), stackTrace);
+    } on Exception catch (_, stackTrace) {
       return Failure(const EarthquakeArchiveException(.unknown), stackTrace);
     }
   }
@@ -74,16 +69,23 @@ class const EarthquakeArchiveRepository({
   Future<Result<Uint8List, EarthquakeArchiveException>> download({
     required String eventId,
   }) async {
-    final response = await client.getBytes(
-      path: api.AdminApiClientUrls.getV2AdminEarthquakeArchivesEventIdFile
-          .replaceFirst('{eventId}', Uri.encodeComponent(eventId)),
-    );
-    return switch (response) {
-      Success(:final value) => Success(value),
-      Failure(:final exception, :final stackTrace) => Failure(
-        failureMapper.map(exception),
-        stackTrace,
-      ),
-    };
+    try {
+      final response = await dio.get<List<int>>(
+        api.AdminApiClientUrls.getV2AdminEarthquakeArchivesEventIdFile
+            .replaceFirst('{eventId}', Uri.encodeComponent(eventId)),
+        options: Options(responseType: .bytes),
+      );
+      return switch (response.data) {
+        final List<int> bytes => Success(Uint8List.fromList(bytes)),
+        _ => Failure(
+          const EarthquakeArchiveException(.unknown),
+          StackTrace.current,
+        ),
+      };
+    } on DioException catch (error, stackTrace) {
+      return Failure(failureMapper.map(error), stackTrace);
+    } on Exception catch (_, stackTrace) {
+      return Failure(const EarthquakeArchiveException(.unknown), stackTrace);
+    }
   }
 }

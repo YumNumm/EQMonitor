@@ -71,7 +71,7 @@ class const _DebugWidget() extends ConsumerWidget {
               onTap: () async =>
                   ref.read(debugModeActionProvider).disable(ref, context),
             ),
-            const _ReplaySection(),
+            _ReplaySection(isAdmin: isAdmin),
             const _EewEarthquakeSection(),
             const _RealtimeMonitorSection(),
             _NotificationDeviceSection(isAdmin: isAdmin),
@@ -131,7 +131,8 @@ class const _DebugTile({
   }
 }
 
-class const _ReplaySection() extends ConsumerWidget {
+class const _ReplaySection({required final bool isAdmin})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
@@ -198,14 +199,15 @@ class const _ReplaySection() extends ConsumerWidget {
                     icon: const Icon(Icons.folder_open_rounded),
                     label: const Text('保存済みから再生・ファイルを追加'),
                   ),
-                  FilledButton.tonalIcon(
-                    onPressed: () async =>
-                        const DebugEarthquakeArchiveListRoute().push<void>(
-                          context,
-                        ),
-                    icon: const Icon(Icons.cloud_download_rounded),
-                    label: const Text('地震アーカイブから取得'),
-                  ),
+                  if (isAdmin)
+                    FilledButton.tonalIcon(
+                      onPressed: () async =>
+                          const DebugEarthquakeArchiveListRoute().push<void>(
+                            context,
+                          ),
+                      icon: const Icon(Icons.cloud_download_rounded),
+                      label: const Text('地震アーカイブから取得'),
+                    ),
                 ],
               ),
             ],

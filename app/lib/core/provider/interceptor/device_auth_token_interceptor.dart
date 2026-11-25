@@ -34,7 +34,14 @@ class DeviceAuthTokenInterceptor({
         (options.method == 'POST' &&
             options.path ==
                 api.SubscriptionApiClientUrls.postV2SubscriptionSync);
-    if (!isDeviceMePath && !isSubscriptionRequest) {
+    const archivePath = api.AdminApiClientUrls.getV2AdminEarthquakeArchives;
+    final isEarthquakeArchiveRequest =
+        options.method == 'GET' &&
+        (options.path == archivePath ||
+            options.path.startsWith('$archivePath/'));
+    if (!isDeviceMePath &&
+        !isSubscriptionRequest &&
+        !isEarthquakeArchiveRequest) {
       handler.next(options);
       return;
     }
