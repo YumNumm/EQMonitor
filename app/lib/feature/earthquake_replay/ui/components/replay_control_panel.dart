@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_duration_formatter.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_intensity_icon_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_waveform_stations_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_origin_track_shape.dart';
@@ -241,13 +242,29 @@ class const _ReplayWaveformButton() extends ConsumerWidget {
     if (stationCount == 0) {
       return const SizedBox.shrink();
     }
+    final showIcon = ref.watch(replayIntensityIconProvider);
     return Padding(
       padding: EdgeInsets.only(top: context.designSystem.spacing.sm),
-      child: OutlinedButton.icon(
-        onPressed: () =>
-            const ReplayWaveformStationListRoute().push<void>(context),
-        icon: const Icon(Icons.ssid_chart_rounded),
-        label: Text('観測点の波形（$stationCount地点）'),
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('観測点を震度アイコンで表示'),
+            value: showIcon,
+            onChanged: (value) => HapticUtil.selection(
+              () => ref
+                  .read(replayIntensityIconProvider.notifier)
+                  .set(enabled: value),
+            ),
+          ),
+          OutlinedButton.icon(
+            onPressed: () =>
+                const ReplayWaveformStationListRoute().push<void>(context),
+            icon: const Icon(Icons.ssid_chart_rounded),
+            label: Text('観測点の波形（$stationCount地点）'),
+          ),
+        ],
       ),
     );
   }
