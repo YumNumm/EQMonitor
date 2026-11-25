@@ -39,6 +39,15 @@
 - 実機では閉じる・最小化・10秒経過・background移行で停止を確認する。
   Androidの`VIBRATE`宣言を重複追加しない。
 
+## 報の取り込みと同一性
+
+- アプリ用の`EewTelegramItem`はAPIの型に依存しない。EQMonitor API（REST・WebSocket・EQRPの1003）は
+  `EewItemWithRelationsConverter`、気象庁XML電文は`JmaEewXmlConverter`で変換してから`Eew`へ渡す。
+- 報の同一性は`eventId`・`serialNo`・`isCanceled`の組（`EewTelegramItem.key`）で判定する。
+  気象庁の取消報は取り消した報と同じ情報番号を持つ（解説資料Ⅰ「Serial」）。
+- バックエンドは取消報の情報番号に1を足して保存している。APIからの変換で1を引き、気象庁の番号に揃える。
+- 同じ地震の報の前後は`compareReportOrder`で決める。情報番号順、同じ番号なら取消報を後、同じ報は発表時刻順。
+
 ## EEWのREST・WebSocket整合
 
 - `Eew`はRESTをlistenし、正常完了時だけ整合処理へ渡す。受信済み値がある間は
@@ -133,7 +142,7 @@
 - 電文一覧のeventId別画面はfamily NotifierがRealtimeを購読し、種別とeventId一致時だけinvalidateする。
   一覧と詳細キャッシュは別所有者なので、それぞれに更新を接続する。
 - EEW詳細は初回API取得前からライブ状態を購読し、取得前の現在値・API応答・取得中の更新を統合する。
-  対象eventIdと報番号で照合し、同一報は発表時刻が新しい値、同時刻なら後から統合した値を採用する。
+  対象eventIdと`EewTelegramItem.key`で照合し、同一報は発表時刻が新しい値、同時刻なら後から統合した値を採用する。
   初期のライブ値よりAPI応答を優先し、取得中の更新を最後に適用する。取得後の同一報番号の訂正・取消も置き換える。
 - ライブ状態のLoading・ErrorはEEW詳細のAPI結果を置き換えない。購読エラーはログへ渡し、初回API取得の完了を妨げない。
 - EEW詳細地図は`fiveUnknown`（震度5弱以上）も震度別レイヤーの対象とし、震度5弱の色を使う。
