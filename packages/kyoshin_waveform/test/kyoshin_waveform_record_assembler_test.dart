@@ -10,7 +10,7 @@ void main() {
   const parser = KnetAsciiParser();
   const assembler = KyoshinWaveformRecordAssembler();
 
-  List<KnetAsciiChannel> knetFixture() => [
+  List<KyoshinRawChannel> knetFixture() => [
     for (final extension in ['UD', 'NS', 'EW'])
       parser.parse(
         File('test/fixtures/EHM0012408081643.$extension').readAsStringSync(),

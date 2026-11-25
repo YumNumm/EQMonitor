@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:kyoshin_waveform/src/kyoshin_waveform_component.dart';
 
-final class const KnetAsciiChannel({
+final class const KyoshinRawChannel({
   required final String stationCode,
   required final double stationLatitude,
   required final double stationLongitude,

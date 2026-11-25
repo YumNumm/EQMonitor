@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:kyoshin_waveform/src/knet_ascii_channel.dart';
+import 'package:kyoshin_waveform/src/kyoshin_raw_channel.dart';
 import 'package:kyoshin_waveform/src/kyoshin_waveform_channel.dart';
 import 'package:kyoshin_waveform/src/kyoshin_waveform_record.dart';
 
 final class const KyoshinWaveformRecordAssembler() {
-  List<KyoshinWaveformRecord> assemble(List<KnetAsciiChannel> channels) {
+  List<KyoshinWaveformRecord> assemble(List<KyoshinRawChannel> channels) {
     final groups = groupBy(
       channels,
       (channel) => (channel.stationCode, channel.recordTime),
@@ -14,7 +14,7 @@ final class const KyoshinWaveformRecordAssembler() {
     ]..sort((a, b) => a.stationCode.compareTo(b.stationCode));
   }
 
-  KyoshinWaveformRecord _assembleStation(List<KnetAsciiChannel> channels) {
+  KyoshinWaveformRecord _assembleStation(List<KyoshinRawChannel> channels) {
     final first = channels.first;
     if (channels.any((channel) => channel.samplingRate != first.samplingRate)) {
       throw FormatException(
