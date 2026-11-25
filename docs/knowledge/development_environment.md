@@ -83,7 +83,7 @@ mise exec -- dart run melos run analyze
 mise exec -- dart test
 ```
 
-- Dart 3.15.0-154.0.dev の `dart analyze` は、信頼済みでない analyzer plugin を実行しない。
+- `dart analyze` は、信頼済みでない analyzer plugin を実行しない（Dart 3.15.0-154.0.dev で確認）。
   `CI` 環境変数がある場合だけ既定で実行するため、ローカルでは `--plugins` を付ける。
   付けないと「not trusted」の通知だけが出て、自作ルールと Hooks の診断なしで成功する。
 - ファイル・サブディレクトリ指定では自作 plugin の診断が抜けることがある。
