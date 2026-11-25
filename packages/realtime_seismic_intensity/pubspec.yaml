@@ -1,0 +1,15 @@
+name: realtime_seismic_intensity
+description: 3成分の加速度波形からリアルタイム震度を計算する。
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.14.0
+
+resolution: workspace
+
+dev_dependencies:
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  test: ^1.29.0
