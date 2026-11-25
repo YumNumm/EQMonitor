@@ -1,6 +1,6 @@
 enum EarthquakeArchiveFailure(final String message) {
-  signedOut('ログインが必要です。デバッグメニューの「アカウント」からログインしてください。'),
-  forbidden('admin 権限のあるアカウントでログインしてください。'),
+  unauthorized('この端末の認証に失敗しました。アプリを再起動してから、もう一度お試しください。'),
+  forbidden('この端末は admin として登録されていません。'),
   notFound('アーカイブが見つかりませんでした。'),
   unavailable('保存先からファイルを取得できませんでした。時間をおいて、もう一度お試しください。'),
   network('通信できませんでした。接続を確認してください。'),

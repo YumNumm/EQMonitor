@@ -1,14 +1,21 @@
-import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
+import 'package:dio/dio.dart';
 import 'package:eqmonitor/feature/earthquake_archive/data/model/earthquake_archive_exception.dart';
 
 final class const EarthquakeArchiveFailureMapper() {
-  EarthquakeArchiveException map(AuthFailure failure) =>
-      EarthquakeArchiveException(switch ((failure.kind, failure.statusCode)) {
-        (.sessionRequired || .unauthorized, _) => .signedOut,
-        (_, 403) => .forbidden,
-        (_, 404) => .notFound,
-        (_, 502 || 503) => .unavailable,
-        (.network || .timeout, _) => .network,
+  EarthquakeArchiveException map(DioException error) =>
+      EarthquakeArchiveException(switch (error) {
+        DioException(response: Response(statusCode: 401)) => .unauthorized,
+        DioException(response: Response(statusCode: 403)) => .forbidden,
+        DioException(response: Response(statusCode: 404)) => .notFound,
+        DioException(response: Response(statusCode: 502 || 503)) =>
+          .unavailable,
+        DioException(
+          type: .connectionError ||
+              .connectionTimeout ||
+              .receiveTimeout ||
+              .sendTimeout,
+        ) =>
+          .network,
         _ => .unknown,
       });
 }

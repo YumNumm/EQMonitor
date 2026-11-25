@@ -544,6 +544,7 @@ final class const DebugMenuRouteGuard() {
           const DebugDeviceSettingsRoute().location,
           const DebugNotificationWebhookRoute().location,
           const DebugDeviceAdminRoute().location,
+          const DebugEarthquakeArchiveListRoute().location,
         ].any(matchedLocation.startsWith) ||
         (isOnboardingCompleted &&
             matchedLocation.startsWith(const OnboardingRoute().location));

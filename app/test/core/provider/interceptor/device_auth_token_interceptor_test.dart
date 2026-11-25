@@ -23,6 +23,8 @@ void main() {
   for (final (method, path) in [
     ('GET', '/v2/subscription/me'),
     ('POST', '/v2/subscription/sync'),
+    ('GET', '/v2/admin/earthquake-archives'),
+    ('GET', '/v2/admin/earthquake-archives/20261123024614/file'),
   ]) {
     test('adds bearer token to $method $path', () async {
       final interceptor = DeviceAuthTokenInterceptor(
@@ -46,6 +48,9 @@ void main() {
     ('POST', '/v2/subscription/me'),
     ('GET', '/v2/subscription/sync'),
     ('GET', 'https://other.example/v2/subscription/me'),
+    ('GET', '/v2/admin/replay-files'),
+    ('GET', '/v2/admin/earthquake-archives-extra'),
+    ('POST', '/v2/admin/earthquake-archives'),
   ]) {
     test('does not read or send token to $method $path', () async {
       final interceptor = DeviceAuthTokenInterceptor(
