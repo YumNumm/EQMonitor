@@ -70,6 +70,12 @@ class const ReplayDataWriter() {
       SnpLogEntryReplayData(:final time, :final message) => [time, message],
       AxisJsonReplayData(:final time, :final json) => [time, json],
       EqMonitorEewReplayData(:final time, :final json) => [time, json],
+      KyoshinWaveformReplayData(
+        :final time,
+        :final metadataJson,
+        :final samples,
+      ) =>
+        [time, metadataJson, samples],
     },
   ];
 }

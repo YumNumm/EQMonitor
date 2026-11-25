@@ -2121,4 +2121,262 @@ as String,
 
 }
 
+/// @nodoc
+mixin _$KyoshinWaveformReplayData {
+
+ ReplayDataType get type; DateTime get time; String get metadataJson; Uint8List get samples;
+/// Create a copy of KyoshinWaveformReplayData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$KyoshinWaveformReplayDataCopyWith<KyoshinWaveformReplayData> get copyWith => _$KyoshinWaveformReplayDataCopyWithImpl<KyoshinWaveformReplayData>(this as KyoshinWaveformReplayData, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinWaveformReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.metadataJson, metadataJson) || other.metadataJson == metadataJson)&&const DeepCollectionEquality().equals(other.samples, samples));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,type,time,metadataJson,const DeepCollectionEquality().hash(samples));
+
+
+
+}
+
+/// @nodoc
+abstract mixin class $KyoshinWaveformReplayDataCopyWith<$Res>  {
+  factory $KyoshinWaveformReplayDataCopyWith(KyoshinWaveformReplayData value, $Res Function(KyoshinWaveformReplayData) _then) = _$KyoshinWaveformReplayDataCopyWithImpl;
+@useResult
+$Res call({
+ ReplayDataType type, DateTime time, String metadataJson, Uint8List samples
+});
+
+
+
+
+}
+/// @nodoc
+class _$KyoshinWaveformReplayDataCopyWithImpl<$Res>
+    implements $KyoshinWaveformReplayDataCopyWith<$Res> {
+  _$KyoshinWaveformReplayDataCopyWithImpl(this._self, this._then);
+
+  final KyoshinWaveformReplayData _self;
+  final $Res Function(KyoshinWaveformReplayData) _then;
+
+/// Create a copy of KyoshinWaveformReplayData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? metadataJson = null,Object? samples = null,}) {
+  return _then(KyoshinWaveformReplayData(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,metadataJson: null == metadataJson ? _self.metadataJson : metadataJson // ignore: cast_nullable_to_non_nullable
+as String,samples: null == samples ? _self.samples : samples // ignore: cast_nullable_to_non_nullable
+as Uint8List,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [KyoshinWaveformReplayData].
+extension KyoshinWaveformReplayDataPatterns on KyoshinWaveformReplayData {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _KyoshinWaveformReplayData value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _KyoshinWaveformReplayData() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _KyoshinWaveformReplayData value)  $default,){
+final _that = this;
+switch (_that) {
+case _KyoshinWaveformReplayData():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _KyoshinWaveformReplayData value)?  $default,){
+final _that = this;
+switch (_that) {
+case _KyoshinWaveformReplayData() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ReplayDataType type,  DateTime time,  String metadataJson,  Uint8List samples)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _KyoshinWaveformReplayData() when $default != null:
+return $default(_that.type,_that.time,_that.metadataJson,_that.samples);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ReplayDataType type,  DateTime time,  String metadataJson,  Uint8List samples)  $default,) {final _that = this;
+switch (_that) {
+case _KyoshinWaveformReplayData():
+return $default(_that.type,_that.time,_that.metadataJson,_that.samples);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ReplayDataType type,  DateTime time,  String metadataJson,  Uint8List samples)?  $default,) {final _that = this;
+switch (_that) {
+case _KyoshinWaveformReplayData() when $default != null:
+return $default(_that.type,_that.time,_that.metadataJson,_that.samples);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _KyoshinWaveformReplayData extends KyoshinWaveformReplayData {
+  const _KyoshinWaveformReplayData({required this.type, required this.time, required this.metadataJson, required this.samples}): super._();
+  
+
+@override final  ReplayDataType type;
+@override final  DateTime time;
+@override final  String metadataJson;
+@override final  Uint8List samples;
+
+/// Create a copy of KyoshinWaveformReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$KyoshinWaveformReplayDataCopyWith<_KyoshinWaveformReplayData> get copyWith => __$KyoshinWaveformReplayDataCopyWithImpl<_KyoshinWaveformReplayData>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinWaveformReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.metadataJson, metadataJson) || other.metadataJson == metadataJson)&&const DeepCollectionEquality().equals(other.samples, samples));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,type,time,metadataJson,const DeepCollectionEquality().hash(samples));
+
+
+
+}
+
+/// @nodoc
+abstract mixin class _$KyoshinWaveformReplayDataCopyWith<$Res> implements $KyoshinWaveformReplayDataCopyWith<$Res> {
+  factory _$KyoshinWaveformReplayDataCopyWith(_KyoshinWaveformReplayData value, $Res Function(_KyoshinWaveformReplayData) _then) = __$KyoshinWaveformReplayDataCopyWithImpl;
+@override @useResult
+$Res call({
+ ReplayDataType type, DateTime time, String metadataJson, Uint8List samples
+});
+
+
+
+
+}
+/// @nodoc
+class __$KyoshinWaveformReplayDataCopyWithImpl<$Res>
+    implements _$KyoshinWaveformReplayDataCopyWith<$Res> {
+  __$KyoshinWaveformReplayDataCopyWithImpl(this._self, this._then);
+
+  final _KyoshinWaveformReplayData _self;
+  final $Res Function(_KyoshinWaveformReplayData) _then;
+
+/// Create a copy of KyoshinWaveformReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? time = null,Object? metadataJson = null,Object? samples = null,}) {
+  return _then(_KyoshinWaveformReplayData(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,metadataJson: null == metadataJson ? _self.metadataJson : metadataJson // ignore: cast_nullable_to_non_nullable
+as String,samples: null == samples ? _self.samples : samples // ignore: cast_nullable_to_non_nullable
+as Uint8List,
+  ));
+}
+
+
+}
+
 // dart format on
