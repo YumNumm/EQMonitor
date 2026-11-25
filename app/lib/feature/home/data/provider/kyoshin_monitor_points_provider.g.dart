@@ -10,49 +10,151 @@ part of 'kyoshin_monitor_points_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// 強震モニタ画像を解析した観測点の Feature。画像が変わったときだけ JSON を読み直す。
 
-@ProviderFor(kyoshinMonitorObservationGeoJson)
-final kyoshinMonitorObservationGeoJsonProvider =
-    KyoshinMonitorObservationGeoJsonProvider._();
+@ProviderFor(kyoshinMonitorImageFeatures)
+final kyoshinMonitorImageFeaturesProvider =
+    KyoshinMonitorImageFeaturesProvider._();
 
-final class KyoshinMonitorObservationGeoJsonProvider
-    extends $FunctionalProvider<String, String, String>
-    with $Provider<String> {
-  KyoshinMonitorObservationGeoJsonProvider._()
+/// 強震モニタ画像を解析した観測点の Feature。画像が変わったときだけ JSON を読み直す。
+
+final class KyoshinMonitorImageFeaturesProvider
+    extends $FunctionalProvider<List<Object?>, List<Object?>, List<Object?>>
+    with $Provider<List<Object?>> {
+  /// 強震モニタ画像を解析した観測点の Feature。画像が変わったときだけ JSON を読み直す。
+  KyoshinMonitorImageFeaturesProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'kyoshinMonitorObservationGeoJsonProvider',
+        name: r'kyoshinMonitorImageFeaturesProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$kyoshinMonitorObservationGeoJsonHash();
+  String debugGetCreateSourceHash() => _$kyoshinMonitorImageFeaturesHash();
 
   @$internal
   @override
-  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<List<Object?>> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  String create(Ref ref) {
-    return kyoshinMonitorObservationGeoJson(ref);
+  List<Object?> create(Ref ref) {
+    return kyoshinMonitorImageFeatures(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(String value) {
+  Override overrideWithValue(List<Object?> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<String>(value),
+      providerOverride: $SyncValueProvider<List<Object?>>(value),
     );
   }
 }
 
-String _$kyoshinMonitorObservationGeoJsonHash() =>
-    r'f2799807fbaf0713553b4cd407de6543db675d45';
+String _$kyoshinMonitorImageFeaturesHash() =>
+    r'ee9fae683978c117f5e664b12c23cbb0688de5ef';
+
+/// 画像の観測点に、リプレイ中は波形から求めた観測点を重ねた Feature
+
+@ProviderFor(kyoshinMonitorObservationFeatures)
+final kyoshinMonitorObservationFeaturesProvider =
+    KyoshinMonitorObservationFeaturesProvider._();
+
+/// 画像の観測点に、リプレイ中は波形から求めた観測点を重ねた Feature
+
+final class KyoshinMonitorObservationFeaturesProvider
+    extends $FunctionalProvider<List<Object?>, List<Object?>, List<Object?>>
+    with $Provider<List<Object?>> {
+  /// 画像の観測点に、リプレイ中は波形から求めた観測点を重ねた Feature
+  KyoshinMonitorObservationFeaturesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kyoshinMonitorObservationFeaturesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$kyoshinMonitorObservationFeaturesHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<Object?>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<Object?> create(Ref ref) {
+    return kyoshinMonitorObservationFeatures(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<Object?> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<Object?>>(value),
+    );
+  }
+}
+
+String _$kyoshinMonitorObservationFeaturesHash() =>
+    r'a79461fb1ae14c2a621401c09639914538a036f7';
+
+/// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の Feature
+
+@ProviderFor(homeKyoshinMonitorObservationFeatures)
+final homeKyoshinMonitorObservationFeaturesProvider =
+    HomeKyoshinMonitorObservationFeaturesProvider._();
+
+/// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の Feature
+
+final class HomeKyoshinMonitorObservationFeaturesProvider
+    extends $FunctionalProvider<List<Object?>, List<Object?>, List<Object?>>
+    with $Provider<List<Object?>> {
+  /// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の Feature
+  HomeKyoshinMonitorObservationFeaturesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'homeKyoshinMonitorObservationFeaturesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$homeKyoshinMonitorObservationFeaturesHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<Object?>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<Object?> create(Ref ref) {
+    return homeKyoshinMonitorObservationFeatures(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<Object?> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<Object?>>(value),
+    );
+  }
+}
+
+String _$homeKyoshinMonitorObservationFeaturesHash() =>
+    r'1dc47973a02a3015d94f5c9e92944e611f93ae8b';
 
 /// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の GeoJSON
 
@@ -101,7 +203,7 @@ final class HomeKyoshinMonitorObservationGeoJsonProvider
 }
 
 String _$homeKyoshinMonitorObservationGeoJsonHash() =>
-    r'fd88ec3165df2fafb00ade8ec5e65760da4ef6c3';
+    r'10f51bcb7c939088452e8bf77dda89be3f77000d';
 
 /// 観測点名ラベル用の GeoJSON
 ///
@@ -159,4 +261,4 @@ final class HomeKyoshinMonitorStationLabelGeoJsonProvider
 }
 
 String _$homeKyoshinMonitorStationLabelGeoJsonHash() =>
-    r'2c48abe7a68675d2b29254d3e4fc368d69921e31';
+    r'34db621f65619a9a9c0e85c445404e77f1309dc0';

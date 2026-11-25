@@ -106,4 +106,4 @@ final class ReplayWaveformFeaturesProvider
 }
 
 String _$replayWaveformFeaturesHash() =>
-    r'dc7d3210b60616b7358499905ee7000ecd91ca25';
+    r'b12638ebea00d8d0b6dba3c966a4f239bd54a3ae';

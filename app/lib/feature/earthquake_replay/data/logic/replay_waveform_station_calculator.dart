@@ -19,6 +19,8 @@ ReplayWaveformStationCalculator replayWaveformStationCalculator(Ref ref) =>
 class const ReplayWaveformStationCalculator({
   required final ReplayWaveformRecordAssembler records,
 }) {
+  static const stepsPerSecond = 10;
+
   Future<List<ReplayWaveformStation>> calculate(List<ReplayData> frames) {
     final waveforms = frames.whereType<KyoshinWaveformReplayData>().toList();
     if (waveforms.isEmpty) {
@@ -63,6 +65,9 @@ class const ReplayWaveformStationCalculator({
         ns: components.ns.accelerationGal,
         ew: components.ew.accelerationGal,
         ud: components.ud.accelerationGal,
+        stepsPerSecond: record.samplingRate % stepsPerSecond == 0
+            ? stepsPerSecond
+            : 1,
       ),
     );
   }

@@ -27,7 +27,11 @@ final class CustomProviderObserver(final Talker talker)
   ) => switch (context.provider.name) {
     'timeTickerProvider' ||
     'eewAliveTelegramProvider' ||
-    'kyoshinMonitorObservationGeoJsonProvider' ||
+    'kyoshinMonitorImageFeaturesProvider' ||
+    'kyoshinMonitorObservationFeaturesProvider' ||
+    'homeKyoshinMonitorObservationFeaturesProvider' ||
+    'replayWaveformFeaturesProvider' ||
+    'replayWaveformTimeProvider' ||
     'kyoshinMonitorAnalyzerIsolateProvider' ||
     'shakeDetectionVisibleProvider' ||
     'homeKyoshinMonitorObservationGeoJsonProvider' => null,
@@ -54,7 +58,12 @@ final class CustomProviderObserver(final Talker talker)
     'shakeDetectionProvider' ||
     'shakeDetectionActiveProvider' ||
     'shakeDetectionVisibleProvider' ||
-    'kyoshinMonitorObservationGeoJsonProvider' ||
+    'kyoshinMonitorImageFeaturesProvider' ||
+    'kyoshinMonitorObservationFeaturesProvider' ||
+    'homeKyoshinMonitorObservationFeaturesProvider' ||
+    'homeKyoshinMonitorStationLabelGeoJsonProvider' ||
+    'replayWaveformFeaturesProvider' ||
+    'replayWaveformTimeProvider' ||
     'eewProvider' ||
     'homeKyoshinMonitorObservationGeoJsonProvider' => null,
     _

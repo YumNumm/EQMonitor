@@ -9,68 +9,63 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_points_provider.g.dart';
 
+/// 強震モニタ画像を解析した観測点の Feature。画像が変わったときだけ JSON を読み直す。
 @riverpod
-String kyoshinMonitorObservationGeoJson(Ref ref) {
-  final imageGeoJson = ref.watch(
+List<Object?> kyoshinMonitorImageFeatures(Ref ref) {
+  final geoJson = ref.watch(
     kyoshinMonitorProvider.select((v) => v.value?.geoJson),
   );
-  return ref
-          .watch(replayWaveformGeoJsonMergerProvider)
-          .merge(
-            imageGeoJson: imageGeoJson,
-            waveformFeatures: ref.watch(replayWaveformFeaturesProvider),
-          ) ??
-      jsonEncode({
-        'type': 'FeatureCollection',
-        'features': <Map<String, dynamic>>[],
-      });
+  if (geoJson == null) {
+    return const [];
+  }
+  try {
+    return switch (jsonDecode(geoJson)) {
+      {'features': final List<Object?> features} => features,
+      _ => const [],
+    };
+  } on FormatException {
+    return const [];
+  }
 }
 
-/// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の GeoJSON
+/// 画像の観測点に、リプレイ中は波形から求めた観測点を重ねた Feature
 @riverpod
-String homeKyoshinMonitorObservationGeoJson(Ref ref) {
-  final raw = ref.watch(kyoshinMonitorObservationGeoJsonProvider);
+List<Object?> kyoshinMonitorObservationFeatures(Ref ref) => ref
+    .watch(replayWaveformGeoJsonMergerProvider)
+    .merge(
+      imageFeatures: ref.watch(kyoshinMonitorImageFeaturesProvider),
+      waveformFeatures: ref.watch(replayWaveformFeaturesProvider),
+    );
+
+/// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の Feature
+@riverpod
+List<Object?> homeKyoshinMonitorObservationFeatures(Ref ref) {
+  final features = ref.watch(kyoshinMonitorObservationFeaturesProvider);
   final min = ref.watch(
     homeConfigurationProvider.select(
       (a) => a.value?.kyoshinMonitor.minRealtimeShindo,
     ),
   );
   if (min == null) {
-    return raw;
+    return features;
   }
-  try {
-    final decoded = jsonDecode(raw) as Map<String, dynamic>;
-    final features = decoded['features'];
-    if (features is! List<dynamic>) {
-      return raw;
-    }
-    final filtered = <dynamic>[];
-    for (final f in features) {
-      if (f is! Map<String, dynamic>) {
-        continue;
-      }
-      final props = f['properties'];
-      if (props is! Map<String, dynamic>) {
-        filtered.add(f);
-        continue;
-      }
-      final intensity = props['intensity'];
-      if (intensity is! num) {
-        filtered.add(f);
-        continue;
-      }
-      if (intensity.toDouble() > min) {
-        filtered.add(f);
-      }
-    }
-    return jsonEncode(<String, dynamic>{
-      'type': 'FeatureCollection',
-      'features': filtered,
-    });
-  } on Exception {
-    return raw;
-  }
+  return features
+      .where(
+        (feature) => switch (feature) {
+          {'properties': {'intensity': final num intensity}} =>
+            intensity.toDouble() > min,
+          _ => true,
+        },
+      )
+      .toList();
 }
+
+/// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の GeoJSON
+@riverpod
+String homeKyoshinMonitorObservationGeoJson(Ref ref) => jsonEncode({
+  'type': 'FeatureCollection',
+  'features': ref.watch(homeKyoshinMonitorObservationFeaturesProvider),
+});
 
 /// 観測点名ラベル用の GeoJSON
 ///
@@ -78,10 +73,10 @@ String homeKyoshinMonitorObservationGeoJson(Ref ref) {
 /// 毎秒の観測値更新でラベルが再配置されるのを避ける。
 @riverpod
 String homeKyoshinMonitorStationLabelGeoJson(Ref ref) {
-  final raw = ref.watch(homeKyoshinMonitorObservationGeoJsonProvider);
-  final decoded = jsonDecode(raw) as Map<String, dynamic>;
   final features = <Map<String, dynamic>>[];
-  for (final feature in decoded['features'] as List<dynamic>) {
+  for (final feature in ref.watch(
+    homeKyoshinMonitorObservationFeaturesProvider,
+  )) {
     if (feature case {
       'geometry': final Object geometry,
       'properties': {'name': final String name},

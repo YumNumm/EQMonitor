@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_waveform_s
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_waveform_features_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_waveform_stations_provider.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_waveform_time_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -36,7 +37,9 @@ class const _StationList({required final List<ReplayWaveformStation> stations})
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final names = ref.watch(replayWaveformStationNamesProvider);
-    final time = ref.watch(replayProvider.select((s) => s?.currentTime));
+    final time =
+        ref.watch(replayWaveformTimeProvider).value ??
+        ref.watch(replayProvider.select((s) => s?.currentTime));
     return ListView.builder(
       itemCount: stations.length,
       itemBuilder: (context, index) {

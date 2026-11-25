@@ -1,6 +1,10 @@
+import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:realtime_seismic_intensity/src/realtime_intensity_calculator.dart';
+import 'package:realtime_seismic_intensity/src/jma_intensity_filter.dart';
+import 'package:realtime_seismic_intensity/src/jma_intensity_filter_design.dart';
+import 'package:realtime_seismic_intensity/src/measured_intensity_formula.dart';
+import 'package:realtime_seismic_intensity/src/ranked_window.dart';
 import 'package:realtime_seismic_intensity/src/realtime_intensity_series.dart';
 
 final class const RealtimeIntensitySeriesCalculator() {
@@ -11,44 +15,87 @@ final class const RealtimeIntensitySeriesCalculator() {
     required List<double> ew,
     required List<double> ud,
     int windowSeconds = 60,
+    int stepsPerSecond = 1,
   }) {
-    final calculator = RealtimeIntensityCalculator(
-      samplingRate: samplingRate,
-      windowSeconds: windowSeconds,
-    );
-    final length = [ns.length, ew.length, ud.length].reduce(
-      (a, b) => a < b ? a : b,
-    );
-    final components = [
-      _withoutOffset(ns, length),
-      _withoutOffset(ew, length),
-      _withoutOffset(ud, length),
-    ];
-    final values = <double?>[];
-    for (var start = 0; start + samplingRate <= length; start += samplingRate) {
-      final end = start + samplingRate;
-      values.add(
-        calculator.addSecond(
-          ns: Float64List.sublistView(components[0], start, end),
-          ew: Float64List.sublistView(components[1], start, end),
-          ud: Float64List.sublistView(components[2], start, end),
-        ),
+    final rank = samplingRate * 3 ~/ 10;
+    if (rank < 1) {
+      throw ArgumentError.value(samplingRate, 'samplingRate', 'too small');
+    }
+    if (windowSeconds <= 0) {
+      throw ArgumentError.value(windowSeconds, 'windowSeconds', 'must be > 0');
+    }
+    if (stepsPerSecond <= 0 || samplingRate % stepsPerSecond != 0) {
+      throw ArgumentError.value(
+        stepsPerSecond,
+        'stepsPerSecond',
+        'must divide samplingRate',
       );
     }
-    return RealtimeIntensitySeries(startTime: startTime, values: values);
+    final composite = _composite(
+      samplingRate: samplingRate,
+      components: [ns, ew, ud],
+    );
+    final stepSamples = samplingRate ~/ stepsPerSecond;
+    final windowSamples = samplingRate * windowSeconds;
+    final window = RankedWindow(values: composite);
+    const formula = MeasuredIntensityFormula();
+    final values = <double?>[];
+    var added = 0;
+    var removed = 0;
+    for (var end = stepSamples; end <= composite.length; end += stepSamples) {
+      for (; added < end; added++) {
+        window.add(added);
+      }
+      final start = max(0, end - windowSamples);
+      for (; removed < start; removed++) {
+        window.remove(removed);
+      }
+      final count = end - start;
+      values.add(
+        count < rank
+            ? null
+            : formula.fromAcceleration(window.smallest(count - rank + 1)),
+      );
+    }
+    return RealtimeIntensitySeries(
+      startTime: startTime,
+      values: values,
+      interval: Duration(
+        microseconds: Duration.microsecondsPerSecond ~/ stepsPerSecond,
+      ),
+    );
+  }
+
+  Float64List _composite({
+    required int samplingRate,
+    required List<List<double>> components,
+  }) {
+    final length = components.map((c) => c.length).reduce(min);
+    final design = JmaIntensityFilterDesign(samplingRate: samplingRate);
+    final composite = Float64List(length);
+    for (final samples in components) {
+      final filter = JmaIntensityFilter(design: design);
+      final offset = _mean(samples, length);
+      for (var i = 0; i < length; i++) {
+        final value = filter.process(samples[i] - offset);
+        composite[i] += value * value;
+      }
+    }
+    for (var i = 0; i < length; i++) {
+      composite[i] = sqrt(composite[i]);
+    }
+    return composite;
   }
 
   // 記録全長の平均値をオフセットとして差し引く。防災科研が公開する最大加速度と同じ扱い。
-  Float64List _withoutOffset(List<double> samples, int length) {
+  double _mean(List<double> samples, int length) {
+    if (length == 0) {
+      return 0;
+    }
     var sum = 0.0;
     for (var i = 0; i < length; i++) {
       sum += samples[i];
     }
-    final mean = length == 0 ? 0.0 : sum / length;
-    final result = Float64List(length);
-    for (var i = 0; i < length; i++) {
-      result[i] = samples[i] - mean;
-    }
-    return result;
+    return sum / length;
   }
 }
