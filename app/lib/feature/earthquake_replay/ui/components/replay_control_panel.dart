@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_duration_formatter.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/provider/replay_waveform_stations_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_origin_track_shape.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -41,6 +43,7 @@ class const ReplayControlPanel({required final ReplayState state, super.key})
             speeds: state.source.playbackSpeeds,
             speed: state.playbackSpeed,
           ),
+          const _ReplayWaveformButton(),
           SizedBox(height: spacing.sm),
           FilledButton.tonalIcon(
             onPressed: () => HapticUtil.light(
@@ -224,6 +227,27 @@ class const _ReplaySpeedSelector({
       onSelectionChanged: (selection) => HapticUtil.selection(
         () =>
             ref.read(replayProvider.notifier).setPlaybackSpeed(selection.first),
+      ),
+    );
+  }
+}
+
+class const _ReplayWaveformButton() extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stationCount = ref.watch(
+      replayWaveformStationsProvider.select((s) => s.value?.length ?? 0),
+    );
+    if (stationCount == 0) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: EdgeInsets.only(top: context.designSystem.spacing.sm),
+      child: OutlinedButton.icon(
+        onPressed: () =>
+            const ReplayWaveformStationListRoute().push<void>(context),
+        icon: const Icon(Icons.ssid_chart_rounded),
+        label: Text('観測点の波形（$stationCount地点）'),
       ),
     );
   }
