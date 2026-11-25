@@ -8,8 +8,8 @@ import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_fallback_polling_provider.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/feature/eew/data/converter/eew_api_converter.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew.g.dart';
@@ -18,7 +18,7 @@ part 'eew.g.dart';
 class Eew extends _$Eew {
   static const fallbackPollingInterval = Duration(seconds: 1);
 
-  final Map<String, api.EewItemWithRelations> _realtimeRecords = {};
+  final Map<String, EewTelegramItem> _realtimeRecords = {};
   List<EewTelegramItem>? _lastRestItems;
 
   @override
@@ -62,7 +62,7 @@ class Eew extends _$Eew {
           case RealtimeReadyEvent():
             ref.invalidate(eewRestProvider, asReload: true);
           case RealtimeEewUpsertEvent(:final record):
-            applyRealtimeRecord(record);
+            applyRealtime(record.toEewTelegramItem);
           default:
             return;
         }
@@ -94,8 +94,7 @@ class Eew extends _$Eew {
     final rawIndex = data.indexWhere((e) => e.eventId == item.eventId);
     final index = rawIndex == -1 ? null : rawIndex;
     if (index != null) {
-      final previous = data[index];
-      if (previous.serialNo <= item.serialNo) {
+      if (item.compareReportOrder(data[index]) >= 0) {
         data[index] = item;
       }
     } else {
@@ -108,18 +107,15 @@ class Eew extends _$Eew {
     _upsert(eew);
   }
 
-  void applyRealtimeRecord(api.EewItemWithRelations record) {
-    final previousSerial =
-        _realtimeRecords[record.eventId]?.serialNo.toInt() ??
-        state.value
-            ?.where((item) => item.eventId == record.eventId)
-            .firstOrNull
-            ?.serialNo;
-    if (previousSerial != null && previousSerial > record.serialNo) {
+  void applyRealtime(EewTelegramItem eew) {
+    final previous =
+        _realtimeRecords[eew.eventId] ??
+        state.value?.where((item) => item.eventId == eew.eventId).firstOrNull;
+    if (previous != null && eew.compareReportOrder(previous) < 0) {
       return;
     }
-    _realtimeRecords[record.eventId] = record;
-    _upsert(record.toEewTelegramItem);
+    _realtimeRecords[eew.eventId] = eew;
+    _upsert(eew);
   }
 
   List<EewTelegramItem> reconcileRestItems(List<EewTelegramItem> restItems) {
@@ -129,11 +125,11 @@ class Eew extends _$Eew {
       final record = entry.value;
       final index = items.indexWhere((item) => item.eventId == entry.key);
       if (index == -1) {
-        items.add(record.toEewTelegramItem);
+        items.add(record);
         continue;
       }
-      if (items[index].serialNo < record.serialNo) {
-        items[index] = record.toEewTelegramItem;
+      if (record.compareReportOrder(items[index]) > 0) {
+        items[index] = record;
       } else {
         retiredEventIds.add(entry.key);
       }

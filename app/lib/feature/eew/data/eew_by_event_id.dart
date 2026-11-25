@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/eew/data/converter/eew_api_converter.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_report_history_merger.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';

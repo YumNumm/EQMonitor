@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/api/api_client_provider.dart';
-import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/eew/data/converter/eew_api_converter.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_page.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;

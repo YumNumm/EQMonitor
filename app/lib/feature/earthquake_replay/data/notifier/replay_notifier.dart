@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:earthquake_replay/earthquake_replay.dart';
@@ -12,6 +11,7 @@ import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_statu
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
+import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_eew_report_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_kyoshin_archive_window_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_origin_time_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/logic/replay_position_resolver.dart';
@@ -25,6 +25,7 @@ import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_file_
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_kyoshin_archive_frame.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_kyoshin_archive_frame_loader.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/repository/replay_kyoshin_archive_repository.dart';
+import 'package:eqmonitor/feature/eew/data/converter/eew_api_converter.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -37,7 +38,6 @@ import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' show EewItemWithRelations;
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -57,6 +57,7 @@ class ReplayNotifier extends _$ReplayNotifier {
   Timer? _liveEewTimer;
   DateTime? _appliedArchiveImageTime;
   ReplayAnchor? _anchor;
+  Map<int, EewTelegramItem> _eewReports = const {};
   // シーク・読み込み・終了をまたいで、解析中だった古いフレームを反映しないための世代番号。
   int _generation = 0;
 
@@ -70,9 +71,10 @@ class ReplayNotifier extends _$ReplayNotifier {
           isLoading: false,
           value: RealtimeEewUpsertEvent(:final record),
         )) {
-          if (_exitIfLiveEewAlive([record.toEewTelegramItem])) {
+          final eew = record.toEewTelegramItem;
+          if (_exitIfLiveEewAlive([eew])) {
             // 終了時の REST 再取得を待たずに、復帰のきっかけになった報を表示する。
-            ref.read(eewProvider.notifier).applyRealtimeRecord(record);
+            ref.read(eewProvider.notifier).applyRealtime(eew);
           }
         }
       });
@@ -178,6 +180,9 @@ class ReplayNotifier extends _$ReplayNotifier {
     _stopPlaybackTimer();
     _generation++;
     _anchor = null;
+    _eewReports = ref
+        .read(replayEewReportResolverProvider)
+        .resolve(source.frames);
     final startTime = source.startTime;
     final initial = ReplayState(
       source: source,
@@ -255,6 +260,7 @@ class ReplayNotifier extends _$ReplayNotifier {
       ref.read(replayExitNoticeProvider.notifier).show(notice);
     }
     _anchor = null;
+    _eewReports = const {};
     state = null;
     ref.read(deviceShakeDetectionProvider.notifier).clear();
     ref.read(appClockProvider.notifier).returnToRealtime();
@@ -383,7 +389,7 @@ class ReplayNotifier extends _$ReplayNotifier {
       current.passedFrameCount,
       passedFrameCount,
     );
-    passed.whereType<EqMonitorEewReplayData>().forEach(_applyEew);
+    _applyEewReports(from: current.passedFrameCount, to: passedFrameCount);
     state = current.copyWith(
       passedFrameCount: passedFrameCount,
       currentTime: target,
@@ -428,7 +434,7 @@ class ReplayNotifier extends _$ReplayNotifier {
 
     _appliedArchiveImageTime = null;
     final passed = current.frames.take(current.passedFrameCount).toList();
-    passed.whereType<EqMonitorEewReplayData>().forEach(_applyEew);
+    _applyEewReports(from: 0, to: current.passedFrameCount);
     switch (current.source) {
       case ReplayEqrpSource():
         final latestImage = passed
@@ -587,18 +593,13 @@ class ReplayNotifier extends _$ReplayNotifier {
     }
   }
 
-  void _applyEew(EqMonitorEewReplayData data) {
-    try {
-      final item = EewItemWithRelations.fromJson(
-        jsonDecode(data.json) as Map<String, dynamic>,
-      );
-      ref.read(eewProvider.notifier).upsert(item.toEewTelegramItem);
-    } on Object catch (error, stackTrace) {
-      talker.warning(
-        '[Replay] EEW frame skipped: ${data.time}',
-        error,
-        stackTrace,
-      );
+  void _applyEewReports({required int from, required int to}) {
+    final eew = ref.read(eewProvider.notifier);
+    for (var index = from; index < to; index++) {
+      final report = _eewReports[index];
+      if (report != null) {
+        eew.upsert(report);
+      }
     }
   }
 

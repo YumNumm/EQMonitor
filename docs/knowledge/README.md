@@ -22,14 +22,14 @@
 
 | 作業 | 要点と参照先 |
 | --- | --- |
-| EEW の値と状態 | [EEW・リアルタイム](eew_realtime.md)。公表震度と深さを独立に扱い、欠測値を作らず、再取得中も有効な表示を維持する。 |
+| EEW の値と状態 | [EEW・リアルタイム](eew_realtime.md)。公表震度と深さを独立に扱い、欠測値を作らず、再取得中も有効な表示を維持する。報は `eventId`・`serialNo`・`isCanceled` で同一性を判定する。 |
 | Live Activity | [表示と検証](live_activity.md)。全国値と現在地値、取消報、到達カウントダウン、現在の Preview 方針を確認する。 |
 | ホーム画面 Widget | [地震履歴 Widget](home_widget.md)。件数は実寸で決め、色が置き換わる描画モードと取得失敗時の表示を確認する。 |
 | Live Activity の点滅・0.1秒表示 | [動く表示の作り方](live_activity_timer_font.md)。システムが描く時刻の文字を専用フォントで描く。漢字を文字で渡さない。 |
 | 通知・バックグラウンド位置 | [通知と位置情報](notification_location.md)。OS 権限・slot 設定・処理の acknowledgment を分離し、再起動や retry を考慮する。 |
 | Android 通知 | [channel 運用](android_notification_channels.md)。利用者設定を保ち、現役 channel を起動時に削除しない。 |
 | 強震モニタ・時刻 | [強震モニタと時計](kyoshin_time.md)。NTP・画像遅延・表示時刻を分け、計測せずに GPU 化を前提としない。 |
-| リプレイ再生 | [リプレイ再生](earthquake_replay.md)。EQRP の時刻は JST の壁時計で、読み込み時に UTC へ戻す。1003 は EEW API の型を格納する。強震モニタの過去画像は発生から3時間以内だけ再生できる。 |
+| リプレイ再生 | [リプレイ再生](earthquake_replay.md)。EQRP の時刻は JST の壁時計で、読み込み時に UTC へ戻す。1003 は EEW API の型を格納し、Union 0 の緊急地震速報は `jma_eew_xml` で読む。強震モニタの過去画像は発生から3時間以内だけ再生できる。 |
 | Siri・Control Center | [App Intents](app_intents.md)。同じ snapshot から音声と表示を作り、欠測や保存地域の鮮度を正しく扱う。 |
 | SwiftUI Preview | [軽量 Preview](apple_previews.md)。host と Widget extension の所属・resource を揃え、配信検証とは区別する。 |
 | 履歴画面・画面遷移 | [画面構成](adaptive_ui.md)。幅と選択状態に応じたペイン、戻る操作、wakelock の所有境界を確認する。 |

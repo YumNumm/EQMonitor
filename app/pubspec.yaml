@@ -110,6 +110,8 @@ dependencies:
   image: ^4.4.0
   in_app_review: ^2.0.10
   intl: ^0.20.2
+  jma_eew_xml:
+    path: ../packages/jma_eew_xml
   jma_map:
     path: ../packages/jma_map
   json_annotation: ^4.11.0

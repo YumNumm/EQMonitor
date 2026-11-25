@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/eew/data/converter/eew_api_converter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -280,6 +280,16 @@ void main() {
       expect(converted.accuracy!.depth, 3);
       expect(converted.accuracy!.magnitudeCalculation, 4);
       expect(converted.accuracy!.numberOfMagnitudeCalculation, 5);
+    });
+
+    test('取消報の serialNo は 1 を引いて取り消した報の番号に揃えること', () {
+      final converted = _makeApiEew(
+        serialNo: 24,
+        isCanceled: true,
+        infoType: api.InfoType.cancellation,
+      ).toEewTelegramItem;
+      expect(converted.serialNo, 23);
+      expect(converted.key.isCanceled, isTrue);
     });
 
     test('serialNo が num でも int に変換されること', () {
