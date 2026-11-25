@@ -13,17 +13,17 @@ class const EewReportHistoryMerger() {
     required String eventId,
     required Iterable<EewTelegramItem> reports,
   }) {
-    final reportsBySerial = <int, EewTelegramItem>{};
+    final reportsByKey = <EewTelegramKey, EewTelegramItem>{};
     for (final report in reports) {
       if (report.eventId != eventId) {
         continue;
       }
-      final previous = reportsBySerial[report.serialNo];
+      final previous = reportsByKey[report.key];
       if (previous == null ||
           !report.reportTime.isBefore(previous.reportTime)) {
-        reportsBySerial[report.serialNo] = report;
+        reportsByKey[report.key] = report;
       }
     }
-    return reportsBySerial.values.sortedBy<num>((report) => report.serialNo);
+    return reportsByKey.values.sorted((a, b) => a.compareReportOrder(b));
   }
 }

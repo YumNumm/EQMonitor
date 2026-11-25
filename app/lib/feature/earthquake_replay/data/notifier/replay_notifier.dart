@@ -71,9 +71,10 @@ class ReplayNotifier extends _$ReplayNotifier {
           isLoading: false,
           value: RealtimeEewUpsertEvent(:final record),
         )) {
-          if (_exitIfLiveEewAlive([record.toEewTelegramItem])) {
+          final eew = record.toEewTelegramItem;
+          if (_exitIfLiveEewAlive([eew])) {
             // 終了時の REST 再取得を待たずに、復帰のきっかけになった報を表示する。
-            ref.read(eewProvider.notifier).applyRealtimeRecord(record);
+            ref.read(eewProvider.notifier).applyRealtime(eew);
           }
         }
       });

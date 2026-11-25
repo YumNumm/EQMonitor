@@ -6,11 +6,12 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
 extension EewItemWithRelationsConverter on api.EewItemWithRelations {
+  // バックエンドは取消報の情報番号に 1 を足して保存している。気象庁の電文と同じく、取り消した報の番号へ戻す。
   EewTelegramItem get toEewTelegramItem => EewTelegramItem(
     eventId: eventId,
     status: status.toTelegramStatus,
     infoType: infoType.toTelegramInfoType,
-    serialNo: serialNo.toInt(),
+    serialNo: isCanceled ? serialNo.toInt() - 1 : serialNo.toInt(),
     headline: headline,
     isCanceled: isCanceled,
     isWarning: isWarning,

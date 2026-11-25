@@ -6,6 +6,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'eew_telegram_item.freezed.dart';
 
+/// 取消報は取り消した報と同じ情報番号を持つため、情報番号だけでは報を区別できない。
+typedef EewTelegramKey = ({String eventId, int serialNo, bool isCanceled});
+
 @Freezed()
 abstract class const EewTelegramItem._() with _$EewTelegramItem {
   const factory({
@@ -41,6 +44,20 @@ abstract class const EewTelegramItem._() with _$EewTelegramItem {
   /// PLUM / レベル法 / 1点のいずれか（マグニチュード・深さを出さない）
   bool get shouldHideMagnitudeAndDepth =>
       isPlum || isLevelMethod || isOnePointDetection;
+
+  EewTelegramKey get key =>
+      (eventId: eventId, serialNo: serialNo, isCanceled: isCanceled);
+
+  /// 同じ地震の報の前後関係。情報番号が同じなら取消報を後にし、同じ報どうしは発表時刻で比べる。
+  int compareReportOrder(EewTelegramItem other) =>
+      switch (serialNo.compareTo(other.serialNo)) {
+        0 => switch ((isCanceled, other.isCanceled)) {
+          (true, false) => 1,
+          (false, true) => -1,
+          _ => reportTime.compareTo(other.reportTime),
+        },
+        final order => order,
+      };
 }
 
 @Freezed()

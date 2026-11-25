@@ -282,6 +282,16 @@ void main() {
       expect(converted.accuracy!.numberOfMagnitudeCalculation, 5);
     });
 
+    test('取消報の serialNo は 1 を引いて取り消した報の番号に揃えること', () {
+      final converted = _makeApiEew(
+        serialNo: 24,
+        isCanceled: true,
+        infoType: api.InfoType.cancellation,
+      ).toEewTelegramItem;
+      expect(converted.serialNo, 23);
+      expect(converted.key.isCanceled, isTrue);
+    });
+
     test('serialNo が num でも int に変換されること', () {
       final apiEew = _makeApiEew(serialNo: 3.0);
       expect(apiEew.toEewTelegramItem.serialNo, 3);

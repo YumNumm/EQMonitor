@@ -61,9 +61,7 @@ class EewSimulation extends _$EewSimulation {
     final sorted = [...reports]
       ..sort((a, b) {
         final timeComparison = a.reportTime.compareTo(b.reportTime);
-        return timeComparison != 0
-            ? timeComparison
-            : a.serialNo.compareTo(b.serialNo);
+        return timeComparison != 0 ? timeComparison : a.compareReportOrder(b);
       });
     if (sorted.isEmpty) {
       return;

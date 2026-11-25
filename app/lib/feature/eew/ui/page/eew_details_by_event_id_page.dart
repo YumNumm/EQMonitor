@@ -64,10 +64,10 @@ class const _EewDetailsByEventIdContent({
     useEffect(() {
       if (simulation != null) {
         final reports = eewsAsyncValue.value?.sorted(
-          (a, b) => a.serialNo.compareTo(b.serialNo),
+          (a, b) => a.compareReportOrder(b),
         );
         final index = reports?.indexWhere(
-          (report) => report.serialNo == simulation.currentReport.serialNo,
+          (report) => report.key == simulation.currentReport.key,
         );
         if (index != null && index >= 0) {
           selectedIndex.value = index;
@@ -124,7 +124,7 @@ class const _EewDetailsByEventIdContent({
             );
           }
           final sortedEews = eews.sorted(
-            (a, b) => a.serialNo.compareTo(b.serialNo),
+            (a, b) => a.compareReportOrder(b),
           );
 
           final displayedEews = simulation != null

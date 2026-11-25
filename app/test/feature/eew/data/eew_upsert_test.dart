@@ -76,6 +76,17 @@ void main() {
       expect(state.single.isCanceled, isTrue);
     });
 
+    test('取消報の後に同じ serialNo の発表報が届いても取消報を保つこと', () {
+      final container = _container(
+        initial: [_eew(eventId: 'e1', serialNo: 2, isCanceled: true)],
+      );
+      final notifier = container.read(eewProvider.notifier);
+      notifier.upsert(_eew(eventId: 'e1', serialNo: 2));
+
+      final state = container.read(eewProvider).value!;
+      expect(state.single.isCanceled, isTrue);
+    });
+
     test('同一 eventId で serialNo が小さい場合は無視されること', () {
       final container = _container(
         initial: [_eew(eventId: 'e1', serialNo: 5)],
