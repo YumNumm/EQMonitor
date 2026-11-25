@@ -31,7 +31,7 @@ ghalint = "1.5.6"
 gitleaks = "latest"
 age = "latest"
 sops = "latest"
-flutter = "22e676c57e1e6d04c2289a47368ea4093bbc3c18"
+flutter = "3.50.1-stable"
 "github:rorkai/App-Store-Connect-CLI" = { version = "latest", rename_exe = "asc" }
 
 [settings]

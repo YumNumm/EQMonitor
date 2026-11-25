@@ -3,7 +3,7 @@ description: Custom analyzer plugin (lint rules) for EQMonitor. Keeps a wide ana
 publish_to: none
 
 environment:
-  sdk: ^3.15.0-154.0.dev
+  sdk: ^3.14.0
 
 resolution: workspace
 
