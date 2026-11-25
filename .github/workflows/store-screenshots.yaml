@@ -59,7 +59,7 @@ jobs:
         run: cp mise.local.toml.example mise.local.toml
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        uses: jdx/mise-action@236a21c3b91f5db6d4e174b348674a0f0caac06d # v5.2.9
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -176,7 +176,7 @@ jobs:
         run: cp mise.local.toml.example mise.local.toml
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        uses: jdx/mise-action@236a21c3b91f5db6d4e174b348674a0f0caac06d # v5.2.9
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
@@ -324,7 +324,7 @@ jobs:
         run: cp mise.local.toml.example mise.local.toml
 
       - name: Install Mise dependencies
-        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        uses: jdx/mise-action@236a21c3b91f5db6d4e174b348674a0f0caac06d # v5.2.9
         env:
           CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
