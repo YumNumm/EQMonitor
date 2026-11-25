@@ -41,6 +41,7 @@ const _$ReplayDataTypeEnumMap = {
   ReplayDataType.snpLogEntry: 1001,
   ReplayDataType.axisJson: 1002,
   ReplayDataType.eqMonitorEew: 1003,
+  ReplayDataType.kyoshinWaveform: 1005,
 };
 
 _JmaBinaryTelegramReplayData _$JmaBinaryTelegramReplayDataFromJson(

@@ -23,6 +23,7 @@ List<RouteBase> get $appRoutes => [
   $earthquakeActivityRoute,
   $telegramListByEventIdRoute,
   $replayOpenRoute,
+  $replayWaveformStationListRoute,
   $homeRoute,
   $talkerRoute,
   $settingsRoute,
@@ -449,6 +450,65 @@ mixin $ReplayOpenRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/replay/open',
     queryParams: {'source': _self.source},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $replayWaveformStationListRoute => GoRouteData.$route(
+  path: '/replay/waveforms',
+  hasOverriddenOnExit: false,
+  factory: $ReplayWaveformStationListRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: ':stationCode',
+      hasOverriddenOnExit: false,
+      factory: $ReplayWaveformRoute._fromState,
+    ),
+  ],
+);
+
+mixin $ReplayWaveformStationListRoute on GoRouteData {
+  static ReplayWaveformStationListRoute _fromState(GoRouterState state) =>
+      const ReplayWaveformStationListRoute();
+
+  @override
+  String get location => GoRouteData.$location('/replay/waveforms');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ReplayWaveformRoute on GoRouteData {
+  static ReplayWaveformRoute _fromState(GoRouterState state) =>
+      ReplayWaveformRoute(stationCode: state.pathParameters['stationCode']!);
+
+  ReplayWaveformRoute get _self => this as ReplayWaveformRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/replay/waveforms/${Uri.encodeComponent(_self.stationCode)}',
   );
 
   @override

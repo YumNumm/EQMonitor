@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:kyoshin_waveform/src/knet_ascii_channel.dart';
+import 'package:kyoshin_waveform/src/kyoshin_raw_channel.dart';
 import 'package:kyoshin_waveform/src/kyoshin_waveform_component.dart';
 
 final class const KnetAsciiParser() {
@@ -8,19 +8,7 @@ final class const KnetAsciiParser() {
   static const _labelWidth = 18;
   static const _jstOffset = Duration(hours: 9);
 
-  static const _components = {
-    'N-S': KyoshinWaveformComponent.ns,
-    'E-W': KyoshinWaveformComponent.ew,
-    'U-D': KyoshinWaveformComponent.ud,
-    '1': KyoshinWaveformComponent.ns1,
-    '2': KyoshinWaveformComponent.ew1,
-    '3': KyoshinWaveformComponent.ud1,
-    '4': KyoshinWaveformComponent.ns2,
-    '5': KyoshinWaveformComponent.ew2,
-    '6': KyoshinWaveformComponent.ud2,
-  };
-
-  KnetAsciiChannel parse(String source) {
+  KyoshinRawChannel parse(String source) {
     final lines = source.split('\n');
     if (lines.length < _headerLineCount) {
       throw const FormatException('K-NET ASCII header is too short');
@@ -28,14 +16,14 @@ final class const KnetAsciiParser() {
     final header = [
       for (var i = 0; i < _headerLineCount; i++) _value(lines[i]),
     ];
-    return KnetAsciiChannel(
+    return KyoshinRawChannel(
       stationCode: header[5],
       stationLatitude: double.parse(header[6]),
       stationLongitude: double.parse(header[7]),
       stationHeightMeters: double.parse(header[8]),
       recordTime: _parseJst(header[9]),
       samplingRate: int.parse(header[10].replaceAll(RegExp('[Hh][Zz]'), '')),
-      component: _parseComponent(header[12]),
+      component: KyoshinWaveformComponent.fromDirection(header[12]),
       scaleFactor: _parseScaleFactor(header[13]),
       maxAccelerationGal: double.parse(header[14]),
       counts: _parseCounts(lines),
@@ -62,14 +50,6 @@ final class const KnetAsciiParser() {
       fields[4],
       fields[5],
     ).subtract(_jstOffset);
-  }
-
-  KyoshinWaveformComponent _parseComponent(String value) {
-    final component = _components[value];
-    if (component == null) {
-      throw FormatException('Unknown K-NET ASCII direction', value);
-    }
-    return component;
   }
 
   double _parseScaleFactor(String value) {

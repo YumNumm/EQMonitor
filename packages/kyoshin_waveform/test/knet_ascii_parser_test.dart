@@ -8,7 +8,7 @@ import 'kiknet_ascii_builder.dart';
 void main() {
   const parser = KnetAsciiParser();
 
-  KnetAsciiChannel fixture(String extension) => parser.parse(
+  KyoshinRawChannel fixture(String extension) => parser.parse(
     File('test/fixtures/EHM0012408081643.$extension').readAsStringSync(),
   );
 

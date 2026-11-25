@@ -24,6 +24,8 @@ import 'package:eqmonitor/feature/earthquake_archive/ui/page/earthquake_archive_
 import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_creation_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_library_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_open_page.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_waveform_page.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/page/replay_waveform_station_list_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
@@ -288,6 +290,26 @@ class const ReplayOpenRoute({required final String source})
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       ReplayOpenPage(source: source);
+}
+
+@TypedGoRoute<ReplayWaveformStationListRoute>(
+  path: '/replay/waveforms',
+  routes: [TypedGoRoute<ReplayWaveformRoute>(path: ':stationCode')],
+)
+class const ReplayWaveformStationListRoute()
+    extends GoRouteData
+    with $ReplayWaveformStationListRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ReplayWaveformStationListPage();
+}
+
+class const ReplayWaveformRoute({required final String stationCode})
+    extends GoRouteData
+    with $ReplayWaveformRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      ReplayWaveformPage(stationCode: stationCode);
 }
 
 @TypedGoRoute<HomeRoute>(

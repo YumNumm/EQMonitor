@@ -1,5 +1,9 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:convert' show jsonDecode;
+import 'dart:typed_data';
+
+import 'package:earthquake_replay/src/model/kyoshin_waveform_metadata.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'replay_data.freezed.dart';
@@ -29,6 +33,9 @@ sealed class const ReplayData({
       ReplayDataType.snpLogEntry => SnpLogEntryReplayData.fromMsgPack(body),
       ReplayDataType.axisJson => AxisJsonReplayData.fromMsgPack(body),
       ReplayDataType.eqMonitorEew => EqMonitorEewReplayData.fromMsgPack(body),
+      ReplayDataType.kyoshinWaveform => KyoshinWaveformReplayData.fromMsgPack(
+        body,
+      ),
     };
   }
 }
@@ -262,6 +269,44 @@ abstract class const EqMonitorEewReplayData._()
       'EqMonitorEewReplayData(time: $time, json: ${json.substring(0, 10)}...)';
 }
 
+@freezed
+abstract class const KyoshinWaveformReplayData._()
+    with _$KyoshinWaveformReplayData
+    implements ReplayData {
+  const factory({
+    required ReplayDataType type,
+    required DateTime time,
+    required String metadataJson,
+    required Uint8List samples,
+  }) = _KyoshinWaveformReplayData;
+
+  factory fromMsgPack(List<dynamic> data) => KyoshinWaveformReplayData(
+    type: ReplayDataType.kyoshinWaveform,
+    time: data[0] as DateTime,
+    metadataJson: data[1] as String,
+    samples: data[2] as Uint8List,
+  );
+
+  KyoshinWaveformMetadata get metadata => KyoshinWaveformMetadata.fromJson(
+    jsonDecode(metadataJson) as Map<String, dynamic>,
+  );
+
+  // 生のカウント値を int32 のビッグエンディアンで並べたもの。
+  Int32List get counts {
+    final view = ByteData.sublistView(samples);
+    final result = Int32List(samples.lengthInBytes ~/ 4);
+    for (var i = 0; i < result.length; i++) {
+      result[i] = view.getInt32(i * 4);
+    }
+    return result;
+  }
+
+  @override
+  String toString() =>
+      'KyoshinWaveformReplayData(time: $time, '
+      'samples: ${samples.lengthInBytes ~/ 4})';
+}
+
 @JsonEnum(valueField: 'value')
 enum ReplayDataType(final int value) {
   jmaXmlTelegram(0),
@@ -272,6 +317,7 @@ enum ReplayDataType(final int value) {
   snpLogEntry(1001),
   axisJson(1002),
   eqMonitorEew(1003),
+  kyoshinWaveform(1005),
 }
 
 enum ImageType(final int value) {
