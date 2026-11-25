@@ -1,0 +1,20 @@
+name: kyoshin_waveform
+description: K-NET・KiK-net の強震記録（K-NET ASCII 形式）を読み込む。
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.14.0
+
+resolution: workspace
+
+dependencies:
+  collection: ^1.19.1
+
+dev_dependencies:
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  realtime_seismic_intensity:
+    path: ../realtime_seismic_intensity
+  test: ^1.29.0
