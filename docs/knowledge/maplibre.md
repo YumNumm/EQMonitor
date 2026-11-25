@@ -15,7 +15,7 @@
 - `flutter_hooks` の `useEffect` は依存が変わると、新しい effect を先に実行し、古い cleanup をその後に呼ぶ。「effect で固定 ID を追加し、cleanup で同じ ID を削除する」だけの実装は、style 以外の依存が変わるたびに追加直後の layer を削除する。cleanup は、後発の effect が置き換えていないこと（世代・トークンの一致）を確認してから削除する。
 - `Theme.of(context)` 由来の色は、テーマ切替のアニメーション中、フレームごとに変わる。effect の依存に置くとその回数だけ再実行される。
 - 取得済みの `styleString` がある間は `mapConfigurationProvider` の再読込中も `MapLibreMap` を保持すれば、テーマ切替は style の差し替えになり、カメラと Widget の状態が残る（市区町村別最大震度・表示範囲選択）。差し替えでは旧 `StyleController` への操作が無視され、追加済みの layer・source・画像を持たない新しい `StyleController` が渡る。`AsyncData` だけを地図表示の条件にすると、再読込のたびに地図が作り直され、カメラが初期位置へ戻る。
-- style の差し替えに対応するレイヤーは、上記の cleanup の確認に加え、初期化済みフラグ・送信済みデータのキャッシュを新しい `StyleController` で作り直す必要がある。未対応のレイヤーは[地図の描画・操作・実機検証](../todo/800_map_display_verification.md)に記録している。
+- style の差し替えに対応するレイヤーは、上記の cleanup の確認に加え、初期化済みフラグ・送信済みデータのキャッシュを新しい `StyleController` で作り直す必要がある。未対応のレイヤーは[地図の描画・操作・実機検証](../todo/990_map_display_verification.md)に記録している。
 - 非同期データの初回取得前はレイヤー Widget をマウントしない。`AsyncValue.valueOrPrevious` を使い、再取得中・失敗時も既存表示を維持する。
 - loading overlay は戻る操作を遮らない。再試行 Future の例外は画面の provider 状態で扱い、ボタンから再伝播させない。
 - EEW が既に活性中なら controller 接続直後にも現在値を同期する。空の EEW 領域には非表示 filter を返す。
@@ -104,6 +104,14 @@
 - `maplibre` を更新して `maplibre_native_ffi` の版が上がるときは、override を外して upstream のビルドで同じカメラ位置（ズーム 10・北緯 32.8 / 東経 130.7 と九州の広域）を確認する。直線が残る場合は fork を新しい tag へ作り直す。upstream の `main` は構成が変わっており（`src/` がなく `third_party/mln-rs` を参照。2026-11-23 時点）、同じ欠陥が残るかは未確認。
 - シミュレータ用アーカイブの再ビルドは、fork で `tools/deps/sync-submodules` の後に CMake preset `ios-simulator-arm64-metal` を install まで実行する。Rust の target `aarch64-apple-ios-sim` と `cargo-about` が要る。`hooks.user_defines.maplibre_native_ffi.local_build` に install 先を指定すると手元のビルドを使えるが、全プラットフォームに効くためコミットしない。
 - Metal の確認は同じ実 archive・camera・style で fill と line を比較する。`MLNMapSnapshotter` や取得・リンク成功だけでは画面の修正を確認できない。
+
+## Android で地図が止まる・ANR になるときの調べ方
+
+- 地図の操作は `MapOperationQueue` で直列に実行する。1 つの操作の Future が返らないと、後続の layer・source 追加がすべて止まり、例外もログも出ない。症状は「一部のレイヤーだけ出ない」になる。
+- Impeller Vulkan では、画像登録（`addImage` 内の `toByteData`）が返らなくなる端末がある（[TODO](../todo/990_map_display_verification.md)）。GPU が止まったままバックグラウンドへ移ると、`FlutterJNI.onSurfaceDestroyed` がメインスレッドを止め、次の起動に失敗したように見える。
+- ANR のトレースは root なしでも `adb bugreport` の `FS/data/anr/` から取れる。debug build の `libflutter.so` は `app/build/app/intermediates/merged_native_libs/` に symbol 付きで残るため、NDK の `llvm-symbolizer` で frame を読める（Build ID の一致を確認する）。
+- エミュレータは既定で Impeller OpenGL ES を選び、Vulkan に強制しても実機の GPU ドライバの挙動は再現しない。`io.flutter.embedding.android.ImpellerBackend` は debug/profile だけで有効で、release では無視される。
+- 本番 API へ debug build でつなぐと、`versionNameSuffix` の `.d` で版が `3.1.0.d` になり User-Agent の照合で 403 になる。`flutter build apk --debug --build-name=3.1.0-beta.1` のように prerelease 付きの版を渡す。
 
 ## 変更時の確認
 

@@ -2,6 +2,14 @@
 
 実機での可視出力と性能は未検証。
 
+## 990: Android の Impeller Vulkan で地震詳細の地図が止まる
+
+- 対象: `mise.toml` / `mise.lock` の Flutter 固定、地震履歴詳細の地図レイヤー（`app/lib/feature/earthquake_history/ui/layer/`）。
+- 2026-11-25、Pixel 11 Pro Fold（PowerVR、Android 17 Beta DP11）で、Flutter 3.51.0-1.0.pre-176（`22e676c57e`）の Impeller Vulkan では地震詳細の観測点・区域アイコンの画像登録が返らず、後続の塗りつぶし・観測点・推計震度が追加されなかった（4 回中 4 回）。その状態でバックグラウンドへ移すとメインスレッドが止まり ANR になる。Play 版 3.1.0 (1588) でも同じ ANR を確認した。
+- 同じ端末で Impeller の OpenGL ES 固定（debug のみ有効）と Impeller 無効は正常だった。HCPP の有無は結果を変えなかった。エミュレータは Vulkan に強制しても再現しない。
+- Flutter 3.50.1 へ戻した。3.50.1 で直るかは実機で未検証。原因が Flutter 3.51 系か MapLibre 0.4 か切り分けられていない。
+- 完了条件: 同じ端末で Flutter 3.50.1 の build を、詳細を開く → バックグラウンド → 復帰の手順で複数回確認し、全レイヤーの追加と復帰後の応答を確かめる。推計震度の表示も確認する。直らなければ、Android で Impeller を無効にするかを決める。
+
 ## 800: タイル境界の直線の実機確認
 
 - iOS シミュレータでタイル境界の両側に出ていた直線は、`maplibre_native_ffi` を fork のビルドへ override して解消した。経緯は [MapLibre の知見](../knowledge/maplibre.md) の「PMTiles と native 障害の切り分け」を参照。
