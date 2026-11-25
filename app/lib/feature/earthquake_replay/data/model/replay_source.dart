@@ -42,7 +42,13 @@ sealed class const ReplaySource._() with _$ReplaySource {
     ReplayKyoshinArchiveSource(:final windowStart) => windowStart,
   };
 
+  // 強震モニタ画像の無いファイルでは、最後のフレームが EEW のため波形の記録より先に終わる。
+  // K-NET/KiK-net の波形を含む場合は、ヘッダの終了時刻まで再生する。
   DateTime get endTime => switch (this) {
+    ReplayEqrpSource(:final file)
+        when file.header.endTime.isAfter(file.data.last.time) &&
+            file.data.any((frame) => frame is KyoshinWaveformReplayData) =>
+      file.header.endTime,
     ReplayEqrpSource(:final file) => file.data.last.time,
     ReplayKyoshinArchiveSource(:final windowEnd) => windowEnd,
   };
