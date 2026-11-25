@@ -1,0 +1,16 @@
+name: jma_eew_xml
+description: 気象庁防災情報 XML の緊急地震速報電文を読み取る。
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.14.0
+
+resolution: workspace
+
+dev_dependencies:
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  test: ^1.29.0
+  xml: ^7.0.1
