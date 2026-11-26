@@ -17,6 +17,12 @@
 - ホームの位置情報バナーは `isCurrentLocationPermissionMissingProvider` と `CurrentLocationPermissionAction` を通知設定画面と共用する。Android の「アプリの使用中のみ許可」からタップしたとき、アプリの権限画面で「常に許可」へ変更でき、復帰後にバナーが消えることを確認する。iOS の「使用中のみ」からの変更も同様に確認する。
 - 地図操作ボタンを `IconButton`（48dp のタップ領域）に変えた。強震モニタの状態カード・スケール表示と横幅が重ならないこと、無効時の見た目が判別できることを Light / Dark・文字拡大で確認する。
 
+## 800: 地震履歴詳細の観測点ツールチップの確認
+
+- 対象: `app/lib/feature/earthquake_history/ui/components/earthquake_history_station_tooltip.dart`、`earthquake_history_details_map_view.dart`。
+- iOS 27.2 Simulator（iPhone 18 Pro）の気象庁 XML 表示で、表示・他の場所のタップと地図ドラッグで閉じる・タップで詳細シート・画面上端での下向き表示・左端での寄せを確認済み。
+- 震度データベース表示、長周期地震動階級表示、ピンチ操作、Android、Light/Dark・文字拡大、ステータスバー直下（上端から 100〜130pt 付近）の観測点は未確認。
+
 ## 800: 通知設定の権限導線の実機確認
 
 - デバッグの「デバイス・通知」→全般通知設定で、日本語・English・中文を保存し、再表示・再起動後もサーバー保存値に一致することと、その言語で届く通知を iOS / Android 実機で確認する。通信失敗時の再試行と文字拡大時の表示も未検証。

@@ -25,7 +25,8 @@ class const EarthquakeHistoryStationTooltip({
       return const SizedBox.shrink();
     }
     final anchor = controller.toScreenLocation(selection.point);
-    final below = anchor.dy < _flipThreshold;
+    final below =
+        anchor.dy < MediaQuery.paddingOf(context).top + _flipThreshold;
     final color = context.designSystem.colorTheme.surfaceContainerHigh;
 
     return SizedBox.expand(
