@@ -12,6 +12,11 @@ class const BasicModalSheet({
   final bool expandToPane = false,
   final Widget? initialPositionOverlay,
 }) extends HookWidget {
+  static const initialExtentRatio = 0.2;
+  static const landscapeWidthRatio = 0.5;
+
+  static bool isLandscape(Size size) => size.width > size.height;
+
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
@@ -93,8 +98,10 @@ class const BasicModalSheet({
             width: constraints.maxWidth,
             height: constraints.maxHeight,
           );
-          final isLandscape = size.width > size.height;
-          final initialExtent = size.height * 0.2;
+          final isLandscape = BasicModalSheet.isLandscape(
+            Size(size.width, size.height),
+          );
+          final initialExtent = size.height * initialExtentRatio;
           initialExtentRef.value = initialExtent;
           final fitStop = switch (fitExtent.value) {
             final extent? when size.height > 0 => extent / size.height,
@@ -201,7 +208,7 @@ class const BasicModalSheet({
             alignment: Alignment.centerRight,
             child: SizedBox(
               width: isLandscape && !expandToPane
-                  ? size.width * 0.5
+                  ? size.width * landscapeWidthRatio
                   : size.width,
               height: size.height,
               child: content,
