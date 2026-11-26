@@ -57,4 +57,4 @@ final class IntensityHistoryMapActionProvider
 }
 
 String _$intensityHistoryMapActionHash() =>
-    r'ed2b871ddbaad32efa1705f4067ff3ef56bda237';
+    r'ddb4d13881fab4314576534ef3aa660bb4b5f90d';

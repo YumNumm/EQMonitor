@@ -1,10 +1,7 @@
 import 'package:eqmonitor/core/extension/async_value.dart';
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
-import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_city_camera.dart';
 import 'package:eqmonitor/feature/location/data/model/map_data_item.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -20,10 +17,12 @@ part 'intensity_history_map_action.g.dart';
 
 @Riverpod(keepAlive: true)
 IntensityHistoryMapAction intensityHistoryMapAction(Ref ref) =>
-    const IntensityHistoryMapAction();
+    IntensityHistoryMapAction();
 
 /// 市区町村別最大震度マップのタップ操作を担う。
-class const IntensityHistoryMapAction() {
+class IntensityHistoryMapAction() {
+  var _tapSequence = 0;
+
   /// 地図タップを市区町村の選択として解釈する。
   ///
   /// ズームに依らずポリゴン判定で市区町村を特定する。都道府県・細分区域への
@@ -47,11 +46,15 @@ class const IntensityHistoryMapAction() {
       return;
     }
 
+    final sequence = ++_tapSequence;
     final city = await ref.read(
       jmaMapAreaInformationCityInsideProvider(
         LatLng(point.lat, point.lon),
       ).future,
     );
+    if (sequence != _tapSequence || !context.mounted) {
+      return;
+    }
     final target = cityTapTargetOf(
       cityCode: city?.property?.code,
       cityName: city?.property?.name,
@@ -61,23 +64,17 @@ class const IntensityHistoryMapAction() {
       ref.read(intensityHistoryControllerProvider.notifier).deselectCity();
       return;
     }
-    if (!context.mounted) {
-      return;
-    }
-    await Future.wait([
-      fitCityAboveSheet(
-        context: context,
-        mapController: mapController,
-        bounds: city?.bounds,
-      ),
-      handleCityTap(
-        ref: ref,
-        context: context,
-        cityCode: target.cityCode,
-        cityName: target.cityName,
-        prefectureName: target.prefectureName,
-      ),
-    ]);
+    selectCity(
+      ref: ref,
+      cityCode: target.cityCode,
+      cityName: target.cityName,
+      prefectureName: target.prefectureName,
+    );
+    await fitCityAboveSheet(
+      context: context,
+      mapController: mapController,
+      bounds: city?.bounds,
+    );
   }
 
   Future<void> fitCityAboveSheet({
@@ -88,7 +85,8 @@ class const IntensityHistoryMapAction() {
     if (bounds == null) {
       return;
     }
-    final padding = const IntensityHistoryCityCamera().padding(
+    const camera = IntensityHistoryCityCamera();
+    final padding = camera.padding(
       viewportSize: MediaQuery.sizeOf(context),
       safePadding: MediaQuery.paddingOf(context),
     );
@@ -101,6 +99,7 @@ class const IntensityHistoryMapAction() {
           north: bounds.northEast.lat,
         ),
         padding: padding,
+        maxZoom: camera.maxZoomFrom(mapController.camera?.zoom),
       ),
     );
     if (result == .cancelled) {
@@ -148,13 +147,12 @@ class const IntensityHistoryMapAction() {
         .firstOrNull;
   }
 
-  Future<void> handleCityTap({
+  void selectCity({
     required WidgetRef ref,
-    required BuildContext context,
     required String cityCode,
     required String cityName,
     required String prefectureName,
-  }) async {
+  }) {
     ref
         .read(intensityHistoryControllerProvider.notifier)
         .selectCity(
@@ -162,26 +160,17 @@ class const IntensityHistoryMapAction() {
           name: cityName,
           prefectureName: prefectureName,
         );
-
-    await CityDetailModalAction().show(
-      context,
-      cityCode: cityCode,
-      cityName: cityName,
-      prefectureName: prefectureName,
-      maxIntensity: cityMaxIntensityOf(ref: ref, cityCode: cityCode),
-    );
   }
 
-  /// ディープリンクで市区町村詳細モーダルを開く。
+  /// ディープリンクで市区町村詳細シートを開く。
   ///
   /// 選択枠は初期カメラでシートの上に収めているため、ここではカメラを動かさない。
   /// [cityCode] が無い、または都道府県配下に存在しない場合は何もしない。
-  Future<void> openFromDeepLink({
+  void openFromDeepLink({
     required WidgetRef ref,
-    required BuildContext context,
     required String prefectureCode,
     required String? cityCode,
-  }) async {
+  }) {
     if (cityCode == null) {
       return;
     }
@@ -204,23 +193,14 @@ class const IntensityHistoryMapAction() {
         .expand((region) => region.cities)
         .where((city) => city.code == cityCode)
         .firstOrNull;
-    if (city == null || !context.mounted) {
+    if (city == null) {
       return;
     }
-    await handleCityTap(
+    selectCity(
       ref: ref,
-      context: context,
       cityCode: city.code,
       cityName: city.name.ja,
       prefectureName: prefecture.name.ja,
     );
   }
-
-  JmaIntensity? cityMaxIntensityOf({
-    required WidgetRef ref,
-    required String cityCode,
-  }) => ref
-      .read(cityMaxIntensityProvider)
-      .valueOrPrevious
-      ?.intensityOfCity(cityCode);
 }

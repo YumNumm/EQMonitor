@@ -9,7 +9,6 @@ import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensit
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
-import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -126,65 +125,47 @@ class const _CityPanel({
             .srcATop,
           ),
         ),
-        child: Semantics(
-          button: true,
-          label: '${selectedCity.name}の詳細を表示',
-          child: InkWell(
-            onTap: () async {
-              await CityDetailModalAction().show(
-                context,
-                cityCode: selectedCity.code,
-                cityName: selectedCity.name,
-                prefectureName: selectedCity.prefectureName,
-                maxIntensity: maxIntensity,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Row(
-                mainAxisSize: .min,
-                children: [
-                  if (maxIntensity case final maxIntensity?) ...[
-                    JmaIntensityIcon(
-                      intensity: maxIntensity,
-                      type: IntensityIconType.filled,
-                      size: 36,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            mainAxisSize: .min,
+            children: [
+              if (maxIntensity case final maxIntensity?) ...[
+                JmaIntensityIcon(
+                  intensity: maxIntensity,
+                  type: IntensityIconType.filled,
+                  size: 36,
+                ),
+                const SizedBox(width: 10),
+              ],
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  mainAxisSize: .min,
+                  children: [
+                    Text(
+                      selectedCity.prefectureName,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: context.designSystem.colorTheme.onSurfaceVariant,
+                      ),
                     ),
-                    const SizedBox(width: 10),
+                    Text(
+                      selectedCity.name,
+                      maxLines: 2,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: .bold,
+                      ),
+                    ),
+                    _RefreshedAtLabel(
+                      aggregatedAt: cityMaxIntensity?.aggregatedAt,
+                    ),
                   ],
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: .start,
-                      mainAxisSize: .min,
-                      children: [
-                        Text(
-                          selectedCity.prefectureName,
-                          maxLines: 1,
-                          overflow: .ellipsis,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: context
-                                .designSystem
-                                .colorTheme
-                                .onSurfaceVariant,
-                          ),
-                        ),
-                        Text(
-                          selectedCity.name,
-                          maxLines: 2,
-                          overflow: .ellipsis,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: .bold,
-                          ),
-                        ),
-                        _RefreshedAtLabel(
-                          aggregatedAt: cityMaxIntensity?.aggregatedAt,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
