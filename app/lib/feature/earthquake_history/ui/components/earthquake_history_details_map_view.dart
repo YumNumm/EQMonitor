@@ -277,8 +277,21 @@ class const _MapContent({
             }
           },
           children: [
+            if (showEstimated && demTileUrl != null)
+              EarthquakeHistoryDetailsEstimatedIntensityDemLayer(
+                key: const ValueKey('estimated-dem'),
+                tileUrl: demTileUrl,
+                displayMode: details.estimatedIntensityDemDisplayMode,
+                palette: details.estimatedIntensityDemPalette,
+              )
+            else if (showEstimated && tileUrl != null)
+              EarthquakeHistoryDetailsEstimatedIntensityLayer(
+                key: const ValueKey('estimated'),
+                tileUrl: tileUrl,
+              ),
             if (showingDb) ...[
-              if (dbTree != null)
+              if (dbTree != null &&
+                  (!showEstimated || details.showStationsOnEstimatedIntensity))
                 EarthquakeHistoryShindoDbStationLayer(
                   key: const ValueKey('shindo-db-station'),
                   belowLayerId: stationAnchor,
@@ -287,18 +300,6 @@ class const _MapContent({
                   showStationLabel: true,
                 ),
             ] else ...[
-              if (showEstimated && demTileUrl != null)
-                EarthquakeHistoryDetailsEstimatedIntensityDemLayer(
-                  key: const ValueKey('estimated-dem'),
-                  tileUrl: demTileUrl,
-                  displayMode: details.estimatedIntensityDemDisplayMode,
-                  palette: details.estimatedIntensityDemPalette,
-                )
-              else if (showEstimated && tileUrl != null)
-                EarthquakeHistoryDetailsEstimatedIntensityLayer(
-                  key: const ValueKey('estimated'),
-                  tileUrl: tileUrl,
-                ),
               if (!showEstimated) ...[
                 EarthquakeHistoryFillLayer(
                   key: const ValueKey('fill'),
