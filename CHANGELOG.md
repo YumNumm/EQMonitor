@@ -1,5 +1,70 @@
 # Changelog
 
+## [3.2.0](https://github.com/YumNumm/EQMonitor/compare/v3.1.0...v3.2.0) (2026-11-28)
+
+
+### Features
+
+* 1005 の波形から観測点のリアルタイム震度を求め、強震モニタの観測点に重ねる ([7843a67](https://github.com/YumNumm/EQMonitor/commit/7843a6773429c4b4df4708be06a540bab57a0c70))
+* **app:** 震度DBと結合した地震の詳細を震度DB表示から開き、震度DB表示でも推計震度を選べるようにする ([48266ce](https://github.com/YumNumm/EQMonitor/commit/48266ce35f06d7d75df2609615bc5fa8ab983385))
+* **app:** 震度DBと結合した地震の詳細を震度DB表示で開き、推計震度も表示できるようにする ([2e59209](https://github.com/YumNumm/EQMonitor/commit/2e592095416f2f3d395aa24ce4305eb48321ca4c))
+* EEW の報を eventId・serialNo・isCanceled の組で区別し、取消報を同じ番号の報より後に扱う ([a43e310](https://github.com/YumNumm/EQMonitor/commit/a43e3104a33694385f8d2574b3c5b83962e9e32e))
+* EQRP の K-NET/KiK-net 波形（Union 1005）を読み込む ([7ad6575](https://github.com/YumNumm/EQMonitor/commit/7ad657546f862f0b03dd8b12ad30e4b81269b3f1))
+* K-NET ASCII 形式の強震記録を読み込むパッケージを追加する ([66c749d](https://github.com/YumNumm/EQMonitor/commit/66c749dbf30beeaba291dba8e40dad3e4d085334))
+* K-NET/KiK-net の観測点ごとの波形を描くコンポーネントを追加する ([55a5776](https://github.com/YumNumm/EQMonitor/commit/55a577635992a1a41eb32a353abbb8da9356ec17))
+* デバッグメニューから地震アーカイブを一覧・取得・再生する ([9026452](https://github.com/YumNumm/EQMonitor/commit/902645266faf6a4e702f956fdf9b7d6dfdd52b02))
+* デバッグメニューから地震アーカイブを一覧・取得・再生する ([324e851](https://github.com/YumNumm/EQMonitor/commit/324e851c73a0973cb403beabe2a92815310db85b))
+* プロダクトページの画像に 4 台の iPhone を並べ、Duo と iPad の見出しのずれを直す ([9537578](https://github.com/YumNumm/EQMonitor/commit/95375788e083dc85fb51f2fc24511606951a5bfc))
+* ヘッダと検索結果にロック画面と地震詳細を加え、見出しの抜き出しのずれを直す ([20663c5](https://github.com/YumNumm/EQMonitor/commit/20663c51d4dd6aa6e4e4597b345a2ab5aa7a8cae))
+* リアルタイム震度の一括計算で計算周期を1秒より短くできるようにする ([3a9b89f](https://github.com/YumNumm/EQMonitor/commit/3a9b89f8144b6047d6e30498391449667c72219b))
+* リプレイで EQRP の気象庁 XML 緊急地震速報を再生する ([a23d3ee](https://github.com/YumNumm/EQMonitor/commit/a23d3eef3b957011ab3223aac7f4d12ec55fd6bf))
+* ログイン中のユーザーとしてバイナリを取得できるようにする ([c2182ba](https://github.com/YumNumm/EQMonitor/commit/c2182bae40e461b6a5197d46724f93b01c1bbe16))
+* 再生中に観測点ごとの波形を開く画面を追加する ([cc04140](https://github.com/YumNumm/EQMonitor/commit/cc04140d1870918f788b10b13b7d61d375c4a6ed))
+* 加速度波形からリアルタイム震度を計算するパッケージを追加する ([34cd750](https://github.com/YumNumm/EQMonitor/commit/34cd75081ee3758bbc0b4eab427ceda7183f08bf))
+* 取得したリプレイファイルを検証して保存できるようにする ([c8abb46](https://github.com/YumNumm/EQMonitor/commit/c8abb4627cb7f247fb8c804ac6839670d306b316))
+* 地震アーカイブの admin API をクライアントに生成する ([15d642d](https://github.com/YumNumm/EQMonitor/commit/15d642d7ed4c1e7b578124e0483a5c871e4de42c))
+* 地震アーカイブを admin デバイスから、デバイスのトークンで使う ([e826b2e](https://github.com/YumNumm/EQMonitor/commit/e826b2eb0aa64aa2f57a7ccc9b08b9b3c3bd8afc))
+* 地震アーカイブを admin デバイスから、デバイスのトークンで使う ([1d33e5e](https://github.com/YumNumm/EQMonitor/commit/1d33e5e6bed8157f291fc1ed49a06dba60a91043))
+* 地震履歴詳細の観測点タップをツールチップ表示にする ([68c43c2](https://github.com/YumNumm/EQMonitor/commit/68c43c2ea59a151f50b4fd2b2393749700e95057))
+* 地震履歴詳細の観測点タップをツールチップ表示にする ([341813e](https://github.com/YumNumm/EQMonitor/commit/341813ebb1ada67b84d103edd6fd4451c732fc48))
+* 市区町村の詳細を地図操作を妨げないシートで表示する ([f8ee0a0](https://github.com/YumNumm/EQMonitor/commit/f8ee0a05989e11c07a51f053e8bd1cbf81969414))
+* 市区町村別最大震度に震度アイコンと非ブロッキングの詳細シートを追加 ([bd499c9](https://github.com/YumNumm/EQMonitor/commit/bd499c95a9a53dcba170eda009bb7f4dd3a0f197))
+* 市区町村別最大震度マップに震度アイコンを表示する ([4062ee9](https://github.com/YumNumm/EQMonitor/commit/4062ee985ef1a26b2f76d3ccfe44e4eeb6991aae))
+* 強震記録の加速度から速度・変位を求める処理を追加する ([d9a612e](https://github.com/YumNumm/EQMonitor/commit/d9a612efd0cccd81345344abd3eee3603b19ff3a))
+* 気象庁 XML の緊急地震速報をアプリ用 EEW モデルへ変換する ([41013dd](https://github.com/YumNumm/EQMonitor/commit/41013dd55297f9139d65f3d70ecff9ffcc8d8940))
+* 気象庁 XML の緊急地震速報を読む jma_eew_xml パッケージを追加 ([e295914](https://github.com/YumNumm/EQMonitor/commit/e2959143b8f7c10570924f97b13385bf906bd01a))
+* 気象庁 XML の緊急地震速報を読むパッケージを追加し、EEW をアプリ用モデルで取り込む ([24054cd](https://github.com/YumNumm/EQMonitor/commit/24054cdb18cb1c63720cb934d99b7958fa631555))
+* 波形から求めたリアルタイム震度を 0.1 秒ごとに表示し、値の無い時刻は灰色の枠線で描く ([21f520b](https://github.com/YumNumm/EQMonitor/commit/21f520b2bb720d31a19de08050bacf28b7e6de1e))
+* 波形リプレイ中に観測点を震度アイコンで表示できるようにする ([ca98d6e](https://github.com/YumNumm/EQMonitor/commit/ca98d6e5356bdb96fa45da6dcaee2eb6db0f1d75))
+* 観測点の波形に速度・変位、成分の絞り込み、リアルタイム震度の推移を表示する ([04cfcdb](https://github.com/YumNumm/EQMonitor/commit/04cfcdb420dd6e52f7b2cd2c6d10148f1366dac8))
+
+
+### Bug Fixes
+
+* Deploy App で dev プラグイン（patrol）を release から除外する ([5e32c17](https://github.com/YumNumm/EQMonitor/commit/5e32c172080a7efd9b84acab86dd5be2449b6bd0))
+* Deploy App の pub get と Android release ビルドを修正 ([b2e3dc7](https://github.com/YumNumm/EQMonitor/commit/b2e3dc732cf930f695a2d55fe2d393d3fe16a3c2))
+* Deploy App の pub get と Android release ビルドを修正 ([4cd2485](https://github.com/YumNumm/EQMonitor/commit/4cd24851d7ba2ab8ef8a4b9cea8a06cdf3f2e9ee))
+* Deploy App の依存解決で dev プラグインを除外する ([86eecc2](https://github.com/YumNumm/EQMonitor/commit/86eecc26e21a218c8df42bcc0f3ed9e8436e6dbd))
+* EQRP の未知のフレーム種別を読み飛ばす ([b970b11](https://github.com/YumNumm/EQMonitor/commit/b970b119bba60ce30973386bd14bb5994f4ad663))
+* EQRP の未知のフレーム種別を読み飛ばす ([74cf679](https://github.com/YumNumm/EQMonitor/commit/74cf6790c7fd86b3639e6d76007c71d20c97556b))
+* iOS で重大な通知の許可を要求できない問題を直す ([de4aca6](https://github.com/YumNumm/EQMonitor/commit/de4aca60c1f07fafad80bd0942bc19c688405861))
+* iOS で重大な通知の許可を要求できない問題を直す ([4d7ab82](https://github.com/YumNumm/EQMonitor/commit/4d7ab820fd8f8956e00155151330cda0b74c1558))
+* iOS提出バージョンを3.1.1へ進める ([694fe9b](https://github.com/YumNumm/EQMonitor/commit/694fe9b258118231ee5ec3d0d6205875a08f60df))
+* K-NET/KiK-net の波形を含む EQRP はヘッダの終了時刻まで再生する ([b566cb4](https://github.com/YumNumm/EQMonitor/commit/b566cb4111079786a2b72e32f53f5e00e775b161))
+* K-NET/KiK-net の波形を含む EQRP はヘッダの終了時刻まで再生する ([8addea1](https://github.com/YumNumm/EQMonitor/commit/8addea126b7fd1f14d166d140604d9535f0ff76c))
+* PowerVR GPU で地図が止まる・推計震度が出ない問題を fork の修正で直す ([0cd9e18](https://github.com/YumNumm/EQMonitor/commit/0cd9e184aa98666682c9f12ef9d56213e9d6c032))
+* SheetFitTarget を HookWidget にして StatefulWidget の禁止に従う ([0b0e0fa](https://github.com/YumNumm/EQMonitor/commit/0b0e0fae79f2c8d9afe79bcf6282c5b0ee734770))
+* お知らせ詳細の本文末尾がナビゲーションバーに隠れる問題を修正 ([18e8350](https://github.com/YumNumm/EQMonitor/commit/18e835081423a5cffbee7cc5d5ba357ec054d290))
+* お知らせ詳細の本文末尾がナビゲーションバーに隠れる問題を修正 ([8633a11](https://github.com/YumNumm/EQMonitor/commit/8633a115cb875b3bd5abf8354fdf4aed80400d7a))
+* 市区町村へのカメラ寄せに拡大の上限を設ける ([cc32ffb](https://github.com/YumNumm/EQMonitor/commit/cc32ffbc9581aa91afd2e37b9098a1fb55540aef))
+* 未知のフレームを除いた後に空なら EQRP を不正とする ([3a9d747](https://github.com/YumNumm/EQMonitor/commit/3a9d74762caa65c287a51bbaad500b688bc16936))
+* 観測点ツールチップの上下反転にステータスバーの高さを含める ([e93feec](https://github.com/YumNumm/EQMonitor/commit/e93feec0ca156e7567e718aaab4f5d4cf2df8bec))
+
+
+### Reverts
+
+* 地震アーカイブ用に足したユーザーとしてのバイナリ取得を外す ([b6a52de](https://github.com/YumNumm/EQMonitor/commit/b6a52de9442c2eb1412847337d49e7587499e8a6))
+
 ## [3.1.0](https://github.com/YumNumm/EQMonitor/compare/v3.0.6...v3.1.0) (2026-11-24)
 
 
