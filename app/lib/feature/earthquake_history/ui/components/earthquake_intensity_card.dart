@@ -32,99 +32,37 @@ class const EarthquakeIntensityCard({
       return const SizedBox.shrink();
     }
 
-    if (showingDb) {
-      return Consumer(
-        builder: (context, ref, _) {
-          final treeAsync = ref.watch(
-            shindoDbIntensityTreeProvider(item.eventId),
-          );
-          return BorderedContainer(
-            elevation: 1,
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(child: SheetHeader(title: '各地の震度')),
-                    if (showDatabaseBadge)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Text(
-                          'データベース',
-                          style: Theme.of(context).textTheme.labelSmall
-                              ?.copyWith(
-                                color: context
-                                    .designSystem
-                                    .colorTheme
-                                    .onSurfaceVariant,
-                              ),
-                        ),
-                      ),
-                  ],
-                ),
-                switch (treeAsync) {
-                  AsyncData(:final value) =>
-                    value != null
-                        ? ShindoDbIntensityContent(tree: value)
-                        : const SizedBox.shrink(),
-                  AsyncError() => const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: Text('震度データベースの読み込みに失敗しました'),
-                  ),
-                  _ => const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: AccessibleCircularProgressIndicator(),
-                    ),
-                  ),
-                },
-              ],
-            ),
-          );
-        },
-      );
-    }
-
-    final title = switch (displayMode) {
-      .jma => '各地の震度',
-      .lpgm => '各地の長周期地震動階級',
-      .estimated => '推計震度',
-    };
-
     return BorderedContainer(
       elevation: 1,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Column(
         crossAxisAlignment: .start,
         children: [
-          if (availableModes.length > 1)
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: DropdownMenuChip<IntensityDisplayMode>(
-                label: switch (displayMode) {
-                  .jma => '各地の震度',
-                  .lpgm => '長周期地震動階級',
-                  .estimated => '推計震度',
-                },
-                value: displayMode,
-                entries: [
-                  for (final mode in availableModes)
-                    DropdownMenuChipEntry(
-                      value: mode,
-                      label: switch (mode) {
-                        .jma => '各地の震度',
-                        .lpgm => '長周期地震動階級',
-                        .estimated => '推計震度',
-                      },
-                    ),
-                ],
-                onSelected: onDisplayModeChanged,
+          Row(
+            children: [
+              Expanded(
+                child: _DisplayModeHeader(
+                  displayMode: displayMode,
+                  availableModes: availableModes,
+                  onDisplayModeChanged: onDisplayModeChanged,
+                ),
               ),
-            )
-          else
-            SheetHeader(title: title),
+              if (showingDb && showDatabaseBadge)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Text(
+                    'データベース',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: context.designSystem.colorTheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           switch (displayMode) {
+            .jma when showingDb => _ShindoDbIntensityBody(
+              eventId: item.eventId,
+            ),
             .jma => JmaIntensityContent(item: item),
             .lpgm => LpgmIntensityContent(item: item),
             .estimated => Padding(
@@ -147,5 +85,68 @@ class const EarthquakeIntensityCard({
         ],
       ),
     );
+  }
+}
+
+class const _DisplayModeHeader({
+  required final IntensityDisplayMode displayMode,
+  required final List<IntensityDisplayMode> availableModes,
+  required final ValueChanged<IntensityDisplayMode> onDisplayModeChanged,
+}) extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    if (availableModes.length <= 1) {
+      return SheetHeader(
+        title: switch (displayMode) {
+          .jma => '各地の震度',
+          .lpgm => '各地の長周期地震動階級',
+          .estimated => '推計震度',
+        },
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: DropdownMenuChip<IntensityDisplayMode>(
+          label: _label(displayMode),
+          value: displayMode,
+          entries: [
+            for (final mode in availableModes)
+              DropdownMenuChipEntry(value: mode, label: _label(mode)),
+          ],
+          onSelected: onDisplayModeChanged,
+        ),
+      ),
+    );
+  }
+
+  String _label(IntensityDisplayMode mode) => switch (mode) {
+    .jma => '各地の震度',
+    .lpgm => '長周期地震動階級',
+    .estimated => '推計震度',
+  };
+}
+
+class const _ShindoDbIntensityBody({required final String eventId})
+    extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return switch (ref.watch(shindoDbIntensityTreeProvider(eventId))) {
+      AsyncData(:final value) =>
+        value != null
+            ? ShindoDbIntensityContent(tree: value)
+            : const SizedBox.shrink(),
+      AsyncError() => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        child: Text('震度データベースの読み込みに失敗しました'),
+      ),
+      _ => const Center(
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: AccessibleCircularProgressIndicator(),
+        ),
+      ),
+    };
   }
 }

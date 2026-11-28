@@ -60,7 +60,7 @@ class const FeedDetailsBody({required final FeedDetail item, super.key})
         : null;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16) + MediaQuery.paddingOf(context),
       child: Column(
         spacing: 8,
         crossAxisAlignment: .start,
