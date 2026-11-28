@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_station_selection.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_area_filter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
@@ -31,6 +32,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthqu
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_content.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_station_tooltip.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_area_icon_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_dem_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_layer.dart';
@@ -202,6 +204,22 @@ class const _MapContent({
     final showStations = showEstimated
         ? details.showStationsOnEstimatedIntensity
         : details.showStations;
+    final selectionScope = (displayMode, showingDb, dbTree, showStations);
+    final selectedStationState =
+        useState<
+          ({Object scope, EarthquakeHistoryStationSelection selection})?
+        >(null);
+    final selectedStation = switch (selectedStationState.value) {
+      (:final scope, :final selection) when scope == selectionScope =>
+        selection,
+      _ => null,
+    };
+    void selectStation(EarthquakeHistoryStationSelection? selection) {
+      selectedStationState.value = switch (selection) {
+        final value? => (scope: selectionScope, selection: value),
+        null => null,
+      };
+    }
 
     // マーカー・初期カメラ・全体表示が同じ震源を指すよう、ここで一度だけ決める。
     final hypocenterPoints = const EarthquakeHistoryHypocenterPointsResolver()
@@ -256,6 +274,7 @@ class const _MapContent({
           onMapCreated: (controller) {
             mapController.value = controller;
           },
+          onCameraMoveStart: (_) => selectStation(null),
           onClick: (event) async {
             final controller = mapController.value;
             if (controller == null) {
@@ -273,6 +292,8 @@ class const _MapContent({
                 dbTree: dbTree,
                 showingDb: showingDb,
                 showingLpgmIntensity: showingLpgmIntensity,
+                selectedStation: selectedStation,
+                onStationSelected: selectStation,
               );
             }
           },
@@ -340,6 +361,24 @@ class const _MapContent({
                 key: const ValueKey('focus-bounds-debug'),
                 bounds: fittedBounds.value ?? initialBounds,
               ),
+            if (selectedStation case final selection?)
+              EarthquakeHistoryStationTooltip(
+                key: const ValueKey('station-tooltip'),
+                selection: selection,
+                onTap: () => showM3EModalBottomSheet<void>(
+                  isScrollControlled: false,
+                  useSafeArea: false,
+                  style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+                  context: context,
+                  clipBehavior: Clip.antiAlias,
+                  builder: (_) => switch (selection) {
+                    EarthquakeHistoryShindoDbStationSelection(:final station) =>
+                      ShindoDbStationDetailSheet(station: station),
+                    EarthquakeHistoryJmaStationSelection(:final station) =>
+                      LpgmStationDetailSheet(station: station),
+                  },
+                ),
+              ),
           ],
         ),
 
@@ -390,14 +429,14 @@ class const _MapContent({
     required Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
     required bool showingDb,
     required bool showingLpgmIntensity,
+    required EarthquakeHistoryStationSelection? selectedStation,
+    required void Function(EarthquakeHistoryStationSelection?)
+    onStationSelected,
     ShindoDbIntensityTree? dbTree,
   }) async {
     final hits = await mapController.queryRenderedFeatures(
       .point(event.screenPoint),
     );
-    if (hits.isEmpty) {
-      return;
-    }
 
     if (dbTree != null && hits.any((h) => h.layerId == _dbStationLayerId)) {
       final result = _findNearestDbStation(event.point, dbTree);
@@ -405,14 +444,14 @@ class const _MapContent({
         return;
       }
       final (station, _) = result;
-      await showM3EModalBottomSheet<void>(
-        isScrollControlled: false,
-        useSafeArea: false,
-        style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-        context: context,
-        clipBehavior: Clip.antiAlias,
-        builder: (_) => ShindoDbStationDetailSheet(station: station),
-      );
+      if (station.location case final location?) {
+        onStationSelected(
+          EarthquakeHistoryShindoDbStationSelection(
+            station: station,
+            point: Geographic(lon: location.lon, lat: location.lat),
+          ),
+        );
+      }
       return;
     }
 
@@ -428,14 +467,21 @@ class const _MapContent({
       if (stationNode == null) {
         return;
       }
-      await showM3EModalBottomSheet<void>(
-        isScrollControlled: false,
-        useSafeArea: false,
-        style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-        context: context,
-        clipBehavior: Clip.antiAlias,
-        builder: (_) => LpgmStationDetailSheet(station: stationNode),
+      onStationSelected(
+        EarthquakeHistoryJmaStationSelection(
+          station: stationNode,
+          showingLpgmIntensity: showingLpgmIntensity,
+        ),
       );
+      return;
+    }
+
+    if (selectedStation != null) {
+      onStationSelected(null);
+      return;
+    }
+
+    if (hits.isEmpty) {
       return;
     }
 
