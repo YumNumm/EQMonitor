@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_details_display_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
@@ -31,15 +32,12 @@ class const _SourceToggleHarness({required final Earthquake earthquake})
     final isDbOnly = hasCatalog && !hasXml;
     final showSourceToggle = hasCatalog && hasXml;
 
-    final source = useState(
-      isDbOnly
-          ? EarthquakeDataSource.jmaIntensityDatabase
-          : EarthquakeDataSource.jmaDisasterInformationXml,
+    const resolver = EarthquakeHistoryDetailsDisplayResolver();
+    final source = useState(resolver.initialSource(hasCatalog: hasCatalog));
+    final effectiveSource = resolver.effectiveSource(
+      selected: source.value,
+      hasCatalog: hasCatalog,
     );
-    final effectiveSource =
-        source.value == EarthquakeDataSource.jmaIntensityDatabase && hasCatalog
-        ? EarthquakeDataSource.jmaIntensityDatabase
-        : EarthquakeDataSource.jmaDisasterInformationXml;
     final showingDb =
         effectiveSource == EarthquakeDataSource.jmaIntensityDatabase;
 
@@ -181,48 +179,34 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('(a) XML+DB 両ソース → トグル表示、DB選択でカード切り替え', (tester) async {
+  testWidgets('(a) XML+DB 両ソース → 震度DBを既定表示、XML選択でカード切り替え', (tester) async {
     await pumpHarness(
       tester,
       earthquake: bothSourcesEarthquake,
       withDbOverride: true,
     );
 
-    // 初期状態: XML モード。トグルに現在選択中の '防災情報XML' が表示される
-    expect(find.text('防災情報XML'), findsOneWidget);
-    expect(find.byType(EarthquakeHypocenterInformationCard), findsOneWidget);
-    expect(find.byType(ShindoDbHypocenterInformationCard), findsNothing);
-
-    // トグルを展開する
-    await tester.tap(find.text('防災情報XML'));
-    await tester.pumpAndSettle();
-
-    // '震度データベース' セグメントが表示されていることを確認
     expect(find.text('震度データベース'), findsOneWidget);
-
-    // '震度データベース' を選択する
-    await tester.tap(find.text('震度データベース'));
-    await tester.pumpAndSettle();
-
-    // DB モードに切り替わる: ShindoDbHypocenterInformationCard が表示される
     expect(find.byType(ShindoDbHypocenterInformationCard), findsOneWidget);
     expect(find.byType(EarthquakeHypocenterInformationCard), findsNothing);
-
-    // 震度カードのタイトルが表示される
     expect(find.text('各地の震度'), findsOneWidget);
+
+    await tester.tap(find.text('震度データベース'));
+    await tester.pumpAndSettle();
+    expect(find.text('防災情報XML'), findsOneWidget);
+    await tester.tap(find.text('防災情報XML'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(EarthquakeHypocenterInformationCard), findsOneWidget);
+    expect(find.byType(ShindoDbHypocenterInformationCard), findsNothing);
   });
 
-  testWidgets('DB選択後にcatalogなしへ更新されてもXML表示へ戻る', (tester) async {
+  testWidgets('DB表示中にcatalogなしへ更新されてもXML表示へ戻る', (tester) async {
     await pumpHarness(
       tester,
       earthquake: bothSourcesEarthquake,
       withDbOverride: true,
     );
-
-    await tester.tap(find.text('防災情報XML'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('震度データベース'));
-    await tester.pumpAndSettle();
 
     expect(find.byType(ShindoDbHypocenterInformationCard), findsOneWidget);
 

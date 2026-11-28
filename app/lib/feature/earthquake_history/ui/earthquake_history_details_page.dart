@@ -9,6 +9,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_details_display_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment_selector.dart';
@@ -110,20 +111,26 @@ class const _LoadedContent({
     final isDbOnly = hasCatalog && !hasXml;
     final showSourceToggle = hasCatalog && hasXml;
 
-    final source = useState(
-      isDbOnly
-          ? EarthquakeDataSource.jmaIntensityDatabase
-          : EarthquakeDataSource.jmaDisasterInformationXml,
+    const resolver = EarthquakeHistoryDetailsDisplayResolver();
+    final source = useState(resolver.initialSource(hasCatalog: hasCatalog));
+    final effectiveSource = resolver.effectiveSource(
+      selected: source.value,
+      hasCatalog: hasCatalog,
     );
-    final effectiveSource =
-        source.value == EarthquakeDataSource.jmaIntensityDatabase && hasCatalog
-        ? EarthquakeDataSource.jmaIntensityDatabase
-        : EarthquakeDataSource.jmaDisasterInformationXml;
     final showingDb =
         effectiveSource == EarthquakeDataSource.jmaIntensityDatabase;
 
     final displayMode = useState(
       hasEstimated ? IntensityDisplayMode.estimated : IntensityDisplayMode.jma,
+    );
+    final availableModes = resolver.availableModes(
+      showingDb: showingDb,
+      hasLpgm: hasLpgm,
+      hasEstimated: hasEstimated,
+    );
+    final effectiveDisplayMode = resolver.effectiveMode(
+      selected: displayMode.value,
+      availableModes: availableModes,
     );
 
     final noticeShownAsync = ref.watch(estimatedIntensityNoticeShownProvider);
@@ -133,7 +140,7 @@ class const _LoadedContent({
     };
 
     useEffect(() {
-      if (hasEstimated && noticeShown == false && !showingDb) {
+      if (hasEstimated && noticeShown == false) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!context.mounted) {
             return;
@@ -145,13 +152,7 @@ class const _LoadedContent({
         });
       }
       return null;
-    }, [hasEstimated, noticeShown, showingDb]);
-
-    final availableModes = [
-      IntensityDisplayMode.jma,
-      if (hasLpgm) IntensityDisplayMode.lpgm,
-      if (hasEstimated) IntensityDisplayMode.estimated,
-    ];
+    }, [hasEstimated, noticeShown]);
 
     final designSystem = context.designSystem;
 
@@ -163,7 +164,7 @@ class const _LoadedContent({
         children: [
           EarthquakeHistoryDetailsMapView(
             earthquake: earthquake,
-            displayMode: displayMode.value,
+            displayMode: effectiveDisplayMode,
             showingDb: showingDb,
           ),
           SafeArea(
@@ -173,9 +174,7 @@ class const _LoadedContent({
               expandToPane: onClose != null,
               initialPositionOverlay: EarthquakeHistoryMapLegend(
                 intensity: showingDb ? null : earthquake.intensity,
-                displayMode: showingDb
-                    ? IntensityDisplayMode.jma
-                    : displayMode.value,
+                displayMode: effectiveDisplayMode,
                 estimatedIntensityScalePalette:
                     earthquake.estimatedIntensityDemTileUrl == null
                     ? null
@@ -191,7 +190,9 @@ class const _LoadedContent({
                           },
                         ),
                       ),
-                shindoDbTree: showingDb
+                shindoDbTree:
+                    showingDb &&
+                        effectiveDisplayMode == IntensityDisplayMode.jma
                     ? ref
                           .watch(
                             shindoDbIntensityTreeProvider(earthquake.eventId),
@@ -248,7 +249,7 @@ class const _LoadedContent({
                       CurrentLocationIntensityCard(item: earthquake),
                       EarthquakeIntensityCard(
                         item: earthquake,
-                        displayMode: displayMode.value,
+                        displayMode: effectiveDisplayMode,
                         onDisplayModeChanged: (mode) =>
                             displayMode.value = mode,
                         availableModes: availableModes,
