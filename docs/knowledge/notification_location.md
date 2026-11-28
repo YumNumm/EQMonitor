@@ -34,6 +34,14 @@
   OSサービスは再起動しない。同じ環境でディスク容量不足も観測しており、iOSの版に固有の問題とは断定しない。
   実機での発生条件・通知サービスが応答しなくなる根因は未確定。
 - Firebase AuthorizationStatusの`deniedPermanently`も明示的に扱い、端末設定からの変更を案内する。
+- iOSの`criticalAlertSetting`は、`.criticalAlert`を一度も要求していない間はエンタイトルメントがあっても
+  `notSupported`を返す（[OneUptime #4516](https://github.com/OneUptime/oneuptime/pull/4516)の観察。
+  要求前は設定アプリにも重大な通知の項目が出ない: [Apple Developer Forums](https://developer.apple.com/forums/thread/664021)）。
+  `notSupported`だけで非対応と判定すると要求の導線が出ず、新規インストールでは許可できない
+  （[#1583](https://github.com/YumNumm/eqmonitor-backend/issues/1583)）。iOSは`PermissionRepository`の
+  `isCriticalAlertAvailable`で対応端末として扱い、`notSupported`・`disabled`は未許可として要求する。
+  配布IPA（3.1.1 build 1601）のプロファイルとコード署名に`critical-alerts`が入っていることは2026-11-26に確認した。
+  要求後も`notSupported`のままなら、そのビルドの署名にエンタイトルメントがないことを疑う。
 - プリセット初期化の同期callback問題は[UI残件](../todo/800_ui_and_navigation.md)。
   `NotificationPresetSelector`のuseEffect内onChangedは現コードにも存在し、実機再現は未実施。
 

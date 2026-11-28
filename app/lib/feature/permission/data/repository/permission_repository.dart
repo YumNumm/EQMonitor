@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -39,6 +40,7 @@ PermissionRepository permissionRepository(Ref ref) => PermissionRepository(
   },
   openNotificationSettings: () =>
       AppSettings.openAppSettings(type: .notification, asAnotherTask: true),
+  isCriticalAlertAvailable: !kIsWeb && defaultTargetPlatform == .iOS,
 );
 
 class PermissionRepository({
@@ -52,6 +54,7 @@ class PermissionRepository({
   required final Future<void> Function() _openNotificationSettings,
   final Future<void> Function() _openLocationSettings =
       AppSettings.openAppSettings,
+  final bool _isCriticalAlertAvailable = false,
 }) {
   Future<void> openLocationSettings() => _openLocationSettings();
 
@@ -62,7 +65,10 @@ class PermissionRepository({
     final settings = await _readMessaging().getNotificationSettings().timeout(
       const Duration(seconds: 10),
     );
-    return OsNotificationPermission.fromNotificationSettings(settings);
+    return OsNotificationPermission.fromNotificationSettings(
+      settings,
+      isCriticalAlertAvailable: _isCriticalAlertAvailable,
+    );
   }
 
   Future<LocationPermission> getLocationPermission() async =>
@@ -95,7 +101,14 @@ class PermissionRepository({
 
   Future<bool> requestCriticalAlertPermission() async {
     final settings = await _readMessaging().requestPermission(
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: true,
       criticalAlert: true,
+      providesAppNotificationSettings: true,
+      provisional: false,
+      sound: true,
     );
     return settings.criticalAlert == .enabled;
   }
