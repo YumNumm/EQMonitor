@@ -3,6 +3,9 @@ import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
+import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
+import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_sheet.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
@@ -31,8 +34,8 @@ import 'package:material_ui/material_ui.dart';
 /// 市区町村別最大震度マップのページ。
 ///
 /// - [initialCityCode] と [initialPrefectureCode] の両方が指定されたとき、
-///   当該市区町村が詳細モーダルの上に収まる初期カメラで開き、起動直後に
-///   詳細モーダルを自動表示する。
+///   当該市区町村が詳細シートの上に収まる初期カメラで開き、起動直後に
+///   詳細シートを自動表示する。
 class const IntensityHistoryPage({
   final String? initialPrefectureCode,
   final String? initialCityCode,
@@ -130,13 +133,10 @@ class const _MapContent({
           return null;
         }
         didInitializeDeepLink.value = true;
-        unawaited(
-          action.openFromDeepLink(
-            ref: ref,
-            context: context,
-            prefectureCode: prefectureCode,
-            cityCode: initialCityCode,
-          ),
+        action.openFromDeepLink(
+          ref: ref,
+          prefectureCode: prefectureCode,
+          cityCode: initialCityCode,
         );
         return null;
       },
@@ -162,60 +162,86 @@ class const _MapContent({
       );
     }
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          MapOperationQueueScope(
-            child: MapLibreMap(
-              onMapCreated: (controller) {
-                mapController.value = controller;
-              },
-              options: mapOptions,
-              onClick: (event) => handleTap(event.point),
-              onLongClick: (event) => handleTap(event.point),
-              children: const [IntensityHistoryMapLayers()],
-            ),
-          ),
+    final selectedCity = ref.watch(
+      intensityHistoryControllerProvider.select((state) => state.selectedCity),
+    );
+    void deselectCity() =>
+        ref.read(intensityHistoryControllerProvider.notifier).deselectCity();
 
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: SafeArea(
-              child: Column(
-                children: [
-                  RegionFloatingPanel(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: CachedDataBanner(
-                      values: [
-                        ref.watch(cityMaxIntensityProvider),
-                      ],
-                    ),
-                  ),
-                ],
+    return PopScope(
+      canPop: selectedCity == null,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          deselectCity();
+        }
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            MapOperationQueueScope(
+              child: MapLibreMap(
+                onMapCreated: (controller) {
+                  mapController.value = controller;
+                },
+                options: mapOptions,
+                onClick: (event) => handleTap(event.point),
+                onLongClick: (event) => handleTap(event.point),
+                children: const [IntensityHistoryMapLayers()],
               ),
             ),
-          ),
 
-          // 凡例（右下）
-          const Positioned(
-            bottom: 8,
-            right: 8,
-            child: SafeArea(
-              child: IntensityHistoryLegend(),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    RegionFloatingPanel(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: CachedDataBanner(
+                        values: [
+                          ref.watch(cityMaxIntensityProvider),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
 
-          const IntensityHistoryLoadingOverlay(),
-          const IntensityHistoryErrorOverlay(),
+            if (selectedCity == null)
+              const Positioned(
+                bottom: 8,
+                right: 8,
+                child: SafeArea(
+                  child: IntensityHistoryLegend(),
+                ),
+              )
+            else
+              BasicModalSheet(
+                initialPositionOverlay: const Align(
+                  alignment: .centerRight,
+                  child: IntensityHistoryLegend(),
+                ),
+                child: CityDetailSheet(
+                  key: ValueKey(selectedCity.code),
+                  city: selectedCity,
+                  onClose: deselectCity,
+                ),
+              ),
 
-          const Positioned(
-            top: 0,
-            left: 0,
-            child: IntensityHistoryNavigationBackButton(),
-          ),
-        ],
+            const IntensityHistoryLoadingOverlay(),
+            const IntensityHistoryErrorOverlay(),
+
+            const Positioned(
+              top: 0,
+              left: 0,
+              child: IntensityHistoryNavigationBackButton(),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_city_icon_layer.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,6 +13,11 @@ class const IntensityHistoryMapLayers({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(cityMaxIntensityProvider).valueOrPrevious?.items;
-    return IntensityFillLayer(items: items);
+    return Stack(
+      children: [
+        IntensityFillLayer(items: items),
+        IntensityCityIconLayer(items: items),
+      ],
+    );
   }
 }

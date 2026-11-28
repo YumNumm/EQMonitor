@@ -1,22 +1,7 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/core/util/date_time_format.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_partial.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
@@ -42,48 +27,6 @@ class _FakeCityMaxIntensity({final DateTime? aggregatedAt})
       ),
     ],
   );
-}
-
-class _FakeEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
-  @override
-  Future<PaginatedResponse<EarthquakePartial>> build(
-    EarthquakeHistoryParameter parameter,
-  ) async {
-    final earthquake = EarthquakePartialNormal(
-      eventId: '20240101000000',
-      status: TelegramStatus.normal,
-      originTime: DateTime(2024, 1, 1, 16, 10),
-      originTimePrecision: OriginTimePrecision.minute,
-      arrivalTime: DateTime(2024, 1, 1, 16, 11),
-      dataSources: const [EarthquakeDataSource.jmaIntensityDatabase],
-      hypocenter: const EarthquakeHypocenter(
-        code: '123',
-        name: '能登半島沖',
-        coordinates: null,
-        magnitude: EarthquakeMagnitude.value(value: 7.6),
-        depth: EarthquakeDepth.shallow(),
-        detailedCode: null,
-        detailedName: null,
-      ),
-      intensity: const EarthquakeIntensityPartial(
-        maxIntensity: JmaIntensity.seven,
-        maxLpgmIntensity: null,
-      ),
-      earthquakeType: EarthquakeType.normal,
-      telegramTypes: const [EarthquakeTelegramType.vxse53],
-      estimatedIntensityTileUrl: null,
-    );
-
-    return PaginatedResponse(
-      items: [
-        EarthquakePartialRegion(
-          regionIntensity: JmaIntensity.sixLower,
-          earthquake: earthquake,
-        ),
-      ],
-      nextToken: null,
-    );
-  }
 }
 
 Future<ProviderContainer> _container({
@@ -174,34 +117,5 @@ void main() {
     expect(find.text('宮城県'), findsOneWidget);
     expect(find.text('仙台市'), findsOneWidget);
     expect(find.textContaining('最大観測震度'), findsNothing);
-  });
-
-  testWidgets('市区町村選択状態でタップすると市区町村詳細モーダルが開く', (tester) async {
-    final container = await _container(
-      overrides: [
-        earthquakeHistoryProvider(
-          const EarthquakeHistoryParameter.city(
-            cityCode: '0410000',
-            sortBy: EarthquakeSortBy.regionalIntensity,
-            sortOrder: SortOrder.desc,
-          ),
-        ).overrideWith(_FakeEarthquakeHistoryNotifier.new),
-      ],
-    );
-    addTearDown(container.dispose);
-
-    container
-        .read(intensityHistoryControllerProvider.notifier)
-        .selectCity(code: '0410000', name: '仙台市', prefectureName: '宮城県');
-
-    await tester.pumpWidget(_panelApp(container, centered: true));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('仙台市'));
-    await tester.pumpAndSettle();
-
-    expect(tester.takeException(), isNull);
-    expect(find.text('観測した地震'), findsOneWidget);
-    expect(find.text('能登半島沖'), findsOneWidget);
   });
 }

@@ -31,7 +31,7 @@ final _prefectures = [
 ];
 
 void main() {
-  const action = IntensityHistoryMapAction();
+  final action = IntensityHistoryMapAction();
 
   group('cityTapTargetOf', () {
     test('市区町村と所属都道府県を組にして返す', () {

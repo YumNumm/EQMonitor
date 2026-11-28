@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
+import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/feature/map/data/logic/map_camera_bounds_fitter.dart';
 import 'package:eqmonitor/feature/map/data/model/map_camera_bounds.dart';
 import 'package:eqmonitor/feature/map/data/model/map_camera_bounds_fit_result.dart';
@@ -9,15 +9,34 @@ import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
 final class const IntensityHistoryCityCamera() {
+  static const maxZoom = 10.0;
+
+  double maxZoomFrom(double? currentZoom) =>
+      math.max(maxZoom, currentZoom ?? maxZoom);
+
   EdgeInsets padding({
     required Size viewportSize,
     required EdgeInsets safePadding,
-  }) => EdgeInsets.fromLTRB(
-    24,
-    safePadding.top + 96,
-    24,
-    viewportSize.height * CityDetailModalAction.initialChildSize + 24,
-  );
+  }) {
+    final sheetArea = Size(
+      viewportSize.width,
+      viewportSize.height - safePadding.top,
+    );
+    if (BasicModalSheet.isLandscape(sheetArea)) {
+      return EdgeInsets.fromLTRB(
+        24,
+        safePadding.top + 96,
+        sheetArea.width * BasicModalSheet.landscapeWidthRatio + 24,
+        safePadding.bottom + 24,
+      );
+    }
+    return EdgeInsets.fromLTRB(
+      24,
+      safePadding.top + 96,
+      24,
+      sheetArea.height * BasicModalSheet.initialExtentRatio + 24,
+    );
+  }
 
   MapCameraBounds? cityBounds({
     required String cityCode,
@@ -53,7 +72,7 @@ final class const IntensityHistoryCityCamera() {
       devicePixelRatio: 1,
       padding: padding(viewportSize: viewportSize, safePadding: safePadding),
       minZoom: defaults.minZoom,
-      maxZoom: defaults.maxZoom,
+      maxZoom: maxZoom,
     );
     return switch (fit) {
       MapCameraBoundsFitSucceeded(:final camera) => MapOptions(

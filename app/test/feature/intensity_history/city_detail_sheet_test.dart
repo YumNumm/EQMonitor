@@ -18,7 +18,12 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
-import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
+import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_sheet.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -160,20 +165,35 @@ EarthquakePartial _earthquakePartialForList(
   };
 }
 
-typedef _OpenModal = void Function(BuildContext context);
+class _FakeCityMaxIntensityNotifier extends CityMaxIntensityNotifier {
+  @override
+  Future<CityMaxIntensity> build() async => const CityMaxIntensity(
+    aggregatedAt: null,
+    items: [
+      CityMaxIntensityEntry(
+        cityCode: '1720400',
+        intensity: JmaIntensity.seven,
+      ),
+    ],
+  );
+}
 
-Widget _modalTestApp({required _OpenModal onPressed}) {
+Override _cityMaxIntensityOverride() =>
+    cityMaxIntensityProvider.overrideWith(_FakeCityMaxIntensityNotifier.new);
+
+const _city = IntensityHistorySelectedCity(
+  code: '1720400',
+  name: '輪島市',
+  prefectureName: '石川県',
+);
+
+Widget _sheetTestApp({VoidCallback? onClose}) {
   return MaterialApp(
     theme: ThemeData.light().copyWith(
       extensions: [DesignSystemThemeExtension.light()],
     ),
     home: Scaffold(
-      body: Builder(
-        builder: (context) => ElevatedButton(
-          onPressed: () => onPressed(context),
-          child: const Text('open'),
-        ),
-      ),
+      body: CityDetailSheet(city: _city, onClose: onClose ?? () {}),
     ),
   );
 }
@@ -181,29 +201,22 @@ Widget _modalTestApp({required _OpenModal onPressed}) {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('市区町村モーダルで地震一覧が表示される', (tester) async {
+  testWidgets('市区町村シートで地震一覧が表示される', (tester) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          _cityMaxIntensityOverride(),
           earthquakeHistoryProvider.overrideWith2(
             (_) => _RegionalIntensityEarthquakeHistoryNotifier(),
           ),
         ],
-        child: _modalTestApp(
-          onPressed: (context) => CityDetailModalAction().show(
-            context,
-            cityCode: '1720400',
-            cityName: '輪島市',
-            prefectureName: '石川県',
-          ),
-        ),
+        child: _sheetTestApp(),
       ),
     );
 
-    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
     expect(find.text('輪島市'), findsOneWidget);
@@ -220,22 +233,15 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          _cityMaxIntensityOverride(),
           earthquakeHistoryProvider.overrideWith2(
             (_) => _EmptyEarthquakeHistoryNotifier(),
           ),
         ],
-        child: _modalTestApp(
-          onPressed: (context) => CityDetailModalAction().show(
-            context,
-            cityCode: '1720400',
-            cityName: '輪島市',
-            prefectureName: '石川県',
-          ),
-        ),
+        child: _sheetTestApp(),
       ),
     );
 
-    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
     expect(find.text('この地域で観測された地震はありません'), findsOneWidget);
@@ -248,22 +254,15 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          _cityMaxIntensityOverride(),
           earthquakeHistoryProvider.overrideWith2(
             (_) => _ErrorEarthquakeHistoryNotifier(),
           ),
         ],
-        child: _modalTestApp(
-          onPressed: (context) => CityDetailModalAction().show(
-            context,
-            cityCode: '1720400',
-            cityName: '輪島市',
-            prefectureName: '石川県',
-          ),
-        ),
+        child: _sheetTestApp(),
       ),
     );
 
-    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
     expect(find.byType(ErrorCard), findsOneWidget);
@@ -276,22 +275,15 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          _cityMaxIntensityOverride(),
           earthquakeHistoryProvider.overrideWith2(
             (_) => _PendingEarthquakeHistoryNotifier(),
           ),
         ],
-        child: _modalTestApp(
-          onPressed: (context) => CityDetailModalAction().show(
-            context,
-            cityCode: '1720400',
-            cityName: '輪島市',
-            prefectureName: '石川県',
-          ),
-        ),
+        child: _sheetTestApp(),
       ),
     );
 
-    await tester.tap(find.byType(ElevatedButton));
     await tester.pump();
 
     expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
@@ -305,22 +297,15 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          _cityMaxIntensityOverride(),
           earthquakeHistoryProvider.overrideWith2(
             (_) => _PagedEarthquakeHistoryNotifier(),
           ),
         ],
-        child: _modalTestApp(
-          onPressed: (context) => CityDetailModalAction().show(
-            context,
-            cityCode: '1720400',
-            cityName: '輪島市',
-            prefectureName: '石川県',
-          ),
-        ),
+        child: _sheetTestApp(),
       ),
     );
 
-    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
     expect(find.text('さらに読み込む'), findsOneWidget);
@@ -338,22 +323,15 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          _cityMaxIntensityOverride(),
           earthquakeHistoryProvider.overrideWith2(
             (_) => _CountingPagedEarthquakeHistoryNotifier(),
           ),
         ],
-        child: _modalTestApp(
-          onPressed: (context) => CityDetailModalAction().show(
-            context,
-            cityCode: '1720400',
-            cityName: '輪島市',
-            prefectureName: '石川県',
-          ),
-        ),
+        child: _sheetTestApp(),
       ),
     );
 
-    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
     final loadMoreButton = find.text('さらに読み込む');
@@ -374,22 +352,15 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          _cityMaxIntensityOverride(),
           earthquakeHistoryProvider.overrideWith2(
             (_) => _RecordingEarthquakeHistoryNotifier(),
           ),
         ],
-        child: _modalTestApp(
-          onPressed: (context) => CityDetailModalAction().show(
-            context,
-            cityCode: '1720400',
-            cityName: '輪島市',
-            prefectureName: '石川県',
-          ),
-        ),
+        child: _sheetTestApp(),
       ),
     );
 
-    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
     for (final label in ['観測震度', '発生時刻', 'M', '最大震度', '深さ']) {
@@ -427,5 +398,31 @@ void main() {
     final reversed = _RecordingEarthquakeHistoryNotifier.parameters.last;
     expect(reversed.sortBy, EarthquakeSortBy.magnitude);
     expect(reversed.sortOrder, SortOrder.asc);
+  });
+
+  testWidgets('観測史上最大震度と閉じるボタンを表示し、閉じる操作を通知する', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(800, 1200));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    var closed = 0;
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          _cityMaxIntensityOverride(),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _EmptyEarthquakeHistoryNotifier(),
+          ),
+        ],
+        child: _sheetTestApp(onClose: () => closed++),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('観測史上最大震度'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('閉じる'));
+    await tester.pump();
+
+    expect(closed, 1);
   });
 }
